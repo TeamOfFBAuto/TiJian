@@ -1,0 +1,44 @@
+//
+//  PrefixHeader.pch
+//  WJXC
+//
+//  Created by lichaowei on 15/6/25.
+//  Copyright (c) 2015年 lcw. All rights reserved.
+//
+
+#ifndef WJXC_PrefixHeader_pch
+#define WJXC_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import "AppConstants.h" //整个app常用常量
+#import "EnumConstants.h" //常用枚举
+#import "NotificationConstants.h"//通知
+#import "ColorConstants.h"//颜色
+#import "ImageConstants.h"//图片
+#import "ApiConstants.h"//接口
+
+#import "MyViewController.h"//viewController基类
+#import "LNavigationController.h"//滑动返回
+#import "CategoriesHeader.h"//用到类目
+#import "YJYRequstManager.h"//网络请求类
+//
+//#import "DBManager.h" //数据库操作
+//
+#import "RefreshTableView.h"
+#import "MBProgressHUD.h"
+#import "LTools.h"//工具类
+//#import "GMAPI.h"//工具类
+//#import "UMSocial.h"//友盟
+//#import "SVProgressHUD.h"//浮层提示框
+//#import "UIImageView+WebCache.h"
+//#import "FMDB.h" //数据库三方类
+//
+////umeng相关
+//#import "MobClick.h"
+//#import "UMSocialWechatHandler.h"
+//#import "UMSocialQQHandler.h"
+//#import "UMSocialSinaHandler.h"
+
+#endif
