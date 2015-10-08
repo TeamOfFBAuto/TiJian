@@ -48,7 +48,7 @@
 		13F1F3E71BBA9A4B00885D31 /* UMSShareListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13F1F3861BBA9A4B00885D31 /* UMSShareListController.xib */; settings = {ASSET_TAGS = (); }; };
 		13F1F3E81BBA9A4B00885D31 /* UMSocialSDKResourcesNew.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 13F1F3871BBA9A4B00885D31 /* UMSocialSDKResourcesNew.bundle */; settings = {ASSET_TAGS = (); }; };
 		13F1F3E91BBA9A4B00885D31 /* libSocialSina.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13F1F38B1BBA9A4B00885D31 /* libSocialSina.a */; settings = {ASSET_TAGS = (); }; };
-		13F1F3EA1BBA9A4B00885D31 /* libSocialQQ.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13F1F38E1BBA9A4B00885D31 /* libSocialQQ.a */; settings = {ASSET_TAGS = (); }; };
+		13F1F3EA1BBA9A4B00885D31 /* libSocialQQ.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13F1F38E1BBA9A4B00885D31 /* libSocialQQ.a */; settings = {ASSET_TAGS = (); ATTRIBUTES = (Required, ); }; };
 		13F1F3EB1BBA9A4B00885D31 /* TencentOpenAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13F1F38F1BBA9A4B00885D31 /* TencentOpenAPI.framework */; settings = {ASSET_TAGS = (); }; };
 		13F1F3EC1BBA9A4B00885D31 /* TencentOpenApi_IOS_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 13F1F3901BBA9A4B00885D31 /* TencentOpenApi_IOS_Bundle.bundle */; settings = {ASSET_TAGS = (); }; };
 		13F1F3ED1BBA9A4B00885D31 /* libSocialWechat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13F1F3931BBA9A4B00885D31 /* libSocialWechat.a */; settings = {ASSET_TAGS = (); }; };
@@ -1038,6 +1038,7 @@
 			baseConfigurationReference = DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/AlipaySDK",
@@ -1068,6 +1069,7 @@
 			baseConfigurationReference = 4D536395CADC0784792F66D1 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/AlipaySDK",

@@ -38,36 +38,6 @@
     return (UINavigationController *)[LTools appDelegate].window.rootViewController;
 }
 
-#pragma - mark 图片比例计算
-
-/**
- *  计算等比例高度
- *
- *  @param image_height   图片的高度
- *  @param image_width    图片的宽度
- *  @param show_Width     实际显示宽度
- *
- *  @return 实际显示高度
- */
-+ (CGFloat)heightForImageHeight:(CGFloat)image_height
-                     imageWidth:(CGFloat)image_width
-                      showWidth:(CGFloat)show_Width
-{
-    float rate;
-    
-    if (image_width == 0.0 || image_height == 0.0) {
-        image_width = image_height;
-    }else
-    {
-        rate = image_height/image_width;
-    }
-    
-    CGFloat imageHeight = show_Width * rate;
-    
-    return imageHeight;
-    
-}
-
 #pragma - mark MD5 加密
 
 /**
@@ -101,174 +71,174 @@
     return md5String;
 }
 
-#pragma - mark 网络数据请求
-
-- (id)initWithUrl:(NSString *)url isPost:(BOOL)isPost postData:(NSData *)postData//post
-{
-    self = [super init];
-    if (self) {
-        requestUrl = url;
-        
-        if (isPost) {
-            requestData = postData;
-            isPostRequest = isPost;
-        }
-    }
-    return self;
-}
-
-- (void)requestCompletion:(void(^)(NSDictionary *result,NSError *erro))completionBlock failBlock:(void(^)(NSDictionary *failDic,NSError *erro))failedBlock{
-    successBlock = completionBlock;
-    failBlock = failedBlock;
-    
-    NSString *newStr = [requestUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    NSLog(@"requestUrl %@",newStr);
-    NSURL *urlS = [NSURL URLWithString:newStr];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlS cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
-    
-    if (isPostRequest) {
-        
-        [request setHTTPMethod:@"POST"];
-        
-        [request setHTTPBody:requestData];
-    }
-    
-    connection = [NSURLConnection connectionWithRequest:request delegate:self];
-    
-    [connection start];
-}
-
-- (void)cancelRequest
-{
-    NSLog(@"取消请求");
-    [connection cancel];
-}
-
-
-#pragma mark - NSURLConnectionDataDelegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
-    _data = [NSMutableData data];
-    
-    NSLog(@"response :%@",response);
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [_data appendData:data];
-}
-
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
-    
-    //    NSString *str = [[NSString alloc]initWithData:_data encoding:NSUTF8StringEncoding];
-    
-    //    NSLog(@"response string %@",str);
-    
-    if (_data.length > 0) {
-        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:_data options:0 error:nil];
-        
-        if ([dic isKindOfClass:[NSDictionary class]]) {
-            
-            int erroCode = [[dic objectForKey:RESULT_CODE]intValue];
-            NSString *erroInfo = [dic objectForKey:RESULT_INFO];
-            
-            if (erroCode != 0) { //0代表无错误,  && erroCode != 1 1代表无结果
-                
-                
-                //大于2000的可以正常提示错误,小于2000的为内部错误 参数错误等
-                if (erroCode > 2000) {
-                    
-                    NSDictionary *failDic = @{RESULT_INFO:erroInfo,RESULT_CODE:[NSString stringWithFormat:@"%d",erroCode]};
-                    failBlock(failDic,0);
-                    
-                    [self showErroInfo:erroInfo];
-
-                    
-                }else
-                {
-                    NSLog(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
-                    
-                    NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:[NSString stringWithFormat:@"%d",erroCode]};
-                    failBlock(failDic,0);
-                }
-                
-                
-            }else
-            {
-                successBlock(dic,0);//传递的已经是没有错误的结果
-            }
-        }else
-        {
-            NSLog(@"-----------解析数据为空");
-            
-            NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:@"999"};
-            failBlock(failDic,0);
-            
-//            [self showErroInfo:@"获取数据异常"];
-        }
-        
-    }else
-    {
-        
-        NSLog(@"-----------请求数据为空");
-        
-        NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:@"999"};
-        
-        failBlock(failDic,0);
-//        [self showErroInfo:@"获取数据异常"];
-
-    }
-    
-    
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
-    NSLog(@"data 为空 connectionError %@",error);
-    
-    NSString *errInfo = @"网络有问题,请检查网络";
-    switch (error.code) {
-        case NSURLErrorNotConnectedToInternet:
-            
-            errInfo = @"无网络连接";
-            break;
-        case NSURLErrorTimedOut:
-            
-            errInfo = @"网络连接超时";
-            break;
-        default:
-            break;
-    }
-    
-    //- 11 代表网络问题
-    NSDictionary *failDic = @{RESULT_INFO: errInfo,RESULT_CODE:NSStringFromInt(-11)};
-    failBlock(failDic,error);
-    
-    [self showErroInfo:errInfo];
-    
-}
-
-/**
- *  显示错误提示
- *
- *  @param errInfo
- */
-- (void)showErroInfo:(NSString *)errInfo
-{
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-    
-    [LTools showMBProgressWithText:errInfo addToView:[UIApplication sharedApplication].keyWindow];
-}
+//#pragma - mark 网络数据请求
+//
+//- (id)initWithUrl:(NSString *)url isPost:(BOOL)isPost postData:(NSData *)postData//post
+//{
+//    self = [super init];
+//    if (self) {
+//        requestUrl = url;
+//        
+//        if (isPost) {
+//            requestData = postData;
+//            isPostRequest = isPost;
+//        }
+//    }
+//    return self;
+//}
+//
+//- (void)requestCompletion:(void(^)(NSDictionary *result,NSError *erro))completionBlock failBlock:(void(^)(NSDictionary *failDic,NSError *erro))failedBlock{
+//    successBlock = completionBlock;
+//    failBlock = failedBlock;
+//    
+//    NSString *newStr = [requestUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    
+//    NSLog(@"requestUrl %@",newStr);
+//    NSURL *urlS = [NSURL URLWithString:newStr];
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlS cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
+//    
+//    if (isPostRequest) {
+//        
+//        [request setHTTPMethod:@"POST"];
+//        
+//        [request setHTTPBody:requestData];
+//    }
+//    
+//    connection = [NSURLConnection connectionWithRequest:request delegate:self];
+//    
+//    [connection start];
+//}
+//
+//- (void)cancelRequest
+//{
+//    NSLog(@"取消请求");
+//    [connection cancel];
+//}
+//
+//
+//#pragma mark - NSURLConnectionDataDelegate
+//
+//- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+//{
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+//    
+//    _data = [NSMutableData data];
+//    
+//    NSLog(@"response :%@",response);
+//}
+//
+//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+//{
+//    [_data appendData:data];
+//}
+//
+//
+//- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+//{
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//    
+//    
+//    //    NSString *str = [[NSString alloc]initWithData:_data encoding:NSUTF8StringEncoding];
+//    
+//    //    NSLog(@"response string %@",str);
+//    
+//    if (_data.length > 0) {
+//        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:_data options:0 error:nil];
+//        
+//        if ([dic isKindOfClass:[NSDictionary class]]) {
+//            
+//            int erroCode = [[dic objectForKey:RESULT_CODE]intValue];
+//            NSString *erroInfo = [dic objectForKey:RESULT_INFO];
+//            
+//            if (erroCode != 0) { //0代表无错误,  && erroCode != 1 1代表无结果
+//                
+//                
+//                //大于2000的可以正常提示错误,小于2000的为内部错误 参数错误等
+//                if (erroCode > 2000) {
+//                    
+//                    NSDictionary *failDic = @{RESULT_INFO:erroInfo,RESULT_CODE:[NSString stringWithFormat:@"%d",erroCode]};
+//                    failBlock(failDic,0);
+//                    
+//                    [self showErroInfo:erroInfo];
+//
+//                    
+//                }else
+//                {
+//                    NSLog(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
+//                    
+//                    NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:[NSString stringWithFormat:@"%d",erroCode]};
+//                    failBlock(failDic,0);
+//                }
+//                
+//                
+//            }else
+//            {
+//                successBlock(dic,0);//传递的已经是没有错误的结果
+//            }
+//        }else
+//        {
+//            NSLog(@"-----------解析数据为空");
+//            
+//            NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:@"999"};
+//            failBlock(failDic,0);
+//            
+////            [self showErroInfo:@"获取数据异常"];
+//        }
+//        
+//    }else
+//    {
+//        
+//        NSLog(@"-----------请求数据为空");
+//        
+//        NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:@"999"};
+//        
+//        failBlock(failDic,0);
+////        [self showErroInfo:@"获取数据异常"];
+//
+//    }
+//    
+//    
+//}
+//
+//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+//{
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//    
+//    NSLog(@"data 为空 connectionError %@",error);
+//    
+//    NSString *errInfo = @"网络有问题,请检查网络";
+//    switch (error.code) {
+//        case NSURLErrorNotConnectedToInternet:
+//            
+//            errInfo = @"无网络连接";
+//            break;
+//        case NSURLErrorTimedOut:
+//            
+//            errInfo = @"网络连接超时";
+//            break;
+//        default:
+//            break;
+//    }
+//    
+//    //- 11 代表网络问题
+//    NSDictionary *failDic = @{RESULT_INFO: errInfo,RESULT_CODE:NSStringFromInt(-11)};
+//    failBlock(failDic,error);
+//    
+//    [self showErroInfo:errInfo];
+//    
+//}
+//
+///**
+// *  显示错误提示
+// *
+// *  @param errInfo
+// */
+//- (void)showErroInfo:(NSString *)errInfo
+//{
+//    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//    
+//    [LTools showMBProgressWithText:errInfo addToView:[UIApplication sharedApplication].keyWindow];
+//}
 
 
 #pragma mark - 版本更新信息
@@ -276,136 +246,83 @@
 - (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version//是否有新版本、新版本更新下地址
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
+
     //test FBLife 605673005 fbauto 904576362
     NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@",appid];
-    
+
     NSString *newStr = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
+
     requestUrl = newStr;
     requestData = nil;
     isPostRequest = NO;
     
-    [self requestCompletion:^(NSDictionary *result, NSError *erro) {
+    
+    NSURL *urlS = [NSURL URLWithString:newStr];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlS cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         
-        NSArray *results = [result objectForKey:@"results"];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         
-        if (results.count == 0) {
+        if (data.length > 0) {
             
-            version(NO,@"no",@"没有更新");
-            return ;
-        }
-        
-        //appStore 版本
-        NSString *newVersion = [[results objectAtIndex:0]objectForKey:@"version"];
-        
-        NSString *updateContent = [[results objectAtIndex:0]objectForKey:@"releaseNotes"];
-        //本地版本
-        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        _downUrl = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/us/app/id%@?mt=8",appid];
-
-        BOOL isNew = NO;
-        if (newVersion && ([newVersion compare:currentVersion] == 1)) {
-            isNew = YES;
-        }
-        
-        version(isNew,_downUrl,updateContent);
-        
-        if (isNew) {
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:Nil];
             
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"版本更新" message:updateContent delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"立即更新", nil];
-            [alert show];
+            NSArray *results = [dic objectForKey:@"results"];
+            
+            if (results.count == 0) {
+                version(NO,@"no",@"没有更新");
+                return ;
+            }
+            
+            //appStore 版本
+            NSString *newVersion = [[[dic objectForKey:@"results"] objectAtIndex:0]objectForKey:@"version"];
+            NSString *updateContent = [[[dic objectForKey:@"results"] objectAtIndex:0]objectForKey:@"releaseNotes"];
+            //本地版本
+            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+            NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+            
+            _downUrl = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/us/app/id%@?mt=8",appid];
+            
+            BOOL isNew = NO;
+            if (newVersion && ([newVersion compare:currentVersion] == 1)) {
+                isNew = YES;
+            }
+            
+            version(isNew,_downUrl,updateContent);
+            
+            if (isNew) {
+                
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"版本更新" message:updateContent delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"立即更新", nil];
+                [alert show];
+            }
+            
+        }else
+        {
+            NSLog(@"data 为空 connectionError %@",connectionError);
+            
+            NSString *errInfo = @"网络有问题,请检查网络";
+            switch (connectionError.code) {
+                case NSURLErrorNotConnectedToInternet:
+                    
+                    errInfo = @"无网络连接";
+                    break;
+                case NSURLErrorTimedOut:
+                    
+                    errInfo = @"网络连接超时";
+                    break;
+                default:
+                    break;
+            }
+            
+            NSDictionary *failDic = @{RESULT_INFO: errInfo};
+            
+            NSLog(@"version erro %@",failDic);
+            
         }
-        
-        
-    } failBlock:^(NSDictionary *result, NSError *erro) {
-        
         
     }];
-    
 }
-
-//- (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version//是否有新版本、新版本更新下地址
-//{
-//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-//    
-//    //test FBLife 605673005 fbauto 904576362
-//    NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@",appid];
-//    
-//    NSString *newStr = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    
-//    NSLog(@"requestUrl %@",newStr);
-//    NSURL *urlS = [NSURL URLWithString:newStr];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlS cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
-//    
-//    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-//        
-//        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//        
-//        if (data.length > 0) {
-//            
-//            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:Nil];
-//            
-//            NSArray *results = [dic objectForKey:@"results"];
-//            
-//            if (results.count == 0) {
-//                version(NO,@"no",@"没有更新");
-//                return ;
-//            }
-//            
-//            //appStore 版本
-//            NSString *newVersion = [[results objectAtIndex:0]objectForKey:@"version"];
-//            
-//            NSString *updateContent = [[results objectAtIndex:0]objectForKey:@"releaseNotes"];
-//            //本地版本
-//            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-//            NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-//            _downUrl = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/us/app/id%@?mt=8",appid];
-//            
-//            //            _downUrl = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/crash-drive-2/id765099329?mt=12"];
-//            BOOL isNew = NO;
-//            if (newVersion && ([newVersion compare:currentVersion] == 1)) {
-//                isNew = YES;
-//            }
-//                        
-//            version(isNew,_downUrl,updateContent);
-//            
-//            if (isNew) {
-//                
-//                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"版本更新" message:updateContent delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"立即更新", nil];
-//                [alert show];
-//            }
-//            
-//        }else
-//        {
-//            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//            
-//            NSLog(@"data 为空 connectionError %@",connectionError);
-//            
-//            NSString *errInfo = @"网络有问题,请检查网络";
-//            switch (connectionError.code) {
-//                case NSURLErrorNotConnectedToInternet:
-//                    
-//                    errInfo = @"无网络连接";
-//                    break;
-//                case NSURLErrorTimedOut:
-//                    
-//                    errInfo = @"网络连接超时";
-//                    break;
-//                default:
-//                    break;
-//            }
-//            
-//            NSDictionary *failDic = @{RESULT_INFO: errInfo};
-//            
-//            NSLog(@"version erro %@",failDic);
-//            
-//        }
-//        
-//    }];
-//    
-//}
 
 #pragma mark UIAlertViewDelegate
 
@@ -417,6 +334,9 @@
     }
 }
 
+/**
+ *  获取是否有最新版本
+ */
 + (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version//是否有新版本、新版本更新下地址
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -565,27 +485,29 @@
  */
 + (BOOL)rongCloudNeedRefreshUserId:(NSString *)userId
 {
-    NSString *key = [NSString stringWithFormat:@"updateTime_%@",userId];
-
-    NSDate *oldDate = [LTools timeFromString:[LTools cacheForKey:key]];
-    
-    NSInteger between = [oldDate hoursBetweenDate:oldDate];
-    
-    if (between >= 1) { //大于一个小时需要更新
-        
-        NSLog(@"需要更新融云用户信息 %@ bew:%ld",oldDate,(long)between);
-        
-        return YES;
-    }
-    
+//    NSString *key = [NSString stringWithFormat:@"updateTime_%@",userId];
+//
+//    NSDate *oldDate = [LTools timeFromString:[LTools cacheForKey:key]];
+//    
+//    NSInteger between = [oldDate hoursBetweenDate:oldDate];
+//    
+//    if (between >= 1) { //大于一个小时需要更新
+//        
+//        NSLog(@"需要更新融云用户信息 %@ bew:%ld",oldDate,(long)between);
+//        
+//        return YES;
+//    }
+//    
     return NO;
 }
+
+#pragma - mark NSUserDefaults本地缓存
 
 /**
  *  归档的方式
  *
- *  @param aModel   <#aModel description#>
- *  @param modelKey <#modelKey description#>
+ *  @param aModel
+ *  @param modelKey
  */
 + (void)cacheModel:(id)aModel forKey:(NSString *)modelKey
 {
@@ -645,23 +567,7 @@
 }
 
 
-//根据url获取SDWebImage 缓存的图片
-
-+ (UIImage *)sd_imageForUrl:(NSString *)url
-{
-//    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-//    NSString *imageKey = [manager cacheKeyForURL:[NSURL URLWithString:url]];
-//    
-//    SDImageCache *cache = [SDImageCache sharedImageCache];
-//    UIImage *cacheImage = [cache imageFromDiskCacheForKey:imageKey];
-//    
-//    return cacheImage;
-    
-    return nil;
-}
-
 #pragma mark - 常用视图快速创建
-
 
 /**
  *  通过xib创建cell
@@ -685,38 +591,7 @@
     return cell;
 }
 
-+ (UIButton *)createButtonWithType:(UIButtonType)buttonType
-                             frame:(CGRect)aFrame
-                             normalTitle:(NSString *)normalTitle
-                             image:(UIImage *)normalImage
-                    backgroudImage:(UIImage *)bgImage
-                         superView:(UIView *)superView
-                            target:(id)target
-                            action:(SEL)action
-{
-    UIButton *btn = [UIButton buttonWithType:buttonType];
-    btn.frame = aFrame;
-    [btn setTitle:normalTitle forState:UIControlStateNormal];
-    [btn setImage:normalImage forState:UIControlStateNormal];
-    [btn setBackgroundImage:bgImage forState:UIControlStateNormal];
-    [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    [superView addSubview:btn];
-    return btn;
-}
-
-+ (UILabel *)createLabelFrame:(CGRect)aFrame
-                        title:(NSString *)title
-                         font:(CGFloat)size
-                        align:(NSTextAlignment)align
-                    textColor:(UIColor *)textColor
-{
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:aFrame];
-    titleLabel.text = title;
-    titleLabel.font = [UIFont systemFontOfSize:size];
-    titleLabel.textAlignment = align;
-    titleLabel.textColor = textColor;
-    return titleLabel;
-}
+#pragma - mark 文字自适应高度、宽度计算
 
 /**
  *  计算宽度
@@ -968,14 +843,15 @@
 #pragma - mark 时间相关
 
 /**
- *  时间戳转化为响应格式时间
+ *  时间戳转化为格式时间
  *
  *  @param placetime 时间线
  *  @param format    时间格式 @"YYYY-MM-dd HH:mm:ss"
  *
  *  @return 返回时间字符串
  */
-+(NSString *)timeString:(NSString *)placetime withFormat:(NSString *)format
++(NSString *)timeString:(NSString *)placetime
+             withFormat:(NSString *)format
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
     [formatter setDateStyle:NSDateFormatterMediumStyle];
@@ -984,6 +860,14 @@
     NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
     NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
     return confromTimespStr;
+}
+
+/**
+ *  获取当前时间戳
+ */
++(NSString *)timechangeToDateline
+{
+    return [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
 }
 
 /**
@@ -1039,51 +923,6 @@
     return timestamp;
 }
 
-+(NSString*)showTimeWithTimestamp:(NSString*)myTime{
-    
-    NSString *timestamp;
-    time_t now;
-    time(&now);
-    
-    int distance = (int)difftime(now,  [myTime integerValue]);
-    
-    //小于一天的显示时、分
-    
-    if (distance < 60 * 60 * 24) {
-    
-        static NSDateFormatter *dateFormatter = nil;
-        if (dateFormatter == nil) {
-            dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"HH:mm"];
-        }
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970: [myTime integerValue]];
-        
-        timestamp = [dateFormatter stringFromDate:date];
-        
-    }
-    else if (distance < 60 * 60 * 24 * 7) {
-        distance = distance / 60 / 60 / 24;
-        timestamp = [NSString stringWithFormat:@"%d%@", distance,@"天前"];
-    }
-    else if (distance < 60 * 60 * 24 * 7 * 4) {
-        distance = distance / 60 / 60 / 24 / 7;
-        timestamp = [NSString stringWithFormat:@"%d%@", distance, @"周前"];
-    }else
-    {
-        static NSDateFormatter *dateFormatter = nil;
-        if (dateFormatter == nil) {
-            dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-        }
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970: [myTime integerValue]];
-        
-        timestamp = [dateFormatter stringFromDate:date];
-    }
-    
-    return timestamp;
-}
-
-
 +(NSString*)timestamp:(NSString*)myTime{
     
     NSString *timestamp;
@@ -1127,84 +966,6 @@
 }
 
 
-//当前时间转换为 时间戳
-
-+(NSString *)timechangeToDateline
-{
-    return [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-}
-
-//时间戳 转 NSDate
-+(NSDate *)timeFromString:(NSString *)timeString
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]];
-    return confromTimesp;
-}
-
-//时间线转化
-
-+(NSString *)timechange:(NSString *)placetime
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"MM-dd"];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
-    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-    return confromTimespStr;
-}
-
-+(NSString *)timechange2:(NSString *)placetime
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
-    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-    return confromTimespStr;
-}
-/**
- *  时间转化格式:MM月dd日
- */
-+(NSString *)timechangeMMDD:(NSString *)placetime
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"MM月dd日"];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
-    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-    return confromTimespStr;
-}
-
-+(NSString *)timechangeAll:(NSString *)placetime
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
-    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-    return confromTimespStr;
-}
-
-+(NSString *)timechange3:(NSString *)placetime
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY年MM月"];
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
-    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
-    return confromTimespStr;
-}
-
-
 + (NSString *)currentTime
 {
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
@@ -1227,7 +988,8 @@
  *
  *  @return 是否需要更新
  */
-+ (BOOL)needUpdateForHours:(CGFloat)hours recordDate:(NSDate *)recordDate
++ (BOOL)needUpdateForHours:(CGFloat)hours
+                recordDate:(NSDate *)recordDate
 {
     if (recordDate) {
         
@@ -1247,6 +1009,8 @@
     return YES;
 }
 
+
+#pragma - mark UIAlertView快捷方式
 
 + (void)alertText:(NSString *)text viewController:(UIViewController *)vc
 {
@@ -1300,6 +1064,7 @@
     
 }
 
+#pragma - mark MBProgressHUD快捷方式
 
 + (void)showMBProgressWithText:(NSString *)text addToView:(UIView *)aView
 {
@@ -1377,11 +1142,33 @@
 
 #pragma - mark 非空字符串
 
+/**
+ *  NSNumber按照设置格式输出
+ *
+ *  @param number
+ *  @param style  NSNumberFormatterRoundCeiling = kCFNumberFormatterRoundCeiling,//四舍五入，原值2.7999999999,直接输出3
+ 
+ * NSNumberFormatterRoundFloor = kCFNumberFormatterRoundFloor,//保留小数输出2.8 正是想要的
+ 
+ * NSNumberFormatterRoundDown = kCFNumberFormatterRoundDown,//加上了人民币标志，原值输出￥2.8
+ 
+ * NSNumberFormatterRoundUp = kCFNumberFormatterRoundUp,//本身数值乘以100后用百分号表示,输出280%
+ 
+ * NSNumberFormatterRoundHalfEven = kCFNumberFormatterRoundHalfEven,//原值表示，输出2.799999999E0
+ 
+ * NSNumberFormatterRoundHalfDown = kCFNumberFormatterRoundHalfDown,//原值的中文表示，输出二点七九九九。。。。
+ 
+ * NSNumberFormatterRoundHalfUp = kCFNumberFormatterRoundHalfUp //原值中文表示，输出第三
+ *
+ *  @return
+ */
+
 +(NSString *)numberToString:(long)number
+                numberStyle:(NSNumberFormatterStyle)style
 {
     NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setFormatterBehavior: NSNumberFormatterBehavior10_4];
-    [numberFormatter setNumberStyle: NSNumberFormatterDecimalStyle];
+    [numberFormatter setNumberStyle: style];
     NSString *numberString = [numberFormatter stringFromNumber: [NSNumber numberWithInteger: number]];
     return numberString;
 }
@@ -1401,6 +1188,30 @@
         return @"";
     }
     return text;
+}
+
+/**
+ *  判断是否为null、NSNull活着nil
+ *
+ *  @return
+ */
++ (BOOL)NSStringIsNull:(NSString *)text
+{
+    if (!text) {
+        return YES;
+    }
+    if ([text isEqualToString:@"(null)"] ||
+        [text isEqualToString:@"null"] ||
+        [text isKindOfClass:[NSNull class]]){
+        return YES;
+    }
+    
+    NSMutableString *str = [NSMutableString stringWithString:text];
+    [str replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, str.length)];
+    if (str.length == 0) {
+        return YES;
+    }
+    return NO;
 }
 
 + (NSString *)safeString:(NSString *)string
@@ -1463,7 +1274,8 @@
  *  行间距string
  */
 
-+ (NSAttributedString *)attributedString:(NSString *)string lineSpaceing:(CGFloat)lineSpage
++ (NSAttributedString *)attributedString:(NSString *)string
+                            lineSpaceing:(CGFloat)lineSpage
 {
     NSMutableAttributedString * attributedString1 = [[NSMutableAttributedString alloc] initWithString:string];
     NSMutableParagraphStyle * paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
@@ -1515,7 +1327,9 @@
  *  @param aKeyword  关键词
  *  @param textColor 关键词颜色
  */
-+ (NSAttributedString *)attributedString:(NSString *)content keyword:(NSString *)aKeyword color:(UIColor *)textColor
++ (NSAttributedString *)attributedString:(NSString *)content
+                                 keyword:(NSString *)aKeyword
+                                   color:(UIColor *)textColor
 {
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:content];
     
@@ -1546,7 +1360,10 @@
  *
  *  @return NSAttributedString
  */
-+ (NSAttributedString *)attributedString:(NSMutableAttributedString *)attibutedString originalString:(NSString *)string AddKeyword:(NSString *)keyword color:(UIColor *)color
++ (NSAttributedString *)attributedString:(NSMutableAttributedString *)attibutedString
+                          originalString:(NSString *)string
+                              AddKeyword:(NSString *)keyword
+                                   color:(UIColor *)color
 {
     if (attibutedString == nil) {
         attibutedString = [[NSMutableAttributedString alloc]initWithString:string];
@@ -1563,17 +1380,9 @@
     return attibutedString;
 }
 
-+ (BOOL)NSStringIsNull:(NSString *)string
-{
-    NSMutableString *str = [NSMutableString stringWithString:string];
-    [str replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, str.length)];
-    if (str.length == 0) {
-        return YES;
-    }
-    return NO;
-}
+#pragma - mark 图片处理相关
 
-#pragma - mark 切图
+#pragma mark 切图
 
 +(UIImage *)scaleToSizeWithImage:(UIImage *)img size:(CGSize)size{
     UIGraphicsBeginImageContext(size);
@@ -1583,11 +1392,35 @@
     return scaledImage;
 }
 
-#pragma mark - 适配尺寸计算
+//根据url获取SDWebImage 缓存的图片
 
++ (UIImage *)sd_imageForUrl:(NSString *)url
+{
+    //    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    //    NSString *imageKey = [manager cacheKeyForURL:[NSURL URLWithString:url]];
+    //
+    //    SDImageCache *cache = [SDImageCache sharedImageCache];
+    //    UIImage *cacheImage = [cache imageFromDiskCacheForKey:imageKey];
+    //
+    //    return cacheImage;
+    
+    return nil;
+}
+
+#pragma - mark 图片比例计算
+
+/**
+ *  计算等比例高度
+ *
+ *  @param image_height   图片的高度
+ *  @param image_width    图片的宽度
+ *  @param show_Width     实际显示宽度
+ *
+ *  @return 实际显示高度
+ */
 + (CGFloat)heightForImageHeight:(CGFloat)image_height
-                  imageWidth:(CGFloat)image_width
-               originalWidth:(CGFloat)original_width
+                     imageWidth:(CGFloat)image_width
+                      showWidth:(CGFloat)show_Width
 {
     float rate;
     
@@ -1598,20 +1431,12 @@
         rate = image_height/image_width;
     }
     
-    CGFloat imageHeight = original_width * rate;
+    CGFloat imageHeight = show_Width * rate;
     
     return imageHeight;
-
+    
 }
 
-#pragma mark - 分类论坛图片获取
-
-+ (UIImage *)imageForBBSId:(NSString *)bbsId
-{
-    NSString *name = [NSString stringWithFormat:@"mirco_icon_%@",bbsId];
-    UIImage *image = [UIImage imageNamed:name];
-    return image;
-}
 
 #pragma mark - 动画
 

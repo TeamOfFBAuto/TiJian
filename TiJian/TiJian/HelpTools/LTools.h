@@ -13,8 +13,6 @@
 
 #import "AppDelegate.h"
 
-//#import "LDataInstance.h"
-
 #define RESULT_INFO @"msg" //错误信息
 
 #define RESULT_CODE @"errorcode" //错误code
@@ -25,15 +23,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 @interface LTools : NSObject<NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 {
-    urlRequestBlock successBlock;
-    urlRequestBlock failBlock;
-    versionBlock aVersionBlock;
-    
+//    urlRequestBlock successBlock;
+//    urlRequestBlock failBlock;
+//    versionBlock aVersionBlock;
+//    
     NSString *requestUrl;
     NSData *requestData;
     BOOL isPostRequest;//是否是post请求
-    
-    NSURLConnection *connection;
+//
+//    NSURLConnection *connection;
     
     NSString *_appid;
     
@@ -46,34 +44,31 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (UINavigationController *)rootNavigationController;
 
+
+#pragma - mark MD5 加密
+
 /**
- *  判断登录
+ *  获取验证码的时候加此参数
+ *
+ *  @param phone 手机号
+ *
+ *  @return 手机号和特定字符串MD5之后的结果
  */
-+ (BOOL)isLogin;
++ (NSString *)md5Phone:(NSString *)phone;
 
-+ (BOOL)isLogin:(UIViewController *)viewController;//判读是否登录
++ (NSString *) md5:(NSString *) text;
 
-//+ (BOOL)isLogin:(UIViewController *)viewController loginBlock:(LoginBlock)aBlock;//判断登录状态
 
-//@property(nonatomic,retain)
-
-/**
- *  网络请求
- */
-- (id)initWithUrl:(NSString *)url isPost:(BOOL)isPost postData:(NSData *)postData;//初始化请求
-
-- (void)requestCompletion:(void(^)(NSDictionary *result,NSError *erro))completionBlock failBlock:(void(^)(NSDictionary *result,NSError *erro))failedBlock;//处理请求结果
-- (void)cancelRequest;
+#pragma mark - 版本更新信息
 
 /**
- *  版本更新
+ *  获取是否有最新版本
  */
 + (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version;//是否有新版本、新版本更新下地址
 
+#pragma mark - NSUserDefault缓存
 
-- (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version;
-
-#pragma mark - 融云用户数据
+#pragma mark 缓存融云用户数据
 
 /**
  *  更新未读消息显示
@@ -82,12 +77,7 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 + (void)updateTabbarUnreadMessageNumber;
 
-//+ (void)rongCloudChatWithUserId:(NSString *)userId
-//                       userName:(NSString *)userName
-//                 viewController:(UIViewController *)viewController;
-
 + (void)cacheRongCloudUserName:(NSString *)userName forUserId:(NSString *)userId;
-
 + (NSString *)rongCloudUserNameWithUid:(NSString *)userId;
 
 + (void)cacheRongCloudUserIcon:(NSString *)iconUrl forUserId:(NSString *)userId;
@@ -110,14 +100,21 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 + (BOOL)rongCloudNeedRefreshUserId:(NSString *)userId;
 
-
-#pragma mark - NSUserDefault 缓存
+#pragma - mark NSUserDefaults本地缓存
 
 /**
- *  NSUserDefault 缓存
+ *  归档的方式
+ *
+ *  @param aModel
+ *  @param modelKey
  */
++ (void)cacheModel:(id)aModel forKey:(NSString *)modelKey;
+
++ (id)cacheModelForKey:(NSString *)modelKey;
+
 //存
 + (void)cache:(id)dataInfo ForKey:(NSString *)key;
+
 //取
 + (id)cacheForKey:(NSString *)key;
 
@@ -126,51 +123,65 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (BOOL)cacheBoolForKey:(NSString *)key;
 
 
-//根据url获取SDWebImage 缓存的图片
-
-+ (UIImage *)sd_imageForUrl:(NSString *)url;
-
 #pragma mark - 常用视图快速创建
 
+/**
+ *  通过xib创建cell
+ *
+ *  @param identify  标识名称
+ *  @param tableView
+ *  @param cellName
+ *
+ *  @return cell
+ */
 + (UITableViewCell *)cellForIdentify:(NSString *)identify
                             cellName:(NSString *)cellName
                             forTable:(UITableView *)tableView;
 
-+ (UIButton *)createButtonWithType:(UIButtonType)buttonType
-                             frame:(CGRect)aFrame
-                       normalTitle:(NSString *)normalTitle
-                             image:(UIImage *)normalImage
-                    backgroudImage:(UIImage *)bgImage
-                         superView:(UIView *)superView
-                            target:(id)target
-                            action:(SEL)action;
+#pragma - mark 文字自适应高度、宽度计算
 
-+ (UILabel *)createLabelFrame:(CGRect)aFrame
-                        title:(NSString *)title
-                         font:(CGFloat)size
-                        align:(NSTextAlignment)align
-                    textColor:(UIColor *)textColor;
-
-#pragma mark - 计算宽度、高度
-
+/**
+ *  计算宽度
+ */
 + (CGFloat)widthForText:(NSString *)text font:(CGFloat)size;
+
 + (CGFloat)widthForText:(NSString *)text boldFont:(CGFloat)size;
 
 + (CGFloat)widthForText:(NSString *)text height:(CGFloat)height font:(CGFloat)size;
 
 + (CGFloat)heightForText:(NSString *)text width:(CGFloat)width font:(CGFloat)size;
-+ (CGFloat)heightForText:(NSString *)text width:(CGFloat)width Boldfont:(CGFloat)size;//加粗
 
-#pragma mark - 小工具
++ (CGFloat)heightForText:(NSString *)text width:(CGFloat)width Boldfont:(CGFloat)size;
 
-/**
- *  根据color id获取优惠劵背景图
- *
- *  @param color color 的id
- *
- *  @return image
- */
-+ (UIImage *)imageForCoupeColorId:(NSString *)color;
+#pragma mark - 验证有消息
+
+//是否是字典
++ (BOOL)isDictinary:(id)object;
+
+#pragma - mark 判断为空或者是空格
+
++ (BOOL) isEmpty:(NSString *) str;
+
+#pragma - mark 验证邮箱、电话等有效性
+
+/*匹配正整数*/
++ (BOOL)isValidateInt:(NSString *)digit;
+
+/*匹配整浮点数*/
++ (BOOL)isValidateFloat:(NSString *)digit;
+
+/*邮箱*/
++ (BOOL)isValidateEmail:(NSString *)email;
+
++ (BOOL)isValidateName:(NSString *)userName;
+
+//数字和字母 和 _
++ (BOOL)isValidatePwd:(NSString *)pwdString;
+
+/*手机及固话*/
++ (BOOL)isValidateMobile:(NSString *)mobileNum;
+
+#pragma - mark 小工具
 
 /**
  *  根据6的屏幕计算比例宽度
@@ -191,6 +202,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (CGFloat)fitHeight:(CGFloat)aHeight;
 
 /**
+ *  根据color id获取优惠劵背景图
+ *
+ *  @param color color 的id
+ *
+ *  @return image
+ */
++ (UIImage *)imageForCoupeColorId:(NSString *)color;
+
+/**
  *  返回距离 大于1000 为km,小于m
  *
  *  @param distance 距离
@@ -199,42 +219,23 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 + (NSString *)distanceString:(NSString *)distance;
 
-+ (void)alertText:(NSString *)text viewController:(UIViewController *)vc;
-
-+ (void)alertText:(NSString *)text;
-
-#pragma mark - MD5
-
-/**
- *  获取验证码的时候加此参数
- *
- *  @param phone 手机号
- *
- *  @return 手机号和特定字符串MD5之后的结果
- */
-+ (NSString *)md5Phone:(NSString *)phone;
-
-+ (NSString *) md5:(NSString *) text;
-
 #pragma - mark 时间相关
 
 /**
- *  时间戳转化为响应格式时间
+ *  时间戳转化为格式时间
  *
  *  @param placetime 时间线
  *  @param format    时间格式 @"YYYY-MM-dd HH:mm:ss"
  *
  *  @return 返回时间字符串
  */
-+(NSString *)timeString:(NSString *)placetime withFormat:(NSString *)format;
++(NSString *)timeString:(NSString *)placetime
+             withFormat:(NSString *)format;
 
-+(NSString *)timechange:(NSString *)placetime;
-+(NSString *)timechange2:(NSString *)placetime;
-+(NSString *)timechange3:(NSString *)placetime;
-
-+(NSString *)timechangeMMDD:(NSString *)placetime;
-
-+(NSString *)timechangeAll:(NSString *)placetime;//时间戳 显示全
+/**
+ *  获取当前时间戳
+ */
++(NSString *)timechangeToDateline;
 
 /**
  *  显示间隔时间 一天内显示时分、几天前、几周前、大于一周 显示具体日期
@@ -247,38 +248,63 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (NSString*)showIntervalTimeWithTimestamp:(NSString*)myTime
                                 withFormat:(NSString *)format;
 
-+(NSString*)showTimeWithTimestamp:(NSString*)myTime;//不满一天显示时、分 大于一天显示时间间隔
++(NSString*)timestamp:(NSString*)myTime;
 
-+(NSDate *)timeFromString:(NSString *)timeString;//时间戳转NSDate
 
-+(NSString *)timechangeToDateline;//转换为时间戳
++ (NSString *)currentTime;
 
-+(NSString*)timestamp:(NSString*)myTime;//模糊时间,如几天前
+/**
+ *  是否需要更新
+ *
+ *  @param hours      时间间隔
+ *  @param recordDate 上次记录时间
+ *
+ *  @return 是否需要更新
+ */
++ (BOOL)needUpdateForHours:(CGFloat)hours
+                recordDate:(NSDate *)recordDate;
 
-+ (NSString *)currentTime;//当前时间 yyyy-mm-dd
 
-+ (BOOL)needUpdateForHours:(CGFloat)hours recordDate:(NSDate *)recordDate;//计算既定时间段是否需要更新
+#pragma - mark UIAlertView快捷方式
 
-#pragma mark - 加载提示
++ (void)alertText:(NSString *)text viewController:(UIViewController *)vc;
+
+
+//alert 提示
+
++ (void)alertText:(NSString *)text;
+
+#pragma - mark MBProgressHUD快捷方式
 
 + (void)showMBProgressWithText:(NSString *)text addToView:(UIView *)aView;
 
 + (MBProgressHUD *)MBProgressWithText:(NSString *)text addToView:(UIView *)aView;
 
-#pragma mark - 字符串的处理
-
-+(NSString *)numberToString:(long)number;//千分位
-
-+ (NSString *)safeString:(NSString *)string;
+#pragma - mark 非空字符串
 
 /**
- *  去掉开头空格
+ *  NSNumber按照设置格式输出
  *
- *  @param string
+ *  @param number
+ *  @param style  NSNumberFormatterRoundCeiling = kCFNumberFormatterRoundCeiling,//四舍五入，原值2.7999999999,直接输出3
+ 
+ * NSNumberFormatterRoundFloor = kCFNumberFormatterRoundFloor,//保留小数输出2.8 正是想要的
+ 
+ * NSNumberFormatterRoundDown = kCFNumberFormatterRoundDown,//加上了人民币标志，原值输出￥2.8
+ 
+ * NSNumberFormatterRoundUp = kCFNumberFormatterRoundUp,//本身数值乘以100后用百分号表示,输出280%
+ 
+ * NSNumberFormatterRoundHalfEven = kCFNumberFormatterRoundHalfEven,//原值表示，输出2.799999999E0
+ 
+ * NSNumberFormatterRoundHalfDown = kCFNumberFormatterRoundHalfDown,//原值的中文表示，输出二点七九九九。。。。
+ 
+ * NSNumberFormatterRoundHalfUp = kCFNumberFormatterRoundHalfUp //原值中文表示，输出第三
  *
- *  @return 
+ *  @return
  */
-+ (NSString *)stringHeadNoSpace:(NSString *)string;
+
++(NSString *)numberToString:(long)number
+                numberStyle:(NSNumberFormatterStyle)style;
 
 /**
  *  排除NSNull null 和 (null)
@@ -289,9 +315,37 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 + (NSString *)NSStringNotNull:(NSString *)text;
 
-+ (NSString *)NSStringAddComma:(NSString *)string; //添加逗号
+/**
+ *  判断是否为null、NSNull活着nil
+ *
+ *  @return
+ */
++ (BOOL)NSStringIsNull:(NSString *)text;
 
-+ (NSAttributedString *)attributedString:(NSString *)string lineSpaceing:(CGFloat)lineSpage;//行间距string
++ (NSString *)safeString:(NSString *)string;
+
+/**
+ *  去除开头的空格
+ */
++ (NSString *)stringHeadNoSpace:(NSString *)string;
+
+/**
+ *  给字符串加逗号
+ *
+ *  @param string 源字符串 如： 123456.78 或者 123456
+ *
+ *  @return 逗号分割字符串  1,234,567.89 或者 123,456
+ */
+
++ (NSString *)NSStringAddComma:(NSString *)string;//添加逗号
+
+
+/**
+ *  行间距string
+ */
+
++ (NSAttributedString *)attributedString:(NSString *)string
+                            lineSpaceing:(CGFloat)lineSpage;
 
 /**
  *  行间距string 字体大小
@@ -310,52 +364,56 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
                                 fontSize:(CGFloat)fontSize
                                textColor:(UIColor *)textColor;
 
-+ (NSAttributedString *)attributedString:(NSString *)content keyword:(NSString *)aKeyword color:(UIColor *)textColor;//关键词高亮
-
-+ (NSAttributedString *)attributedString:(NSMutableAttributedString *)attibutedString originalString:(NSString *)string AddKeyword:(NSString *)keyword color:(UIColor *)color;//每次一个关键词高亮,多次调用
-
-+ (BOOL)NSStringIsNull:(NSString *)string;//判断字符串是否全为空格
-
-#pragma mark - 验证有效性
-
-+ (BOOL) isEmpty:(NSString *) str;//是否为空
-
-+ (BOOL)isDictinary:(id)object;//是否是字典
 
 /**
- *  验证 邮箱、电话等
+ *  关键词特殊显示
+ *
+ *  @param content   源字符串
+ *  @param aKeyword  关键词
+ *  @param textColor 关键词颜色
  */
-
-+ (BOOL)isValidateInt:(NSString *)digit;
-+ (BOOL)isValidateFloat:(NSString *)digit;
-+ (BOOL)isValidateEmail:(NSString *)email;
-+ (BOOL)isValidateName:(NSString *)userName;
-+ (BOOL)isValidatePwd:(NSString *)pwdString;
-+ (BOOL)isValidateMobile:(NSString *)mobileNum;
-
++ (NSAttributedString *)attributedString:(NSString *)content
+                                 keyword:(NSString *)aKeyword
+                                   color:(UIColor *)textColor;
 /**
- *  切图
+ *  每次只给一个关键词加高亮颜色
+ *
+ *  @param attibutedString 可以为空
+ *  @param string          attibutedString 为空时,用此进行初始化;并且用于找到关键词的range
+ *  @param keyword         需要高亮的部分
+ *  @param color           高亮的颜色
+ *
+ *  @return NSAttributedString
  */
++ (NSAttributedString *)attributedString:(NSMutableAttributedString *)attibutedString
+                          originalString:(NSString *)string
+                              AddKeyword:(NSString *)keyword
+                                   color:(UIColor *)color;
+
+#pragma - mark 图片处理相关
+
+#pragma mark 切图
+
 +(UIImage *)scaleToSizeWithImage:(UIImage *)img size:(CGSize)size;
 
-#pragma mark - 适配尺寸计算
+//根据url获取SDWebImage 缓存的图片
+
++ (UIImage *)sd_imageForUrl:(NSString *)url;
+
+#pragma - mark 图片比例计算
 
 /**
  *  计算等比例高度
  *
  *  @param image_height   图片的高度
  *  @param image_width    图片的宽度
- *  @param original_Width 实际显示宽度
+ *  @param show_Width     实际显示宽度
  *
  *  @return 实际显示高度
  */
 + (CGFloat)heightForImageHeight:(CGFloat)image_height
                      imageWidth:(CGFloat)image_width
-                  originalWidth:(CGFloat)original_Width;
-
-#pragma mark - 分类论坛图片获取
-
-+ (UIImage *)imageForBBSId:(NSString *)bbsId;
+                      showWidth:(CGFloat)show_Width;
 
 #pragma mark - 动画
 
