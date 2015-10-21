@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1324B6971BD7329700FB47A9 /* LQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6961BD7329700FB47A9 /* LQuestionView.m */; settings = {ASSET_TAGS = (); }; };
 		1324B6991BD7485500FB47A9 /* age.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1324B6981BD7485500FB47A9 /* age.jpg */; settings = {ASSET_TAGS = (); }; };
 		1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B69E1BD7499900FB47A9 /* RootViewController.m */; settings = {ASSET_TAGS = (); }; };
 		1324B6A31BD7671E00FB47A9 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A21BD7671E00FB47A9 /* HomeViewController.m */; settings = {ASSET_TAGS = (); }; };
 		1324B6A71BD76B6A00FB47A9 /* PersonalCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */; settings = {ASSET_TAGS = (); }; };
+		1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */; settings = {ASSET_TAGS = (); }; };
 		1391FC641BBBB112005E06A8 /* YJYRequstManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1391FC621BBBB112005E06A8 /* YJYRequstManager.m */; settings = {ASSET_TAGS = (); }; };
 		13F1F2671BBA78ED00885D31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2661BBA78ED00885D31 /* main.m */; };
 		13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2691BBA78ED00885D31 /* AppDelegate.m */; };
@@ -86,8 +86,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1324B6951BD7329700FB47A9 /* LQuestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQuestionView.h; sourceTree = "<group>"; };
-		1324B6961BD7329700FB47A9 /* LQuestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQuestionView.m; sourceTree = "<group>"; };
 		1324B6981BD7485500FB47A9 /* age.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = age.jpg; sourceTree = "<group>"; };
 		1324B69D1BD7499900FB47A9 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		1324B69E1BD7499900FB47A9 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
@@ -95,6 +93,8 @@
 		1324B6A21BD7671E00FB47A9 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		1324B6A51BD76B6A00FB47A9 /* PersonalCustomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalCustomViewController.h; sourceTree = "<group>"; };
 		1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCustomViewController.m; sourceTree = "<group>"; };
+		1324B6A91BD76DEF00FB47A9 /* LQuestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQuestionView.h; sourceTree = "<group>"; };
+		1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQuestionView.m; sourceTree = "<group>"; };
 		1391FC611BBBB112005E06A8 /* YJYRequstManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJYRequstManager.h; sourceTree = "<group>"; };
 		1391FC621BBBB112005E06A8 /* YJYRequstManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJYRequstManager.m; sourceTree = "<group>"; };
 		13F1F2621BBA78ED00885D31 /* TiJian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TiJian.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -302,15 +302,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1324B6941BD7327000FB47A9 /* CustomViews */ = {
-			isa = PBXGroup;
-			children = (
-				1324B6951BD7329700FB47A9 /* LQuestionView.h */,
-				1324B6961BD7329700FB47A9 /* LQuestionView.m */,
-			);
-			path = CustomViews;
-			sourceTree = "<group>";
-		};
 		1324B6A01BD766E600FB47A9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -328,6 +319,15 @@
 				1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */,
 			);
 			path = "个人定制";
+			sourceTree = "<group>";
+		};
+		1324B6A81BD76DEF00FB47A9 /* CommonViews */ = {
+			isa = PBXGroup;
+			children = (
+				1324B6A91BD76DEF00FB47A9 /* LQuestionView.h */,
+				1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */,
+			);
+			path = CommonViews;
 			sourceTree = "<group>";
 		};
 		1391FC5E1BBBB112005E06A8 /* Requests */ = {
@@ -364,6 +364,7 @@
 		13F1F2641BBA78ED00885D31 /* TiJian */ = {
 			isa = PBXGroup;
 			children = (
+				1324B6A81BD76DEF00FB47A9 /* CommonViews */,
 				13F1F2981BBA99B800885D31 /* PrefixHeader.pch */,
 				1391FC5E1BBBB112005E06A8 /* Requests */,
 				13F1F2A01BBA9A4B00885D31 /* HelpTools */,
@@ -428,7 +429,6 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
-				1324B6941BD7327000FB47A9 /* CustomViews */,
 				13F1F3F01BBA9C2500885D31 /* BaseClass */,
 				13F1F2A11BBA9A4B00885D31 /* Categories */,
 				13F1F2BA1BBA9A4B00885D31 /* EGORefresh */,
@@ -940,10 +940,10 @@
 				13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */,
 				13F1F4021BBA9D5500885D31 /* RefreshHeaderView.m in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
-				1324B6971BD7329700FB47A9 /* LQuestionView.m in Sources */,
 				13F1F39C1BBA9A4B00885D31 /* UIImageView+Extensions.m in Sources */,
 				13F1F3F81BBA9C2500885D31 /* MyViewController.m in Sources */,
 				1324B6A31BD7671E00FB47A9 /* HomeViewController.m in Sources */,
+				1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */,
 				13F1F4051BBA9EC800885D31 /* UIView+Frame.m in Sources */,
 				1391FC641BBBB112005E06A8 /* YJYRequstManager.m in Sources */,
 				13F1F3C21BBA9A4B00885D31 /* LTools.m in Sources */,
