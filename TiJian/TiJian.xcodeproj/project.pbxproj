@@ -66,9 +66,6 @@
 		13F1F4051BBA9EC800885D31 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4041BBA9EC800885D31 /* UIView+Frame.m */; settings = {ASSET_TAGS = (); }; };
 		13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4071BBA9F6B00885D31 /* RefreshTableView.m */; settings = {ASSET_TAGS = (); }; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
-		E3E341DB1BD794B30042B11A /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E341D61BD794B30042B11A /* GmoveImv.m */; settings = {ASSET_TAGS = (); }; };
-		E3E341DC1BD794B30042B11A /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E341D81BD794B30042B11A /* GTouchMoveView.m */; settings = {ASSET_TAGS = (); }; };
-		E3E341DD1BD794B30042B11A /* UILabel+GautoMatchedText.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E341DA1BD794B30042B11A /* UILabel+GautoMatchedText.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -267,12 +264,6 @@
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		E3E341D51BD794B30042B11A /* GmoveImv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmoveImv.h; sourceTree = "<group>"; };
-		E3E341D61BD794B30042B11A /* GmoveImv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GmoveImv.m; sourceTree = "<group>"; };
-		E3E341D71BD794B30042B11A /* GTouchMoveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTouchMoveView.h; sourceTree = "<group>"; };
-		E3E341D81BD794B30042B11A /* GTouchMoveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTouchMoveView.m; sourceTree = "<group>"; };
-		E3E341D91BD794B30042B11A /* UILabel+GautoMatchedText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+GautoMatchedText.h"; sourceTree = "<group>"; };
-		E3E341DA1BD794B30042B11A /* UILabel+GautoMatchedText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+GautoMatchedText.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -438,7 +429,6 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
-				E3E341D41BD794B30042B11A /* GTouchMoveView */,
 				13F1F3F01BBA9C2500885D31 /* BaseClass */,
 				13F1F2A11BBA9A4B00885D31 /* Categories */,
 				13F1F2BA1BBA9A4B00885D31 /* EGORefresh */,
@@ -743,19 +733,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E3E341D41BD794B30042B11A /* GTouchMoveView */ = {
-			isa = PBXGroup;
-			children = (
-				E3E341D51BD794B30042B11A /* GmoveImv.h */,
-				E3E341D61BD794B30042B11A /* GmoveImv.m */,
-				E3E341D71BD794B30042B11A /* GTouchMoveView.h */,
-				E3E341D81BD794B30042B11A /* GTouchMoveView.m */,
-				E3E341D91BD794B30042B11A /* UILabel+GautoMatchedText.h */,
-				E3E341DA1BD794B30042B11A /* UILabel+GautoMatchedText.m */,
-			);
-			path = GTouchMoveView;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -969,12 +946,9 @@
 				1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */,
 				13F1F4051BBA9EC800885D31 /* UIView+Frame.m in Sources */,
 				1391FC641BBBB112005E06A8 /* YJYRequstManager.m in Sources */,
-				E3E341DB1BD794B30042B11A /* GmoveImv.m in Sources */,
-				E3E341DC1BD794B30042B11A /* GTouchMoveView.m in Sources */,
 				13F1F3C21BBA9A4B00885D31 /* LTools.m in Sources */,
 				13F1F39E1BBA9A4B00885D31 /* UIView+Additions.m in Sources */,
 				13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */,
-				E3E341DD1BD794B30042B11A /* UILabel+GautoMatchedText.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,
 				13F1F39F1BBA9A4B00885D31 /* UIViewController+Addtions.m in Sources */,
