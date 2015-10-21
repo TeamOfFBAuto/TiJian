@@ -26,6 +26,7 @@ PODS:
   - FMDB/standard (2.5):
     - FMDB/common
   - JSONKit (1.5pre)
+  - Masonry (0.6.3)
   - MBProgressHUD (0.9.1)
   - Reachability (3.1.1)
   - RongCloudIMKit (2.2.11)
@@ -38,6 +39,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.3.1)
   - FMDB (~> 2.5)
   - JSONKit (~> 1.5pre)
+  - Masonry (~> 0.6.3)
   - MBProgressHUD (~> 0.8)
   - Reachability (~> 3.1.1)
   - RongCloudIMKit (~> 2.2.2)
@@ -48,6 +50,7 @@ SPEC CHECKSUMS:
   AFNetworking: 05b9f6e3aa5ac45bc383b4bb108ef338080a26c7
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
   JSONKit: bae313ce6a6c444f40489a6c0b023f399888871f
+  Masonry: ff105a956abcd19a618b2028b121cb638d7a8e2f
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   Reachability: dd9aa4fb6667b9f787690a74f53cb7634ce99893
   RongCloudIMKit: 9268043d0b4cdc5fd39a23d43d7115a3f913c6e7
