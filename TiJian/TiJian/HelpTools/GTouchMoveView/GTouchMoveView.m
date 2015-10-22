@@ -105,7 +105,7 @@
     
     
     int switchValue = [self valueSwitch:chooseValue];
-    if (_titleTextWidth>=(chooseValue-_moveImv.frame.size.width*0.5)) {
+    if (_titleTextWidth>=(chooseValue-_moveImv.frame.size.width + 6)) {
         NSLog(@"消失");
         _titelLabel.textAlignment = NSTextAlignmentRight;
     }else{
@@ -129,6 +129,7 @@
     CGFloat aa = (_theRangeHigh - _theRangeLow);
     CGFloat aaa = a * aa;
     int switchValue = (int)aaa;
+    switchValue += _theRangeLow;
     return switchValue;
 }
 
@@ -142,7 +143,7 @@
     }
     
     //值的范围比例
-    CGFloat aa = a/(_theRangeHigh - _theRangeLow);
+    CGFloat aa = (a-_theRangeLow)/(_theRangeHigh - _theRangeLow);
     
     //滑块的中间x
     CGFloat aaa = (_theFrame.size.width-25) *aa;
