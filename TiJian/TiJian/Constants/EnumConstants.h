@@ -25,6 +25,15 @@ typedef enum{
     Gender_Boy
 }Gender;
 
+//个人定制 问题的类型
+typedef enum{
+    QUESTIONTYPE_SEX = 1,//性别问题
+    QUESTIONTYPE_AGE ,//年龄问题
+    QUESTIONTYPE_HEIHGT ,//身高问题
+    QUESTIONTYPE_WEIGHT ,//体重问题
+    QUESTIONTYPE_OTHER //其他问题
+}QUESTIONTYPE;
+
 //注册类型，1=》手机注册 2=》邮箱注册，默认为手机注册
 typedef enum{
     Register_Phone = 1,

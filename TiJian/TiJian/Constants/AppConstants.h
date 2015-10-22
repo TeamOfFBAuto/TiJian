@@ -31,6 +31,8 @@
 
 #define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 
+#define FitScreen(a) (iPhone6PLUS ? a * 1.2 : a) //适配6 PLUS 放大1.2倍
+
 //根视图
 #define ROOTVIEWCONTROLLER (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController
 

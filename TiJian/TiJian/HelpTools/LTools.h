@@ -202,6 +202,16 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (CGFloat)fitHeight:(CGFloat)aHeight;
 
 /**
+ *  根据6的宽度等比例适配size
+ */
++ (CGSize)fitWidthForSize:(CGSize)size;
+
+/**
+ *  根据6的高度等比例适配size
+ */
++ (CGSize)fitHeightForSize:(CGSize)size;
+
+/**
  *  根据color id获取优惠劵背景图
  *
  *  @param color color 的id

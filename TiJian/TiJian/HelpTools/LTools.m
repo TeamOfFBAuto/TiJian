@@ -797,6 +797,24 @@
 }
 
 /**
+ *  根据6的宽度等比例适配size
+ */
++ (CGSize)fitWidthForSize:(CGSize)size
+{
+    CGFloat radio = DEVICE_WIDTH / 375.f;
+    return CGSizeMake(size.width * radio, size.height * radio);
+}
+
+/**
+ *  根据6的高度等比例适配size
+ */
++ (CGSize)fitHeightForSize:(CGSize)size
+{
+    CGFloat radio = DEVICE_HEIGHT / 667;
+    return CGSizeMake(size.width * radio, size.height * radio);
+}
+
+/**
  *  根据color id获取优惠劵背景图
  *
  *  @param color color 的id
