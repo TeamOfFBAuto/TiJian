@@ -93,9 +93,20 @@
 }
 
 
+-(void)setTheValue:(NSString *)theValue
+{
+    _theValue = theValue;
+    
+    //监测值得变化
+    if (_valueBlock) {
+        
+        _valueBlock(theValue);
+    }
+    
+}
 
 -(void)theValue:(CGFloat)chooseValue{
-    NSLog(@"--->%.2f",chooseValue);
+//    NSLog(@"--->%.2f",chooseValue);
     
     //调整数字Label的frame
     CGRect r = _progressNumLabel.frame;
@@ -106,19 +117,20 @@
     
     int switchValue = [self valueSwitch:chooseValue];
     if (_titleTextWidth>=(chooseValue-_moveImv.frame.size.width + 6)) {
-        NSLog(@"消失");
+//        NSLog(@"消失");
         _titelLabel.textAlignment = NSTextAlignmentRight;
     }else{
         _titelLabel.textAlignment = NSTextAlignmentLeft;
-        NSLog(@"出现");
+//        NSLog(@"出现");
     }
-    
-   
-    
     
     _progressNumLabel.text = [NSString stringWithFormat:@"%d",switchValue];
     self.theValue = _progressNumLabel.text;
-    
+}
+
+-(void)setValueBlock:(VALUEBLOCK)valueBlock
+{
+    _valueBlock = valueBlock;
 }
 
 

@@ -92,6 +92,8 @@
 		1324B74A1BD7742F00FB47A9 /* left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1324B6FB1BD7742F00FB47A9 /* left@2x.png */; settings = {ASSET_TAGS = (); }; };
 		1324B74B1BD7742F00FB47A9 /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1324B6FC1BD7742F00FB47A9 /* right@2x.png */; settings = {ASSET_TAGS = (); }; };
 		1391FC641BBBB112005E06A8 /* YJYRequstManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1391FC621BBBB112005E06A8 /* YJYRequstManager.m */; settings = {ASSET_TAGS = (); }; };
+		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; settings = {ASSET_TAGS = (); }; };
+		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; settings = {ASSET_TAGS = (); }; };
 		13F1F2671BBA78ED00885D31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2661BBA78ED00885D31 /* main.m */; };
 		13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2691BBA78ED00885D31 /* AppDelegate.m */; };
 		13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F26C1BBA78ED00885D31 /* ViewController.m */; };
@@ -258,6 +260,10 @@
 		1324B6FC1BD7742F00FB47A9 /* right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right@2x.png"; sourceTree = "<group>"; };
 		1391FC611BBBB112005E06A8 /* YJYRequstManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJYRequstManager.h; sourceTree = "<group>"; };
 		1391FC621BBBB112005E06A8 /* YJYRequstManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJYRequstManager.m; sourceTree = "<group>"; };
+		13CCAF661BD8DC6400BF9AA8 /* BaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseModel.h; sourceTree = "<group>"; };
+		13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseModel.m; sourceTree = "<group>"; };
+		13CCAF6A1BD8DCB100BF9AA8 /* QuestionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionModel.h; sourceTree = "<group>"; };
+		13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionModel.m; sourceTree = "<group>"; };
 		13F1F2621BBA78ED00885D31 /* TiJian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TiJian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13F1F2661BBA78ED00885D31 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		13F1F2681BBA78ED00885D31 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -600,6 +606,15 @@
 			path = Requests;
 			sourceTree = "<group>";
 		};
+		13CCAF691BD8DC7C00BF9AA8 /* CommonModels */ = {
+			isa = PBXGroup;
+			children = (
+				13CCAF6A1BD8DCB100BF9AA8 /* QuestionModel.h */,
+				13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */,
+			);
+			path = CommonModels;
+			sourceTree = "<group>";
+		};
 		13F1F2591BBA78ED00885D31 = {
 			isa = PBXGroup;
 			children = (
@@ -632,11 +647,12 @@
 				13F1F30E1BBA9A4B00885D31 /* ThirdClass */,
 				13F1F2991BBA99CE00885D31 /* Constants */,
 				1324B6A81BD76DEF00FB47A9 /* CommonViews */,
+				13CCAF691BD8DC7C00BF9AA8 /* CommonModels */,
 				1324B6A01BD766E600FB47A9 /* ViewControllers */,
-				13F1F2681BBA78ED00885D31 /* AppDelegate.h */,
-				13F1F2691BBA78ED00885D31 /* AppDelegate.m */,
 				13F1F26B1BBA78ED00885D31 /* ViewController.h */,
 				13F1F26C1BBA78ED00885D31 /* ViewController.m */,
+				13F1F2681BBA78ED00885D31 /* AppDelegate.h */,
+				13F1F2691BBA78ED00885D31 /* AppDelegate.m */,
 				1324B69D1BD7499900FB47A9 /* RootViewController.h */,
 				1324B69E1BD7499900FB47A9 /* RootViewController.m */,
 				1324B6981BD7485500FB47A9 /* age.jpg */,
@@ -971,6 +987,8 @@
 		13F1F3F01BBA9C2500885D31 /* BaseClass */ = {
 			isa = PBXGroup;
 			children = (
+				13CCAF661BD8DC6400BF9AA8 /* BaseModel.h */,
+				13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */,
 				13F1F3F11BBA9C2500885D31 /* LNavigationController.h */,
 				13F1F3F21BBA9C2500885D31 /* LNavigationController.m */,
 				13F1F3F31BBA9C2500885D31 /* MyViewController.h */,
@@ -1292,6 +1310,7 @@
 				13F1F3991BBA9A4B00885D31 /* NSDate+Additons.m in Sources */,
 				13F1F39B1BBA9A4B00885D31 /* UIButton+Additions.m in Sources */,
 				13F1F3F71BBA9C2500885D31 /* LNavigationController.m in Sources */,
+				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,
 				13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */,
 				13F1F4021BBA9D5500885D31 /* RefreshHeaderView.m in Sources */,
 				E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */,
@@ -1299,6 +1318,7 @@
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
 				E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */,
 				13F1F39C1BBA9A4B00885D31 /* UIImageView+Extensions.m in Sources */,
+				13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */,
 				13F1F3F81BBA9C2500885D31 /* MyViewController.m in Sources */,
 				1324B6A31BD7671E00FB47A9 /* HomeViewController.m in Sources */,
 				1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */,

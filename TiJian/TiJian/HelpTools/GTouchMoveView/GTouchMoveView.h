@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "GmoveImv.h"
 
+typedef void(^VALUEBLOCK)(NSString *value);
+
 @interface GTouchMoveView : UIView<GmoveImvDelegate>
 
-
-
 @property(nonatomic,strong)NSString *theValue;//值
+@property(nonatomic,copy)VALUEBLOCK valueBlock;
 
 /**
  *  初始化方法

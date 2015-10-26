@@ -74,7 +74,7 @@
     //移动view
     self.center = newcenter;
     
-    NSLog(@"GmoveImv x = %f  y = %f",self.center.x,self.center.y);
+//    NSLog(@"GmoveImv x = %f  y = %f",self.center.x,self.center.y);
     
     if (self && [self.delegate respondsToSelector:@selector(theValue:)]) {
         [self.delegate theValue:self.center.x];
