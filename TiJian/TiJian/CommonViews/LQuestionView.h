@@ -17,7 +17,7 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
 /**
  *  初始化问题view 根据答案个数来区分页面样式
  *
- *  @param frame
+ *  @param mulSelect  是否是多选
  *  @param answerImages 答案对应images
  *  @param initNum      初始化答案 等于0时为没有初始化答案,答案从1开始
  *  @param quesitonId   问题id
@@ -29,7 +29,8 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
                               quesitonId:(NSString *)questionId
                            questionTitle:(NSString *)questionTitle
                                  initNum:(int)initNum
-                             resultBlock:(RESULTBLOCK)aBlock;
+                             resultBlock:(RESULTBLOCK)aBlock
+                               mulSelect:(BOOL)mulSelect;
 
 /**
  *  创建年龄view

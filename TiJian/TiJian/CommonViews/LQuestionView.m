@@ -10,6 +10,11 @@
 #import "GTouchMoveView.h"
 
 @interface LQuestionView () //延展 需要在原始类中实现
+{
+    BOOL _mulSelect;//是否是多选
+    int _answerNum;//答案个数
+    int _questionId;//问题id
+}
 
 @property(copy,nonatomic)RESULTBLOCK resultBlock;
 
@@ -20,7 +25,7 @@
 /**
  *  初始化问题view 根据答案个数来区分页面样式
  *
- *  @param frame
+ *  @param mulSelect  是否是多选
  *  @param answerImages 答案对应images
  *  @param initNum      初始化答案 等于0时为没有初始化答案,答案从1开始
  *  @param quesitonId   问题id
@@ -33,12 +38,17 @@
                            questionTitle:(NSString *)questionTitle
                                  initNum:(int)initNum
                              resultBlock:(RESULTBLOCK)aBlock
+                               mulSelect:(BOOL)mulSelect
 {
     self = [super initWithFrame:frame];
     self.backgroundColor = [UIColor whiteColor];
     
     if (self) {
         
+        self.resultBlock = aBlock;
+        _mulSelect = mulSelect;//是否是多选
+        _answerNum = (int)answerImages.count;//答案个数
+        _questionId = [questionId intValue];//记录问题id
         //head
         UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 64)];
         [self addSubview:navigationView];
@@ -61,7 +71,7 @@
         
         for (int i = 0; i < count; i ++) {
             
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            PropertyButton *btn = [PropertyButton buttonWithType:UIButtonTypeCustom];
             [btn setBackgroundImage:answerImages[i] forState:UIControlStateNormal];
             [self addSubview:btn];
             [btn addTarget:self action:@selector(clickToSelectAnswer:) forControlEvents:UIControlEventTouchUpInside];
@@ -156,6 +166,24 @@
             }
             
             btn.frame = CGRectMake(left, top_view, width, height);
+            
+            //加选择按钮
+            UIButton *selectedButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [selectedButton setImage:[UIImage imageNamed:@"duihao"] forState:UIControlStateNormal];
+            [btn addSubview:selectedButton];
+            selectedButton.frame = CGRectMake(btn.width - 23 - 5, btn.height - 23 - 5, 23, 23);
+            btn.selectedButton = selectedButton;
+            
+            if (count == 3) {
+                
+                if (i % 2 == 0) {
+                    
+                    selectedButton.left -= (23 + 5);
+                }
+            }
+            
+            //默认为未选择状态
+            btn.selectedState = NO;
 
         }
     }
@@ -325,8 +353,33 @@
  *
  *  @param sender
  */
-- (void)clickToSelectAnswer:(UIButton *)sender
+- (void)clickToSelectAnswer:(PropertyButton *)sender
 {
+    sender.selectedState = !sender.selectedState;
+    //根据tag 取问题id
+    
+    //多选
+    if (_mulSelect) {
+        return; //多选情况下不进行一下代码
+    }
+    
+    for (int i = 0 ; i < _answerNum; i ++) {
+        
+        int tag = _questionId * 100 + i;
+        if (tag != sender.tag) {
+            
+            PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+            btn.selectedState = NO;
+        }
+    }
+    
+    int value = (int)sender.tag - _questionId * 100 + 1;//代表答案第几个,从1开始
+    
+    //单选时 自动跳转下个页面
+    
+    if (self.resultBlock) {
+        self.resultBlock(QUESTIONTYPE_OTHER,self,@{@"result":[NSNumber numberWithInt:value]});
+    }
     
 }
 
