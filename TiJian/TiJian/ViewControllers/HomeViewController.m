@@ -8,6 +8,7 @@
 
 #import "HomeViewController.h"
 #import "PersonalCustomViewController.h"
+#import "GStoreHomeViewController.h"
 
 @interface HomeViewController ()
 
@@ -29,7 +30,33 @@
         make.left.equalTo(self.view).offset(100);
         make.size.mas_equalTo(CGSizeMake(100, 50));
     }];
+    
+    
+    
+    
+    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn1 setTitle:@"商城" forState:UIControlStateNormal];
+    btn1.backgroundColor = [UIColor orangeColor];
+    [btn1 addTarget:self action:@selector(shangcheng) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn1];
+    [btn1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(100);
+        make.left.equalTo(self.view).offset(100);
+        make.size.mas_equalTo(CGSizeMake(100, 50));
+    }];
+    
+    
+    
 }
+
+-(void)shangcheng{
+    GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];
+    cc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
