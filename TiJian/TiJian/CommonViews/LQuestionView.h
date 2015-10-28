@@ -69,5 +69,12 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
                                initNum:(int)initNum
                            resultBlock:(RESULTBLOCK)aBlock;
 
+/**
+ *  设置滑动条初始值
+ *
+ *  @param initValue 初始值
+ */
+- (void)setInitValue:(NSString *)initValue;
+
 
 @end

@@ -94,6 +94,8 @@
 		1324B74A1BD7742F00FB47A9 /* left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1324B6FB1BD7742F00FB47A9 /* left@2x.png */; settings = {ASSET_TAGS = (); }; };
 		1324B74B1BD7742F00FB47A9 /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1324B6FC1BD7742F00FB47A9 /* right@2x.png */; settings = {ASSET_TAGS = (); }; };
 		1391FC641BBBB112005E06A8 /* YJYRequstManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1391FC621BBBB112005E06A8 /* YJYRequstManager.m */; settings = {ASSET_TAGS = (); }; };
+		1393328C1BE0B31A00B4628B /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1393328B1BE0B31A00B4628B /* DBManager.m */; settings = {ASSET_TAGS = (); }; };
+		1393328E1BE0B3DB00B4628B /* hema.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 1393328D1BE0B3DB00B4628B /* hema.sqlite */; settings = {ASSET_TAGS = (); }; };
 		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; settings = {ASSET_TAGS = (); }; };
 		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; settings = {ASSET_TAGS = (); }; };
 		13F1F2671BBA78ED00885D31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2661BBA78ED00885D31 /* main.m */; };
@@ -265,6 +267,9 @@
 		1324B6FC1BD7742F00FB47A9 /* right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right@2x.png"; sourceTree = "<group>"; };
 		1391FC611BBBB112005E06A8 /* YJYRequstManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJYRequstManager.h; sourceTree = "<group>"; };
 		1391FC621BBBB112005E06A8 /* YJYRequstManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJYRequstManager.m; sourceTree = "<group>"; };
+		1393328A1BE0B31A00B4628B /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
+		1393328B1BE0B31A00B4628B /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
+		1393328D1BE0B3DB00B4628B /* hema.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = hema.sqlite; sourceTree = "<group>"; };
 		13CCAF661BD8DC6400BF9AA8 /* BaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseModel.h; sourceTree = "<group>"; };
 		13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseModel.m; sourceTree = "<group>"; };
 		13CCAF6A1BD8DCB100BF9AA8 /* QuestionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionModel.h; sourceTree = "<group>"; };
@@ -608,6 +613,9 @@
 		1391FC5E1BBBB112005E06A8 /* Requests */ = {
 			isa = PBXGroup;
 			children = (
+				1393328D1BE0B3DB00B4628B /* hema.sqlite */,
+				1393328A1BE0B31A00B4628B /* DBManager.h */,
+				1393328B1BE0B31A00B4628B /* DBManager.m */,
 				1391FC611BBBB112005E06A8 /* YJYRequstManager.h */,
 				1391FC621BBBB112005E06A8 /* YJYRequstManager.m */,
 			);
@@ -1192,6 +1200,7 @@
 				1324B7481BD7742F00FB47A9 /* 9_2@2x.png in Resources */,
 				1324B7101BD7742F00FB47A9 /* 19_4@2x.png in Resources */,
 				1324B7001BD7742F00FB47A9 /* 11_2@2x.png in Resources */,
+				1393328E1BE0B3DB00B4628B /* hema.sqlite in Resources */,
 				13F1F3E01BBA9A4B00885D31 /* UMSCommentDetailController.xib in Resources */,
 				1324B7351BD7742F00FB47A9 /* 2_w_3@2x.png in Resources */,
 				1324B7131BD7742F00FB47A9 /* 1_3_girl@2x.png in Resources */,
@@ -1342,6 +1351,7 @@
 				13F1F3FE1BBA9C5E00885D31 /* UIColor+ConvertColor.m in Sources */,
 				1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
+				1393328C1BE0B31A00B4628B /* DBManager.m in Sources */,
 				13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */,
 				13F1F39D1BBA9A4B00885D31 /* UILabel+Additions.m in Sources */,
 				13F1F2671BBA78ED00885D31 /* main.m in Sources */,

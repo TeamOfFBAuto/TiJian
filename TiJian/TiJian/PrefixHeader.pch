@@ -38,7 +38,7 @@
 //#import "UMSocial.h"//友盟
 //#import "SVProgressHUD.h"//浮层提示框
 //#import "UIImageView+WebCache.h"
-//#import "FMDB.h" //数据库三方类
+#import "FMDB.h" //数据库三方类
 //
 ////umeng相关
 //#import "MobClick.h"

@@ -15,6 +15,10 @@
 #define Q_HEIGHT @"height" //身高
 #define Q_SEX @"sex" //性别
 
+#define kCurrentTag 1000
+#define kNextTag 1001
+#define kLastTag 1002
+
 @interface PersonalCustomViewController ()
 {
     UIView *_view_sex;//性别选择
@@ -31,6 +35,7 @@
     Gender _selectedGender;//记录选择的性别
     NSMutableDictionary *_questionDictionary;//记录问题信息
     
+    int _questionId;//当前问题id
 }
 
 @end
@@ -48,17 +53,12 @@
     // Do any additional setup after loading the view.
     
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    _scroll = [[UIScrollView alloc]init];
-    _scroll.scrollEnabled = NO;
-    [self.view addSubview:_scroll];
-    [_scroll mas_makeConstraints:^(MASConstraintMaker *make) {
-       
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
-    }];
     
     _questionDictionary = [NSMutableDictionary dictionary];
-    [self prepareSexView];
     
+    //性别
+    _view_sex = [self createSexViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+    [self.view addSubview:_view_sex];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -67,21 +67,18 @@
 }
 
 #pragma - mark 视图创建
-
 /**
- *  性别选择视图
+ *  创建性别选择页面
+ *
+ *  @param frame
+ *
+ *  @return
  */
-- (void)prepareSexView
+- (UIView *)createSexViewWithFrame:(CGRect)frame
 {
     //选择性别
-    _view_sex = [[UIView alloc]init];
-    _view_sex.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:_view_sex];
-    [_view_sex mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
-    }];
-    
-    _currentView = _view_sex;
+    UIView *view_sex = [[UIView alloc]initWithFrame:frame];
+    view_sex.backgroundColor = [UIColor whiteColor];
     
     UIImage *bgImage = [UIImage imageNamed:@"1_1_bg"];
     CGFloat width = bgImage.size.width;
@@ -89,8 +86,8 @@
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, [LTools fitHeight:85], FitScreen(width), FitScreen(height))];
     imageView.image = bgImage;
-    imageView.centerX = self.view.centerX;
-    [_view_sex addSubview:imageView];
+    imageView.centerX = view_sex.centerX;
+    [view_sex addSubview:imageView];
     
     //选项
     UIImage *boyImage = [UIImage imageNamed:@"1_2_boy"];
@@ -116,11 +113,13 @@
             [btn setImage:girlImage forState:UIControlStateNormal];
         }
         btn.tag = 100 + i;//100 为男 101 为女
-        [_view_sex addSubview:btn];
+        [view_sex addSubview:btn];
         [btn addTarget:self action:@selector(clickToSelectSex:) forControlEvents:UIControlEventTouchUpInside];
         btn.frame = CGRectMake(aWidth + (imageWidth + aWidth) * i, [LTools fitHeight:50] + imageView.bottom, imageWidth, imageHeight);
-
+        
     }
+
+    return view_sex;
 }
 
 - (void)prepareBottom
@@ -182,58 +181,24 @@
     
     [_questionDictionary setObject:result[@"result"] forKey:key];
     
+    NSLog(@"---%@",_questionDictionary);
+    
 }
 
 - (void)clickToSelectSex:(UIButton *)sender
 {
-    //test
-//    NSArray *images = @[[UIImage imageNamed:@"5_1"],
-//                        [UIImage imageNamed:@"5_2"]];
-    
-    NSArray *images = @[[UIImage imageNamed:@"9_1"],
-                        [UIImage imageNamed:@"9_2"],
-                        [UIImage imageNamed:@"9_3"]];
-    
-//    NSArray *images = @[[UIImage imageNamed:@"17_1"],
-//                        [UIImage imageNamed:@"17_2"],
-//                        [UIImage imageNamed:@"17_3"],
-//                        [UIImage imageNamed:@"17_4"]];
-    
-//    NSArray *images = @[[UIImage imageNamed:@"27_1"],
-//                        [UIImage imageNamed:@"27_2"],
-//                        [UIImage imageNamed:@"27_3"],
-//                        [UIImage imageNamed:@"27_4"],
-//                        [UIImage imageNamed:@"27_5"]];
-    
-    LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images quesitonId:@"5" questionTitle:@"吸烟是否≥15支/日？" initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
-        
-    } mulSelect:YES];
-    [self.view addSubview:quetionView];
-    
-    [self prepareBottom];
-    
-    return;
-    
     
     int tag = (int)sender.tag - 100;
-    
     _selectedGender = tag == 1 ? Gender_Girl : Gender_Boy;//记录选择性别
     
     [self updateQuestionType:QUESTIONTYPE_SEX result:@{@"result":[NSNumber numberWithInt:tag]}];
-
-    __weak typeof(self)weakSelf = self;
-    //年龄view
-    _view_Age = [[LQuestionView alloc]initAgeViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:tag == 1 ? Gender_Girl : Gender_Boy initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
-        
-        [weakSelf updateQuestionType:type result:result];
-    }];
-    [self.view addSubview:_view_Age];
-    _view_Age.backgroundColor = [UIColor whiteColor];
-    _currentView = _view_Age;
     
+    UIView *currentView = _view_sex;
+    UIView *toView = [self configItemWithQuestionId:2 forward:YES];//下一个问题id 2 年龄
+    [self swapView:currentView ToView:toView forward:YES];
     [self prepareBottom];
-    
 }
+
 
 /**
  *  返回上一步
@@ -242,7 +207,59 @@
  */
 - (void)clickToLast:(UIButton *)sender
 {
-//    [self swapView:_view_sex toView:_view_Age back:YES];
+//    __weak typeof(self)weakSelf = self;
+    
+    if (_questionId == 2) { //年龄
+        
+        //跳性别
+        UIView *currentView = _view_Age;
+        UIView *toView = [self configItemWithQuestionId:1 forward:NO];
+        [self swapView:currentView ToView:toView forward:NO];
+        
+    }else if (_questionId == 3) //身高
+    {
+        //跳年龄
+        UIView *currentView = _view_Height;
+        UIView *toView = [self configItemWithQuestionId:2 forward:NO];
+        [self swapView:currentView ToView:toView forward:NO];
+        
+    }else if (_questionId == 4) //体重
+    {
+        //跳身高
+        UIView *currentView = _view_Weight;
+        UIView *toView = [self configItemWithQuestionId:3 forward:NO];
+        [self swapView:currentView ToView:toView forward:NO];
+        
+    }else if (_questionId >= 5){
+        
+        //    //test
+        ////    NSArray *images = @[[UIImage imageNamed:@"5_1"],
+        ////                        [UIImage imageNamed:@"5_2"]];
+        //
+        //    NSArray *images = @[[UIImage imageNamed:@"9_1"],
+        //                        [UIImage imageNamed:@"9_2"],
+        //                        [UIImage imageNamed:@"9_3"]];
+        //
+        ////    NSArray *images = @[[UIImage imageNamed:@"17_1"],
+        ////                        [UIImage imageNamed:@"17_2"],
+        ////                        [UIImage imageNamed:@"17_3"],
+        ////                        [UIImage imageNamed:@"17_4"]];
+        //
+        ////    NSArray *images = @[[UIImage imageNamed:@"27_1"],
+        ////                        [UIImage imageNamed:@"27_2"],
+        ////                        [UIImage imageNamed:@"27_3"],
+        ////                        [UIImage imageNamed:@"27_4"],
+        ////                        [UIImage imageNamed:@"27_5"]];
+        //
+        //    LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images quesitonId:@"5" questionTitle:@"吸烟是否≥15支/日？" initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        //        
+        //    } mulSelect:YES];
+        //    [self.view addSubview:quetionView];
+        //    
+        //    [self prepareBottom];
+        //    
+        //    return;
+    }
 
 }
 
@@ -251,54 +268,37 @@
  *
  *  @param sender
  */
+
 - (void)clickToForward:(UIButton *)sender
 {
-    __weak typeof(self)weakSelf = self;
-    //当是年龄时，下一步为身高
-    if (_currentView == _view_Age) {
-        
-        //年龄view
-        _view_Height = [[LQuestionView alloc]initHeightViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
-            
-            [weakSelf updateQuestionType:type result:result];
-        }];
-        [self.view addSubview:_view_Height];
-        _view_Height.backgroundColor = [UIColor whiteColor];
-        _currentView = _view_Height;
-        
-        NSLog(@"_view_Height");
-        
-        return;
-    }
+//    __weak typeof(self)weakSelf = self;
     
-    //当是年龄时，下一步为体重
-    if (_currentView == _view_Height) {
+    if (_questionId == 2) { //年龄
         
-        //年龄view
-        _view_Weight = [[LQuestionView alloc]initWeightViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
-            [weakSelf updateQuestionType:type result:result];
-        }];
-        [self.view addSubview:_view_Weight];
-        _view_Weight.backgroundColor = [UIColor whiteColor];
-        _currentView = _view_Weight;
+        //跳身高
+        UIView *currentView = _view_Age;
+        UIView *toView = [self configItemWithQuestionId:3 forward:YES];
+        [self swapView:currentView ToView:toView forward:YES];
         
-        return;
-
-    }
-    
-    //当是体重时,需要计算BMI (weight（kg）/height(m)平方)
-    if (_currentView == _view_Weight) {
+    }else if (_questionId == 3) //身高
+    {
+        //跳身高
+        UIView *currentView = _view_Height;
+        UIView *toView = [self configItemWithQuestionId:4 forward:YES];
+        [self swapView:currentView ToView:toView forward:YES];
         
+    }else if (_questionId == 4) //体重
+    {
         CGFloat weight = [[_questionDictionary objectForKey:Q_WEIGHT] floatValue];
         CGFloat height = [[_questionDictionary objectForKey:Q_HEIGHT] floatValue];
-
+        
         CGFloat BMI = weight / powf(height * 0.01, 2);
         NSLog(@"result %@",_questionDictionary);
         NSLog(@"BMI : %.2f",BMI);
         
-//        19.5~24
-//        ＞24~27.9
-//        ≥28
+        //19.5~24
+        //＞24~27.9
+        //≥28
         
         if (BMI < 19.5) {
             
@@ -314,37 +314,176 @@
         {
             
         }
+        
     }
+}
+
+#pragma - mark 控制页面切换
+
+/**
+ *  更具问题id获取对应问题view
+ *
+ *  @param questionId 问题id
+ *  @param forward 是否是前进
+ *
+ *  @return view
+ */
+- (UIView *)configItemWithQuestionId:(NSInteger)questionId
+                             forward:(BOOL)forward
+{
+    
+    _questionId = (int)questionId;//记录当前问题id
+    
+    UIView *view = nil;
+    __weak typeof(self)weakSelf = self;
+
+    if (questionId == 1) {
+        
+        if (forward) {
+            [self prepareBottom];
+        }else
+        {
+            [_bottomView removeFromSuperview];
+            _bottomView = nil;
+        }
+        //性别
+        _view_sex = [self createSexViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+        [self.view addSubview:_view_sex];
+        view = _view_sex;
+        
+    }else if (questionId == 2){
+        //年龄
+        
+        //设置初始值
+        int age = [[_questionDictionary objectForKey:Q_AGE]intValue];
+        if (age > 0) {
+            [_view_Age setInitValue:NSStringFromInt(age)];
+        }
+        
+        Gender gender = [[_questionDictionary objectForKey:Q_SEX]intValue] == 1 ? Gender_Girl : Gender_Boy;
+        _view_Age = [[LQuestionView alloc]initAgeViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH :0,  0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:gender initNum:age resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+            
+            [weakSelf updateQuestionType:type result:result];
+        }];
+        _view_Age.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:_view_Age];
+        
+        
+        view = _view_Age;
+        
+    }else if (questionId == 3){
+        //身高
+        
+        //设置初始值
+        int height = [[_questionDictionary objectForKey:Q_HEIGHT]intValue];
+        if (height > 0) {
+            [_view_Age setInitValue:NSStringFromInt(height)];
+        }
+        _view_Height = [[LQuestionView alloc]initHeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:height resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+            
+            [weakSelf updateQuestionType:type result:result];
+        }];
+        _view_Height.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:_view_Height];
+        
+        view = _view_Height;
+        
+    }else if (questionId == 4){
+        //体重
+        
+        //设置初始值
+        int weight = [[_questionDictionary objectForKey:Q_WEIGHT]intValue];
+        if (weight > 0) {
+            [_view_Age setInitValue:NSStringFromInt(weight)];
+        }
+        _view_Weight = [[LQuestionView alloc]initWeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:weight resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+            [weakSelf updateQuestionType:type result:result];
+        }];
+        _view_Weight.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:_view_Weight];
+        
+        view = _view_Weight;
+        
+    }else if (questionId >= 5){
+        
+        //性别、年龄、身高、体重其他的问题
+        
+        //test
+        //    NSArray *images = @[[UIImage imageNamed:@"5_1"],
+        //                        [UIImage imageNamed:@"5_2"]];
+        
+        NSArray *images = @[[UIImage imageNamed:@"9_1"],
+                            [UIImage imageNamed:@"9_2"],
+                            [UIImage imageNamed:@"9_3"]];
+        
+        //    NSArray *images = @[[UIImage imageNamed:@"17_1"],
+        //                        [UIImage imageNamed:@"17_2"],
+        //                        [UIImage imageNamed:@"17_3"],
+        //                        [UIImage imageNamed:@"17_4"]];
+        
+        //    NSArray *images = @[[UIImage imageNamed:@"27_1"],
+        //                        [UIImage imageNamed:@"27_2"],
+        //                        [UIImage imageNamed:@"27_3"],
+        //                        [UIImage imageNamed:@"27_4"],
+        //                        [UIImage imageNamed:@"27_5"]];
+        
+        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images quesitonId:@"5" questionTitle:@"吸烟是否≥15支/日？" initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+            
+        } mulSelect:YES];
+        [self.view addSubview:quetionView];
+        
+        view = quetionView;
+                
+    }
+    
+
+    return view;
 }
 
 /**
- *  切换view
+ *  控制view的切换动画
  *
- *  @param oneView 目标view
- *  @param toView  切换至目标view
+ *  @param currentView 当前显示view
+ *  @param toView     下一个view
+ *  @param forward    是否是前进
  */
-- (void)swapView:(UIView *)oneView
-          toView:(UIView *)toView
-            back:(BOOL)back
+- (void)swapView:(UIView *)currentView
+          ToView:(UIView *)toView
+         forward:(BOOL)forward
 {
-    
-    
-    if (back) {
-        
-        oneView.left = 0.f;
-        toView.left = -DEVICE_WIDTH;
-        
+    __weak typeof(self)weakSelf = self;
+    //前进
+    if (forward) {
+        [self.view bringSubviewToFront:toView];
+        [UIView animateWithDuration:0.3 animations:^{
+           
+            toView.left = 0.f; //左移动
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [weakSelf removeView:currentView];
+            }
+        }];
     }else
     {
-        oneView.left = 0.f;
-        toView.left = DEVICE_WIDTH;
+        [self.view insertSubview:currentView aboveSubview:toView];
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            currentView.left = DEVICE_WIDTH; //右移动
+        } completion:^(BOOL finished) {
+            
+            if (finished) {
+                [weakSelf removeView:currentView];
+            }
+        }];
     }
-    [UIView animateWithDuration:0.5 animations:^{
-        
-        toView.left = 0.f;
-        
-    }];
-
 }
+
+- (void)removeView:(UIView *)view
+{
+    [view removeFromSuperview];
+    view = nil;
+}
+
 
 @end

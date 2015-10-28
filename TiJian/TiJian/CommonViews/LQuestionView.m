@@ -14,6 +14,7 @@
     BOOL _mulSelect;//是否是多选
     int _answerNum;//答案个数
     int _questionId;//问题id
+    GTouchMoveView *_moveView;
 }
 
 @property(copy,nonatomic)RESULTBLOCK resultBlock;
@@ -220,6 +221,12 @@
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"年龄/岁" rangeLow:0 rangeHigh:100 imageName:arrowImageName];
         [self addSubview:moveView];
         
+        _moveView = moveView;
+        
+        if (initNum > 0) {
+            [moveView setCustomValueWithStr:NSStringFromInt(initNum)];
+        }
+        
         if (aBlock) {
             aBlock(QUESTIONTYPE_AGE,self,@{@"result":moveView.theValue});
         }
@@ -279,6 +286,11 @@
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"身高/cm" rangeLow:90 rangeHigh:251 imageName:arrowImageName];
         [self addSubview:moveView];
         
+        _moveView = moveView;
+        
+        if (initNum > 0) {
+            [moveView setCustomValueWithStr:NSStringFromInt(initNum)];
+        }
         
         if (aBlock) {
             aBlock(QUESTIONTYPE_HEIHGT,self,@{@"result":moveView.theValue});
@@ -327,6 +339,12 @@
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"体重/kg" rangeLow:45 rangeHigh:300 imageName:arrowImageName];
         [self addSubview:moveView];
         
+        _moveView = moveView;
+        
+        if (initNum > 0) {
+            [moveView setCustomValueWithStr:NSStringFromInt(initNum)];
+        }
+        
         if (aBlock) {
             aBlock(QUESTIONTYPE_WEIGHT,self,@{@"result":moveView.theValue});
         }
@@ -342,6 +360,16 @@
     return self;
 }
 
+/**
+ *  设置滑动条初始值
+ *
+ *  @param initValue 初始值
+ */
+- (void)setInitValue:(NSString *)initValue
+{
+    initValue = NSStringFromInt([initValue intValue]);
+    [_moveView setCustomValueWithStr:initValue];
+}
 
 - (void)clickToSelectSex:(UIButton *)btn
 {

@@ -148,6 +148,8 @@
 
 -(void)setCustomValueWithStr:(NSString *)value{
     
+    self.theValue = value;
+    
     int a = [value intValue];
     
     if (a>_theRangeHigh || a<_theRangeLow) {
