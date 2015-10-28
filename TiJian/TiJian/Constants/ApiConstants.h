@@ -11,8 +11,35 @@
 #ifndef WJXC_ApiConstants_h
 #define WJXC_ApiConstants_h
 
-#define SERVER_URL @"http://123.57.51.27:85" //域名地址 正式
-//#define SERVER_URL @"http://182.92.106.193:85" //域名地址 测试
+//#define SERVER_URL @"http://123.57.51.27:85" //域名地址 正式
+#define SERVER_URL @"http://123.57.56.167:85" //域名地址 测试
+
+
+//商城首页轮播图
+#define StoreCycleAdv @"/index.php?d=jshop&c=adver&m=adver_list"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //添加商品评论
 #define ADD_PRODUCT_PINGLUN @"/index.php?d=api&c=products&m=add_comment"
