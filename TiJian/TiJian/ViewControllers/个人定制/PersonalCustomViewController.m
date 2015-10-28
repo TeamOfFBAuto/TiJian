@@ -190,24 +190,24 @@
 //    NSArray *images = @[[UIImage imageNamed:@"5_1"],
 //                        [UIImage imageNamed:@"5_2"]];
     
-//    NSArray *images = @[[UIImage imageNamed:@"9_1"],
-//                        [UIImage imageNamed:@"9_2"],
-//                        [UIImage imageNamed:@"9_3"]];
+    NSArray *images = @[[UIImage imageNamed:@"9_1"],
+                        [UIImage imageNamed:@"9_2"],
+                        [UIImage imageNamed:@"9_3"]];
     
 //    NSArray *images = @[[UIImage imageNamed:@"17_1"],
 //                        [UIImage imageNamed:@"17_2"],
 //                        [UIImage imageNamed:@"17_3"],
 //                        [UIImage imageNamed:@"17_4"]];
     
-    NSArray *images = @[[UIImage imageNamed:@"27_1"],
-                        [UIImage imageNamed:@"27_2"],
-                        [UIImage imageNamed:@"27_3"],
-                        [UIImage imageNamed:@"27_4"],
-                        [UIImage imageNamed:@"27_5"]];
+//    NSArray *images = @[[UIImage imageNamed:@"27_1"],
+//                        [UIImage imageNamed:@"27_2"],
+//                        [UIImage imageNamed:@"27_3"],
+//                        [UIImage imageNamed:@"27_4"],
+//                        [UIImage imageNamed:@"27_5"]];
     
     LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images quesitonId:@"5" questionTitle:@"吸烟是否≥15支/日？" initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
         
-    }];
+    } mulSelect:YES];
     [self.view addSubview:quetionView];
     
     [self prepareBottom];
