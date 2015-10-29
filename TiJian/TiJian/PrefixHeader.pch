@@ -23,9 +23,8 @@
 #import "LNavigationController.h"//滑动返回
 #import "CategoriesHeader.h"//用到类目
 #import "YJYRequstManager.h"//网络请求类
-//
-//#import "DBManager.h" //数据库操作
-//
+#import "DBManager.h" //数据库操作
+
 #import "RefreshTableView.h"
 #import "MBProgressHUD.h"
 #import "LTools.h"//工具类

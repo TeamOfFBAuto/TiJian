@@ -40,6 +40,8 @@
 
 #define W_H_RATIO 200/320  //宽高比
 
+#define BMI(weight,height) (weight / powf(height * 0.01, 2)) //计算BMI
+
 //错误提示信息 
 
 #define ALERT_ERRO_PHONE @"请输入有效手机号"

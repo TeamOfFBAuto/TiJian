@@ -65,6 +65,8 @@
         
         int count = (int)answerImages.count;
         
+        NSLog(@"answers count %d",count);
+        
         CGFloat width = 0.f;
         CGFloat height = 0.f;
         CGFloat left = 0.f;
@@ -411,5 +413,44 @@
     
 }
 
+/**
+ *  获取选项选择状态1和0的串
+ *
+ */
+- (NSString *)optionsSelectedState
+{
+    NSMutableString *answerString = [NSMutableString string];
+    for (int i = 0 ; i < _answerNum; i ++) {
+        
+        int tag = _questionId * 100 + i;
+        PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+        [answerString appendFormat:@"%d",btn.selectedState ? 1 : 0];
+    }
+    NSLog(@"answerString %@",answerString);
+    return answerString;
+}
+
+/**
+ *  是否可以进行下一个
+ *
+ *  @return YES or NO
+ */
+- (BOOL)enableForward
+{
+    if (_questionId <= 4) { //性别、年龄、身高、体重 是可以直接跳转的
+        return YES;
+    }
+    
+    for (int i = 0 ; i < _answerNum; i ++) {
+        int tag = _questionId * 100 + i;
+        PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+        if (btn.selectedState) {
+            
+            return YES;//只要有被选中得就可以跳转
+        }
+    }
+    
+    return NO;//没有被选择代表还没有选
+}
 
 @end

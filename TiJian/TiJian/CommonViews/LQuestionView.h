@@ -76,5 +76,17 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
  */
 - (void)setInitValue:(NSString *)initValue;
 
+/**
+ *  获取选项选择状态1和0的串
+ *
+ */
+- (NSString *)optionsSelectedState;
+
+/**
+ *  是否可以进行下一个
+ *
+ *  @return YES or NO
+ */
+- (BOOL)enableForward;
 
 @end

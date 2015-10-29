@@ -18,6 +18,15 @@
 + (id)shareInstance;
 
 /**
+ *  查询问题信息
+ *
+ *  @param questionId    问题id
+ *
+ *  @return QuestionModel对象
+ */
+- (id)queryQuestionById:(int)questionId;
+
+/**
  *  根据组合id查找对应所有问题id
  *
  *  @param groupId 组合id
@@ -32,15 +41,24 @@
 - (NSArray *)queryOptionsIdsByQuestionId:(int)groupId;
 
 /**
- *  查询下个组合id
+ *  查询下个组合id (正数为未结束、负数为结束、0为无对应的下个组合信息)
  *
  *  @param groupId      当前组合id
  *  @param answerString 当前组合下所有问题答案（1、0）的二进制串
  *
- *  @return
+ *  @return 下个组合id
  */
 - (int)queryNextGroupIdByGroupId:(int)groupId
                     answerString:(NSString *)answerString;
+
+/**
+ *  查询组合name
+ *
+ *  @param groupId    问题id
+ *
+ *  @return
+ */
+- (NSString *)queryGroupNameById:(int)groupId;
 
 ////２.查询数据
 //

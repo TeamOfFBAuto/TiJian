@@ -12,8 +12,9 @@
 #import "BaseModel.h"
 
 @interface QuestionModel : BaseModel
-@property(nonatomic,retain)NSString *questionId;
+@property(nonatomic,assign)int questionId;
+@property(nonatomic,retain)NSString *questionName;
+@property(nonatomic,assign)int type;//问题类型
 @property(nonatomic,retain)NSString *result;//是否结束end,或者下一组合
-//@property(nonatomic,retain)
 
 @end
