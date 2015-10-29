@@ -19,7 +19,7 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
  *
  *  @param mulSelect  是否是多选
  *  @param answerImages 答案对应images
- *  @param initNum      初始化答案 等于0时为没有初始化答案,答案从1开始
+ *  @param initAnswerString      初始化答案二进制串
  *  @param quesitonId   问题id
  *
  *  @return
@@ -28,7 +28,7 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
                             answerImages:(NSArray *)answerImages
                               quesitonId:(NSString *)questionId
                            questionTitle:(NSString *)questionTitle
-                                 initNum:(int)initNum
+                                 initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
                                mulSelect:(BOOL)mulSelect;
 

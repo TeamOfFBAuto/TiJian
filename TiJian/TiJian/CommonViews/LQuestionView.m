@@ -28,7 +28,7 @@
  *
  *  @param mulSelect  是否是多选
  *  @param answerImages 答案对应images
- *  @param initNum      初始化答案 等于0时为没有初始化答案,答案从1开始
+ *  @param initAnswerString      初始化答案二进制串
  *  @param quesitonId   问题id
  *
  *  @return
@@ -37,7 +37,7 @@
                             answerImages:(NSArray *)answerImages
                               quesitonId:(NSString *)questionId
                            questionTitle:(NSString *)questionTitle
-                                 initNum:(int)initNum
+                        initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
                                mulSelect:(BOOL)mulSelect
 {
@@ -187,6 +187,16 @@
             
             //默认为未选择状态
             btn.selectedState = NO;
+            
+            NSLog(@"");
+            
+            if (initAnswerString && [[initAnswerString substringWithRange:NSMakeRange(i, 1)] intValue] == 1) {
+                
+                btn.selectedState = YES;//更新选中状态
+            }else
+            {
+                btn.selectedState = NO;
+            }
 
         }
     }

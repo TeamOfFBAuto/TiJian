@@ -37,7 +37,7 @@
     
     int _questionId;//当前问题id
     int _groupId;//当前groupId
-    
+    NSMutableArray *_groupSortArray;//组合id排序
     int _test;
 }
 
@@ -58,9 +58,17 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     _questionDictionary = [NSMutableDictionary dictionary];
-    
-    
+    _groupSortArray = [NSMutableArray array];
     _groupId = 1;//初始化,第一个组合id为1
+    [_groupSortArray addObject:NSStringFromInt(_groupId)];
+    
+    //下个组合问题ids
+    NSArray *questions = [[DBManager shareInstance]queryQuestionIdsByGroupId:1];
+    if (questions.count > 0) {
+        [_questionDictionary setObject:questions forKey:NSStringFromInt(1)];//记录组合对应的问题ids
+    }
+
+    
     _test = 1;
     //性别
     _view_sex = [self createSexViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
@@ -236,33 +244,53 @@
         
     }else if (_questionId >= 5){
         
-        //    //test
-        ////    NSArray *images = @[[UIImage imageNamed:@"5_1"],
-        ////                        [UIImage imageNamed:@"5_2"]];
-        //
-        //    NSArray *images = @[[UIImage imageNamed:@"9_1"],
-        //                        [UIImage imageNamed:@"9_2"],
-        //                        [UIImage imageNamed:@"9_3"]];
-        //
-        ////    NSArray *images = @[[UIImage imageNamed:@"17_1"],
-        ////                        [UIImage imageNamed:@"17_2"],
-        ////                        [UIImage imageNamed:@"17_3"],
-        ////                        [UIImage imageNamed:@"17_4"]];
-        //
-        ////    NSArray *images = @[[UIImage imageNamed:@"27_1"],
-        ////                        [UIImage imageNamed:@"27_2"],
-        ////                        [UIImage imageNamed:@"27_3"],
-        ////                        [UIImage imageNamed:@"27_4"],
-        ////                        [UIImage imageNamed:@"27_5"]];
-        //
-        //    LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images quesitonId:@"5" questionTitle:@"吸烟是否≥15支/日？" initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
-        //        
-        //    } mulSelect:YES];
-        //    [self.view addSubview:quetionView];
-        //    
-        //    [self prepareBottom];
-        //    
-        //    return;
+        UIView *currentView = _currentView;
+        UIView *toView;
+        //组合内上一个问题
+        //判断是否是组合第一个问题
+        
+        //首先判断是否切换组合或者本组合内切换问题
+        
+        NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(_groupId)];
+        int count = (int)questions.count;//当前组合问题个数
+        int questionId = 0;
+        //当前第几个问题
+        int index = [self questionIndexForGroupId:_groupId];
+        
+        if (index == 0) { //第一个问题,要切换组合
+            //先移除当前组合
+            [_questionDictionary removeObjectForKey:NSStringFromInt(_groupId)];
+            [_groupSortArray removeObject:NSStringFromInt(_groupId)];
+            int lastGroupId = [[_groupSortArray lastObject] intValue];
+            _groupId = lastGroupId;
+            
+            //获取问题id
+            
+            //下个组合问题ids
+            questions = [_questionDictionary objectForKey:NSStringFromInt(lastGroupId)];
+            count = (int)questions.count;//当前组合问题个数
+
+            index = count - 1;//最后一个开始
+            questionId = [self swapQuestionIdAtIndex:index forGroupId:lastGroupId];
+            //记录当前是组合中第几个问题
+            [self updateQuestionIndex:index forGroupId:lastGroupId];
+            
+            toView = [self configItemWithQuestionId:questionId forward:NO];
+        }else
+        {
+            //获取问题id
+            index --;//最后一个开始
+            questionId = [self swapQuestionIdAtIndex:index forGroupId:_groupId];
+            //记录当前是组合中第几个问题
+            [self updateQuestionIndex:index forGroupId:_groupId];
+            
+            toView = [self configItemWithQuestionId:questionId forward:NO];
+        }
+        
+        //切换至上一个组合
+        
+        [self swapView:currentView ToView:toView forward:NO];
+
     }
 
 }
@@ -277,9 +305,18 @@
 {
 //    __weak typeof(self)weakSelf = self;
     
-    
     //首先判断是否可以前进
     LQuestionView *currentQuestionView = (LQuestionView *)_currentView;
+    
+    /**
+     *  记录问题答案
+     */
+    NSString *answerString = [currentQuestionView optionsSelectedState];
+    if (answerString && answerString.length > 0) {
+        NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)_questionId];
+        [_questionDictionary setObject:answerString forKey:key];
+    }
+    
     if (![currentQuestionView enableForward]) {
         
         [LTools showMBProgressWithText:@"您还没有回答问题" addToView:self.view];
@@ -366,7 +403,7 @@
             
             //切换下一个组合
             
-            NSString *key = [NSString stringWithFormat:@"answeString_group_%d",_groupId];
+            NSString *key = [NSString stringWithFormat:@"answerString_group_%d",_groupId];
             NSString *answerString = [_questionDictionary objectForKey:key];
             //需要切换组合
             int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:answerString];
@@ -396,7 +433,7 @@
             //当前组合 -- 切换问题
             
             //需要拼接组合的答案二进制串
-            NSString *key = [NSString stringWithFormat:@"answeString_group_%d",_groupId];
+            NSString *key = [NSString stringWithFormat:@"answerString_group_%d",_groupId];
             
             NSMutableString *g_answerString = [NSMutableString string];
             NSString *string = [_questionDictionary objectForKey:key];
@@ -444,9 +481,12 @@
     int nextGroupId = [[DBManager shareInstance]queryNextGroupIdByGroupId:groupId answerString:answerString];
     NSLog(@"nextGroupId %d",nextGroupId);
     
-    if (groupId > 0) {
+    if (nextGroupId > 0) {
         _groupId = nextGroupId;//记录当前groupId
+        //每次切换组合时 加上新的组合id
+        [_groupSortArray addObject:NSStringFromInt(nextGroupId)];
     }
+    
     
     //下个组合问题ids
     NSArray *questions = [[DBManager shareInstance]queryQuestionIdsByGroupId:nextGroupId];
@@ -457,8 +497,6 @@
     {
         NSLog(@"逗我呢 %d 对应问题id 为空",nextGroupId);
     }
-    
-    
     return nextGroupId;
 }
 
@@ -474,18 +512,17 @@
                   forGroupId:(int)groupId
 {
     //记录当前是组合中第几个问题
-    int index = 0;
     [self updateQuestionIndex:q_index forGroupId:groupId];
     
     NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(groupId)];
-    int questionId = [[questions objectAtIndex:index] intValue];//获取问题id
+    int questionId = [[questions objectAtIndex:q_index] intValue];//获取问题id
     _questionId = questionId;
     return questionId;
 }
 
 
 /**
- *  更新当前组合回答问题的小标（判断是组合中第几个问题）
+ *  更新当前组合回答问题的下标（判断是组合中第几个问题）
  *
  *  @param index   下标
  *  @param groupId 组合id
@@ -619,8 +656,12 @@
                 [images_arr addObject:image];
             }
         }
+        //需要拼接组合的答案二进制串
         
-        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initNum:0 resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)questionId];
+        NSString *initAnswerString = [_questionDictionary objectForKey:key];
+
+        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             
         } mulSelect:YES];
         [self.view addSubview:quetionView];
