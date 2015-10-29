@@ -18,7 +18,11 @@
 //商城首页轮播图
 #define StoreCycleAdv @"/index.php?d=jshop&c=adver&m=adver_list"
 
+//商城套餐分类
+#define StoreProductClass @"/index.php?d=jshop&c=setmeal&m=setmeal_category_list"
 
+//首页精品推荐
+#define StoreProductRecommend @"/index.php?d=jshop&c=setmeal&m=setmeal_list"
 
 
 

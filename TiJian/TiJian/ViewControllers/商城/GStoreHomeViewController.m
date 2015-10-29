@@ -14,7 +14,7 @@
 #import "GwebViewController.h"
 #import "CycleAdvModel.h"
 
-@interface GStoreHomeViewController ()<GcycleScrollViewDelegate>
+@interface GStoreHomeViewController ()<GcycleScrollViewDelegate,RefreshDelegate,UITableViewDataSource>
 {
     NSMutableArray *_com_id_array;//幻灯的id
     NSMutableArray *_com_type_array;//幻灯的type
@@ -25,17 +25,41 @@
     GcycleScrollView *_topScrollView;
     
     YJYRequstManager *_request;
+    AFHTTPRequestOperation *_request_adv;
+    AFHTTPRequestOperation *_request_ProductClass;
+    AFHTTPRequestOperation *_request_ProductRecommend;
     
-    RefreshHeaderView *_RefreshTabelView;
+    RefreshTableView *_table;
+    
+    int _count;//网络请求个数
+    
+    NSDictionary *_StoreCycleAdvDic;
+    NSDictionary *_StoreProductClassDic;
+    NSDictionary *_StoreProductRecommendDic;
     
     
 }
 
 @property(nonatomic,strong)NSMutableArray *contentArray;
 
+@property(nonatomic,strong)UIView *topView;;
+
 @end
 
 @implementation GStoreHomeViewController
+
+
+- (void)dealloc
+{
+    NSLog(@"dealloc %@",self);
+    
+    [_request removeOperation:_request_adv];
+    [_request removeOperation:_request_ProductClass];
+    [_request removeOperation:_request_ProductRecommend];
+    
+    [self removeObserver:self forKeyPath:@"_count"];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,10 +68,13 @@
     self.myTitle = @"体检商城";
     self.myTitleLabel.textColor = RGBCOLOR(91, 147, 203);
     
+    
+    [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    
+    
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    [self prepareNetData];
-    
+    [self creatTableView];
     
 }
 
@@ -149,7 +176,7 @@
         }
         _topScrollView = [[GcycleScrollView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, (int)(DEVICE_WIDTH*300/750)) delegate:self imageItems:itemArray isAuto:YES pageControlNum:self.contentArray.count];
         [_topScrollView scrollToIndex:0];
-        [self.view addSubview:_topScrollView];
+        [self.topView addSubview:_topScrollView];
         
     }
 }
@@ -187,26 +214,260 @@
 #pragma mark - 请求网络数据
 
 -(void)prepareNetData{
+    
     _request = [YJYRequstManager shareInstance];
-    [_request requestWithMethod:YJYRequstMethodGet api:StoreCycleAdv parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _count = 0;
+    
+    //轮播图
+    _request_adv = [_request requestWithMethod:YJYRequstMethodGet api:StoreCycleAdv parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        [self setTopScrollViewWithDic:result];
+        _StoreCycleAdvDic = result;
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+        
         
     } failBlock:^(NSDictionary *result) {
         NSLog(@"%s",__FUNCTION__);
     }];
     
     
+    //商城套餐分类
+    _request_ProductClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _StoreProductClassDic = result;
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    //首页精品推荐
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _StoreProductRecommendDic = result;
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    
+    
 }
 
+//三个网络请求完成
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if ([keyPath isEqualToString:@"contentSize"]) {
+        return;
+    }
+    
+    NSNumber *num = [change objectForKey:@"new"];
+    
+    if ([num intValue] == 3) {
+        
+        //数据数组
+        NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
+        
+        //refresh头部
+        self.topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, (int)(DEVICE_WIDTH*300/750)+classData.count*0.5*DEVICE_WIDTH*0.5+DEVICE_WIDTH*160/750+5 + DEVICE_WIDTH*80/750)];
+        self.topView.backgroundColor = [UIColor whiteColor];
+        _table.tableHeaderView = self.topView;
+        
+        
+        
+        //设置轮播图
+        [self setTopScrollViewWithDic:_StoreCycleAdvDic];
+        
+        //设置版块
+        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH, self.topView.frame.size.height - _topScrollView.frame.size.height - DEVICE_WIDTH*160/750-5)];
+        bankuaiView.backgroundColor = RGBCOLOR(244, 245, 246);
+        [self.topView addSubview:bankuaiView];
+        
+        //共几行
+        int hang = (int)classData.count/2;
+        if (hang<classData.count/2.0) {
+            hang+=1;
+        };
+        //每行几列
+        int lie = 2;
+        for (int i = 0; i<classData.count; i++) {
+            
+            NSDictionary *dic = classData[i];
+            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*DEVICE_WIDTH*0.5, DEVICE_WIDTH*0.5, DEVICE_WIDTH*0.5)];
+            [bankuaiView addSubview:view];
+            view.backgroundColor = RGBCOLOR_ONE;
+            
+            NSLog(@"------------------------>%@",NSStringFromCGRect(view.frame));
+            
+            //图片
+            UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
+            [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+            [view addSubview:imv];
+            //标题
+//            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, imv.frame.size.width, imv.frame.size.height * 0.25)];
+//            titleLabel.text = [dic stringValueForKey:@"name"];
+//            titleLabel.textColor = [UIColor blackColor];
+//            titleLabel.font = [UIFont systemFontOfSize:15];
+//            [imv addSubview:titleLabel];
+            
+            
+        }
+        
+        UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.topView.frame.size.height-DEVICE_WIDTH*160/750 - DEVICE_WIDTH*80/750, DEVICE_WIDTH, DEVICE_WIDTH*160/750)];
+        dingzhiImv.backgroundColor = [UIColor purpleColor];
+        [self.topView addSubview:dingzhiImv];
+        
+        
+        
+        
+        //设置精品推荐
+        
+        UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0, self.topView.frame.size.height - DEVICE_WIDTH*80/750, DEVICE_WIDTH, DEVICE_WIDTH*80/750)];
+        jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
+        [self.topView addSubview:jingpintuijian];
+        UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
+        ttl.font = [UIFont systemFontOfSize:15];
+        [jingpintuijian addSubview:ttl];
+        ttl.text = @"精品推荐";
+        ttl.textColor = [UIColor blackColor];
+        
+        
+        
+        
+        NSArray *RecommendArray = [_StoreProductRecommendDic arrayValueForKey:@"data"];
+        
+        [_table reloadData:RecommendArray pageSize:20];
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
 
 
 #pragma mark - 视图创建
 
+-(void)creatTableView{
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table.refreshDelegate = self;
+    _table.dataSource = self;
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_table];
+    [_table showRefreshHeader:YES];
+    
+    
+    
+    
+}
 
 
+#pragma - mark RefreshDelegate
 
 
+- (void)loadNewDataForTableView:(UITableView *)tableView{
+    
+    [_request removeOperation:_request_adv];
+    [_request removeOperation:_request_ProductClass];
+    [_request removeOperation:_request_ProductRecommend];
+    
+    [self prepareNetData];//获取顶部活动图
 
+}
+- (void)loadMoreDataForTableView:(UITableView *)tableView{
+    
+    [self prepareNetData];//获取顶部活动图
+
+}
+
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    
+}
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    
+}
+
+- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    CGFloat height = 100;
+    return height;
+}
+//将要显示
+- (void)refreshTableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        
+    });
+}
+
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _table.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *identifier = @"identifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    
+    for (UIView *imv in cell.contentView.subviews) {
+        [imv removeFromSuperview];
+    }
+    
+    NSDictionary *dic = _table.dataArray[indexPath.row];
+    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 80, 80)];
+    [logoImv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+    [cell.contentView addSubview:logoImv];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+10, logoImv.frame.origin.y, DEVICE_WIDTH-20-80, logoImv.frame.size.height*0.5)];
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.font = [UIFont systemFontOfSize:14];
+    titleLabel.numberOfLines = 2;
+    titleLabel.text = [dic stringValueForKey:@"brand_name"];
+    [cell.contentView addSubview:titleLabel];
+    
+    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, CGRectGetMaxY(titleLabel.frame), titleLabel.frame.size.width, titleLabel.frame.size.height/2)];
+    priceLabel.textColor = RGBCOLOR(224, 104, 21);
+    priceLabel.font = [UIFont systemFontOfSize:13];
+    priceLabel.text = [dic stringValueForKey:@"setmeal_original_price"];
+    [cell.contentView addSubview:priceLabel];
+    
+    UILabel *priceLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), titleLabel.frame.size.width, titleLabel.frame.size.height/2)];
+    priceLabel1.textColor = RGBCOLOR(80, 81, 82);
+    priceLabel1.font = [UIFont systemFontOfSize:13];
+    priceLabel1.text = [dic stringValueForKey:@"setmeal_price"];
+    [cell.contentView addSubview:priceLabel1];
+    
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    return cell;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return [UIView new];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.5;
+}
 
 @end
