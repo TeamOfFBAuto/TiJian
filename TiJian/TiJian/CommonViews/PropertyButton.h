@@ -12,5 +12,6 @@
 
 @property(nonatomic,retain)UIButton *selectedButton;//选择状态
 @property(nonatomic,assign)BOOL selectedState;//是否选中
+@property(nonatomic,retain)id aModel;
 
 @end

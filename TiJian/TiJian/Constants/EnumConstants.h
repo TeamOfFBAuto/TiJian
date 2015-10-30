@@ -34,6 +34,14 @@ typedef enum{
     QUESTIONTYPE_OTHER //其他问题
 }QUESTIONTYPE;
 
+//个人定制 问题的选项类型 单选、多选、其他
+typedef enum{
+    QUESTIONOPTIONTYPE_SINGLE = 1,//单选
+    QUESTIONOPTIONTYPE_MULTI ,//多选
+    QUESTIONOPTIONTYPE_OTHER //其他
+}QUESTIONOPTIONTYPE;
+
+
 //注册类型，1=》手机注册 2=》邮箱注册，默认为手机注册
 typedef enum{
     Register_Phone = 1,

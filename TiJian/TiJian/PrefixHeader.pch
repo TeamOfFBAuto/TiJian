@@ -38,6 +38,7 @@
 //#import "SVProgressHUD.h"//浮层提示框
 //#import "UIImageView+WebCache.h"
 #import "FMDB.h" //数据库三方类
+#import "JSONKit.h"
 //
 ////umeng相关
 //#import "MobClick.h"

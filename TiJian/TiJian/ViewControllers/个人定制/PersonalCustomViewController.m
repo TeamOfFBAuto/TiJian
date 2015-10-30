@@ -9,6 +9,8 @@
 #import "PersonalCustomViewController.h"
 #import "LQuestionView.h"
 #import "QuestionModel.h"
+#import "IgnoreConditionModel.h"
+#import "OptionModel.h"//选项model
 
 #define Q_AGE @"age" //年龄
 #define Q_WEIGHT @"weight" //体重
@@ -18,6 +20,8 @@
 #define kCurrentTag 1000
 #define kNextTag 1001
 #define kLastTag 1002
+
+#define Q_RESULT @"questionResult" //最终答案结果am等
 
 @interface PersonalCustomViewController ()
 {
@@ -59,13 +63,13 @@
     
     _questionDictionary = [NSMutableDictionary dictionary];
     _groupSortArray = [NSMutableArray array];
-    _groupId = 1;//初始化,第一个组合id为1
+    _groupId = 0;//初始化,第一个组合不能获取到组合id,默认为0
     [_groupSortArray addObject:NSStringFromInt(_groupId)];
     
     //下个组合问题ids
     NSArray *questions = [[DBManager shareInstance]queryQuestionIdsByGroupId:1];
     if (questions.count > 0) {
-        [_questionDictionary setObject:questions forKey:NSStringFromInt(1)];//记录组合对应的问题ids
+        [_questionDictionary setObject:questions forKey:NSStringFromInt(0)];//记录组合对应的问题ids
     }
 
     
@@ -308,19 +312,9 @@
     //首先判断是否可以前进
     LQuestionView *currentQuestionView = (LQuestionView *)_currentView;
     
-    /**
-     *  记录问题答案
-     */
-    NSString *answerString = [currentQuestionView optionsSelectedState];
-    if (answerString && answerString.length > 0) {
-        NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)_questionId];
-        [_questionDictionary setObject:answerString forKey:key];
-    }
-    
     if (![currentQuestionView enableForward]) {
         
         [LTools showMBProgressWithText:@"您还没有回答问题" addToView:self.view];
-        
         return;
     }
     
@@ -348,21 +342,15 @@
         
         //需要切换组合
         
+        //第一个问题组合不能确定组合id,问题一样也不能保证组合id一样
+        
         NSString *groupOne_answerString = [self groupOneAnswerstring];
-        groupOne_answerString = @"10100000001";
         
         int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:groupOne_answerString];
         
         if (nextGroupId <= 0) { //表示结束了,不需要回答下个组合问题了
             
-            NSString *g_name = [[DBManager shareInstance]queryGroupNameById:nextGroupId];
-            NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
-            
-            NSLog(@"%@",g_name);
-            
-            [LTools showMBProgressWithText:text addToView:self.view];
-            
-            
+            [self actionForFinishQuestionWithGroupId:nextGroupId];
             return;
         }
         
@@ -380,44 +368,35 @@
         
     }else if (_questionId >= 5)
     {
-        //首先判断是否切换组合或者本组合内切换问题
         
+        //首先判断是否切换组合或者本组合内切换问题
         NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(_groupId)];
         int count = (int)questions.count;//当前组合问题个数
         
         if (count == 0) {
             
             NSLog(@"该组合没有问题选项");
-            
             return;
         }
         
         //当前第几个问题
         int index = [self questionIndexForGroupId:_groupId];
-        
-        
         UIView *currentView = _currentView;
         UIView *toView;
         int questionId = 0;
         if (index == count - 1) { //已经是组合最后一个了
             
-            //切换下一个组合
+            NSLog(@"切换组合------%@",_questionDictionary);
+
+            //需要切换到下一个组合
             
-            NSString *key = [NSString stringWithFormat:@"answerString_group_%d",_groupId];
-            NSString *answerString = [_questionDictionary objectForKey:key];
-            //需要切换组合
-            int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:answerString];
+            int lastGroupId = _groupId;//暂时记录上一个组合id
+            
+            NSString *answerString = [self answerStringForGroupId:lastGroupId];
+            int nextGroupId = [self swapNextGroupWithGroupId:lastGroupId answerString:answerString];
             
             if (nextGroupId <= 0) { //表示结束了,不需要回答下个组合问题了
-                
-                NSString *g_name = [[DBManager shareInstance]queryGroupNameById:nextGroupId];
-                NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
-                
-                NSLog(@"%@",g_name);
-                
-                [LTools showMBProgressWithText:text addToView:self.view];
-                
-                
+                [self actionForFinishQuestionWithGroupId:nextGroupId];
                 return;
             }
             
@@ -431,20 +410,6 @@
         }else
         {
             //当前组合 -- 切换问题
-            
-            //需要拼接组合的答案二进制串
-            NSString *key = [NSString stringWithFormat:@"answerString_group_%d",_groupId];
-            
-            NSMutableString *g_answerString = [NSMutableString string];
-            NSString *string = [_questionDictionary objectForKey:key];
-            if (string) {
-                [g_answerString appendString:string];
-            }
-            NSString *answerString = [currentQuestionView optionsSelectedState];
-            [g_answerString appendString:answerString];
-            
-            //记录组合 答案拼接串
-            [_questionDictionary setObject:g_answerString forKey:key];
             
             //更新index
             index ++;
@@ -466,6 +431,216 @@
     }
 }
 
+/**
+ *  记录每个问题的选项选择状态
+ *
+ *  @param state      选择状态
+ *  @param optionId   选项id
+ *  @param questionId 问题id
+ *  @param groupId    组合id
+ */
+- (void)updateOptionState:(int)state
+             withOptionId:(int)optionId
+           withQuestionId:(int)questionId
+               forGroupId:(int)groupId
+{
+    /**
+     *  记录问题选项选择状态
+     */
+        NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d_option_%d",groupId,(int)questionId,optionId];
+        [_questionDictionary setObject:[NSNumber numberWithInt:state] forKey:key];
+}
+
+/**
+ *  获取选项选择状态
+ *
+ *  @param optionId   选项id
+ *  @param questionId 问题id
+ *  @param groupId    组合id
+ */
+- (int)optionStateWithOptionId:(int)optionId
+                withQuestionId:(int)questionId
+                    forGroupId:(int)groupId
+{
+    NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d_option_%d",groupId,(int)questionId,optionId];
+    
+    int state = [[_questionDictionary objectForKey:key] intValue];
+    
+    return  state;
+}
+
+/**
+ *  记录每个问题的答案二进制串
+ *
+ *  @param answerString 答案串
+ *  @param questionId   问题id
+ *  @param groupId      对应组合id
+ */
+- (void)updateQuestionAnswertring:(NSString *)answerString
+                           withQuestionId:(int)questionId
+                               forGroupId:(int)groupId
+{
+    /**
+     *  记录问题答案
+     */
+    if (answerString && answerString.length > 0) {
+        NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",groupId,(int)questionId];
+        [_questionDictionary setObject:answerString forKey:key];
+    }
+}
+
+/**
+ *  更新组合 对应的答案二进制串
+ *
+ *  @param groupId 组合id
+ */
+- (void)updateAnswerstringForId:(int)groupId
+{
+    //需要拼接组合的答案二进制串
+    NSString *key = [NSString stringWithFormat:@"answerString_group_%d",groupId];
+    NSMutableString *g_answerString = [NSMutableString string];
+    NSString *string = [_questionDictionary objectForKey:key];
+    if (string) {
+        [g_answerString appendString:string];
+    }
+    
+    LQuestionView *currentQuestionView = (LQuestionView *)_currentView;
+    //拼接答案的时候需要考虑忽略条件
+    NSString *answerString = [currentQuestionView optionsSelectedState];
+    [g_answerString appendString:answerString];
+    
+    //记录组合 答案拼接串
+    [_questionDictionary setObject:g_answerString forKey:key];
+}
+
+/**
+ *  处理问题回答完毕--执行结束操作
+ */
+- (void)actionForFinishQuestionWithGroupId:(int)groupId
+{
+    NSString *g_name = [[DBManager shareInstance] queryGroupNameById:groupId];
+    NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
+    
+    NSLog(@"%@",g_name);
+    
+    if (g_name.length > 0) {
+        [_questionDictionary setObject:g_name forKeyedSubscript:Q_RESULT];//记录结果
+    }
+    
+    [LTools showMBProgressWithText:text addToView:self.view];
+}
+
+#pragma - mark 获取组合答案信息
+
+- (NSString *)answerStringForGroupId:(int)groupId
+{
+    NSArray *questionArray = [_questionDictionary objectForKey:NSStringFromInt(groupId)];
+    NSMutableString *answerString = [NSMutableString string];
+    
+    NSArray *ignores = [self ignoreOptionsIdWithGroupId:groupId];//获取所有忽略选项
+    
+    for (NSString *q_id in questionArray) {
+        
+        //找到问题对应选项
+        NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:[q_id intValue]];
+        
+        //循环找到选项对应状态
+        for (NSString *optionId in options) {
+            
+            NSString *o_string = [NSString stringWithFormat:@"%@_%@",q_id,optionId];
+            if (![ignores containsObject:o_string]) { //不忽略
+                
+                NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d_option_%d",groupId,[q_id intValue],[optionId intValue]];
+                int state = [[_questionDictionary objectForKey:key]intValue];
+                [answerString appendString:NSStringFromInt(state)];
+            }
+            
+        }
+        
+    }
+    NSLog(@"组合对应的答案串 %@",answerString);
+    
+    return answerString;
+}
+
+/**
+ *  查找组合id对应所有的忽略的选项id(问题id_选项id,如:2_1)
+ *
+ *  @return
+ */
+- (NSArray *)ignoreOptionsIdWithGroupId:(int)groupId
+{
+    //拼接组合答案串（需要忽略问题查找流程）
+    //根据组合id 获取需要忽略的条件
+    //根据忽略的条件（有多种情况，满足其一即可）找到对应的需要忽略的问题id和对应的选项
+    
+    NSMutableArray *ignore_array = [NSMutableArray array];
+    NSArray *ignores = [[DBManager shareInstance]queryIgnoreInfoByGroupId:groupId];
+    for (IgnoreConditionModel *aModel in ignores) {
+        
+        NSString *ignoreConditions = aModel.ignore_conditions;
+        
+        //该问题对应选择都忽略
+        if ([ignoreConditions integerValue] == 1) {
+            
+            NSArray *ignoreOptions = [aModel.ignore_option_ids objectFromJSONString];
+            for (NSString *optionid in ignoreOptions) {
+                
+                NSString *temp = [NSString stringWithFormat:@"%d_%@",aModel.question_id,optionid];
+                [ignore_array addObject:temp];
+            }
+            
+            continue;
+        }
+        
+        NSArray *conditons = [aModel.ignore_conditions objectFromJSONString];
+        for (NSArray *array in conditons) { //1、每个筛选条件
+            
+            BOOL fit_all = NO;//默认多个条件都不符合
+            
+            for (NSArray *q_array in array) { //2、每个问题
+                
+                BOOL fit_option = YES;// 本条件默认符合
+                
+                for (NSDictionary *q_dic in q_array) { //3、每个问题的选项
+                    
+                    NSString *q_id = [q_dic objectForKey:@"question_id"];
+                    NSString *option_id = [q_dic objectForKey:@"option_id"];
+                    NSString *anwser = [q_dic objectForKey:@"answer"];
+                    
+                    //实际选项状态
+                    int state = [self optionStateWithOptionId:[option_id intValue] withQuestionId:[q_id intValue] forGroupId:groupId];
+                    
+                    if (state != [anwser intValue]) {
+                        
+                        //本条件不符合
+                        fit_option = NO;
+                    }
+                }
+                
+                if (fit_option) {
+                    fit_all = YES;//单个条件符合 则就满足条件
+                }
+            }
+            
+            if (fit_all) { //需要忽略的optionId
+                
+                //满足条件 需要做忽略操作
+                NSArray *ignoreOptions = [aModel.ignore_option_ids objectFromJSONString];
+                for (NSString *optionid in ignoreOptions) {
+                    
+                    NSString *temp = [NSString stringWithFormat:@"%d_%@",aModel.question_id,optionid];
+                    [ignore_array addObject:temp];
+                }
+            }
+        }
+    }
+    
+    return ignore_array;
+
+}
+
+
 #pragma - mark 控制组合切换和问题切换
 
 /**
@@ -486,7 +661,6 @@
         //每次切换组合时 加上新的组合id
         [_groupSortArray addObject:NSStringFromInt(nextGroupId)];
     }
-    
     
     //下个组合问题ids
     NSArray *questions = [[DBManager shareInstance]queryQuestionIdsByGroupId:nextGroupId];
@@ -646,22 +820,39 @@
         
         NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:(int)questionId];
         int optionsNum = (int)[options count];
-        NSMutableArray *images_arr = [NSMutableArray arrayWithCapacity:optionsNum];
         
-        //获取问题图片
+        NSMutableArray *options_arr = [NSMutableArray array];
+        //获取选项和选项对应图片
         for (int i = 0; i < optionsNum; i ++) {
             NSString *imageName = [NSString stringWithFormat:@"%d_%d",(int)questionId,i + 1];
             UIImage *image = [UIImage imageNamed:imageName];
             if (image) {
-                [images_arr addObject:image];
+
+                int optionId = [options[i] intValue];
+                OptionModel *option = [[OptionModel alloc]initWithQuestionId:(int)questionId optionId:optionId optionImage:image];
+                [options_arr addObject:option];
             }
         }
+        
         //需要拼接组合的答案二进制串
         
         NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)questionId];
         NSString *initAnswerString = [_questionDictionary objectForKey:key];
 
-        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:images_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+            
+            NSString *answerString = result[QUESTION_ANSERSTRING];
+            [weakSelf updateQuestionAnswertring:answerString withQuestionId:aModel.questionId forGroupId:_groupId];//针对问题记录
+            
+            int state = [[result objectForKey:QUESTION_OPTION_STATE] intValue];
+            NSArray *optionStates = [result objectForKey:QUESTION_OPTION_IDS];
+            for (NSDictionary *aDic in optionStates) {
+                
+                int optionid = [[[aDic allKeys]lastObject] intValue];
+                int state = [[[aDic allValues]lastObject]intValue];
+                
+                [weakSelf updateOptionState:state withOptionId:optionid withQuestionId:(int)questionId forGroupId:_groupId];//针对选项记录
+            }
             
         } mulSelect:YES];
         [self.view addSubview:quetionView];

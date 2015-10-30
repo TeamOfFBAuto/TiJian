@@ -8,6 +8,7 @@
 
 #import "DBManager.h"
 #import "QuestionModel.h"
+#import "IgnoreConditionModel.h"
 
 @implementation DBManager
 
@@ -355,10 +356,21 @@
     //  str 为要转换的字符串，endstr 为第一个不能转换的字符的指针，base 为字符串 str 所采用的进制。
 //    NSLog(@"%lu",  strtoul([test UTF8String], NULL, 2));//二进制转长整形无符号
 
+    if (!answerString) {
+        return 0;
+    }
+    
     int answerIds = (int)strtoul([answerString UTF8String], NULL, 2);
     if ([_dataBase open]) {
         
-        NSString *sql = [NSString stringWithFormat:@"select next_group_id,is_end from j_customization_g_q_answer where group_id = %d  and answer_ids = %d",groupId,answerIds];
+        NSString *sql;
+        if (groupId == 0) { //group_id 不作为条件
+            
+           sql = [NSString stringWithFormat:@"select next_group_id,is_end from j_customization_g_q_answer where answer_ids = %d",answerIds];
+        }else
+        {
+            sql = [NSString stringWithFormat:@"select next_group_id,is_end from j_customization_g_q_answer where group_id = %d  and answer_ids = %d",groupId,answerIds];
+        }
         
         NSLog(@"%s sql:%@",__FUNCTION__,sql);
         
@@ -440,6 +452,42 @@
         return g_name;
     }
     return @"";
+}
+
+/**
+ *  查找组合答案拼接时需要忽略信息 model
+ *
+ *  @param groupId 组合id
+ *
+ *  @return
+ */
+- (NSArray *)queryIgnoreInfoByGroupId:(int)groupId
+{
+    
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_ignore where group_id = %d",groupId];
+        
+        NSMutableArray *temp = [NSMutableArray array];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        while (rs.next) {
+            int groupId = [rs intForColumn:@"group_id"];
+            int question_id = [rs intForColumn:@"question_id"];
+            NSString *ignore_option_ids = [rs stringForColumn:@"ignore_option_ids"];
+            NSString *ignore_conditions = [rs stringForColumn:@"ignore_conditions"];
+            IgnoreConditionModel *aModel = [[IgnoreConditionModel alloc]init];
+            aModel.group_id = groupId;
+            aModel.question_id = question_id;
+            aModel.ignore_conditions = ignore_conditions;
+            aModel.ignore_option_ids = ignore_option_ids;
+            [temp addObject:aModel];
+        }
+        
+        [rs close];
+        [_dataBase close];
+        return temp;
+    }
+    return nil;
 }
 
 @end

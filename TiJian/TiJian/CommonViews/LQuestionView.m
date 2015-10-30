@@ -8,10 +8,11 @@
 
 #import "LQuestionView.h"
 #import "GTouchMoveView.h"
+#import "OptionModel.h"
 
 @interface LQuestionView () //延展 需要在原始类中实现
 {
-    BOOL _mulSelect;//是否是多选
+    QUESTIONOPTIONTYPE _mulSelect;//是否是多选
     int _answerNum;//答案个数
     int _questionId;//问题id
     GTouchMoveView *_moveView;
@@ -39,7 +40,7 @@
                            questionTitle:(NSString *)questionTitle
                         initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
-                               mulSelect:(BOOL)mulSelect
+                               mulSelect:(QUESTIONOPTIONTYPE)mulSelect
 {
     self = [super initWithFrame:frame];
     self.backgroundColor = [UIColor whiteColor];
@@ -74,11 +75,16 @@
         
         for (int i = 0; i < count; i ++) {
             
+            
+            OptionModel *option = [answerImages objectAtIndex:i];
+
             PropertyButton *btn = [PropertyButton buttonWithType:UIButtonTypeCustom];
-            [btn setBackgroundImage:answerImages[i] forState:UIControlStateNormal];
+            [btn setBackgroundImage:option.optionImage forState:UIControlStateNormal];
             [self addSubview:btn];
             [btn addTarget:self action:@selector(clickToSelectAnswer:) forControlEvents:UIControlEventTouchUpInside];
             btn.tag = [questionId intValue] * 100 + i;
+            btn.aModel = option;
+            
             
             if (count == 2) {
                 
@@ -398,29 +404,45 @@
     sender.selectedState = !sender.selectedState;
     //根据tag 取问题id
     
-    //多选
-    if (_mulSelect) {
-        return; //多选情况下不进行一下代码
+    if (_mulSelect == QUESTIONOPTIONTYPE_SINGLE) { //单选
+        
+        for (int i = 0 ; i < _answerNum; i ++) {
+            
+            int tag = _questionId * 100 + i;
+            if (tag != sender.tag) {
+                
+                PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+                btn.selectedState = NO;
+            }
+        }
+    }else if (_mulSelect == QUESTIONOPTIONTYPE_MULTI){ //多选
+        
+        
+    }else if (_mulSelect == QUESTIONOPTIONTYPE_OTHER){ //其他
+        
+        
     }
     
+    //获取所有选项和对应选择状态
+    NSMutableArray *state_arr = [NSMutableArray arrayWithCapacity:_answerNum];//记录所有的选项和状态
     for (int i = 0 ; i < _answerNum; i ++) {
         
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        
         int tag = _questionId * 100 + i;
-        if (tag != sender.tag) {
-            
-            PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
-            btn.selectedState = NO;
-        }
+        PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+        OptionModel *option = btn.aModel;
+        [dic setObject:[NSNumber numberWithBool:btn.selectedState] forKey:NSStringFromInt(option.optionId)];
+        [state_arr addObject:dic];
     }
     
-    int value = (int)sender.tag - _questionId * 100 + 1;//代表答案第几个,从1开始
-    
-    //单选时 自动跳转下个页面
-    
+    //回调结果
     if (self.resultBlock) {
-        self.resultBlock(QUESTIONTYPE_OTHER,self,@{@"result":[NSNumber numberWithInt:value]});
+        self.resultBlock(QUESTIONTYPE_OTHER,self,@{QUESTION_OPTION_TYPE:[NSNumber numberWithInt:_mulSelect],
+                                                   QUESTION_ANSERSTRING:[self optionsSelectedState],
+                                                   QUESTION_OPTION_IDS:state_arr
+                                                   });
     }
-    
 }
 
 /**

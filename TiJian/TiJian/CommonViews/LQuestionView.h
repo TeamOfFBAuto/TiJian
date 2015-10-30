@@ -11,13 +11,18 @@
  */
 #import <UIKit/UIKit.h>
 
+#define QUESTION_OPTION_TYPE @"questionOptionType" //选项情况，单选、多选等
+#define QUESTION_ANSERSTRING @"questionAnswerString" //答案二进制串
+#define QUESTION_OPTION_IDS @"questionOptionIdS" //问题对应所有选项id
+#define QUESTION_OPTION_STATE @"questionOptionState" //问题选项状态 1或者0
+
 typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
 @interface LQuestionView : UIView
 
 /**
  *  初始化问题view 根据答案个数来区分页面样式
  *
- *  @param mulSelect  是否是多选
+ *  @param mulSelect  选项类型
  *  @param answerImages 答案对应images
  *  @param initAnswerString      初始化答案二进制串
  *  @param quesitonId   问题id
@@ -30,7 +35,7 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
                            questionTitle:(NSString *)questionTitle
                                  initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
-                               mulSelect:(BOOL)mulSelect;
+                               mulSelect:(QUESTIONOPTIONTYPE)mulSelect;
 
 /**
  *  创建年龄view

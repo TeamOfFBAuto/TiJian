@@ -60,6 +60,16 @@
  */
 - (NSString *)queryGroupNameById:(int)groupId;
 
+/**
+ *  查找组合答案拼接时需要忽略信息 model
+ *
+ *  @param groupId 组合id
+ *
+ *  @return
+ */
+- (NSArray *)queryIgnoreInfoByGroupId:(int)groupId;
+
+
 ////２.查询数据
 //
 //-(NSArray *)QueryData;
