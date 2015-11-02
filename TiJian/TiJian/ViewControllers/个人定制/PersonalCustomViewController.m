@@ -873,6 +873,9 @@
         
         QuestionModel *aModel = [[DBManager shareInstance]queryQuestionById:(int)questionId];
         
+        //记录特殊选项
+        int specialId = aModel.special_option_id;
+        
         NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:(int)questionId];
         int optionsNum = (int)[options count];
         
@@ -885,6 +888,10 @@
 
                 int optionId = [options[i] intValue];
                 OptionModel *option = [[OptionModel alloc]initWithQuestionId:(int)questionId optionId:optionId optionImage:image];
+                if (optionId == specialId) {
+                    
+                    option.isSepecial = YES;//标记特殊性
+                }
                 [options_arr addObject:option];
             }
         }
@@ -908,7 +915,8 @@
                 [weakSelf updateOptionState:state withOptionId:optionid withQuestionId:(int)questionId forGroupId:_groupId];//针对选项记录
             }
             
-        } mulSelect:YES];
+        } mulSelect:aModel.select_option_type specialOptionId:specialId];
+        
         [self.view addSubview:quetionView];
         
         view = quetionView;

@@ -22,10 +22,11 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
 /**
  *  初始化问题view 根据答案个数来区分页面样式
  *
- *  @param mulSelect  选项类型
+ *  @param mulSelect  是否是多选
  *  @param answerImages 答案对应images
  *  @param initAnswerString      初始化答案二进制串
  *  @param quesitonId   问题id
+ *  @param specialOptionId 特殊选项id
  *
  *  @return
  */
@@ -33,9 +34,10 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
                             answerImages:(NSArray *)answerImages
                               quesitonId:(NSString *)questionId
                            questionTitle:(NSString *)questionTitle
-                                 initAnswerString:(NSString *)initAnswerString
+                        initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
-                               mulSelect:(QUESTIONOPTIONTYPE)mulSelect;
+                               mulSelect:(QUESTIONOPTIONTYPE)mulSelect
+                         specialOptionId:(int)specialOptionId;
 
 /**
  *  创建年龄view

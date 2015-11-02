@@ -15,6 +15,7 @@
 @property(nonatomic,assign)int questionId;
 @property(nonatomic,assign)int optionId;
 @property(nonatomic,retain)UIImage *optionImage;
+@property(nonatomic,assign)BOOL isSepecial;//是否是特殊的选项,问题来决定
 
 -(instancetype)initWithQuestionId:(int)questionId
                          optionId:(int)optionId

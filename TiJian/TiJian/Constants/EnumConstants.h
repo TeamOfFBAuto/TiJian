@@ -35,9 +35,12 @@ typedef enum{
 }QUESTIONTYPE;
 
 //个人定制 问题的选项类型 单选、多选、其他
+//选项类型默认1  1=》多选一 2=》除特殊选项可多选，选特殊选项则其他都不能选 3=》除特殊选项单选，分别可以和特殊选项同时选中 4=》任意选择
 typedef enum{
     QUESTIONOPTIONTYPE_SINGLE = 1,//单选
-    QUESTIONOPTIONTYPE_MULTI ,//多选
+    QUESTIONOPTIONTYPE_MULTI_NOSPECIAL = 2,//除了特殊选项可多选，选特殊选项则其他都不能选
+    QUESTIONOPTIONTYPE_SINGLE_NOSPECIAL = 3,//正常的选项单选,但是可以分别和特殊选项组合
+    QUESTIONOPTIONTYPE_MULTI = 4,//多选
     QUESTIONOPTIONTYPE_OTHER //其他
 }QUESTIONOPTIONTYPE;
 

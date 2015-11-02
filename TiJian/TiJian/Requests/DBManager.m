@@ -415,9 +415,13 @@
             int q_id = [rs intForColumn:@"question_id"];
             NSString *q_name = [rs stringForColumn:@"question_name"];
             int type = [rs intForColumn:@"type"];
+            int special_option_id = [rs intForColumn:@"special_option_id"];//特殊选项id
+            int select_option_type = [rs intForColumn:@"select_option_type"];//问题的选项类型 1234
             aModel.questionId = q_id;
             aModel.questionName = q_name;
             aModel.type = type;
+            aModel.special_option_id = special_option_id;
+            aModel.select_option_type = select_option_type;
         }
         [rs close];
         [_dataBase close];
