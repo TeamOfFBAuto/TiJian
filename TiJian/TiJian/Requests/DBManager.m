@@ -490,4 +490,54 @@
     return nil;
 }
 
+//- (int)ignoreTypeIdForGroupId:(int)groupId
+//                   questionId:(int)questionId
+//                     optionId:(int)optionId
+//                       answer:(int)answer
+//                         type:(int)type
+//                   affectNext:(int)affectNext
+
+/**
+ *  查询组合id对应的 n+1忽略条件
+ *
+ *  @param groupId
+ *
+ *  @return
+ */
+- (NSArray *)queryIgnoreN1ModelForGroupId:(int)groupId
+{
+    
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_n1 where group_id = %d",groupId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        
+        NSLog(@"%s %@",__FUNCTION__,sql);
+        
+        NSMutableArray *temp = [NSMutableArray array];
+        
+        while(rs.next) {
+            
+            int question_id = [rs intForColumn:@"question_id"];
+            int option_id = [rs intForColumn:@"option_id"];
+            int answer = [rs intForColumn:@"answer"];
+            int type = [rs intForColumn:@"type"];
+            int affectNext = [rs intForColumn:@"affect_next"];
+            int n1_type_id = [rs intForColumn:@"n1_type_id"];
+            
+            IgnoreConditionModel *aModel = [[IgnoreConditionModel alloc]initWithGroupId:groupId questionId:question_id optionId:option_id answer:answer type:type affectNext:affectNext n1_type_id:n1_type_id];
+            [temp addObject:aModel];
+            NSLog(@"__next groupId:%d questionId:%d optionId:%d",groupId,question_id,option_id);
+            
+        }
+        [rs close];
+        [_dataBase close];
+        
+        return  temp;
+    }
+    
+    return nil;
+}
+
+
 @end

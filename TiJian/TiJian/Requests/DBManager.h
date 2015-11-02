@@ -69,6 +69,15 @@
  */
 - (NSArray *)queryIgnoreInfoByGroupId:(int)groupId;
 
+/**
+ *  查询组合id对应的 n+1忽略条件
+ *
+ *  @param groupId
+ *
+ *  @return
+ */
+- (NSArray *)queryIgnoreN1ModelForGroupId:(int)groupId;
+
 
 ////２.查询数据
 //

@@ -72,8 +72,6 @@
         [_questionDictionary setObject:questions forKey:NSStringFromInt(0)];//记录组合对应的问题ids
     }
 
-    
-    _test = 1;
     //性别
     _view_sex = [self createSexViewWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     [self.view addSubview:_view_sex];
@@ -346,6 +344,9 @@
         
         NSString *groupOne_answerString = [self groupOneAnswerstring];
         
+        //test
+//        groupOne_answerString = @"10100000100";//跳转至组合2
+        
         int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:groupOne_answerString];
         
         if (nextGroupId <= 0) { //表示结束了,不需要回答下个组合问题了
@@ -538,6 +539,7 @@
     NSMutableString *answerString = [NSMutableString string];
     
     NSArray *ignores = [self ignoreOptionsIdWithGroupId:groupId];//获取所有忽略选项
+    NSArray *ignores_n1 = [[DBManager shareInstance]queryIgnoreN1ModelForGroupId:groupId];//n+1需要忽略的条件
     
     for (NSString *q_id in questionArray) {
         
@@ -548,11 +550,29 @@
         for (NSString *optionId in options) {
             
             NSString *o_string = [NSString stringWithFormat:@"%@_%@",q_id,optionId];
+            
             if (![ignores containsObject:o_string]) { //不忽略
                 
                 NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d_option_%d",groupId,[q_id intValue],[optionId intValue]];
                 int state = [[_questionDictionary objectForKey:key]intValue];
-                [answerString appendString:NSStringFromInt(state)];
+                
+                int n1_type_id = [self n1TypeIdForGroupId:groupId questionId:[q_id intValue] optionId:[optionId intValue] answer:state type:1 affectNext:0 withIgnoreArray:ignores_n1];
+                
+                if (n1_type_id >= 0) { //需要忽略
+                    
+                    //把 n+1情况记录下来,需要传送给后台
+                    NSString *key_ignore = [NSString stringWithFormat:@"ignore_group_%d_question_%d_option_%d",groupId,[q_id intValue],[optionId intValue]];
+                    [_questionDictionary setObject:[NSNumber numberWithInt:n1_type_id] forKey:key_ignore];
+                    
+                }else
+                {
+                    [answerString appendString:NSStringFromInt(state)];
+
+                }
+                
+            }else
+            {
+                NSLog(@"需要忽略问题id:%@_optionId:%@",q_id,optionId);
             }
             
         }
@@ -561,6 +581,43 @@
     NSLog(@"组合对应的答案串 %@",answerString);
     
     return answerString;
+}
+
+/**
+ *  获取满足的n+1忽略条件的 n1_type_id,-1代表不忽略,大于等于0代表忽略
+ *
+ *  @param groupId    组合id
+ *  @param questionId 问题id
+ *  @param optionId   选项id
+ *  @param answer     是否选中1或者0
+ *  @param type       目前默认1
+ *  @param affectNext 目前默认0
+ *
+ *  @return
+ */
+- (int)n1TypeIdForGroupId:(int)groupId
+               questionId:(int)questionId
+                 optionId:(int)optionId
+                   answer:(int)answer
+                     type:(int)type
+               affectNext:(int)affectNext
+          withIgnoreArray:(NSArray *)ignoreArray
+{
+    
+    for (IgnoreConditionModel *aMode in ignoreArray) {
+        
+        if (aMode.group_id == groupId &&
+            aMode.question_id == questionId &&
+            aMode.option_id == optionId &&
+            aMode.answer == answer &&
+            aMode.type == type &&
+            aMode.affect_next == affectNext) {
+            
+            return aMode.n1_type_id;
+        }
+    }
+    
+    return -1;
 }
 
 /**
@@ -594,16 +651,15 @@
         }
         
         NSArray *conditons = [aModel.ignore_conditions objectFromJSONString];
-        for (NSArray *array in conditons) { //1、每个筛选条件
+        
+        BOOL fit_all = NO;//默认所有数组对应条件都不满足
+
+        for (NSArray *array in conditons) { //1、遍历每个筛选条件(多个筛选条件array形式)
             
-            BOOL fit_all = NO;//默认多个条件都不符合
-            
-            for (NSArray *q_array in array) { //2、每个问题
+            BOOL fit_option = YES;// 本条件默认符合
+
+            for (NSDictionary *q_dic in array) { //2、每个问题
                 
-                BOOL fit_option = YES;// 本条件默认符合
-                
-                for (NSDictionary *q_dic in q_array) { //3、每个问题的选项
-                    
                     NSString *q_id = [q_dic objectForKey:@"question_id"];
                     NSString *option_id = [q_dic objectForKey:@"option_id"];
                     NSString *anwser = [q_dic objectForKey:@"answer"];
@@ -612,26 +668,25 @@
                     int state = [self optionStateWithOptionId:[option_id intValue] withQuestionId:[q_id intValue] forGroupId:groupId];
                     
                     if (state != [anwser intValue]) {
-                        
                         //本条件不符合
                         fit_option = NO;
                     }
-                }
                 
-                if (fit_option) {
-                    fit_all = YES;//单个条件符合 则就满足条件
-                }
             }
             
-            if (fit_all) { //需要忽略的optionId
+            if (fit_option) {
+                fit_all = YES;//单个数组对应的条件都满足时,则整个条件都满足
+            }
+        }
+        
+        if (fit_all) { //需要忽略的optionId
+            
+            //满足条件 需要做忽略操作
+            NSArray *ignoreOptions = [aModel.ignore_option_ids objectFromJSONString];
+            for (NSString *optionid in ignoreOptions) {
                 
-                //满足条件 需要做忽略操作
-                NSArray *ignoreOptions = [aModel.ignore_option_ids objectFromJSONString];
-                for (NSString *optionid in ignoreOptions) {
-                    
-                    NSString *temp = [NSString stringWithFormat:@"%d_%@",aModel.question_id,optionid];
-                    [ignore_array addObject:temp];
-                }
+                NSString *temp = [NSString stringWithFormat:@"%d_%@",aModel.question_id,optionid];
+                [ignore_array addObject:temp];
             }
         }
     }
@@ -844,7 +899,6 @@
             NSString *answerString = result[QUESTION_ANSERSTRING];
             [weakSelf updateQuestionAnswertring:answerString withQuestionId:aModel.questionId forGroupId:_groupId];//针对问题记录
             
-            int state = [[result objectForKey:QUESTION_OPTION_STATE] intValue];
             NSArray *optionStates = [result objectForKey:QUESTION_OPTION_IDS];
             for (NSDictionary *aDic in optionStates) {
                 
