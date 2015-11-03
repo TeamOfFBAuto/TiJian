@@ -400,6 +400,16 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
                               AddKeyword:(NSString *)keyword
                                    color:(UIColor *)color;
 
+#pragma - mark 获取JSONString
+/**
+ *  object转化为JSON字符串
+ *
+ *  @param object
+ *
+ *  @return
+ */
++ (NSString *)JSONStringWithObject:(id)object;
+
 #pragma - mark 图片处理相关
 
 #pragma mark 切图

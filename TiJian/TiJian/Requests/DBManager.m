@@ -7,6 +7,8 @@
 //
 
 #import "DBManager.h"
+#import "QuestionModel.h"
+#import "IgnoreConditionModel.h"
 
 @implementation DBManager
 
@@ -301,7 +303,8 @@
 {
     if ([_dataBase open]) {
         FMResultSet *rs = [_dataBase executeQuery:
-                           @"select question_id from j_customization_group_questions where group_id = ? order by order",groupId];
+                           @"select question_id from j_customization_group_questions where group_id = ? order by 'order'",[NSNumber numberWithInt:groupId]];
+        
         NSMutableArray *temp = [NSMutableArray array];
         while (rs.next) {
             
@@ -323,8 +326,9 @@
 - (NSArray *)queryOptionsIdsByQuestionId:(int)groupId
 {
     if ([_dataBase open]) {
-        FMResultSet *rs = [_dataBase executeQuery:
-                           @"select option_id from j_customization_question_options where question_id = ? order by option_order",groupId];
+        
+        NSString *sql = [NSString stringWithFormat:@"select option_id from j_customization_question_options where question_id = %d order by option_order",groupId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
         NSMutableArray *temp = [NSMutableArray array];
         while (rs.next) {
             
@@ -339,12 +343,12 @@
 }
 
 /**
- *  查询下个组合id
+ *  查询下个组合id (正数为未结束、负数为结束、0为无对应的下个组合信息)
  *
  *  @param groupId      当前组合id
  *  @param answerString 当前组合下所有问题答案（1、0）的二进制串
  *
- *  @return
+ *  @return 下个组合id
  */
 - (int)queryNextGroupIdByGroupId:(int)groupId
                    answerString:(NSString *)answerString
@@ -352,14 +356,37 @@
     //  str 为要转换的字符串，endstr 为第一个不能转换的字符的指针，base 为字符串 str 所采用的进制。
 //    NSLog(@"%lu",  strtoul([test UTF8String], NULL, 2));//二进制转长整形无符号
 
+    if (!answerString) {
+        return 0;
+    }
+    
     int answerIds = (int)strtoul([answerString UTF8String], NULL, 2);
     if ([_dataBase open]) {
-        FMResultSet *rs = [_dataBase executeQuery:
-                           @"select next_group_id from j_customization_g_q_answer where group_id = ?  and answer_ids = ?",groupId,answerIds];
+        
+        NSString *sql;
+        if (groupId == 0) { //group_id 不作为条件
+            
+           sql = [NSString stringWithFormat:@"select next_group_id,is_end from j_customization_g_q_answer where answer_ids = %d",answerIds];
+        }else
+        {
+            sql = [NSString stringWithFormat:@"select next_group_id,is_end from j_customization_g_q_answer where group_id = %d  and answer_ids = %d",groupId,answerIds];
+        }
+        
+        NSLog(@"%s sql:%@",__FUNCTION__,sql);
+        
+        FMResultSet *rs = [_dataBase executeQuery:sql];
         int x = 0;
         while (rs.next) {
             
             x = [rs intForColumn:@"next_group_id"];
+            
+            int is_end = [rs intForColumn:@"is_end"];
+            
+            if (is_end) { //如果是结束 则为负
+                x *= -1;
+            }
+            
+            NSLog(@"nextGroupId %d",x);
         }
         [rs close];
         [_dataBase close];
@@ -367,5 +394,156 @@
     }
     return 0;
 }
+
+/**
+ *  查询问题信息
+ *
+ *  @param questionId    问题id
+ *
+ *  @return QuestionModel对象
+ */
+- (id)queryQuestionById:(int)questionId
+{
+    
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_questions where question_id = %d",questionId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        QuestionModel *aModel = [[QuestionModel alloc]init];
+        while (rs.next) {
+            
+            int q_id = [rs intForColumn:@"question_id"];
+            NSString *q_name = [rs stringForColumn:@"question_name"];
+            int type = [rs intForColumn:@"type"];
+            int special_option_id = [rs intForColumn:@"special_option_id"];//特殊选项id
+            int select_option_type = [rs intForColumn:@"select_option_type"];//问题的选项类型 1234
+            aModel.questionId = q_id;
+            aModel.questionName = q_name;
+            aModel.type = type;
+            aModel.special_option_id = special_option_id;
+            aModel.select_option_type = select_option_type;
+        }
+        [rs close];
+        [_dataBase close];
+        return aModel;
+    }
+    return nil;
+}
+
+
+/**
+ *  查询组合name
+ *
+ *  @param groupId    问题id
+ *
+ *  @return
+ */
+- (NSString *)queryGroupNameById:(int)groupId
+{
+    
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select group_name from j_customization_groups where group_id = %d",groupId];
+        
+        NSString *g_name = @"";
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        while (rs.next) {
+            
+            g_name = [rs stringForColumn:@"group_name"];
+                    }
+        [rs close];
+        [_dataBase close];
+        return g_name;
+    }
+    return @"";
+}
+
+/**
+ *  查找组合答案拼接时需要忽略信息 model
+ *
+ *  @param groupId 组合id
+ *
+ *  @return
+ */
+- (NSArray *)queryIgnoreInfoByGroupId:(int)groupId
+{
+    
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_ignore where group_id = %d",groupId];
+        
+        NSMutableArray *temp = [NSMutableArray array];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        while (rs.next) {
+            int groupId = [rs intForColumn:@"group_id"];
+            int question_id = [rs intForColumn:@"question_id"];
+            NSString *ignore_option_ids = [rs stringForColumn:@"ignore_option_ids"];
+            NSString *ignore_conditions = [rs stringForColumn:@"ignore_conditions"];
+            IgnoreConditionModel *aModel = [[IgnoreConditionModel alloc]init];
+            aModel.group_id = groupId;
+            aModel.question_id = question_id;
+            aModel.ignore_conditions = ignore_conditions;
+            aModel.ignore_option_ids = ignore_option_ids;
+            [temp addObject:aModel];
+        }
+        
+        [rs close];
+        [_dataBase close];
+        return temp;
+    }
+    return nil;
+}
+
+//- (int)ignoreTypeIdForGroupId:(int)groupId
+//                   questionId:(int)questionId
+//                     optionId:(int)optionId
+//                       answer:(int)answer
+//                         type:(int)type
+//                   affectNext:(int)affectNext
+
+/**
+ *  查询组合id对应的 n+1忽略条件
+ *
+ *  @param groupId
+ *
+ *  @return
+ */
+- (NSArray *)queryIgnoreN1ModelForGroupId:(int)groupId
+{
+    
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_n1 where group_id = %d",groupId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        
+        NSLog(@"%s %@",__FUNCTION__,sql);
+        
+        NSMutableArray *temp = [NSMutableArray array];
+        
+        while(rs.next) {
+            
+            int n1_id = [rs intForColumn:@"n1_id"];
+            int question_id = [rs intForColumn:@"question_id"];
+            int option_id = [rs intForColumn:@"option_id"];
+            int answer = [rs intForColumn:@"answer"];
+            int type = [rs intForColumn:@"type"];
+            int affectNext = [rs intForColumn:@"affect_next"];
+            int n1_type_id = [rs intForColumn:@"n1_type_id"];
+            
+            IgnoreConditionModel *aModel = [[IgnoreConditionModel alloc]initWithGroupId:groupId questionId:question_id optionId:option_id answer:answer type:type affectNext:affectNext n1_type_id:n1_type_id];
+            aModel.n1_id = n1_id;
+            [temp addObject:aModel];
+            NSLog(@"__next groupId:%d questionId:%d optionId:%d",groupId,question_id,option_id);
+            
+        }
+        [rs close];
+        [_dataBase close];
+        
+        return  temp;
+    }
+    
+    return nil;
+}
+
 
 @end

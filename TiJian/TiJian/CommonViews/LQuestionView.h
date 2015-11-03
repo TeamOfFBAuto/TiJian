@@ -11,6 +11,11 @@
  */
 #import <UIKit/UIKit.h>
 
+#define QUESTION_OPTION_TYPE @"questionOptionType" //选项情况，单选、多选等
+#define QUESTION_ANSERSTRING @"questionAnswerString" //答案二进制串
+#define QUESTION_OPTION_IDS @"questionOptionIdS" //问题对应所有选项id
+#define QUESTION_OPTION_STATE @"questionOptionState" //问题选项状态 1或者0
+
 typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
 @interface LQuestionView : UIView
 
@@ -19,8 +24,9 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
  *
  *  @param mulSelect  是否是多选
  *  @param answerImages 答案对应images
- *  @param initNum      初始化答案 等于0时为没有初始化答案,答案从1开始
+ *  @param initAnswerString      初始化答案二进制串
  *  @param quesitonId   问题id
+ *  @param specialOptionId 特殊选项id
  *
  *  @return
  */
@@ -28,9 +34,10 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
                             answerImages:(NSArray *)answerImages
                               quesitonId:(NSString *)questionId
                            questionTitle:(NSString *)questionTitle
-                                 initNum:(int)initNum
+                        initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
-                               mulSelect:(BOOL)mulSelect;
+                               mulSelect:(QUESTIONOPTIONTYPE)mulSelect
+                         specialOptionId:(int)specialOptionId;
 
 /**
  *  创建年龄view
@@ -76,5 +83,17 @@ typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);
  */
 - (void)setInitValue:(NSString *)initValue;
 
+/**
+ *  获取选项选择状态1和0的串
+ *
+ */
+- (NSString *)optionsSelectedState;
+
+/**
+ *  是否可以进行下一个
+ *
+ *  @return YES or NO
+ */
+- (BOOL)enableForward;
 
 @end
