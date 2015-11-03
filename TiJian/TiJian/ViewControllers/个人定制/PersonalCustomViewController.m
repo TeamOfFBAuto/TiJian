@@ -82,6 +82,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma - mark 网络请求
+
+
+
 #pragma - mark 视图创建
 /**
  *  创建性别选择页面
@@ -514,11 +518,11 @@
     [_questionDictionary setObject:g_answerString forKey:key];
 }
 
-/**
- *  处理问题回答完毕--执行结束操作
- */
+#pragma - mark 处理问题回答完毕--执行结束操作
+
 - (void)actionForFinishQuestionWithGroupId:(int)groupId
 {
+    
     NSString *g_name = [[DBManager shareInstance] queryGroupNameById:groupId];
     NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
     
@@ -529,6 +533,84 @@
     }
     
     [LTools showMBProgressWithText:text addToView:self.view];
+    
+    //组合信息
+    //最终结束组合id
+    //n1_type+id
+    
+    NSMutableArray *groupArray = [NSMutableArray arrayWithCapacity:_groupSortArray.count];
+    NSMutableArray *n1_ids_array = [NSMutableArray array];
+    //组合id
+    for (NSString *groupId in _groupSortArray) {
+        
+        //单独处理组合为0情况
+        if ([groupId intValue] == 0) {
+            NSNumber *age = [_questionDictionary objectForKey:Q_SEX];
+            NSNumber *height = [_questionDictionary objectForKey:Q_HEIGHT];
+            NSNumber *weight = [_questionDictionary objectForKey:Q_WEIGHT];
+            NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
+            
+            NSDictionary *groupOne = @{groupId:@{Q_SEX:sex,
+                                                 Q_HEIGHT:height,
+                                                 Q_WEIGHT:weight,
+                                                 Q_AGE:age}};
+
+            
+            [groupArray addObject:groupOne];
+            
+            continue;
+        }
+        
+        //问题
+        NSArray *questions = [_questionDictionary objectForKey:groupId];
+        
+        NSMutableArray *questionArray = [NSMutableArray array];
+        
+        for (NSString *questionId in questions) {
+            
+            NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:[questionId intValue]];
+            
+            NSMutableArray *optionsArray = [NSMutableArray arrayWithCapacity:options.count];
+            
+            for (NSString *optionId in options) {
+                
+                int state = [self optionStateWithOptionId:[optionId intValue] withQuestionId:[questionId intValue] forGroupId:[groupId intValue]];
+                
+                NSDictionary *option_dic = @{optionId : NSStringFromInt(state)};
+                [optionsArray addObject:option_dic];
+                
+                //忽略
+                NSString *key = [NSString stringWithFormat:@"ignore_group_%@_question_%@_option_%@",groupId,questionId,optionId];
+                NSNumber *n1_type_id = [_questionDictionary objectForKey:key];
+                if (n1_type_id) {
+                    
+                    [n1_ids_array addObject:n1_type_id];
+                }
+            }
+            
+            //问题对应的所有选项
+            
+            NSDictionary *question_dic = @{questionId : optionsArray};
+            [questionArray addObject:question_dic];
+        }
+        
+        //组合对应所有问题
+        NSDictionary *group_dic = @{groupId:questionArray};
+        [groupArray addObject:group_dic];
+    }
+    
+    NSString *n1_ids = [n1_ids_array componentsJoinedByString:@","];
+    n1_ids = n1_ids ? : @"";
+    
+    groupId = groupId > 0 ? groupId : -groupId;
+    
+    NSDictionary *result = @{@"group_ids":groupArray,
+                             @"final_groupId":NSStringFromInt(groupId),
+                             @"nq_ids":n1_ids};
+    
+    NSString *jsonString = [LTools JSONStringWithObject:result];
+    
+    NSLog(@"result %@",jsonString);
 }
 
 #pragma - mark 获取组合答案信息
@@ -556,13 +638,13 @@
                 NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d_option_%d",groupId,[q_id intValue],[optionId intValue]];
                 int state = [[_questionDictionary objectForKey:key]intValue];
                 
-                int n1_type_id = [self n1TypeIdForGroupId:groupId questionId:[q_id intValue] optionId:[optionId intValue] answer:state type:1 affectNext:0 withIgnoreArray:ignores_n1];
+                IgnoreConditionModel *ignoreModel = [self n1TypeModelForGroupId:groupId questionId:[q_id intValue] optionId:[optionId intValue] answer:state type:1 affectNext:0 withIgnoreArray:ignores_n1];
                 
-                if (n1_type_id >= 0) { //需要忽略
+                if (ignoreModel) { //需要忽略
                     
                     //把 n+1情况记录下来,需要传送给后台
                     NSString *key_ignore = [NSString stringWithFormat:@"ignore_group_%d_question_%d_option_%d",groupId,[q_id intValue],[optionId intValue]];
-                    [_questionDictionary setObject:[NSNumber numberWithInt:n1_type_id] forKey:key_ignore];
+                    [_questionDictionary setObject:[NSNumber numberWithInt:ignoreModel.n1_id] forKey:key_ignore];
                     
                 }else
                 {
@@ -595,7 +677,44 @@
  *
  *  @return
  */
-- (int)n1TypeIdForGroupId:(int)groupId
+//- (int)n1TypeIdForGroupId:(int)groupId
+//               questionId:(int)questionId
+//                 optionId:(int)optionId
+//                   answer:(int)answer
+//                     type:(int)type
+//               affectNext:(int)affectNext
+//          withIgnoreArray:(NSArray *)ignoreArray
+//{
+//    
+//    for (IgnoreConditionModel *aMode in ignoreArray) {
+//        
+//        if (aMode.group_id == groupId &&
+//            aMode.question_id == questionId &&
+//            aMode.option_id == optionId &&
+//            aMode.answer == answer &&
+//            aMode.type == type &&
+//            aMode.affect_next == affectNext) {
+//            
+//            return aMode.n1_type_id;
+//        }
+//    }
+//    
+//    return -1;
+//}
+
+/**
+ *  获取满足的n+1忽略条件的 model,aMode.n1_type_id为-1代表不忽略,大于等于0代表忽略
+ *
+ *  @param groupId    组合id
+ *  @param questionId 问题id
+ *  @param optionId   选项id
+ *  @param answer     是否选中1或者0
+ *  @param type       目前默认1
+ *  @param affectNext 目前默认0
+ *
+ *  @return
+ */
+- (IgnoreConditionModel *)n1TypeModelForGroupId:(int)groupId
                questionId:(int)questionId
                  optionId:(int)optionId
                    answer:(int)answer
@@ -613,11 +732,11 @@
             aMode.type == type &&
             aMode.affect_next == affectNext) {
             
-            return aMode.n1_type_id;
+            return aMode;
         }
     }
     
-    return -1;
+    return nil;
 }
 
 /**
@@ -873,6 +992,9 @@
         
         QuestionModel *aModel = [[DBManager shareInstance]queryQuestionById:(int)questionId];
         
+        //记录特殊选项
+        int specialId = aModel.special_option_id;
+        
         NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:(int)questionId];
         int optionsNum = (int)[options count];
         
@@ -885,6 +1007,10 @@
 
                 int optionId = [options[i] intValue];
                 OptionModel *option = [[OptionModel alloc]initWithQuestionId:(int)questionId optionId:optionId optionImage:image];
+                if (optionId == specialId) {
+                    
+                    option.isSepecial = YES;//标记特殊性
+                }
                 [options_arr addObject:option];
             }
         }
@@ -908,7 +1034,14 @@
                 [weakSelf updateOptionState:state withOptionId:optionid withQuestionId:(int)questionId forGroupId:_groupId];//针对选项记录
             }
             
-        } mulSelect:YES];
+            //判断是否是单选,单选的情况下自动跳转
+            if (type == QUESTIONOPTIONTYPE_SINGLE) {
+                
+                [weakSelf clickToForward:nil];
+            }
+            
+        } mulSelect:aModel.select_option_type specialOptionId:specialId];
+        
         [self.view addSubview:quetionView];
         
         view = quetionView;

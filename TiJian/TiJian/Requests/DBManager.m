@@ -415,9 +415,13 @@
             int q_id = [rs intForColumn:@"question_id"];
             NSString *q_name = [rs stringForColumn:@"question_name"];
             int type = [rs intForColumn:@"type"];
+            int special_option_id = [rs intForColumn:@"special_option_id"];//特殊选项id
+            int select_option_type = [rs intForColumn:@"select_option_type"];//问题的选项类型 1234
             aModel.questionId = q_id;
             aModel.questionName = q_name;
             aModel.type = type;
+            aModel.special_option_id = special_option_id;
+            aModel.select_option_type = select_option_type;
         }
         [rs close];
         [_dataBase close];
@@ -518,6 +522,7 @@
         
         while(rs.next) {
             
+            int n1_id = [rs intForColumn:@"n1_id"];
             int question_id = [rs intForColumn:@"question_id"];
             int option_id = [rs intForColumn:@"option_id"];
             int answer = [rs intForColumn:@"answer"];
@@ -526,6 +531,7 @@
             int n1_type_id = [rs intForColumn:@"n1_type_id"];
             
             IgnoreConditionModel *aModel = [[IgnoreConditionModel alloc]initWithGroupId:groupId questionId:question_id optionId:option_id answer:answer type:type affectNext:affectNext n1_type_id:n1_type_id];
+            aModel.n1_id = n1_id;
             [temp addObject:aModel];
             NSLog(@"__next groupId:%d questionId:%d optionId:%d",groupId,question_id,option_id);
             

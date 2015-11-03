@@ -16,6 +16,7 @@
     int _answerNum;//答案个数
     int _questionId;//问题id
     GTouchMoveView *_moveView;
+    int _specialOptionId;//特殊选项id
 }
 
 @property(copy,nonatomic)RESULTBLOCK resultBlock;
@@ -31,6 +32,7 @@
  *  @param answerImages 答案对应images
  *  @param initAnswerString      初始化答案二进制串
  *  @param quesitonId   问题id
+ *  @param specialOptionId 特殊选项id
  *
  *  @return
  */
@@ -41,6 +43,7 @@
                         initAnswerString:(NSString *)initAnswerString
                              resultBlock:(RESULTBLOCK)aBlock
                                mulSelect:(QUESTIONOPTIONTYPE)mulSelect
+                         specialOptionId:(int)specialOptionId
 {
     self = [super initWithFrame:frame];
     self.backgroundColor = [UIColor whiteColor];
@@ -48,9 +51,10 @@
     if (self) {
         
         self.resultBlock = aBlock;
-        _mulSelect = mulSelect;//是否是多选
+        _mulSelect = mulSelect;//选项的类型
         _answerNum = (int)answerImages.count;//答案个数
         _questionId = [questionId intValue];//记录问题id
+        _specialOptionId = specialOptionId;
         //head
         UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 64)];
         [self addSubview:navigationView];
@@ -193,8 +197,6 @@
             
             //默认为未选择状态
             btn.selectedState = NO;
-            
-            NSLog(@"");
             
             if (initAnswerString && [[initAnswerString substringWithRange:NSMakeRange(i, 1)] intValue] == 1) {
                 
@@ -389,11 +391,6 @@
     [_moveView setCustomValueWithStr:initValue];
 }
 
-- (void)clickToSelectSex:(UIButton *)btn
-{
-    
-}
-
 /**
  *  选择答案
  *
@@ -417,6 +414,74 @@
         }
     }else if (_mulSelect == QUESTIONOPTIONTYPE_MULTI){ //多选
         
+        NSLog(@"多选");
+        
+    }else if (_mulSelect == QUESTIONOPTIONTYPE_MULTI_NOSPECIAL){ //除了特殊选项其他可多选，选特殊选项则其他都不能选
+        
+        //首先判断是否选择的是 特殊选项
+        OptionModel *sender_model = sender.aModel;
+        //选择是特殊选项
+        if (sender_model.optionId == _specialOptionId) {
+            
+            if (sender.selectedState) {
+                
+                for (int i = 0; i < _answerNum; i ++) {
+                    
+                    int tag = _questionId * 100 + i;
+                    PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+                    if (btn != sender) {
+                        
+                        btn.selectedState = NO;
+                    }
+                }
+            }
+        }else //不是特殊选项的话,特殊选项置为NO
+        {
+            for (int i = 0; i < _answerNum; i ++) {
+                
+                int tag = _questionId * 100 + i;
+                PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+                OptionModel *o_model = btn.aModel;
+
+                if (o_model.optionId == _specialOptionId) {
+                    
+                    btn.selectedState = NO;
+                }
+            }
+        }
+        
+    }else if (_mulSelect == QUESTIONOPTIONTYPE_SINGLE_NOSPECIAL){ //正常的选项单选,但是可以分别和特殊选项组合
+        
+        //首先判断是否选择的是 特殊选项
+        OptionModel *sender_model = sender.aModel;
+        
+        //点击特殊选项时,其他的不用改变状态
+        if (sender_model.optionId == _specialOptionId) {
+            
+
+        }else //点击不是特殊选项的话 特殊选项不变,其他选项变,且其他选项不能同时被选择
+        {
+            for (int i = 0; i < _answerNum; i ++) {
+                
+                int tag = _questionId * 100 + i;
+                PropertyButton *btn = (PropertyButton *)[self viewWithTag:tag];
+                OptionModel *o_model = btn.aModel;
+                
+                if (o_model.optionId != _specialOptionId) {
+                    
+                    if (sender.selectedState) {
+                        
+                        if (btn != sender) {
+                            
+                            btn.selectedState = NO;
+                        }else
+                        {
+                            btn.selectedState = YES;
+                        }
+                    }
+                }
+            }
+        }
         
     }else if (_mulSelect == QUESTIONOPTIONTYPE_OTHER){ //其他
         
@@ -438,12 +503,13 @@
     
     //回调结果
     if (self.resultBlock) {
-        self.resultBlock(QUESTIONTYPE_OTHER,self,@{QUESTION_OPTION_TYPE:[NSNumber numberWithInt:_mulSelect],
+        self.resultBlock((int)_mulSelect,self,@{QUESTION_OPTION_TYPE:[NSNumber numberWithInt:_mulSelect],
                                                    QUESTION_ANSERSTRING:[self optionsSelectedState],
                                                    QUESTION_OPTION_IDS:state_arr
                                                    });
     }
 }
+
 
 /**
  *  获取选项选择状态1和0的串

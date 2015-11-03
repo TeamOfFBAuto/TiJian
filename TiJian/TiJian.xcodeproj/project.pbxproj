@@ -1660,7 +1660,11 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
+>>>>>>> origin/master
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
@@ -1693,7 +1697,11 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
+>>>>>>> origin/master
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
