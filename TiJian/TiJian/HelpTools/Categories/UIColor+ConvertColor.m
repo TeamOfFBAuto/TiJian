@@ -46,4 +46,16 @@
     return [UIColor colorWithRed:((float) r / 255.0f) green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:1.0f];
 }
 
++ (UIColor *)randomColor {
+    static BOOL seed = NO;
+    if (!seed) {
+        seed = YES;
+        srandom((unsigned)time(NULL));
+    }
+    CGFloat red = (CGFloat)random()/(CGFloat)RAND_MAX;
+    CGFloat green = (CGFloat)random()/(CGFloat)RAND_MAX;
+    CGFloat blue = (CGFloat)random()/(CGFloat)RAND_MAX;
+    return [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];//alpha为1.0,颜色完全不透明
+}
+
 @end

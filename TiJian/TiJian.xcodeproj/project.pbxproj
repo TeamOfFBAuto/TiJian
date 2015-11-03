@@ -164,6 +164,9 @@
 		13F1F4021BBA9D5500885D31 /* RefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4011BBA9D5500885D31 /* RefreshHeaderView.m */; settings = {ASSET_TAGS = (); }; };
 		13F1F4051BBA9EC800885D31 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4041BBA9EC800885D31 /* UIView+Frame.m */; settings = {ASSET_TAGS = (); }; };
 		13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4071BBA9F6B00885D31 /* RefreshTableView.m */; settings = {ASSET_TAGS = (); }; };
+		13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */; settings = {ASSET_TAGS = (); }; };
+		13F251EE1BE8B11D0021BF4C /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13F251EC1BE8B11D0021BF4C /* back@2x.png */; settings = {ASSET_TAGS = (); }; };
+		13F251EF1BE8B11D0021BF4C /* zhuanjiajianyi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13F251ED1BE8B11D0021BF4C /* zhuanjiajianyi@2x.png */; settings = {ASSET_TAGS = (); }; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; settings = {ASSET_TAGS = (); }; };
 		E31FC6921BDF50780057D3BE /* GcycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC6911BDF50780057D3BE /* GcycleScrollView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -477,6 +480,10 @@
 		13F1F4041BBA9EC800885D31 /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
 		13F1F4061BBA9F6B00885D31 /* RefreshTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshTableView.h; sourceTree = "<group>"; };
 		13F1F4071BBA9F6B00885D31 /* RefreshTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshTableView.m; sourceTree = "<group>"; };
+		13F251E81BE8AC2F0021BF4C /* RecommendMedicalCheckController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendMedicalCheckController.h; sourceTree = "<group>"; };
+		13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendMedicalCheckController.m; sourceTree = "<group>"; };
+		13F251EC1BE8B11D0021BF4C /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		13F251ED1BE8B11D0021BF4C /* zhuanjiajianyi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zhuanjiajianyi@2x.png"; sourceTree = "<group>"; };
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -556,6 +563,8 @@
 			children = (
 				1324B6A51BD76B6A00FB47A9 /* PersonalCustomViewController.h */,
 				1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */,
+				13F251E81BE8AC2F0021BF4C /* RecommendMedicalCheckController.h */,
+				13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */,
 			);
 			path = "个人定制";
 			sourceTree = "<group>";
@@ -574,6 +583,7 @@
 		1324B6AC1BD7742F00FB47A9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				13F251EB1BE8B11D0021BF4C /* 推荐项目 */,
 				139333441BE0DF3E00B4628B /* 个性定制 */,
 			);
 			path = Images;
@@ -1089,6 +1099,15 @@
 			path = BaseClass;
 			sourceTree = "<group>";
 		};
+		13F251EB1BE8B11D0021BF4C /* 推荐项目 */ = {
+			isa = PBXGroup;
+			children = (
+				13F251EC1BE8B11D0021BF4C /* back@2x.png */,
+				13F251ED1BE8B11D0021BF4C /* zhuanjiajianyi@2x.png */,
+			);
+			path = "推荐项目";
+			sourceTree = "<group>";
+		};
 		6D5116572F4D463C65E73ADC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1300,6 +1319,7 @@
 				139333F41BE0DF3E00B4628B /* 8_2@2x.png in Resources */,
 				13F1F3E31BBA9A4B00885D31 /* UMShareEditViewController.xib in Resources */,
 				13F1F3EF1BBA9A4B00885D31 /* 归档.zip in Resources */,
+				13F251EE1BE8B11D0021BF4C /* back@2x.png in Resources */,
 				139333C41BE0DF3E00B4628B /* 22_2@2x.png in Resources */,
 				139333D41BE0DF3E00B4628B /* 26_4@2x.png in Resources */,
 				139333F81BE0DF3E00B4628B /* duihao@2x.png in Resources */,
@@ -1347,6 +1367,7 @@
 				139333B71BE0DF3E00B4628B /* 18_3@2x.png in Resources */,
 				139333CE1BE0DF3E00B4628B /* 24-2@2x.png in Resources */,
 				13F1F3A41BBA9A4B00885D31 /* bluedown1@2x.png in Resources */,
+				13F251EF1BE8B11D0021BF4C /* zhuanjiajianyi@2x.png in Resources */,
 				139333B61BE0DF3E00B4628B /* 18_2@2x.png in Resources */,
 				139333F51BE0DF3E00B4628B /* 8_3@2x.png in Resources */,
 				139333D11BE0DF3E00B4628B /* 26_1@2x.png in Resources */,
@@ -1486,6 +1507,7 @@
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				1393328C1BE0B31A00B4628B /* DBManager.m in Sources */,
 				E31FC6921BDF50780057D3BE /* GcycleScrollView.m in Sources */,
+				13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */,
 				13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */,
 				13F1F39D1BBA9A4B00885D31 /* UILabel+Additions.m in Sources */,
 				13F1F2671BBA78ED00885D31 /* main.m in Sources */,
