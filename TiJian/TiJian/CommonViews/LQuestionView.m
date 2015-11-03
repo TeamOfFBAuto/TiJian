@@ -198,8 +198,6 @@
             //默认为未选择状态
             btn.selectedState = NO;
             
-            NSLog(@"");
-            
             if (initAnswerString && [[initAnswerString substringWithRange:NSMakeRange(i, 1)] intValue] == 1) {
                 
                 btn.selectedState = YES;//更新选中状态
@@ -505,7 +503,7 @@
     
     //回调结果
     if (self.resultBlock) {
-        self.resultBlock(QUESTIONTYPE_OTHER,self,@{QUESTION_OPTION_TYPE:[NSNumber numberWithInt:_mulSelect],
+        self.resultBlock((int)_mulSelect,self,@{QUESTION_OPTION_TYPE:[NSNumber numberWithInt:_mulSelect],
                                                    QUESTION_ANSERSTRING:[self optionsSelectedState],
                                                    QUESTION_OPTION_IDS:state_arr
                                                    });

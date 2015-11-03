@@ -1034,6 +1034,12 @@
                 [weakSelf updateOptionState:state withOptionId:optionid withQuestionId:(int)questionId forGroupId:_groupId];//针对选项记录
             }
             
+            //判断是否是单选,单选的情况下自动跳转
+            if (type == QUESTIONOPTIONTYPE_SINGLE) {
+                
+                [weakSelf clickToForward:nil];
+            }
+            
         } mulSelect:aModel.select_option_type specialOptionId:specialId];
         
         [self.view addSubview:quetionView];
