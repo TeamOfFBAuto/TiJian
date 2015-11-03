@@ -34,7 +34,7 @@
 
 #import "PropertyButton.h"//button子类
 
-//#import "GMAPI.h"//工具类
+#import "GMAPI.h"//工具类
 //#import "UMSocial.h"//友盟
 //#import "SVProgressHUD.h"//浮层提示框
 //#import "UIImageView+WebCache.h"
