@@ -522,6 +522,7 @@
         
         while(rs.next) {
             
+            int n1_id = [rs intForColumn:@"n1_id"];
             int question_id = [rs intForColumn:@"question_id"];
             int option_id = [rs intForColumn:@"option_id"];
             int answer = [rs intForColumn:@"answer"];
@@ -530,6 +531,7 @@
             int n1_type_id = [rs intForColumn:@"n1_type_id"];
             
             IgnoreConditionModel *aModel = [[IgnoreConditionModel alloc]initWithGroupId:groupId questionId:question_id optionId:option_id answer:answer type:type affectNext:affectNext n1_type_id:n1_type_id];
+            aModel.n1_id = n1_id;
             [temp addObject:aModel];
             NSLog(@"__next groupId:%d questionId:%d optionId:%d",groupId,question_id,option_id);
             

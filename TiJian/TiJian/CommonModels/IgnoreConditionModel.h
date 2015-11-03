@@ -23,6 +23,7 @@
 //根据忽略的条件（有多种情况，满足其一即可）找到对应的需要忽略的问题id和对应的选项
 
 //针对 n+1 的忽略条件
+@property(nonatomic,assign)int n1_id;
 @property(nonatomic,assign)int option_id;
 @property(nonatomic,assign)int answer;
 @property(nonatomic,assign)int type;

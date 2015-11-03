@@ -1658,7 +1658,7 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = FBLife.TiJian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
@@ -1689,7 +1689,7 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = FBLife.TiJian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};

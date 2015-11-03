@@ -1398,6 +1398,36 @@
     return attibutedString;
 }
 
+#pragma - mark 获取JSONString
+/**
+ *  object转化为JSON字符串
+ *
+ *  @param object
+ *
+ *  @return
+ */
++ (NSString *)JSONStringWithObject:(id)object
+{
+    if (!object) {
+        return nil;
+    }
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    
+    if ([jsonData length] > 0 && error == nil){
+        
+        //使用这个方法的返回，我们就可以得到想要的JSON串
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData
+                                                     encoding:NSUTF8StringEncoding];
+        return jsonString;
+    }
+    
+    NSLog(@"%s:%@",__FUNCTION__,error);
+    return nil;
+}
+
 #pragma - mark 图片处理相关
 
 #pragma mark 切图
