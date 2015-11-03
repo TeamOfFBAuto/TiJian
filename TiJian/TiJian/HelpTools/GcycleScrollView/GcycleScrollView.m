@@ -240,7 +240,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     int page = (int)(_scrollView.contentOffset.x / _scrollView.frame.size.width);
     if (page > -1 && page < imageItems.count) {
         SGFocusImageItem *item = [imageItems objectAtIndex:page];
-        if ([self.delegate respondsToSelector:@selector(testfoucusImageFrame:didSelectItem:)]) {
+        if ( self.delegate && [self.delegate respondsToSelector:@selector(testfoucusImageFrame:didSelectItem:)]) {
             [self.delegate testfoucusImageFrame:self didSelectItem:item];
         }
     }
@@ -296,7 +296,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     }
     if (page!= _pagecontrol.currentPage)
     {
-        if ([self.delegate respondsToSelector:@selector(testfoucusImageFrame:currentItem:)])
+        if (self.delegate && [self.delegate respondsToSelector:@selector(testfoucusImageFrame:currentItem:)])
         {
             [self.delegate testfoucusImageFrame:self currentItem:page];
         }
