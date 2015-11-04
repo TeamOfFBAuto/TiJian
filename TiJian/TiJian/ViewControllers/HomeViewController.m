@@ -10,12 +10,20 @@
 #import "PersonalCustomViewController.h"
 #import "GStoreHomeViewController.h"
 #import "RecommendMedicalCheckController.h"
+#import "PhysicalTestResultController.h"
 
 @interface HomeViewController ()
 
 @end
 
 @implementation HomeViewController
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:nil];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -76,6 +84,16 @@
 #pragma - mark 事件处理
 - (void)clickToPush:(UIButton *)btn
 {
+    BOOL testOver = YES;
+    if (testOver) { //已经体检过的跳转至体检结果页
+        PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];
+        physical.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:physical animated:YES];
+        
+        return;
+    }
+    
+    
     PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
     custom.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:custom animated:YES];

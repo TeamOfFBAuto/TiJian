@@ -10,4 +10,14 @@
 
 @interface BaseModel : NSObject
 -(id)initWithDictionary:(NSDictionary *)dic;
+
+/**
+ *  将字典数组转化为model数组
+ *
+ *  @param array 字典数组
+ *
+ *  @return
+ */
++ (NSArray *)modelsFromArray:(NSArray *)array;
+
 @end

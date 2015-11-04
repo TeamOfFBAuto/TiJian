@@ -11,6 +11,7 @@
 #import "QuestionModel.h"
 #import "IgnoreConditionModel.h"
 #import "OptionModel.h"//选项model
+#import "RecommendMedicalCheckController.h"
 
 #define Q_AGE @"age" //年龄
 #define Q_WEIGHT @"weight" //体重
@@ -23,7 +24,7 @@
 
 #define Q_RESULT @"questionResult" //最终答案结果am等
 
-@interface PersonalCustomViewController ()
+@interface PersonalCustomViewController ()<UIAlertViewDelegate>
 {
     UIView *_view_sex;//性别选择
     LQuestionView *_view_Age;//年龄
@@ -42,7 +43,7 @@
     int _questionId;//当前问题id
     int _groupId;//当前groupId
     NSMutableArray *_groupSortArray;//组合id排序
-    int _test;
+    NSString *_jsonString;//最终结果json串
 }
 
 @end
@@ -99,6 +100,12 @@
     //选择性别
     UIView *view_sex = [[UIView alloc]initWithFrame:frame];
     view_sex.backgroundColor = [UIColor whiteColor];
+    
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [closeBtn setImage:[UIImage imageNamed:@"tuichu"] forState:UIControlStateNormal];
+    [view_sex addSubview:closeBtn];
+    closeBtn.frame = CGRectMake(0, 20, 44, 44);
+    [closeBtn addTarget:self action:@selector(clickToClose) forControlEvents:UIControlEventTouchUpInside];
     
     UIImage *bgImage = [UIImage imageNamed:@"1_1_bg"];
     CGFloat width = bgImage.size.width;
@@ -174,6 +181,29 @@
 }
 
 #pragma - mark 事件处理
+
+
+/**
+ *  跳转至个性化定制结果页
+ */
+- (void)pushToCustomizationResult
+{
+    RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
+    recommend.jsonString = _jsonString;
+    recommend.lastViewController = self.navigationController.topViewController;
+//    [recommend.lastViewController.navigationController popViewControllerAnimated:NO];
+    
+    [recommend.lastViewController.navigationController pushViewController:recommend animated:YES];
+}
+
+/**
+ *  点击关闭个性化定制
+ */
+- (void)clickToClose
+{
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定退出个性化定制？" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
+    [alert show];
+}
 
 /**
  *  更新问题选择结果
@@ -523,22 +553,24 @@
 - (void)actionForFinishQuestionWithGroupId:(int)groupId
 {
     
-    NSString *g_name = [[DBManager shareInstance] queryGroupNameById:groupId];
-    NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
-    
-    NSLog(@"%@",g_name);
-    
-    if (g_name.length > 0) {
-        [_questionDictionary setObject:g_name forKeyedSubscript:Q_RESULT];//记录结果
-    }
-    
-    [LTools showMBProgressWithText:text addToView:self.view];
+//    NSString *g_name = [[DBManager shareInstance] queryGroupNameById:groupId];
+//    NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
+//    
+//    NSLog(@"%@",g_name);
+//    
+//    if (g_name.length > 0) {
+//        [_questionDictionary setObject:g_name forKeyedSubscript:Q_RESULT];//记录结果
+//    }
+//    
+//    [LTools showMBProgressWithText:text addToView:self.view];
     
     //组合信息
     //最终结束组合id
     //n1_type+id
     
-    NSMutableArray *groupArray = [NSMutableArray arrayWithCapacity:_groupSortArray.count];
+//    NSMutableDictionary *groupArray = [NSMutableArray arrayWithCapacity:_groupSortArray.count];
+    
+    NSMutableDictionary *groupDic = [NSMutableDictionary dictionary];
     NSMutableArray *n1_ids_array = [NSMutableArray array];
     //组合id
     for (NSString *groupId in _groupSortArray) {
@@ -550,13 +582,16 @@
             NSNumber *weight = [_questionDictionary objectForKey:Q_WEIGHT];
             NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
             
-            NSDictionary *groupOne = @{groupId:@{Q_SEX:sex,
-                                                 Q_HEIGHT:height,
-                                                 Q_WEIGHT:weight,
-                                                 Q_AGE:age}};
-
+//            NSDictionary *groupOne = @{groupId:@{Q_SEX:sex,
+//                                                 Q_HEIGHT:height,
+//                                                 Q_WEIGHT:weight,
+//                                                 Q_AGE:age}};
+//            [groupArray addObject:groupOne];
             
-            [groupArray addObject:groupOne];
+            [groupDic setObject:@{Q_SEX:sex,
+                                  Q_HEIGHT:height,
+                                  Q_WEIGHT:weight,
+                                  Q_AGE:age} forKey:groupId];
             
             continue;
         }
@@ -564,7 +599,9 @@
         //问题
         NSArray *questions = [_questionDictionary objectForKey:groupId];
         
-        NSMutableArray *questionArray = [NSMutableArray array];
+//        NSMutableArray *questionArray = [NSMutableArray array];
+        
+        NSMutableDictionary *quesitonDic = [NSMutableDictionary dictionary];
         
         for (NSString *questionId in questions) {
             
@@ -576,8 +613,13 @@
                 
                 int state = [self optionStateWithOptionId:[optionId intValue] withQuestionId:[questionId intValue] forGroupId:[groupId intValue]];
                 
-                NSDictionary *option_dic = @{optionId : NSStringFromInt(state)};
-                [optionsArray addObject:option_dic];
+                if (state == 1) {
+                    
+                    [optionsArray addObject:optionId];
+                }
+                
+//                NSDictionary *option_dic = @{optionId : NSStringFromInt(state)};
+//                [optionsArray addObject:option_dic];
                 
                 //忽略
                 NSString *key = [NSString stringWithFormat:@"ignore_group_%@_question_%@_option_%@",groupId,questionId,optionId];
@@ -590,13 +632,16 @@
             
             //问题对应的所有选项
             
-            NSDictionary *question_dic = @{questionId : optionsArray};
-            [questionArray addObject:question_dic];
+//            NSDictionary *question_dic = @{questionId : optionsArray};
+//            [questionArray addObject:question_dic];
+            
+            [quesitonDic setObject:optionsArray forKey:questionId];
         }
         
         //组合对应所有问题
-        NSDictionary *group_dic = @{groupId:questionArray};
-        [groupArray addObject:group_dic];
+//        NSDictionary *group_dic = @{groupId:questionArray};
+//        [groupArray addObject:group_dic];
+        [groupDic setObject:quesitonDic forKey:groupId];
     }
     
     NSString *n1_ids = [n1_ids_array componentsJoinedByString:@","];
@@ -604,13 +649,18 @@
     
     groupId = groupId > 0 ? groupId : -groupId;
     
-    NSDictionary *result = @{@"group_ids":groupArray,
+    NSDictionary *result = @{@"group_ids":groupDic,
                              @"final_groupId":NSStringFromInt(groupId),
                              @"nq_ids":n1_ids};
     
     NSString *jsonString = [LTools JSONStringWithObject:result];
+    _jsonString = jsonString;
     
     NSLog(@"result %@",jsonString);
+    
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定提交结果" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"确定", nil];
+    alert.tag = 10000;
+    [alert show];
 }
 
 #pragma - mark 获取组合答案信息
@@ -1047,6 +1097,17 @@
         view = quetionView;
     }
     
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    if (view == _view_sex) {
+        [closeBtn setImage:[UIImage imageNamed:@"tuichu"] forState:UIControlStateNormal];
+    }else
+    {
+        [closeBtn setImage:[UIImage imageNamed:@"tuichu_w"] forState:UIControlStateNormal];
+    }
+    [view addSubview:closeBtn];
+    closeBtn.frame = CGRectMake(0, 20, 44, 44);
+    [closeBtn addTarget:self action:@selector(clickToClose) forControlEvents:UIControlEventTouchUpInside];
+    
 
     return view;
 }
@@ -1184,6 +1245,27 @@
     }
     [temp replaceCharactersInRange:NSMakeRange(index, 1) withString:@"1"];
     return temp;
+}
+
+#pragma - mark @protocol UIAlertViewDelegate <NSObject>
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 10000) {
+        
+        if (buttonIndex == 1) {
+            
+            [self pushToCustomizationResult];
+        }
+        
+        return;
+    }
+    
+    if(buttonIndex == 1){
+        
+        [self leftButtonTap:nil];
+    }
 }
 
 

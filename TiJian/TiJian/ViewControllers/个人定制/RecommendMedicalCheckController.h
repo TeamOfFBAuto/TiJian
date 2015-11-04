@@ -12,4 +12,6 @@
 
 @interface RecommendMedicalCheckController : MyViewController
 
+@property(nonatomic,retain)NSString *jsonString;
+
 @end

@@ -12,6 +12,7 @@
 {
     UIPanGestureRecognizer * panGestureRecognizer;
     UISwipeGestureRecognizer * swipe;
+    UIButton *_backButton;//返回按钮
 }
 
 @end
@@ -43,12 +44,59 @@
 {
     [super viewWillAppear:animated];
 
-    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
-    {
-        //iOS 5 new UINavigationBar custom background
+    self.navigationController.navigationBarHidden = NO;
+    
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
+//    {
+//        //iOS 5 new UINavigationBar custom background
+//        
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
+//    }
+}
+
+
+- (void)setNavigationStyle:(NAVIGATIONSTYLE)style
+                     title:(NSString *)title
+{
+    if (style == NAVIGATIONSTYLE_BLUE) {
         
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
+        if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
+        {
+            [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
+            [_backButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
+            _myTitleLabel.textColor = [UIColor whiteColor];//白色字体
+        }
+    }else if (style == NAVIGATIONSTYLE_WHITE){
+        
+        [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics: UIBarMetricsDefault];
+        [_backButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
+        _myTitleLabel.textColor = [UIColor whiteColor];//白色字体
+        
+    }else if (style == NAVIGATIONSTYLE_CUSTOM){
+        
+        self.navigationController.navigationBarHidden = YES;
+        
+        UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, IOS7_OR_LATER ? 0 : 20, DEVICE_WIDTH, IOS7_OR_LATER ? 64 : 44)];
+        [self.view addSubview:navigationView];
+        navigationView.backgroundColor = DEFAULT_TEXTCOLOR;
+        
+        //标题
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, DEVICE_WIDTH, 44)];
+        label.font = [UIFont systemFontOfSize:17];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
+        [navigationView addSubview:label];
+        _myTitleLabel = label;
+        
+        UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [backButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];
+        backButton.frame = CGRectMake(0, navigationView.height - 44, 44, 44);
+        [navigationView addSubview:backButton];
+        [backButton addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+
     }
+    
+    _myTitleLabel.text = title;
 }
 
 
@@ -99,7 +147,7 @@
     if (theType == MyViewControllerLeftbuttonTypeBack)
     {
         UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-        spaceButton1.width = IOS7_OR_LATER ? -10 : 5;
+//        spaceButton1.width = IOS7_OR_LATER ? -10 : 5;
         
         UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
         [button_back addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
@@ -108,6 +156,9 @@
         [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         UIBarButtonItem *back_item=[[UIBarButtonItem alloc]initWithCustomView:button_back];
         self.navigationItem.leftBarButtonItems=@[spaceButton1,back_item];
+        
+        _backButton = button_back;
+        
     }else if (theType == MyViewControllerLeftbuttonTypelogo)
     {
         UIImageView * leftImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ios7logo"]];

@@ -29,6 +29,14 @@ typedef enum
     MyViewControllerRightbuttonTypeOther
 }MyViewControllerRightbuttonType;
 
+typedef enum {
+ 
+    NAVIGATIONSTYLE_WHITE = 0,//白色
+    NAVIGATIONSTYLE_BLUE = 1 ,//蓝色
+    NAVIGATIONSTYLE_CUSTOM = 2 //自定义
+    
+}NAVIGATIONSTYLE;//导航栏类型
+
 typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @interface MyViewController : UIViewController
@@ -56,6 +64,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 
 @property(nonatomic,assign)BOOL lastPageNavigationHidden;//上一级是否隐藏navigationBar
+@property(nonatomic,retain)UIViewController *lastViewController;
 
 ///标题
 @property(nonatomic,strong)UILabel * myTitleLabel;
@@ -69,6 +78,9 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 
 -(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType WithRightButtonType:(MyViewControllerRightbuttonType)rightType;
+
+- (void)setNavigationStyle:(NAVIGATIONSTYLE)style
+                     title:(NSString *)title;
 -(void)leftButtonTap:(UIButton *)sender;
 
 -(void)rightButtonTap:(UIButton *)sender;

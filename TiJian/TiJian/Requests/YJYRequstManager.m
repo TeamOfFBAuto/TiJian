@@ -56,13 +56,13 @@
                     failBlock:(AFResultBlock)failBlock
 {
     NSString *baseUrl = nil;
-    if (IOS9_OR_LATER) {
-        
-        
-    }else
-    {
+//    if (IOS9_OR_LATER) {
+//        
+//        
+//    }else
+//    {
         baseUrl = [SERVER_URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
+//    }
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
