@@ -84,19 +84,41 @@
 #pragma - mark 事件处理
 - (void)clickToPush:(UIButton *)btn
 {
-    BOOL testOver = YES;
-    if (testOver) { //已经体检过的跳转至体检结果页
+    
+    __weak typeof(self)weakSelf = self;
+    BOOL isLogin = [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+       
+        if (success) {
+            [weakSelf pushToPhysicaResult];
+            
+        }else
+        {
+            NSLog(@"没登陆成功");
+        }
+    }];
+    //登录成功
+    if (isLogin) {
+        
+        [weakSelf pushToPhysicaResult];
+    }
+}
+
+- (void)pushToPhysicaResult
+{
+    //先判断是否个性化定制过
+    BOOL isOver = NO;
+    if (isOver) {
+        //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];
         physical.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:physical animated:YES];
-        
-        return;
+    }else
+    {
+        PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
+        custom.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:custom animated:YES];
+
     }
-    
-    
-    PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
-    custom.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:custom animated:YES];
 }
 
 - (void)clickToQuestionResult
