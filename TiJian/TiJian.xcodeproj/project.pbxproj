@@ -21,6 +21,7 @@
 		1303C2DB1BE9F42D00700847 /* ProjectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C2DA1BE9F42D00700847 /* ProjectModel.m */; settings = {ASSET_TAGS = (); }; };
 		1303C2DE1BE9F6DC00700847 /* NSObject+Addtions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C2DD1BE9F6DC00700847 /* NSObject+Addtions.m */; settings = {ASSET_TAGS = (); }; };
 		1303C2E11BE9FB2400700847 /* NSArray+Additons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C2E01BE9FB2400700847 /* NSArray+Additons.m */; settings = {ASSET_TAGS = (); }; };
+		1303C2E41BEA0DE600700847 /* ProductModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C2E31BEA0DE600700847 /* ProductModel.m */; settings = {ASSET_TAGS = (); }; };
 		13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 13217C9B1BDF1E9D00020C40 /* PropertyButton.m */; };
 		1324B6991BD7485500FB47A9 /* age.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1324B6981BD7485500FB47A9 /* age.jpg */; };
 		1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B69E1BD7499900FB47A9 /* RootViewController.m */; };
@@ -236,6 +237,8 @@
 		1303C2DD1BE9F6DC00700847 /* NSObject+Addtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Addtions.m"; sourceTree = "<group>"; };
 		1303C2DF1BE9FB2400700847 /* NSArray+Additons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additons.h"; sourceTree = "<group>"; };
 		1303C2E01BE9FB2400700847 /* NSArray+Additons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Additons.m"; sourceTree = "<group>"; };
+		1303C2E21BEA0DE600700847 /* ProductModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductModel.h; sourceTree = "<group>"; };
+		1303C2E31BEA0DE600700847 /* ProductModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductModel.m; sourceTree = "<group>"; };
 		13217C9A1BDF1E9D00020C40 /* PropertyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyButton.h; sourceTree = "<group>"; };
 		13217C9B1BDF1E9D00020C40 /* PropertyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyButton.m; sourceTree = "<group>"; };
 		1324B6981BD7485500FB47A9 /* age.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = age.jpg; sourceTree = "<group>"; };
@@ -782,6 +785,8 @@
 				139334051BE3789000B4628B /* OptionModel.m */,
 				1303C2D91BE9F42D00700847 /* ProjectModel.h */,
 				1303C2DA1BE9F42D00700847 /* ProjectModel.m */,
+				1303C2E21BEA0DE600700847 /* ProductModel.h */,
+				1303C2E31BEA0DE600700847 /* ProductModel.m */,
 			);
 			path = CommonModels;
 			sourceTree = "<group>";
@@ -1589,6 +1594,7 @@
 				13F1F39E1BBA9A4B00885D31 /* UIView+Additions.m in Sources */,
 				139334061BE3789000B4628B /* OptionModel.m in Sources */,
 				13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */,
+				1303C2E41BEA0DE600700847 /* ProductModel.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,
 				13F1F39F1BBA9A4B00885D31 /* UIViewController+Addtions.m in Sources */,
@@ -1774,15 +1780,7 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-
-
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
-
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
-
-
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
-
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
@@ -1815,15 +1813,7 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-
-
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
-
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
-
-
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
-
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";

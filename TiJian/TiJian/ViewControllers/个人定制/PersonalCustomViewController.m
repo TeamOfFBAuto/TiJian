@@ -85,8 +85,6 @@
 
 #pragma - mark 网络请求
 
-
-
 #pragma - mark 视图创建
 /**
  *  创建性别选择页面

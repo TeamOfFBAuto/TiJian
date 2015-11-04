@@ -9,8 +9,7 @@
 #import "RecommendMedicalCheckController.h"
 #import "GProductCellTableViewCell.h"
 #import "ProjectModel.h"
-
-#import "NSArray+Additons.h"
+#import "ProductModel.h"
 
 @interface RecommendMedicalCheckController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -30,9 +29,7 @@
     self.myTitleLabel.text = @"推荐项目";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
-    
-//    [self prepareData];//请求数据
-    
+        
     [self getCustomizationResult];
 }
 
@@ -114,7 +111,10 @@
  */
 - (void)getCustomizationResult
 {
-//    http://123.57.56.167:85/index.php?d=api&c=customization&m=get_customization_result
+    
+    if (!self.jsonString) {
+        return;
+    }
     
     NSDictionary *params = @{@"c_result":self.jsonString,
                              @"province_id":@"1000",
@@ -132,32 +132,18 @@
     
 }
 
-- (void)prepareData
-{
-    NSDictionary *params = @{};
-    __weak typeof(self)weakSelf = self;
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        [weakSelf parseDataWithResult:result];
-        
-    } failBlock:^(NSDictionary *result) {
-        
-        
-    }];
-}
-
 - (void)parseDataWithResult:(NSDictionary *)result
 {
-    _dataArray = [NSArray arrayWithArray:result[@"setmeal_product_list"]];
-    
     NSDictionary *data = result[@"data"];
-    NSArray *temp = data[@"projects_data"];
+    NSArray *setmeal_product_list = data[@"setmeal_product_list"];
+    _dataArray = [ProductModel modelsFromArray:setmeal_product_list];
     
-//    _projectsArray = [temp objectsForClass:[ProjectModel class]];
-    
-    _projectsArray = [ProjectModel modelsFromArray:temp];
+    NSArray *projects_data = data[@"projects_data"];
+    _projectsArray = [ProjectModel modelsFromArray:projects_data];
     
     [self createViewsWithProjects:_projectsArray];
+    [_table reloadData];
+    
 }
 
 
@@ -182,7 +168,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"aaaaaa";
+    static NSString *identifier = @"GProductCellTableViewCell";
     GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
@@ -191,11 +177,8 @@
         [cell.contentView addSubview:line];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    NSDictionary *dic = _dataArray[indexPath.row];
-    
-    [cell loadData:dic];
-    
-//    cell.textLabel.text = @"套餐";
+    ProductModel *product = _dataArray[indexPath.row];
+    [cell setCellWithModel:product];
     
     return cell;
 }
