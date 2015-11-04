@@ -9,6 +9,7 @@
 #import "HomeViewController.h"
 #import "PersonalCustomViewController.h"
 #import "GStoreHomeViewController.h"
+#import "RecommendMedicalCheckController.h"
 
 @interface HomeViewController ()
 
@@ -45,7 +46,16 @@
         make.size.mas_equalTo(CGSizeMake(100, 50));
     }];
     
-    
+    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn2 setTitle:@"问卷结束界面" forState:UIControlStateNormal];
+    btn2.backgroundColor = [UIColor orangeColor];
+    [btn2 addTarget:self action:@selector(clickToQuestionResult) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn2];
+    [btn2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(210);
+        make.left.equalTo(self.view).offset(100);
+        make.size.mas_equalTo(CGSizeMake(150, 50));
+    }];
     
 }
 
@@ -69,6 +79,13 @@
     PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
     custom.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:custom animated:YES];
+}
+
+- (void)clickToQuestionResult
+{
+    RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
+    recommend.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:recommend animated:YES];
 }
 
 @end

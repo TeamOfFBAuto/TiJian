@@ -13,6 +13,9 @@
 #import "RefreshTableView.h"
 #import "GwebViewController.h"
 #import "CycleAdvModel.h"
+#import "GoneClassListViewController.h"
+#import "GproductDetailViewController.h"
+#import "GProductCellTableViewCell.h"
 
 @interface GStoreHomeViewController ()<GcycleScrollViewDelegate,RefreshDelegate,UITableViewDataSource>
 {
@@ -56,6 +59,9 @@
     [_request removeOperation:_request_adv];
     [_request removeOperation:_request_ProductClass];
     [_request removeOperation:_request_ProductRecommend];
+    
+    _topScrollView.delegate = nil;
+    _topScrollView = nil;
     
     [self removeObserver:self forKeyPath:@"_count"];
 }
@@ -206,6 +212,10 @@
     }
     
 }
+
+- (void)testfoucusImageFrame:(GcycleScrollView *)imageFrame currentItem:(int)index{
+    
+}
 #pragma mark - 循环滚动view相关=======
 
 
@@ -269,24 +279,8 @@
     NSNumber *num = [change objectForKey:@"new"];
     
     if ([num intValue] == 3) {
-        
         //数据数组
         NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
-        
-        //refresh头部
-        self.topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, (int)(DEVICE_WIDTH*300/750)+classData.count*0.5*DEVICE_WIDTH*0.5+DEVICE_WIDTH*160/750+5 + DEVICE_WIDTH*80/750)];
-        self.topView.backgroundColor = [UIColor whiteColor];
-        _table.tableHeaderView = self.topView;
-        
-        
-        
-        //设置轮播图
-        [self setTopScrollViewWithDic:_StoreCycleAdvDic];
-        
-        //设置版块
-        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH, self.topView.frame.size.height - _topScrollView.frame.size.height - DEVICE_WIDTH*160/750-5)];
-        bankuaiView.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.topView addSubview:bankuaiView];
         
         //共几行
         int hang = (int)classData.count/2;
@@ -295,14 +289,47 @@
         };
         //每行几列
         int lie = 2;
+        
+        
+        
+        //refresh头部
+        self.topView = [[UIView alloc]initWithFrame:CGRectMake(0,
+                                                               0,
+                                                               DEVICE_WIDTH,
+                                                               [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/300]//轮播图高度
+                                                               +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
+                                                               +5
+                                                               +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
+                                                               +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
+                                                               )];
+        self.topView.backgroundColor = RGBCOLOR(244, 245, 246);
+        _table.tableHeaderView = self.topView;
+        
+        
+        
+        //设置轮播图
+        [self setTopScrollViewWithDic:_StoreCycleAdvDic];
+        
+        //设置版块
+        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
+        bankuaiView.backgroundColor = [UIColor whiteColor];
+        [self.topView addSubview:bankuaiView];
+        
+        
+        
+        //宽
+        CGFloat kk = DEVICE_WIDTH*0.5;
+        //高
+        CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+        
+        
         for (int i = 0; i<classData.count; i++) {
             
             NSDictionary *dic = classData[i];
-            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*DEVICE_WIDTH*0.5, DEVICE_WIDTH*0.5, DEVICE_WIDTH*0.5)];
+            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*hh, kk, hh)];
             [bankuaiView addSubview:view];
             view.backgroundColor = RGBCOLOR_ONE;
             
-            NSLog(@"------------------------>%@",NSStringFromCGRect(view.frame));
             
             //图片
             UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
@@ -316,10 +343,19 @@
 //            [imv addSubview:titleLabel];
             
             
+            int imvTag = i+10;
+            
+            [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
+            
+            
         }
         
-        UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.topView.frame.size.height-DEVICE_WIDTH*160/750 - DEVICE_WIDTH*80/750, DEVICE_WIDTH, DEVICE_WIDTH*160/750)];
-        dingzhiImv.backgroundColor = [UIColor purpleColor];
+        UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
+                                                                               CGRectGetMaxY(bankuaiView.frame)+5,
+                                                                               DEVICE_WIDTH,
+                                                                               [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
+                                                                               )];
+        dingzhiImv.backgroundColor = [UIColor lightGrayColor];
         [self.topView addSubview:dingzhiImv];
         
         
@@ -327,7 +363,10 @@
         
         //设置精品推荐
         
-        UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0, self.topView.frame.size.height - DEVICE_WIDTH*80/750, DEVICE_WIDTH, DEVICE_WIDTH*80/750)];
+        UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
+                                                                         CGRectGetMaxY(dingzhiImv.frame),
+                                                                         DEVICE_WIDTH,
+                                                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
         jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
         [self.topView addSubview:jingpintuijian];
         UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
@@ -345,15 +384,23 @@
         
     }
     
-    
-    
-    
-    
-    
-    
+}
+
+
+-(void)classImvClicked:(UIImageView*)sender{
+    NSLog(@"%s",__FUNCTION__);
+    NSLog(@"%ld",(long)sender.tag);
+    //数据数组
+    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
+    NSDictionary *dic = classData[sender.tag - 10];
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.className = [dic stringValueForKey:@"name"];
+    [self.navigationController pushViewController:cc animated:YES];
     
     
 }
+
+
 
 
 #pragma mark - 视图创建
@@ -381,12 +428,11 @@
     [_request removeOperation:_request_ProductClass];
     [_request removeOperation:_request_ProductRecommend];
     
-    [self prepareNetData];//获取顶部活动图
-
+    [self prepareNetData];
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    [self prepareNetData];//获取顶部活动图
+    [self prepareNetData];
 
 }
 
@@ -396,7 +442,11 @@
 }
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    
+    NSLog(@"%s",__FUNCTION__);
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    NSDictionary *dic = _table.dataArray[indexPath.row];
+    cc.productId = [dic stringValueForKey:@"setmeal_product_id"];
+    [self.navigationController pushViewController:cc animated:YES];
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
@@ -419,39 +469,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"identifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    }
-    
-    for (UIView *imv in cell.contentView.subviews) {
-        [imv removeFromSuperview];
+        cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
     NSDictionary *dic = _table.dataArray[indexPath.row];
-    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 80, 80)];
-    [logoImv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-    [cell.contentView addSubview:logoImv];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+10, logoImv.frame.origin.y, DEVICE_WIDTH-20-80, logoImv.frame.size.height*0.5)];
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.font = [UIFont systemFontOfSize:14];
-    titleLabel.numberOfLines = 2;
-    titleLabel.text = [dic stringValueForKey:@"brand_name"];
-    [cell.contentView addSubview:titleLabel];
-    
-    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, CGRectGetMaxY(titleLabel.frame), titleLabel.frame.size.width, titleLabel.frame.size.height/2)];
-    priceLabel.textColor = RGBCOLOR(224, 104, 21);
-    priceLabel.font = [UIFont systemFontOfSize:13];
-    priceLabel.text = [dic stringValueForKey:@"setmeal_original_price"];
-    [cell.contentView addSubview:priceLabel];
-    
-    UILabel *priceLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), titleLabel.frame.size.width, titleLabel.frame.size.height/2)];
-    priceLabel1.textColor = RGBCOLOR(80, 81, 82);
-    priceLabel1.font = [UIFont systemFontOfSize:13];
-    priceLabel1.text = [dic stringValueForKey:@"setmeal_price"];
-    [cell.contentView addSubview:priceLabel1];
-    
+    [cell loadData:dic];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
