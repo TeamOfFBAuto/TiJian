@@ -366,33 +366,19 @@
         
         
         UserInfo *user = [[UserInfo alloc]initWithDictionary:result];
-        
-        //保存用户信息
-        
         /**
          *  归档的方式保存userInfo
          */
-        NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:user];
-        
-        [[NSUserDefaults standardUserDefaults]setObject:userData forKey:@"userInfo"];
-        
-        [[NSUserDefaults standardUserDefaults]synchronize];
-        
+        [user cacheForKey:USERINFO_MODEL];
         
         [LTools cache:user.user_name ForKey:USER_NAME];
         [LTools cache:user.uid ForKey:USER_UID];
         [LTools cache:user.authcode ForKey:USER_AUTHOD];
         [LTools cache:user.avatar ForKey:USER_HEAD_IMAGEURL];
         
-        
-        
         //保存登录状态 yes
         
         [LTools cacheBool:YES ForKey:LOGIN_SERVER_STATE];
-        
-        //        [LTools showMBProgressWithText:result[RESULT_INFO] addToView:self.view];
-        
-//        [SVProgressHUD showInfoWithStatus: maskType:SVProgressHUDMaskTypeClear];
         
         [LTools showMBProgressWithText:result[RESULT_INFO] addToView:self.view];
         

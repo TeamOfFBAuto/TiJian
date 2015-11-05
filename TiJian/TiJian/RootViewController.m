@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "HomeViewController.h"
+#import "PersonalCenterController.h"
 
 @interface RootViewController ()<UITabBarControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
@@ -39,7 +40,7 @@
 - (void)prepareItems
 {
     
-    NSArray *classNames = @[@"HomeViewController",@"UIViewController",@"UIViewController"];
+    NSArray *classNames = @[@"HomeViewController",@"UIViewController",@"PersonalCenterController"];
     NSArray *item_names = @[@"首页",@"体检报告",@"个人中心"];
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:classNames.count];
     for (int i = 0; i < classNames.count;i ++) {
