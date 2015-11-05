@@ -445,7 +445,7 @@
     NSLog(@"%s",__FUNCTION__);
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     NSDictionary *dic = _table.dataArray[indexPath.row];
-    cc.productId = [dic stringValueForKey:@"setmeal_product_id"];
+    cc.productId = [dic stringValueForKey:@"product_id"];
     [self.navigationController pushViewController:cc animated:YES];
 }
 

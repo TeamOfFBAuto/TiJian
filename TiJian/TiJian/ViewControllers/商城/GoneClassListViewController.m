@@ -10,15 +10,26 @@
 #import "RefreshTableView.h"
 #import "NSDictionary+GJson.h"
 #import "GProductCellTableViewCell.h"
+#import "GproductDetailViewController.h"
+#import "GTranslucentSideBar.h"
+#import "GPushView.h"
 
-@interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource>
+@interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate>
 {
     RefreshTableView *_table;
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_ProductOneClass;
     NSDictionary *_productOneClassDic;
     int _count;//网络请求个数
+    
+    
+    
+    
 }
+
+@property (nonatomic, strong) GTranslucentSideBar *rightSideBar;
+
+
 @end
 
 @implementation GoneClassListViewController
@@ -46,6 +57,7 @@
     
     
     [self creatTableView];
+    [self creatRightTranslucentSideBar];
     [self creatFilterBtn];
     
 }
@@ -67,6 +79,41 @@
     
 }
 
+-(void)creatRightTranslucentSideBar{
+    
+    // Create Right SideBar
+    self.rightSideBar = [[GTranslucentSideBar alloc] initWithDirection:YES];
+    self.rightSideBar.delegate = self;
+    self.rightSideBar.sideBarWidth = DEVICE_WIDTH*670.0/750;
+    self.rightSideBar.translucentStyle = UIBarStyleBlack;
+    self.rightSideBar.tag = 1;
+    
+    // Add PanGesture to Show SideBar by PanGesture
+    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    [self.view addGestureRecognizer:panGestureRecognizer];
+    
+//    // Create Content of SideBar
+//    UITableView *tableView = [[UITableView alloc] init];
+//    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height)];
+//    v.backgroundColor = [UIColor clearColor];
+//    [tableView setTableHeaderView:v];
+//    [tableView setTableFooterView:v];
+//    tableView.dataSource = self;
+//    tableView.delegate = self;
+//    // Set ContentView in SideBar
+//    [self.rightSideBar setContentViewInSideBar:tableView];
+    
+    
+    GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)noGender:NO];
+    pushView.backgroundColor = [UIColor orangeColor];
+    [self.rightSideBar setContentViewInSideBar:pushView];
+    
+    
+    
+
+    
+}
+
 -(void)creatFilterBtn{
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     filterButton.frame = CGRectMake(17, 17, 38, 38);
@@ -76,8 +123,56 @@
     
     [self.view addSubview:filterButton];
     [filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
+    
 }
 
+
+-(void)clickToFilter:(UIButton *)sender{
+    [self.rightSideBar show];
+}
+
+#pragma mark - Gesture Handler
+- (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint startPoint = [recognizer locationInView:self.view];
+            self.rightSideBar.isCurrentPanGestureTarget = YES;
+    }
+    
+    [self.rightSideBar handlePanGestureToShow:recognizer inView:self.view];
+    
+}
+
+#pragma mark - CDRTranslucentSideBarDelegate
+- (void)sideBar:(GTranslucentSideBar *)sideBar didAppear:(BOOL)animated
+{
+    
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar did appear");
+    }
+}
+
+- (void)sideBar:(GTranslucentSideBar *)sideBar willAppear:(BOOL)animated
+{
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar will appear");
+    }
+}
+
+- (void)sideBar:(GTranslucentSideBar *)sideBar didDisappear:(BOOL)animated
+{
+    
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar did disappear");
+    }
+}
+
+- (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated
+{
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar will disappear");
+    }
+}
 
 
 
@@ -147,7 +242,19 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     
+    NSLog(@"%s",__FUNCTION__);
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    NSDictionary *dic = _table.dataArray[indexPath.row];
+    cc.productId = [dic stringValueForKey:@"product_id"];
+    [self.navigationController pushViewController:cc animated:YES];
 }
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"%s",__FUNCTION__);
+    
+}
+
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     CGFloat height = 100;
@@ -164,23 +271,44 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _table.dataArray.count;
+    
+    NSInteger num = 0;
+    if (tableView.tag ==1) {
+        num = 4;
+    }else{
+        num = _table.dataArray.count;
+    }
+    
+    return num;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *identifier = @"identifier";
-    GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (!cell) {
-        cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    
+    if (tableView.tag == 1) {
+        static NSString *ident = @"ident";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ident];
+        if (!cell) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ident];
+        }
+        return cell;
+    }else{
+        static NSString *identifier = @"identifier";
+        GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (!cell) {
+            cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        }
+        
+        NSDictionary *dic = _table.dataArray[indexPath.row];
+        
+        [cell loadData:dic];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        return cell;
     }
     
-    NSDictionary *dic = _table.dataArray[indexPath.row];
     
-    [cell loadData:dic];
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    return cell;
+    return [[UITableViewCell alloc]init];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{

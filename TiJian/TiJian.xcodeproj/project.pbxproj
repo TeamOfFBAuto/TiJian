@@ -167,22 +167,6 @@
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6921BDF50780057D3BE /* GcycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC6911BDF50780057D3BE /* GcycleScrollView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E31FC6951BDF50AB0057D3BE /* SMPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC6941BDF50AB0057D3BE /* SMPageControl.m */; settings = {ASSET_TAGS = (); }; };
-		E31FC6981BDF59970057D3BE /* SGFocusImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC6971BDF59970057D3BE /* SGFocusImageItem.m */; settings = {ASSET_TAGS = (); }; };
-		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; settings = {ASSET_TAGS = (); }; };
-		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; settings = {ASSET_TAGS = (); }; };
-		E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D71BD88D66001CF93D /* UILabel+GautoMatchedText.m */; settings = {ASSET_TAGS = (); }; };
-		E3A7099B1BE0754300750D27 /* NSDictionary+GJson.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A7099A1BE0754300750D27 /* NSDictionary+GJson.m */; settings = {ASSET_TAGS = (); }; };
-		E3A7099E1BE0A0E000750D27 /* roundblue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A7099C1BE0A0E000750D27 /* roundblue@2x.png */; settings = {ASSET_TAGS = (); }; };
-		E3A7099F1BE0A0E000750D27 /* roundgray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A7099D1BE0A0E000750D27 /* roundgray@2x.png */; settings = {ASSET_TAGS = (); }; };
-		E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */; settings = {ASSET_TAGS = (); }; };
-		E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A71BE0B07000750D27 /* GwebViewController.m */; settings = {ASSET_TAGS = (); }; };
-		E3EE35FA1BE88DE00089A89C /* GMAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35F91BE88DE00089A89C /* GMAPI.m */; settings = {ASSET_TAGS = (); }; };
-		E3EE35FD1BE89B0E0089A89C /* GProductCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35FC1BE89B0E0089A89C /* GProductCellTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
-		E3EE36001BE8B2240089A89C /* GproductDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35FF1BE8B2240089A89C /* GproductDetailTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
-		E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE36021BE8C4F00089A89C /* UILabel+GautoMatchedText.m */; settings = {ASSET_TAGS = (); }; };
-		E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */; settings = {ASSET_TAGS = (); }; };
-		E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */; settings = {ASSET_TAGS = (); }; };
 		E31FC6951BDF50AB0057D3BE /* SMPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC6941BDF50AB0057D3BE /* SMPageControl.m */; };
 		E31FC6981BDF59970057D3BE /* SGFocusImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC6971BDF59970057D3BE /* SGFocusImageItem.m */; };
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
@@ -193,6 +177,16 @@
 		E3A7099F1BE0A0E000750D27 /* roundgray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A7099D1BE0A0E000750D27 /* roundgray@2x.png */; };
 		E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */; };
 		E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A71BE0B07000750D27 /* GwebViewController.m */; };
+		E3EE35FA1BE88DE00089A89C /* GMAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35F91BE88DE00089A89C /* GMAPI.m */; settings = {ASSET_TAGS = (); }; };
+		E3EE35FD1BE89B0E0089A89C /* GProductCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35FC1BE89B0E0089A89C /* GProductCellTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		E3EE36001BE8B2240089A89C /* GproductDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35FF1BE8B2240089A89C /* GproductDetailTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE36021BE8C4F00089A89C /* UILabel+GautoMatchedText.m */; settings = {ASSET_TAGS = (); }; };
+		E3EE36061BE9D4A10089A89C /* GproductDirectoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE36051BE9D4A10089A89C /* GproductDirectoryTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		E3EE36121BE9E2B20089A89C /* shaixuan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3EE36111BE9E2B20089A89C /* shaixuan@2x.png */; settings = {ASSET_TAGS = (); }; };
+		E3EE361B1BEA0EE50089A89C /* GTranslucentSideBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE361A1BEA0EE50089A89C /* GTranslucentSideBar.m */; settings = {ASSET_TAGS = (); }; };
+		E3EE361E1BEA13320089A89C /* GPushView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE361D1BEA13320089A89C /* GPushView.m */; settings = {ASSET_TAGS = (); }; };
+		E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */; settings = {ASSET_TAGS = (); }; };
+		E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -526,6 +520,13 @@
 		E3EE35FF1BE8B2240089A89C /* GproductDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GproductDetailTableViewCell.m; sourceTree = "<group>"; };
 		E3EE36011BE8C4F00089A89C /* UILabel+GautoMatchedText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+GautoMatchedText.h"; sourceTree = "<group>"; };
 		E3EE36021BE8C4F00089A89C /* UILabel+GautoMatchedText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+GautoMatchedText.m"; sourceTree = "<group>"; };
+		E3EE36041BE9D4A10089A89C /* GproductDirectoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GproductDirectoryTableViewCell.h; sourceTree = "<group>"; };
+		E3EE36051BE9D4A10089A89C /* GproductDirectoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GproductDirectoryTableViewCell.m; sourceTree = "<group>"; };
+		E3EE36111BE9E2B20089A89C /* shaixuan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shaixuan@2x.png"; sourceTree = "<group>"; };
+		E3EE36191BEA0EE50089A89C /* GTranslucentSideBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTranslucentSideBar.h; sourceTree = "<group>"; };
+		E3EE361A1BEA0EE50089A89C /* GTranslucentSideBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTranslucentSideBar.m; sourceTree = "<group>"; };
+		E3EE361C1BEA13320089A89C /* GPushView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPushView.h; sourceTree = "<group>"; };
+		E3EE361D1BEA13320089A89C /* GPushView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPushView.m; sourceTree = "<group>"; };
 		E3F364BE1BE7044F00C34A0B /* GoneClassListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoneClassListViewController.h; sourceTree = "<group>"; };
 		E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoneClassListViewController.m; sourceTree = "<group>"; };
 		E3F364C11BE747BE00C34A0B /* GproductDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GproductDetailViewController.h; sourceTree = "<group>"; };
@@ -599,6 +600,8 @@
 				E3EE35FC1BE89B0E0089A89C /* GProductCellTableViewCell.m */,
 				E3EE35FE1BE8B2240089A89C /* GproductDetailTableViewCell.h */,
 				E3EE35FF1BE8B2240089A89C /* GproductDetailTableViewCell.m */,
+				E3EE36041BE9D4A10089A89C /* GproductDirectoryTableViewCell.h */,
+				E3EE36051BE9D4A10089A89C /* GproductDirectoryTableViewCell.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -829,6 +832,7 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				E3EE36071BE9DDB40089A89C /* GTranslucentSideBar */,
 				E3A709981BE0754300750D27 /* Gutils */,
 				E31FC68F1BDF50470057D3BE /* GcycleScrollView */,
 				E3A293D11BD88D66001CF93D /* GTouchMoveView */,
@@ -1141,6 +1145,7 @@
 		E31FC68B1BDF24970057D3BE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E3EE36111BE9E2B20089A89C /* shaixuan@2x.png */,
 				E31FC68C1BDF24D60057D3BE /* GStoreHomeViewController.h */,
 				E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */,
 				E3F364BE1BE7044F00C34A0B /* GoneClassListViewController.h */,
@@ -1190,8 +1195,19 @@
 				E3A7099A1BE0754300750D27 /* NSDictionary+GJson.m */,
 				E3EE35F81BE88DE00089A89C /* GMAPI.h */,
 				E3EE35F91BE88DE00089A89C /* GMAPI.m */,
+				E3EE361C1BEA13320089A89C /* GPushView.h */,
+				E3EE361D1BEA13320089A89C /* GPushView.m */,
 			);
 			path = Gutils;
+			sourceTree = "<group>";
+		};
+		E3EE36071BE9DDB40089A89C /* GTranslucentSideBar */ = {
+			isa = PBXGroup;
+			children = (
+				E3EE36191BEA0EE50089A89C /* GTranslucentSideBar.h */,
+				E3EE361A1BEA0EE50089A89C /* GTranslucentSideBar.m */,
+			);
+			path = GTranslucentSideBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1359,6 +1375,7 @@
 				139333D61BE0DF3E00B4628B /* 27_1@2x.png in Resources */,
 				139333AD1BE0DF3E00B4628B /* 15_2@2x.png in Resources */,
 				139333A51BE0DF3E00B4628B /* 12_1@2x.png in Resources */,
+				E3EE36121BE9E2B20089A89C /* shaixuan@2x.png in Resources */,
 				139333F31BE0DF3E00B4628B /* 8_1@2x.png in Resources */,
 				139333FF1BE1F29A00B4628B /* 9_1@2x.png in Resources */,
 				139333C11BE0DF3E00B4628B /* 21_1@2x.png in Resources */,
@@ -1495,6 +1512,7 @@
 				E3EE35FD1BE89B0E0089A89C /* GProductCellTableViewCell.m in Sources */,
 				13F1F3991BBA9A4B00885D31 /* NSDate+Additons.m in Sources */,
 				13F1F39B1BBA9A4B00885D31 /* UIButton+Additions.m in Sources */,
+				E3EE361B1BEA0EE50089A89C /* GTranslucentSideBar.m in Sources */,
 				E3EE36001BE8B2240089A89C /* GproductDetailTableViewCell.m in Sources */,
 				13F1F3F71BBA9C2500885D31 /* LNavigationController.m in Sources */,
 				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,
@@ -1502,6 +1520,7 @@
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
 				E31FC6981BDF59970057D3BE /* SGFocusImageItem.m in Sources */,
 				E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */,
+				E3EE36061BE9D4A10089A89C /* GproductDirectoryTableViewCell.m in Sources */,
 				13F1F4021BBA9D5500885D31 /* RefreshHeaderView.m in Sources */,
 				E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */,
 				E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */,
@@ -1523,6 +1542,7 @@
 				13F1F3C21BBA9A4B00885D31 /* LTools.m in Sources */,
 				13F1F39E1BBA9A4B00885D31 /* UIView+Additions.m in Sources */,
 				139334061BE3789000B4628B /* OptionModel.m in Sources */,
+				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
 				13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,
