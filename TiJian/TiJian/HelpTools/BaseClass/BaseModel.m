@@ -26,4 +26,24 @@
     NSLog(@"forUndefinedKey %@",key);
 }
 
++ (NSArray *)modelsFromArray:(NSArray *)array
+{
+    
+    if (![array isKindOfClass:[NSArray class]]) {
+        return nil;
+    }
+    
+    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:array.count];
+    
+    for (NSDictionary *aDic in array) {
+        
+        if ([aDic isKindOfClass:[NSDictionary class]]) {
+            
+            id object = [[self alloc]initWithDictionary:aDic];
+            [objects addObject:object];
+        }
+    }
+    return objects;
+}
+
 @end

@@ -46,4 +46,6 @@
 //#import "UMSocialQQHandler.h"
 //#import "UMSocialSinaHandler.h"
 
+#import "LoginViewController.h"
+
 #endif

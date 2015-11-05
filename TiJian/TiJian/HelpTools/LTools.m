@@ -50,7 +50,7 @@
 + (NSString *)md5Phone:(NSString *)phone
 {
 //    13718570646_sea-food@_2015
-    NSString *mdPhone = [NSString stringWithFormat:@"%@_sea-food@_2015",phone];
+    NSString *mdPhone = [NSString stringWithFormat:@"%@_ala-yy@_2015",phone];
     
     return [self md5:mdPhone];
 }
@@ -1115,17 +1115,17 @@
 
 + (BOOL)isLogin
 {
-//    NSString *authey = [GMAPI getAuthkey];
-//    
-//    if (authey.length > 0) {
-//        
-//        return YES;
-//    }
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    
+    if (authey.length > 0) {
+        
+        return YES;
+    }
     return NO;
 }
 
-+ (BOOL)isLogin:(UIViewController *)viewController
-{
+//+ (BOOL)isLogin:(UIViewController *)viewController
+//{
 //    if ([LTools cacheBoolForKey:LOGIN_SERVER_STATE] == NO) {
 //        
 //        LoginViewController *login = [[LoginViewController alloc]init];
@@ -1136,9 +1136,9 @@
 //        
 //        return NO;
 //    }
-    
-    return YES;
-}
+//    
+//    return YES;
+//}
 
 //+ (BOOL)isLogin:(UIViewController *)viewController loginBlock:(LoginBlock)aBlock
 //{

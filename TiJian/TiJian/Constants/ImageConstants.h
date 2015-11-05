@@ -14,13 +14,13 @@
 /**
  *  导航栏背景图
  */
-#define IOS7DAOHANGLANBEIJING_PUSH @"navigationBarBackground_1" //导航栏背景
-#define IOS6DAOHANGLANBEIJING @"sliderBBSNavigationBarImage_ios6.png"
+#define IOS7DAOHANGLANBEIJING_PUSH @"navigationbarBackgroudImage" //导航栏背景
+#define IOS6DAOHANGLANBEIJING @"navigationbarBackgroudImage_iOS6.png"
 
 /**
  *  返回按钮
  */
-#define BACK_DEFAULT_IMAGE [UIImage imageNamed:@"homepage_top_back_g"]
+#define BACK_DEFAULT_IMAGE [UIImage imageNamed:@"back"]
 
 /**
  *  默认头像

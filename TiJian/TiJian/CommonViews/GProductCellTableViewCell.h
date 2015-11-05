@@ -25,7 +25,7 @@
 
 -(void)loadCustomViewWithData:(NSDictionary*)dic;
 
-
+- (void)setCellWithModel:(id)aModel;//add by lcw
 
 
 @end
