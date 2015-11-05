@@ -188,10 +188,8 @@
 {
     RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
     recommend.jsonString = _jsonString;
-    recommend.lastViewController = self.navigationController.topViewController;
-//    [recommend.lastViewController.navigationController popViewControllerAnimated:NO];
-    
-    [recommend.lastViewController.navigationController pushViewController:recommend animated:YES];
+    [self.lastViewController.navigationController popViewControllerAnimated:NO];
+    [self.lastViewController.navigationController pushViewController:recommend animated:YES];
 }
 
 /**
@@ -575,7 +573,7 @@
         
         //单独处理组合为0情况
         if ([groupId intValue] == 0) {
-            NSNumber *age = [_questionDictionary objectForKey:Q_SEX];
+            NSNumber *age = [_questionDictionary objectForKey:Q_AGE];
             NSNumber *height = [_questionDictionary objectForKey:Q_HEIGHT];
             NSNumber *weight = [_questionDictionary objectForKey:Q_WEIGHT];
             NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
@@ -679,7 +677,7 @@
         //循环找到选项对应状态
         for (NSString *optionId in options) {
             
-            NSString *o_string = [NSString stringWithFormat:@"%@_%@",q_id,optionId];
+            NSString *o_string = [NSString stringWithFormat:@"%d_%@_%@",groupId,q_id,optionId];
             
             if (![ignores containsObject:o_string]) { //不忽略
                 
@@ -788,7 +786,7 @@
 }
 
 /**
- *  查找组合id对应所有的忽略的选项id(问题id_选项id,如:2_1)
+ *  查找组合id对应所有的忽略的选项id(组合id_问题id_选项id,如:6_12_19)
  *
  *  @return
  */
@@ -810,7 +808,7 @@
             NSArray *ignoreOptions = [aModel.ignore_option_ids objectFromJSONString];
             for (NSString *optionid in ignoreOptions) {
                 
-                NSString *temp = [NSString stringWithFormat:@"%d_%@",aModel.question_id,optionid];
+                NSString *temp = [NSString stringWithFormat:@"%d_%d_%@",groupId,aModel.question_id,optionid];
                 [ignore_array addObject:temp];
             }
             
@@ -852,7 +850,7 @@
             NSArray *ignoreOptions = [aModel.ignore_option_ids objectFromJSONString];
             for (NSString *optionid in ignoreOptions) {
                 
-                NSString *temp = [NSString stringWithFormat:@"%d_%@",aModel.question_id,optionid];
+                NSString *temp = [NSString stringWithFormat:@"%d_%d_%@",groupId,aModel.question_id,optionid];
                 [ignore_array addObject:temp];
             }
         }
@@ -1024,7 +1022,7 @@
         //设置初始值
         int weight = [[_questionDictionary objectForKey:Q_WEIGHT]intValue];
         if (weight > 0) {
-            [_view_Age setInitValue:NSStringFromInt(weight)];
+            [_view_Weight setInitValue:NSStringFromInt(weight)];
         }
         _view_Weight = [[LQuestionView alloc]initWeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:weight resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             [weakSelf updateQuestionType:type result:result];
@@ -1184,7 +1182,7 @@
     int height = [[_questionDictionary objectForKey:Q_HEIGHT]intValue];
     int weight = [[_questionDictionary objectForKey:Q_WEIGHT]intValue];
     [temp appendString:[self BMIString:BMI(weight, height)]];
-    
+
     return temp;
 }
 

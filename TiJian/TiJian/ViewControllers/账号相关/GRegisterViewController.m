@@ -503,14 +503,15 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     NSLog(@"%s",__FUNCTION__);
     
+    if (!iPhone4) {
+        return YES;
+    }
+    
     [UIView animateWithDuration:0.2 animations:^{
-        self.view.frame = CGRectMake(0, -10, DEVICE_WIDTH, DEVICE_HEIGHT);
+        self.view.frame = CGRectMake(0,-10, DEVICE_WIDTH, DEVICE_HEIGHT);
     } completion:^(BOOL finished) {
         
     }];
-    
-    
-    
     
     
     return YES;

@@ -29,6 +29,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
     NSString *title = @"已经完成测试,快来看看结果吧";
     
     CGFloat top = 64 + 40;
@@ -101,6 +103,7 @@
 {
     PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
     custom.hidesBottomBarWhenPushed = YES;
+    custom.lastViewController = self;
     [self.navigationController pushViewController:custom animated:YES];
 }
 

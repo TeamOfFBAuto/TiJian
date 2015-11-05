@@ -31,6 +31,8 @@
 //获取个性定制结果POST
 #define GET_CUSTOMIZAITION_RESULT @"/index.php?d=api&c=customization&m=get_customization_result"
 
+//2、获取最近的个性化测试结果
+#define GET_LATEST_CUSTOMIZATION_RESULT @"/index.php?d=api&c=customization&m=get_latest_customization_result"
 
 //添加商品评论
 #define ADD_PRODUCT_PINGLUN @"/index.php?d=api&c=products&m=add_comment"

@@ -70,7 +70,7 @@
         
         [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics: UIBarMetricsDefault];
         [_backButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
-        _myTitleLabel.textColor = [UIColor whiteColor];//白色字体
+        _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
         
     }else if (style == NAVIGATIONSTYLE_CUSTOM){
         

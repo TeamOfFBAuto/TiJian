@@ -31,16 +31,20 @@
 
 #define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 
-#define FitScreen(a) (iPhone6PLUS ? a * 1.2 : a) //适配6 PLUS 放大1.2倍
+//适配6 PLUS 放大1.2倍
+#define FitScreen(a) (iPhone6PLUS ? a * 1.2 : a)
 
 //根视图
 #define ROOTVIEWCONTROLLER (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController
 
 //图片比例
+#define W_H_RATIO 200/320
+//计算BMI
+#define BMI(weight,height) (weight / powf(height * 0.01, 2))
 
-#define W_H_RATIO 200/320  //宽高比
-
-#define BMI(weight,height) (weight / powf(height * 0.01, 2)) //计算BMI
+//int 转 string
+#define NSStringFromFloat(float) [NSString stringWithFormat:@"%f",(float)]
+#define NSStringFromInt(int) [NSString stringWithFormat:@"%d",(int)]
 
 //错误提示信息 
 
@@ -68,6 +72,7 @@
 #define LOGIN_SERVER_STATE @"user_login_state" //服务器 no是未登陆  yes是已登陆
 #define LOGIN_RONGCLOUD_STATE @"rongcloudLoginState"//融云登陆状态
 
+#define USER_CUSTOMIZATON_RESULT @"customizationResult"//记录是否体检过
 #define USER_AUTHOD @"user_authod"
 #define USER_CHECKUSER @"checkfbuser"
 #define USER_HEAD_IMAGEURL @"userHeadImageUrl"//头像url
@@ -75,17 +80,11 @@
 #define USER_AUTHKEY_OHTER @"otherKey"//第三方key
 #define USRR_AUTHKEY @"authkey"
 #define USER_DEVICE_TOKEN @"DEVICE_TOKEN"
-
 #define USER_RONGCLOUD_TOKEN @"RongCloudToken" //融云token
 
 
 #define USER_UPDATEHEADIMAGE @"updateHeadImage"//更新用户头像
 #define USER_NEWHEADIMAGE @"newHeadImage"//新头像
-
-//int 转 string
-#define NSStringFromFloat(float) [NSString stringWithFormat:@"%f",(float)]
-#define NSStringFromInt(int) [NSString stringWithFormat:@"%d",(int)]
-
 
 #define UmengAppkey @"558d25c867e58e9366002e68"//正式 umeng后台：wjxc2015@qq.com wjxc2015
 

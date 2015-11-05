@@ -52,12 +52,12 @@
     
     self.viewControllers = [NSArray arrayWithArray:items];
     
-    NSArray *normalImages = @[@"homepage_bottom_home_grey",
-                              @"homepage_bottom_classify_grey",
-                              @"homepage_bottom_shopping cart_grey"];
-    NSArray *selectedImages = @[@"homepage_bottom_home_green",
-                                @"homepage_bottom_classify_green",
-                                @"homepage_bottom_shopping cart_green"];
+    NSArray *selectedImages = @[@"homepage_b",
+                              @"report_b",
+                              @"personal_b"];
+    NSArray *normalImages = @[@"homepage_g",
+                                @"report_g",
+                                @"personal_g"];
     
     for (int i = 0; i < normalImages.count; i ++) {
         
@@ -75,9 +75,9 @@
     }
     
     [[UITabBarItem appearance] setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"656565"],                                                                                                              NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
+     [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"323232"],                                                                                                              NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
     [[UITabBarItem appearance] setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"89b700"],                                                                                                              NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+     [NSDictionary dictionaryWithObjectsAndKeys:DEFAULT_TEXTCOLOR,                                                                                                              NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
 }
 
