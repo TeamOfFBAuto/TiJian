@@ -95,6 +95,34 @@
 }
 
 /**
+ *  归档方式存储用户信息
+ */
+- (void)cacheUserInfo
+{
+    [self cacheForKey:USERINFO_MODEL];
+}
+
+/**
+ *  获取本地存储的用户信息
+ *
+ *  @return model
+ */
++ (UserInfo *)userInfoForCache
+{
+    return [self cacheResultForKey:USERINFO_MODEL];
+}
+
+/**
+ *  清除本地存储的用户信息
+ */
++ (void)cleanUserInfo
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:nil forKey:USERINFO_MODEL];
+    [userDefaults synchronize];
+}
+
+/**
  *  获取存在本地的model
  *
  *  @param modelKey key
@@ -108,5 +136,17 @@
     return [NSKeyedUnarchiver unarchiveObjectWithData:data];
 }
 
+/**
+ *  更新头像
+ *
+ *  @param avatar 头像地址
+ */
++ (void)updateUserAvatar:(NSString *)avatar
+{
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.avatar = avatar;
+    [userInfo cacheForKey:USERINFO_MODEL];
+    
+}
 
 @end

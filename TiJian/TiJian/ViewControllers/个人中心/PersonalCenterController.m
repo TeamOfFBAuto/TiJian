@@ -7,15 +7,22 @@
 //
 
 #import "PersonalCenterController.h"
-#import "UserInfo.h"
+#import "SettingsViewController.h"
 
-@interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate>
+@interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
     UITableView *_table;
     NSArray *_dataArray;
     NSArray *_projectsArray;//推荐项目
     UserInfo *_userInfo;
+    UIImageView *_headImageView;//头像
+    
+    UILabel *_nameLabel;
+    UIView *_headview;//table headview
 }
+
+@property(nonatomic,retain)UIView *loginView;
+@property(nonatomic,retain)UIView *unloginView;
 
 @end
 
@@ -29,16 +36,17 @@
     self.rightImageName = @"personal_message";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
-    _userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLogoutNotify:) name:NOTIFICATION_LOGOUT object:nil];
+    
+    _userInfo = [UserInfo userInfoForCache];
     
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
     _table.backgroundColor = [UIColor clearColor];
-//    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    [self createViews];
+    [self createTableHeadView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,40 +54,232 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)createViews
+#pragma - mark 通知
+
+- (void)notificationForLogoutNotify:(NSNotification *)notify
 {
-    UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 80)];
-    headview.backgroundColor = [UIColor whiteColor];
+    [self updateLoginState:NO];
+}
+
+#pragma - mark 网络请求
+
+#pragma - mark 创建视图
+/**
+ *  创建tableView headView
+ */
+- (void)createTableHeadView
+{
+    _headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 80)];
+    _headview.backgroundColor = [UIColor whiteColor];
     
     UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 60, 60)];
-    [logo sd_setImageWithURL:[NSURL URLWithString:_userInfo.avatar] placeholderImage:DEFAULT_HEADIMAGE];
     [logo addRoundCorner];
-    [headview addSubview:logo];
-    logo.backgroundColor = DEFAULT_TEXTCOLOR;
+    [_headview addSubview:logo];
+    logo.backgroundColor = [UIColor colorWithHexString:@"e6e6e6"];
+    [logo addTaget:self action:@selector(clickToChangeUserHeadImage) tag:0];
+    _headImageView = logo;
+    
+    //设置头像
+    BOOL updateState = [LTools cacheBoolForKey:USER_UPDATEHEADIMAGE_STATE];
+    if (!updateState) { //不需要上传,则正常显示url
+        [logo sd_setImageWithURL:[NSURL URLWithString:_userInfo.avatar] placeholderImage:DEFAULT_HEADIMAGE];
+    }else
+    {
+        UIImage *image = [[SDImageCache sharedImageCache]imageFromDiskCacheForKey:USER_NEWHEADIMAGE];
+        if (image) {
+            logo.image = image;
+        }else
+        {
+            logo.image = DEFAULT_HEADIMAGE;
+        }
+    }
+    
+    if ([LoginViewController isLogin]) {
+        
+        [_headview addSubview:self.loginView];
+        
+    }else
+    {
+        [_headview addSubview:self.unloginView];
+    }
+    
+    _table.tableHeaderView = _headview;
+    
+}
+
+-(UIView *)unloginView
+{
+    if (_unloginView) {
+        return _unloginView;
+    }
+    _unloginView = [[UIView alloc]initWithFrame:CGRectMake(15 + 60 + 10, 0, DEVICE_WIDTH - (15 + 60 + 10), 80)];
+    _unloginView.backgroundColor = [UIColor whiteColor];
+    
+    NSString *name = [NSString stringWithFormat:@"登录/注册"];
+    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    [_unloginView addSubview:_nameLabel];
+    _nameLabel.centerY = _unloginView.height/2.f;
+    
+    
+    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(_unloginView.width - 15 - 7, (80-14)/2.f, 7, 14)];
+    editImage.image = [UIImage imageNamed:@"personal_jiantou_r"];
+    [_unloginView addSubview:editImage];
+    [_unloginView addTaget:self action:@selector(clickToEditUserInfo) tag:0];
+    
+    return _unloginView;
+}
+
+-(UIView *)loginView{
+    
+    if (_loginView) {
+        
+        return _loginView;
+    }
+    
+    _loginView = [[UIView alloc]initWithFrame:CGRectMake(15 + 60 + 10, 0, DEVICE_WIDTH - (15 + 60 + 10), 80)];
+    _loginView.backgroundColor = [UIColor whiteColor];
     
     NSString *name = [NSString stringWithFormat:@"用户名:%@",_userInfo.user_name];
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(logo.right + 10, 22.5, 200, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [headview addSubview:nameLabel];
+    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 22.5, 200, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    [_loginView addSubview:_nameLabel];
     
-    UILabel *sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.left, nameLabel.bottom + 7, 35, 15) title:@"性别:" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [headview addSubview:sexLabel];
+    UILabel *sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(_nameLabel.left, _nameLabel.bottom + 7, 35, 15) title:@"性别:" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    [_loginView addSubview:sexLabel];
     
     int sex = [_userInfo.gender intValue];
     
     UIImageView *sexImage = [[UIImageView alloc]initWithFrame:CGRectMake(sexLabel.right + 5, sexLabel.top + 1, 12, 12)];
     sexImage.image = sex == 2 ? [UIImage imageNamed:@"sex_nan"] : [UIImage imageNamed:@"sex_nv"];
-    [headview addSubview:sexImage];
+    [_loginView addSubview:sexImage];
     
     NSString *sexString = sex == 2 ? @"男" : @"女";
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(sexImage.right + 6, sexLabel.top, 15, 15) title:sexString font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [headview addSubview:label];
+    [_loginView addSubview:label];
     
-    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 23, (80-23)/2.f, 23, 23)];
+    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 23, (80-23)/2.f, 23, 23)];
     editImage.image = [UIImage imageNamed:@"bianji"];
-    [headview addSubview:editImage];
+    [_loginView addSubview:editImage];
+    [_loginView addTaget:self action:@selector(clickToEditUserInfo) tag:0];
     
-    _table.tableHeaderView = headview;
+    return _loginView;
+}
+
+#pragma - mark 事件处理
+/**
+ *  更新登录状态
+ *
+ *  @param isLogin 是否登录
+ */
+- (void)updateLoginState:(BOOL)isLogin
+{
+    if (isLogin) {
+        
+        _userInfo = [UserInfo userInfoForCache];
+        [_headview addSubview:self.loginView];
+        [_headImageView sd_setImageWithURL:[NSURL URLWithString:_userInfo.avatar] placeholderImage:DEFAULT_HEADIMAGE];
+        
+    }else
+    {
+        if (self.loginView) {
+            [_loginView removeFromSuperview];
+            _loginView = nil;
+        }
+        _headImageView.image = DEFAULT_HEADIMAGE;
+        [_headview addSubview:self.unloginView];
+    }
+}
+
+- (void)clickToEditUserInfo
+{
+    __weak typeof(self)weakSelf = self;
+    if ([LoginViewController isLogin:self loginBlock:^(BOOL success) {
+        
+        if (success) {
+            
+            //登录成功更新界面
+            [weakSelf updateLoginState:YES];
+        }
+    }])
+    {
+        //已登录
+        NSLog(@"编辑个人信息");
+
+    }
+}
+
+- (void)clickToChangeUserHeadImage
+{
+    NSLog(@"修改个人头像");
     
+    if (![LoginViewController isLogin]) {
+        NSLog(@"未登录修改毛线");
+        return;
+    }
+    
+    UIActionSheet* alert = [[UIActionSheet alloc] initWithTitle:nil delegate:self
+                                              cancelButtonTitle:@"取消"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"相机",@"从相机选择",nil];
+    [alert showInView:self.view];
+}
+
+-(void)choseImageWithTypeCameraTypePhotoLibrary:(UIImagePickerControllerSourceType)type{
+    
+    UIImagePickerController * imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate =self;
+    imagePicker.sourceType = type;
+    imagePicker.allowsEditing = YES;
+    imagePicker.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    imagePicker.allowsEditing =YES;
+    [self presentViewController:imagePicker animated:YES completion:^{
+        
+    }];
+}
+
+-(void)rightButtonTap:(UIButton *)sender
+{
+    NSLog(@"消息中心");
+}
+
+#pragma mark UIACtionSheet delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex ==0){
+        [self choseImageWithTypeCameraTypePhotoLibrary:UIImagePickerControllerSourceTypeCamera];
+    }else if(buttonIndex == 1){
+        [self choseImageWithTypeCameraTypePhotoLibrary:UIImagePickerControllerSourceTypePhotoLibrary];
+    }
+}
+
+
+
+#pragma mark xuan ze zhao pian de dai li
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    
+    UIImage *image = [info objectForKey:@"UIImagePickerControllerEditedImage"];
+    //    NSData * imageData = UIImageJPEGRepresentation(image,0.6);
+    
+    image = [LTools scaleToSizeWithImage:image size:CGSizeMake(200, 200)];
+    //TODO：将图片发给服务器
+    
+    [LTools cacheBool:YES ForKey:USER_UPDATEHEADIMAGE_STATE];//需要更新头像
+    
+    //存储更新头像image
+    
+    [[SDImageCache sharedImageCache]storeImage:image forKey:USER_NEWHEADIMAGE toDisk:YES];
+
+    //上传头像通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATEHEADIMAGE object:image];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        _headImageView.image = image;
+    });
+    
+    [picker dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 
@@ -91,7 +291,46 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"跳转至体检套餐购买页面");
+    if (indexPath.section == 0) {
+        
+        if (indexPath.row == 0) {
+            
+            //@"我的订单";
+            
+        }else if (indexPath.row == 1){
+            
+            //@"我的购物车";
+            
+        }else if (indexPath.row == 2){
+            
+            //@"我的套餐";
+        }
+    }else if (indexPath.section == 1){
+        
+        if (indexPath.row == 0) {
+            
+            //@"我的钱包";
+            
+        }else if (indexPath.row == 1){
+            
+            //@"我的收藏";
+        }
+    }else if (indexPath.section == 2){
+        
+        if (indexPath.row == 0) {
+            
+            //@"家人管理";
+        }
+    }else if (indexPath.section == 3){
+        
+        if (indexPath.row == 0) {
+            
+            //@"设置";
+            SettingsViewController *settings = [[SettingsViewController alloc]init];
+            settings.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:settings animated:YES];
+        }
+    }
 }
 
 #pragma - mark UITableViewDataSource<NSObject>
@@ -121,13 +360,13 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 54.5, DEVICE_WIDTH - 20, 0.5)];
-        line.backgroundColor = DEFAULT_LINECOLOR;
-//        [cell.contentView addSubview:line];
+        UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (55-7-15)/2.f, 7, 14)];
+        arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
+        [cell.contentView addSubview:arrow];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:14];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
     if (indexPath.section == 0) {
         

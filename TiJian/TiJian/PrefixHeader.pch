@@ -47,5 +47,6 @@
 //#import "UMSocialSinaHandler.h"
 
 #import "LoginViewController.h"
+#import "UserInfo.h"
 
 #endif

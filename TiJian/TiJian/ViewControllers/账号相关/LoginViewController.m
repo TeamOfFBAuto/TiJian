@@ -45,9 +45,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
         
-    self.myTitleLabel.text = @"登录";
-    self.myTitleLabel.textColor = RGBCOLOR(105, 160, 4);
-    
+    self.myTitleLabel.text = @"登录";    
 
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
@@ -56,7 +54,7 @@
     
     [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(0,5)];
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0,5)];
-    [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(122, 173, 0) range:NSMakeRange(5, 3)];
+    [aaa addAttribute:NSForegroundColorAttributeName value:DEFAULT_TEXTCOLOR range:NSMakeRange(5, 3)];
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(5, 3)];
     [aaa addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(5, 3)];
     
@@ -369,7 +367,7 @@
         /**
          *  归档的方式保存userInfo
          */
-        [user cacheForKey:USERINFO_MODEL];
+        [user cacheUserInfo];
         
         [LTools cache:user.user_name ForKey:USER_NAME];
         [LTools cache:user.uid ForKey:USER_UID];

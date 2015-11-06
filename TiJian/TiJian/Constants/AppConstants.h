@@ -83,7 +83,7 @@
 #define USER_RONGCLOUD_TOKEN @"RongCloudToken" //融云token
 
 
-#define USER_UPDATEHEADIMAGE @"updateHeadImage"//更新用户头像
+#define USER_UPDATEHEADIMAGE_STATE @"updateHeadImage"//更新用户头像
 #define USER_NEWHEADIMAGE @"newHeadImage"//新头像
 
 #define UmengAppkey @"558d25c867e58e9366002e68"//正式 umeng后台：wjxc2015@qq.com wjxc2015
