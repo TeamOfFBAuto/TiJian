@@ -71,15 +71,31 @@
  *  @param aModel
  *  @param modelKey
  */
-- (void)cacheForKey:(NSString *)modelKey;
+//- (void)cacheForKey:(NSString *)modelKey;
 
 /**
- *  获取存在本地的model
- *
- *  @param modelKey key
- *
- *  @return
+ *  归档方式存储用户信息
  */
-+ (id)cacheResultForKey:(NSString *)modelKey;
+- (void)cacheUserInfo;
+
+/**
+ *  获取本地存储的用户信息
+ *
+ *  @return model
+ */
++ (UserInfo *)userInfoForCache;
+
+/**
+ *  清除本地存储的用户信息
+ */
++ (void)cleanUserInfo;
+
+
+/**
+ *  更新头像
+ *
+ *  @param avatar 头像地址
+ */
++ (void)updateUserAvatar:(NSString *)avatar;
 
 @end

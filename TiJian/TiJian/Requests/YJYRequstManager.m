@@ -216,7 +216,8 @@
             {
                 NSLog(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
                 
-                NSDictionary *result = @{Erro_Info:@"获取数据异常",
+                erroInfo = erroInfo ? : @"获取数据异常";
+                NSDictionary *result = @{Erro_Info: erroInfo,
                                          Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 failBlock(result);
                 

@@ -111,17 +111,27 @@
  */
 - (void)getCustomizationResult
 {
-    
-    if (!self.jsonString) {
-        return;
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    authey = authey.length ? authey : @"";
+    NSDictionary *params;
+    NSString *api;
+    if (self.jsonString) {
+        params = @{@"c_result":self.jsonString,
+                   @"province_id":@"1000",
+                   @"city_id":@"1001",
+                   @"authcode":authey};
+        api = GET_CUSTOMIZAITION_RESULT;
+    }else
+    {
+        //获取最近体检结果
+        params = @{@"province_id":@"1000",
+                   @"city_id":@"1001",
+                   @"authcode":authey};
+        api = GET_LATEST_CUSTOMIZATION_RESULT;
     }
     
-    NSDictionary *params = @{@"c_result":self.jsonString,
-                             @"province_id":@"1000",
-                             @"city_id":@"1001"};
-    
     __weak typeof(self)weakSelf = self;
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:GET_CUSTOMIZAITION_RESULT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [weakSelf parseDataWithResult:result];
         
@@ -129,11 +139,11 @@
         
         
     }];
-    
 }
 
 - (void)parseDataWithResult:(NSDictionary *)result
 {
+    [LTools cacheBool:YES ForKey:USER_CUSTOMIZATON_RESULT];//记录已体检过
     NSDictionary *data = result[@"data"];
     NSArray *setmeal_product_list = data[@"setmeal_product_list"];
     _dataArray = [ProductModel modelsFromArray:setmeal_product_list];
@@ -168,7 +178,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"aaaaaa";
+    static NSString *identifier = @"GProductCellTableViewCell";
     GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
