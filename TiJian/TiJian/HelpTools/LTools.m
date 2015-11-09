@@ -50,7 +50,7 @@
 + (NSString *)md5Phone:(NSString *)phone
 {
 //    13718570646_sea-food@_2015
-    NSString *mdPhone = [NSString stringWithFormat:@"%@_ala-yy@_2015",phone];
+    NSString *mdPhone = [NSString stringWithFormat:@"%@_he-ma@_2015",phone];
     
     return [self md5:mdPhone];
 }
@@ -707,10 +707,10 @@
     return [emailTest evaluateWithObject:userName];
 }
 
-//数字和字母 和 _
+//数字和字母 和 _ 6到12位
 + (BOOL)isValidatePwd:(NSString *)pwdString
 {
-    NSString * emailRegex = @"^[a-zA-Z0-9_]{6,32}$";
+    NSString * emailRegex = @"^[a-zA-Z0-9_]{6,12}$";
     NSPredicate * emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",emailRegex];
     return [emailTest evaluateWithObject:pwdString];
 }
@@ -1351,7 +1351,7 @@
 {
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:content];
     
-    if (content.length <= aKeyword.length) {
+    if (content.length < aKeyword.length) {
         return string;
     }
     

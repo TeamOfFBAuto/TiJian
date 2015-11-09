@@ -28,6 +28,7 @@ typedef void(^LoginBlock)(BOOL success);
 @property (strong, nonatomic) IBOutlet UIView *thirdLoginView2;
 
 @property (strong, nonatomic) IBOutlet UILabel *zhuceLabel;
+@property (strong, nonatomic) IBOutlet UIButton *registerBtn;
 
 
 - (void)setLoginBlock:(LoginBlock)aBlock;

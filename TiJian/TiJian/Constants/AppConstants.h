@@ -49,8 +49,8 @@
 //错误提示信息 
 
 #define ALERT_ERRO_PHONE @"请输入有效手机号"
-#define ALERT_ERRO_PASSWORD @"密码格式有误,请输入6~32位英文字母或数字"
-#define ALERT_ERRO_SECURITYCODE @"验证码格式有误,请输入6位数字"
+#define ALERT_ERRO_PASSWORD @"密码格式有误,请输入6~12位英文字母或数字"
+#define ALERT_ERRO_SECURITYCODE @"请输入有效验证码"
 #define ALERT_ERRO_FINDPWD @"两次密码不一致"
 
 //秒杀相关描述语

@@ -28,6 +28,8 @@
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     }
     
+    [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"登录"];
+    
     //微信未安装或者不支持
 //    if (![WXApi isWXAppInstalled] || ![WXApi isWXAppSupportApi]) {
 //        
@@ -48,7 +50,7 @@
     self.myTitleLabel.text = @"登录";    
 
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
-    
+    self.view.backgroundColor = [UIColor colorWithHexString:@"6da0cf"];
     
     NSMutableAttributedString *aaa = [[NSMutableAttributedString alloc]initWithString:@"没有账户？去注册"];
     
@@ -58,14 +60,17 @@
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(5, 3)];
     [aaa addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(5, 3)];
     
+    [self.registerBtn addTarget:self action:@selector(clickToRegiter) forControlEvents:UIControlEventTouchUpInside];
     
+    NSString *phoneText = @"请输入手机号";
+    NSMutableAttributedString *phone = [[NSMutableAttributedString alloc]initWithString:phoneText];
+    [phone addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, phoneText.length)];
+    [self.phoneTF setAttributedPlaceholder:phone];
     
-    self.zhuceLabel.attributedText = aaa;
-    
-    self.zhuceLabel.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tt = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(gotoZhuce)];
-    [self.zhuceLabel addGestureRecognizer:tt];
-    
+    NSString *passText = @"请输入密码";
+    NSMutableAttributedString *password = [[NSMutableAttributedString alloc]initWithString:passText];
+    [password addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, passText.length)];
+    [self.pwdTF setAttributedPlaceholder:password];
     
 }
 
@@ -153,9 +158,21 @@
 /**
  *  注册
  */
--(void)gotoZhuce{
+-(void)clickToRegiter{
     GRegisterViewController *regis = [[GRegisterViewController alloc]init];
     [self.navigationController pushViewController:regis animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    
+    regis.registerBlock = ^(NSString *phoneNum,NSString *password){
+        
+        NSLog(@"phone %@ password %@",phoneNum,password);
+        
+        weakSelf.phoneTF.text = phoneNum;
+        weakSelf.pwdTF.text = password;
+        
+        [weakSelf clickToNormalLogin:nil];
+    } ;
 }
 
 /**

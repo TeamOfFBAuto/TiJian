@@ -8,6 +8,7 @@
 
 #import "PersonalCenterController.h"
 #import "SettingsViewController.h"
+#import "PeopleManageController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -40,7 +41,7 @@
     
     _userInfo = [UserInfo userInfoForCache];
     
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 49) style:UITableViewStylePlain];
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
@@ -253,7 +254,8 @@
 
 
 
-#pragma mark xuan ze zhao pian de dai li
+#pragma - mark UIPickerViewControllerDelegate
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     
@@ -291,6 +293,10 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (![LoginViewController isLogin:self]) {
+        return;
+    }
+    
     if (indexPath.section == 0) {
         
         if (indexPath.row == 0) {
@@ -320,6 +326,9 @@
         if (indexPath.row == 0) {
             
             //@"家人管理";
+            PeopleManageController *p_manage = [[PeopleManageController alloc]init];
+            p_manage.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:p_manage animated:YES];
         }
     }else if (indexPath.section == 3){
         
