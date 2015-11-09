@@ -22,4 +22,11 @@
     
     return value;
 }
+
+
+
++(NSString *)testAuth{
+    return @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
+}
+
 @end

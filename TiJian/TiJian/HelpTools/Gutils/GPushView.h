@@ -12,13 +12,14 @@
 
 @property(nonatomic,strong)NSMutableArray *viewsArray;
 
-@property(nonatomic,strong)UITableView *tab1;
-@property(nonatomic,strong)UITableView *tab2;
-@property(nonatomic,strong)UITableView *tab3;
+@property(nonatomic,strong)UITableView *tab1;//主筛选
+@property(nonatomic,strong)UITableView *tab2;//城市选择
+@property(nonatomic,strong)UITableView *tab3;//价格
+@property(nonatomic,strong)UITableView *tab4;//体检品牌
 
-@property(nonatomic,assign)BOOL noGender;//没有性别选项
+@property(nonatomic,assign)BOOL gender;//没有性别选项
 
--(id)initWithFrame:(CGRect)frame noGender:(BOOL)theGender;
+-(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender;
 
 
 @end

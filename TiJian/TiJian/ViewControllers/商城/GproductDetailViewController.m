@@ -9,15 +9,18 @@
 #import "GproductDetailViewController.h"
 #import "GproductDetailTableViewCell.h"
 #import "GproductDirectoryTableViewCell.h"
+#import "GShopCarViewController.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_productDetail;
+    AFHTTPRequestOperation *_request_GetShopCarNum;
     int _count;
     
-    UITableView *_tab;
+    NSDictionary *_shopCarDic;
     
+    UITableView *_tab;
     NSDictionary *_dataDic;
     
     GproductDetailTableViewCell *_tmpCell;
@@ -27,6 +30,8 @@
     UIView *_downView;
     
     UITableView *_hiddenView;
+    
+    UILabel *_shopCarNumLabel;
     
 }
 
@@ -41,8 +46,10 @@
     _tab.delegate = nil;
     _tab.dataSource = nil;
     _tab = nil;
-    
+    [_request removeOperation:_request_GetShopCarNum];
+    [_request removeOperation:_request_productDetail];
     [self removeObserver:self forKeyPath:@"_count"];
+    
     
     
 }
@@ -59,6 +66,8 @@
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
     
+    
+    
     [self prepareNetData];
     
     
@@ -69,16 +78,7 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
-    
-    
-    NSNumber *num = [change objectForKey:@"new"];
-    
-    if ([num intValue] == 1) {
-        
-    }
-    
-}
+
 
 
 #pragma mark - @protocol UIScrollViewDelegate<NSObject>
@@ -138,22 +138,96 @@
     _request = [YJYRequstManager shareInstance];
     _count = 0;
     
+    
+    [self getProductDetail];
+    [self getshopcarNum];
+    
+}
+
+
+
+-(void)getProductDetail{
     NSDictionary *parameters = @{
                                  @"product_id":self.productId
                                  };
     
-    
     [_request requestWithMethod:YJYRequstMethodGet api:StoreProductDetail parameters:parameters constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
         _dataDic = [result dictionaryValueForKey:@"data"];
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+
         
-        [self creatTabAndDownView];
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+//获取购物车数量
+-(void)getshopcarNum{
+    
+    //    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@",GET_SHOPPINGCAR_NUM,[LTools cacheForKey:USER_AUTHOD]];
+    
+    NSDictionary *dic = @{
+                          @"authcode":[GMAPI testAuth]
+                          };
+    _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
         
     } failBlock:^(NSDictionary *result) {
         
     }];
     
 }
+
+//获取购物车数量
+-(void)addProductToShopCar{
+
+    NSDictionary *dic = @{
+                          @"authcode":[GMAPI testAuth],
+                          @"product_id":self.productId,
+                          @"product_num":@"1"
+                          };
+    [_request requestWithMethod:YJYRequstMethodPost api:ORDER_ADD_TO_CART parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        int count = [_shopCarNumLabel.text intValue];
+        count+=1;
+        _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",count];
+        [self updateShopCarNumAndFrame];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+}
+
+
+
+//网络请求完成
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if ([keyPath isEqualToString:@"contentSize"]) {
+        return;
+    }
+    
+    NSNumber *num = [change objectForKey:@"new"];
+    
+    if ([num intValue] == 2) {
+        [self creatTabAndDownView];
+        
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            
+            [self updateShopCarNumAndFrame];
+        }
+    }
+    
+    
+}
+
+
 
 #pragma mark - 视图创建
 -(void)creatTabAndDownView{
@@ -175,12 +249,14 @@
     _downView.backgroundColor = RGBCOLOR(38, 51, 62);
     
     UIButton *addShopCarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    addShopCarBtn.tag = 104;
     CGFloat theW = [GMAPI scaleWithHeight:50 width:0 theWHscale:180.0/100];
     [addShopCarBtn setFrame:CGRectMake(_downView.frame.size.width-theW, 0, theW, 50)];
     addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
     [addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
     [addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_downView addSubview:addShopCarBtn];
     
     CGFloat tw = (_downView.frame.size.width-theW)/4;
@@ -190,10 +266,49 @@
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
         [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
         oneBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+        oneBtn.tag = 100+i;
+        [oneBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_downView addSubview:oneBtn];
+        
+        if (i == 3) {
+            _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+            _shopCarNumLabel.textColor = [UIColor whiteColor];
+            _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
+            _shopCarNumLabel.layer.cornerRadius = 5;
+            _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
+            _shopCarNumLabel.layer.borderWidth = 0.5f;
+            _shopCarNumLabel.layer.masksToBounds = YES;
+            _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
+            _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
+            
+            [oneBtn addSubview:_shopCarNumLabel];
+        }
+        
     }
     [self.view addSubview:_downView];
 }
+
+-(void)updateShopCarNumAndFrame{
+    
+    if ([_shopCarNumLabel.text intValue] == 0) {
+        _shopCarNumLabel.hidden = YES;
+    }else{
+        _shopCarNumLabel.hidden = NO;
+        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
+        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
+        UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
+        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with, -2, with, 11)];
+        
+    }
+    
+}
+
+
+
+
+
 
 -(void)creatHiddenView{
     _hiddenView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_tab.frame), DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStyleGrouped];
@@ -203,6 +318,27 @@
     [self.view addSubview:_hiddenView];
     
 }
+
+
+-(void)downBtnClicked:(UIButton *)sender{
+    if (sender.tag == 100) {//客服
+        
+    }else if (sender.tag == 101){//收藏
+        
+    }else if (sender.tag == 102){//品牌店
+        
+    }else if (sender.tag == 103){//购物车
+        
+        GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+        [self.navigationController pushViewController:cc animated:YES];
+        
+    }else if (sender.tag == 104){//加入购物车
+        
+        [self addProductToShopCar];
+        
+    }
+}
+
 
 
 #pragma mark - UITableViewDelegate && UITableViewDataSource
