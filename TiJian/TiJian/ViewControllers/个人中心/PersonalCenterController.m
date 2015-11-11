@@ -29,6 +29,20 @@
 
 @implementation PersonalCenterController
 
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    
+//    if ([LoginViewController isLogin]) {
+//        
+//        [_headview addSubview:self.loginView];
+//        
+//    }else
+//    {
+//        [_headview addSubview:self.unloginView];
+//    }
+//}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -38,6 +52,7 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLogoutNotify:) name:NOTIFICATION_LOGOUT object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLoginNotify:) name:NOTIFICATION_LOGIN object:nil];
     
     _userInfo = [UserInfo userInfoForCache];
     
@@ -60,6 +75,11 @@
 - (void)notificationForLogoutNotify:(NSNotification *)notify
 {
     [self updateLoginState:NO];
+}
+
+- (void)notificationForLoginNotify:(NSNotification *)notify
+{
+    [self updateLoginState:YES];
 }
 
 #pragma - mark 网络请求
@@ -175,6 +195,11 @@
 {
     if (isLogin) {
         
+        if (self.unloginView) {
+            self.unloginView.hidden = YES;
+            [_unloginView removeFromSuperview];
+            _unloginView = nil;
+        }
         _userInfo = [UserInfo userInfoForCache];
         [_headview addSubview:self.loginView];
         [_headImageView sd_setImageWithURL:[NSURL URLWithString:_userInfo.avatar] placeholderImage:DEFAULT_HEADIMAGE];

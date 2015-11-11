@@ -20,6 +20,7 @@ static int seconds = 60;//计时60s
     UIScrollView *_downScrollView;
     NSTimer *timer;
     UIButton *getYanzhengmaBtn;
+    NSString *_encryptcode;//验证码
 }
 
 @property(nonatomic,retain)UILabel *codeLabel;//验证码显示
@@ -274,7 +275,7 @@ static int seconds = 60;//计时60s
     [btn setFrame:CGRectMake(DEVICE_WIDTH + 50, yanzhengmaView.bottom + 30, DEVICE_WIDTH - 100, 40)];
     btn.backgroundColor = [UIColor whiteColor];
     [btn setTitle:@"下一步" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(btnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(clickToNext) forControlEvents:UIControlEventTouchUpInside];
     btn.titleLabel.font = [UIFont systemFontOfSize:15];
     btn.layer.cornerRadius = 2;
     [btn setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
@@ -382,11 +383,8 @@ static int seconds = 60;//计时60s
         return;
     }
     
-    [self startTimer];
-    
     __weak typeof(self)weakSelf = self;
-    
-   
+       
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     NSDictionary *param = @{
@@ -397,15 +395,20 @@ static int seconds = 60;//计时60s
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_GET_SECURITY_CODE parameters:param constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         NSLog(@"result %@",result);
+        _encryptcode = result[@"code"];//记录验证码
         
-//        [LTools showMBProgressWithText:result[RESULT_INFO] addToView:self.view];
-        
-        [self changeTheUpViewStateWithNum:2];
+        //获取验证码成功之后切换界面
+        [weakSelf changeTheUpViewStateWithNum:2];
         [_downScrollView setContentOffset:CGPointMake(DEVICE_WIDTH, 0) animated:YES];
+        
+        //开始计时
+        [weakSelf startTimer];
+        
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         
     } failBlock:^(NSDictionary *result) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         NSLog(@"failDic %@",result);
         [weakSelf renewTimer];
     }];
@@ -413,14 +416,17 @@ static int seconds = 60;//计时60s
 }
 
 //输入完验证码
--(void)btnClicked{
+-(void)clickToNext{
     
     //下一步
-    if (self.yanzhengmaTf.text.length == 0) {
-        [LTools showMBProgressWithText:@"请输入验证码" addToView:self.view];
+    if (![self.yanzhengmaTf.text intValue] == [_encryptcode intValue]) {
+        
+        [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
+        
     }else{
+        
         [self changeTheUpViewStateWithNum:3];
-        [_downScrollView setContentOffset:CGPointMake(2*DEVICE_WIDTH, 0) animated:YES];
+        [_downScrollView setContentOffset:CGPointMake(2 * DEVICE_WIDTH, 0) animated:YES];
     }    
 }
 
@@ -553,7 +559,7 @@ static int seconds = 60;//计时60s
     //下一步
     if (textField == self.yanzhengmaTf) {
         
-        [self btnClicked];
+        [self clickToNext];
     }
     
     //新密码跳转至确认密码

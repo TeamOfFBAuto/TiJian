@@ -715,6 +715,15 @@
     return [emailTest evaluateWithObject:pwdString];
 }
 
+//验证身份证
++ (BOOL)isValidateIDCard:(NSString *)idCard
+{
+    ///^(\d{15})|(\d{18})|(\d{17}[\dXx])$/
+    NSString *regex = @"/^(\\d{15})|(\\d{18})|(\\d{17}[\\dXx])$/";
+    NSPredicate * emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
+    return [emailTest evaluateWithObject:idCard];
+}
+
 /*手机及固话*/
 + (BOOL)isValidateMobile:(NSString *)mobileNum
 {

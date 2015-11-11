@@ -65,6 +65,12 @@
 
 @property(nonatomic,assign)int relation;//0 互相未关注 1关注了别人 2别人关注你 3互相关注
 
+//家人管理 model
+@property(nonatomic,retain)NSString *appellation;//称谓
+@property(nonatomic,retain)NSString *family_uid;//家人id
+@property(nonatomic,retain)NSString *family_user_name;//家人name
+@property(nonatomic,retain)NSString *id_card;//身份证号
+
 /**
  *  归档的方式存model对象 重写了编码解码方法
  *

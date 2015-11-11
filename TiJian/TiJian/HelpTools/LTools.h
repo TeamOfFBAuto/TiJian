@@ -178,6 +178,9 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 //数字和字母 和 _
 + (BOOL)isValidatePwd:(NSString *)pwdString;
 
+//验证身份证
++ (BOOL)isValidateIDCard:(NSString *)idCard;
+
 /*手机及固话*/
 + (BOOL)isValidateMobile:(NSString *)mobileNum;
 

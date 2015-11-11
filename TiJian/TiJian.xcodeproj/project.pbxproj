@@ -79,6 +79,7 @@
 		1303C3771BEB0D7200700847 /* tijianren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3431BEB0D7100700847 /* tijianren@2x.png */; };
 		1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */; };
 		1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C37B1BEB432900700847 /* PersonalCenterController.m */; };
+		131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */; };
 		131C118E1BF04BF100629938 /* user_fanhui@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131C11891BF04BF100629938 /* user_fanhui@2x.png */; };
 		131C118F1BF04BF100629938 /* user_mima2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131C118A1BF04BF100629938 /* user_mima2@2x.png */; };
 		131C11901BF04BF100629938 /* user_mima@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131C118B1BF04BF100629938 /* user_mima@2x.png */; };
@@ -376,6 +377,8 @@
 		1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tijianren_duo@2x.png"; sourceTree = "<group>"; };
 		1303C37A1BEB432900700847 /* PersonalCenterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalCenterController.h; sourceTree = "<group>"; };
 		1303C37B1BEB432900700847 /* PersonalCenterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCenterController.m; sourceTree = "<group>"; };
+		131A176D1BF1D20E00B12D2F /* RightTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightTextFieldCell.h; sourceTree = "<group>"; };
+		131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightTextFieldCell.m; sourceTree = "<group>"; };
 		131C11891BF04BF100629938 /* user_fanhui@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_fanhui@2x.png"; sourceTree = "<group>"; };
 		131C118A1BF04BF100629938 /* user_mima2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_mima2@2x.png"; sourceTree = "<group>"; };
 		131C118B1BF04BF100629938 /* user_mima@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_mima@2x.png"; sourceTree = "<group>"; };
@@ -928,6 +931,8 @@
 				E3EE35FF1BE8B2240089A89C /* GproductDetailTableViewCell.m */,
 				E3EE36041BE9D4A10089A89C /* GproductDirectoryTableViewCell.h */,
 				E3EE36051BE9D4A10089A89C /* GproductDirectoryTableViewCell.m */,
+				131A176D1BF1D20E00B12D2F /* RightTextFieldCell.h */,
+				131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -1999,6 +2004,7 @@
 				13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */,
 				13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */,
 				13F1F39D1BBA9A4B00885D31 /* UILabel+Additions.m in Sources */,
+				131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */,
 				134822E51BECA32000EA2E06 /* PeopleManageController.m in Sources */,
 				13F1F2671BBA78ED00885D31 /* main.m in Sources */,
 				E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */,

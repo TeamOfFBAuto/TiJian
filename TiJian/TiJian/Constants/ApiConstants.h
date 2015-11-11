@@ -48,6 +48,9 @@
 //单品 - 添加收藏 (参数:product_id、authcode)
 #define HOME_PRODUCT_COLLECT_ADD @"/?d=api&c=products&m=favor"
 
+/**************************登录注册相关用户接口**********************************/
+
+#pragma - mark 登录注册相关用户接口
 //登录
 #define USER_LOGIN_ACTION @"/index.php?d=api&c=user&m=login"
 
@@ -69,9 +72,15 @@
 //修改用户信息
 #define USER_UPDATE_USEINFO @"/index.php?d=api&c=user&m=update_user_info"
 
+//20、融云获取token
+#define USER_GET_TOKEN @"/index.php?d=api&c=chat&m=get_token"
+
 //关于我们
 #define ABOUT_US_URL @"http://www.baidu.com"
 
+/******************商品相关接口*******************/
+
+#pragma - mark 商品相关
 
 //获取商品详情
 #define GET_PRODUCTDETAIL @"/index.php?d=api&c=products&m=get_product_detail"
@@ -90,12 +99,20 @@
 #define GET_PRODUCT_COMMENT @"/index.php?d=api&c=products&m=get_product_comment"
 
 
-
 //获取商品分类
 #define GET_PRODUCT_CLASS @"/index.php?d=api&c=products&m=get_product_category"
 
 //获取热门城市
 #define GET_HOTCITY @"/index.php?d=api&c=products&m=hot_city"
+
+//商品相关接口=====================
+
+//25、获取商品列表
+#define PRODUCT_LIST @"/index.php?d=api&c=products&m=get_product_list"
+
+//32、商品收藏列表
+
+#define PRODUCT_COLLECT_LIST @"/index.php?d=api&c=products&m=get_favor_list"
 
 //收藏商品
 #define SHOUCANGRODUCT @"/index.php?d=api&c=products&m=add_favor"
@@ -110,6 +127,7 @@
 #define HUODONGXIANGQING @"/index.php?d=api&c=activity&m=get_activity_detail"
 
 //收货地址相关接口==================
+#pragma - mark 收货地址相关
 
 //获取用户的收货地址列表
 #define USER_ADDRESS_LIST @"/index.php?d=api&c=user&m=get_user_address"
@@ -126,19 +144,9 @@
 //删除地址
 #define USER_ADDRESS_DELETE @"/index.php?d=api&c=user&m=del_user_address"
 
-//20、融云获取tokend
-#define USER_GET_TOKEN @"/index.php?d=api&c=chat&m=get_token"
-
-//商品相关接口=====================
-
-//25、获取商品列表
-#define PRODUCT_LIST @"/index.php?d=api&c=products&m=get_product_list"
-
-//32、商品收藏列表
-
-#define PRODUCT_COLLECT_LIST @"/index.php?d=api&c=products&m=get_favor_list"
 
 //订单相关接口=====================
+#pragma - mark 订单相关
 
 //40、购物车添加商品
 #define ORDER_ADD_TO_CART @"/index.php?d=api&c=order&m=add_to_cart"
@@ -196,5 +204,22 @@
 
 #define GET_SHOPPINGCAR_NUM @"/index.php?d=api&c=order&m=get_cart_pro_num"
 
+//***************家人管理****************//
+#pragma - mark 家人管理相关接口
+
+//21、获取我的家人列表
+#define GET_FAMILY @"/index.php?d=api&c=user&m=get_family"
+
+//22、添加我的家人信息
+#define ADD_FAMILY @"/index.php?d=api&c=user&m=add_family"
+//post:参数authcode、family_user_name 姓名、appellation 称谓、id_card 身份证号、gender 性别（1=》男 2=》女）、age 年龄、mobile 手机号
+
+//23、编辑我的家人信息
+#define EDIT_FAMILY @"/index.php?d=api&c=user&m=edit_family"
+//post:参数authcode、family_user_name 姓名、appellation 称谓、id_card 身份证号、gender 性别（1=》男 2=》女）、age 年龄、mobile 手机号
+
+//24、删除我的家人信息
+#define DEL_FAMILY @"/index.php?d=api&c=user&m=del_family"
+//post参数调取参数:authcode、family_uids 列表中的id 可传多个 用英文逗号隔开
 
 #endif

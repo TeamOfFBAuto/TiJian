@@ -16,6 +16,8 @@
     BOOL _isOpen;//是否展开
     UIView *_view_tableHeader;
     BOOL _isEdit;//是否在编辑
+    UILabel *_numLabel;//位数
+    int _deleteIndex;//待删除下标
 }
 
 @end
@@ -39,13 +41,58 @@
     
     _isOpen = YES;//默认打开
     _isEdit = NO;//默认非编辑
-    [_table.dataArray addObjectsFromArray:@[@"张木木",@"刘木木",@"张木木"]];
     _table.tableHeaderView = [self tableHeadView];
+    
+    [_table showRefreshHeader:YES];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma - mark 网络请求
+
+- (void)getFamily
+{
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    
+//    __weak typeof(self)weakSelf = self;
+    __weak typeof(_table)weakTable = _table;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:GET_FAMILY parameters:@{@"authcode":authey} constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *temp = [UserInfo modelsFromArray:result[@"family_list"]];
+        [weakTable reloadData:temp pageSize:1000 noDataView:nil];
+        _numLabel.text = [NSString stringWithFormat:@"%d位",(int)weakTable.dataArray.count];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [weakTable loadFail];
+    }];
+}
+
+- (void)deleteFamily:(int)index
+{
+    UserInfo *aModel = _table.dataArray[index];
+
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSDictionary *params = @{@"authcode":authey,
+                             @"family_uids":aModel.family_uid};
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak typeof(self)weakSelf = self;
+    __weak typeof(_table)weakTable = _table;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:DEL_FAMILY parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [weakTable.dataArray removeObjectAtIndex:index];
+        [weakTable reloadData];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+    }];
 }
 
 #pragma - mark 事件处理
@@ -72,6 +119,14 @@
 - (void)clickToAdd:(UIButton *)sender
 {
     AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
+    __weak typeof(_table)weakTable = _table;
+    
+    [add setUpdateParamsBlock:^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+        [weakTable showRefreshHeader:YES];
+    }];
+    
     [self.navigationController pushViewController:add animated:YES];
 }
 
@@ -134,11 +189,22 @@
     return headView;
 }
 
+#pragma - mark UIAlertViewDelegate <NSObject>
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex NS_DEPRECATED_IOS(2_0, 9_0)
+{
+    if(buttonIndex == 1){
+        
+        [self deleteFamily:_deleteIndex];
+    }
+}
+
+
 #pragma - mark RefreshDelegate
 
 - (void)loadNewDataForTableView:(UITableView *)tableView
 {
-    
+    [self getFamily];
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView
 {
@@ -147,9 +213,28 @@
 //新加
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
+    UserInfo *aModel = _table.dataArray[indexPath.row];
+
     if (_isEdit) {//在编辑
-        
         NSLog(@"删除");
+        _deleteIndex = (int)indexPath.row;
+        NSString *text = [NSString stringWithFormat:@"是否删除\"%@\"\"%@\"?",aModel.appellation,aModel.family_user_name];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:text delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alert show];
+    }else
+    {
+        AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
+        add.actionStyle = ACTIONSTYLE_DETTAILT;
+        add.userModel = aModel;
+        __weak typeof(_table)weakTable = _table;
+        
+        [add setUpdateParamsBlock:^(NSDictionary *params){
+            
+            NSLog(@"params %@",params);
+            [weakTable showRefreshHeader:YES];
+        }];
+        
+        [self.navigationController pushViewController:add animated:YES];
     }
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
@@ -169,6 +254,7 @@
         NSString *name = [NSString stringWithFormat:@"%d位",(int)_table.dataArray.count];
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLable.right + 60, 0, 200, _view_tableHeader.height) title:name font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
         [_view_tableHeader addSubview:nameLabel];
+        _numLabel = nameLabel;
         
         _arrowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _arrowBtn.frame = CGRectMake(DEVICE_WIDTH - 15 - 13, (67-7)/2.f, 13, 7);
@@ -230,12 +316,12 @@
         [bgView addSubview:arrow];
         
         //本人
-        UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(15 * 2, 0, 35, bgView.height) title:nil font:16 align:NSTextAlignmentLeft textColor:[UIColor blackColor]];
+        UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(15 * 2, 0, 100, bgView.height) title:nil font:16 align:NSTextAlignmentLeft textColor:[UIColor blackColor]];
         [bgView addSubview:titleLable];
         titleLable.tag = 100;
         
         NSString *name = nil;
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLable.right + 60, 0, 200, bgView.height) title:name font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLable.right, 0, DEVICE_WIDTH - titleLable.right - 10, bgView.height) title:name font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
         [bgView addSubview:nameLabel];
         nameLabel.tag = 101;
         
@@ -249,9 +335,10 @@
         [deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
         deleteBtn.backgroundColor = [UIColor colorWithHexString:@"ed1f1f"];
         deleteBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        deleteBtn.frame = CGRectMake(DEVICE_WIDTH - 70, 0, 70, 56);
+        deleteBtn.frame = CGRectMake(DEVICE_WIDTH, 0, 70, 56);
         [bgView addSubview:deleteBtn];
         deleteBtn.tag = 102;
+        deleteBtn.userInteractionEnabled = NO;
 
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -260,10 +347,15 @@
     UILabel *title = [cell.contentView viewWithTag:100];
     UILabel *nameLabel = [cell.contentView viewWithTag:101];
     UIButton *deleteBtn = (UIButton *)[cell.contentView viewWithTag:102];
-    deleteBtn.hidden = !_isEdit;
     
-    title.text = @"称谓";
-    nameLabel.text = _table.dataArray[indexPath.row];
+    [UIView animateWithDuration:0.5 animations:^{
+        deleteBtn.left = _isEdit ? DEVICE_WIDTH - 70 : DEVICE_WIDTH;
+
+    }];
+    
+    UserInfo *aModel = _table.dataArray[indexPath.row];
+    title.text = aModel.appellation;
+    nameLabel.text = aModel.family_user_name;
     
     return cell;
 }

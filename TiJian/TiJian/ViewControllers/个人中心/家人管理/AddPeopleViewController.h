@@ -8,7 +8,15 @@
 
 #import "MyViewController.h"
 
+typedef enum {
+    ACTIONSTYLE_ADD = 0,//添加
+    ACTIONSTYLE_DETTAILT //详情
+}ACTIONSTYLE;
+
+@class UserInfo;
 @interface AddPeopleViewController : MyViewController
 
+@property(nonatomic,assign)ACTIONSTYLE actionStyle;
+@property(nonatomic,retain)UserInfo *userModel;
 
 @end

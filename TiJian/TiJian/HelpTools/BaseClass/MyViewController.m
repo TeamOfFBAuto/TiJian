@@ -134,7 +134,7 @@
 
 -(void)setUpdateParamsBlock:(UpdateParamsBlock)updateParamsBlock
 {
-    _aParmasBlock = updateParamsBlock;
+    _updateParamsBlock = updateParamsBlock;
 }
 
 
@@ -204,32 +204,15 @@
     }
     
     
-    
     if (rightType == MyViewControllerRightbuttonTypeRefresh)
     {
-        _my_right_button = [UIButton buttonWithType:UIButtonTypeCustom];
+        _my_right_button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_my_right_button setImage:[UIImage imageNamed:@"ios7_refresh4139.png"] forState:UIControlStateNormal];
         _my_right_button.frame = CGRectMake(0,0,41/2,39/2);
         _my_right_button.center = CGPointMake(300,20);
         [_my_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
         
         self.navigationItem.rightBarButtonItems= @[spaceButton,[[UIBarButtonItem alloc] initWithCustomView:_my_right_button]];
-        
-    }else if (rightType == MyViewControllerRightbuttonTypeSearch)
-    {
-        UIButton *rightview=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 37, 37/2)];
-        rightview.backgroundColor=[UIColor clearColor];
-        [rightview addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-        
-        
-        _my_right_button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_my_right_button setImage:[UIImage imageNamed:@"ios7_newssearch.png"] forState:UIControlStateNormal];
-        _my_right_button.frame = CGRectMake(IOS7_OR_LATER ? 25:10, 0, 37/2, 37/2);
-        //    refreshButton.center = CGPointMake(300,20);
-        [rightview addSubview:_my_right_button];
-        [_my_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-        UIBarButtonItem *_rightitem=[[UIBarButtonItem alloc]initWithCustomView:rightview];
-        self.navigationItem.rightBarButtonItem=_rightitem;
         
     }else if(rightType == MyViewControllerRightbuttonTypeText)
     {
@@ -272,7 +255,7 @@
     {
         UIImage * rightImage = [UIImage imageNamed:_rightImageName];
         
-        _my_right_button = [UIButton buttonWithType:UIButtonTypeCustom];
+        _my_right_button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         
         [_my_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
         

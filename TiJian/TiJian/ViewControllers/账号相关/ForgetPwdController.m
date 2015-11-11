@@ -17,6 +17,7 @@ static int seconds = 60;//计时60s
     NSTimer *timer;
     UIView *_bgView_one;
     UIView *_bgView_second;
+    NSString *_encryptcode;//验证码
 }
 
 @end
@@ -190,8 +191,9 @@ static int seconds = 60;//计时60s
         return;
     }
     NSString *text = self.securityTF.text;
-    int length = (int)text.length;
-    if (length != 4 && length != 6) {
+
+    if ([text intValue] != [_encryptcode intValue]) {
+        
         [LTools alertText:ALERT_ERRO_SECURITYCODE viewController:self];
         
         return;
@@ -269,8 +271,6 @@ static int seconds = 60;//计时60s
         return;
     }
     
-    [self startTimer];
-    
     __weak typeof(self)weakSelf = self;
     
     
@@ -279,17 +279,19 @@ static int seconds = 60;//计时60s
                           @"type":@"2",
                           @"encryptcode":[LTools md5Phone:mobile]
                           };
-    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_GET_SECURITY_CODE parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        //获取成功才开始计时
+        _encryptcode = result[@"code"];
+        [weakSelf startTimer];
         [LTools showMBProgressWithText:@"验证码已发送" addToView:self.view];
         
     } failBlock:^(NSDictionary *result) {
          [weakSelf renewTimer];
-    }];
-    
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
 
-    
+    }];
 }
 
 
@@ -333,23 +335,27 @@ static int seconds = 60;//计时60s
         return;
     }
     
+    __weak typeof(self)weakSelf = self;
     NSDictionary *dic = @{
                           @"mobile":mobile,
                           @"code":self.securityTF.text,
                           @"new_password":password,
                           @"confirm_password":self.secondPassword.text
                           };
-    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_GETBACK_PASSWORD parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+
         [LTools showMBProgressWithText:@"找回密码成功" addToView:self.view];
         
         [self performSelector:@selector(clickToClose:) withObject:nil afterDelay:2];
         
     } failBlock:^(NSDictionary *result) {
         
-        
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+
     }];
     
 }

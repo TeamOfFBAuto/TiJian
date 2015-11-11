@@ -19,6 +19,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    NSString *test1 = @"371311198905213411";
+    if ([LTools isValidateIDCard:test1]) {
+        
+        NSLog(@"tes1 是正确身份证");
+    }
+    
+    test1 = @"37131119890521341";
+    if ([LTools isValidateIDCard:test1]) {
+        NSLog(@"tes2 是正确身份证");
+
+    }
+    
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
     
