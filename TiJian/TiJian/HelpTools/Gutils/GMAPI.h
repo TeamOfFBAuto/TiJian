@@ -14,4 +14,7 @@
 //出入宽或高和比例 想计算的值传0
 +(CGFloat)scaleWithHeight:(CGFloat)theH width:(CGFloat)theW theWHscale:(CGFloat)theWHS;
 
+
++(NSString *)testAuth;
+
 @end

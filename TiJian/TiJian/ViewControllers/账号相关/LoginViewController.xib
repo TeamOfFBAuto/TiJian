@@ -100,11 +100,19 @@
                                 <mask key="constraints">
                                     <exclude reference="77Y-RA-V47"/>
                                     <exclude reference="Aff-uv-EXl"/>
+<<<<<<< HEAD
                                     <exclude reference="3Ns-4j-Owg"/>
                                     <exclude reference="Epc-Mx-o5A"/>
                                     <exclude reference="Xd9-TA-ajf"/>
                                     <exclude reference="9XA-4r-m7h"/>
                                     <exclude reference="xta-nl-oQv"/>
+=======
+                                    <exclude reference="9XA-4r-m7h"/>
+                                    <exclude reference="xta-nl-oQv"/>
+                                    <exclude reference="3Ns-4j-Owg"/>
+                                    <exclude reference="Epc-Mx-o5A"/>
+                                    <exclude reference="Xd9-TA-ajf"/>
+>>>>>>> origin/master
                                 </mask>
                             </variation>
                             <variation key="heightClass=regular-widthClass=compact">
@@ -115,11 +123,19 @@
                                 <mask key="constraints">
                                     <include reference="77Y-RA-V47"/>
                                     <include reference="Aff-uv-EXl"/>
+<<<<<<< HEAD
                                     <include reference="3Ns-4j-Owg"/>
                                     <include reference="Epc-Mx-o5A"/>
                                     <include reference="Xd9-TA-ajf"/>
                                     <include reference="9XA-4r-m7h"/>
                                     <include reference="xta-nl-oQv"/>
+=======
+                                    <include reference="9XA-4r-m7h"/>
+                                    <include reference="xta-nl-oQv"/>
+                                    <include reference="3Ns-4j-Owg"/>
+                                    <include reference="Epc-Mx-o5A"/>
+                                    <include reference="Xd9-TA-ajf"/>
+>>>>>>> origin/master
                                 </mask>
                             </variation>
                         </view>
@@ -152,7 +168,10 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="u5S-ml-x5U"/>
                                     </constraints>
+<<<<<<< HEAD
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+=======
+>>>>>>> origin/master
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     <variation key="default">
@@ -184,11 +203,19 @@
                                 </mask>
                                 <mask key="constraints">
                                     <exclude reference="n9P-Q2-IZR"/>
+<<<<<<< HEAD
                                     <exclude reference="1MC-2f-Pwh"/>
                                     <exclude reference="HYI-dP-WUo"/>
                                     <exclude reference="hSi-Tb-zQx"/>
                                     <exclude reference="ADI-As-sWR"/>
                                     <exclude reference="iMf-Q7-XV3"/>
+=======
+                                    <exclude reference="ADI-As-sWR"/>
+                                    <exclude reference="iMf-Q7-XV3"/>
+                                    <exclude reference="1MC-2f-Pwh"/>
+                                    <exclude reference="HYI-dP-WUo"/>
+                                    <exclude reference="hSi-Tb-zQx"/>
+>>>>>>> origin/master
                                 </mask>
                             </variation>
                             <variation key="heightClass=regular-widthClass=compact">
@@ -198,11 +225,19 @@
                                 </mask>
                                 <mask key="constraints">
                                     <include reference="n9P-Q2-IZR"/>
+<<<<<<< HEAD
                                     <include reference="1MC-2f-Pwh"/>
                                     <include reference="HYI-dP-WUo"/>
                                     <include reference="hSi-Tb-zQx"/>
                                     <include reference="ADI-As-sWR"/>
                                     <include reference="iMf-Q7-XV3"/>
+=======
+                                    <include reference="ADI-As-sWR"/>
+                                    <include reference="iMf-Q7-XV3"/>
+                                    <include reference="1MC-2f-Pwh"/>
+                                    <include reference="HYI-dP-WUo"/>
+                                    <include reference="hSi-Tb-zQx"/>
+>>>>>>> origin/master
                                 </mask>
                             </variation>
                         </view>
@@ -332,18 +367,32 @@
                     <exclude reference="HeN-eq-Uu0"/>
                 </mask>
                 <mask key="constraints">
+<<<<<<< HEAD
                     <exclude reference="ddb-az-iUT"/>
                     <exclude reference="nJV-vf-I5E"/>
                     <exclude reference="BRb-rS-hEb"/>
                     <exclude reference="Cex-B5-UOF"/>
                     <exclude reference="LoK-ba-fb5"/>
+=======
+                    <exclude reference="J5z-t8-Agh"/>
+                    <exclude reference="mvX-ID-gAc"/>
+                    <exclude reference="sj2-Pe-rXB"/>
+>>>>>>> origin/master
                     <exclude reference="YSB-Ye-kZK"/>
                     <exclude reference="dmK-eZ-aVb"/>
                     <exclude reference="g6q-GA-5U2"/>
                     <exclude reference="ibz-gd-FVJ"/>
+<<<<<<< HEAD
                     <exclude reference="J5z-t8-Agh"/>
                     <exclude reference="mvX-ID-gAc"/>
                     <exclude reference="sj2-Pe-rXB"/>
+=======
+                    <exclude reference="BRb-rS-hEb"/>
+                    <exclude reference="Cex-B5-UOF"/>
+                    <exclude reference="LoK-ba-fb5"/>
+                    <exclude reference="ddb-az-iUT"/>
+                    <exclude reference="nJV-vf-I5E"/>
+>>>>>>> origin/master
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -354,18 +403,32 @@
                     <include reference="HeN-eq-Uu0"/>
                 </mask>
                 <mask key="constraints">
+<<<<<<< HEAD
                     <include reference="ddb-az-iUT"/>
                     <include reference="nJV-vf-I5E"/>
                     <include reference="BRb-rS-hEb"/>
                     <include reference="Cex-B5-UOF"/>
                     <exclude reference="LoK-ba-fb5"/>
+=======
+                    <include reference="J5z-t8-Agh"/>
+                    <include reference="mvX-ID-gAc"/>
+                    <include reference="sj2-Pe-rXB"/>
+>>>>>>> origin/master
                     <include reference="YSB-Ye-kZK"/>
                     <include reference="dmK-eZ-aVb"/>
                     <include reference="g6q-GA-5U2"/>
                     <exclude reference="ibz-gd-FVJ"/>
+<<<<<<< HEAD
                     <include reference="J5z-t8-Agh"/>
                     <include reference="mvX-ID-gAc"/>
                     <include reference="sj2-Pe-rXB"/>
+=======
+                    <include reference="BRb-rS-hEb"/>
+                    <include reference="Cex-B5-UOF"/>
+                    <exclude reference="LoK-ba-fb5"/>
+                    <include reference="ddb-az-iUT"/>
+                    <include reference="nJV-vf-I5E"/>
+>>>>>>> origin/master
                 </mask>
             </variation>
             <connections>

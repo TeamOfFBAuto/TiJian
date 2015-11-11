@@ -91,20 +91,8 @@
     // Add PanGesture to Show SideBar by PanGesture
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     [self.view addGestureRecognizer:panGestureRecognizer];
-    
-//    // Create Content of SideBar
-//    UITableView *tableView = [[UITableView alloc] init];
-//    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, tableView.bounds.size.height)];
-//    v.backgroundColor = [UIColor clearColor];
-//    [tableView setTableHeaderView:v];
-//    [tableView setTableFooterView:v];
-//    tableView.dataSource = self;
-//    tableView.delegate = self;
-//    // Set ContentView in SideBar
-//    [self.rightSideBar setContentViewInSideBar:tableView];
-    
-    
-    GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)noGender:NO];
+
+    GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:YES];
     pushView.backgroundColor = [UIColor orangeColor];
     [self.rightSideBar setContentViewInSideBar:pushView];
     
