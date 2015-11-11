@@ -12,4 +12,17 @@
 
 @interface GShopCarViewController : MyViewController
 
+@property(nonatomic,strong)RefreshTableView *rTab;
+
+@property(nonatomic,strong)UILabel *totolPriceLabel;
+
+@property(nonatomic,strong)UIButton *allChooseBtn;
+
+-(void)updateRtabTotolPrice;
+
+-(void)setOpenArray1WithIndex:(int)index;
+-(void)setOpenArray0WithIndex:(int)index;
+
+-(void)isAllChooseAndUpdateState;
+
 @end

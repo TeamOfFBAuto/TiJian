@@ -32,4 +32,11 @@
 @property(nonatomic,retain)NSString *status;
 @property(nonatomic,retain)NSString *type_id;
 
+//购物车相关
+@property(nonatomic,strong)NSString *product_name;
+@property(nonatomic,strong)NSString *current_price;
+@property(nonatomic,strong)NSString *product_num;
+@property(nonatomic,assign)BOOL userChoose;//用户是否选择
+@property(nonatomic,strong)NSString *brand_name;
+
 @end

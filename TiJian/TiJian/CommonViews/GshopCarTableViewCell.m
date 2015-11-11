@@ -7,6 +7,8 @@
 //
 
 #import "GshopCarTableViewCell.h"
+#import "ProductModel.h"
+#import "GShopCarViewController.h"
 
 @implementation GshopCarTableViewCell
 
@@ -21,34 +23,118 @@
 }
 
 
--(void)loadCustomViewWithIndex:(NSIndexPath *)index data:(NSDictionary *)dic{
+-(void)loadCustomViewWithIndex:(NSIndexPath *)index{
+    
+    
+    self.theIndexPath = index;
+    
+    NSArray *arr = self.delegate.rTab.dataArray[index.section];
+    ProductModel *model = arr[index.row];
+    
+    
     
     CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/250];
     
-    UIButton *chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat wAndH = 44;
-    [chooseBtn setFrame:CGRectMake(0, height*0.5-wAndH*0.5, wAndH, wAndH)];
-    chooseBtn.backgroundColor = [UIColor orangeColor];
-    [self.contentView addSubview:chooseBtn];
+    self.chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
+    [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
     
-    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(chooseBtn.frame)+10, 10, height - 20, height - 20)];
+    self.chooseBtn.selected = model.userChoose;
+    CGFloat wAndH = 35;
+    [self.chooseBtn setFrame:CGRectMake(5, height*0.5-wAndH*0.5, wAndH, wAndH)];
+    [self.chooseBtn addTarget:self action:@selector(chooseBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:self.chooseBtn];
+    
+    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+5, 10, [GMAPI scaleWithHeight:height-20 width:0 theWHscale:252.0/158], height - 20)];
+    [logoImv l_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:nil];
     logoImv.backgroundColor = [UIColor redColor];
     
     [self.contentView addSubview:logoImv];
     
     
-    UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+10, logoImv.frame.origin.y, DEVICE_WIDTH - chooseBtn.frame.size.width - 10 - logoImv.frame.size.width - 10 - 10, logoImv.frame.size.height/3)];
-    contentLabel.backgroundColor = [UIColor purpleColor];
+    UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+5, logoImv.frame.origin.y, DEVICE_WIDTH - 5 - self.chooseBtn.frame.size.width - 5 - logoImv.frame.size.width - 5 - 5, logoImv.frame.size.height/3)];
+//    contentLabel.backgroundColor = [UIColor redColor];
+    contentLabel.font = [UIFont systemFontOfSize:12];
+    contentLabel.numberOfLines = 2;
+    contentLabel.text = model.product_name;
     [self.contentView addSubview:contentLabel];
     
-    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentLabel.frame.origin.x, CGRectGetMaxY(contentLabel.frame), contentLabel.frame.size.width, contentLabel.frame.size.height)];
-    priceLabel.backgroundColor = RGBCOLOR_ONE;
+    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentLabel.frame.origin.x, CGRectGetMaxY(contentLabel.frame), contentLabel.frame.size.width, logoImv.frame.size.height/3)];
+    priceLabel.font = [UIFont systemFontOfSize:13];
+//    priceLabel.backgroundColor = [UIColor orangeColor];
+    priceLabel.textColor = RGBCOLOR(237, 108, 22);
+    priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
     [self.contentView addSubview:priceLabel];
     
-    UIView *numView = [[UIView alloc]initWithFrame:CGRectMake(priceLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), priceLabel.frame.size.width, priceLabel.frame.size.height)];
-    numView.backgroundColor = RGBCOLOR_ONE;
-    [self.contentView addSubview:numView];
+    //加减
+    UIImageView *numImv = [[UIImageView alloc]initWithFrame:CGRectMake(priceLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), priceLabel.frame.size.height*3, logoImv.frame.size.height/3)];
+    [numImv setImage:[UIImage imageNamed:@"shuliang.png"]];
+    numImv.userInteractionEnabled = YES;
+    [self.contentView addSubview:numImv];
+    UIButton *jianBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [jianBtn setFrame:CGRectMake(0, 0, numImv.frame.size.height, numImv.frame.size.height)];
+    [jianBtn setImage:[UIImage imageNamed:@"shuliang-.png"] forState:UIControlStateNormal];
+    [jianBtn addTarget:self action:@selector(jianBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [numImv addSubview:jianBtn];
     
+    self.numLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jianBtn.frame), 0, numImv.frame.size.width/3, numImv.frame.size.height)];
+    self.numLabel.font = [UIFont systemFontOfSize:12];
+    self.numLabel.textColor = [UIColor blackColor];
+    self.numLabel.text = model.product_num;
+    self.numLabel.textAlignment = NSTextAlignmentCenter;
+    [numImv addSubview:self.numLabel];
+    
+    UIButton *jiaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [jiaBtn setFrame:CGRectMake(CGRectGetMaxX(self.numLabel.frame), 0, numImv.frame.size.width/3, numImv.frame.size.height)];
+    [jiaBtn setImage:[UIImage imageNamed:@"shuliang+.png"] forState:UIControlStateNormal];
+    [jiaBtn addTarget:self action:@selector(jiaBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [numImv addSubview:jiaBtn];
+    
+
 }
+
+//选中按钮点击
+-(void)chooseBtnClicked{
+    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
+    ProductModel *model = arr[self.theIndexPath.row];
+    model.userChoose = !model.userChoose;
+    self.chooseBtn.selected = model.userChoose;
+    
+    [self.delegate isAllChooseAndUpdateState];
+    [self.delegate updateRtabTotolPrice];
+}
+
+//加号点击
+-(void)jiaBtnClicked{
+    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
+    ProductModel *model = arr[self.theIndexPath.row];
+    int num = [model.product_num intValue];
+    num+=1;
+    model.product_num = [NSString stringWithFormat:@"%d",num];
+    self.numLabel.text = model.product_num;
+    
+    [self.delegate updateRtabTotolPrice];
+}
+
+//减号点击
+-(void)jianBtnClicked{
+    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
+    ProductModel *model = arr[self.theIndexPath.row];
+    int num = [model.product_num intValue];
+    if (num == 1) {
+        
+    }else{
+        num-=1;
+    }
+    model.product_num = [NSString stringWithFormat:@"%d",num];
+    self.numLabel.text = model.product_num;
+    
+    [self.delegate updateRtabTotolPrice];
+}
+
+
+
+
+
 
 @end
