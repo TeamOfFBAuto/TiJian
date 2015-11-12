@@ -355,7 +355,7 @@
                                                                                DEVICE_WIDTH,
                                                                                [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
                                                                                )];
-        dingzhiImv.backgroundColor = [UIColor lightGrayColor];
+        [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
         [self.topView addSubview:dingzhiImv];
         
         
