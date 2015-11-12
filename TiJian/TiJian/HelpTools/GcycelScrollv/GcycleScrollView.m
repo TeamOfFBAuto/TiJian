@@ -1,12 +1,13 @@
 //
 //  GcycleScrollView.m
-//  TiJian
+//  gcycleScrollview
 //
-//  Created by gaomeng on 15/10/27.
-//  Copyright © 2015年 lcw. All rights reserved.
+//  Created by gaomeng on 15/9/1.
+//  Copyright (c) 2015年 gaomeng. All rights reserved.
 //
 
 #import "GcycleScrollView.h"
+#import "SGFocusImageItem.h"
 #import <objc/runtime.h>
 
 @interface GcycleScrollView () {
@@ -19,6 +20,7 @@
 - (void)switchFocusImageItems;
 @end
 
+
 static NSString *SG_FOCUS_ITEM_ASS_KEY = @"loopScrollview";
 
 static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
@@ -26,7 +28,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
 
 @implementation GcycleScrollView
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<GcycleScrollViewDelegate>)delegate focusImageItems:(SGFocusImageItem *)firstItem, ...
+- (id)initWithFrame:(CGRect)frame delegate:(id<NewHuandengViewDelegate>)delegate focusImageItems:(SGFocusImageItem *)firstItem, ...
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -53,7 +55,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<GcycleScrollViewDelegate>)delegate imageItems:(NSArray *)items isAuto:(BOOL)isAuto
+- (id)initWithFrame:(CGRect)frame delegate:(id<NewHuandengViewDelegate>)delegate imageItems:(NSArray *)items isAuto:(BOOL)isAuto
 {
     self = [super initWithFrame:frame];
     if (self)
@@ -67,7 +69,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     }
     return self;
 }
-- (id)initWithFrame:(CGRect)frame delegate:(id<GcycleScrollViewDelegate>)delegate imageItems:(NSArray *)items
+- (id)initWithFrame:(CGRect)frame delegate:(id<NewHuandengViewDelegate>)delegate imageItems:(NSArray *)items
 {
     return [self initWithFrame:frame delegate:delegate imageItems:items isAuto:YES];
 }
@@ -83,7 +85,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
 }
 
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<GcycleScrollViewDelegate>)delegate imageItems:(NSArray *)items isAuto:(BOOL)isAuto pageControlNum:(NSInteger)num
+- (id)initWithFrame:(CGRect)frame delegate:(id<NewHuandengViewDelegate>)delegate imageItems:(NSArray *)items isAuto:(BOOL)isAuto pageControlNum:(NSInteger)num
 {
     self = [super initWithFrame:frame];
     if (self)
@@ -109,7 +111,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     _scrollView.scrollsToTop = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.pagingEnabled = YES;
-//    _scrollView.delegate = self;
+    _scrollView.delegate = self;
     
     [self addSubview:_scrollView];
     
@@ -130,13 +132,13 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     
     // single tap gesture recognizer
     UITapGestureRecognizer *tapGestureRecognize = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureRecognizer:)];
-//    tapGestureRecognize.delegate = self;
+    tapGestureRecognize.delegate = self;
     tapGestureRecognize.numberOfTapsRequired = 1;
     [_scrollView addGestureRecognizer:tapGestureRecognize];
     _scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * imageItems.count, _scrollView.frame.size.height);
     
     for (int i = 0; i < imageItems.count; i++) {
-        //        NSLog(@"%@",NSStringFromCGRect(self.bounds));
+//        NSLog(@"%@",NSStringFromCGRect(self.bounds));
         UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(i*self.frame.size.width, 0, self.frame.size.width,self.frame.size.height)];
         imv.backgroundColor = RGBCOLOR_ONE;
         SGFocusImageItem *item = [imageItems objectAtIndex:i];
@@ -166,8 +168,8 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     _scrollView.scrollsToTop = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.pagingEnabled = YES;
-//    _scrollView.delegate = self;
-    
+    _scrollView.delegate = self;
+
     [self addSubview:_scrollView];
     
     //pagecontrol
@@ -181,16 +183,16 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     _pagecontrol.currentPage = 0;
     [self addSubview:_pagecontrol];
     
-    
+
     // single tap gesture recognizer
     UITapGestureRecognizer *tapGestureRecognize = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureRecognizer:)];
-//    tapGestureRecognize.delegate = self;
+    tapGestureRecognize.delegate = self;
     tapGestureRecognize.numberOfTapsRequired = 1;
     [_scrollView addGestureRecognizer:tapGestureRecognize];
     _scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * imageItems.count, _scrollView.frame.size.height);
     
     for (int i = 0; i < imageItems.count; i++) {
-        //        NSLog(@"%@",NSStringFromCGRect(self.bounds));
+//        NSLog(@"%@",NSStringFromCGRect(self.bounds));
         UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(i*DEVICE_WIDTH, 0, DEVICE_WIDTH,(int)(DEVICE_WIDTH*250/750))];
         imv.backgroundColor = RGBCOLOR_ONE;
         SGFocusImageItem *item = [imageItems objectAtIndex:i];
@@ -234,13 +236,13 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
 
 - (void)singleTapGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
-    //    NSLog(@"%s", __FUNCTION__);
+//    NSLog(@"%s", __FUNCTION__);
     
     NSArray *imageItems = objc_getAssociatedObject(self, (const void *)SG_FOCUS_ITEM_ASS_KEY);
     int page = (int)(_scrollView.contentOffset.x / _scrollView.frame.size.width);
     if (page > -1 && page < imageItems.count) {
         SGFocusImageItem *item = [imageItems objectAtIndex:page];
-        if ( self.delegate && [self.delegate respondsToSelector:@selector(testfoucusImageFrame:didSelectItem:)]) {
+        if ([self.delegate respondsToSelector:@selector(testfoucusImageFrame:didSelectItem:)]) {
             [self.delegate testfoucusImageFrame:self didSelectItem:item];
         }
     }
@@ -291,12 +293,12 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
             page = 0;
         }else if(page <0)
         {
-            page = (int)_pagecontrol.numberOfPages - 1;
+            page = _pagecontrol.numberOfPages -1;
         }
     }
     if (page!= _pagecontrol.currentPage)
     {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(testfoucusImageFrame:currentItem:)])
+        if ([self.delegate respondsToSelector:@selector(testfoucusImageFrame:currentItem:)])
         {
             [self.delegate testfoucusImageFrame:self currentItem:page];
         }
@@ -330,7 +332,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     {
         if (aIndex >= ([imageItems count]-2))
         {
-            aIndex = (int)[imageItems count]-3;
+            aIndex = [imageItems count]-3;
         }
         [self moveToTargetPosition:self.frame.size.width*(aIndex+1)];
     }else
@@ -345,6 +347,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
 -(void)setimageItems:(NSArray *)items{
     
 }
+
 
 
 @end
