@@ -17,7 +17,7 @@
 #import "GproductDetailViewController.h"
 #import "GProductCellTableViewCell.h"
 
-@interface GStoreHomeViewController ()<GcycleScrollViewDelegate,RefreshDelegate,UITableViewDataSource>
+@interface GStoreHomeViewController ()<NewHuandengViewDelegate,RefreshDelegate,UITableViewDataSource>
 {
     NSMutableArray *_com_id_array;//幻灯的id
     NSMutableArray *_com_type_array;//幻灯的type
@@ -180,7 +180,14 @@
             SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithDict:dict tag:length];
             [itemArray addObject:item];
         }
-        _topScrollView = [[GcycleScrollView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, (int)(DEVICE_WIDTH*300/750)) delegate:self imageItems:itemArray isAuto:YES pageControlNum:self.contentArray.count];
+        
+        
+        if (!_topScrollView) {
+            _topScrollView = [[GcycleScrollView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, (int)(DEVICE_WIDTH*300/750)) delegate:self imageItems:itemArray isAuto:YES pageControlNum:self.contentArray.count];
+            
+            
+        }
+        
         [_topScrollView scrollToIndex:0];
         [self.topView addSubview:_topScrollView];
         
@@ -355,7 +362,7 @@
                                                                                DEVICE_WIDTH,
                                                                                [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
                                                                                )];
-        dingzhiImv.backgroundColor = [UIColor lightGrayColor];
+        [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
         [self.topView addSubview:dingzhiImv];
         
         

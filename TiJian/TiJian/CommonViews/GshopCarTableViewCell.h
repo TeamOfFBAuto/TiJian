@@ -10,11 +10,26 @@
 //购物车自定义cell
 
 #import <UIKit/UIKit.h>
+@class ProductModel;
+@class GShopCarViewController;
 
 @interface GshopCarTableViewCell : UITableViewCell
+{
+    YJYRequstManager *_request;
+    AFHTTPRequestOperation *_request_addShopCar;
+    AFHTTPRequestOperation *_requset_subShopCar;
+    
+}
+@property(nonatomic,assign)GShopCarViewController *delegate;
+
+@property(nonatomic,strong)NSIndexPath *theIndexPath;
+
+@property(nonatomic,strong)UIButton *chooseBtn;
+
+@property(nonatomic,strong)UILabel *numLabel;
 
 
--(void)loadCustomViewWithIndex:(NSIndexPath *)index data:(NSDictionary *)dic;
+-(void)loadCustomViewWithIndex:(NSIndexPath *)index;
 
 
 @end

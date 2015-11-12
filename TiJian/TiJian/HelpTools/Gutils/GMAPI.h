@@ -14,6 +14,8 @@
 //出入宽或高和比例 想计算的值传0
 +(CGFloat)scaleWithHeight:(CGFloat)theH width:(CGFloat)theW theWHscale:(CGFloat)theWHS;
 
+//提示浮层
++ (void)showAutoHiddenMBProgressWithText:(NSString *)text addToView:(UIView *)aView;
 
 +(NSString *)testAuth;
 

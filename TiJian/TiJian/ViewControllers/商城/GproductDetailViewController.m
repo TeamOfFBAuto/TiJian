@@ -329,8 +329,12 @@
         
     }else if (sender.tag == 103){//购物车
         
-        GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-        [self.navigationController pushViewController:cc animated:YES];
+        if (self.isShopCarPush) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }
         
     }else if (sender.tag == 104){//加入购物车
         
@@ -547,7 +551,7 @@
             [view addSubview:titleView];
             
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(5, 0, [GMAPI scaleWithHeight:titleView.frame.size.height width:0 theWHscale:145.0/100], titleView.frame.size.height)];
-            imv.backgroundColor = [UIColor orangeColor];
+            [imv setImage:[UIImage imageNamed:@"tijianxiangmu1.png"]];
             [titleView addSubview:imv];
             
             UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(imv.frame)+10, 0, titleView.frame.size.width - 10-imv.frame.size.width-5, titleView.frame.size.height)];

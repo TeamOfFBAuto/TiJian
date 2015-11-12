@@ -37,13 +37,13 @@
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
             
-            [imv l_setImageWithURL:[NSURL URLWithString:[dataDic stringValueForKey:@"brand_cover"]] placeholderImage:nil];
+            [imv l_setImageWithURL:[NSURL URLWithString:[dataDic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
             [self.contentView addSubview:imv];
             height += imv.frame.size.height;
             
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(imv.frame)+15, DEVICE_WIDTH - 20, 0)];
             titleLabel.font = [UIFont systemFontOfSize:13];
-            titleLabel.text = @"套餐名称简介套餐名称简介套餐名称简介套餐名称简介套餐名称简介套餐名称简介";
+            titleLabel.text = [dataDic stringValueForKey:@"setmeal_name"];
             titleLabel.numberOfLines = 2;
             [titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(imv.frame)+15) width:DEVICE_WIDTH - 20];
             [self.contentView addSubview:titleLabel];

@@ -58,7 +58,7 @@
 -(void)loadData:(NSDictionary *)dic{
     
     
-    [self.logoImv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"brand_cover"]] placeholderImage:nil];
+    [self.logoImv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
     self.titleLabel.text = [dic stringValueForKey:@"brand_name"];
     
     NSString *priceString = [NSString stringWithFormat:@"￥%@",[dic stringValueForKey:@"setmeal_original_price"]];
