@@ -246,6 +246,17 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
              withFormat:(NSString *)format;
 
 /**
+ *  NSDate转指定格式string
+ *
+ *  @param date   日期
+ *  @param format 格式
+ *
+ *  @return
+ */
++(NSString *)timeDate:(NSDate *)date
+           withFormat:(NSString *)format;
+
+/**
  *  获取当前时间戳
  */
 +(NSString *)timechangeToDateline;

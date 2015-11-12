@@ -307,14 +307,12 @@
                 <constraint firstItem="piZ-2q-e1b" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="31" id="J5z-t8-Agh">
                     <variation key="heightClass=regular-widthClass=compact" constant="60"/>
                 </constraint>
-                <constraint firstItem="iUg-1o-2SZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="60" id="LoK-ba-fb5"/>
                 <constraint firstAttribute="trailing" secondItem="pI7-sj-waQ" secondAttribute="trailing" constant="20" id="YSB-Ye-kZK"/>
                 <constraint firstItem="HeN-eq-Uu0" firstAttribute="top" secondItem="pI7-sj-waQ" secondAttribute="bottom" constant="28" id="ddb-az-iUT"/>
                 <constraint firstItem="pI7-sj-waQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="dmK-eZ-aVb"/>
                 <constraint firstItem="pI7-sj-waQ" firstAttribute="top" secondItem="iUg-1o-2SZ" secondAttribute="bottom" constant="47" id="g6q-GA-5U2">
                     <variation key="heightClass=regular-widthClass=compact" constant="8"/>
                 </constraint>
-                <constraint firstItem="pI7-sj-waQ" firstAttribute="centerX" secondItem="piZ-2q-e1b" secondAttribute="centerX" id="ibz-gd-FVJ"/>
                 <constraint firstItem="piZ-2q-e1b" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="mvX-ID-gAc">
                     <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                 </constraint>
@@ -336,11 +334,9 @@
                     <exclude reference="nJV-vf-I5E"/>
                     <exclude reference="BRb-rS-hEb"/>
                     <exclude reference="Cex-B5-UOF"/>
-                    <exclude reference="LoK-ba-fb5"/>
                     <exclude reference="YSB-Ye-kZK"/>
                     <exclude reference="dmK-eZ-aVb"/>
                     <exclude reference="g6q-GA-5U2"/>
-                    <exclude reference="ibz-gd-FVJ"/>
                     <exclude reference="J5z-t8-Agh"/>
                     <exclude reference="mvX-ID-gAc"/>
                     <exclude reference="sj2-Pe-rXB"/>
@@ -358,11 +354,9 @@
                     <include reference="nJV-vf-I5E"/>
                     <include reference="BRb-rS-hEb"/>
                     <include reference="Cex-B5-UOF"/>
-                    <exclude reference="LoK-ba-fb5"/>
                     <include reference="YSB-Ye-kZK"/>
                     <include reference="dmK-eZ-aVb"/>
                     <include reference="g6q-GA-5U2"/>
-                    <exclude reference="ibz-gd-FVJ"/>
                     <include reference="J5z-t8-Agh"/>
                     <include reference="mvX-ID-gAc"/>
                     <include reference="sj2-Pe-rXB"/>

@@ -11,6 +11,7 @@
 #import "GStoreHomeViewController.h"
 #import "RecommendMedicalCheckController.h"
 #import "PhysicalTestResultController.h"
+#import "MedicalOrderController.h"//预约体检
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
@@ -175,7 +176,9 @@
  */
 - (void)pushToOrder
 {
-    
+    MedicalOrderController *m_order = [[MedicalOrderController alloc]init];
+    m_order.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:m_order animated:YES];
 }
 
 @end

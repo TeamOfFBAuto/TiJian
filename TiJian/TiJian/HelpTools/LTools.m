@@ -890,6 +890,25 @@
 }
 
 /**
+ *  NSDate转指定格式string
+ *
+ *  @param date   日期
+ *  @param format 格式
+ *
+ *  @return
+ */
++(NSString *)timeDate:(NSDate *)date
+             withFormat:(NSString *)format
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:format];
+    NSString *confromTimespStr = [formatter stringFromDate:date];
+    return confromTimespStr;
+}
+
+/**
  *  获取当前时间戳
  */
 +(NSString *)timechangeToDateline
