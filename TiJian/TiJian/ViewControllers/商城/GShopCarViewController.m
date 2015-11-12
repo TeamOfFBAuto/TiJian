@@ -9,6 +9,7 @@
 #import "GShopCarViewController.h"
 #import "GshopCarTableViewCell.h"
 #import "ProductModel.h"
+#import "GproductDetailViewController.h"
 
 @interface GShopCarViewController ()<UITableViewDataSource,RefreshDelegate>
 {
@@ -92,7 +93,7 @@
     [_downView addSubview:midleView];
     
     self.totolPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, midleView.frame.size.width, midleView.frame.size.height*0.5)];
-    NSString *pStr = @"774.00";
+    NSString *pStr = @"0.00";
     NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
     [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 3)];
@@ -104,11 +105,11 @@
     
     [midleView addSubview:self.totolPriceLabel];
     
-    UILabel *detailPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.totolPriceLabel.frame), self.totolPriceLabel.frame.size.width, self.totolPriceLabel.frame.size.height)];
-    detailPriceLabel.font = [UIFont systemFontOfSize:12];
-    detailPriceLabel.textColor = [UIColor blackColor];
-    detailPriceLabel.text = [NSString stringWithFormat:@"总额：￥%@ 优惠：￥%@",@"784.00",@"10.00"];
-    [midleView addSubview:detailPriceLabel];
+    self.detailPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.totolPriceLabel.frame), self.totolPriceLabel.frame.size.width, self.totolPriceLabel.frame.size.height)];
+    self.detailPriceLabel.font = [UIFont systemFontOfSize:12];
+    self.detailPriceLabel.textColor = [UIColor blackColor];
+    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%@  优惠:￥%@",@"0.0",@"0.0"];
+    [midleView addSubview:self.detailPriceLabel];
     
     
     UIButton *jiesuanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -170,6 +171,19 @@
     
     
     self.allChooseBtn.selected = NO;
+    
+    NSString *pStr = @"0.00";
+    NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
+    NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
+    [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 3)];
+    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:15] range:NSMakeRange(0, 3)];
+    [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(237, 108, 22) range:NSMakeRange(3, pStr.length+1)];
+    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(3, pStr.length+1)];
+    self.totolPriceLabel.attributedText = aaa;
+    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%@  优惠:￥%@",@"0.0",@"0.0"];
+    
+    
+    
     
     [self prepareNetData];
 }
@@ -315,7 +329,19 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
+    
+    NSArray *arr = self.rTab.dataArray[indexPath.section];
+    ProductModel *model = arr[indexPath.row];
+    
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    cc.isShopCarPush = YES;
+    cc.productId = model.product_id;
+    
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    
 }
+
 
 
 
@@ -324,6 +350,7 @@
     
     CGFloat totolPrice = 0;
     
+    CGFloat totolPrice_o = 0;
     
     
     for (NSArray *arr in self.rTab.dataArray) {
@@ -331,12 +358,17 @@
             if (model.userChoose) {
                 CGFloat current_price = [model.current_price floatValue];
                 totolPrice += current_price * [model.product_num intValue];
+                
+                CGFloat o_price = [model.original_price floatValue];
+                totolPrice_o += o_price * [model.product_num intValue];
+                
             }
             
         }
     }
     
-
+    
+    //现价统计
     NSString *pStr = [NSString stringWithFormat:@"%.2f",totolPrice];
     NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
@@ -346,6 +378,10 @@
     [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(237, 108, 22) range:NSMakeRange(3, pStr.length+1)];
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(3, pStr.length+1)];
     self.totolPriceLabel.attributedText = aaa;
+    
+    //原价统计
+    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,totolPrice_o - totolPrice];
+    
     
 }
 

@@ -23,6 +23,14 @@
 }
 
 
+
+- (void)dealloc
+{
+    [_request removeOperation:_request_addShopCar];
+    [_request removeOperation:_requset_subShopCar];
+}
+
+
 -(void)loadCustomViewWithIndex:(NSIndexPath *)index{
     
     
@@ -106,14 +114,7 @@
 
 //加号点击
 -(void)jiaBtnClicked{
-    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
-    ProductModel *model = arr[self.theIndexPath.row];
-    int num = [model.product_num intValue];
-    num+=1;
-    model.product_num = [NSString stringWithFormat:@"%d",num];
-    self.numLabel.text = model.product_num;
-    
-    [self.delegate updateRtabTotolPrice];
+    [self prepareAddShopCar];
 }
 
 //减号点击
@@ -122,17 +123,92 @@
     ProductModel *model = arr[self.theIndexPath.row];
     int num = [model.product_num intValue];
     if (num == 1) {
-        
+        model.product_num = [NSString stringWithFormat:@"%d",num];
+        self.numLabel.text = model.product_num;
+        [self.delegate updateRtabTotolPrice];
     }else{
-        num-=1;
+        
+        [self prepareSubShopCar];
+        
     }
-    model.product_num = [NSString stringWithFormat:@"%d",num];
-    self.numLabel.text = model.product_num;
     
-    [self.delegate updateRtabTotolPrice];
 }
 
 
+
+//购物车加1
+-(void)prepareAddShopCar{
+    
+    [MBProgressHUD showHUDAddedTo:self.delegate.view animated:YES];
+    
+    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
+    ProductModel *model = arr[self.theIndexPath.row];
+    
+    _request = [YJYRequstManager shareInstance];
+    NSDictionary *dic = @{
+                          @"authcode":[GMAPI testAuth],
+                          @"cart_pro_id":model.cart_pro_id,
+                          @"product_num":@"1"
+                          };
+    
+    _request_addShopCar = [_request requestWithMethod:YJYRequstMethodPost api:ORDER_EDIT_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        int num = [model.product_num intValue];
+        num+=1;
+        model.product_num = [NSString stringWithFormat:@"%d",num];
+        self.numLabel.text = model.product_num;
+        [MBProgressHUD hideAllHUDsForView:self.delegate.view animated:YES];
+        [self.delegate updateRtabTotolPrice];
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.delegate.view animated:YES];
+        [GMAPI showAutoHiddenMBProgressWithText:[result stringValueForKey:@"msg"] addToView:self.delegate.view];
+        
+    }];
+    
+    
+    
+}
+
+
+//购物车-1
+-(void)prepareSubShopCar{
+    
+    [MBProgressHUD showHUDAddedTo:self.delegate.view animated:YES];
+    
+    
+    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
+    ProductModel *model = arr[self.theIndexPath.row];
+    int num = [model.product_num intValue];
+    num-=1;
+    
+    _request = [YJYRequstManager shareInstance];
+    
+    NSDictionary *dic = @{
+                          @"authcode":[GMAPI testAuth],
+                          @"cart_pro_id":model.cart_pro_id,
+                          @"product_num":@"-1"
+                          };
+    
+    _request_addShopCar = [_request requestWithMethod:YJYRequstMethodPost api:ORDER_EDIT_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        
+        [MBProgressHUD hideAllHUDsForView:self.delegate.view animated:YES];
+        
+        model.product_num = [NSString stringWithFormat:@"%d",num];
+        self.numLabel.text = model.product_num;
+        [self.delegate updateRtabTotolPrice];
+        
+        
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.delegate.view animated:YES];
+        [GMAPI showAutoHiddenMBProgressWithText:[result stringValueForKey:@"msg"] addToView:self.delegate.view];
+    }];
+}
 
 
 

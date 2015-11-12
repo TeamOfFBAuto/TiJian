@@ -14,7 +14,12 @@
 @class GShopCarViewController;
 
 @interface GshopCarTableViewCell : UITableViewCell
-
+{
+    YJYRequstManager *_request;
+    AFHTTPRequestOperation *_request_addShopCar;
+    AFHTTPRequestOperation *_requset_subShopCar;
+    
+}
 @property(nonatomic,assign)GShopCarViewController *delegate;
 
 @property(nonatomic,strong)NSIndexPath *theIndexPath;

@@ -16,6 +16,8 @@
 
 @property(nonatomic,strong)UILabel *totolPriceLabel;
 
+@property(nonatomic,strong)UILabel *detailPriceLabel;
+
 @property(nonatomic,strong)UIButton *allChooseBtn;
 
 -(void)updateRtabTotolPrice;

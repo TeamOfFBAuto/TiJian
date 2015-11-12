@@ -329,8 +329,12 @@
         
     }else if (sender.tag == 103){//购物车
         
-        GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-        [self.navigationController pushViewController:cc animated:YES];
+        if (self.isShopCarPush) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }
         
     }else if (sender.tag == 104){//加入购物车
         

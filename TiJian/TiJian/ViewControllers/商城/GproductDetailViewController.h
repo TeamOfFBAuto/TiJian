@@ -15,6 +15,8 @@
 
 @property(nonatomic,strong)NSString *productId;
 
+@property(nonatomic,assign)BOOL isShopCarPush;
+
 
 
 @end

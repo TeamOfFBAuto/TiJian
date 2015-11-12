@@ -38,5 +38,7 @@
 @property(nonatomic,strong)NSString *product_num;
 @property(nonatomic,assign)BOOL userChoose;//用户是否选择
 @property(nonatomic,strong)NSString *brand_name;
+@property(nonatomic,strong)NSString *cart_pro_id;//购物车id
+@property(nonatomic,strong)NSString *original_price;//原价
 
 @end
