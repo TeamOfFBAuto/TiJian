@@ -12,6 +12,7 @@
 #import "RecommendMedicalCheckController.h"
 #import "PhysicalTestResultController.h"
 #import "MedicalOrderController.h"//预约体检
+#import "AppointmentViewController.h"//预约
 #import "WebviewController.h"
 #import "ArticleModel.h"
 
@@ -232,7 +233,22 @@
  */
 - (void)pushToOrder
 {
-    MedicalOrderController *m_order = [[MedicalOrderController alloc]init];
+    __weak typeof(self)weakSelf = self;
+        
+    [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+        if (success) {
+            [weakSelf loginToAppoint];
+        }
+    }];
+    
+//    MedicalOrderController *m_order = [[MedicalOrderController alloc]init];
+//    m_order.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:m_order animated:YES];
+}
+
+- (void)loginToAppoint
+{
+    AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
     m_order.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:m_order animated:YES];
 }

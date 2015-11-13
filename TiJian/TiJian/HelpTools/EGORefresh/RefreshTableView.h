@@ -55,6 +55,9 @@
 @property (nonatomic,assign)BOOL                        isLoadMoreData;    //是否是载入更多
 @property (nonatomic,assign)BOOL                        isHaveMoreData;    //是否还有更多数据,决定是否有更多view
 
+@property (nonatomic,assign)BOOL                        isHaveLoaded;    //是否已经加载过数据
+
+
 @property (nonatomic,assign)int pageNum;//页数
 @property (nonatomic,retain)NSMutableArray *dataArray;//数据源
 

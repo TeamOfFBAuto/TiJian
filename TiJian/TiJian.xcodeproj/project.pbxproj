@@ -267,6 +267,8 @@
 		13F242261BF5CC36002C9D81 /* ArticleListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F242251BF5CC36002C9D81 /* ArticleListController.m */; };
 		13F242291BF5D589002C9D81 /* BasicTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F242281BF5D589002C9D81 /* BasicTableViewCell.m */; };
 		13F2422C1BF5D5E0002C9D81 /* ArticleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F2422B1BF5D5E0002C9D81 /* ArticleCell.m */; };
+		13F242311BF5E17D002C9D81 /* AppointmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F242301BF5E17D002C9D81 /* AppointmentViewController.m */; };
+		13F242341BF5F1D2002C9D81 /* AppointmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F242331BF5F1D2002C9D81 /* AppointmentCell.m */; };
 		13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
@@ -734,6 +736,10 @@
 		13F242281BF5D589002C9D81 /* BasicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicTableViewCell.m; sourceTree = "<group>"; };
 		13F2422A1BF5D5E0002C9D81 /* ArticleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleCell.h; sourceTree = "<group>"; };
 		13F2422B1BF5D5E0002C9D81 /* ArticleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleCell.m; sourceTree = "<group>"; };
+		13F2422F1BF5E17D002C9D81 /* AppointmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointmentViewController.h; sourceTree = "<group>"; };
+		13F242301BF5E17D002C9D81 /* AppointmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointmentViewController.m; sourceTree = "<group>"; };
+		13F242321BF5F1D2002C9D81 /* AppointmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointmentCell.h; sourceTree = "<group>"; };
+		13F242331BF5F1D2002C9D81 /* AppointmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointmentCell.m; sourceTree = "<group>"; };
 		13F251E81BE8AC2F0021BF4C /* RecommendMedicalCheckController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendMedicalCheckController.h; sourceTree = "<group>"; };
 		13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendMedicalCheckController.m; sourceTree = "<group>"; };
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -962,6 +968,8 @@
 				131A17721BF32CE800B12D2F /* MedicalOrderController.m */,
 				13F241E41BF4769D002C9D81 /* ChooseHopitalController.h */,
 				13F241E51BF4769D002C9D81 /* ChooseHopitalController.m */,
+				13F2422F1BF5E17D002C9D81 /* AppointmentViewController.h */,
+				13F242301BF5E17D002C9D81 /* AppointmentViewController.m */,
 			);
 			path = "体检预约";
 			sourceTree = "<group>";
@@ -1032,6 +1040,8 @@
 				13F242281BF5D589002C9D81 /* BasicTableViewCell.m */,
 				13F2422A1BF5D5E0002C9D81 /* ArticleCell.h */,
 				13F2422B1BF5D5E0002C9D81 /* ArticleCell.m */,
+				13F242321BF5F1D2002C9D81 /* AppointmentCell.h */,
+				13F242331BF5F1D2002C9D81 /* AppointmentCell.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -2110,6 +2120,7 @@
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
 				1303C3071BEA14EB00700847 /* LoginViewController.m in Sources */,
 				E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */,
+				13F242311BF5E17D002C9D81 /* AppointmentViewController.m in Sources */,
 				E3EE36061BE9D4A10089A89C /* GproductDirectoryTableViewCell.m in Sources */,
 				13F1F4021BBA9D5500885D31 /* RefreshHeaderView.m in Sources */,
 				134822D81BEC80C400EA2E06 /* SettingsViewController.m in Sources */,
@@ -2125,6 +2136,7 @@
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
 				1303C2E11BE9FB2400700847 /* NSArray+Additons.m in Sources */,
 				E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */,
+				13F242341BF5F1D2002C9D81 /* AppointmentCell.m in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
 				E3D8AE161BF4B16D003AE2E3 /* GcycleScrollView.m in Sources */,
 				E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */,

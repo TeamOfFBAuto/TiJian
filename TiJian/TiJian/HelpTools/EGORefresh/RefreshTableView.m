@@ -50,6 +50,7 @@
     if (self) {
         // Initialization code
         
+        _neverShowLoadMore = YES;
         self.pageNum = 1;
         self.dataArray = [NSMutableArray array];
         [self createHeaderView];
@@ -271,6 +272,7 @@
 //代码触发刷新
 -(void)showRefreshHeader:(BOOL)animated
 {
+    self.isHaveLoaded = YES;
     if (animated)
     {
         [UIView beginAnimations:nil context:NULL];

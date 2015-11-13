@@ -41,5 +41,13 @@ typedef void(^LoginBlock)(BOOL success);
 + (BOOL)isLogin:(UIViewController *)viewController;
 + (BOOL)isLogin:(UIViewController *)viewController
      loginBlock:(LoginBlock)aBlock;
+/**
+ *  登录了直接进行下一步操作
+ *
+ *  @param viewController
+ *  @param aBlock         直接下一步操作
+ */
++ (void)loginToDoWithViewController:(UIViewController *)viewController
+                         loginBlock:(LoginBlock)aBlock;
 
 @end

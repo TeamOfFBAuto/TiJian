@@ -399,6 +399,19 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (NSAttributedString *)attributedString:(NSString *)content
                                  keyword:(NSString *)aKeyword
                                    color:(UIColor *)textColor;
+
+/**
+ *  关键词特殊显示
+ *
+ *  @param content   源字符串
+ *  @param aKeyword  关键词
+ *  @param textColor 关键词颜色
+ *  @param keywordFontSize 关键字大小
+ */
++ (NSAttributedString *)attributedString:(NSString *)content
+                                 keyword:(NSString *)aKeyword
+                                   color:(UIColor *)textColor
+                         keywordFontSize:(CGFloat)keywordFontSize;
 /**
  *  每次只给一个关键词加高亮颜色
  *

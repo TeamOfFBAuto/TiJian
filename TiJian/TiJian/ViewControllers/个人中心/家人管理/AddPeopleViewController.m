@@ -416,7 +416,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:15];
     //注意section
     cell.textLabel.text = _items[indexPath.section];
-    cell.textLabel.textColor = [UIColor colorWithHexString:@"b0b0b0"];
+    cell.textLabel.textColor = [UIColor colorWithHexString:@"323232"];
     
 //    if (self.actionStyle == ACTIONSTYLE_ADD) {
     
@@ -424,7 +424,7 @@
     
     if (self.actionStyle == ACTIONSTYLE_ADD) {
         
-        [cell.tf_right setAttributedPlaceholder:[LTools attributedString:text keyword:text color:[UIColor colorWithHexString:@"323232"]]];
+        [cell.tf_right setAttributedPlaceholder:[LTools attributedString:text keyword:text color:[UIColor colorWithHexString:@"b0b0b0"]]];
 
     }else
     {

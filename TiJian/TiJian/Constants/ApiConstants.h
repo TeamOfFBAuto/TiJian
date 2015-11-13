@@ -230,5 +230,10 @@
 //1. 资讯列表 (GET get方式 page 当前页 per_page 每页显示数目)
 #define HEALTH_ACTICAL_LIST @"/index.php?d=api&c=article&m=article_list"
 
+//=======================================================
+
+#pragma - mark 体检预约相关接口
+//获取未预约
+#define GET_NO_APPOINTS @"/index.php?d=api&c=appoint&m=get_no_appoints"
 
 #endif
