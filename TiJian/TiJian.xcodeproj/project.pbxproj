@@ -275,6 +275,11 @@
 		E3D8AE191BF4B16D003AE2E3 /* roundgray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE111BF4B16D003AE2E3 /* roundgray@2x.png */; settings = {ASSET_TAGS = (); }; };
 		E3D8AE1A1BF4B16D003AE2E3 /* SGFocusImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE131BF4B16D003AE2E3 /* SGFocusImageItem.m */; settings = {ASSET_TAGS = (); }; };
 		E3D8AE1B1BF4B16D003AE2E3 /* SMPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE151BF4B16D003AE2E3 /* SMPageControl.m */; settings = {ASSET_TAGS = (); }; };
+		E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE1D1BF4B310003AE2E3 /* ConfirmOrderViewController.m */; settings = {ASSET_TAGS = (); }; };
+		E3D8AE211BF5E7E1003AE2E3 /* GproductCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE201BF5E7E1003AE2E3 /* GproductCommentView.m */; settings = {ASSET_TAGS = (); }; };
+		E3D8AE271BF5EB00003AE2E3 /* ProductCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE261BF5EB00003AE2E3 /* ProductCommentModel.m */; settings = {ASSET_TAGS = (); }; };
+		E3D8AE2A1BF6054B003AE2E3 /* GcommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE291BF6054B003AE2E3 /* GcommentViewController.m */; settings = {ASSET_TAGS = (); }; };
+		E3D8AE2D1BF60C4B003AE2E3 /* GcommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE2C1BF60C4B003AE2E3 /* GcommentTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
 		E3D93F501BEB45BB00C0BE52 /* garea.plist in Resources */ = {isa = PBXBuildFile; fileRef = E3D93F4E1BEB45BB00C0BE52 /* garea.plist */; settings = {ASSET_TAGS = (); }; };
 		E3D93F511BEB45BB00C0BE52 /* garea.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = E3D93F4F1BEB45BB00C0BE52 /* garea.sqlite */; settings = {ASSET_TAGS = (); }; };
 		E3EE35FA1BE88DE00089A89C /* GMAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35F91BE88DE00089A89C /* GMAPI.m */; };
@@ -731,6 +736,16 @@
 		E3D8AE131BF4B16D003AE2E3 /* SGFocusImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGFocusImageItem.m; sourceTree = "<group>"; };
 		E3D8AE141BF4B16D003AE2E3 /* SMPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMPageControl.h; sourceTree = "<group>"; };
 		E3D8AE151BF4B16D003AE2E3 /* SMPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMPageControl.m; sourceTree = "<group>"; };
+		E3D8AE1C1BF4B310003AE2E3 /* ConfirmOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmOrderViewController.h; sourceTree = "<group>"; };
+		E3D8AE1D1BF4B310003AE2E3 /* ConfirmOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfirmOrderViewController.m; sourceTree = "<group>"; };
+		E3D8AE1F1BF5E7E1003AE2E3 /* GproductCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GproductCommentView.h; sourceTree = "<group>"; };
+		E3D8AE201BF5E7E1003AE2E3 /* GproductCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GproductCommentView.m; sourceTree = "<group>"; };
+		E3D8AE251BF5EB00003AE2E3 /* ProductCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductCommentModel.h; sourceTree = "<group>"; };
+		E3D8AE261BF5EB00003AE2E3 /* ProductCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductCommentModel.m; sourceTree = "<group>"; };
+		E3D8AE281BF6054B003AE2E3 /* GcommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcommentViewController.h; sourceTree = "<group>"; };
+		E3D8AE291BF6054B003AE2E3 /* GcommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcommentViewController.m; sourceTree = "<group>"; };
+		E3D8AE2B1BF60C4B003AE2E3 /* GcommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcommentTableViewCell.h; sourceTree = "<group>"; };
+		E3D8AE2C1BF60C4B003AE2E3 /* GcommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcommentTableViewCell.m; sourceTree = "<group>"; };
 		E3D93F4E1BEB45BB00C0BE52 /* garea.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = garea.plist; sourceTree = "<group>"; };
 		E3D93F4F1BEB45BB00C0BE52 /* garea.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = garea.sqlite; sourceTree = "<group>"; };
 		E3EE35F81BE88DE00089A89C /* GMAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMAPI.h; sourceTree = "<group>"; };
@@ -962,6 +977,10 @@
 				131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */,
 				E3D0850A1BF0A48500279DFC /* GshopCarTableViewCell.h */,
 				E3D0850B1BF0A48500279DFC /* GshopCarTableViewCell.m */,
+				E3D8AE1F1BF5E7E1003AE2E3 /* GproductCommentView.h */,
+				E3D8AE201BF5E7E1003AE2E3 /* GproductCommentView.m */,
+				E3D8AE2B1BF60C4B003AE2E3 /* GcommentTableViewCell.h */,
+				E3D8AE2C1BF60C4B003AE2E3 /* GcommentTableViewCell.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -1126,6 +1145,8 @@
 				1303C2DA1BE9F42D00700847 /* ProjectModel.m */,
 				1303C2E21BEA0DE600700847 /* ProductModel.h */,
 				1303C2E31BEA0DE600700847 /* ProductModel.m */,
+				E3D8AE251BF5EB00003AE2E3 /* ProductCommentModel.h */,
+				E3D8AE261BF5EB00003AE2E3 /* ProductCommentModel.m */,
 			);
 			path = CommonModels;
 			sourceTree = "<group>";
@@ -1547,6 +1568,10 @@
 				E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */,
 				E359ACA11BEC96EA00EF1527 /* GShopCarViewController.h */,
 				E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */,
+				E3D8AE1C1BF4B310003AE2E3 /* ConfirmOrderViewController.h */,
+				E3D8AE1D1BF4B310003AE2E3 /* ConfirmOrderViewController.m */,
+				E3D8AE281BF6054B003AE2E3 /* GcommentViewController.h */,
+				E3D8AE291BF6054B003AE2E3 /* GcommentViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2007,10 +2032,13 @@
 				13F1F39B1BBA9A4B00885D31 /* UIButton+Additions.m in Sources */,
 				E3EE361B1BEA0EE50089A89C /* GTranslucentSideBar.m in Sources */,
 				E3EE36001BE8B2240089A89C /* GproductDetailTableViewCell.m in Sources */,
+				E3D8AE211BF5E7E1003AE2E3 /* GproductCommentView.m in Sources */,
 				13F1F3F71BBA9C2500885D31 /* LNavigationController.m in Sources */,
+				E3D8AE2A1BF6054B003AE2E3 /* GcommentViewController.m in Sources */,
 				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,
 				13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */,
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
+				E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */,
 				1303C3071BEA14EB00700847 /* LoginViewController.m in Sources */,
 				E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */,
 				E3EE36061BE9D4A10089A89C /* GproductDirectoryTableViewCell.m in Sources */,
@@ -2049,9 +2077,11 @@
 				1303C3061BEA14EB00700847 /* GRegisterViewController.m in Sources */,
 				1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */,
 				E3D8AE1A1BF4B16D003AE2E3 /* SGFocusImageItem.m in Sources */,
+				E3D8AE271BF5EB00003AE2E3 /* ProductCommentModel.m in Sources */,
 				134822DE1BEC80F200EA2E06 /* UpdatePWDController.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
 				134822DB1BEC80E700EA2E06 /* AboutUsController.m in Sources */,
+				E3D8AE2D1BF60C4B003AE2E3 /* GcommentTableViewCell.m in Sources */,
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,
 				13F1F39F1BBA9A4B00885D31 /* UIViewController+Addtions.m in Sources */,
 				13F1F3FE1BBA9C5E00885D31 /* UIColor+ConvertColor.m in Sources */,

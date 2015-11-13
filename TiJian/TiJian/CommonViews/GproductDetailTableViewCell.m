@@ -7,6 +7,8 @@
 //
 
 #import "GproductDetailTableViewCell.h"
+#import "GproductCommentView.h"
+#import "GproductDetailViewController.h"
 
 @implementation GproductDetailTableViewCell
 
@@ -21,7 +23,7 @@
 }
 
 
--(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath{
+-(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr{
     //6个section
     //0     logo图 套餐名 描述 价钱
     //1     优惠券
@@ -54,14 +56,14 @@
             NSString *yuanjia = [dataDic stringValueForKey:@"setmeal_original_price"];
             
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame)+12, DEVICE_WIDTH - 20, 15)];
-            NSString *price = [NSString stringWithFormat:@"￥%@ %@",xianjia,yuanjia];
+            NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
             NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
             [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
             [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, xianjia.length+1)];
             
-            [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+1)];
-            [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(xianjia.length+1, yuanjia.length+1)];
-            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length)];
+            [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+            [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
             priceLabel.attributedText = aaa;
             [self.contentView addSubview:priceLabel];
             height += priceLabel.frame.size.height+12;
@@ -90,54 +92,128 @@
         tLabel.font = [UIFont systemFontOfSize:14];
         tLabel.text = @"主要参数";
         [self.contentView addSubview:tLabel];
-        height +=tLabel.frame.size.height;
+        height += tLabel.frame.size.height+10;
+    
         
-        UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(tLabel.frame)+10, DEVICE_WIDTH-20, 50)];
-        cLabel.font = [UIFont systemFontOfSize:13];
-        cLabel.text = @"主要参数介绍主要参数介绍主要参数介绍主要参数介绍主要参数介绍主要参数介绍主要参数介绍";
-        [cLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(tLabel.frame)+10) width:DEVICE_WIDTH - 20];
-        [self.contentView addSubview:cLabel];
-        height = 25+cLabel.frame.size.height+10;
+        UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(tLabel.frame)+5, DEVICE_WIDTH-20, 50)];
+        [self.contentView addSubview:cView];
         
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(cLabel.frame)+10, DEVICE_WIDTH, 5)];
+        //品牌名称
+        UILabel *brandNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, cView.frame.size.width, 12)];
+        brandNameLabel.font = [UIFont systemFontOfSize:12];
+        brandNameLabel.textColor = [UIColor blackColor];
+        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",[dataDic stringValueForKey:@"brand_name"]];
+        [cView addSubview:brandNameLabel];
+        
+        //适合人群
+        UILabel *suitLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(brandNameLabel.frame)+5, cView.frame.size.width, 12)];
+        suitLabel.font = [UIFont systemFontOfSize:12];
+        suitLabel.textColor = [UIColor blackColor];
+        NSArray *suit_infoArray = [dataDic arrayValueForKey:@"suit_info"];
+        NSString *suit_info_str = @"";
+        for (NSDictionary *dic in suit_infoArray) {
+            NSString *ss = [NSString stringWithFormat:@"%@  %@",suit_info_str,[dic stringValueForKey:@"suit_name"]];
+            suit_info_str = ss;
+        }
+        suitLabel.text = [NSString stringWithFormat:@"适用人群:%@",suit_info_str];
+        [cView addSubview:suitLabel];
+        
+        //体检项目
+        UILabel *projectInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(suitLabel.frame)+5, cView.frame.size.width, 12)];
+        projectInfoLabel.font = [UIFont systemFontOfSize:12];
+        projectInfoLabel.textColor = [UIColor blackColor];
+        NSArray *projectInfoArray = [dataDic arrayValueForKey:@"project_info"];
+        NSString *projectInfo_str = @"";
+        for (NSDictionary *dic in projectInfoArray) {
+            NSString *ss = [NSString stringWithFormat:@"%@  %@",projectInfo_str,[dic stringValueForKey:@"project_name"]];
+            projectInfo_str = ss;
+        }
+        projectInfoLabel.text = [NSString stringWithFormat:@"体检项目:%@",projectInfo_str];
+        [cView addSubview:projectInfoLabel];
+        
+        //适用地区
+        UILabel *cityInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5, cView.frame.size.width, 12)];
+        cityInfoLabel.font = [UIFont systemFontOfSize:12];
+        cityInfoLabel.textColor = [UIColor blackColor];
+        NSArray *cityInfoArray = [dataDic arrayValueForKey:@"city_info"];
+        NSString *cityInfo_str = @"";
+        for (NSDictionary *dic in cityInfoArray) {
+            NSString *ss = [NSString stringWithFormat:@"%@  %@",cityInfo_str,[dic stringValueForKey:@"city_name"]];
+            cityInfo_str = ss;
+        }
+        cityInfoLabel.text = [NSString stringWithFormat:@"适用地区:%@",cityInfo_str];
+        [cView addSubview:cityInfoLabel];
+        
+        
+        
+        [brandNameLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) width:cView.frame.size.width];
+        [suitLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(brandNameLabel.frame)+5) width:cView.frame.size.width];
+        [projectInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(suitLabel.frame)+5) width:cView.frame.size.width];
+        [cityInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5) width:cView.frame.size.width];
+        
+        CGFloat hh = brandNameLabel.frame.size.height + 5 + suitLabel.frame.size.height + 5 + projectInfoLabel.frame.size.height + 5 + cityInfoLabel.frame.size.height;
+        
+        [cView setHeight:hh];
+        
+        height += cView.frame.size.height+5;
+        
+        
+        
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(cView.frame)+10, DEVICE_WIDTH, 5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
         [self.contentView addSubview:line];
         height += line.frame.size.height+10;
         
     }else if (theindexPath.section == 3){//评价
-        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, DEVICE_WIDTH - 20, 0)];
-        tLabel.font = [UIFont systemFontOfSize:13];
-        tLabel.text  = @"评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容";
-        [tLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, 10) width:DEVICE_WIDTH-20];
-        [self.contentView addSubview:tLabel];
-        height +=tLabel.frame.size.height;
         
-        UILabel *replyNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(tLabel.frame)+10, (DEVICE_WIDTH-20)*0.5, 15)];
-        replyNameLabel.font = [UIFont systemFontOfSize:12];
-        replyNameLabel.textColor = RGBCOLOR(80, 81, 82);
-        replyNameLabel.text = @"回复商家名称";
-        [self.contentView addSubview:replyNameLabel];
         
-        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(replyNameLabel.frame), replyNameLabel.frame.origin.y, (DEVICE_WIDTH-20)*0.5, 15)];
-        timeLabel.textAlignment = NSTextAlignmentRight;
-        timeLabel.textColor = RGBCOLOR(80, 81, 82);
-        timeLabel.font = [UIFont systemFontOfSize:12];
-        timeLabel.text = @"2015-08-20";
-        [self.contentView addSubview:timeLabel];
-        height +=timeLabel.frame.size.height+10;
+        if (theindexPath.row == 0) {
+            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+            [self.contentView addSubview:view];
+            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 50, view.frame.size.height)];
+            tLabel.font = [UIFont systemFontOfSize:14];
+            tLabel.text = @"评价";
+            [view addSubview:tLabel];
+            
+            
+            if (commentArr.count>0) {
+                UIButton *moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [moreBtn setFrame:CGRectMake(view.frame.size.width-60, 0, 60, view.frame.size.height)];
+                moreBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [moreBtn setTitle:@"更多" forState:UIControlStateNormal];
+                [moreBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [moreBtn addTarget:self action:@selector(goToCommentVc) forControlEvents:UIControlEventTouchUpInside];
+                [self.contentView addSubview:moreBtn];
+            }
+            
+            UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, view.frame.size.height - 0.5, view.frame.size.width, 0.5)];
+            line.backgroundColor = RGBCOLOR(220, 221, 223);
+            [view addSubview:line];
+            
+            height += [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80];
+            
+        }else{
+            if (commentArr.count == 0) {//暂无评论
+                UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 30)];
+                tt.text = @"暂无评论";
+                tt.font = [UIFont systemFontOfSize:13];
+                [self.contentView addSubview:tt];
+                height = 30;
+            }else{
+                CGFloat h_y = 0;
+                for (int i = 0; i<commentArr.count; i++) {
+                    GproductCommentView *view = [[GproductCommentView alloc]initWithFrame:CGRectMake(0, h_y, DEVICE_WIDTH, 10)];
+                    CGFloat hh = [view loadCustomViewWithModel:commentArr[i]];
+                    [self.contentView addSubview:view];
+                    height += hh;
+                    h_y = hh;
+                }
+            }
+        }
         
-        UILabel *replyContentLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-        replyContentLabel.font = [UIFont systemFontOfSize:10];
-        replyContentLabel.text = @"商家回复内容商家回复内容商家回复内容商家回复内容商家回复内容";
-        replyContentLabel.textColor = RGBCOLOR(80, 81, 82);
-        [replyContentLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(timeLabel.frame)+5) width:DEVICE_WIDTH-20];
-        [self.contentView addSubview:replyContentLabel];
-        height += 5+replyContentLabel.frame.size.height;
         
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(replyContentLabel.frame)+10, DEVICE_WIDTH, 0.5)];
-        line.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.contentView addSubview:line];
-        height += line.frame.size.height+15;
+        
+        
         
         
     }else if (theindexPath.section == 4){//看了又看
@@ -213,5 +289,12 @@
     return height;
     
 }
+
+
+-(void)goToCommentVc{
+    [self.delegate goToCommentVc];
+}
+
+
 
 @end

@@ -17,6 +17,6 @@
 
 @property(nonatomic,assign)BOOL isShopCarPush;
 
-
+-(void)goToCommentVc;
 
 @end

@@ -35,6 +35,17 @@
     [hud hide:YES afterDelay:1.5];
 }
 
++(NSString *)timechangeYMD:(NSString *)placetime
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
+    NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
+    return confromTimespStr;
+}
+
 
 
 

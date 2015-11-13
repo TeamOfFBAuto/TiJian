@@ -17,6 +17,10 @@
 //提示浮层
 + (void)showAutoHiddenMBProgressWithText:(NSString *)text addToView:(UIView *)aView;
 
+//时间转换 —— 年-月-日
++(NSString *)timechangeYMD:(NSString *)placetime;
+
+
 +(NSString *)testAuth;
 
 @end

@@ -10,12 +10,16 @@
 #import "GproductDetailTableViewCell.h"
 #import "GproductDirectoryTableViewCell.h"
 #import "GShopCarViewController.h"
+#import "ProductCommentModel.h"
+#import "GcommentViewController.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_productDetail;
     AFHTTPRequestOperation *_request_GetShopCarNum;
+    AFHTTPRequestOperation *_request_ProductProjectList;
+    AFHTTPRequestOperation *_request_GetProductComment;
     int _count;
     
     NSDictionary *_shopCarDic;
@@ -33,6 +37,10 @@
     
     UILabel *_shopCarNumLabel;
     
+    NSArray *_productProjectListDataArray;//项目列表
+    
+    NSArray *_productCommentArray;//商品评论
+    
 }
 
 @end
@@ -48,6 +56,8 @@
     _tab = nil;
     [_request removeOperation:_request_GetShopCarNum];
     [_request removeOperation:_request_productDetail];
+    [_request removeOperation:_request_ProductProjectList];
+    [_request removeOperation:_request_GetProductComment];
     [self removeObserver:self forKeyPath:@"_count"];
     
     
@@ -81,7 +91,7 @@
 
 
 
-#pragma mark - @protocol UIScrollViewDelegate<NSObject>
+#pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
@@ -91,7 +101,7 @@
         // 下拉到最底部时显示更多数据
         
         
-        if(scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height + 60 + 30)))
+        if(scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height + 30)))
         {
             [self moveToUp:YES];
         }
@@ -138,20 +148,42 @@
     _request = [YJYRequstManager shareInstance];
     _count = 0;
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [self getProductDetail];
+    [self getProductConmment];
+    [self prepareProductProjectList];
     [self getshopcarNum];
     
 }
 
+//套餐项目列表
+-(void)prepareProductProjectList{
+    NSDictionary *dic = @{
+                          @"product_id":self.productId
+                          };
+    
+    _request_ProductProjectList = [_request requestWithMethod:YJYRequstMethodGet api:StoreProdectProjectList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _productProjectListDataArray = [result arrayValueForKey:@"data"];
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKey:@"_count"];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+}
 
 
+//套餐详情
 -(void)getProductDetail{
     NSDictionary *parameters = @{
                                  @"product_id":self.productId
                                  };
     
-    [_request requestWithMethod:YJYRequstMethodGet api:StoreProductDetail parameters:parameters constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_productDetail = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductDetail parameters:parameters constructingBodyBlock:nil completion:^(NSDictionary *result) {
         _dataDic = [result dictionaryValueForKey:@"data"];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
 
@@ -169,7 +201,7 @@
     NSDictionary *dic = @{
                           @"authcode":[GMAPI testAuth]
                           };
-    _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _shopCarDic = result;
         
@@ -182,7 +214,32 @@
     
 }
 
-//获取购物车数量
+//套餐评论
+-(void)getProductConmment{
+    NSDictionary *dic = @{
+                          @"product_id":self.productId,
+                          @"page":@"1",
+                          @"per_page":@"3"
+                          };
+    _request_GetProductComment = [_request requestWithMethod:YJYRequstMethodGet api:GET_PRODUCT_COMMENT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSArray *arr = [result arrayValueForKey:@"list"];
+        NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
+        for (NSDictionary *dic in arr) {
+            ProductCommentModel *model = [[ProductCommentModel alloc]initWithDictionary:dic];
+            [array addObject:model];
+        }
+        _productCommentArray = array;
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKey:@"_count"];
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+}
+
+
+
+//添加商品到购物车
 -(void)addProductToShopCar{
 
     NSDictionary *dic = @{
@@ -213,7 +270,10 @@
     
     NSNumber *num = [change objectForKey:@"new"];
     
-    if ([num intValue] == 2) {
+    if ([num intValue] == 4) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
         [self creatTabAndDownView];
         
         if (_shopCarNumLabel) {
@@ -235,6 +295,7 @@
     _tab.tag = 1000;
     _tab.delegate = self;
     _tab.dataSource = self;
+    _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tab];
     
     
@@ -355,11 +416,13 @@
             cell = [[GproductDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         }
         
+        cell.delegate = self;
+        
         for (UIView *view in cell.contentView.subviews) {
             [view removeFromSuperview];
         }
         
-        [cell loadCustomViewWithDic:_dataDic index:indexPath];
+        [cell loadCustomViewWithDic:_dataDic index:indexPath productCommentArray:_productCommentArray];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -374,8 +437,12 @@
             [view removeFromSuperview];
         }
         
-        [cell loadCustomViewWithData:nil indexPath:indexPath];
         
+        NSArray *arr = _productProjectListDataArray[indexPath.section];
+        NSDictionary *dic = arr[indexPath.row];
+        
+        [cell loadCustomViewWithData:dic indexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
     
@@ -399,7 +466,7 @@
         //5     上拉显示体检项目详情
         num = 6;
     }else if (tableView.tag == 1001){
-        num = 1;
+        num = _productProjectListDataArray.count;
     }
     
     return num;
@@ -417,14 +484,15 @@
         }else if (section == 2){
             num = 1;
         }else if (section == 3){
-            num = 1;//1为暂无平路
+            num = 2;
         }else if (section == 4){
             num = 1;
         }else if (section == 5){
             num = 1;
         }
     }else if (tableView.tag == 1001){
-        num = 20;
+        NSArray *arr = _productProjectListDataArray[section];
+        num = arr.count;
     }
     
     
@@ -443,7 +511,7 @@
         for (UIView *view in _tmpCell.contentView.subviews) {
             [view removeFromSuperview];
         }
-        height = [_tmpCell loadCustomViewWithDic:_dataDic index:indexPath];
+        height = [_tmpCell loadCustomViewWithDic:_dataDic index:indexPath productCommentArray:_productCommentArray];
     }else if (tableView.tag == 1001){
         if (!_tmpCell1) {
             _tmpCell1 = [[GproductDirectoryTableViewCell alloc]init];
@@ -452,7 +520,10 @@
             [view removeFromSuperview];
         }
         
-        height = [_tmpCell1 loadCustomViewWithData:nil indexPath:indexPath];
+        NSArray *arr = _productProjectListDataArray[indexPath.section];
+        NSDictionary *dic = arr[indexPath.row];
+        
+        height = [_tmpCell1 loadCustomViewWithData:dic indexPath:indexPath];
     }
     
     
@@ -466,13 +537,12 @@
     CGFloat height = 0.01;
     
     if (tableView.tag == 1000) {
-        if (section == 3) {
-            height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80];
-        }
-    }else if (tableView.tag == 1001){
         
-        if (section == 0) {
-            height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/180];
+    }else if (tableView.tag == 1001){
+        if (section == 0.01) {
+            height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/220];
+        }else{
+            height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60];
         }
         
         
@@ -485,11 +555,9 @@
     CGFloat height = 0.01;
     
     if (tableView.tag == 1000) {
-        if (section == 3) {
-            height = 5;
-        }
+        
     }else if (tableView.tag == 1001){
-        height = 0.01;
+        
     }
     
     return height;
@@ -499,10 +567,7 @@
 -(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     if (tableView.tag == 1000) {
-        if (section == 3) {
-            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
-            view.backgroundColor = RGBCOLOR(244, 245, 246);
-        }
+        
     }else if (tableView.tag == 1001){
         
     }
@@ -514,36 +579,16 @@
     
     
     if (tableView.tag == 1000) {
-        if (section == 3) {
-            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 50, view.frame.size.height)];
-            tLabel.font = [UIFont systemFontOfSize:14];
-            tLabel.text = @"评价";
-            [view addSubview:tLabel];
-            
-            UIButton *moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [moreBtn setFrame:CGRectMake(view.frame.size.width - 100, 0, 100, view.frame.size.height)];
-            moreBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-            [moreBtn setTitle:@"更多" forState:UIControlStateNormal];
-            moreBtn.titleLabel.textColor = [UIColor blackColor];
-            [view addSubview:moreBtn];
-            
-            UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tLabel.frame), DEVICE_WIDTH, 0.5)];
-            line.backgroundColor = RGBCOLOR(220, 221, 223);
-            [view addSubview:line];
-            
-        }
+        
     }else if (tableView.tag == 1001){
         if (section == 0) {
-            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/180])];
-            view.backgroundColor = [UIColor orangeColor];
-            
-            UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/220])];
+            UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
             tishiLabel.backgroundColor = [UIColor whiteColor];
             tishiLabel.font = [UIFont systemFontOfSize:12];
             tishiLabel.textAlignment = NSTextAlignmentCenter;
             tishiLabel.textColor = [UIColor blackColor];
-            tishiLabel.text = @"下拉显示产品详情";
+            tishiLabel.text = @"下拉显示套餐详情";
             [view addSubview:tishiLabel];
             
             UIView *titleView =[[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tishiLabel.frame),DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100])];
@@ -560,6 +605,44 @@
             tLabel.text = @"健康优选套餐(男/女二选一)";
             [titleView addSubview:tLabel];
             
+            UIView *blueView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(titleView.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
+            blueView.backgroundColor = RGBCOLOR(222, 245, 255);
+            [view addSubview:blueView];
+            
+            UILabel *xuhaoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, blueView.frame.size.width/4, blueView.frame.size.height)];
+            xuhaoLabel.text = @"序号";
+            xuhaoLabel.font = [UIFont systemFontOfSize:12];
+            xuhaoLabel.textAlignment = NSTextAlignmentCenter;
+            [blueView addSubview:xuhaoLabel];
+            
+            UILabel *mingxiLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(xuhaoLabel.frame), 0, xuhaoLabel.frame.size.width, xuhaoLabel.frame.size.height)];
+            mingxiLabel.text = @"明细";
+            mingxiLabel.font = [UIFont systemFontOfSize:12];
+            mingxiLabel.textAlignment = NSTextAlignmentCenter;
+            [blueView addSubview:mingxiLabel];
+            
+            
+            UILabel *zuheneirongLbel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(mingxiLabel.frame), 0, blueView.frame.size.width/2, blueView.frame.size.height)];
+            zuheneirongLbel.text = @"组合内容";
+            zuheneirongLbel.font = [UIFont systemFontOfSize:12];
+            zuheneirongLbel.textAlignment = NSTextAlignmentCenter;
+            [blueView addSubview:zuheneirongLbel];
+            
+            
+            
+        }else{
+            
+            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
+            view.backgroundColor = RGBCOLOR(222, 245, 255);
+            
+            UILabel *canhouxiangmuLabel = [[UILabel alloc]initWithFrame:view.bounds];
+            canhouxiangmuLabel.textAlignment = NSTextAlignmentCenter;
+            canhouxiangmuLabel.text = @"餐后项目";
+            canhouxiangmuLabel.font = [UIFont systemFontOfSize:12];
+            [view addSubview:canhouxiangmuLabel];
+            
+            
+            
         }
     }
     
@@ -569,6 +652,11 @@
 }
 
 
+-(void)goToCommentVc{
+    GcommentViewController *cc = [[GcommentViewController alloc]init];
+    cc.productId = self.productId;
+    [self.navigationController pushViewController:cc animated:YES];
+}
 
 
 

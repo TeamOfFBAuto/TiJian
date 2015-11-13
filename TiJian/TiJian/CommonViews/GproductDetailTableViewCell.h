@@ -11,9 +11,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class GproductDetailViewController;
+
 @interface GproductDetailTableViewCell : UITableViewCell
 
+@property(nonatomic,assign)GproductDetailViewController *delegate;
 
--(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath;
+-(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr;
 
 @end

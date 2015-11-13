@@ -10,6 +10,7 @@
 #import "GshopCarTableViewCell.h"
 #import "ProductModel.h"
 #import "GproductDetailViewController.h"
+#import "ConfirmOrderViewController.h"
 
 @interface GShopCarViewController ()<UITableViewDataSource,RefreshDelegate>
 {
@@ -22,6 +23,8 @@
     UIView *_downView;
     
     int _open[500];
+    
+    CGFloat _totolPrice;
     
     
 }
@@ -45,7 +48,7 @@
     _request = [YJYRequstManager shareInstance];
     _page = 1;
     _per_page = 20;
-    
+    _totolPrice = 0;
     
     [self creaTab];
     
@@ -117,10 +120,24 @@
     jiesuanBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [jiesuanBtn setFrame:CGRectMake(CGRectGetMaxX(midleView.frame), 0, DEVICE_WIDTH*215.0/750, 50)];
     [jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+    [jiesuanBtn addTarget:self action:@selector(goToConfirmOrderVc) forControlEvents:UIControlEventTouchUpInside];
     [_downView addSubview:jiesuanBtn];
     
     
     [self.view addSubview:_downView];
+    
+}
+
+
+-(void)goToConfirmOrderVc{
+    
+    if (_totolPrice != 0) {
+        ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+        cc.dataArray = self.rTab.dataArray;
+        [self.navigationController pushViewController:cc animated:YES];
+    }else{
+        [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
+    }
     
 }
 
@@ -348,7 +365,7 @@
 //更新下边价格信息view
 -(void)updateRtabTotolPrice{
     
-    CGFloat totolPrice = 0;
+    _totolPrice = 0;
     
     CGFloat totolPrice_o = 0;
     
@@ -357,7 +374,7 @@
         for (ProductModel*model in arr) {
             if (model.userChoose) {
                 CGFloat current_price = [model.current_price floatValue];
-                totolPrice += current_price * [model.product_num intValue];
+                _totolPrice += current_price * [model.product_num intValue];
                 
                 CGFloat o_price = [model.original_price floatValue];
                 totolPrice_o += o_price * [model.product_num intValue];
@@ -369,7 +386,7 @@
     
     
     //现价统计
-    NSString *pStr = [NSString stringWithFormat:@"%.2f",totolPrice];
+    NSString *pStr = [NSString stringWithFormat:@"%.2f",_totolPrice];
     NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
     [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 3)];
@@ -380,7 +397,7 @@
     self.totolPriceLabel.attributedText = aaa;
     
     //原价统计
-    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,totolPrice_o - totolPrice];
+    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,totolPrice_o - _totolPrice];
     
     
 }
