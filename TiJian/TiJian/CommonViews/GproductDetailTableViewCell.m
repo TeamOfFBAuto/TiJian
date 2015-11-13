@@ -9,6 +9,9 @@
 #import "GproductDetailTableViewCell.h"
 #import "GproductCommentView.h"
 #import "GproductDetailViewController.h"
+#import "CoupeView.h"
+#import "ButtonProperty.h"
+#import "CouponModel.h"
 
 @implementation GproductDetailTableViewCell
 
@@ -24,6 +27,7 @@
 
 
 -(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr{
+    self.dataDic = dataDic;
     //6个section
     //0     logo图 套餐名 描述 价钱
     //1     优惠券
@@ -81,6 +85,18 @@
         tLabel.text = @"优惠券";
         [self.contentView addSubview:tLabel];
         height += tLabel.frame.size.height;
+        
+        UIButton *getCouponBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [getCouponBtn setFrame:CGRectMake(DEVICE_WIDTH - 80, 0, 80, tLabel.frame.size.height)];
+        getCouponBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+        [getCouponBtn setTitle:@"点击领取" forState:UIControlStateNormal];
+        [getCouponBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [getCouponBtn addTarget:self action:@selector(clickToCoupe) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:getCouponBtn];
+        
+        
+        
+        
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tLabel.frame), DEVICE_WIDTH, 5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -293,6 +309,75 @@
 
 -(void)goToCommentVc{
     [self.delegate goToCommentVc];
+}
+
+/**
+ *  点击去获取优惠劵
+ */
+- (void)clickToCoupe
+{
+    if (_coupeView) {
+        [_coupeView removeFromSuperview];
+        _coupeView = nil;
+    }
+    
+    NSArray *arr = [self.dataDic arrayValueForKey:@"coupon_list"];
+    NSMutableArray *coupons = [NSMutableArray arrayWithCapacity:1];
+    for (NSDictionary *dic in arr) {
+        CouponModel *amodel = [[CouponModel alloc]initWithDictionary:dic];
+        [coupons addObject:amodel];
+    }
+    
+    _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
+    
+    __weak typeof(self)weakSelf = self;
+    
+    _coupeView.coupeBlock = ^(NSDictionary *params){
+        
+        ButtonProperty *btn = params[@"button"];
+        CouponModel *aModel = params[@"model"];
+        
+        [weakSelf netWorkForCouponModel:aModel button:btn];
+    };
+    [_coupeView show];
+}
+
+/**
+ *  领取优惠劵
+ *
+ *  @param aModel 优惠劵model
+ *  @param sender
+ */
+- (void)netWorkForCouponModel:(CouponModel *)aModel
+                       button:(UIButton *)sender
+{
+    //    __weak typeof(self)weakSelf = self;
+    
+//    if (![LTools isLogin:self]) {
+//        
+//        [_coupeView removeFromSuperview];
+//        _coupeView = nil;
+//        
+//        return;
+//    }
+    
+    
+    YJYRequstManager *rr = [YJYRequstManager shareInstance];
+    NSDictionary *dic = @{
+                          @"coupon_id":aModel.coupon_id,
+                          @"authcode":[GMAPI testAuth]
+                          };
+    
+    [rr requestWithMethod:YJYRequstMethodPost api:USER_GETCOUPON parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSLog(@"result %@",result);
+        aModel.enable_receive = @"0";
+        sender.selected = YES;
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
 }
 
 
