@@ -129,6 +129,30 @@
     return YES;
 }
 
++ (void)loginToDoWithViewController:(UIViewController *)viewController
+     loginBlock:(LoginBlock)aBlock
+{
+    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    
+    if (!authkey || authkey.length == 0) {
+        
+        LoginViewController *login = [[LoginViewController alloc]init];
+        
+        [login setLoginBlock:aBlock];//登录block
+        
+        LNavigationController *unVc = [[LNavigationController alloc]initWithRootViewController:login];
+        
+        [viewController presentViewController:unVc animated:YES completion:nil];
+        
+        return;
+    }
+    
+    //如果已经登录直接进行下一步操作
+    if (aBlock) {
+        aBlock(YES);//登录成功
+    }
+}
+
 #pragma mark - 事件处理
 
 - (void)loginResultIsSuccess:(BOOL)isSuccess

@@ -55,6 +55,9 @@
 @property (nonatomic,assign)BOOL                        isLoadMoreData;    //是否是载入更多
 @property (nonatomic,assign)BOOL                        isHaveMoreData;    //是否还有更多数据,决定是否有更多view
 
+@property (nonatomic,assign)BOOL                        isHaveLoaded;    //是否已经加载过数据
+
+
 @property (nonatomic,assign)int pageNum;//页数
 @property (nonatomic,retain)NSMutableArray *dataArray;//数据源
 
@@ -81,6 +84,14 @@
 
 -(id)initWithFrame:(CGRect)frame showLoadMore:(BOOL)show;
 
+/**
+ *  创建refreshTableView
+ *
+ *  @param frame
+ *  @param superView headerView的父视图
+ *
+ *  @return
+ */
 -(id)initWithFrame:(CGRect)frame superView:(UIView *)superView;
 
 //买衣日志扩展

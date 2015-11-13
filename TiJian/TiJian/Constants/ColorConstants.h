@@ -28,5 +28,11 @@ alpha:(a)]
 #define DEFAULT_TEXTCOLOR RGBCOLOR(125, 163, 208) //主题颜色一致
 #define DEFAULT_LINECOLOR RGBCOLOR(226, 226, 226) //分割线颜色
 
+//字体颜色
+#define DEFAULT_TEXTCOLOR_TITLE [UIColor colorWithHexString:@"323232"] //标题颜色
+#define DEFAULT_TEXTCOLOR_TITLE_SUB [UIColor colorWithHexString:@"323232"] //副标题或者摘要
+#define DEFAULT_TEXTCOLOR_TITLE_THIRD [UIColor colorWithHexString:@"999999"] //颜色第三层次
+
+
 
 #endif

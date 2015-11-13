@@ -890,6 +890,25 @@
 }
 
 /**
+ *  NSDate转指定格式string
+ *
+ *  @param date   日期
+ *  @param format 格式
+ *
+ *  @return
+ */
++(NSString *)timeDate:(NSDate *)date
+             withFormat:(NSString *)format
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:format];
+    NSString *confromTimespStr = [formatter stringFromDate:date];
+    return confromTimespStr;
+}
+
+/**
  *  获取当前时间戳
  */
 +(NSString *)timechangeToDateline
@@ -1377,6 +1396,43 @@
     
     return string;
 }
+
+
+/**
+ *  关键词特殊显示
+ *
+ *  @param content   源字符串
+ *  @param aKeyword  关键词
+ *  @param textColor 关键词颜色
+ *  @param keywordFontSize 关键字大小
+ */
++ (NSAttributedString *)attributedString:(NSString *)content
+                                 keyword:(NSString *)aKeyword
+                                   color:(UIColor *)textColor
+                         keywordFontSize:(CGFloat)keywordFontSize
+{
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:content];
+    
+    if (content.length < aKeyword.length) {
+        return string;
+    }
+    
+    for (int i = 0; i <= content.length - aKeyword.length; i ++) {
+        
+        NSRange tmp = NSMakeRange(i, aKeyword.length);
+        
+        NSRange range = [content rangeOfString:aKeyword options:NSCaseInsensitiveSearch range:tmp];
+        
+        if (range.location != NSNotFound) {
+            [string addAttribute:NSForegroundColorAttributeName value:textColor range:range];
+            [string addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:keywordFontSize] range:range];
+        }
+    }
+    
+    return string;
+}
+
 /**
  *  每次只给一个关键词加高亮颜色
  *

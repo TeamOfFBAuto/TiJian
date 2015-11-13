@@ -11,12 +11,22 @@
 #import "GStoreHomeViewController.h"
 #import "RecommendMedicalCheckController.h"
 #import "PhysicalTestResultController.h"
+#import "MedicalOrderController.h"//预约体检
+#import "AppointmentViewController.h"//预约
+#import "WebviewController.h"
+#import "ArticleModel.h"
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
 #define kTagHealth 102 //健康资讯
 
 @interface HomeViewController ()
+
+@property(nonatomic,retain)UIView *healthView;//背景view
+@property(nonatomic,retain)UIImageView *icon_health;//健康咨询图标
+@property(nonatomic,retain)UILabel *title_health;//健康咨询标题
+@property(nonatomic,retain)UILabel *subTitle_health;//监控咨询摘要
+@property(nonatomic,retain)ArticleModel *articleModel;
 
 @end
 
@@ -72,25 +82,69 @@
     view_health.backgroundColor = [UIColor whiteColor];
     [bgScroll addSubview:view_health];
     [view_health addTaget:self action:@selector(clickToPush:) tag:kTagHealth];
+    view_health.hidden = YES;//默认隐藏
+    self.healthView = view_health;
+    
     //图标
     UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(20, 13.5, 50, 50)];
     [icon addRoundCorner];
     icon.backgroundColor = DEFAULT_TEXTCOLOR;
     [view_health addSubview:icon];
+    self.icon_health = icon;
+    
     //标题
     CGFloat left = icon.right + 10;
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, 25, DEVICE_WIDTH - left - 20, 14) title:@"经常流鼻血是怎么回事?" font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, 25, DEVICE_WIDTH - left - 20, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [view_health addSubview:titleLabel];
+    self.title_health = titleLabel;
     
-    UILabel *subLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, titleLabel.bottom + 8, DEVICE_WIDTH - left - 20, 12) title:@"到底是怎么回事呢？专家给你解答" font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    UILabel *subLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, titleLabel.bottom + 8, DEVICE_WIDTH - left - 20, 12) title:nil font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [view_health addSubview:subLabel];
+    self.subTitle_health = subLabel;
     
     bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, view_health.bottom + 15);
+    
+    //获取健康咨询
+    [self getHealthArticlelist];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma - mark 网络请求
+
+/**
+ *  获取咨询文章
+ */
+- (void)getHealthArticlelist
+{
+    NSDictionary *params = @{@"page":@"1",@"per_page":@"1"};
+    __weak typeof(self)weakSelf = self;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:HEALTH_ACTICAL_LIST parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
+        [weakSelf setHealthViewWithModel:[temp lastObject]];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        
+    }];
+}
+
+/**
+ *  健康资讯赋值
+ *
+ *  @param aModel
+ */
+- (void)setHealthViewWithModel:(ArticleModel *)aModel
+{
+    self.healthView.hidden = NO;
+    self.articleModel = aModel;
+    [self.icon_health sd_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    self.title_health.text = aModel.title;
+    self.subTitle_health.text = aModel.summary;
 }
 
 #pragma - mark 事件处理
@@ -167,7 +221,11 @@
  */
 - (void)pushToHealthNews
 {
-    
+    WebviewController *web = [[WebviewController alloc]init];
+    web.webUrl = self.articleModel.url;
+    web.moreInfo = YES;
+    web.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:web animated:YES];
 }
 
 /**
@@ -175,7 +233,24 @@
  */
 - (void)pushToOrder
 {
+    __weak typeof(self)weakSelf = self;
+        
+    [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+        if (success) {
+            [weakSelf loginToAppoint];
+        }
+    }];
     
+//    MedicalOrderController *m_order = [[MedicalOrderController alloc]init];
+//    m_order.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:m_order animated:YES];
+}
+
+- (void)loginToAppoint
+{
+    AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
+    m_order.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:m_order animated:YES];
 }
 
 @end

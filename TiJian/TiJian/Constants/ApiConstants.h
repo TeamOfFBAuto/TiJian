@@ -54,7 +54,7 @@
 
 /**************************登录注册相关用户接口**********************************/
 
-#pragma - mark 登录注册相关用户接口
+#pragma mark - 登录注册相关用户接口
 //登录
 #define USER_LOGIN_ACTION @"/index.php?d=api&c=user&m=login"
 
@@ -84,7 +84,7 @@
 
 /******************商品相关接口*******************/
 
-#pragma - mark 商品相关
+#pragma mark - 商品相关
 
 //获取商品详情
 #define GET_PRODUCTDETAIL @"/index.php?d=api&c=products&m=get_product_detail"
@@ -131,7 +131,7 @@
 #define HUODONGXIANGQING @"/index.php?d=api&c=activity&m=get_activity_detail"
 
 //收货地址相关接口==================
-#pragma - mark 收货地址相关
+#pragma mark - 收货地址相关
 
 //获取用户的收货地址列表
 #define USER_ADDRESS_LIST @"/index.php?d=api&c=user&m=get_user_address"
@@ -150,7 +150,7 @@
 
 
 //订单相关接口=====================
-#pragma - mark 订单相关
+#pragma mark - 订单相关
 
 //40、购物车添加商品
 #define ORDER_ADD_TO_CART @"/index.php?d=api&c=order&m=add_to_cart"
@@ -209,7 +209,7 @@
 #define GET_SHOPPINGCAR_NUM @"/index.php?d=api&c=order&m=get_cart_pro_num"
 
 //***************家人管理****************//
-#pragma - mark 家人管理相关接口
+#pragma mark - 家人管理相关接口
 
 //21、获取我的家人列表
 #define GET_FAMILY @"/index.php?d=api&c=user&m=get_family"
@@ -225,5 +225,19 @@
 //24、删除我的家人信息
 #define DEL_FAMILY @"/index.php?d=api&c=user&m=del_family"
 //post参数调取参数:authcode、family_uids 列表中的id 可传多个 用英文逗号隔开
+
+
+//=======================================================
+
+#pragma - mark 健康资讯相关接口
+
+//1. 资讯列表 (GET get方式 page 当前页 per_page 每页显示数目)
+#define HEALTH_ACTICAL_LIST @"/index.php?d=api&c=article&m=article_list"
+
+//=======================================================
+
+#pragma - mark 体检预约相关接口
+//获取未预约
+#define GET_NO_APPOINTS @"/index.php?d=api&c=appoint&m=get_no_appoints"
 
 #endif

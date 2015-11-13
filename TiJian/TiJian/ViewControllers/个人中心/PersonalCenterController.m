@@ -334,7 +334,7 @@
             
         }else if (indexPath.row == 2){
             
-            //@"我的套餐";
+            //@"我的预约";
         }
     }else if (indexPath.section == 1){
         
@@ -416,7 +416,7 @@
             
         }else if (indexPath.row == 2){
             
-            cell.textLabel.text = @"我的套餐";
+            cell.textLabel.text = @"我的预约";
             cell.imageView.image = [UIImage imageNamed:@"personal_yuyue"];
         }
     }else if (indexPath.section == 1){
