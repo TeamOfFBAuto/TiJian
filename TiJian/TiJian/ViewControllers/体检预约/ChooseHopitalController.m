@@ -34,7 +34,7 @@
 //    _calendar_bgView
     
     _currentCalendar = [NSCalendar currentCalendar];
-    self.calendar = [[FSCalendar alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH/1.6)];
+    self.calendar = [[FSCalendar alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300)];
     _calendar.delegate = self;
     _calendar.dataSource = self;
     [self.view addSubview:_calendar];
@@ -44,8 +44,12 @@
 //    _calendar.minimumDate = [NSDate date];
     [_calendar setCurrentPage:[NSDate date] animated:YES];
     
-    _calendar.appearance.todayColor = [UIColor colorWithHexString:@"f88326"];
-    _calendar.appearance.selectionColor = [UIColor colorWithHexString:@"f88326"];
+    FSCalendarAppearance *apprearance = _calendar.appearance;
+    
+    apprearance.todayColor = [UIColor redColor];
+    apprearance.selectionColor = [UIColor colorWithHexString:@"f88326"];
+    apprearance.headerTitleColor = [UIColor colorWithHexString:@"323232"];
+    apprearance.weekdayTextColor = [UIColor colorWithHexString:@"999999"];
     
     self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _closeButton.frame = CGRectMake(0, _calendar.bottom, DEVICE_WIDTH, 27);
@@ -88,8 +92,12 @@
 {
     sender.selected = !sender.selected;
     FSCalendarScope selectedScope = sender.selected ? FSCalendarScopeMonth : FSCalendarScopeWeek;
+
     [_calendar setScope:selectedScope animated:YES];
     
+//    [_calendar setCurrentPage:[NSDate date] animated:NO];
+
+
 }
 
 #pragma mark - FSCalendarDelegate
@@ -104,14 +112,17 @@
     _table.top = _closeButton.bottom;
     _table.height = DEVICE_HEIGHT - 64 - _closeButton.bottom;
     
+//    [_calendar setCurrentPage:[NSDate date] animated:NO];
+
+    
     NSLog(@"size %f",size.height);
 }
 
 - (void)calendarCurrentPageDidChange:(FSCalendar *)calendar
 {
-    [calendar selectDate:[NSDate date] scrollToDate:YES];
-    
-    [calendar setCurrentPage:[NSDate date] animated:YES];
+//    [calendar selectDate:[NSDate date] scrollToDate:YES];
+//    
+//    [calendar setCurrentPage:[NSDate date] animated:YES];
 }
 
 - (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date
@@ -129,6 +140,12 @@
    SSLunarDate * _lunarDate = [[SSLunarDate alloc] initWithDate:date calendar:_currentCalendar];
     return _lunarDate.dayString;
 }
+
+- (NSDate *)minimumDateForCalendar:(FSCalendar *)calendar
+{
+    return [NSDate date];
+}
+//- (NSDate *)maximumDateForCalendar:(FSCalendar *)calendar;
 
 #pragma - mark UITableViewDelegate
 

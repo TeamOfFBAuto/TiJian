@@ -81,6 +81,14 @@
 
 -(id)initWithFrame:(CGRect)frame showLoadMore:(BOOL)show;
 
+/**
+ *  创建refreshTableView
+ *
+ *  @param frame
+ *  @param superView headerView的父视图
+ *
+ *  @return
+ */
 -(id)initWithFrame:(CGRect)frame superView:(UIView *)superView;
 
 //买衣日志扩展
