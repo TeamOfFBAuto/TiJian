@@ -39,6 +39,16 @@
 
 @end
 
+
+/**
+ *  数据源监控block
+ *
+ *  @param keyPath
+ *  @param change  值得变化
+ */
+typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
+
+
 @interface RefreshTableView : UITableView<L_EGORefreshTableDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     BOOL _neverShowLoadMore;//是否永远不显示加载更多
@@ -65,6 +75,8 @@
 @property(nonatomic,retain)UILabel *normalLabel;
 @property(nonatomic,retain)UILabel *loadingLabel;
 @property(nonatomic,assign)BOOL hiddenLoadMore;//隐藏加载更多,默认隐藏
+
+@property (nonatomic,copy)OBSERVERBLOCK dataArrayObeserverBlock;//监控数据源
 
 
 -(void)createHeaderView;
@@ -121,5 +133,11 @@
  */
 - (void)loadFailWithView:(UIView *)view
                 pageSize:(int)pageSize;
+
+
+
+-(void)setDataArrayObeserverBlock:(OBSERVERBLOCK)dataArrayObeserverBlock;
+-(void)removeObserver;
+
 
 @end

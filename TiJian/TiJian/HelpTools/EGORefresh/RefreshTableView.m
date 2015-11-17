@@ -774,4 +774,26 @@
 
 
 
+
+
+//监控数据源的block
+
+-(void)setDataArrayObeserverBlock:(OBSERVERBLOCK)dataArrayObeserverBlock
+{
+    //监测数据源
+    [self addObserver:self forKeyPath:@"_dataArrayCount" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    _dataArrayObeserverBlock = dataArrayObeserverBlock;
+}
+
+-(void)removeObserver
+{
+    if (_dataArrayObeserverBlock) {
+        
+        [self removeObserver:self forKeyPath:@"_dataArrayCount"];
+    }
+}
+
+
+
+
 @end

@@ -57,6 +57,10 @@
 #define MIAOSHAO_END_TEXT @"秒杀已结束"
 #define MIAOSHAO_PRE_TEXT @"秒杀结束倒计时:"
 
+
+//分页网络请求
+#define G_PER_PAGE 20
+
 //保存用户信息设备信息相关
 
 #define USER_INFO @"userInfo"//用户信息

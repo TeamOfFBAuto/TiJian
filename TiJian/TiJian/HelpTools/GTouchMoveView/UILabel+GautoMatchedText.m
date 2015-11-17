@@ -11,7 +11,7 @@
 @implementation UILabel (GautoMatchedText)
 
 
-//设定宽度 自适应高度
+//设置最大宽度 自适应高度
 -(void)setMatchedFrame4LabelWithOrigin:(CGPoint)o width:(CGFloat)theWidth{
     CGRect r = [self matchedRectWithWidth:theWidth];
     [self setFrame:CGRectMake(o.x, o.y, r.size.width, r.size.height)];

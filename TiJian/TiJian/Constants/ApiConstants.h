@@ -27,6 +27,12 @@
 //套餐详情
 #define StoreProductDetail @"/index.php?d=api&c=setmeal&m=setmeal_detail"
 
+//套餐下体检项目列表
+#define StoreProdectProjectList @"/index.php?d=api&c=setmeal&m=setmeal_project_list"
+
+//领取优惠券
+#define USER_GETCOUPON @"/index.php?d=api&c=order&m=receive_coupon"
+
 
 //获取个性定制结果POST
 #define GET_CUSTOMIZAITION_RESULT @"/index.php?d=api&c=customization&m=get_customization_result"
