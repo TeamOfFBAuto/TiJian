@@ -11,9 +11,11 @@
 #import "PersonalCustomViewController.h"//个性化定制
 #import "PhysicalTestResultController.h"//测试结果
 #import "ChooseHopitalController.h"//选择分院和时间
+#import "AppointDetailController.h"//预约详情
 #import "ProductModel.h"
 #import "AppointmentCell.h"
-#define kTagButton 100
+#import "AppointModel.h"
+#define kTagButton 300
 #define kTagTableView 200
 
 @interface AppointmentViewController ()<RefreshDelegate,UITableViewDataSource,UIScrollViewDelegate>
@@ -35,6 +37,9 @@
     self.myTitle = @"预约";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_SUCCESS object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_CANCEL_SUCCESS object:nil];
+    
     //创建视图
     [self prepareView];
     //请求数据
@@ -47,6 +52,16 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - 通知处理
+
+- (void)notificationForAppointSuccess
+{
+    //刷新预约情况
+    [[self tableViewWithIndex:0]showRefreshHeader:YES];//待预约
+    [[self tableViewWithIndex:1]showRefreshHeader:YES];//已预约
+    
 }
 
 #pragma mark - 视图创建
@@ -101,27 +116,50 @@
     int index = (int)table.tag - kTagTableView;
     NSDictionary *params;
     NSString *api;
+    
+    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    
+    
+    //待预约
     if (table == [self tableViewWithIndex:0]) {
         
         api = GET_NO_APPOINTS;
-        NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
-        authkey = @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
         params = @{@"authcode":authkey};
+    }
+    //已预约
+    else if (table == [self tableViewWithIndex:1])
+    {
+        api = GET_APPOINT;
+        params = @{@"authcode":authkey,
+                   @"expired":@"0",
+                   @"page":NSStringFromInt(table.pageNum),
+                   @"per_page":@"20"};
+        
+    }
+    //已过期
+    else if ([self tableViewWithIndex:2])
+    {
+        api = GET_APPOINT;
+        params = @{@"authcode":authkey,
+                   @"expired":@"1",
+                   @"page":NSStringFromInt(table.pageNum),
+                   @"per_page":@"20"};
+
     }
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(table)weakTable = table;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+//        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         [weakSelf parseDataWithResult:result withIndex:index];
         
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+//        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         [weakTable loadFail];
         
@@ -140,6 +178,14 @@
         _company = [ProductModel modelsFromArray:setmeal_list[@"company"]];
         _personal = [ProductModel modelsFromArray:setmeal_list[@"personal"]];
         [[self tableViewWithIndex:0]finishReloadigData];
+    }else if (index == 1){
+        
+        NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
+        [[self tableViewWithIndex:1]reloadData:temp isHaveMore:YES];
+    }else if (index == 2){
+        
+        NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
+        [[self tableViewWithIndex:2]reloadData:temp isHaveMore:YES];
     }
 }
 
@@ -208,7 +254,7 @@
     if (scrollView == _scroll) {
         
         int page = floor((scrollView.contentOffset.x - DEVICE_WIDTH / 2) / DEVICE_WIDTH) + 1;//只要大于半页就算下一页
-        NSLog(@"page %d",page);
+//        NSLog(@"page %d",page);
         
         [self updateButtonStateWithSelectedIndex:page];
         
@@ -226,18 +272,38 @@
 {
     [self netWorkForListWithTable:tableView];
 }
-- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView
 {
-    ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
-    if ([aModel.type intValue] == 2) { //代金卷
-        
-        return;
-    }
-
     int index = (int)tableView.tag - kTagTableView;
     if (index == 0) {
+        
+        ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
+        if ([aModel.type intValue] == 2) { //代金卷
+            
+            return;
+        }
+        
         ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+        
+        //公司
+        if ([aModel.type intValue] == 1) {
+            
+            NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
+            [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:aModel.company_info[@"company_id"] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+        }else
+        {
+            choose.productId = aModel.product_id;
+            choose.order_id = aModel.order_id;
+            choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
+        }
+        
         [self.navigationController pushViewController:choose animated:YES];
+    }else
+    {
+        AppointModel *aModel = tableView.dataArray[indexPath.row];
+        AppointDetailController *detail = [[AppointDetailController alloc]init];
+        detail.appoint_id = aModel.appoint_id;
+        [self.navigationController pushViewController:detail animated:YES];
     }
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
@@ -248,7 +314,7 @@
         return [AppointmentCell heightForCellWithType:[aModel.type intValue]];
     }
     
-    return 44.f;
+    return 60.f;
 }
 
 - (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView
@@ -336,8 +402,53 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        
+        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 55)];
+        view.backgroundColor = [UIColor whiteColor];
+        [cell.contentView addSubview:view];
+        
+        CGFloat nameWidth = 120;
+        CGFloat timeWidth = 70;
+        CGFloat centerWidth = DEVICE_WIDTH - nameWidth - timeWidth - 20;
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, nameWidth, 55) title:nil font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
+        [view addSubview:nameLabel];
+        nameLabel.tag = 100;
+        
+        UILabel *centerLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.right, 0, centerWidth, 55) title:nil font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE];
+        [view addSubview:centerLabel];
+        centerLabel.tag = 101;
+        
+        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 10 - timeWidth, 0, timeWidth, 55) title:nil font:13 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
+        [view addSubview:timeLabel];
+//        timeLabel.backgroundColor = [UIColor redColor];
+        timeLabel.tag = 102;
     }
+    cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    UILabel *nameLabel = [cell.contentView viewWithTag:100];
+    UILabel *centerLabel = [cell.contentView viewWithTag:101];
+    UILabel *timeLabel = [cell.contentView viewWithTag:102];
+    RefreshTableView *table = (RefreshTableView *)tableView;
+    AppointModel *aModel = table.dataArray[indexPath.row];
+    
+    NSString *name = aModel.user_name;
+    NSString *text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,aModel.user_name];
+    [nameLabel setAttributedText:[LTools attributedString:text keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+    centerLabel.text = aModel.center_name;
+    
+    //未过期
+    if (index == 1) {
+        
+        timeLabel.text = [LTools timeString:aModel.appointment_exam_time withFormat:@"YYYY.MM.dd"];
+
+    }
+    //已过期
+    else if (index == 2){
+        
+        NSString *days = NSStringFromInt([aModel.days intValue]);
+        NSString *text = [NSString stringWithFormat:@"过期%@天",days];
+        [timeLabel setAttributedText:[LTools attributedString:text keyword:days color:[UIColor colorWithHexString:@"f88326"]]];
+    }
     
     return cell;
 }

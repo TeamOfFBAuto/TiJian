@@ -294,6 +294,13 @@
     _rightImageName = rightImageName;
     [self setMyViewControllerLeftButtonType:leftType WithRightButtonType:myRightType];
 }
+
+-(void)setRightImage:(UIImage *)rightImage
+{
+    _rightImage = rightImage;
+    [self setMyViewControllerLeftButtonType:leftType WithRightButtonType:myRightType];
+}
+
 -(void)setLeftImageName:(NSString *)leftImageName
 {
     _leftImageName = leftImageName;

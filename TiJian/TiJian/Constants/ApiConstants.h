@@ -233,7 +233,34 @@
 //=======================================================
 
 #pragma - mark 体检预约相关接口
-//获取未预约
+
+//1、获取未预约
 #define GET_NO_APPOINTS @"/index.php?d=api&c=appoint&m=get_no_appoints"
+
+//2、获取预约体检分院
+
+//(get:product_id 套餐商品id、province_id 省id、city_id 城市id、date 预约日期、longitude 经度（可不传）、latitude 纬度（可不传）)
+#define GET_CENTER_PERCENT @"/index.php?d=api&c=appoint&m=get_center_percent"
+
+//3、提交预约信息
+//post 方式 authcode、order_id 订单id、product_id 套餐商品id、exam_center_id 预约体检机构id、date 预约体检日期（如：2015-11-13）、company_id 公司id（若是公司买单的 则要传）、order_checkuper_id 预约id（若是公司买单的 则要传）、family_uid 家人id 多个用英文逗号隔开（若是个人买单，则要传）、myself 是否包括本人 1是 0不是（若是个人买单，则要传）
+#define MAKE_APPOINT @"/index.php?d=api&c=appoint&m=make_appoint"
+
+//4、获取已预约/过期列表
+//get 方式 authcode、expired 是否过期的 0=》未过期 1=》已过期、page、per_page
+#define GET_APPOINT @"/index.php?d=api&c=appoint&m=get_appoints"
+
+//5、查看预约详情
+//get 方式、authcode、appoint_id 预约id
+#define GET_APPOINT_DETAIL @"/index.php?d=api&c=appoint&m=view_appoint"
+
+//6、取消预约
+//post 方式、authcode、appoint_id 预约id
+#define CANCEL_APPOINT @"/index.php?d=api&c=appoint&m=cancel_appoint"
+
+//7、重新/编辑预约
+//post、authcode、appoint_id 预约id、exam_center_id 预约体检分院id、date 预约日期
+#define UPDATE_APPOINT @"/index.php?d=api&c=appoint&m=update_appoint"
+
 
 #endif

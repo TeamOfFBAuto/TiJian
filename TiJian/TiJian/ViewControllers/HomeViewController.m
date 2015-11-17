@@ -13,12 +13,15 @@
 #import "PhysicalTestResultController.h"
 #import "MedicalOrderController.h"//预约体检
 #import "AppointmentViewController.h"//预约
+#import "ArticleListController.h"//健康资讯列表
 #import "WebviewController.h"
 #import "ArticleModel.h"
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
-#define kTagHealth 102 //健康资讯
+#define kTagHealth 103 //健康资讯
+#define kTagHealthList 102 //健康资讯列表
+
 
 @interface HomeViewController ()
 
@@ -161,6 +164,9 @@
     }else if (tag == kTagHealth){
         //健康资讯
         [self pushToHealthNews];
+    }else if (tag == kTagHealthList){
+        //健康资讯列表
+        [self pushToHealthNewsList];
     }
 }
 
@@ -226,6 +232,15 @@
     web.moreInfo = YES;
     web.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:web animated:YES];
+}
+/**
+ *  监控资讯列表
+ */
+- (void)pushToHealthNewsList
+{
+    ArticleListController *list = [[ArticleListController alloc]init];
+    list.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:list animated:YES];
 }
 
 /**

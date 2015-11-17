@@ -304,6 +304,16 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (MBProgressHUD *)MBProgressWithText:(NSString *)text addToView:(UIView *)aView;
 
+#pragma - mark 身份证安全性处理
+/**
+ *  处理身份证号
+ *
+ *  @param idCard 身份证号
+ *
+ *  @return
+ */
++ (NSString *)safeStringWithIdCard:(NSString *)idCard;
+
 #pragma - mark 非空字符串
 
 /**

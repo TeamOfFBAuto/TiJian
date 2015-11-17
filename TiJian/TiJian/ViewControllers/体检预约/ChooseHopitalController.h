@@ -11,8 +11,27 @@
 #import "MyViewController.h"
 #import "FSCalendar.h"
 
+@class ProductModel;
 @interface ChooseHopitalController : MyViewController<FSCalendarDataSource, FSCalendarDelegate>
 
 @property(nonatomic,retain)FSCalendar *calendar;
+@property(nonatomic,retain)NSString *productId;//商品id
+@property(nonatomic,retain)NSString *order_id;
+@property(nonatomic,assign)int noAppointNum;//剩余未预约个数
+
+/**
+ *  公司预约参数
+ *
+ *  @param orderId
+ *  @param productId
+ *  @param companyId          公司id
+ *  @param order_checkuper_id 公司订单特有
+ *  @param noAppointNum
+ */
+- (void)setCompanyAppointOrderId:(NSString *)orderId
+                       productId:(NSString *)productId
+                       companyId:(NSString *)companyId
+              order_checkuper_id:(NSString *)order_checkuper_id
+                    noAppointNum:(int)noAppointNum;
 
 @end
