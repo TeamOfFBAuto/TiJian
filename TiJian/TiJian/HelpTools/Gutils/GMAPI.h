@@ -21,6 +21,18 @@
 +(NSString *)timechangeYMD:(NSString *)placetime;
 
 
+//测试authcode
++(NSString *)getAuthkey;
 +(NSString *)testAuth;
+
+
+//地区选择相关
++ (int)cityIdForName:(NSString *)cityName;
+
++ (NSString *)cityNameForId:(int)cityId;
+
+
+
+
 
 @end
