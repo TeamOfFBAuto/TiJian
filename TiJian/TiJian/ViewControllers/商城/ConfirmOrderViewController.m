@@ -13,6 +13,7 @@
 #import "ProductModel.h"
 #import "AddAddressController.h"
 #import "PayActionViewController.h"
+#import "GconfirmOrderCell.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -21,8 +22,14 @@
     
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_confirmOrder;
+    AFHTTPRequestOperation *_request_address;
     
     CGFloat _sumPrice_pay;
+    
+    NSMutableArray *_addressArray;
+    
+    
+    UIView *_tabFooterView;
     
     
 }
@@ -41,9 +48,11 @@
     
     _sumPrice_pay = 0;
     
-    [self creatTab];
-    [self creatAddressView];
-    [self creatDownView];
+    
+    
+    [self prepareNetData];
+    
+    
     
     
 }
@@ -52,6 +61,50 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - 请求网络数据
+
+//获取用户收货地址
+-(void)prepareNetData{
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    NSDictionary *dic = @{
+                          @"authcode":[GMAPI testAuth],
+                          @"page":@"1",
+                          @"per_page":@"500"
+                          };
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    _request_address = [_request requestWithMethod:YJYRequstMethodGet api:USER_ADDRESS_LIST parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"在这里%@",result);
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        _addressArray = [NSMutableArray arrayWithCapacity:1];
+        
+        NSArray *arr = [result arrayValueForKey:@"list"];
+        for (NSDictionary *dic in arr) {
+            AddressModel *model = [[AddressModel alloc]initWithDictionary:dic];
+            [_addressArray addObject:model];
+        }
+        
+        [self creatTab];
+        [self creatAddressView];
+        [self creatDownView];
+        
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+}
+
+
 
 
 #pragma mark - 视图创建
@@ -65,65 +118,85 @@
 }
 
 
+-(void)creatTabFooterView{
+    _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 105)];
+    _tabFooterView.backgroundColor = [UIColor whiteColor];
+}
+
+
+
+
 -(void)creatAddressView{
     _addressView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 115)];
     _addressView.backgroundColor = RGBCOLOR(244, 245, 246);
     
-   
+    AddressModel *theModel = nil;
+    for (AddressModel *model in _addressArray) {
+        if ([model.default_address intValue] == 1) {
+            theModel = model;
+        }
+    }
+    
+    if (!theModel) {//没有地址
+        
+    }else{
+        //上分割线
+        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 2.5)];
+        [imv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_line.png"]];
+        [_addressView addSubview:imv];
+        
+        //内容
+        UIView *contentView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(imv.frame), DEVICE_WIDTH, 100)];
+        contentView.backgroundColor = [UIColor whiteColor];
+        [_addressView addSubview:contentView];
+        [contentView addTaget:self action:@selector(goToEditAddress) tag:0];
+        
+        //姓名
+        UIImageView *nameLogoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 12, 17.5)];
+        [nameLogoImv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_name.png"]];
+        [contentView addSubview:nameLogoImv];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(nameLogoImv.frame)+8, 10, 80, nameLogoImv.frame.size.height)];
+        nameLabel.font = [UIFont systemFontOfSize:14];
+        nameLabel.textColor = [UIColor blackColor];
+        nameLabel.text = theModel.receiver_username;
+        [contentView addSubview:nameLabel];
+        
+        //电话
+        UIImageView *phoneLogoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(nameLabel.frame)+10, nameLabel.frame.origin.y, 12, 17.5)];
+        [phoneLogoImv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_phone.png"]];
+        [contentView addSubview:phoneLogoImv];
+        UILabel *phoneLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(phoneLogoImv.frame)+8, 10, 110, phoneLogoImv.frame.size.height)];
+        phoneLabel.font = [UIFont systemFontOfSize:14];
+        phoneLabel.text = theModel.mobile;
+        [contentView addSubview:phoneLabel];
+        
+        //详细地址
+        UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(phoneLabel.frame)+10, DEVICE_WIDTH - 20, contentView.frame.size.height - nameLogoImv.frame.size.height -30)];
+        addressLabel.font = [UIFont systemFontOfSize:13];
+        addressLabel.textColor = [UIColor blackColor];
+        addressLabel.text = theModel.address;
+        [contentView addSubview:addressLabel];
+        
+        //自适应地址label高度
+        [addressLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(phoneLabel.frame)+10) height:contentView.frame.size.height - nameLogoImv.frame.size.height -30 limitMaxWidth:DEVICE_WIDTH - 20];
+        
+        //调整contentview高度
+        [contentView setHeight:CGRectGetMaxY(addressLabel.frame)+10];
+        
+        //下分割线
+        UIImageView *imv1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(contentView.frame), DEVICE_WIDTH, 2.5)];
+        [imv1 setImage:[UIImage imageNamed:@"shoppingcart_dd_top_line.png"]];
+        [_addressView addSubview:imv1];
+        
+        //调整addressview高度
+        [_addressView setHeight:CGRectGetMaxY(imv1.frame)+5];
+        
+        _tab.tableHeaderView = _addressView;
+    }
     
     
-    //上分割线
-    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 2.5)];
-    [imv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_line.png"]];
-    [_addressView addSubview:imv];
     
-    //内容
-    UIView *contentView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(imv.frame), DEVICE_WIDTH, 100)];
-    contentView.backgroundColor = [UIColor whiteColor];
-    [_addressView addSubview:contentView];
-    [contentView addTaget:self action:@selector(goToEditAddress) tag:0];
     
-    //姓名
-    UIImageView *nameLogoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 12, 17.5)];
-    [nameLogoImv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_name.png"]];
-    [contentView addSubview:nameLogoImv];
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(nameLogoImv.frame)+8, 10, 80, nameLogoImv.frame.size.height)];
-    nameLabel.font = [UIFont systemFontOfSize:14];
-    nameLabel.textColor = [UIColor blackColor];
-    nameLabel.text = @"张欣";
-    [contentView addSubview:nameLabel];
-    
-    //电话
-    UIImageView *phoneLogoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(nameLabel.frame)+10, nameLabel.frame.origin.y, 12, 17.5)];
-    [phoneLogoImv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_phone.png"]];
-    [contentView addSubview:phoneLogoImv];
-    UILabel *phoneLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(phoneLogoImv.frame)+8, 10, 110, phoneLogoImv.frame.size.height)];
-    phoneLabel.font = [UIFont systemFontOfSize:14];
-    phoneLabel.text = @"13302020202";
-    [contentView addSubview:phoneLabel];
-    
-    //详细地址
-    UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(phoneLabel.frame)+10, DEVICE_WIDTH - 20, contentView.frame.size.height - nameLogoImv.frame.size.height -30)];
-    addressLabel.font = [UIFont systemFontOfSize:13];
-    addressLabel.textColor = [UIColor blackColor];
-    addressLabel.text = @"地址地址地址地址地址地址地址地址";
-    [contentView addSubview:addressLabel];
-    
-    //自适应地址label高度
-    [addressLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(phoneLabel.frame)+10) height:contentView.frame.size.height - nameLogoImv.frame.size.height -30 limitMaxWidth:DEVICE_WIDTH - 20];
-    
-    //调整contentview高度
-    [contentView setHeight:CGRectGetMaxY(addressLabel.frame)+10];
-    
-    //下分割线
-    UIImageView *imv1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(contentView.frame), DEVICE_WIDTH, 2.5)];
-    [imv1 setImage:[UIImage imageNamed:@"shoppingcart_dd_top_line.png"]];
-    [_addressView addSubview:imv1];
-    
-    //调整addressview高度
-    [_addressView setHeight:CGRectGetMaxY(imv1.frame)+5];
-    
-    _tab.tableHeaderView = _addressView;
 }
 
 
@@ -275,12 +348,13 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100];
+    CGFloat height = 0.01;
+    height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100];
     return height;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/230];
+    CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/250];
     return height;
 }
 
@@ -291,44 +365,48 @@
     
     ProductModel *amodel = arr[0];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-    titleLabel.backgroundColor = [UIColor orangeColor];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH - 30 theWHscale:750.0/80])];
+    titleLabel.font = [UIFont systemFontOfSize:14];
     titleLabel.text = amodel.brand_name;
     [view addSubview:titleLabel];
     
     [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+    view.backgroundColor = [UIColor whiteColor];
     return view;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
-    [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100])];
-    view.backgroundColor = [UIColor purpleColor];
-    
-    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/10])];
-    upLine.backgroundColor = RGBCOLOR(244, 245, 246);
-    [view addSubview:upLine];
-    
-    UIView *midView = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(upLine.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-    midView.backgroundColor = [UIColor whiteColor];
-    
-    
-    
-    
-    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(midView.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/10])];
-    [view addSubview:downLine];
+//    [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100])];
+//    view.backgroundColor = [UIColor purpleColor];
+//    
+//    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/10])];
+//    upLine.backgroundColor = RGBCOLOR(244, 245, 246);
+//    [view addSubview:upLine];
+//    
+//    UIView *midView = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(upLine.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+//    midView.backgroundColor = [UIColor whiteColor];
+//    
+//    
+//    
+//    
+//    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(midView.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/10])];
+//    [view addSubview:downLine];
     
     return view;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"identifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    GconfirmOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[GconfirmOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
+    NSArray *arr = self.dataArray[indexPath.section];
+    ProductModel *model = arr[indexPath.row];
     
+    [cell loadCustomViewWithModel:model];
     
     
     
