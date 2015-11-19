@@ -60,6 +60,7 @@
     [_request removeOperation:_request_GetProductComment];
     [self removeObserver:self forKeyPath:@"_count"];
     
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
     
     
 }
@@ -75,8 +76,7 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
-    
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     
     [self prepareNetData];
     
@@ -196,7 +196,7 @@
 //获取购物车数量
 -(void)getshopcarNum{
     
-    //    NSString *url = [NSString stringWithFormat:@"%@&authcode=%@",GET_SHOPPINGCAR_NUM,[LTools cacheForKey:USER_AUTHOD]];
+    
     
     NSDictionary *dic = @{
                           @"authcode":[GMAPI testAuth]
@@ -208,11 +208,40 @@
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
         
+        
     } failBlock:^(NSDictionary *result) {
         
     }];
     
 }
+
+-(void)updateShopCarNum{
+    
+    NSDictionary *dic = @{
+                          @"authcode":[GMAPI testAuth]
+                          };
+    _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+}
+
+
+
+
 
 //套餐评论
 -(void)getProductConmment{

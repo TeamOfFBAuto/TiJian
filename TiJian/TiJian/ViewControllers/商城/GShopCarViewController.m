@@ -18,7 +18,6 @@
     AFHTTPRequestOperation *_request_shopCarDetail;
     
     int _page;
-    int _per_page;
     
     UIView *_downView;
     
@@ -26,11 +25,35 @@
     
     CGFloat _totolPrice;
     
+    UIView *_noProductView;
+    
     
 }
 @end
 
 @implementation GShopCarViewController
+
+- (void)dealloc
+{
+    
+    [_request removeOperation:_request_shopCarDetail];
+    _request = nil;
+    
+    self.rTab.refreshDelegate = nil;
+    self.rTab.dataSource = nil;
+    self.rTab = nil;
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
+}
+
+
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+}
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,11 +67,14 @@
         _open[i] = 0;
     }
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCar) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     
     _request = [YJYRequstManager shareInstance];
     _page = 1;
-    _per_page = 20;
     _totolPrice = 0;
+    
+    
+    [self creatNoProductView];
     
     [self creaTab];
     
@@ -62,6 +88,8 @@
 }
 
 
+#pragma mark - 视图创建
+//创建主tableview
 -(void)creaTab{
     self.rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStyleGrouped];
     self.rTab.refreshDelegate = self;
@@ -73,7 +101,7 @@
     
 }
 
-
+//创建下方功能view
 -(void)creatDownView{
     _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT -64 - 50, DEVICE_WIDTH, 50)];
     _downView.backgroundColor = [UIColor whiteColor];
@@ -128,11 +156,30 @@
     
 }
 
+//创建购物车没有东西的提示界面
+-(void)creatNoProductView{
+    _noProductView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    
+    UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
+    tishiLabel.center = _noProductView.center;
+    tishiLabel.font = [UIFont systemFontOfSize:15];
+    tishiLabel.text = @"~空空如也~";
+    tishiLabel.textAlignment = NSTextAlignmentCenter;
+    tishiLabel.textColor = [UIColor grayColor];
+    [_noProductView addSubview:tishiLabel];
+    
+    _noProductView.hidden = YES;
+    [self.view addSubview:_noProductView];
+}
 
+
+
+#pragma mark - 点击跳转
 -(void)goToConfirmOrderVc{
     
     if (_totolPrice != 0) {
         ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+        cc.lastViewController = self;
         cc.dataArray = self.rTab.dataArray;
         [self.navigationController pushViewController:cc animated:YES];
     }else{
@@ -143,12 +190,18 @@
 
 
 #pragma mark - 请求网络数据
+
+-(void)updateShopCar{
+    [_rTab showRefreshHeader:YES];
+}
+
+
 -(void)prepareNetData{
     
     NSDictionary *dic = @{
                           @"authcode":[GMAPI testAuth],
                           @"page":[NSString stringWithFormat:@"%d",_page],
-                          @"per_page":[NSString stringWithFormat:@"%d",_per_page]
+                          @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };
     
     _request_shopCarDetail = [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_CART_PRODCUTS parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -166,7 +219,15 @@
             [dataArray addObject:oneBrandArray];
         }
         
-        [self.rTab reloadData:dataArray pageSize:_per_page];
+        [self.rTab reloadData:dataArray pageSize:G_PER_PAGE];
+        
+        if (_page == 1 && list.count == 0) {
+            _noProductView.hidden = NO;
+            _downView.hidden = YES;
+        }else{
+            _noProductView.hidden = YES;
+            _downView.hidden = NO;
+        }
         
         
     } failBlock:^(NSDictionary *result) {
@@ -180,7 +241,6 @@
     [_request removeOperation:_request_shopCarDetail];
     
     _page = 1;
-    _per_page = 20;
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;

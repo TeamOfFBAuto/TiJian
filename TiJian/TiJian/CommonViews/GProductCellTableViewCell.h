@@ -10,6 +10,7 @@
 
 //套餐自定义cell
 #import <UIKit/UIKit.h>
+#import "ProductModel.h"
 
 @interface GProductCellTableViewCell : UITableViewCell
 
@@ -21,9 +22,9 @@
 
 -(void)loadCustomView;
 
--(void)loadData:(NSDictionary *)dic;
+-(void)loadData:(ProductModel *)theModel;
 
--(void)loadCustomViewWithData:(NSDictionary*)dic;
+-(void)loadCustomViewWithData:(ProductModel*)theModel;
 
 - (void)setCellWithModel:(id)aModel;//add by lcw
 

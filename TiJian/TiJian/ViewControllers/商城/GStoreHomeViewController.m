@@ -16,6 +16,9 @@
 #import "GoneClassListViewController.h"
 #import "GproductDetailViewController.h"
 #import "GProductCellTableViewCell.h"
+#import "PhysicalTestResultController.h"
+#import "PersonalCustomViewController.h"
+
 
 @interface GStoreHomeViewController ()<NewHuandengViewDelegate,RefreshDelegate,UITableViewDataSource>
 {
@@ -38,7 +41,7 @@
     
     NSDictionary *_StoreCycleAdvDic;
     NSDictionary *_StoreProductClassDic;
-    NSDictionary *_StoreProductRecommendDic;
+    NSMutableArray *_StoreProductRecommendArray;
     
     
 }
@@ -264,7 +267,12 @@
     //首页精品推荐
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        _StoreProductRecommendDic = result;
+        _StoreProductRecommendArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_StoreProductRecommendArray addObject:model];
+        }
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
     } failBlock:^(NSDictionary *result) {
@@ -275,6 +283,8 @@
     
     
 }
+
+
 
 //三个网络请求完成
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
@@ -363,6 +373,9 @@
                                                                                [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
                                                                                )];
         [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
+        
+        [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
+        
         [self.topView addSubview:dingzhiImv];
         
         
@@ -384,10 +397,7 @@
         
         
         
-        
-        NSArray *RecommendArray = [_StoreProductRecommendDic arrayValueForKey:@"data"];
-        
-        [_table reloadData:RecommendArray pageSize:20];
+        [_table reloadData:_StoreProductRecommendArray pageSize:G_PER_PAGE];
         
     }
     
@@ -401,7 +411,9 @@
     NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
     NSDictionary *dic = classData[sender.tag - 10];
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.category_id = (int)(sender.tag - 10);
     cc.className = [dic stringValueForKey:@"name"];
+    
     [self.navigationController pushViewController:cc animated:YES];
     
     
@@ -481,9 +493,9 @@
         cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    NSDictionary *dic = _table.dataArray[indexPath.row];
+    ProductModel *model = _table.dataArray[indexPath.row];
     
-    [cell loadData:dic];
+    [cell loadData:model];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -501,5 +513,51 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.5;
 }
+
+
+
+/**
+ *  个性化定制
+ */
+- (void)pushToPersonalCustom
+{
+    __weak typeof(self)weakSelf = self;
+    BOOL isLogin = [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+        
+        if (success) {
+            [weakSelf pushToPhysicaResult];
+        }else
+        {
+            NSLog(@"没登陆成功");
+        }
+    }];
+    //登录成功
+    if (isLogin) {
+        
+        [weakSelf pushToPhysicaResult];
+    }
+}
+
+/**
+ *  跳转至个性化定制页 或者 结果页
+ */
+- (void)pushToPhysicaResult
+{
+    //先判断是否个性化定制过
+    BOOL isOver = [LTools cacheBoolForKey:USER_CUSTOMIZATON_RESULT];
+    if (isOver) {
+        //已经个性化定制过
+        PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];
+        physical.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:physical animated:YES];
+    }else
+    {
+        PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
+        custom.lastViewController = self;
+        custom.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:custom animated:YES];
+    }
+}
+
 
 @end
