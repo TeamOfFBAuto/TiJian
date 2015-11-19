@@ -84,6 +84,9 @@
     _scroll.showsHorizontalScrollIndicator = NO;
     _scroll.contentSize = CGSizeMake(DEVICE_WIDTH * 3, _scroll.height);
     
+    //scrollView 和 系统手势冲突问题
+    [_scroll.panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
+    
     NSArray *arr = @[@"未预约",@"已预约",@"已过期"];
     CGFloat width = DEVICE_WIDTH / 3.f;
     for (int i = 0; i < arr.count; i ++) {
@@ -118,7 +121,6 @@
     NSString *api;
     
     NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
-    
     
     //待预约
     if (table == [self tableViewWithIndex:0]) {
@@ -295,6 +297,8 @@
             choose.productId = aModel.product_id;
             choose.order_id = aModel.order_id;
             choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
+            
+            choose.lastViewController = self;//需要选择体检人的时候需要传
         }
         
         [self.navigationController pushViewController:choose animated:YES];

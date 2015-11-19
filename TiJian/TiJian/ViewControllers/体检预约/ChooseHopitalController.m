@@ -8,7 +8,6 @@
 
 #import "ChooseHopitalController.h"
 #import "PeopleManageController.h"
-#import "AppointResultController.h"
 #import "SSLunarDate.h"
 #import "HospitalModel.h"
 
@@ -33,6 +32,7 @@
 
 @property (strong, nonatomic) NSCalendar *currentCalendar;
 @property(nonatomic,retain)UIButton *closeButton;
+@property(nonatomic,retain)UIImageView *closeImage;
 
 
 @end
@@ -70,9 +70,13 @@
     _closeButton.frame = CGRectMake(0, _calendar.bottom, DEVICE_WIDTH, 27);
     _closeButton.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     [_closeButton addTarget:self action:@selector(clickToCloseClendar:) forControlEvents:UIControlEventTouchUpInside];
-    [_closeButton setImage:[UIImage imageNamed:@"yuyue_jiantou_up"] forState:UIControlStateSelected];
-    [_closeButton setImage:[UIImage imageNamed:@"yuyue_jiantou_down"] forState:UIControlStateNormal];
     [self.view addSubview:_closeButton];
+    
+    //图标
+    self.closeImage = [[UIImageView alloc]initWithFrame:_closeButton.bounds];
+    _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_down"];
+    _closeImage.contentMode = UIViewContentModeCenter;
+    [_closeButton addSubview:_closeImage];
     
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _closeButton.bottom) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
@@ -114,6 +118,14 @@
 //    company_id 公司id（若是公司买单的 则要传）
 //    order_checkuper_id 预约id（若是公司买单的 则要传）
     
+    int index = _selectRow - 1;
+    if (index < 0) {
+        
+        [LTools alertText:@"请选择体检分院" viewController:self];
+        
+        return;
+    }
+    
     HospitalModel *h_model = _table.dataArray[_selectRow];
     _exam_center_id = h_model.exam_center_id;
     
@@ -129,7 +141,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
+//    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
@@ -148,11 +160,7 @@
 - (void)networkForCenter:(NSString *)date
 {
 //     套餐商品id、 省id、 城市id、 预约日期、longitude 经度（可不传）、latitude 纬度（可不传
-    
-    //test
-    date = @"2015-11-20";
-    self.productId = @"3";
-    
+
     _selectDate = date;//记录选择的时间
     
     NSDictionary *params = @{@"product_id":self.productId,
@@ -187,8 +195,9 @@
 {
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-    AppointResultController *result = [[AppointResultController alloc]init];
-    [self.navigationController pushViewController:result animated:YES];
+//    AppointResultController *result = [[AppointResultController alloc]init];
+//    [self.navigationController pushViewController:result animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /**
@@ -220,14 +229,6 @@
 - (void)parseDataWithResult:(NSDictionary *)result
 {
     NSArray *temp = [HospitalModel modelsFromArray:result[@"center_list"]];
-//    if (_dataArray) {
-//        [_dataArray removeAllObjects];
-//        [_dataArray addObjectsFromArray:temp];
-//    }else
-//    {
-//        _dataArray = [NSMutableArray arrayWithArray:temp];
-//    }
-//    [_table reloadData];
     
     [_table reloadData:temp pageSize:50];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -237,6 +238,15 @@
 - (void)clickToCloseClendar:(UIButton *)sender
 {
     sender.selected = !sender.selected;
+    
+    if (sender.selected) {
+        
+        _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_up"];
+    }else
+    {
+        _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_down"];
+    }
+    
     FSCalendarScope selectedScope = sender.selected ? FSCalendarScopeMonth : FSCalendarScopeWeek;
 
     [_calendar setScope:selectedScope animated:YES];
@@ -252,18 +262,26 @@
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
         [alert show];
         
-        
         return;
     }
     
     //确认 分院、时间
     
-    HospitalModel *h_model = _table.dataArray[_selectRow];
+    HospitalModel *h_model = _table.dataArray[_selectRow - 1];
 
     //选择人
     PeopleManageController *people = [[PeopleManageController alloc]init];
     people.isChoose = YES;
     [people setAppointOrderId:self.order_id productId:self.productId examCenterId:h_model.exam_center_id date:_selectDate noAppointNum:self.noAppointNum];
+    
+    //先pop掉 选择时间分院,在push
+    if (self.lastViewController) {
+        
+        [self.lastViewController.navigationController popViewControllerAnimated:NO];
+        [self.lastViewController.navigationController pushViewController:people animated:YES];
+        return;
+    }
+    
     [self.navigationController pushViewController:people animated:YES];
     
 }

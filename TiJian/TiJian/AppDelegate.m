@@ -8,8 +8,15 @@
 
 #import "AppDelegate.h"
 #import "RootViewController.h"
+#import "BMapKit.h"
 
-@interface AppDelegate ()
+#define BAIDU_APPKEY @"xVfbtQq4cB5OLkTk8hmxlyLd" //appStore com.yijiayi.yijiayi
+
+@interface AppDelegate ()<BMKGeneralDelegate>
+{
+    BMKMapManager* _mapManager;
+    CLLocationManager *_locationManager;
+}
 
 @end
 
@@ -19,23 +26,30 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    NSString *test1 = @"371311198905213411";
-    if ([LTools isValidateIDCard:test1]) {
-        
-        NSLog(@"tes1 是正确身份证");
-    }
-    
-    test1 = @"37131119890521341";
-    if ([LTools isValidateIDCard:test1]) {
-        NSLog(@"tes2 是正确身份证");
-
-    }
-    
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
     
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
+    
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
+    {
+        //设置定位权限 仅ios8有意义
+        [_locationManager requestWhenInUseAuthorization];// 前台定位
+        
+        //  [locationManager requestAlwaysAuthorization];// 前后台同时定位
+    }
+    [_locationManager startUpdatingLocation];
+    
+    
+    // 要使用百度地图，请先启动BaiduMapManager
+    _mapManager = [[BMKMapManager alloc]init];
+    // 如果要关注网络及授权验证事件，请设定   BMKGeneralDelegate协议
+    
+    BOOL ret = [_mapManager start:BAIDU_APPKEY  generalDelegate:self];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
     
     return YES;
 }
@@ -118,6 +132,27 @@
         NSLog(@"failBlock result %@",result[Erro_Info]);
         
     }];
+}
+
+
+#pragma mark - BMKGeneralDelegate <NSObject>
+
+/**
+ *返回网络错误
+ *@param iError 错误号
+ */
+- (void)onGetNetworkState:(int)iError
+{
+    
+}
+
+/**
+ *返回授权验证错误
+ *@param iError 错误号 : 为0时验证通过，具体参加BMKPermissionCheckResultCode
+ */
+- (void)onGetPermissionState:(int)iError
+{
+    
 }
 
 @end

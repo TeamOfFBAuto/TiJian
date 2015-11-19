@@ -8,6 +8,7 @@
 
 #import "AppointDetailController.h"
 #import "AppointUpdateController.h"
+#import "MapViewController.h"
 #import "AppointModel.h"
 
 #define kAlertTagPhone 100 //打电话
@@ -27,8 +28,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.myTitle = @"预约详情";
-    self.rightImage = [UIImage imageNamed:@"personal_yuyue_xiugai"];
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+//    self.rightImage = [UIImage imageNamed:@"personal_yuyue_xiugai"];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     [self netWorkForList];
 }
@@ -72,12 +73,14 @@
         title1 = [NSString stringWithFormat:@"已过期%@天",_detailModel.days];
         title2 = @"重新预约";
         [btn2 addTarget:self action:@selector(clickToAppointAgain) forControlEvents:UIControlEventTouchUpInside];
-
+        
     }else
     {
         //未过期
         title1 = @"距体检";
         title2 = [NSString stringWithFormat:@"%@天",_detailModel.days];
+        self.rightImage = [UIImage imageNamed:@"personal_yuyue_xiugai"];
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     }
     
     UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 82, 20) title:title1 font:12 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
@@ -255,12 +258,27 @@
 }
 
 #pragma mark - 事件处理
+
+-(void)rightButtonTap:(UIButton *)sender
+{
+    [self clickToAppointAgain];
+}
+
 /**
  *  分院位置
  */
 - (void)clickToMap
 {
     NSLog(@"当前地址 %@ %@",_detailModel.center_latitude,_detailModel.center_longitude);
+    MapViewController *map = [[MapViewController alloc]init];
+    map.coordinate = CLLocationCoordinate2DMake([_detailModel.center_latitude floatValue], [_detailModel.center_longitude floatValue]);
+    map.titleName = _detailModel.center_name;
+//    UINavigationController *unVc = [[UINavigationController alloc]initWithRootViewController:map];
+    [self presentViewController:map animated:YES completion:^{
+//
+    }];
+    
+//    [self.navigationController pushViewController:map animated:YES];
 }
 
 /**

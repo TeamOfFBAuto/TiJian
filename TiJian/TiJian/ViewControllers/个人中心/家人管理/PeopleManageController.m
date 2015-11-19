@@ -8,7 +8,6 @@
 
 #import "PeopleManageController.h"
 #import "AddPeopleViewController.h"
-#import "AppointResultController.h"
 #import "AppointModel.h"
 
 @interface PeopleManageController ()<UITableViewDataSource,RefreshDelegate>
@@ -186,7 +185,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
+//    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
@@ -201,7 +200,6 @@
         
     }];
 }
-//
 
 #pragma - mark 事件处理
 
@@ -209,8 +207,9 @@
 {
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-    AppointResultController *result = [[AppointResultController alloc]init];
-    [self.navigationController pushViewController:result animated:YES];
+//    AppointResultController *result = [[AppointResultController alloc]init];
+//    [self.navigationController pushViewController:result animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /**
