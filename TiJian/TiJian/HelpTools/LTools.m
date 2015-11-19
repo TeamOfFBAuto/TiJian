@@ -922,6 +922,28 @@
 }
 
 /**
+ *  时间转化为对应的时间戳
+ *
+ *  @param string 时间
+ *  @param format 格式
+ *
+ *  @return
+ */
++(NSString *)timeDatelineWithString:(NSString *)string
+                             format:(NSString *)format
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:format];
+    
+    NSDate *date = [formatter dateFromString:string];
+    
+    return [NSString stringWithFormat:@"%ld", (long)[date timeIntervalSince1970]];
+}
+
+
+/**
  *  显示间隔时间 一天内显示时分、几天前、几周前、大于一周 显示具体日期
  *
  *  @param myTime 时间线

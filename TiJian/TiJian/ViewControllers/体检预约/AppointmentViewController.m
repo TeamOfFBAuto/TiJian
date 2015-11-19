@@ -174,8 +174,15 @@
                   withIndex:(int)index
 {
     NSDictionary *setmeal_list = result[@"setmeal_list"];
+
     //待预约
     if (index == 0) {
+        
+        if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
+            
+            [[self tableViewWithIndex:0]finishReloadigData];
+            return;
+        }
         
         _company = [ProductModel modelsFromArray:setmeal_list[@"company"]];
         _personal = [ProductModel modelsFromArray:setmeal_list[@"personal"]];

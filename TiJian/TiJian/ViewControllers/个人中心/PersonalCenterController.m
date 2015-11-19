@@ -9,6 +9,7 @@
 #import "PersonalCenterController.h"
 #import "SettingsViewController.h"
 #import "PeopleManageController.h"
+#import "EditUserInfoViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -29,19 +30,14 @@
 
 @implementation PersonalCenterController
 
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    
-//    if ([LoginViewController isLogin]) {
-//        
-//        [_headview addSubview:self.loginView];
-//        
-//    }else
-//    {
-//        [_headview addSubview:self.unloginView];
-//    }
-//}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [_loginView removeFromSuperview];
+    _loginView = nil;
+    [self updateLoginState:[LoginViewController isLogin]];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -170,17 +166,29 @@
     int sex = [_userInfo.gender intValue];
     
     UIImageView *sexImage = [[UIImageView alloc]initWithFrame:CGRectMake(sexLabel.right + 5, sexLabel.top + 1, 12, 12)];
-    sexImage.image = sex == 2 ? [UIImage imageNamed:@"sex_nan"] : [UIImage imageNamed:@"sex_nv"];
+    sexImage.image = sex == 1 ? [UIImage imageNamed:@"sex_nan"] : [UIImage imageNamed:@"sex_nv"];
     [_loginView addSubview:sexImage];
     
-    NSString *sexString = sex == 2 ? @"男" : @"女";
+    NSString *sexString = (sex == 1) ? @"男" : @"女";
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(sexImage.right + 6, sexLabel.top, 15, 15) title:sexString font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [_loginView addSubview:label];
     
-    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 23, (80-23)/2.f, 23, 23)];
-    editImage.image = [UIImage imageNamed:@"bianji"];
-    [_loginView addSubview:editImage];
-    [_loginView addTaget:self action:@selector(clickToEditUserInfo) tag:0];
+//    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 23, (80-23)/2.f, 23, 23)];
+//    editImage.image = [UIImage imageNamed:@"bianji"];
+//    [_loginView addSubview:editImage];
+//    [_loginView addTaget:self action:@selector(clickToEditUserInfo) tag:0];
+    
+    //箭头
+    UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 3.5, 0, 5.5, 11)];
+    arrow.image = [UIImage imageNamed:@"personal_jiantou_small"];
+    [_loginView addSubview:arrow];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(_loginView.width - arrow.width - 100 - 20, _loginView.height - 20 - 12 + 2, 100, 11) title:@"账户管理、收货地址" font:11 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
+    [_loginView addSubview:label];
+    label.font = [UIFont boldSystemFontOfSize:11];
+    [label addTaget:self action:@selector(clickToEditUserInfo) tag:0];
+    
+    arrow.centerY = label.centerY;
     
     return _loginView;
 }
@@ -229,7 +237,9 @@
     {
         //已登录
         NSLog(@"编辑个人信息");
-
+        EditUserInfoViewController *edit = [[EditUserInfoViewController alloc]init];
+        edit.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:edit animated:YES];
     }
 }
 

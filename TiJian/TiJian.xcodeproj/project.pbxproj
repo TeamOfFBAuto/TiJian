@@ -81,6 +81,9 @@
 		1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C37B1BEB432900700847 /* PersonalCenterController.m */; };
 		130D2E011BFC7229002E301F /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E001BFC7229002E301F /* MapViewController.m */; };
 		130D2E031BFC7332002E301F /* gpin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E021BFC7332002E301F /* gpin@2x.png */; };
+		130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E051BFDBF30002E301F /* UpdateUserInfoController.m */; };
+		130D2E091BFDC0FE002E301F /* LDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E081BFDC0FE002E301F /* LDatePicker.m */; };
+		130D2E0B1BFDE740002E301F /* personal_jiantou_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E0A1BFDE740002E301F /* personal_jiantou_small@2x.png */; };
 		131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */; };
 		131A17731BF32CE800B12D2F /* MedicalOrderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A17721BF32CE800B12D2F /* MedicalOrderController.m */; };
 		131A17761BF3309800B12D2F /* CompanyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A17751BF3309800B12D2F /* CompanyCell.m */; };
@@ -487,6 +490,11 @@
 		130D2DFF1BFC7229002E301F /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		130D2E001BFC7229002E301F /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		130D2E021BFC7332002E301F /* gpin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gpin@2x.png"; sourceTree = "<group>"; };
+		130D2E041BFDBF30002E301F /* UpdateUserInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateUserInfoController.h; sourceTree = "<group>"; };
+		130D2E051BFDBF30002E301F /* UpdateUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateUserInfoController.m; sourceTree = "<group>"; };
+		130D2E071BFDC0FE002E301F /* LDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDatePicker.h; sourceTree = "<group>"; };
+		130D2E081BFDC0FE002E301F /* LDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDatePicker.m; sourceTree = "<group>"; };
+		130D2E0A1BFDE740002E301F /* personal_jiantou_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_jiantou_small@2x.png"; sourceTree = "<group>"; };
 		131A176D1BF1D20E00B12D2F /* RightTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightTextFieldCell.h; sourceTree = "<group>"; };
 		131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightTextFieldCell.m; sourceTree = "<group>"; };
 		131A17711BF32CE800B12D2F /* MedicalOrderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalOrderController.h; sourceTree = "<group>"; };
@@ -1049,6 +1057,7 @@
 		1303C30E1BEB0D7100700847 /* 个人中心 */ = {
 			isa = PBXGroup;
 			children = (
+				130D2E0A1BFDE740002E301F /* personal_jiantou_small@2x.png */,
 				1303C30F1BEB0D7100700847 /* bianji@2x.png */,
 				1303C3101BEB0D7100700847 /* personal_dingdan@2x.png */,
 				1303C3111BEB0D7100700847 /* personal_gouwuche@2x.png */,
@@ -1142,6 +1151,8 @@
 				134822DD1BEC80F200EA2E06 /* UpdatePWDController.m */,
 				134822DF1BEC8DF200EA2E06 /* EditUserInfoViewController.h */,
 				134822E01BEC8DF200EA2E06 /* EditUserInfoViewController.m */,
+				130D2E041BFDBF30002E301F /* UpdateUserInfoController.h */,
+				130D2E051BFDBF30002E301F /* UpdateUserInfoController.m */,
 			);
 			path = "个人中心";
 			sourceTree = "<group>";
@@ -1209,6 +1220,8 @@
 		1324B6A81BD76DEF00FB47A9 /* CommonViews */ = {
 			isa = PBXGroup;
 			children = (
+				130D2E071BFDC0FE002E301F /* LDatePicker.h */,
+				130D2E081BFDC0FE002E301F /* LDatePicker.m */,
 				E3D8AE311BF61CAC003AE2E3 /* ButtonProperty.h */,
 				E3D8AE321BF61CAC003AE2E3 /* ButtonProperty.m */,
 				E3D8AE2E1BF61C2E003AE2E3 /* CoupeView.h */,
@@ -2382,6 +2395,7 @@
 				139333E01BE0DF3E00B4628B /* 2_m_4@2x.png in Resources */,
 				139333EB1BE0DF3E00B4628B /* 4_1_bg@2x.png in Resources */,
 				E3796D111BFB37CD004B63F7 /* zhifuchenggong@2x.png in Resources */,
+				130D2E0B1BFDE740002E301F /* personal_jiantou_small@2x.png in Resources */,
 				139333B31BE0DF3E00B4628B /* 17_2@2x.png in Resources */,
 				E3796D251BFB389E004B63F7 /* shoppingcart_right_+@2x.png in Resources */,
 				139333D01BE0DF3E00B4628B /* 25_2@2x.png in Resources */,
@@ -2537,6 +2551,7 @@
 				134822E11BEC8DF200EA2E06 /* EditUserInfoViewController.m in Sources */,
 				13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */,
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
+				130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */,
 				E3E2B4201BFB218A007988C5 /* ShopModel.m in Sources */,
 				13F2422C1BF5D5E0002C9D81 /* ArticleCell.m in Sources */,
 				13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */,
@@ -2548,6 +2563,7 @@
 				E3E2B4121BFB20A4007988C5 /* FBActionSheet.m in Sources */,
 				E3D8AE1A1BF4B16D003AE2E3 /* SGFocusImageItem.m in Sources */,
 				E3D8AE271BF5EB00003AE2E3 /* ProductCommentModel.m in Sources */,
+				130D2E091BFDC0FE002E301F /* LDatePicker.m in Sources */,
 				134822DE1BEC80F200EA2E06 /* UpdatePWDController.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
 				134822DB1BEC80E700EA2E06 /* AboutUsController.m in Sources */,

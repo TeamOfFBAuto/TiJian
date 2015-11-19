@@ -8,7 +8,12 @@
 
 #import "PeopleManageController.h"
 #import "AddPeopleViewController.h"
+#import "EditUserInfoViewController.h"
 #import "AppointModel.h"
+
+#define kTag_Appoint 200 //预约
+#define kTag_Delete 201 //去删除
+#define KTag_EditUserInfo 202 //去编辑个人信息
 
 @interface PeopleManageController ()<UITableViewDataSource,RefreshDelegate>
 {
@@ -82,10 +87,6 @@
 - (void)getFamily
 {
     NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
-    
-    authkey = @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
-
-    
 //    __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:GET_FAMILY parameters:@{@"authcode":authkey} constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -218,6 +219,7 @@
 - (void)clickToAppoint
 {
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
+    alert.tag = kTag_Appoint;
     [alert show];
 }
 
@@ -237,16 +239,26 @@
         {
             if ([self enableSelectNewPeople]) {
                 
-                _isMyselfSelected = YES;
-                _selectedIcon.hidden = NO;
+                
+                //需要判断信息是否完整
+                
+                if ([self isUserInfoWell]) {
+                    
+                    _isMyselfSelected = YES;
+                    _selectedIcon.hidden = NO;
+                }else
+                {
+                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"用户信息不完整,去完善？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去完善", nil];
+                    alert.tag = KTag_EditUserInfo;
+                    [alert show];
+                }
             }
         }
         
         return;
     }
     
-    UserInfo *userInfo = [UserInfo userInfoForCache];
-    [self clickToUserInfo:userInfo];
+    [self clickToEditUserInfoIsFull:NO];
 }
 
 /**
@@ -312,6 +324,42 @@
 {
     _isEdit = !_isEdit;
     [_table reloadData];
+}
+
+/**
+ *  编辑本人信息
+ */
+- (void)clickToEditUserInfoIsFull:(BOOL)isFull
+{
+    EditUserInfoViewController *edit = [[EditUserInfoViewController alloc]init];
+    edit.isFullUserInfo = isFull;
+    [self.navigationController pushViewController:edit animated:YES];
+}
+
+/**
+ *  判断本人信息是否完整
+ *
+ *  @return
+ */
+- (BOOL)isUserInfoWell
+{
+    UserInfo *userInfo = [UserInfo userInfoForCache];
+    NSString *name = userInfo.real_name;
+    NSString *id_card = userInfo.id_card;
+    int sex = [userInfo.gender intValue];
+    int age = [userInfo.age intValue];
+    NSString *phone = userInfo.mobile;
+    
+    if (name.length > 0 &&
+        [LTools isValidateIDCard:id_card] &&
+        sex > 0 &&
+        age > 0 &&
+        [LTools isValidateMobile:phone]) {
+        
+        return YES;
+    }
+    
+    return NO;
 }
 
 /**
@@ -444,11 +492,23 @@
         
         if(self.isChoose)
         {
-            [self networkForMakeAppoint];//提交预约
+            if (alertView.tag == kTag_Appoint) {
+                
+                [self networkForMakeAppoint];//提交预约
+
+            }else if (alertView.tag == KTag_EditUserInfo){
+                
+                //去编辑个人信息
+                
+                [self clickToEditUserInfoIsFull:YES];
+            }
+            
             return;
         }
-        
-        [self deleteFamily:_deleteIndex];
+        if (alertView.tag == kTag_Delete) {
+            
+            [self deleteFamily:_deleteIndex];
+        }
     }
 }
 
@@ -473,6 +533,7 @@
         _deleteIndex = (int)indexPath.row;
         NSString *text = [NSString stringWithFormat:@"是否删除\"%@\"\"%@\"?",aModel.appellation,aModel.family_user_name];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:text delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        alert.tag = kTag_Delete;
         [alert show];
     }else
     {

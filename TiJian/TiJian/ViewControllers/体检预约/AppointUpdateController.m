@@ -7,6 +7,8 @@
 //
 
 #import "AppointUpdateController.h"
+#import "ChooseHopitalController.h"
+#import "PeopleManageController.h"
 #import "AppointModel.h"
 
 @interface AppointUpdateController ()<UITableViewDelegate,UITableViewDataSource>
@@ -99,6 +101,29 @@
 
 #pragma mark - 事件处理
 
+/**
+ *  去选择体检人
+ */
+- (void)clickToSelectUserInfo
+{
+    NSLog(@"选择体检人");
+    PeopleManageController *people = [[PeopleManageController alloc]init];
+    people.isChoose = YES;
+    people.noAppointNum = 1;
+    [self.navigationController pushViewController:people animated:YES];
+}
+
+/**
+ *  去选择体检分院
+ */
+- (void)clickToTimeAndCenter
+{
+    NSLog(@"选择时间分院");
+//    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+////    choose.productId = 
+//    [self.navigationController pushViewController:choose animated:YES];
+}
+
 #pragma mark - 代理
 
 #pragma - mark UITableViewDelegate
@@ -106,6 +131,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 2) {
+        
         return 60.f;
     }
     
@@ -151,10 +177,12 @@
     if (section == 0) {
         brandIcon.image = [UIImage imageNamed:@"tijianren_duo"];
         brandName.text = @"体检人信息";
+        [view addTaget:self action:@selector(clickToSelectUserInfo) tag:0];
 
     }else if (section == 1){
         brandIcon.image = [UIImage imageNamed:@"fenyuan"];
         brandName.text = @"体检时间、分院";
+        [view addTaget:self action:@selector(clickToTimeAndCenter) tag:0];
 
     }else if (section == 2){
         brandIcon.image = [UIImage imageNamed:@"gouwudai"];
@@ -202,6 +230,16 @@
         cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         if (!cell) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 64, 40)];
+            [cell.contentView addSubview:imageView];
+            imageView.tag = 100;
+            CGFloat left = imageView.right + 20;
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(left, 0, DEVICE_WIDTH - left - 15, 60) title:nil font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
+            label.tag = 101;
+            label.numberOfLines = 2;
+            label.lineBreakMode = NSLineBreakByWordWrapping;
+            [cell.contentView addSubview:label];
         }
     }else
     {
@@ -215,6 +253,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:14.f];
     cell.textLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
     cell.detailTextLabel.font = [UIFont systemFontOfSize:14.f];
+    cell.detailTextLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
     if (indexPath.section == 0) {
         
         cell.textLabel.text = _titles[indexPath.row];
@@ -254,14 +293,11 @@
         
     }else if (indexPath.section == 2){
         
-        cell.imageView.width = 80.f;
-        cell.imageView.height = 30.f;
-        cell.imageView.backgroundColor = [UIColor orangeColor];
+        UIImageView *imageView = [cell.contentView viewWithTag:100];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:_appointModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
         
-        cell.textLabel.width = DEVICE_WIDTH - 80 - 15 - cell.imageView.right - 45;
-        cell.textLabel.textAlignment = NSTextAlignmentRight;
-        cell.textLabel.numberOfLines = 2;
-        cell.textLabel.text = @"慈铭体检优化BC男友 广州慈铭体检优化BC男友 广州慈铭体检优化BC男友 广州慈铭体检优化BC男友 广州";
+        UILabel *label = [cell.contentView viewWithTag:101];
+        label.text = _appointModel.setmeal_name;
     }
     
     return cell;

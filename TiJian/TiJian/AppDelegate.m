@@ -125,6 +125,12 @@
         
         [LTools cacheBool:NO ForKey:USER_UPDATEHEADIMAGE_STATE];//不需要更新头像
         
+        [[SDImageCache sharedImageCache] removeImageForKey:USER_NEWHEADIMAGE fromDisk:YES];
+        
+        NSString *avatar = result[@"avatar"];
+        
+        [UserInfo updateUserAvatar:avatar];
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATEHEADIMAGE_SUCCESS object:nil];//更新头像成功
         
     } failBlock:^(NSDictionary *result) {
