@@ -13,7 +13,7 @@
 
 @interface GoneClassListViewController : MyViewController
 
-@property(nonatomic,assign)int type;//分类id
+@property(nonatomic,assign)int category_id;//分类id
 
 @property(nonatomic,strong)NSString *className;//分类名称
 

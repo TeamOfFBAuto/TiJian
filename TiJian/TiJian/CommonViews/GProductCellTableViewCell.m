@@ -7,7 +7,6 @@
 //
 
 #import "GProductCellTableViewCell.h"
-#import "ProductModel.h"
 
 @implementation GProductCellTableViewCell
 
@@ -62,18 +61,18 @@
 }
 
 
--(void)loadData:(NSDictionary *)dic{
+-(void)loadData:(ProductModel *)theModel{
     
     
-    [self.logoImv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-    self.titleLabel.text = [dic stringValueForKey:@"brand_name"];
+    [self.logoImv l_setImageWithURL:[NSURL URLWithString:theModel.cover_pic] placeholderImage:nil];
+    self.titleLabel.text = theModel.brand_name;
     
-    NSString *priceString = [NSString stringWithFormat:@"￥%@",[dic stringValueForKey:@"setmeal_original_price"]];
+    NSString *priceString = [NSString stringWithFormat:@"￥%@",theModel.setmeal_price];
     
     self.priceLabel.text = priceString;
     
     
-    NSString *p = [NSString stringWithFormat:@"￥%@",[dic stringValueForKey:@"setmeal_price"]];
+    NSString *p = [NSString stringWithFormat:@"￥%@",theModel.setmeal_original_price];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:p];
     [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(80, 81, 82) range:NSMakeRange(0, p.length)];
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, p.length)];
@@ -88,10 +87,10 @@
     [self.logoImv l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:nil];
     self.titleLabel.text = aModel.setmeal_name;
     
-    NSString *priceString = [NSString stringWithFormat:@"￥%@",aModel.setmeal_original_price];
+    NSString *priceString = [NSString stringWithFormat:@"￥%@",aModel.setmeal_price];
     self.priceLabel.text = priceString;
     
-    NSString *p = [NSString stringWithFormat:@"%@",aModel.setmeal_price];
+    NSString *p = [NSString stringWithFormat:@"%@",aModel.setmeal_original_price];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:p];
     [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(80, 81, 82) range:NSMakeRange(0, p.length)];
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, p.length)];
@@ -100,9 +99,9 @@
     self.originalPriceLabel.attributedText = aaa;
 }
 
--(void)loadCustomViewWithData:(NSDictionary*)dic{
+-(void)loadCustomViewWithData:(ProductModel*)theModel{
     [self loadCustomView];
-    [self loadData:dic];
+    [self loadData:theModel];
 }
 
 

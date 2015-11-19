@@ -223,6 +223,9 @@
 //提交订单
 -(void)confirmOrderBtnClicked{
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
@@ -283,13 +286,15 @@
     
     _request_confirmOrder = [_request requestWithMethod:YJYRequstMethodPost api:ORDER_SUBMIT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
         NSLog(@"%@",result);
         NSString *orderId = [result stringValueForKey:@"order_id"];
         NSString *orderNum = [result stringValueForKey:@"order_no"];
         [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         NSLog(@"%@",result);
     }];
     
@@ -303,6 +308,11 @@
 - (void)pushToPayPageWithOrderId:(NSString *)orderId
                         orderNum:(NSString *)orderNum
 {
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+    
+    
     PayActionViewController *pay = [[PayActionViewController alloc]init];
     pay.orderId = orderId;
     pay.orderNum = orderNum;

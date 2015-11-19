@@ -13,13 +13,16 @@
 #import "GproductDetailViewController.h"
 #import "GTranslucentSideBar.h"
 #import "GPushView.h"
+#import "ProductModel.h"
 
 @interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate>
 {
     RefreshTableView *_table;
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_ProductOneClass;
-    NSDictionary *_productOneClassDic;
+    
+    NSMutableArray *_productOneClassArray;
+    
     int _count;//网络请求个数
     
     
@@ -168,13 +171,30 @@
 
 -(void)prepareNetData{
     
-    _request = [YJYRequstManager shareInstance];
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
     _count = 0;
 
+    
+    NSDictionary *dic = @{
+                          @"category_id":[NSString stringWithFormat:@"%d",self.category_id]
+                          };
+    
+    
+    
     //首页精品推荐
-    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        _productOneClassDic = result;
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        
+        _productOneClassArray = [NSMutableArray arrayWithCapacity:1];
+        
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_productOneClassArray addObject:model];
+        }
+        
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
     } failBlock:^(NSDictionary *result) {
@@ -196,9 +216,7 @@
     
     if ([num intValue] == 1) {
         
-        NSArray *RecommendArray = [_productOneClassDic arrayValueForKey:@"data"];
-        
-        [_table reloadData:RecommendArray pageSize:20];
+        [_table reloadData:_productOneClassArray pageSize:G_PER_PAGE];
         
     }
  
@@ -232,8 +250,8 @@
     
     NSLog(@"%s",__FUNCTION__);
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    NSDictionary *dic = _table.dataArray[indexPath.row];
-    cc.productId = [dic stringValueForKey:@"product_id"];
+    ProductModel *model = _table.dataArray[indexPath.row];
+    cc.productId = model.product_id;
     [self.navigationController pushViewController:cc animated:YES];
 }
 
@@ -286,9 +304,10 @@
             cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         }
         
-        NSDictionary *dic = _table.dataArray[indexPath.row];
         
-        [cell loadData:dic];
+        ProductModel *model = _table.dataArray[indexPath.row];
+        
+        [cell loadData:model];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
