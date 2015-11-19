@@ -253,13 +253,21 @@
         
     }else if(rightType == MyViewControllerRightbuttonTypeOther)
     {
-        UIImage * rightImage = [UIImage imageNamed:_rightImageName];
+        UIImage * rightImage;
+        if (self.rightImageName) {
+            
+            rightImage = [UIImage imageNamed:_rightImageName];
+        }
+        
+        if (self.rightImage) {
+            rightImage = self.rightImage;
+        }
         
         _my_right_button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         
         [_my_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
         
-        [_my_right_button setImage:[UIImage imageNamed:self.rightImageName] forState:UIControlStateNormal];
+        [_my_right_button setImage:rightImage forState:UIControlStateNormal];
         
         _my_right_button.frame = CGRectMake(0,0,rightImage.size.width,rightImage.size.height);
         
@@ -294,6 +302,13 @@
     _rightImageName = rightImageName;
     [self setMyViewControllerLeftButtonType:leftType WithRightButtonType:myRightType];
 }
+
+-(void)setRightImage:(UIImage *)rightImage
+{
+    _rightImage = rightImage;
+    [self setMyViewControllerLeftButtonType:leftType WithRightButtonType:myRightType];
+}
+
 -(void)setLeftImageName:(NSString *)leftImageName
 {
     _leftImageName = leftImageName;

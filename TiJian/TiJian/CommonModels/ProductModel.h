@@ -53,5 +53,9 @@
 @property(nonatomic,strong)NSString *appointed_num;
 @property(nonatomic,strong)NSString *no_appointed_num;
 
+@property(nonatomic,strong)NSDictionary *checkuper_info;//{age;gender;id_card;mobile;order_checkuper_id;user_name;
+
+@property(nonatomic,strong)NSString *order_id;//对应订单id
+
 
 @end

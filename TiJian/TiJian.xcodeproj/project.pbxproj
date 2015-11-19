@@ -79,6 +79,8 @@
 		1303C3771BEB0D7200700847 /* tijianren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3431BEB0D7100700847 /* tijianren@2x.png */; };
 		1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */; };
 		1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C37B1BEB432900700847 /* PersonalCenterController.m */; };
+		130D2E011BFC7229002E301F /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E001BFC7229002E301F /* MapViewController.m */; };
+		130D2E031BFC7332002E301F /* gpin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E021BFC7332002E301F /* gpin@2x.png */; };
 		131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */; };
 		131A17731BF32CE800B12D2F /* MedicalOrderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A17721BF32CE800B12D2F /* MedicalOrderController.m */; };
 		131A17761BF3309800B12D2F /* CompanyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A17751BF3309800B12D2F /* CompanyCell.m */; };
@@ -203,6 +205,8 @@
 		139334001BE1F29A00B4628B /* 9_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 139333FE1BE1F29A00B4628B /* 9_2@2x.png */; };
 		139334031BE350CB00B4628B /* IgnoreConditionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 139334021BE350CB00B4628B /* IgnoreConditionModel.m */; };
 		139334061BE3789000B4628B /* OptionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 139334051BE3789000B4628B /* OptionModel.m */; };
+		13C97F2E1BF98A5200C66691 /* yuyue_daijinquan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */; };
+		13C97F311BF9B54700C66691 /* AppointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C97F301BF9B54700C66691 /* AppointModel.m */; };
 		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; };
 		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; };
 		13F1F2671BBA78ED00885D31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2661BBA78ED00885D31 /* main.m */; };
@@ -270,6 +274,10 @@
 		13F242311BF5E17D002C9D81 /* AppointmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F242301BF5E17D002C9D81 /* AppointmentViewController.m */; };
 		13F242341BF5F1D2002C9D81 /* AppointmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F242331BF5F1D2002C9D81 /* AppointmentCell.m */; };
 		13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */; };
+		13FCD6A11BFAD6BD005AE05B /* AppointDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */; };
+		13FCD6A31BFAD863005AE05B /* personal_yuyue_xiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */; };
+		13FCD6A51BFAD935005AE05B /* yuyue_wenhao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */; };
+		13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6951BDF50AB0057D3BE /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -477,6 +485,9 @@
 		1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tijianren_duo@2x.png"; sourceTree = "<group>"; };
 		1303C37A1BEB432900700847 /* PersonalCenterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalCenterController.h; sourceTree = "<group>"; };
 		1303C37B1BEB432900700847 /* PersonalCenterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCenterController.m; sourceTree = "<group>"; };
+		130D2DFF1BFC7229002E301F /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		130D2E001BFC7229002E301F /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		130D2E021BFC7332002E301F /* gpin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gpin@2x.png"; sourceTree = "<group>"; };
 		131A176D1BF1D20E00B12D2F /* RightTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightTextFieldCell.h; sourceTree = "<group>"; };
 		131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightTextFieldCell.m; sourceTree = "<group>"; };
 		131A17711BF32CE800B12D2F /* MedicalOrderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalOrderController.h; sourceTree = "<group>"; };
@@ -620,6 +631,9 @@
 		139334021BE350CB00B4628B /* IgnoreConditionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IgnoreConditionModel.m; sourceTree = "<group>"; };
 		139334041BE3789000B4628B /* OptionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionModel.h; sourceTree = "<group>"; };
 		139334051BE3789000B4628B /* OptionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionModel.m; sourceTree = "<group>"; };
+		13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_daijinquan@2x.png"; sourceTree = "<group>"; };
+		13C97F2F1BF9B54700C66691 /* AppointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointModel.h; sourceTree = "<group>"; };
+		13C97F301BF9B54700C66691 /* AppointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointModel.m; sourceTree = "<group>"; };
 		13CCAF661BD8DC6400BF9AA8 /* BaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseModel.h; sourceTree = "<group>"; };
 		13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseModel.m; sourceTree = "<group>"; };
 		13CCAF6A1BD8DCB100BF9AA8 /* QuestionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionModel.h; sourceTree = "<group>"; };
@@ -811,6 +825,12 @@
 		13F242331BF5F1D2002C9D81 /* AppointmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointmentCell.m; sourceTree = "<group>"; };
 		13F251E81BE8AC2F0021BF4C /* RecommendMedicalCheckController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendMedicalCheckController.h; sourceTree = "<group>"; };
 		13F251E91BE8AC2F0021BF4C /* RecommendMedicalCheckController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendMedicalCheckController.m; sourceTree = "<group>"; };
+		13FCD69F1BFAD6BD005AE05B /* AppointDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointDetailController.h; sourceTree = "<group>"; };
+		13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointDetailController.m; sourceTree = "<group>"; };
+		13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_yuyue_xiugai@2x.png"; sourceTree = "<group>"; };
+		13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_wenhao@2x.png"; sourceTree = "<group>"; };
+		13FCD6A61BFB316C005AE05B /* AppointUpdateController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointUpdateController.h; sourceTree = "<group>"; };
+		13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointUpdateController.m; sourceTree = "<group>"; };
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1089,6 +1109,9 @@
 		1303C33A1BEB0D7100700847 /* 预约 */ = {
 			isa = PBXGroup;
 			children = (
+				13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */,
+				13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */,
+				13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */,
 				13F242171BF4925A002C9D81 /* yuyue_jiantou_down@2x.png */,
 				13F242181BF4925A002C9D81 /* yuyue_jiantou_up@2x.png */,
 				131A177E1BF34BAF00B12D2F /* yuyue_xuxian@2x.png */,
@@ -1135,6 +1158,12 @@
 				13F241E51BF4769D002C9D81 /* ChooseHopitalController.m */,
 				13F2422F1BF5E17D002C9D81 /* AppointmentViewController.h */,
 				13F242301BF5E17D002C9D81 /* AppointmentViewController.m */,
+				13FCD69F1BFAD6BD005AE05B /* AppointDetailController.h */,
+				13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */,
+				13FCD6A61BFB316C005AE05B /* AppointUpdateController.h */,
+				13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */,
+				130D2DFF1BFC7229002E301F /* MapViewController.h */,
+				130D2E001BFC7229002E301F /* MapViewController.m */,
 			);
 			path = "体检预约";
 			sourceTree = "<group>";
@@ -1225,6 +1254,7 @@
 				1303C2C81BE9AEC900700847 /* back_w@2x.png */,
 				1303C2CA1BE9B6EE00700847 /* back@2x.png */,
 				134822D41BEC795200EA2E06 /* default_hema@2x.png */,
+				130D2E021BFC7332002E301F /* gpin@2x.png */,
 				139333441BE0DF3E00B4628B /* 个性定制 */,
 			);
 			path = Images;
@@ -1382,6 +1412,8 @@
 				13F241E21BF444D3002C9D81 /* HospitalModel.m */,
 				13F2421B1BF5C0E8002C9D81 /* ArticleModel.h */,
 				13F2421C1BF5C0E8002C9D81 /* ArticleModel.m */,
+				13C97F2F1BF9B54700C66691 /* AppointModel.h */,
+				13C97F301BF9B54700C66691 /* AppointModel.m */,
 			);
 			path = CommonModels;
 			sourceTree = "<group>";
@@ -2189,6 +2221,7 @@
 				E3D93F511BEB45BB00C0BE52 /* garea.sqlite in Resources */,
 				139333FC1BE0DF3E00B4628B /* 归档.zip in Resources */,
 				139333EA1BE0DF3E00B4628B /* 3_w_2_e79f9f@2x.png in Resources */,
+				13FCD6A51BFAD935005AE05B /* yuyue_wenhao@2x.png in Resources */,
 				131A177F1BF34BAF00B12D2F /* yuyue_xuxian@2x.png in Resources */,
 				E3D8AE481BF6203F003AE2E3 /* choujiangquan_r@2x.png in Resources */,
 				1303C3461BEB0D7100700847 /* personal_dingdan@2x.png in Resources */,
@@ -2317,6 +2350,7 @@
 				E3E6C3621BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png in Resources */,
 				139333F51BE0DF3E00B4628B /* 8_3@2x.png in Resources */,
 				139333D11BE0DF3E00B4628B /* 26_1@2x.png in Resources */,
+				130D2E031BFC7332002E301F /* gpin@2x.png in Resources */,
 				139333EF1BE0DF3E00B4628B /* 6_1@2x.png in Resources */,
 				139333FA1BE0DF3E00B4628B /* right@2x.png in Resources */,
 				139333D21BE0DF3E00B4628B /* 26_2@2x.png in Resources */,
@@ -2343,6 +2377,7 @@
 				1303C36C1BEB0D7100700847 /* personal_g@2x.png in Resources */,
 				1303C36A1BEB0D7100700847 /* homepage_message@2x.png in Resources */,
 				13F1F2701BBA78ED00885D31 /* Main.storyboard in Resources */,
+				13C97F2E1BF98A5200C66691 /* yuyue_daijinquan@2x.png in Resources */,
 				131C11921BF04BF100629938 /* user_zhuce@2x.png in Resources */,
 				139333A71BE0DF3E00B4628B /* 12_3@2x.png in Resources */,
 				E3D8AE4D1BF6203F003AE2E3 /* youhui_yilingqu@2x.png in Resources */,
@@ -2360,6 +2395,7 @@
 				E3796D091BFB37CD004B63F7 /* homepage_search@2x.png in Resources */,
 				E3796D0B1BFB37CD004B63F7 /* my_weixin@2x.png in Resources */,
 				139333C91BE0DF3E00B4628B /* 23_2@2x.png in Resources */,
+				13FCD6A31BFAD863005AE05B /* personal_yuyue_xiugai@2x.png in Resources */,
 				E3E2B4171BFB2122007988C5 /* SelectCell.xib in Resources */,
 				1303C3611BEB0D7100700847 /* sex_nan@2x.png in Resources */,
 				1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */,
@@ -2469,6 +2505,7 @@
 				E3E2B3FC1BFB1E90007988C5 /* PayActionViewController.m in Sources */,
 				E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */,
 				1303C3071BEA14EB00700847 /* LoginViewController.m in Sources */,
+				130D2E011BFC7229002E301F /* MapViewController.m in Sources */,
 				E3E2B40F1BFB2081007988C5 /* ShoppingAddressController.m in Sources */,
 				E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */,
 				13F242311BF5E17D002C9D81 /* AppointmentViewController.m in Sources */,
@@ -2488,6 +2525,7 @@
 				E3E2B4161BFB2122007988C5 /* SelectCell.m in Sources */,
 				E31FC6951BDF50AB0057D3BE /* (null) in Sources */,
 				13F2421D1BF5C0E8002C9D81 /* ArticleModel.m in Sources */,
+				13C97F311BF9B54700C66691 /* AppointModel.m in Sources */,
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
 				1303C2E11BE9FB2400700847 /* NSArray+Additons.m in Sources */,
 				E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */,
@@ -2518,6 +2556,7 @@
 				13F1F39E1BBA9A4B00885D31 /* UIView+Additions.m in Sources */,
 				139334061BE3789000B4628B /* OptionModel.m in Sources */,
 				134822E11BEC8DF200EA2E06 /* EditUserInfoViewController.m in Sources */,
+				13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */,
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
 				E3E2B4201BFB218A007988C5 /* ShopModel.m in Sources */,
 				13F2422C1BF5D5E0002C9D81 /* ArticleCell.m in Sources */,
@@ -2549,6 +2588,7 @@
 				13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */,
 				13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */,
 				13F1F39D1BBA9A4B00885D31 /* UILabel+Additions.m in Sources */,
+				13FCD6A11BFAD6BD005AE05B /* AppointDetailController.m in Sources */,
 				E3D8AE1B1BF4B16D003AE2E3 /* SMPageControl.m in Sources */,
 				131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */,
 				134822E51BECA32000EA2E06 /* PeopleManageController.m in Sources */,
@@ -2728,7 +2768,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "455dfd3d-c160-44d6-9110-027a5de8c266";
+				PROVISIONING_PROFILE = "9859e4a3-044d-4a34-87e2-52a046155210";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Debug;
@@ -2761,7 +2801,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "455dfd3d-c160-44d6-9110-027a5de8c266";
+				PROVISIONING_PROFILE = "9859e4a3-044d-4a34-87e2-52a046155210";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Release;

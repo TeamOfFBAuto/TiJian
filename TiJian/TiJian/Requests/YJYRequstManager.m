@@ -184,7 +184,7 @@
         
         failBlock(failDic);
         
-        NSLog(@"---->获取数据异常 :response %@",operation.responseString);
+        NSLog(@"---->数据异常—后台返回原始数据 :response %@",operation.responseString);
 
         return;
     }

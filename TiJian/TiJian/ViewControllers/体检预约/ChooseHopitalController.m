@@ -7,17 +7,32 @@
 //
 
 #import "ChooseHopitalController.h"
+#import "PeopleManageController.h"
 #import "SSLunarDate.h"
+#import "HospitalModel.h"
 
-@interface ChooseHopitalController ()<UITableViewDataSource,UITableViewDelegate>
+@interface ChooseHopitalController ()<UITableViewDataSource,RefreshDelegate>
 {
     UIView *_calendar_bgView;
-    UITableView *_table;
+    RefreshTableView *_table;
     int _selectRow;
+//    NSMutableArray *_dataArray;
+    NSString *_selectDate;//选中的时间
+    
+    NSString *_exam_center_id;//体检中心id
+    NSString *_product_id;
+    NSString *_order_id;
+    NSString *_company_id; //公司订单才有的
+    NSString *_order_checkuper_id;//公司订单才有的
+    int _noAppointNum;//未预约数
+    
+    BOOL _isCompanyAppoint;//是否是公司预约
+
 }
 
 @property (strong, nonatomic) NSCalendar *currentCalendar;
 @property(nonatomic,retain)UIButton *closeButton;
+@property(nonatomic,retain)UIImageView *closeImage;
 
 
 @end
@@ -55,16 +70,23 @@
     _closeButton.frame = CGRectMake(0, _calendar.bottom, DEVICE_WIDTH, 27);
     _closeButton.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     [_closeButton addTarget:self action:@selector(clickToCloseClendar:) forControlEvents:UIControlEventTouchUpInside];
-    [_closeButton setImage:[UIImage imageNamed:@"yuyue_jiantou_up"] forState:UIControlStateNormal];
-    [_closeButton setImage:[UIImage imageNamed:@"yuyue_jiantou_down"] forState:UIControlStateSelected];
     [self.view addSubview:_closeButton];
     
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _closeButton.bottom) style:UITableViewStylePlain];
-    _table.delegate = self;
+    //图标
+    self.closeImage = [[UIImageView alloc]initWithFrame:_closeButton.bounds];
+    _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_down"];
+    _closeImage.contentMode = UIViewContentModeCenter;
+    [_closeButton addSubview:_closeImage];
+    
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _closeButton.bottom) style:UITableViewStylePlain];
+    _table.refreshDelegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
     _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _table.backgroundColor = [UIColor whiteColor];
+    
+    NSString *selectDate = [LTools timeDate:[NSDate date] withFormat:@"yyyy-MM-dd"];
+    [self networkForCenter:selectDate];
     
 }
 
@@ -86,18 +108,193 @@
     }
 }
 
+#pragma mark - 网络请求
+
+/**
+ *  提交预约信息
+ */
+- (void)networkForMakeAppoint
+{
+//    company_id 公司id（若是公司买单的 则要传）
+//    order_checkuper_id 预约id（若是公司买单的 则要传）
+    
+    int index = _selectRow - 1;
+    if (index < 0) {
+        
+        [LTools alertText:@"请选择体检分院" viewController:self];
+        
+        return;
+    }
+    
+    HospitalModel *h_model = _table.dataArray[_selectRow];
+    _exam_center_id = h_model.exam_center_id;
+    
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSDictionary *params = @{@"authcode":authey,
+                             @"order_id":_order_id,
+                             @"product_id":_product_id,
+                             @"exam_center_id":_exam_center_id,
+                             @"date":_selectDate,
+                             @"company_id":_company_id ? : @"", //公司订单才有的
+                             @"order_checkuper_id":_order_checkuper_id ? : @"", //公司订单才有的
+                             };
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak typeof(self)weakSelf = self;
+//    __weak typeof(_table)weakTable = _table;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+        [LTools showMBProgressWithText:@"恭喜您预约成功！" addToView:weakSelf.view];
+        [weakSelf performSelector:@selector(appointSuccess) withObject:nil afterDelay:0.5];
+        NSLog(@"预约成功 result");
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+    }];
+}
+
+- (void)networkForCenter:(NSString *)date
+{
+//     套餐商品id、 省id、 城市id、 预约日期、longitude 经度（可不传）、latitude 纬度（可不传
+
+    _selectDate = date;//记录选择的时间
+    
+    NSDictionary *params = @{@"product_id":self.productId,
+                             @"province_id":@"1000",
+                             @"city_id":@"1001",
+                             @"date":date,
+                             @"page":NSStringFromInt(_table.pageNum),
+                             @"per_page":@"50"};
+    NSString *api = GET_CENTER_PERCENT;
+    
+    __weak typeof(self)weakSelf = self;
+//    __weak typeof(_table)weakTable = _table;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        [weakSelf parseDataWithResult:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+//        [weakTable loadFail];
+        
+    }];
+}
+
+
 #pragma mark - 事件处理
+
+- (void)appointSuccess
+{
+    //预约成功通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
+//    AppointResultController *result = [[AppointResultController alloc]init];
+//    [self.navigationController pushViewController:result animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+/**
+ *  公司预约参数
+ *
+ *  @param orderId
+ *  @param productId
+ *  @param companyId          公司id
+ *  @param order_checkuper_id 公司订单特有
+ *  @param noAppointNum
+ */
+- (void)setCompanyAppointOrderId:(NSString *)orderId
+                       productId:(NSString *)productId
+                       companyId:(NSString *)companyId
+              order_checkuper_id:(NSString *)order_checkuper_id
+                    noAppointNum:(int)noAppointNum
+{
+    //提交预约参数
+    _order_id = orderId;//订单id
+    _product_id = productId;//单品id
+    //    _exam_center_id = examCenterId;
+    _company_id = companyId;
+    _order_checkuper_id = order_checkuper_id;
+    _noAppointNum = noAppointNum;
+    
+    _isCompanyAppoint = YES;
+}
+
+- (void)parseDataWithResult:(NSDictionary *)result
+{
+    NSArray *temp = [HospitalModel modelsFromArray:result[@"center_list"]];
+    
+    [_table reloadData:temp pageSize:50];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
+}
 
 - (void)clickToCloseClendar:(UIButton *)sender
 {
     sender.selected = !sender.selected;
+    
+    if (sender.selected) {
+        
+        _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_up"];
+    }else
+    {
+        _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_down"];
+    }
+    
     FSCalendarScope selectedScope = sender.selected ? FSCalendarScopeMonth : FSCalendarScopeWeek;
 
     [_calendar setScope:selectedScope animated:YES];
     
 //    [_calendar setCurrentPage:[NSDate date] animated:NO];
+}
 
+-(void)rightButtonTap:(UIButton *)sender
+{
+    //公司预约提交预约信息
+    if (_isCompanyAppoint) {
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
+        [alert show];
+        
+        return;
+    }
+    
+    //确认 分院、时间
+    
+    HospitalModel *h_model = _table.dataArray[_selectRow - 1];
 
+    //选择人
+    PeopleManageController *people = [[PeopleManageController alloc]init];
+    people.isChoose = YES;
+    [people setAppointOrderId:self.order_id productId:self.productId examCenterId:h_model.exam_center_id date:_selectDate noAppointNum:self.noAppointNum];
+    
+    //先pop掉 选择时间分院,在push
+    if (self.lastViewController) {
+        
+        [self.lastViewController.navigationController popViewControllerAnimated:NO];
+        [self.lastViewController.navigationController pushViewController:people animated:YES];
+        return;
+    }
+    
+    [self.navigationController pushViewController:people animated:YES];
+    
+}
+
+#pragma - mark UIAlertViewDelegate <NSObject>
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        
+        [self networkForMakeAppoint];//提交预约
+    }
 }
 
 #pragma mark - FSCalendarDelegate
@@ -131,7 +328,12 @@
 }
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date
 {
-    NSLog(@"did select date %@",[LTools timeDate:date withFormat:@"yyyy/MM/dd"]);
+    NSString *selectDate = [LTools timeDate:date withFormat:@"yyyy-MM-dd"];
+    NSLog(@"did select date %@",selectDate);
+    
+    _table.pageNum = 1;
+    _table.isReloadData = YES;
+    [self networkForCenter:selectDate];
 }
 
 #pragma mark - FSCalendarDataSource
@@ -184,7 +386,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
-    return 10;
+    return _table.dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -216,16 +418,24 @@
 
     cell.textLabel.textColor = [UIColor colorWithHexString:@"646464"];
     cell.detailTextLabel.textColor = [UIColor colorWithHexString:@"323232"];
-    NSString *brand = @"慈铭体检";
-    NSString *name = @"上地分院";
-    NSString *text = [NSString stringWithFormat:@"%@  %@",brand,name];
-    [cell.textLabel setAttributedText:[LTools attributedString:text keyword:name color:[UIColor colorWithHexString:@"323232"]]];
     
     UILabel *label = [cell.contentView viewWithTag:100];
     UIImageView *icon = [cell.contentView viewWithTag:101];
-    NSString *numString = [NSString stringWithFormat:@"%d%%",76];
-    NSString *d_text = [NSString stringWithFormat:@"已预约%@",numString];
-    [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
+
+    HospitalModel *h_model = _table.dataArray[indexPath.row];
+    
+    if (h_model) {
+        NSString *brand = h_model.brand_name;
+        NSString *name = h_model.center_name;
+        NSString *text = [NSString stringWithFormat:@"%@  %@",brand ? : @"",name ? : @""];
+        [cell.textLabel setAttributedText:[LTools attributedString:text keyword:name color:[UIColor colorWithHexString:@"323232"]]];
+        
+        NSString *numString = [NSString stringWithFormat:@"%d%%",[h_model.appoint_percent intValue]];
+        NSString *d_text = [NSString stringWithFormat:@"已预约%@",numString];
+        [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
+    }
+    
+    
     
     if ((int)indexPath.row + 1 == _selectRow) {
         
@@ -253,6 +463,31 @@
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     return [UIView new];
+}
+
+#pragma mark - 视图创建
+
+#pragma mark - 代理
+
+#pragma - mark RefreshDelegate <NSObject>
+
+- (void)loadNewDataForTableView:(UITableView *)tableView
+{
+    [self networkForCenter:_selectDate];
+}
+- (void)loadMoreDataForTableView:(UITableView *)tableView
+{
+    [self networkForCenter:_selectDate];
+}
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+{
+    _selectRow = (int)indexPath.row + 1;
+    
+    [tableView reloadData];
+}
+- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+{
+    return 50.f;
 }
 
 @end

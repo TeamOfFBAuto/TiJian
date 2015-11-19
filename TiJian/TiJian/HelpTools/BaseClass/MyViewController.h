@@ -57,7 +57,8 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @property(nonatomic,strong)NSString * leftImageName;
 
-@property(nonatomic,strong)NSString * rightImageName;
+@property(nonatomic,strong)NSString * rightImageName;//图片名字
+@property(nonatomic,strong)UIImage * rightImage;//image
 
 
 @property(nonatomic,assign)BOOL lastPageNavigationHidden;//上一级是否隐藏navigationBar

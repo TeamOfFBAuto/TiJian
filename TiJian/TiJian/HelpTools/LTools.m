@@ -550,6 +550,11 @@
 //取
 + (id)cacheForKey:(NSString *)key
 {
+    //test
+    if ([key isEqualToString:USER_AUTHOD]) {
+        
+        return @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:key];
 }
@@ -1185,6 +1190,31 @@
 //    
 //    return YES;
 //}
+
+#pragma - mark 身份证安全性处理
+/**
+ *  处理身份证号
+ *
+ *  @param idCard 身份证号
+ *
+ *  @return
+ */
++ (NSString *)safeStringWithIdCard:(NSString *)idCard
+{
+    NSMutableString *temp = [NSMutableString stringWithString:idCard];
+    int index = 4;
+    int length = (int)idCard.length;
+    
+    if (length < 8) { //小于八位不处理
+        return idCard;
+    }
+    
+    while (index < length - 4) {
+        [temp replaceCharactersInRange:NSMakeRange(index, 1) withString:@"*"];
+        index ++;
+    }
+    return temp;
+}
 
 #pragma - mark 非空字符串
 

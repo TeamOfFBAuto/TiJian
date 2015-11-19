@@ -66,16 +66,17 @@
             //背景图
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(left, 10, width, height)];
             imageView.backgroundColor = [UIColor whiteColor];
+            imageView.image = [UIImage imageNamed:@"yuyue_daijinquan"];
             [view addSubview:imageView];
-            [imageView setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
+//            [imageView setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
             
             //================代金卷相关
             
-            UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 107, 16) title:@"1000元" font:15 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR];
+            UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 20, 107, 16) title:@"1000元" font:15 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR];
             [imageView addSubview:priceLabel];
             self.priceLabel = priceLabel;
             
-            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, priceLabel.bottom + 5, priceLabel.width, 13) title:@"【超额补差价】" font:12 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, priceLabel.bottom + 5, priceLabel.width, 13) title:@"【超额补差价】" font:12 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
             [imageView addSubview:label];
             
             
