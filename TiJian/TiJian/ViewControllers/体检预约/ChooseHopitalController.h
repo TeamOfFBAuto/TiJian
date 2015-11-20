@@ -20,6 +20,15 @@
 @property(nonatomic,assign)int noAppointNum;//剩余未预约个数
 
 /**
+ *  仅选择时间和分院,不做其他操作
+ *
+ *  @param productId
+ *  @param examCenterId 分院id
+ */
+- (void)setSelectParamWithProductId:(NSString *)productId
+                       examCenterId:(NSString *)examCenterId;
+
+/**
  *  公司预约参数
  *
  *  @param orderId

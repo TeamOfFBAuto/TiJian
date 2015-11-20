@@ -126,7 +126,7 @@
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        CGPoint startPoint = [recognizer locationInView:self.view];
+//        CGPoint startPoint = [recognizer locationInView:self.view];
             self.rightSideBar.isCurrentPanGestureTarget = YES;
     }
     

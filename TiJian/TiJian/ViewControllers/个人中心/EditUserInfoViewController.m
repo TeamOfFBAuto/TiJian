@@ -200,7 +200,7 @@
     NSString *api = GET_USERINFO_WITHID;
     
     __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
+//    __weak typeof(_table)weakTable = _table;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);

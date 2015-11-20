@@ -24,7 +24,7 @@
 - (void)setCellWithModel:(AddressModel *)aModel
 {
     self.nameLabel.text = [NSString stringWithFormat:@"%@  %@",aModel.receiver_username,aModel.mobile];
-    CGFloat width = [LTools widthForText:aModel.receiver_username font:15];
+//    CGFloat width = [LTools widthForText:aModel.receiver_username font:15];
     
     self.addressLabel.text = aModel.address;
     

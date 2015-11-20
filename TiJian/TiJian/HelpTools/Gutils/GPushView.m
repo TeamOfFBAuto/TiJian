@@ -153,7 +153,7 @@
             provinceNameLabel.text = _areaData[section-1][@"State"];
             view.tag = 10+section-1;
             [view addSubview:provinceNameLabel];
-            [view addTaget:self action:@selector(viewForHeaderInSectionClicked:) tag:view.tag];
+            [view addTaget:self action:@selector(viewForHeaderInSectionClicked:) tag:(int)view.tag];
             
             
             

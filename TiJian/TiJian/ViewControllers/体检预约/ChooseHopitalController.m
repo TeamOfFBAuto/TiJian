@@ -15,19 +15,18 @@
 {
     UIView *_calendar_bgView;
     RefreshTableView *_table;
-    int _selectRow;
-//    NSMutableArray *_dataArray;
+    
+    int _selectHospitalId;//选中得分院di
     NSString *_selectDate;//选中的时间
+    NSString *_selectCenterName;//选中分院name
     
     NSString *_exam_center_id;//体检中心id
-    NSString *_product_id;
     NSString *_order_id;
     NSString *_company_id; //公司订单才有的
     NSString *_order_checkuper_id;//公司订单才有的
     int _noAppointNum;//未预约数
-    
     BOOL _isCompanyAppoint;//是否是公司预约
-
+    BOOL _isJustSelect;//是否仅为选择时间和分院
 }
 
 @property (strong, nonatomic) NSCalendar *currentCalendar;
@@ -45,8 +44,6 @@
     self.myTitle = @"选择时间、分院";
     self.rightString = @"确认";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
-    
-//    _calendar_bgView
     
     _currentCalendar = [NSCalendar currentCalendar];
     self.calendar = [[FSCalendar alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300)];
@@ -118,21 +115,20 @@
 //    company_id 公司id（若是公司买单的 则要传）
 //    order_checkuper_id 预约id（若是公司买单的 则要传）
     
-    int index = _selectRow - 1;
-    if (index < 0) {
+    int index = _selectHospitalId;
+    if (index <= 0) {
         
         [LTools alertText:@"请选择体检分院" viewController:self];
         
         return;
     }
     
-    HospitalModel *h_model = _table.dataArray[_selectRow];
-    _exam_center_id = h_model.exam_center_id;
+    _exam_center_id = NSStringFromInt(_selectHospitalId);
     
     NSString *authey = [LTools cacheForKey:USER_AUTHOD];
     NSDictionary *params = @{@"authcode":authey,
                              @"order_id":_order_id,
-                             @"product_id":_product_id,
+                             @"product_id":_productId,
                              @"exam_center_id":_exam_center_id,
                              @"date":_selectDate,
                              @"company_id":_company_id ? : @"", //公司订单才有的
@@ -162,13 +158,29 @@
 //     套餐商品id、 省id、 城市id、 预约日期、longitude 经度（可不传）、latitude 纬度（可不传
 
     _selectDate = date;//记录选择的时间
+    NSDictionary *params;
+    /**
+     *  仅选择时间分院,修改套餐,需要传参数 之前选择的分院id
+     */
+    if (_isJustSelect) {
+        params = @{@"product_id":self.productId,
+                   @"province_id":@"1000",
+                   @"city_id":@"1001",
+                   @"date":date,
+                   @"page":NSStringFromInt(_table.pageNum),
+                   @"per_page":@"50",
+                   @"exam_center_id":_exam_center_id};
+        
+    }else
+    {
+        params = @{@"product_id":self.productId,
+                   @"province_id":@"1000",
+                   @"city_id":@"1001",
+                   @"date":date,
+                   @"page":NSStringFromInt(_table.pageNum),
+                   @"per_page":@"50"};
+    }
     
-    NSDictionary *params = @{@"product_id":self.productId,
-                             @"province_id":@"1000",
-                             @"city_id":@"1001",
-                             @"date":date,
-                             @"page":NSStringFromInt(_table.pageNum),
-                             @"per_page":@"50"};
     NSString *api = GET_CENTER_PERCENT;
     
     __weak typeof(self)weakSelf = self;
@@ -217,13 +229,29 @@
 {
     //提交预约参数
     _order_id = orderId;//订单id
-    _product_id = productId;//单品id
+    _productId = productId;//单品id
     //    _exam_center_id = examCenterId;
     _company_id = companyId;
     _order_checkuper_id = order_checkuper_id;
     _noAppointNum = noAppointNum;
     
     _isCompanyAppoint = YES;
+}
+
+
+/**
+ *  仅选择时间和分院,不做其他操作
+ *
+ *  @param productId
+ *  @param examCenterId 分院id
+ */
+- (void)setSelectParamWithProductId:(NSString *)productId
+                       examCenterId:(NSString *)examCenterId
+{
+    _isJustSelect = YES;
+    _productId = productId;
+    _exam_center_id = examCenterId;
+    _selectHospitalId = [examCenterId intValue];
 }
 
 - (void)parseDataWithResult:(NSDictionary *)result
@@ -256,6 +284,23 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
+    //仅是选择时间和分院,不做其他操作
+    if (_isJustSelect) {
+        
+        if (self.updateParamsBlock) {
+            
+            if (_selectCenterName.length > 0 && _selectDate.length > 0) {
+                NSDictionary *params = @{@"date":_selectDate,
+                                         @"centerName":_selectCenterName,
+                                         @"centerId":NSStringFromInt(_selectHospitalId)};
+                self.updateParamsBlock(params);
+            }
+            [self leftButtonTap:nil];
+        }
+        
+        return;
+    }
+    
     //公司预约提交预约信息
     if (_isCompanyAppoint) {
         
@@ -267,12 +312,10 @@
     
     //确认 分院、时间
     
-    HospitalModel *h_model = _table.dataArray[_selectRow - 1];
-
     //选择人
     PeopleManageController *people = [[PeopleManageController alloc]init];
-    people.isChoose = YES;
-    [people setAppointOrderId:self.order_id productId:self.productId examCenterId:h_model.exam_center_id date:_selectDate noAppointNum:self.noAppointNum];
+    people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;
+    [people setAppointOrderId:self.order_id productId:self.productId examCenterId:NSStringFromInt(_selectHospitalId) date:_selectDate noAppointNum:self.noAppointNum];
     
     //先pop掉 选择时间分院,在push
     if (self.lastViewController) {
@@ -328,7 +371,7 @@
 }
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date
 {
-    NSString *selectDate = [LTools timeDate:date withFormat:@"yyyy-MM-dd"];
+    NSString *selectDate = [LTools timeDate:date withFormat:@"YYYY-MM-dd"];
     NSLog(@"did select date %@",selectDate);
     
     _table.pageNum = 1;
@@ -357,7 +400,11 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    _selectRow = (int)indexPath.row + 1;
+    
+    HospitalModel *h_model = _table.dataArray[indexPath.row];
+    
+    _selectHospitalId = [h_model.exam_center_id intValue];
+    _selectCenterName = h_model.center_name;
     
     [tableView reloadData];
 }
@@ -437,7 +484,7 @@
     
     
     
-    if ((int)indexPath.row + 1 == _selectRow) {
+    if ([h_model.exam_center_id intValue] == _selectHospitalId) {
         
         label.left = DEVICE_WIDTH - 100 - 10 - 35;
         icon.hidden = NO;
@@ -481,8 +528,9 @@
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    _selectRow = (int)indexPath.row + 1;
-    
+    HospitalModel *h_model = _table.dataArray[indexPath.row];
+    _selectHospitalId = [h_model.exam_center_id intValue];
+    _selectCenterName = h_model.center_name;
     [tableView reloadData];
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView

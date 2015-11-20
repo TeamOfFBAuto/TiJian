@@ -39,6 +39,8 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_SUCCESS object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_CANCEL_SUCCESS object:nil];
+    //更新预约
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForUpdateAppointSuccess) name:NOTIFICATION_APPOINT_UPDATE_SUCCESS object:nil];
     
     //创建视图
     [self prepareView];
@@ -60,6 +62,17 @@
 {
     //刷新预约情况
     [[self tableViewWithIndex:0]showRefreshHeader:YES];//待预约
+    [[self tableViewWithIndex:1]showRefreshHeader:YES];//已预约
+    
+}
+
+/**
+ *  更新预约成功
+ */
+- (void)notificationForUpdateAppointSuccess
+{
+    //刷新预约情况
+    [[self tableViewWithIndex:2]showRefreshHeader:YES];//已过期
     [[self tableViewWithIndex:1]showRefreshHeader:YES];//已预约
     
 }

@@ -347,7 +347,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 3.0; //switch interval time
             page = 0;
         }else if(page <0)
         {
-            page = _pagecontrol.numberOfPages -1;
+            page = (int)_pagecontrol.numberOfPages -1;
         }
     }
     if (page!= _pagecontrol.currentPage)

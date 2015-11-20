@@ -40,8 +40,6 @@
 
 }
 
-
-
 @end
 
 @implementation PeopleManageController
@@ -49,7 +47,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.myTitleLabel.text = self.isChoose ? @"选择体检人" : @"家人管理";
+    
+    if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
+        self.myTitle = @"家人管理";
+    }else if (_actionType == PEOPLEACTIONTYPE_SELECT){
+        self.myTitle = @"重新选择体检人";
+    }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT){
+        self.myTitle = @"选择体检人";
+    }
+    
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     self.view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
@@ -67,7 +73,7 @@
     _isMyselfSelected = NO;//默认未选择自己
     _table.tableHeaderView = [self tableHeadView];
     
-    if (self.isChoose) {
+    if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT) {
         UIView *view = [self tableFooterView];
         [self.view addSubview:view];
         view.top = DEVICE_HEIGHT - view.height - 64;
@@ -224,11 +230,65 @@
 }
 
 /**
+ *  选择体检人并返回
+ *
+ *  @param user UserInfo model
+ *  @param myself 是否是本人
+ */
+- (void)selectPeople:(UserInfo *)user
+              myself:(BOOL)myself
+{
+    if (self.updateParamsBlock) {
+        
+        NSDictionary *params = @{@"result":user,
+                                 @"myself":[NSNumber numberWithBool:myself]};
+        self.updateParamsBlock(params);
+    }
+    
+    [self leftButtonTap:nil];
+}
+
+/**
  *  查看本人信息
  */
 - (void)clickToMe
 {
-    if (self.isChoose) {
+    //普通
+    if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
+        
+        [self clickToEditUserInfoIsFull:NO];
+
+    }
+    //选择人
+    else if (_actionType == PEOPLEACTIONTYPE_SELECT){
+        
+        if ([self enableSelectNewPeople]) {
+            
+            //需要判断信息是否完整
+            if ([self isUserInfoWell]) {
+                
+                _selectedIcon.hidden = NO;
+                _isMyselfSelected = YES;
+                
+                //选择成功回调
+                NSLog(@"选择体检人成功");
+                
+                UserInfo *user = [UserInfo userInfoForCache];
+                
+                [self selectPeople:user myself:YES];
+                
+                
+            }else
+            {
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"用户信息不完整,去完善？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去完善", nil];
+                alert.tag = KTag_EditUserInfo;
+                [alert show];
+            }
+        }
+        
+    }
+    //选择并预约
+    else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT){
         
         if (_isMyselfSelected) {
             
@@ -239,13 +299,12 @@
         {
             if ([self enableSelectNewPeople]) {
                 
-                
                 //需要判断信息是否完整
-                
                 if ([self isUserInfoWell]) {
                     
-                    _isMyselfSelected = YES;
                     _selectedIcon.hidden = NO;
+                    _isMyselfSelected = YES;
+                    
                 }else
                 {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"用户信息不完整,去完善？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去完善", nil];
@@ -254,12 +313,47 @@
                 }
             }
         }
-        
-        return;
     }
-    
-    [self clickToEditUserInfoIsFull:NO];
 }
+
+
+///**
+// *  查看本人信息
+// */
+//- (void)clickToMe
+//{
+//    if (self.isChoose) {
+//        
+//        if (_isMyselfSelected) {
+//            
+//            _selectedIcon.hidden = YES;
+//            _isMyselfSelected = NO;
+//            
+//        }else
+//        {
+//            if ([self enableSelectNewPeople]) {
+//                
+//                
+//                //需要判断信息是否完整
+//                
+//                if ([self isUserInfoWell]) {
+//                    
+//                    _isMyselfSelected = YES;
+//                    _selectedIcon.hidden = NO;
+//                }else
+//                {
+//                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"用户信息不完整,去完善？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去完善", nil];
+//                    alert.tag = KTag_EditUserInfo;
+//                    [alert show];
+//                }
+//            }
+//        }
+//        
+//        return;
+//    }
+//    
+//    [self clickToEditUserInfoIsFull:NO];
+//}
 
 /**
  *  跳转至用户详情页
@@ -394,35 +488,37 @@
 - (void)createNavigationbarTools
 {
     
-    if (self.isChoose) {
+    if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
+        
+        UIButton *rightView=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 88, 44)];
+        rightView.backgroundColor=[UIColor clearColor];
+        
+        //添加
+        UIButton *heartButton = [[UIButton alloc]initWithframe:CGRectMake(0, 0, 44, 44) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"personal_jiaren_tianjia"] selectedImage:nil target:self action:@selector(clickToAdd:)];
+        [heartButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        
+        
+        //删除
+        UIButton *collectButton = [[UIButton alloc]initWithframe:CGRectMake(44, 0, 44, 44) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"personal_jiaren_shanchu"] selectedImage:nil target:self action:@selector(clickToEdit:)];
+        [collectButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        
+        
+        [rightView addSubview:heartButton];
+        [rightView addSubview:collectButton];
+        
+        UIBarButtonItem *comment_item=[[UIBarButtonItem alloc]initWithCustomView:rightView];
+        
+        self.navigationItem.rightBarButtonItem = comment_item;
+    }else
+    {
         //添加
         UIButton *heartButton = [[UIButton alloc]initWithframe:CGRectMake(0, 0, 44, 44) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"personal_jiaren_tianjia"] selectedImage:nil target:self action:@selector(clickToAdd:)];
         [heartButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         UIBarButtonItem *comment_item=[[UIBarButtonItem alloc]initWithCustomView:heartButton];
         self.navigationItem.rightBarButtonItem = comment_item;
         return;
-        
     }
     
-    UIButton *rightView=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 88, 44)];
-    rightView.backgroundColor=[UIColor clearColor];
-    
-    //添加
-    UIButton *heartButton = [[UIButton alloc]initWithframe:CGRectMake(0, 0, 44, 44) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"personal_jiaren_tianjia"] selectedImage:nil target:self action:@selector(clickToAdd:)];
-    [heartButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    
-    
-    //删除
-    UIButton *collectButton = [[UIButton alloc]initWithframe:CGRectMake(44, 0, 44, 44) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"personal_jiaren_shanchu"] selectedImage:nil target:self action:@selector(clickToEdit:)];
-    [collectButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    
-    
-    [rightView addSubview:heartButton];
-    [rightView addSubview:collectButton];
-    
-    UIBarButtonItem *comment_item=[[UIBarButtonItem alloc]initWithCustomView:rightView];
-    
-    self.navigationItem.rightBarButtonItem = comment_item;
 }
 
 - (UIView *)tableFooterView
@@ -459,23 +555,20 @@
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLable.right + 60, 0, 200, bgView.height) title:name font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
     [bgView addSubview:nameLabel];
     
-    //选择体检人
-    if (self.isChoose) {
+    if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
         
+        UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (67-14)/2.f, 7, 14)];
+        editImage.image = [UIImage imageNamed:@"personal_jiantou_r"];
+        [bgView addSubview:editImage];
+    }else
+    {
         //图标 对号
         UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 14.5, 0, 14.5, 50)];
         icon.image = [UIImage imageNamed:@"duihao"];
         icon.contentMode = UIViewContentModeCenter;
         [bgView addSubview:icon];
         icon.hidden = YES;
-        
         _selectedIcon = icon;
-        
-    }else
-    {
-        UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (67-14)/2.f, 7, 14)];
-        editImage.image = [UIImage imageNamed:@"personal_jiantou_r"];
-        [bgView addSubview:editImage];
     }
     
     [bgView addTaget:self action:@selector(clickToMe) tag:0];
@@ -490,21 +583,18 @@
 {
     if(buttonIndex == 1){
         
-        if(self.isChoose)
-        {
-            if (alertView.tag == kTag_Appoint) {
-                
-                [self networkForMakeAppoint];//提交预约
-
-            }else if (alertView.tag == KTag_EditUserInfo){
-                
-                //去编辑个人信息
-                
-                [self clickToEditUserInfoIsFull:YES];
-            }
+        
+        if (alertView.tag == kTag_Appoint) {
             
-            return;
+            [self networkForMakeAppoint];//提交预约
+
+        }else if (alertView.tag == KTag_EditUserInfo){
+            
+            //去编辑个人信息
+            
+            [self clickToEditUserInfoIsFull:YES];
         }
+            
         if (alertView.tag == kTag_Delete) {
             
             [self deleteFamily:_deleteIndex];
@@ -538,19 +628,38 @@
     }else
     {
         NSString *uid = aModel.family_uid;
-        //选择人
-        if (self.isChoose) {
+        
+        if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
+            
+            [self clickToUserInfo:aModel];
+
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT){
+            
+            if ([self enableSelectNewPeople]) {
+                [_selectedArray addObject:uid];
+            }
+            [tableView reloadData];
+            
+            //选择成功 返回
+            
+            //选择成功回调
+            NSLog(@"选择体检人成功");
+            
+            [self selectPeople:aModel myself:NO];
+
+            
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT){
             
             if ([_selectedArray containsObject:uid]) {
                 [_selectedArray removeObject:uid];
-
+                
             }else
             {
                 
                 if ([self enableSelectNewPeople]) {
                     
                     [_selectedArray addObject:uid];
-
+                    
                 }else
                 {
                     return;
@@ -558,12 +667,7 @@
             }
             
             [tableView reloadData];
-
-            
-            return;
         }
-        
-        [self clickToUserInfo:aModel];
     }
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
@@ -640,18 +744,19 @@
         bgView.backgroundColor = [UIColor whiteColor];
         [cell.contentView addSubview:bgView];
         
-        if (self.isChoose) {
+        if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
+            
+            UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (56-7-15)/2.f, 7, 14)];
+            arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
+            [bgView addSubview:arrow];
+        }else
+        {
             //图标 对号
             UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 14.5, 0, 14.5, 50)];
             icon.image = [UIImage imageNamed:@"duihao"];
             icon.contentMode = UIViewContentModeCenter;
             [cell.contentView addSubview:icon];
             icon.tag = 103;
-        }else
-        {
-            UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (56-7-15)/2.f, 7, 14)];
-            arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
-            [bgView addSubview:arrow];
         }
         
         //本人

@@ -39,6 +39,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)actionForNotification:(NSNotification *)notify
+{
+    NSArray *subviews = [_scroll subviews];
+    if (subviews.count > 0) {
+        
+        [subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    }
+    
+    [_scroll removeFromSuperview];
+    _scroll = nil;
+    
+    [self netWorkForList];
+}
+
 #pragma mark - 视图创建
 
 - (void)prepareView
@@ -297,6 +311,8 @@
 - (void)clickToAppointAgain
 {
     NSLog(@"重新预约");
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_APPOINT_UPDATE_SUCCESS object:nil];
+    
     AppointUpdateController *again = [[AppointUpdateController alloc]init];
     [again setParamsWithModel:_detailModel isAppointAgain:YES];
     [self.navigationController pushViewController:again animated:YES];

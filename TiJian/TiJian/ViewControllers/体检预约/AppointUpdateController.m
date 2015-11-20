@@ -17,6 +17,9 @@
     AppointModel *_appointModel;
     UITableView *_table;
     NSArray *_titles;
+    BOOL _isUpdated;//是否被更新过
+    BOOL _isMyself;//是否是自己
+    NSString *_updateFamilyUid;//更新的familyUid
 }
 
 @end
@@ -55,7 +58,6 @@
     _appointModel = aModel;
     
     [self prepareRefreshTableView];
-
 }
 
 #pragma mark - 视图创建
@@ -72,22 +74,42 @@
 }
 
 #pragma mark - 网络请求
-
-- (void)netWorkForList
+/**
+ *  预约修改
+ */
+- (void)netWorkForUpdateAppoint
 {
-    NSDictionary *params = @{@"page":@"1",
-                             @"per_page":@"10"};;
-    NSString *api = nil;
+//    myself 1 表示本人
+    NSString *authcode = [LTools cacheForKey:USER_AUTHOD];
+    NSDictionary *params;
+    
+    if (_isMyself) {
+        
+        params = @{@"authcode":authcode,
+                   @"appoint_id":_appointModel.appoint_id,
+                   @"exam_center_id":_appointModel.exam_center_id,
+                   @"date":[LTools timeString:_appointModel.appointment_exam_time withFormat:@"YYYY-MM-dd"],
+                   @"myself":@"1"};
+    }else
+    {
+        params = @{@"authcode":authcode,
+                   @"appoint_id":_appointModel.appoint_id,
+                   @"exam_center_id":_appointModel.exam_center_id,
+                   @"date":[LTools timeString:_appointModel.appointment_exam_time withFormat:@"YYYY-MM-dd"],
+                   @"family_uid":_updateFamilyUid ? _updateFamilyUid : @""};
+    }
+    
+    NSString *api = UPDATE_APPOINT;
     
     __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
+    //    __weak typeof(RefreshTableView *)weakTable = _table;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
-//        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
-//        [weakTable reloadData:temp pageSize:10];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_UPDATE_SUCCESS object:nil];
+        [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -101,16 +123,50 @@
 
 #pragma mark - 事件处理
 
+-(void)rightButtonTap:(UIButton *)sender
+{
+    if (_isUpdated) {
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定重新预约？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alert show];
+    }
+}
+
 /**
  *  去选择体检人
  */
 - (void)clickToSelectUserInfo
 {
     NSLog(@"选择体检人");
+    
+    _isUpdated = YES;
+    
     PeopleManageController *people = [[PeopleManageController alloc]init];
-    people.isChoose = YES;
+    people.actionType = PEOPLEACTIONTYPE_SELECT;
     people.noAppointNum = 1;
     [self.navigationController pushViewController:people animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    people.updateParamsBlock = ^(NSDictionary *params){
+      
+        UserInfo *user = params[@"result"];
+        BOOL myself = [params[@"myself"]boolValue];
+        [weakSelf updatePeople:user myself:myself];
+    };
+}
+
+- (void)updatePeople:(UserInfo *)userInfo
+              myself:(BOOL)myself
+{
+    _isMyself = myself;
+    _updateFamilyUid = userInfo.family_uid;
+    _appointModel.user_name = myself ? userInfo.real_name : userInfo.family_user_name;
+    _appointModel.gender = userInfo.gender;
+    _appointModel.age = userInfo.age;
+    _appointModel.id_card = userInfo.id_card;
+    _appointModel.mobile = userInfo.mobile;
+    
+    [_table reloadData];
 }
 
 /**
@@ -119,18 +175,58 @@
 - (void)clickToTimeAndCenter
 {
     NSLog(@"选择时间分院");
-//    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-////    choose.productId = 
-//    [self.navigationController pushViewController:choose animated:YES];
+    
+    _isUpdated = YES;
+    
+    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+    [choose setSelectParamWithProductId:_appointModel.product_id examCenterId:_appointModel.exam_center_id];
+    [self.navigationController pushViewController:choose animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    choose.updateParamsBlock = ^(NSDictionary *params){
+        
+        [weakSelf updateCenterWithParams:params];
+    };
+}
+
+- (void)updateCenterWithParams:(NSDictionary *)params
+{
+    NSString *date = params[@"date"];
+    NSString *centerName = params[@"centerName"];
+    NSString *centerId = params[@"centerId"];
+    
+    _appointModel.center_name = centerName;
+    _appointModel.exam_center_id = centerId;
+    NSString *time = [LTools timeDatelineWithString:date format:@"YYYY-MM-dd"];
+    _appointModel.appointment_exam_time = time;
+    [_table reloadData];
 }
 
 #pragma mark - 代理
+
+#pragma mark - UIAlertViewDelegate <NSObject>
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        
+        [self netWorkForUpdateAppoint];
+    }
+}
 
 #pragma - mark UITableViewDelegate
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 2) {
+        
+        if ([_appointModel.company_id intValue] > 0) {
+            
+            if (indexPath.row == 0) {
+                return 40.f;
+            }
+        }
         
         return 60.f;
     }
@@ -177,8 +273,13 @@
     if (section == 0) {
         brandIcon.image = [UIImage imageNamed:@"tijianren_duo"];
         brandName.text = @"体检人信息";
-        [view addTaget:self action:@selector(clickToSelectUserInfo) tag:0];
+        
+        //大于0 是公司套餐
+        if ([_appointModel.company_id intValue] > 0) {
+            [view addTaget:self action:@selector(clickToSelectUserInfo) tag:0];
 
+        }
+        
     }else if (section == 1){
         brandIcon.image = [UIImage imageNamed:@"fenyuan"];
         brandName.text = @"体检时间、分院";
@@ -194,7 +295,7 @@
     line.backgroundColor = DEFAULT_LINECOLOR;
     [brandView addSubview:line];
     
-    if (section != 2) {
+    if (section != 2 && [_appointModel.company_id intValue] == 0) {
         //箭头
         UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(view.width - 6 - 20, (50-12)/2.f, 6, 12)];
         arrow.image = [UIImage imageNamed:@"jiantou"];
@@ -215,7 +316,12 @@
     }else if (section == 1){
         return 2;
     }else if (section == 2){
-        return 1;
+        
+        if ([_appointModel.company_id intValue] == 0) {
+            return 1;
+        }
+        
+        return 2;//公司套餐
     }
     return 0;
 }
@@ -227,20 +333,35 @@
     UITableViewCell *cell;
     if (indexPath.section == 2) {
         
-        cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if (!cell) {
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        //公司
+        if ([_appointModel.company_id intValue] > 0 && indexPath.row == 0) {
             
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 64, 40)];
-            [cell.contentView addSubview:imageView];
-            imageView.tag = 100;
-            CGFloat left = imageView.right + 20;
-            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(left, 0, DEVICE_WIDTH - left - 15, 60) title:nil font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
-            label.tag = 101;
-            label.numberOfLines = 2;
-            label.lineBreakMode = NSLineBreakByWordWrapping;
-            [cell.contentView addSubview:label];
+            if (indexPath.row == 0) {
+                
+                cell = [tableView dequeueReusableCellWithIdentifier:identifier2];
+                if (!cell) {
+                    cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier2];
+                }
+                
+            }
+        }else
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+            if (!cell) {
+                cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+                
+                UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 64, 40)];
+                [cell.contentView addSubview:imageView];
+                imageView.tag = 100;
+                CGFloat left = imageView.right + 20;
+                UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(left, 0, DEVICE_WIDTH - left - 15, 60) title:nil font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
+                label.tag = 101;
+                label.numberOfLines = 2;
+                label.lineBreakMode = NSLineBreakByWordWrapping;
+                [cell.contentView addSubview:label];
+            }
         }
+    
     }else
     {
         cell = [tableView dequeueReusableCellWithIdentifier:identifier2];
@@ -293,11 +414,21 @@
         
     }else if (indexPath.section == 2){
         
-        UIImageView *imageView = [cell.contentView viewWithTag:100];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:_appointModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+        //公司
+        if ([_appointModel.company_id intValue] > 0 && indexPath.row == 0) {
+            
+            cell.textLabel.text = @"公司名称:";
+            cell.detailTextLabel.text = _appointModel.company_name;
+        }else
+        {
+            UIImageView *imageView = [cell.contentView viewWithTag:100];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:_appointModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+            
+            UILabel *label = [cell.contentView viewWithTag:101];
+            label.text = _appointModel.setmeal_name;
+
+        }
         
-        UILabel *label = [cell.contentView viewWithTag:101];
-        label.text = _appointModel.setmeal_name;
     }
     
     return cell;
