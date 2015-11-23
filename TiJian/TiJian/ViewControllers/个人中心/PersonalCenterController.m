@@ -10,6 +10,7 @@
 #import "SettingsViewController.h"
 #import "PeopleManageController.h"
 #import "EditUserInfoViewController.h"
+#import "AppointmentViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -345,6 +346,9 @@
         }else if (indexPath.row == 2){
             
             //@"我的预约";
+            AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
+            m_order.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:m_order animated:YES];
         }
     }else if (indexPath.section == 1){
         
