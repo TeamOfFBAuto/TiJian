@@ -114,7 +114,14 @@
 }
 
 
-
++(NSString *)getCurrentProvinceId{
+    NSString *str = @"1000";
+    return str;
+}
++(NSString *)getCurrentCityId{
+    NSString *str = @"1001";
+    return str;
+}
 
 
 

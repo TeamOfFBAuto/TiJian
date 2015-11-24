@@ -59,8 +59,9 @@
     // Do any additional setup after loading the view.
     
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     self.myTitle = @"购物车";
+    self.rightString = @"删除";
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;
@@ -173,7 +174,7 @@
 
 
 
-#pragma mark - 点击跳转
+#pragma mark - 点击事件
 -(void)goToConfirmOrderVc{
     
     if (_totolPrice != 0) {
@@ -183,6 +184,16 @@
         [self.navigationController pushViewController:cc animated:YES];
     }else{
         [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
+    }
+    
+}
+
+//删除按钮
+-(void)rightButtonTap:(UIButton *)sender{
+    if ([sender.titleLabel.text isEqualToString:@"删除"]) {
+        [sender setTitle:@"完成" forState:UIControlStateNormal];
+    }else{
+        [sender setTitle:@"完成" forState:UIControlStateNormal];
     }
     
 }

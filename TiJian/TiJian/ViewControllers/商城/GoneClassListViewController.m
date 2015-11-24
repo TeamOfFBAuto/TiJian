@@ -184,7 +184,7 @@
     
     
     //首页精品推荐
-    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         

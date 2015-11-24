@@ -41,7 +41,7 @@
     
     NSDictionary *_StoreCycleAdvDic;
     NSDictionary *_StoreProductClassDic;
-    NSMutableArray *_StoreProductRecommendArray;
+    NSMutableArray *_StoreProductListArray;
     
     
 }
@@ -265,13 +265,13 @@
     
     
     //首页精品推荐
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        _StoreProductRecommendArray = [NSMutableArray arrayWithCapacity:1];
+        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *arr = [result arrayValueForKey:@"data"];
         for (NSDictionary *dic in arr) {
             ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-            [_StoreProductRecommendArray addObject:model];
+            [_StoreProductListArray addObject:model];
         }
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
@@ -397,7 +397,7 @@
         
         
         
-        [_table reloadData:_StoreProductRecommendArray pageSize:G_PER_PAGE];
+        [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
         
     }
     

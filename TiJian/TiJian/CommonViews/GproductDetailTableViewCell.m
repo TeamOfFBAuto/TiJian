@@ -12,6 +12,7 @@
 #import "CoupeView.h"
 #import "ButtonProperty.h"
 #import "CouponModel.h"
+#import "ProductModel.h"
 
 @implementation GproductDetailTableViewCell
 
@@ -26,8 +27,8 @@
 }
 
 
--(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr{
-    self.dataDic = dataDic;
+-(CGFloat)loadCustomViewWithModel:(ProductModel*)theModel index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr lookAgainArray:(NSArray *)theLookArray{
+    self.productModel = theModel;
     //6个section
     //0     logo图 套餐名 描述 价钱
     //1     优惠券
@@ -43,21 +44,21 @@
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
             
-            [imv l_setImageWithURL:[NSURL URLWithString:[dataDic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+            [imv l_setImageWithURL:[NSURL URLWithString:self.productModel.cover_pic] placeholderImage:nil];
             [self.contentView addSubview:imv];
             height += imv.frame.size.height;
             
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(imv.frame)+15, DEVICE_WIDTH - 20, 0)];
             titleLabel.font = [UIFont systemFontOfSize:13];
-            titleLabel.text = [dataDic stringValueForKey:@"setmeal_name"];
+            titleLabel.text = self.productModel.setmeal_name;
             titleLabel.numberOfLines = 2;
             [titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(imv.frame)+15) width:DEVICE_WIDTH - 20];
             [self.contentView addSubview:titleLabel];
             height += titleLabel.frame.size.height+15;
             
             
-            NSString *xianjia = [dataDic stringValueForKey:@"setmeal_price"];
-            NSString *yuanjia = [dataDic stringValueForKey:@"setmeal_original_price"];
+            NSString *xianjia = self.productModel.setmeal_price;
+            NSString *yuanjia = self.productModel.setmeal_original_price;
             
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame)+12, DEVICE_WIDTH - 20, 15)];
             NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
@@ -118,14 +119,14 @@
         UILabel *brandNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, cView.frame.size.width, 12)];
         brandNameLabel.font = [UIFont systemFontOfSize:12];
         brandNameLabel.textColor = [UIColor blackColor];
-        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",[dataDic stringValueForKey:@"brand_name"]];
+        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",self.productModel.brand_name];
         [cView addSubview:brandNameLabel];
         
         //适合人群
         UILabel *suitLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(brandNameLabel.frame)+5, cView.frame.size.width, 12)];
         suitLabel.font = [UIFont systemFontOfSize:12];
         suitLabel.textColor = [UIColor blackColor];
-        NSArray *suit_infoArray = [dataDic arrayValueForKey:@"suit_info"];
+        NSArray *suit_infoArray = self.productModel.suit_info;
         NSString *suit_info_str = @"";
         for (NSDictionary *dic in suit_infoArray) {
             NSString *ss = [NSString stringWithFormat:@"%@  %@",suit_info_str,[dic stringValueForKey:@"suit_name"]];
@@ -138,7 +139,7 @@
         UILabel *projectInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(suitLabel.frame)+5, cView.frame.size.width, 12)];
         projectInfoLabel.font = [UIFont systemFontOfSize:12];
         projectInfoLabel.textColor = [UIColor blackColor];
-        NSArray *projectInfoArray = [dataDic arrayValueForKey:@"project_info"];
+        NSArray *projectInfoArray = self.productModel.project_info;
         NSString *projectInfo_str = @"";
         for (NSDictionary *dic in projectInfoArray) {
             NSString *ss = [NSString stringWithFormat:@"%@  %@",projectInfo_str,[dic stringValueForKey:@"project_name"]];
@@ -151,7 +152,7 @@
         UILabel *cityInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5, cView.frame.size.width, 12)];
         cityInfoLabel.font = [UIFont systemFontOfSize:12];
         cityInfoLabel.textColor = [UIColor blackColor];
-        NSArray *cityInfoArray = [dataDic arrayValueForKey:@"city_info"];
+        NSArray *cityInfoArray = self.productModel.city_info;
         NSString *cityInfo_str = @"";
         for (NSDictionary *dic in cityInfoArray) {
             NSString *ss = [NSString stringWithFormat:@"%@  %@",cityInfo_str,[dic stringValueForKey:@"city_name"]];
@@ -243,34 +244,41 @@
         
         CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
         CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
-        for (int i = 0; i<3; i++) {
+        NSInteger count = theLookArray.count;
+        for (int i = 0; i<count; i++) {
+            ProductModel *amodel = theLookArray[i];
             UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), CGRectGetMaxY(tLabel.frame)+10, theW, theH)];
             logoAndContentView.layer.borderWidth = 0.5;
             logoAndContentView.layer.borderColor = [RGBCOLOR(235, 236, 238)CGColor];
             [self.contentView addSubview:logoAndContentView];
+            logoAndContentView.tag = [amodel.product_id integerValue];
+            [logoAndContentView addTaget:self action:@selector(logoAndContentViewClicked:) tag:logoAndContentView.tag];
+            
+            
             
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
-            imv.backgroundColor = RGBCOLOR_ONE;
+            imv.userInteractionEnabled = YES;
+            [imv l_setImageWithURL:[NSURL URLWithString:self.productModel.cover_pic] placeholderImage:nil];
             [logoAndContentView addSubview:imv];
             
             UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(imv.frame)+5, theW-10, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/60])];
-            titleLable.text = @"套餐介绍套餐介绍套餐介绍套餐介绍套餐介绍";
+            titleLable.text = amodel.setmeal_name;
             titleLable.numberOfLines = 2;
             titleLable.font = [UIFont systemFontOfSize:11];
             [logoAndContentView addSubview:titleLable];
             
             
-            NSString *xianjia = @"578";
-            NSString *yuanjia = @"963";
+            NSString *xianjia = amodel.setmeal_price;
+            NSString *yuanjia = amodel.setmeal_original_price;
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(titleLable.frame)+5, DEVICE_WIDTH - 10, 12)];
-            NSString *price = [NSString stringWithFormat:@"￥%@ %@",xianjia,yuanjia];
+            NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
             NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
             [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
             [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, xianjia.length+1)];
             
-            [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+1)];
-            [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(xianjia.length+1, yuanjia.length+1)];
-            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length)];
+            [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+            [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
             priceLabel.attributedText = aaa;
             [logoAndContentView addSubview:priceLabel];
             
@@ -307,9 +315,20 @@
 }
 
 
+
+#pragma mark - 点击方法
+
+//跳转评论界面
 -(void)goToCommentVc{
     [self.delegate goToCommentVc];
 }
+
+//跳转单品详情页
+-(void)logoAndContentViewClicked:(UIView*)sender{
+    NSString *product_id = [NSString stringWithFormat:@"%ld",(long)sender.tag];
+    [self.delegate goToProductDetailVcWithId:product_id];
+}
+
 
 /**
  *  点击去获取优惠劵
@@ -321,7 +340,7 @@
         _coupeView = nil;
     }
     
-    NSArray *arr = [self.dataDic arrayValueForKey:@"coupon_list"];
+    NSArray *arr = self.productModel.coupon_list;
     NSMutableArray *coupons = [NSMutableArray arrayWithCapacity:1];
     for (NSDictionary *dic in arr) {
         CouponModel *amodel = [[CouponModel alloc]initWithDictionary:dic];
@@ -379,6 +398,10 @@
     }];
     
 }
+
+
+
+
 
 
 

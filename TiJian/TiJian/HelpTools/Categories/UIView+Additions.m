@@ -10,7 +10,7 @@
 
 @implementation UIView (Additions)
 
-- (void)addTaget:(id)target action:(SEL)selector tag:(int)tag
+- (void)addTaget:(id)target action:(SEL)selector tag:(NSInteger)tag
 {
     self.userInteractionEnabled = YES;
     UIButton *personalButton = [UIButton buttonWithType:UIButtonTypeCustom];

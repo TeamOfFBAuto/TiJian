@@ -21,8 +21,19 @@
 //商城套餐分类
 #define StoreProductClass @"/index.php?d=api&c=setmeal&m=setmeal_category_list"
 
-//首页精品推荐
-#define StoreProductRecommend @"/index.php?d=api&c=setmeal&m=setmeal_list"
+//商品列表 get方式
+#define StoreProductList @"/index.php?d=api&c=setmeal&m=setmeal_list"
+//province_id：省份id 必填
+//city_id： 城市id   必填
+//下面参数根据具体情况填写
+//brand_id：品牌id
+//category_id: 分类id
+//gender: 1男 2女  不传表示全部
+//low_price: 最低价
+//high_price: 最高价
+//page: 当前页
+//per_page: 每页显示数量
+
 
 //套餐详情
 #define StoreProductDetail @"/index.php?d=api&c=setmeal&m=setmeal_detail"

@@ -31,7 +31,9 @@
 
 + (NSString *)cityNameForId:(int)cityId;
 
-
+//获取当前定位省份id 城市id
++(NSString *)getCurrentProvinceId;
++(NSString *)getCurrentCityId;
 
 
 
