@@ -12,7 +12,7 @@
 #define BAIDU_APPKEY @"xVfbtQq4cB5OLkTk8hmxlyLd" //appStore com.yijiayi.yijiayi
 #import <AlipaySDK/AlipaySDK.h>//支付宝
 #import "WXApi.h"//微信
-#import "UMSocial.h"
+//#import "UMSocial.h"
 
 @interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate>
 {
@@ -137,6 +137,12 @@
         
         [LTools cacheBool:NO ForKey:USER_UPDATEHEADIMAGE_STATE];//不需要更新头像
         
+        [[SDImageCache sharedImageCache] removeImageForKey:USER_NEWHEADIMAGE fromDisk:YES];
+        
+        NSString *avatar = result[@"avatar"];
+        
+        [UserInfo updateUserAvatar:avatar];
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATEHEADIMAGE_SUCCESS object:nil];//更新头像成功
         
     } failBlock:^(NSDictionary *result) {
@@ -204,7 +210,9 @@
         return  [WXApi handleOpenURL:url delegate:self];
     }
     
-    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+//    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+    
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url

@@ -16,10 +16,13 @@
 @property(nonatomic,retain)NSString *id;
 @property(nonatomic,retain)NSString *uid;
 @property(nonatomic,retain)NSString *user_name;
+
+@property(nonatomic,retain)NSString *real_name;//真实姓名
+
 @property(nonatomic,retain)NSString *password;
 @property(nonatomic,retain)NSString *admin_id;
 @property(nonatomic,retain)NSString *user_grade;
-@property(nonatomic,retain)NSString *gender;
+@property(nonatomic,retain)NSString *gender; //1男 2 女
 @property(nonatomic,retain)NSString *age;
 @property(nonatomic,retain)NSString *email;
 @property(nonatomic,retain)NSString *mobile;
@@ -96,12 +99,41 @@
  */
 + (void)cleanUserInfo;
 
-
 /**
  *  更新头像
  *
  *  @param avatar 头像地址
  */
 + (void)updateUserAvatar:(NSString *)avatar;
+
+/**
+ *  更新真实姓名
+ */
++ (void)updateUserRealName:(NSString *)realName;
+
+/**
+ *  更新性别
+ */
++ (void)updateUserSex:(NSString *)sex;
+
+/**
+ *  更新年龄
+ */
++ (void)updateUserAge:(NSString *)age;
+
+/**
+ *  更新生日
+ */
++ (void)updateUserBirthday:(NSString *)dateline;
+
+/**
+ *  更新生日
+ */
++ (void)updateUserIdCard:(NSString *)idCard;
+
+/**
+ *  更新昵称
+ */
++ (void)updateUserName:(NSString *)userName;
 
 @end

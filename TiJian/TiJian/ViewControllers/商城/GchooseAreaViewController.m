@@ -99,7 +99,7 @@
     provinceNameLabel.text = _areaData[section][@"State"];
     view.tag = section+10;
     [view addSubview:provinceNameLabel];
-    [view addTaget:self action:@selector(viewForHeaderInSectionClicked:) tag:view.tag];
+    [view addTaget:self action:@selector(viewForHeaderInSectionClicked:) tag:(int)view.tag];
     
     
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, view.frame.size.width, 0.5)];

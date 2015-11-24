@@ -306,8 +306,8 @@ static int seconds = 60;//计时60s
     
     
     NSString *password = self.passwordTF.text;
-    NSString *secondPassword = self.secondPassword.text;
-    int code = [self.securityTF.text intValue];
+//    NSString *secondPassword = self.secondPassword.text;
+//    int code = [self.securityTF.text intValue];
     NSString *mobile = self.phoneTF.text;
     
     if (![LTools isValidateMobile:mobile]) {

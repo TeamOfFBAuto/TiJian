@@ -262,6 +262,17 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 +(NSString *)timechangeToDateline;
 
 /**
+ *  时间转化为对应的时间戳
+ *
+ *  @param string 时间
+ *  @param format 格式
+ *
+ *  @return
+ */
++(NSString *)timeDatelineWithString:(NSString *)string
+                             format:(NSString *)format;
+
+/**
  *  显示间隔时间 一天内显示时分、几天前、几周前、大于一周 显示具体日期
  *
  *  @param myTime 时间线

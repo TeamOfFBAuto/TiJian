@@ -29,12 +29,16 @@
 @property(nonatomic,retain)NSString *cancel_time;
 @property(nonatomic,retain)NSString *center_phone;//分院电话
 @property(nonatomic,retain)NSString *company_id;
+@property(nonatomic,retain)NSString *company_name;
 @property(nonatomic,retain)NSString *company_user_id;
 @property(nonatomic,retain)NSString *expired;//1过期 0 未过期
 @property(nonatomic,retain)NSString *gender;
 @property(nonatomic,retain)NSString *id_card;
 @property(nonatomic,retain)NSString *mobile;
 @property(nonatomic,retain)NSString *setmeal_name;//套餐内容或者名称
+@property(nonatomic,retain)NSString *product_id;//套餐对应id
+@property(nonatomic,retain)NSString *cover_pic;//套餐图
+
 @property(nonatomic,retain)NSString *status;
 @property(nonatomic,retain)NSString *center_latitude;//维度
 @property(nonatomic,retain)NSString *center_longitude;//经度

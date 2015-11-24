@@ -149,4 +149,83 @@
     
 }
 
+/**
+ *  更新真实姓名
+ */
++ (void)updateUserRealName:(NSString *)realName
+{
+    if (!realName) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.real_name = realName;
+    [userInfo cacheForKey:USERINFO_MODEL];
+    
+}
+
+/**
+ *  更新性别
+ */
++ (void)updateUserSex:(NSString *)sex
+{
+    if (!sex) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.gender = sex;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
+/**
+ *  更新年龄
+ */
++ (void)updateUserAge:(NSString *)age
+{
+    if (!age) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.age = age;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
+/**
+ *  更新生日
+ */
++ (void)updateUserBirthday:(NSString *)dateline
+{
+    if (!dateline) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.birthday = dateline;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
+/**
+ *  更新身份证号
+ */
++ (void)updateUserIdCard:(NSString *)idCard
+{
+    if (!idCard) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.id_card = idCard;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
+/**
+ *  更新昵称
+ */
++ (void)updateUserName:(NSString *)userName
+{
+    if (!userName) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.user_name = userName;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
 @end

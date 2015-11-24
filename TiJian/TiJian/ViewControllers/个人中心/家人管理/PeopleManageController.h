@@ -10,9 +10,18 @@
 #import "MyViewController.h"
 @class AppointModel;
 
+typedef enum{
+    PEOPLEACTIONTYPE_NORMAL = 0,//普通家人管理
+    PEOPLEACTIONTYPE_SELECT_APPOINT, //选择并提交预约
+    PEOPLEACTIONTYPE_SELECT //仅选择体检人信息
+}PEOPLEACTIONTYPE;
+
 @interface PeopleManageController : MyViewController
 
-@property(nonatomic,assign)BOOL isChoose;//是否是选择人
+//@property(nonatomic,assign)BOOL isChoose;//是否是选择人
+@property(nonatomic,assign)int noAppointNum;//未预约个数
+@property(nonatomic,assign)PEOPLEACTIONTYPE actionType;
+
 
 /**
  *  预约参数传值
