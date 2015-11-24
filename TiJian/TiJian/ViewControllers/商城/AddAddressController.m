@@ -91,8 +91,7 @@
                 NSString *pro_name = [GMAPI cityNameForId:[pro_id intValue]];
                 NSString *city_name = [GMAPI cityNameForId:[city_id intValue]];
                 
-//                self.provinceId = [pro_id integerValue];
-//                self.cityId = [city_id integerValue];
+
                 self.provinceName = pro_name;
                 self.cityName = city_name;
                 
@@ -144,17 +143,24 @@
     }
     
     //设置默认
+    _defaultButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_defaultButton setFrame:CGRectMake(0, top, 110, 40)];
+    [_defaultButton setTitle:@"设为默认地址" forState:UIControlStateNormal];
+    _defaultButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    [_defaultButton setTitleColor:RGBCOLOR(81, 82, 83) forState:UIControlStateNormal];
+    [_defaultButton setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
+    [_defaultButton setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
+    [_defaultButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    [_defaultButton addTarget:self action:@selector(defaultButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    _defaultButton = [[UIButton alloc]initWithframe:CGRectMake(0, top, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"myaddress_normal"] selectedImage:[UIImage imageNamed:@"myaddress_selected"] target:self action:@selector(clickToSelect:)];
+    
+    
     [self.view addSubview:_defaultButton];
     
     //设置是否默认地址
     _defaultButton.selected = [self.addressModel.default_address intValue] == 1 ? YES : NO;
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(_defaultButton.right + 5, _defaultButton.top, 160, 50)];
-    [self.view addSubview:label];
-    label.font = [UIFont systemFontOfSize:15];
-    label.text = @"设为默认地址";
+    
     
     _saveButton = [[UIButton alloc]initWithframe:CGRectMake(33, DEVICE_HEIGHT - 64 - 25 - 43, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"保存" selectedTitle:nil target:self action:@selector(clickToSave:)];
     [self.view addSubview:_saveButton];
@@ -170,9 +176,17 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(controlSaveButton) name:UITextFieldTextDidEndEditingNotification object:nil];
     
     
+    if (self.isEditAddress) {
+        [self controlSaveButton];
+    }
     
-//    [self createAreaPickView];
 }
+
+
+-(void)defaultButtonClicked:(UIButton *)sender{
+    sender.selected = !sender.selected;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -338,9 +352,7 @@
  */
 - (void)clickToSelectArea:(UIButton *)sender
 {
-    
-//    [self clickToHidderKeyboard];//隐藏键盘
-//    [self areaShow];
+
     
     GchooseAreaViewController *chooseAddress = [[GchooseAreaViewController alloc]init];
     

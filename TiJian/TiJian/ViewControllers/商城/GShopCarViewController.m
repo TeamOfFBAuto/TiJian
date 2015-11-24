@@ -17,7 +17,6 @@
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_shopCarDetail;
     
-    int _page;
     
     UIView *_downView;
     
@@ -70,7 +69,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCar) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     
     _request = [YJYRequstManager shareInstance];
-    _page = 1;
+    _rTab.pageNum = 1;
     _totolPrice = 0;
     
     
@@ -114,7 +113,7 @@
     [self.allChooseBtn setTitle:@"全选" forState:UIControlStateNormal];
     [self.allChooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
     [self.allChooseBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
-    [self.allChooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
+    [self.allChooseBtn setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
     
     
     [self.allChooseBtn addTarget:self action:@selector(downViewallChooseBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -200,7 +199,7 @@
     
     NSDictionary *dic = @{
                           @"authcode":[GMAPI testAuth],
-                          @"page":[NSString stringWithFormat:@"%d",_page],
+                          @"page":[NSString stringWithFormat:@"%d",_rTab.pageNum],
                           @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };
     
@@ -221,7 +220,7 @@
         
         [self.rTab reloadData:dataArray pageSize:G_PER_PAGE];
         
-        if (_page == 1 && list.count == 0) {
+        if (_rTab.pageNum == 1 && list.count == 0) {
             _noProductView.hidden = NO;
             _downView.hidden = YES;
         }else{
@@ -231,8 +230,9 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        NSLog(@"aa");
+        [_rTab loadFail];
     }];
+    
 }
 
 
@@ -240,7 +240,7 @@
     
     [_request removeOperation:_request_shopCarDetail];
     
-    _page = 1;
+    _rTab.pageNum = 1;
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;
@@ -319,7 +319,7 @@
     UIButton *chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [chooseBtn setFrame:CGRectMake(5, v_height*0.5-17.5, 35, 35)];
     [chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
-    [chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
+    [chooseBtn setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
     chooseBtn.selected = _open[section];
     chooseBtn.tag = 10+section;
     [chooseBtn addTarget:self action:@selector(headerViewchooseBtnClicked:) forControlEvents:UIControlEventTouchUpInside];

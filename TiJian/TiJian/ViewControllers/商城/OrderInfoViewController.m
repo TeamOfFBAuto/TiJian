@@ -9,7 +9,6 @@
 #import "OrderInfoViewController.h"
 #import "ProductBuyCell.h"
 #import "ConfirmInfoCell.h"
-#import "ShoppingAddressController.h"//收货地址
 #import "AddressModel.h"
 #import "ProductModel.h"
 #import "FBActionSheet.h"

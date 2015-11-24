@@ -45,7 +45,7 @@
     
     self.chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
-    [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
+    [self.chooseBtn setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
     
     self.chooseBtn.selected = model.userChoose;
     CGFloat wAndH = 35;

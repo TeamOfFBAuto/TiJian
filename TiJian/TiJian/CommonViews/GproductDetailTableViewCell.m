@@ -210,7 +210,7 @@
             
         }else{
             if (commentArr.count == 0) {//暂无评论
-                UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 30)];
+                UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH, 30)];
                 tt.text = @"暂无评论";
                 tt.font = [UIFont systemFontOfSize:13];
                 [self.contentView addSubview:tt];
