@@ -7,6 +7,7 @@
 //
 
 #import "GPushView.h"
+#import "GcustomNavcView.h"
 
 @implementation GPushView
 {
@@ -40,34 +41,65 @@
     
     
     //视图相关
-    self.viewsArray = [NSMutableArray arrayWithCapacity:4];
     
-    self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
+    
+    self.navigationView = [[GcustomNavcView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 64)];
+    self.navigationView.backgroundColor = [UIColor whiteColor];
+    [self addSubview:self.navigationView];
+    
+    //中
+    self.navc_midelLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.navigationView.theMidelView.frame.size.width, self.navigationView.theMidelView.frame.size.height)];
+    self.navc_midelLabel.backgroundColor = [UIColor orangeColor];
+    self.navc_midelLabel.textAlignment = NSTextAlignmentCenter;
+    self.navc_midelLabel.text = @"筛选";
+    self.navc_midelLabel.textColor = RGBCOLOR(62, 150, 205);
+    [self.navigationView.theMidelView addSubview:self.navc_midelLabel];
+    
+    //左
+    self.navc_leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.navc_leftBtn setFrame:CGRectMake(0, 0, self.navigationView.theLeftView.frame.size.width, self.navigationView.theLeftView.frame.size.height)];
+    [self.navc_leftBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [self.navc_leftBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
+    [self.navigationView.theLeftView addSubview:self.navc_leftBtn];
+    
+    //右
+    self.navc_rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.navc_rightBtn setFrame:CGRectMake(0, 0, self.navigationView.theRightView.frame.size.width, self.navigationView.theRightView.frame.size.height)];
+    [self.navc_rightBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [self.navc_rightBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
+    [self.navigationView.theRightView addSubview:self.navc_rightBtn];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
     self.tab1.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab1.delegate = self;
     self.tab1.dataSource = self;
     self.tab1.tag = 1;
-    [self.viewsArray addObject:self.tab1];
     
-    self.tab2 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) style:UITableViewStyleGrouped];
+    self.tab2 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStyleGrouped];
     self.tab2.delegate = self;
     self.tab2.dataSource = self;
     self.tab2.tag = 2;
-    [self.viewsArray addObject:self.tab2];
     
-    self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
+    self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
     self.tab3.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab3.delegate = self;
     self.tab3.dataSource = self;
     self.tab3.tag = 3;
-    [self.viewsArray addObject:self.tab3];
     
-    self.tab4 = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
+    self.tab4 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
     self.tab4.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab4.delegate = self;
     self.tab4.dataSource = self;
-    self.tab4.tag = 3;
-    [self.viewsArray addObject:self.tab4];
+    self.tab4.tag = 4;
     
     
     

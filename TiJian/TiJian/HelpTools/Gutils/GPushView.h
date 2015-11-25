@@ -7,15 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+@class GcustomNavcView;
 
 @interface GPushView : UIView<UITableViewDelegate,UITableViewDataSource>
 
-@property(nonatomic,strong)NSMutableArray *viewsArray;
 
+@property(nonatomic,strong)GcustomNavcView *navigationView;//上面navigationview
 @property(nonatomic,strong)UITableView *tab1;//主筛选
 @property(nonatomic,strong)UITableView *tab2;//城市选择
 @property(nonatomic,strong)UITableView *tab3;//价格
 @property(nonatomic,strong)UITableView *tab4;//体检品牌
+
+@property(nonatomic,strong)UILabel *navc_midelLabel;
+@property(nonatomic,strong)UIButton *navc_leftBtn;
+@property(nonatomic,strong)UIButton *navc_rightBtn;
+
 
 @property(nonatomic,assign)BOOL gender;//没有性别选项
 

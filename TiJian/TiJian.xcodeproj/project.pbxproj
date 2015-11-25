@@ -283,6 +283,7 @@
 		13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31E1A2F1C0566D800CB995D /* GMyOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A2E1C0566D800CB995D /* GMyOrderViewController.m */; };
+		E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A311C05926400CB995D /* GcustomNavcView.m */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6951BDF50AB0057D3BE /* (null) in Sources */ = {isa = PBXBuildFile; };
 		E329A8B81C00AD440017A5D3 /* personalxiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */; };
@@ -849,6 +850,8 @@
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E31E1A2D1C0566D800CB995D /* GMyOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMyOrderViewController.h; sourceTree = "<group>"; };
 		E31E1A2E1C0566D800CB995D /* GMyOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMyOrderViewController.m; sourceTree = "<group>"; };
+		E31E1A301C05926400CB995D /* GcustomNavcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcustomNavcView.h; sourceTree = "<group>"; };
+		E31E1A311C05926400CB995D /* GcustomNavcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcustomNavcView.m; sourceTree = "<group>"; };
 		E31FC68C1BDF24D60057D3BE /* GStoreHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStoreHomeViewController.h; sourceTree = "<group>"; };
 		E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GStoreHomeViewController.m; sourceTree = "<group>"; };
 		E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personalxiugai@2x.png"; sourceTree = "<group>"; };
@@ -1984,6 +1987,8 @@
 				E3D8AE2C1BF60C4B003AE2E3 /* GcommentTableViewCell.m */,
 				E335FAB71BFF172800708BF6 /* GuserAddressTableViewCell.h */,
 				E335FAB81BFF172800708BF6 /* GuserAddressTableViewCell.m */,
+				E31E1A301C05926400CB995D /* GcustomNavcView.h */,
+				E31E1A311C05926400CB995D /* GcustomNavcView.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2565,6 +2570,7 @@
 				134822D81BEC80C400EA2E06 /* SettingsViewController.m in Sources */,
 				E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */,
 				1303C2DE1BE9F6DC00700847 /* NSObject+Addtions.m in Sources */,
+				E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */,
 				E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */,
 				134822E81BECBD7A00EA2E06 /* AddPeopleViewController.m in Sources */,
 				E31E1A2F1C0566D800CB995D /* GMyOrderViewController.m in Sources */,
