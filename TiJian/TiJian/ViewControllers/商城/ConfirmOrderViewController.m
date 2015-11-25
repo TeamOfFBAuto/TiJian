@@ -283,7 +283,8 @@
                           @"address_id":@"1",
                           @"order_note":@"订单备注",
                           @"is_use_score":@"0",
-                          @"total_price":total_price
+                          @"total_price":total_price,
+                          @"real_price":total_price
                           };
     
     

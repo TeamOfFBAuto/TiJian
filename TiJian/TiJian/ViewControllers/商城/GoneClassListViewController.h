@@ -18,6 +18,8 @@
 @property(nonatomic,strong)NSString *className;//分类名称
 
 
+-(void)therightSideBarDismiss;
+
 
 
 @end

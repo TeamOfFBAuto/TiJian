@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @class GcustomNavcView;
+@class GoneClassListViewController;
 
 @interface GPushView : UIView<UITableViewDelegate,UITableViewDataSource>
 
@@ -22,8 +23,10 @@
 @property(nonatomic,strong)UIButton *navc_leftBtn;
 @property(nonatomic,strong)UIButton *navc_rightBtn;
 
-
 @property(nonatomic,assign)BOOL gender;//没有性别选项
+
+@property(nonatomic,assign)GoneClassListViewController *delegate;
+
 
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender;
 

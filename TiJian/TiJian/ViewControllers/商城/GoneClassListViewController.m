@@ -82,6 +82,7 @@
     
 }
 
+//创建侧滑栏
 -(void)creatRightTranslucentSideBar{
     
     // Create Right SideBar
@@ -96,13 +97,9 @@
     [self.view addGestureRecognizer:panGestureRecognizer];
 
     GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:YES];
-    pushView.backgroundColor = [UIColor orangeColor];
+    pushView.delegate = self;
     [self.rightSideBar setContentViewInSideBar:pushView];
-    
-    
-    
 
-    
 }
 
 -(void)creatFilterBtn{
@@ -115,6 +112,13 @@
     [self.view addSubview:filterButton];
     [filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
     
+}
+
+
+#pragma mark - 逻辑处理
+
+-(void)therightSideBarDismiss{
+    [self.rightSideBar dismiss];
 }
 
 

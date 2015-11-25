@@ -8,6 +8,7 @@
 
 #import "GPushView.h"
 #import "GcustomNavcView.h"
+#import "GoneClassListViewController.h"
 
 @implementation GPushView
 {
@@ -39,75 +40,90 @@
     NSString *path = [[NSBundle mainBundle]pathForResource:@"garea" ofType:@"plist"];
     _areaData = [NSArray arrayWithContentsOfFile:path];
     
+    [self creatNavcView];
+    [self creatTab];
     
-    //视图相关
-    
-    
+    return self;
+}
+
+
+#pragma mark - 视图创建
+
+//创建上方导航栏
+-(void)creatNavcView{
     self.navigationView = [[GcustomNavcView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 64)];
     self.navigationView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.navigationView];
     
     //中
-    self.navc_midelLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.navigationView.theMidelView.frame.size.width, self.navigationView.theMidelView.frame.size.height)];
-    self.navc_midelLabel.backgroundColor = [UIColor orangeColor];
+    self.navc_midelLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 15, self.navigationView.theMidelView.frame.size.width, self.navigationView.theMidelView.frame.size.height-20)];
     self.navc_midelLabel.textAlignment = NSTextAlignmentCenter;
     self.navc_midelLabel.text = @"筛选";
     self.navc_midelLabel.textColor = RGBCOLOR(62, 150, 205);
+    self.navc_midelLabel.font = [UIFont systemFontOfSize:17];
     [self.navigationView.theMidelView addSubview:self.navc_midelLabel];
     
     //左
     self.navc_leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navc_leftBtn setFrame:CGRectMake(0, 0, self.navigationView.theLeftView.frame.size.width, self.navigationView.theLeftView.frame.size.height)];
+    [self.navc_leftBtn setFrame:CGRectMake(0, 15, self.navigationView.theLeftView.frame.size.width, self.navigationView.theLeftView.frame.size.height-20)];
     [self.navc_leftBtn setTitle:@"取消" forState:UIControlStateNormal];
     [self.navc_leftBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
+    [self.navc_leftBtn addTarget:self action:@selector(leftBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.navc_leftBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [self.navigationView.theLeftView addSubview:self.navc_leftBtn];
     
     //右
     self.navc_rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navc_rightBtn setFrame:CGRectMake(0, 0, self.navigationView.theRightView.frame.size.width, self.navigationView.theRightView.frame.size.height)];
+    [self.navc_rightBtn setFrame:CGRectMake(0, 15, self.navigationView.theRightView.frame.size.width, self.navigationView.theRightView.frame.size.height-20)];
     [self.navc_rightBtn setTitle:@"确定" forState:UIControlStateNormal];
     [self.navc_rightBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
+    self.navc_rightBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [self.navigationView.theRightView addSubview:self.navc_rightBtn];
     
     
-    
-    
-    
-    
-    
-    
-    
-    
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, self.navigationView.frame.size.height - 5, self.navigationView.frame.size.width, 5)];
+    line.backgroundColor = RGBCOLOR(244, 245, 246);
+    [self.navigationView addSubview:line];
+}
+
+
+
+//创建tab
+-(void)creatTab{
+    //主筛选
     self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
     self.tab1.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab1.delegate = self;
     self.tab1.dataSource = self;
     self.tab1.tag = 1;
     
+    //城市选择
     self.tab2 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStyleGrouped];
     self.tab2.delegate = self;
     self.tab2.dataSource = self;
     self.tab2.tag = 2;
     
+    //价格
     self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
     self.tab3.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab3.delegate = self;
     self.tab3.dataSource = self;
     self.tab3.tag = 3;
     
+    //体检品牌
     self.tab4 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
     self.tab4.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab4.delegate = self;
     self.tab4.dataSource = self;
     self.tab4.tag = 4;
     
-    
-    
     [self addSubview:self.tab1];
-    
-    
-    return self;
 }
+
+-(void)leftBtnClicked{
+    [self.delegate therightSideBarDismiss];
+}
+
 
 
 #pragma mark - UITableViewDataSource && UITableViewDelegate
@@ -239,9 +255,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat height = 0;
     if (tableView.tag == 1) {//主筛选
-        if (indexPath.row == 0) {
-            height = [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/140];
-        }else if (indexPath.row == 1 && self.gender){
+        if (indexPath.row == 0 && self.gender){
             height = [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/125];//性别
         }else{
             height = [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/90];
@@ -267,32 +281,7 @@
             [view removeFromSuperview];
         }
         
-        if (indexPath.row == 0) {
-            UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [quxiaoBtn setTitle:@"取消" forState:UIControlStateNormal];
-            [quxiaoBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
-            [quxiaoBtn setFrame:CGRectMake(15, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/140] - 5 - 44 , 50, 44)];
-            [cell.contentView addSubview:quxiaoBtn];
-            
-            
-            UIButton *titleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [titleBtn setTitle:@"筛选" forState:UIControlStateNormal];
-            [titleBtn setFrame:CGRectMake(CGRectGetMaxX(quxiaoBtn.frame), quxiaoBtn.frame.origin.y, self.frame.size.width- 30 - quxiaoBtn.frame.size.width*2, quxiaoBtn.frame.size.height)];
-            [titleBtn setTitleColor:RGBCOLOR(62, 150, 205) forState:UIControlStateNormal];
-            [cell.contentView addSubview:titleBtn];
-            
-            UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [quedingBtn setFrame:CGRectMake(self.frame.size.width - 15-50, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/140] - 5 - 44 , 50, 44)];
-            [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
-            [quedingBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
-            [cell.contentView addSubview:quedingBtn];
-            
-            UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/140] - 5, self.frame.size.width, 5)];
-            line.backgroundColor = RGBCOLOR(244, 245, 246);
-
-            [cell.contentView addSubview:line];
-            
-        }else if (indexPath.row == 1 && self.gender){//有性别
+        if (indexPath.row == 0 && self.gender){//有性别
 
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/125])];
             titleLabel.text = @"性别";
@@ -336,7 +325,7 @@
             [cell.contentView addSubview:line];
   
             
-        }else{
+        }else{//无性别
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/90])];
             titleLabel.text = _tab1TitleDataArray[indexPath.row-1];
             titleLabel.font = [UIFont systemFontOfSize:15];
