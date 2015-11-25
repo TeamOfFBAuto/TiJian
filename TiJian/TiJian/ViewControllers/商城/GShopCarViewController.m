@@ -67,9 +67,8 @@
     // Do any additional setup after loading the view.
     
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"购物车";
-    self.rightString = @"删除";
     _deleteState = NO;
     
     for (int i = 0; i<500; i++) {
@@ -186,47 +185,18 @@
 #pragma mark - 点击事件
 -(void)goToConfirmOrderVc{
     
-    if (_totolPrice != 0) {
-        ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
-        cc.lastViewController = self;
-        
-        NSArray *arr = [self getChoseProducts];
-        
-        cc.dataArray = arr;
-        
-        [self.navigationController pushViewController:cc animated:YES];
-    }else{
-        [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
-    }
     
-    
-    
-    
-    
-    
-}
-
-//删除按钮
--(void)rightButtonTap:(UIButton *)sender{
-    
-    if ([sender.titleLabel.text isEqualToString:@"删除"]) {
-        _deleteState = YES;
-        [sender setTitle:@"完成" forState:UIControlStateNormal];
-        _jiesuanBtn.hidden = YES;
-        self.totolPriceLabel.hidden = YES;
-        self.detailPriceLabel.hidden = YES;
-        
-    }else{
-        
+    if (_deleteState) {//删除
         NSArray *arr = [self getChoseProducts];
         NSMutableArray *pidsArray = [NSMutableArray arrayWithCapacity:1];
-        for (ProductModel *model in arr) {
-            [pidsArray addObject:model.product_id];
+        for (NSArray* oneArray in arr) {
+            for (ProductModel* model in oneArray) {
+                [pidsArray addObject:model.cart_pro_id];
+            }
+            
         }
         
         NSString *pids_str = [pidsArray componentsJoinedByString:@","];
-        
-        
         if (!_request) {
             _request = [YJYRequstManager shareInstance];
         }
@@ -238,19 +208,58 @@
         
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
+        
+        __weak typeof (self)bself = self;
+        
         [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            bself.totolPriceLabel.hidden = NO;
+            bself.detailPriceLabel.hidden = NO;
+            [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
             
-            _deleteState = NO;
-            [sender setTitle:@"删除" forState:UIControlStateNormal];
-            _jiesuanBtn.hidden = NO;
-            self.totolPriceLabel.hidden = NO;
-            self.detailPriceLabel.hidden = NO;
+            [bself.rTab.dataArray removeAllObjects];
+            
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
         } failBlock:^(NSDictionary *result) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }];
+    }else{
+        if (_totolPrice != 0) {
+            ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+            cc.lastViewController = self;
+            
+            NSArray *arr = [self getChoseProducts];
+            
+            cc.dataArray = arr;
+            
+            [self.navigationController pushViewController:cc animated:YES];
+        }else{
+            [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
+        }
+    }
+ 
+    
+}
+
+//删除按钮
+-(void)rightButtonTap:(UIButton *)sender{
+    
+    if ([sender.titleLabel.text isEqualToString:@"删除"]) {
+        _deleteState = YES;
+        [sender setTitle:@"完成" forState:UIControlStateNormal];
+        [_jiesuanBtn setTitle:@"删除" forState:UIControlStateNormal];
+        self.totolPriceLabel.hidden = YES;
+        self.detailPriceLabel.hidden = YES;
+        
+    }else{
+        
+        _deleteState = NO;
+        [sender setTitle:@"删除" forState:UIControlStateNormal];
+        [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+        self.totolPriceLabel.hidden = NO;
+        self.detailPriceLabel.hidden = NO;
+        
     }
     
 }
@@ -258,17 +267,13 @@
 
 #pragma mark - 请求网络数据
 
-
--(void)deleteProductsWithIds:(NSString*)pids{
-    
-}
-
-
 //更新购物车
 -(void)updateShopCar{
     [_rTab showRefreshHeader:YES];
 }
 
+
+//获取购物车数据
 
 -(void)prepareNetData{
     
@@ -277,6 +282,8 @@
                           @"page":[NSString stringWithFormat:@"%d",_rTab.pageNum],
                           @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };
+    
+    __weak typeof (self)bself = self;
     
     _request_shopCarDetail = [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_CART_PRODCUTS parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"-------%@",result);
@@ -292,6 +299,15 @@
             }
             [dataArray addObject:oneBrandArray];
         }
+        
+        
+        if (self.rTab.pageNum == 1 && dataArray.count == 0) {
+            self.navigationItem.rightBarButtonItems = @[spaceButton];
+        }else{
+            [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+            bself.rightString = @"删除";
+        }
+        
         
         [self.rTab reloadData:dataArray pageSize:G_PER_PAGE];
         
@@ -500,12 +516,16 @@
 
 -(NSArray *)getChoseProducts{
     NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
+    
     for (NSArray *arr in self.rTab.dataArray) {
+        NSMutableArray *oneArr = [NSMutableArray arrayWithCapacity:1];
         for (ProductModel *model in arr) {
             if (model.userChoose) {
-                [theArr addObject:model];
+                [oneArr addObject:model];
             }
-            
+        }
+        if (oneArr.count > 0) {
+            [theArr addObject:oneArr];
         }
     }
     
