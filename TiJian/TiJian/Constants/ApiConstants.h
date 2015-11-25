@@ -171,7 +171,7 @@
 //41、购物车增加/减少商品
 #define ORDER_EDIT_CART_PRODUCT @"/index.php?d=api&c=order&m=edit_cart_product"
 
-//42、删除某条购物车记录
+//42、删除购物车记录
 #define ORDER_DEL_CART_PRODUCT @"/index.php?d=api&c=order&m=del_cart_product"
 
 //43、获取购物车记录

@@ -282,6 +282,7 @@
 		13FCD6A51BFAD935005AE05B /* yuyue_wenhao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */; };
 		13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
+		E31E1A2F1C0566D800CB995D /* GMyOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A2E1C0566D800CB995D /* GMyOrderViewController.m */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6951BDF50AB0057D3BE /* (null) in Sources */ = {isa = PBXBuildFile; };
 		E329A8B81C00AD440017A5D3 /* personalxiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */; };
@@ -846,6 +847,8 @@
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E31E1A2D1C0566D800CB995D /* GMyOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMyOrderViewController.h; sourceTree = "<group>"; };
+		E31E1A2E1C0566D800CB995D /* GMyOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMyOrderViewController.m; sourceTree = "<group>"; };
 		E31FC68C1BDF24D60057D3BE /* GStoreHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStoreHomeViewController.h; sourceTree = "<group>"; };
 		E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GStoreHomeViewController.m; sourceTree = "<group>"; };
 		E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personalxiugai@2x.png"; sourceTree = "<group>"; };
@@ -1892,6 +1895,8 @@
 				E335F9F81BFEFDE700708BF6 /* GuserAddressViewController.m */,
 				E329A8C01C040C530017A5D3 /* GManageAddressViewController.h */,
 				E329A8C11C040C530017A5D3 /* GManageAddressViewController.m */,
+				E31E1A2D1C0566D800CB995D /* GMyOrderViewController.h */,
+				E31E1A2E1C0566D800CB995D /* GMyOrderViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2335,7 +2340,6 @@
 				1303C35A1BEB0D7100700847 /* personal_youhuiquan_y@2x.png in Resources */,
 				139333C51BE0DF3E00B4628B /* 22_3@2x.png in Resources */,
 				E329A8BD1C0301810017A5D3 /* personal_jiaren_shanchu@2x.png in Resources */,
-				13F1F3E01BBA9A4B00885D31 /* UMSCommentDetailController.xib in Resources */,
 				131A177A1BF33B7900B12D2F /* yuyue@2x.png in Resources */,
 				139333FB1BE0DF3E00B4628B /* 归档 2.zip in Resources */,
 				1303C3661BEB0D7100700847 /* homepage_4@2x.png in Resources */,
@@ -2563,6 +2567,7 @@
 				1303C2DE1BE9F6DC00700847 /* NSObject+Addtions.m in Sources */,
 				E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */,
 				134822E81BECBD7A00EA2E06 /* AddPeopleViewController.m in Sources */,
+				E31E1A2F1C0566D800CB995D /* GMyOrderViewController.m in Sources */,
 				1303C3041BEA14EB00700847 /* ForgetPwdController.m in Sources */,
 				E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */,
 				131A17731BF32CE800B12D2F /* MedicalOrderController.m in Sources */,

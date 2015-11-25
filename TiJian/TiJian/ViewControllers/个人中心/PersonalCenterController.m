@@ -11,6 +11,7 @@
 #import "PeopleManageController.h"
 #import "EditUserInfoViewController.h"
 #import "AppointmentViewController.h"
+#import "GMyOrderViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -338,6 +339,11 @@
         if (indexPath.row == 0) {
             
             //@"我的订单";
+            
+            GMyOrderViewController *cc = [[GMyOrderViewController alloc]init];
+            cc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:cc animated:YES];
+            
             
         }else if (indexPath.row == 1){
             

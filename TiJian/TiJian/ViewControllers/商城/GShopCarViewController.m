@@ -27,6 +27,14 @@
     UIView *_noProductView;
     
     
+    
+    BOOL _deleteState;//删除状态
+    
+    UIButton *_jiesuanBtn;//结算 删除按钮
+    
+    
+    
+    
 }
 @end
 
@@ -62,6 +70,7 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     self.myTitle = @"购物车";
     self.rightString = @"删除";
+    _deleteState = NO;
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;
@@ -143,13 +152,13 @@
     [midleView addSubview:self.detailPriceLabel];
     
     
-    UIButton *jiesuanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    jiesuanBtn.backgroundColor = RGBCOLOR(237, 108, 22);
-    jiesuanBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [jiesuanBtn setFrame:CGRectMake(CGRectGetMaxX(midleView.frame), 0, DEVICE_WIDTH*215.0/750, 50)];
-    [jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
-    [jiesuanBtn addTarget:self action:@selector(goToConfirmOrderVc) forControlEvents:UIControlEventTouchUpInside];
-    [_downView addSubview:jiesuanBtn];
+    _jiesuanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _jiesuanBtn.backgroundColor = RGBCOLOR(237, 108, 22);
+    _jiesuanBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [_jiesuanBtn setFrame:CGRectMake(CGRectGetMaxX(midleView.frame), 0, DEVICE_WIDTH*215.0/750, 50)];
+    [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+    [_jiesuanBtn addTarget:self action:@selector(goToConfirmOrderVc) forControlEvents:UIControlEventTouchUpInside];
+    [_downView addSubview:_jiesuanBtn];
     
     
     [self.view addSubview:_downView];
@@ -180,20 +189,68 @@
     if (_totolPrice != 0) {
         ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
         cc.lastViewController = self;
-        cc.dataArray = self.rTab.dataArray;
+        
+        NSArray *arr = [self getChoseProducts];
+        
+        cc.dataArray = arr;
+        
         [self.navigationController pushViewController:cc animated:YES];
     }else{
         [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
     }
     
+    
+    
+    
+    
+    
 }
 
 //删除按钮
 -(void)rightButtonTap:(UIButton *)sender{
+    
     if ([sender.titleLabel.text isEqualToString:@"删除"]) {
+        _deleteState = YES;
         [sender setTitle:@"完成" forState:UIControlStateNormal];
+        _jiesuanBtn.hidden = YES;
+        self.totolPriceLabel.hidden = YES;
+        self.detailPriceLabel.hidden = YES;
+        
     }else{
-        [sender setTitle:@"完成" forState:UIControlStateNormal];
+        
+        NSArray *arr = [self getChoseProducts];
+        NSMutableArray *pidsArray = [NSMutableArray arrayWithCapacity:1];
+        for (ProductModel *model in arr) {
+            [pidsArray addObject:model.product_id];
+        }
+        
+        NSString *pids_str = [pidsArray componentsJoinedByString:@","];
+        
+        
+        if (!_request) {
+            _request = [YJYRequstManager shareInstance];
+        }
+        
+        NSDictionary *dic = @{
+                              @"authcode":[GMAPI getAuthkey],
+                              @"cart_pro_id":pids_str
+                              };
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            _deleteState = NO;
+            [sender setTitle:@"删除" forState:UIControlStateNormal];
+            _jiesuanBtn.hidden = NO;
+            self.totolPriceLabel.hidden = NO;
+            self.detailPriceLabel.hidden = NO;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+        } failBlock:^(NSDictionary *result) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        }];
     }
     
 }
@@ -201,6 +258,13 @@
 
 #pragma mark - 请求网络数据
 
+
+-(void)deleteProductsWithIds:(NSString*)pids{
+    
+}
+
+
+//更新购物车
 -(void)updateShopCar{
     [_rTab showRefreshHeader:YES];
 }
@@ -431,6 +495,22 @@
 }
 
 
+#pragma makr - 逻辑处理
+
+
+-(NSArray *)getChoseProducts{
+    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel *model in arr) {
+            if (model.userChoose) {
+                [theArr addObject:model];
+            }
+            
+        }
+    }
+    
+    return theArr;
+}
 
 
 //更新下边价格信息view
