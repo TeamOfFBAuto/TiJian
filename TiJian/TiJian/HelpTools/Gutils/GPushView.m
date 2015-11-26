@@ -21,6 +21,14 @@
     
     NSArray *_priceArray;//价格区间
     
+    int _isMark_price[10];
+    
+    
+    UIView *_tab3Header;//价格选择的tabHeader
+    
+    UIImageView *_defaultPriceImv;
+    
+    
 }
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender{
     self = [super initWithFrame:frame];
@@ -34,13 +42,20 @@
         _isopen[i] = 0;
     }
     
+    
+    for (int i = 0; i<10; i++) {
+        _isMark_price[i] = 0;
+    }
+    
+    
+    
     //地区数据
     NSString *path = [[NSBundle mainBundle]pathForResource:@"garea" ofType:@"plist"];
     _areaData = [NSArray arrayWithContentsOfFile:path];
     
     
     //价格筛选
-    _priceArray = @[@"0——300",@"300——500",@"500——800",@"800——1000",@"1000——1500",@"1500——2000",@"2000以上"];
+    _priceArray = @[@"0—300",@"300—500",@"500—800",@"800—1000",@"1000—1500",@"1500—2000",@"2000以上"];
     
     
     
@@ -118,11 +133,12 @@
     
     
     //价格
-    self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
+    self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStyleGrouped];
     self.tab3.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab3.delegate = self;
     self.tab3.dataSource = self;
     self.tab3.tag = 3;
+    [self creatTab3Header];
     
     //体检品牌
     self.tab4 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
@@ -134,7 +150,7 @@
     [self addSubview:self.tab1];
 }
 
-
+//创建城市选择的tableHeader 展示默认定位城市
 -(void)creatTab2Header{
     
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
@@ -154,23 +170,82 @@
     [view addSubview:tishiLabel];
 }
 
+//创建价格选择的tabelHeader 显示默认全部
+-(void)creatTab3Header{
+    _tab3Header = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44)];
+    _tab3Header.backgroundColor = [UIColor whiteColor];
+    
+    [_tab3Header addTaget:self action:@selector(tab3HeaderClicked) tag:0];
+    
+    self.tab3.tableHeaderView = _tab3Header;
+    
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, 50, 44)];
+    tLabel.font = [UIFont systemFontOfSize:14];
+    tLabel.text = @"全部";
+    tLabel.textColor = RGBCOLOR(237, 108, 22);
+    [_tab3Header addSubview:tLabel];
+    
+    
+    _defaultPriceImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+    [_defaultPriceImv setImage:[UIImage imageNamed:@"duihao.png"]];
+    [_tab3Header addSubview:_defaultPriceImv];
+    
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
+    line.backgroundColor = RGBCOLOR(234, 235, 236);
+    [_tab3Header addSubview:line];
+    
+    
+    [self setDefaultPriceImvHidden];
+    
+}
+
 
 
 #pragma mark - 逻辑处理
 
-//navigationView leftBtn 点击
+
+-(void)tab3HeaderClicked{
+    for (int i = 0; i<10; i++) {
+        _isMark_price[i] = 0;
+    }
+    
+    [self setDefaultPriceImvHidden];
+    [self.tab3 reloadData];
+}
+
+
+/**
+ *  设置默认价格后面的对勾是否显示
+ */
+-(void)setDefaultPriceImvHidden{
+    BOOL hidden = NO;
+    for (int i = 0; i<10; i++) {
+        if (_isMark_price[i]) {
+            hidden = YES;
+        }
+    }
+    
+    _defaultPriceImv.hidden = hidden;
+}
+
+
+/**
+ *  navigationView leftBtn 点击
+ *
+ *  @param sender 自定义navcView左上角按钮
+ */
 -(void)leftBtnClicked:(UIButton*)sender{
     if (sender.tag == -1) {//主筛选界面侧边栏消失
         [self.delegate therightSideBarDismiss];
     }else if (sender.tag == -2){//选择地区 返回到主筛选界面
         [self.tab2 removeFromSuperview];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -3){//选择价格 返回到主筛选界面
         [self.tab3 removeFromSuperview];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -4){//选择品牌 返回到主筛选界面
         [self.tab4 removeFromSuperview];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }
     
     
@@ -179,27 +254,41 @@
     
 }
 
-//navigationView rightBtn 点击
+/**
+ *  navigationView rightBtn 点击
+ *
+ *  @param sender navcview右边按钮
+ */
 -(void)rightBtnClicked:(UIButton*)sender{
     if (sender.tag == -11) {//主筛选界面侧边栏消失
         [self.delegate therightSideBarDismiss];
     }else if (sender.tag == -12){//选择地区 返回到主筛选界面
         [self.tab2 removeFromSuperview];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -13){//选择价格 返回到主筛选界面
         [self.tab3 removeFromSuperview];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        
     }else if (sender.tag == -14){//选择品牌 返回到主筛选界面
         [self.tab4 removeFromSuperview];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }
 }
 
 
-//设置navigationview 的leftBtn 和 midelTitle
--(void)setNavcLeftBtnTag:(NSInteger)theTag image:(UIImage*)theImage leftTitle:(NSString*)theTitle midTitle:(NSString*)theMtitle{
+/**
+ *  设置navigationview的leftBtn midelTitle rightBtn
+ *
+ *  @param theLTag   左边按钮tag
+ *  @param theImage  左边按钮图
+ *  @param theTitle  左边按钮标题
+ *  @param theMtitle 中间标题
+ *  @param theRTag   右边按钮tag
+ */
+-(void)setNavcLeftBtnTag:(NSInteger)theLTag image:(UIImage*)theImage leftTitle:(NSString*)theTitle midTitle:(NSString*)theMtitle rightBtnTag:(NSInteger)theRTag{
     
-    self.navc_leftBtn.tag = theTag;
+    self.navc_leftBtn.tag = theLTag;
+    self.navc_rightBtn.tag = theRTag;
     [self.navc_leftBtn setTitle:theTitle forState:UIControlStateNormal];
     [self.navc_leftBtn setImage:theImage forState:UIControlStateNormal];
     
@@ -207,10 +296,6 @@
     
 }
 
-//设置navigationview 的rightBtn
--(void)setNavcRightBtnTag:(NSInteger)theTag{
-    self.navc_rightBtn.tag = theTag;
-}
 
 
 
@@ -290,20 +375,35 @@
 -(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     if (tableView.tag == 3) {//价格区间选择
-        [view setFrame:CGRectMake(0, 0, self.frame.size.width, 50)];
+        [view setFrame:CGRectMake(0, 0, self.frame.size.width, 60)];
+        view.backgroundColor = [UIColor whiteColor];
         
-        UITextField *tf_low = [[UITextField alloc]initWithFrame:CGRectMake(10, 5, 80, 40)];
-        tf_low.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
-        tf_low.layer.masksToBounds = YES;
-        [view addSubview:tf_low];
+        UIView *tf_low_backView = [[UIView alloc]initWithFrame:CGRectMake(10, 10, 70, 30)];
+        tf_low_backView.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
+        tf_low_backView.layer.borderWidth = 0.5;
+        tf_low_backView.layer.masksToBounds = YES;
+        tf_low_backView.layer.cornerRadius = 4;
+        [view addSubview:tf_low_backView];
         
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tf_low.frame)+5, 24, 20, 1)];
+        self.tf_low = [[UITextField alloc]initWithFrame:tf_low_backView.bounds];
+        self.tf_low.textAlignment = NSTextAlignmentCenter;
+        self.tf_low.delegate = self;
+        [tf_low_backView addSubview:self.tf_low];
+        
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tf_low_backView.frame)+5, 24, 20, 1)];
         line.backgroundColor = RGBCOLOR(37, 38, 38);
         [view addSubview:line];
         
-        UITextField *tf_high = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tf_low.frame)+30, tf_low.frame.origin.y, tf_low.frame.size.width, tf_low.frame.size.height)];
-        tf_high.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
-        [view addSubview:tf_high];
+        UIView *tf_high_backView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tf_low_backView.frame)+30, tf_low_backView.frame.origin.y, tf_low_backView.frame.size.width, tf_low_backView.frame.size.height)];
+        tf_high_backView.layer.borderWidth = 0.5;
+        tf_high_backView.layer.cornerRadius = 4;
+        tf_high_backView.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
+        [view addSubview:tf_high_backView];
+        
+        self.tf_high = [[UITextField alloc]initWithFrame:tf_low_backView.bounds];
+        self.tf_high.textAlignment = NSTextAlignmentCenter;
+        self.tf_high.delegate = self;
+        [tf_high_backView addSubview:self.tf_high];
         
     }
     
@@ -321,7 +421,7 @@
     if (tt == 0 || tt == 1 || tt == 2 || tt == 3) {//4个直辖市
         [self.tab2 removeFromSuperview];
         
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         
         NSDictionary *dic = _areaData[tt];
         NSString *provinceName = [dic stringValueForKey:@"State"];
@@ -355,7 +455,13 @@
     return height;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 0.01;
+    
+    CGFloat height = 0.01;
+    if (tableView.tag == 3) {//价格筛选
+        height = 50;
+    }
+    
+    return height;
 }
 
 
@@ -525,12 +631,25 @@
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identi];
         }
         
+        
+        for (UIView*view in cell.contentView.subviews) {
+            [view removeFromSuperview];
+        }
+        
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.textLabel.text = _priceArray[indexPath.row];
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
         line.backgroundColor = RGBCOLOR(234, 235, 236);
         [cell.contentView addSubview:line];
+        
+        if (_isMark_price[indexPath.row]) {
+            UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+            [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+            [cell.contentView addSubview:mark_imv];
+        }
+        
+        
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -547,30 +666,24 @@
         if (self.gender) {
             if (indexPath.row == 1) {//城市
                 [self addSubview:self.tab2];
-                [self setNavcLeftBtnTag:-2 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"城市"];
-                [self setNavcRightBtnTag:-12];
+                [self setNavcLeftBtnTag:-2 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"城市" rightBtnTag:-12];
             }else if (indexPath.row == 2){//价格
                 [self addSubview:self.tab3];
-                [self setNavcLeftBtnTag:-3 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"价格"];
-                [self setNavcRightBtnTag:-13];
+                [self setNavcLeftBtnTag:-3 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"价格" rightBtnTag:-13];
             }else if (indexPath.row == 3){//体检品牌
                 [self addSubview:self.tab4];
-                [self setNavcLeftBtnTag:-4 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"体检品牌"];
-                [self setNavcRightBtnTag:-14];
+                [self setNavcLeftBtnTag:-4 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"体检品牌" rightBtnTag:-14];
             }
         }else{
             if (indexPath.row == 0) {//城市
                 [self addSubview:self.tab2];
-                [self setNavcLeftBtnTag:-2 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"城市"];
-                [self setNavcRightBtnTag:-12];
+                [self setNavcLeftBtnTag:-2 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"城市" rightBtnTag:-12];
             }else if (indexPath.row == 1){//价格
                 [self addSubview:self.tab3];
-                [self setNavcLeftBtnTag:-3 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"价格"];
-                [self setNavcRightBtnTag:-13];
+                [self setNavcLeftBtnTag:-3 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"价格" rightBtnTag:-13];
             }else if (indexPath.row == 2){//体检品牌
                 [self addSubview:self.tab4];
-                [self setNavcLeftBtnTag:-4 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"体检品牌"];
-                [self setNavcRightBtnTag:-14];
+                [self setNavcLeftBtnTag:-4 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"体检品牌" rightBtnTag:-14];
             }
         }
     }else if (tableView.tag == 2){//选择地区
@@ -579,11 +692,26 @@
         NSArray * cities = _areaData[indexPath.section][@"Cities"];
         NSString *cityStr = cities[indexPath.row][@"city"];
         self.userChooseCity = cityStr;
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         [self.tab2 removeFromSuperview];
         [self.tab1 reloadData];
         
     }else if (tableView.tag == 3){//价格
+        for (int i = 0; i<10; i++) {
+            _isMark_price[i] = 0;
+        }
+        
+        _isMark_price[indexPath.row] = 1;
+        
+        [self.tf_high resignFirstResponder];
+        [self.tf_low resignFirstResponder];
+        
+        
+        [self.tab3 reloadData];
+        
+        [self setDefaultPriceImvHidden];
+        
+        
         
     }else if (tableView.tag == 4){//体检品牌
         
@@ -593,6 +721,15 @@
 
 
 
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    
+    [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
+    [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+    return YES;
+}
 
 
 
