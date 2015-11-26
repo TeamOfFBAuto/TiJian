@@ -516,16 +516,11 @@
 
 -(NSArray *)getChoseProducts{
     NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
-    
     for (NSArray *arr in self.rTab.dataArray) {
-        NSMutableArray *oneArr = [NSMutableArray arrayWithCapacity:1];
         for (ProductModel *model in arr) {
             if (model.userChoose) {
-                [oneArr addObject:model];
+                [theArr addObject:model];
             }
-        }
-        if (oneArr.count > 0) {
-            [theArr addObject:oneArr];
         }
     }
     

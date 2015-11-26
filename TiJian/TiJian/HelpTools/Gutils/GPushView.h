@@ -19,9 +19,14 @@
 @property(nonatomic,strong)UITableView *tab3;//价格
 @property(nonatomic,strong)UITableView *tab4;//体检品牌
 
-@property(nonatomic,strong)UILabel *navc_midelLabel;
-@property(nonatomic,strong)UIButton *navc_leftBtn;
-@property(nonatomic,strong)UIButton *navc_rightBtn;
+@property(nonatomic,strong)UILabel *navc_midelLabel;//自定义navigationview 中间Label
+@property(nonatomic,strong)UIButton *navc_leftBtn;//自定义navigationview 左边Label
+@property(nonatomic,strong)UIButton *navc_rightBtn;//自定义navigationview 右边Label
+
+@property(nonatomic,strong)NSString *userChooseCity;//城市选择
+@property(nonatomic,strong)NSString *userChoosePrice;//价钱选择
+@property(nonatomic,strong)NSString *userChoosePinpai;//品牌选择
+
 
 @property(nonatomic,assign)BOOL gender;//没有性别选项
 

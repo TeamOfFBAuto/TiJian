@@ -36,6 +36,8 @@
     NSString *_selectAddressId;//选中的地址
     
     
+    NSMutableArray *_theData;//二维数组
+    
 }
 @end
 
@@ -54,6 +56,10 @@
     
     
     
+    
+    [self makeDyadicArray];
+    
+    
     [self prepareNetData];
     
     
@@ -65,6 +71,33 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - 逻辑处理
+-(void)makeDyadicArray{
+    
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
+    for (ProductModel *model in self.dataArray) {
+        if (![dic objectForKey:model.brand_id]) {
+            NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
+            [arr addObject:model];
+            [dic setValue:arr forKey:model.brand_id];
+        }else{
+            NSMutableArray *arr = [dic objectForKey:model.brand_id];
+            [arr addObject:model];
+        }
+    }
+    
+    NSArray *keys = [dic allKeys];
+    
+    _theData = [NSMutableArray arrayWithCapacity:1];
+    
+    for (NSString *key in keys) {
+        NSMutableArray *arr = [dic objectForKey:key];
+        [_theData addObject:arr];
+    }
+}
+
 
 
 #pragma mark - 请求网络数据
@@ -255,7 +288,7 @@
     NSMutableArray *product_nums_arr = [NSMutableArray arrayWithCapacity:1];
     NSString *total_price = @"0";
     CGFloat price = 0;
-    for (NSArray *arr in self.dataArray) {
+    for (NSArray *arr in _theData) {
         for (ProductModel *oneModel in arr) {
             [product_ids_arr addObject:oneModel.product_id];
             [product_nums_arr addObject:oneModel.product_num];
@@ -441,13 +474,13 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     NSInteger num = 0;
-    num = self.dataArray.count;
+    num = _theData.count;
     return num;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
-    NSArray *arr = self.dataArray[section];
+    NSArray *arr = _theData[section];
     num = arr.count;
     return num;
 }
@@ -471,7 +504,7 @@
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     
-    NSArray *arr = self.dataArray[section];
+    NSArray *arr = _theData[section];
     
     ProductModel *amodel = arr[0];
     
@@ -513,7 +546,7 @@
         cell = [[GconfirmOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    NSArray *arr = self.dataArray[indexPath.section];
+    NSArray *arr = _theData[indexPath.section];
     ProductModel *model = arr[indexPath.row];
     
     [cell loadCustomViewWithModel:model];
