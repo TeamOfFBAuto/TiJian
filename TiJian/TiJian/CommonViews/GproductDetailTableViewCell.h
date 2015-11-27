@@ -12,6 +12,7 @@
 #import <UIKit/UIKit.h>
 @class CoupeView;
 @class GproductDetailViewController;
+@class ProductModel;
 
 @interface GproductDetailTableViewCell : UITableViewCell
 {
@@ -19,8 +20,8 @@
 }
 @property(nonatomic,assign)GproductDetailViewController *delegate;
 
-@property(nonatomic,strong)NSDictionary *dataDic;
+@property(nonatomic,strong)ProductModel *productModel;
 
--(CGFloat)loadCustomViewWithDic:(NSDictionary*)dataDic index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr;
+-(CGFloat)loadCustomViewWithModel:(ProductModel*)theModel index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr lookAgainArray:(NSArray *)theLookArray;
 
 @end

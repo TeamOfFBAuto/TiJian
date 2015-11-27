@@ -12,6 +12,7 @@
 #import "GShopCarViewController.h"
 #import "ProductCommentModel.h"
 #import "GcommentViewController.h"
+#import "ProductModel.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -20,12 +21,14 @@
     AFHTTPRequestOperation *_request_GetShopCarNum;
     AFHTTPRequestOperation *_request_ProductProjectList;
     AFHTTPRequestOperation *_request_GetProductComment;
+    AFHTTPRequestOperation *_request_LookAgain;
     int _count;
     
     NSDictionary *_shopCarDic;
     
     UITableView *_tab;
-    NSDictionary *_dataDic;
+    
+    ProductModel *_theProductModel;//产品model
     
     GproductDetailTableViewCell *_tmpCell;
     GproductDirectoryTableViewCell *_tmpCell1;
@@ -40,6 +43,10 @@
     NSArray *_productProjectListDataArray;//项目列表
     
     NSArray *_productCommentArray;//商品评论
+    
+    NSMutableArray *_LookAgainProductListArray;//看了又看
+    
+    
     
 }
 
@@ -58,6 +65,7 @@
     [_request removeOperation:_request_productDetail];
     [_request removeOperation:_request_ProductProjectList];
     [_request removeOperation:_request_GetProductComment];
+    [_request removeOperation:_request_LookAgain];
     [self removeObserver:self forKeyPath:@"_count"];
     
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
@@ -150,10 +158,10 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self getProductDetail];
-    [self getProductConmment];
-    [self prepareProductProjectList];
-    [self getshopcarNum];
+    [self getProductDetail];//单品详情
+    [self getProductConmment];//产品评论
+    [self prepareProductProjectList];//具体项目
+    [self getshopcarNum];//购物车数量
     
 }
 
@@ -183,15 +191,57 @@
                                  @"product_id":self.productId
                                  };
     
+    __weak typeof (self)bself = self;
+    
     _request_productDetail = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductDetail parameters:parameters constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _dataDic = [result dictionaryValueForKey:@"data"];
+        
+        NSDictionary *dic = [result dictionaryValueForKey:@"data"];
+        
+        _theProductModel = [[ProductModel alloc]initWithDictionary:dic];
+        
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-
+        
+        [bself prepareLookAgainNetData];
+        
         
     } failBlock:^(NSDictionary *result) {
         
     }];
 }
+
+
+//看了又看
+-(void)prepareLookAgainNetData{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic = @{
+                          @"brand_id":_theProductModel.brand_id,
+                          @"province_id":[GMAPI getCurrentProvinceId],
+                          @"city_id":[GMAPI getCurrentCityId],
+                          @"page":@"1",
+                          @"per_page":@"3"
+                          };
+    
+    
+    _request_LookAgain = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _LookAgainProductListArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_LookAgainProductListArray addObject:model];
+        }
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+
 
 //获取购物车数量
 -(void)getshopcarNum{
@@ -290,7 +340,7 @@
 
 
 
-//网络请求完成
+#pragma mark - 网络请求完成
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     
     if ([keyPath isEqualToString:@"contentSize"]) {
@@ -299,7 +349,7 @@
     
     NSNumber *num = [change objectForKey:@"new"];
     
-    if ([num intValue] == 4) {
+    if ([num intValue] == 5) {
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
@@ -451,7 +501,7 @@
             [view removeFromSuperview];
         }
         
-        [cell loadCustomViewWithDic:_dataDic index:indexPath productCommentArray:_productCommentArray];
+        [cell loadCustomViewWithModel:_theProductModel index:indexPath productCommentArray:_productCommentArray lookAgainArray:_LookAgainProductListArray];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -540,7 +590,7 @@
         for (UIView *view in _tmpCell.contentView.subviews) {
             [view removeFromSuperview];
         }
-        height = [_tmpCell loadCustomViewWithDic:_dataDic index:indexPath productCommentArray:_productCommentArray];
+        height = [_tmpCell loadCustomViewWithModel:_theProductModel index:indexPath productCommentArray:_productCommentArray lookAgainArray:_LookAgainProductListArray];
     }else if (tableView.tag == 1001){
         if (!_tmpCell1) {
             _tmpCell1 = [[GproductDirectoryTableViewCell alloc]init];
@@ -680,10 +730,17 @@
     return view;
 }
 
-
+//跳转评论界面
 -(void)goToCommentVc{
     GcommentViewController *cc = [[GcommentViewController alloc]init];
     cc.productId = self.productId;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+//跳转单品详情页
+-(void)goToProductDetailVcWithId:(NSString *)productId{
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    cc.productId = productId;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

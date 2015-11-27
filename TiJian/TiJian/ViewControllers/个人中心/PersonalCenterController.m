@@ -14,6 +14,7 @@
 #import "GShopCarViewController.h"
 #import "ProductListViewController.h"
 #import "OrderViewController.h"
+#import "GMyOrderViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -347,6 +348,11 @@
             OrderViewController *order = [[OrderViewController alloc]init];
             order.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:order animated:YES];
+            
+            GMyOrderViewController *cc = [[GMyOrderViewController alloc]init];
+            cc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:cc animated:YES];
+            
             
         }else if (indexPath.row == 1){
             

@@ -17,7 +17,7 @@
  *  @param selector slector
  *  @param tag      包含button tag值
  */
-- (void)addTaget:(id)target action:(SEL)selector tag:(int)tag;
+- (void)addTaget:(id)target action:(SEL)selector tag:(NSInteger)tag;
 /**
  *  给view加圆角
  *

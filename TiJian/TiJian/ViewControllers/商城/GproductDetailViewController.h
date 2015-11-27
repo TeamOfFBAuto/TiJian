@@ -19,4 +19,6 @@
 
 -(void)goToCommentVc;
 
+-(void)goToProductDetailVcWithId:(NSString *)productId;
+
 @end

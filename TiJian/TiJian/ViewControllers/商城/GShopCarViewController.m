@@ -17,7 +17,6 @@
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_shopCarDetail;
     
-    int _page;
     
     UIView *_downView;
     
@@ -26,6 +25,14 @@
     CGFloat _totolPrice;
     
     UIView *_noProductView;
+    
+    
+    
+    BOOL _deleteState;//删除状态
+    
+    UIButton *_jiesuanBtn;//结算 删除按钮
+    
+    
     
     
 }
@@ -47,10 +54,15 @@
 }
 
 
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+}
+
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+    
 }
 
 
@@ -62,6 +74,7 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"购物车";
+    _deleteState = NO;
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;
@@ -70,7 +83,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCar) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     
     _request = [YJYRequstManager shareInstance];
-    _page = 1;
+    _rTab.pageNum = 1;
     _totolPrice = 0;
     
     
@@ -114,7 +127,7 @@
     [self.allChooseBtn setTitle:@"全选" forState:UIControlStateNormal];
     [self.allChooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
     [self.allChooseBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 0)];
-    [self.allChooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
+    [self.allChooseBtn setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
     
     
     [self.allChooseBtn addTarget:self action:@selector(downViewallChooseBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -143,13 +156,13 @@
     [midleView addSubview:self.detailPriceLabel];
     
     
-    UIButton *jiesuanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    jiesuanBtn.backgroundColor = RGBCOLOR(237, 108, 22);
-    jiesuanBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [jiesuanBtn setFrame:CGRectMake(CGRectGetMaxX(midleView.frame), 0, DEVICE_WIDTH*215.0/750, 50)];
-    [jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
-    [jiesuanBtn addTarget:self action:@selector(goToConfirmOrderVc) forControlEvents:UIControlEventTouchUpInside];
-    [_downView addSubview:jiesuanBtn];
+    _jiesuanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _jiesuanBtn.backgroundColor = RGBCOLOR(237, 108, 22);
+    _jiesuanBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [_jiesuanBtn setFrame:CGRectMake(CGRectGetMaxX(midleView.frame), 0, DEVICE_WIDTH*215.0/750, 50)];
+    [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+    [_jiesuanBtn addTarget:self action:@selector(goToConfirmOrderVc) forControlEvents:UIControlEventTouchUpInside];
+    [_downView addSubview:_jiesuanBtn];
     
     
     [self.view addSubview:_downView];
@@ -174,16 +187,84 @@
 
 
 
-#pragma mark - 点击跳转
+#pragma mark - 点击事件
 -(void)goToConfirmOrderVc{
     
-    if (_totolPrice != 0) {
-        ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
-        cc.lastViewController = self;
-        cc.dataArray = self.rTab.dataArray;
-        [self.navigationController pushViewController:cc animated:YES];
+    
+    if (_deleteState) {//删除
+        NSArray *arr = [self getChoseProducts];
+        NSMutableArray *pidsArray = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray* oneArray in arr) {
+            for (ProductModel* model in oneArray) {
+                [pidsArray addObject:model.cart_pro_id];
+            }
+            
+        }
+        
+        NSString *pids_str = [pidsArray componentsJoinedByString:@","];
+        if (!_request) {
+            _request = [YJYRequstManager shareInstance];
+        }
+        
+        NSDictionary *dic = @{
+                              @"authcode":[GMAPI getAuthkey],
+                              @"cart_pro_id":pids_str
+                              };
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        
+        __weak typeof (self)bself = self;
+        
+        [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            bself.totolPriceLabel.hidden = NO;
+            bself.detailPriceLabel.hidden = NO;
+            [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+            
+            [bself.rTab.dataArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+        } failBlock:^(NSDictionary *result) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        }];
     }else{
-        [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
+        if (_totolPrice != 0) {
+            ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+            cc.lastViewController = self;
+            
+            NSArray *arr = [self getChoseProducts];
+            
+            cc.dataArray = arr;
+            
+            [self.navigationController pushViewController:cc animated:YES];
+        }else{
+            [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
+        }
+    }
+ 
+    
+}
+
+//删除按钮
+-(void)rightButtonTap:(UIButton *)sender{
+    
+    if ([sender.titleLabel.text isEqualToString:@"删除"]) {
+        _deleteState = YES;
+        [sender setTitle:@"完成" forState:UIControlStateNormal];
+        [_jiesuanBtn setTitle:@"删除" forState:UIControlStateNormal];
+        self.totolPriceLabel.hidden = YES;
+        self.detailPriceLabel.hidden = YES;
+        
+    }else{
+        
+        _deleteState = NO;
+        [sender setTitle:@"删除" forState:UIControlStateNormal];
+        [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+        self.totolPriceLabel.hidden = NO;
+        self.detailPriceLabel.hidden = NO;
+        
     }
     
 }
@@ -191,18 +272,23 @@
 
 #pragma mark - 请求网络数据
 
+//更新购物车
 -(void)updateShopCar{
     [_rTab showRefreshHeader:YES];
 }
 
 
+//获取购物车数据
+
 -(void)prepareNetData{
     
     NSDictionary *dic = @{
                           @"authcode":[GMAPI testAuth],
-                          @"page":[NSString stringWithFormat:@"%d",_page],
+                          @"page":[NSString stringWithFormat:@"%d",_rTab.pageNum],
                           @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };
+    
+    __weak typeof (self)bself = self;
     
     _request_shopCarDetail = [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_CART_PRODCUTS parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"-------%@",result);
@@ -219,9 +305,18 @@
             [dataArray addObject:oneBrandArray];
         }
         
+        
+        if (self.rTab.pageNum == 1 && dataArray.count == 0) {
+            self.navigationItem.rightBarButtonItems = @[spaceButton];
+        }else{
+            [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+            bself.rightString = @"删除";
+        }
+        
+        
         [self.rTab reloadData:dataArray pageSize:G_PER_PAGE];
         
-        if (_page == 1 && list.count == 0) {
+        if (_rTab.pageNum == 1 && list.count == 0) {
             _noProductView.hidden = NO;
             _downView.hidden = YES;
         }else{
@@ -231,8 +326,9 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        NSLog(@"aa");
+        [_rTab loadFail];
     }];
+    
 }
 
 
@@ -240,7 +336,7 @@
     
     [_request removeOperation:_request_shopCarDetail];
     
-    _page = 1;
+    _rTab.pageNum = 1;
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;
@@ -318,7 +414,7 @@
     UIButton *chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [chooseBtn setFrame:CGRectMake(5, v_height*0.5-17.5, 35, 35)];
     [chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
-    [chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
+    [chooseBtn setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
     chooseBtn.selected = _open[section];
     chooseBtn.tag = 10+section;
     [chooseBtn addTarget:self action:@selector(headerViewchooseBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -414,6 +510,21 @@
 }
 
 
+#pragma makr - 逻辑处理
+
+
+-(NSArray *)getChoseProducts{
+    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel *model in arr) {
+            if (model.userChoose) {
+                [theArr addObject:model];
+            }
+        }
+    }
+    
+    return theArr;
+}
 
 
 //更新下边价格信息view

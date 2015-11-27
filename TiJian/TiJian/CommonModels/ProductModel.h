@@ -35,6 +35,11 @@
 @property(nonatomic,retain)NSString *is_recommend;
 
 @property(nonatomic,retain)NSDictionary *small_cover_pic;
+//单品详情相关
+@property(nonatomic,strong)NSArray *suit_info;
+@property(nonatomic,strong)NSArray *project_info;
+@property(nonatomic,strong)NSArray *coupon_list;
+
 //购物车相关
 @property(nonatomic,strong)NSString *product_name;
 @property(nonatomic,strong)NSString *current_price;

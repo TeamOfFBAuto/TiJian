@@ -123,7 +123,6 @@
     self.contentLabel.text = model.product_name;
     
     self.priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
-    
     self.numLabel.text = model.product_num;
 
 }

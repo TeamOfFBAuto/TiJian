@@ -82,6 +82,7 @@
     
 }
 
+//创建侧滑栏
 -(void)creatRightTranslucentSideBar{
     
     // Create Right SideBar
@@ -96,13 +97,9 @@
     [self.view addGestureRecognizer:panGestureRecognizer];
 
     GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:YES];
-    pushView.backgroundColor = [UIColor orangeColor];
+    pushView.delegate = self;
     [self.rightSideBar setContentViewInSideBar:pushView];
-    
-    
-    
 
-    
 }
 
 -(void)creatFilterBtn{
@@ -115,6 +112,13 @@
     [self.view addSubview:filterButton];
     [filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
     
+}
+
+
+#pragma mark - 逻辑处理
+
+-(void)therightSideBarDismiss{
+    [self.rightSideBar dismiss];
 }
 
 
@@ -184,7 +188,7 @@
     
     
     //首页精品推荐
-    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductRecommend parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         
@@ -263,7 +267,9 @@
 
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    CGFloat height = 100;
+    CGFloat height = 0.01;
+    CGFloat imv_W = 255.0/750 *DEVICE_WIDTH;
+    height = [GMAPI scaleWithHeight:0 width:imv_W theWHscale:255.0/160]+20;
     return height;
 }
 //将要显示

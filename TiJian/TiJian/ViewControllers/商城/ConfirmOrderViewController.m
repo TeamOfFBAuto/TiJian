@@ -14,6 +14,8 @@
 #import "AddAddressController.h"
 #import "PayActionViewController.h"
 #import "GconfirmOrderCell.h"
+#import "AddressModel.h"
+#import "GuserAddressViewController.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -31,6 +33,10 @@
     
     UIView *_tabFooterView;
     
+    NSString *_selectAddressId;//选中的地址
+    
+    
+    NSMutableArray *_theData;//二维数组
     
 }
 @end
@@ -50,6 +56,10 @@
     
     
     
+    
+    [self makeDyadicArray];
+    
+    
     [self prepareNetData];
     
     
@@ -61,6 +71,33 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - 逻辑处理
+-(void)makeDyadicArray{
+    
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
+    for (ProductModel *model in self.dataArray) {
+        if (![dic objectForKey:model.brand_id]) {
+            NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
+            [arr addObject:model];
+            [dic setValue:arr forKey:model.brand_id];
+        }else{
+            NSMutableArray *arr = [dic objectForKey:model.brand_id];
+            [arr addObject:model];
+        }
+    }
+    
+    NSArray *keys = [dic allKeys];
+    
+    _theData = [NSMutableArray arrayWithCapacity:1];
+    
+    for (NSString *key in keys) {
+        NSMutableArray *arr = [dic objectForKey:key];
+        [_theData addObject:arr];
+    }
+}
+
 
 
 #pragma mark - 请求网络数据
@@ -93,8 +130,15 @@
             [_addressArray addObject:model];
         }
         
+        AddressModel *theModel = nil;
+        for (AddressModel *model in _addressArray) {
+            if ([model.default_address intValue] == 1) {
+                theModel = model;
+            }
+        }
+        
         [self creatTab];
-        [self creatAddressView];
+        [self creatAddressViewWithModel:theModel];
         [self creatDownView];
         
         
@@ -126,18 +170,26 @@
 
 
 
--(void)creatAddressView{
-    _addressView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 115)];
-    _addressView.backgroundColor = RGBCOLOR(244, 245, 246);
-    
-    AddressModel *theModel = nil;
-    for (AddressModel *model in _addressArray) {
-        if ([model.default_address intValue] == 1) {
-            theModel = model;
+-(void)creatAddressViewWithModel:(AddressModel*)theModel{
+    if (!_addressView) {
+        _addressView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 115)];
+        _addressView.backgroundColor = RGBCOLOR(244, 245, 246);
+    }else{
+        for (UIView *view in _addressView.subviews) {
+            [view removeFromSuperview];
         }
     }
     
+    
+    
     if (!theModel) {//没有地址
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn setFrame:CGRectMake(0, 0, 100, 50)];
+        [btn setTitle:@"添加收货地址" forState:UIControlStateNormal];
+        btn.backgroundColor = [UIColor orangeColor];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        btn.center = _addressView.center;
+        [_addressView addSubview:btn];
         
     }else{
         //上分割线
@@ -149,7 +201,7 @@
         UIView *contentView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(imv.frame), DEVICE_WIDTH, 100)];
         contentView.backgroundColor = [UIColor whiteColor];
         [_addressView addSubview:contentView];
-        [contentView addTaget:self action:@selector(goToEditAddress) tag:0];
+        [contentView addTaget:self action:@selector(goToAddressVC) tag:0];
         
         //姓名
         UIImageView *nameLogoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 12, 17.5)];
@@ -236,7 +288,7 @@
     NSMutableArray *product_nums_arr = [NSMutableArray arrayWithCapacity:1];
     NSString *total_price = @"0";
     CGFloat price = 0;
-    for (NSArray *arr in self.dataArray) {
+    for (NSArray *arr in _theData) {
         for (ProductModel *oneModel in arr) {
             [product_ids_arr addObject:oneModel.product_id];
             [product_nums_arr addObject:oneModel.product_num];
@@ -264,7 +316,8 @@
                           @"address_id":@"1",
                           @"order_note":@"订单备注",
                           @"is_use_score":@"0",
-                          @"total_price":total_price
+                          @"total_price":total_price,
+                          @"real_price":total_price
                           };
     
     
@@ -329,25 +382,105 @@
 
 
 
--(void)goToEditAddress{
-    NSLog(@"%s",__FUNCTION__);
-    AddAddressController *cc = [[AddAddressController alloc]init];
+//跳转编辑地址vc
+-(void)goToAddressVC{
+    
+    if (_addressArray.count == 0) {//没有收货地址
+        
+    }else{//有收货地址
+        
+    }
+    
+    GuserAddressViewController *cc = [[GuserAddressViewController alloc]init];
     [self.navigationController pushViewController:cc animated:YES];
+    
+    
+    
+    
+    
+    
+    
+//    NSLog(@"%s",__FUNCTION__);
+//     __weak typeof(self)wealSelf = self;
+//    ShoppingAddressController *address = [[ShoppingAddressController alloc]init];
+//    address.isSelectAddress = YES;
+//    address.selectAddressId = _selectAddressId;
+//    address.selectAddressBlock = ^(AddressModel *aModel){
+//        _selectAddressId = aModel.address_id;
+//        [wealSelf updateAddressInfoWithModel:aModel];//更新收货地址显示
+//        [wealSelf updateExpressFeeWithProviceId:aModel.pro_id cityId:aModel.city_id];//更新邮费
+//    };
+//    [self.navigationController pushViewController:address animated:YES];
+}
+/**
+ *  更新收货地址信息
+ *
+ *  @param aModel
+ 
+ */
+- (void)updateAddressInfoWithModel:(AddressModel *)aModel
+{
+    NSLog(@"---address %@",aModel.address);
+    
+    [_tab.tableHeaderView removeFromSuperview];
+    _tab.tableHeaderView = nil;
+    
+    [self creatAddressViewWithModel:aModel];
 }
 
+
+
+
+
+
+
+/**
+ *  切换购物地址时 更新邮费
+ */
+- (void)updateExpressFeeWithProviceId:(NSString *)privinceId
+                               cityId:(NSString *)cityId
+{
+//    NSString *authkey = [GMAPI getAuthkey];
+//    NSString *province_id = privinceId;
+//    NSString *city_id = cityId;
+//    NSString *total_price = NSStringFromFloat(_sumPrice_pay);
+//    NSDictionary *params = @{@"authcode":authkey,
+//                             @"province_id":province_id,
+//                             @"city_id":city_id,
+//                             @"total_price":total_price};
+//    
+//    __weak typeof(_table)weakTable = _table;
+//    __weak typeof(self)weakSelf = self;
+//    
+//    NSString *url = [LTools url:ORDER_GET_EXPRESS_FEE withParams:params];
+//    LTools *tool = [[LTools alloc]initWithUrl:url isPost:NO postData:nil];
+//    [tool requestCompletion:^(NSDictionary *result, NSError *erro) {
+//        
+//        NSLog(@"更新邮费%@ %@",result[RESULT_INFO],result);
+//        float fee = [result[@"fee"]floatValue];
+//        _expressFee = fee;
+//        [weakSelf updateSumPrice];
+//        [weakTable reloadData];
+//        
+//    } failBlock:^(NSDictionary *result, NSError *erro) {
+//        
+//        NSLog(@"更新邮费 失败 %@",result[RESULT_INFO]);
+//        
+//    }];
+}
 
 
 #pragma mark - UITableViewDelegate && UITableViewDataSource
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     NSInteger num = 0;
-    num = self.dataArray.count;
+    num = _theData.count;
     return num;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
-    NSArray *arr = self.dataArray[section];
+    NSArray *arr = _theData[section];
     num = arr.count;
     return num;
 }
@@ -370,7 +503,7 @@
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     
-    NSArray *arr = self.dataArray[section];
+    NSArray *arr = _theData[section];
     
     ProductModel *amodel = arr[0];
     
@@ -412,7 +545,7 @@
         cell = [[GconfirmOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    NSArray *arr = self.dataArray[indexPath.section];
+    NSArray *arr = _theData[indexPath.section];
     ProductModel *model = arr[indexPath.row];
     
     [cell loadCustomViewWithModel:model];
