@@ -116,7 +116,7 @@
             tf.width -= 18;
             
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 8, tf.top, 8, 50)];
-            imageView.image = [UIImage imageNamed:@"shopping cart_dd_top_jt"];
+            imageView.image = [UIImage imageNamed:@"personal_jiantou_r"];
             [self.view addSubview:imageView];
             imageView.contentMode = UIViewContentModeCenter;
             
@@ -141,7 +141,7 @@
     
     //设置默认
     
-    _defaultButton = [[UIButton alloc]initWithframe:CGRectMake(0, top, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"shopping cart_normal"] selectedImage:[UIImage imageNamed:@"shopping cart_selected"] target:self action:@selector(clickToSelect:)];
+    _defaultButton = [[UIButton alloc]initWithframe:CGRectMake(0, top, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"xuanzhong_no"] selectedImage:[UIImage imageNamed:@"xuanzhong"] target:self action:@selector(clickToSelect:)];
     [self.view addSubview:_defaultButton];
     
     //设置是否默认地址

@@ -27,15 +27,13 @@
 //    CGFloat width = [LTools widthForText:aModel.receiver_username font:15];
     
     self.addressLabel.text = aModel.address;
-    
-//    default_address
-    
+        
     int isDefault = [aModel.default_address intValue];
     
     NSString *keyword = isDefault ? @"[默认]" : @"";
     
     NSString *content = [NSString stringWithFormat:@"%@%@",keyword,aModel.address];
-    NSAttributedString *string = [LTools attributedString:content keyword:keyword color:DEFAULT_TEXTCOLOR];
+    NSAttributedString *string = [LTools attributedString:content keyword:keyword color:DEFAULT_TEXTCOLOR_ORANGE];
     [self.addressLabel setAttributedText:string];
 }
 
