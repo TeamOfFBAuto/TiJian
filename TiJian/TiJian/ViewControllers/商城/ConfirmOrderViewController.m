@@ -36,7 +36,11 @@
     NSString *_selectAddressId;//选中的地址
     
     
-    NSMutableArray *_theData;//二维数组
+    NSMutableArray *_theData;//本类内部使用的二维数组
+    
+    
+    
+    
     
 }
 @end
@@ -158,13 +162,43 @@
     _tab.dataSource = self;
     [self.view addSubview:_tab];
     
+    [self creatTabFooterView];
     
 }
 
 
 -(void)creatTabFooterView{
-    _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 105)];
+    _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 435)];
     _tabFooterView.backgroundColor = [UIColor whiteColor];
+    
+    //第一条分割线
+    UIView *line1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
+    line1.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line1];
+    
+    //留言view
+    UIView *liuyanView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line1.frame), DEVICE_WIDTH, 50)];
+    liuyanView.backgroundColor = [UIColor whiteColor];
+    [_tabFooterView addSubview:liuyanView];
+    
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(7, 0, 75, 50)];
+    tLabel.font = [UIFont systemFontOfSize:15];
+    tLabel.text = @"给卖家留言";
+    tLabel.backgroundColor = [UIColor orangeColor];
+    [liuyanView addSubview:tLabel];
+    UITextField *liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(liuyanView.frame)+10, 0, DEVICE_WIDTH - 7-7-10, 50)];
+    liuyantf.font = [UIFont systemFontOfSize:15];
+    [liuyanView addSubview:liuyantf];
+    
+    //第二条分割线
+    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(liuyanView.frame), DEVICE_WIDTH, 0.5)];
+    line2.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line2];
+    
+    
+    
+    _tab.tableFooterView = _tabFooterView;
+
 }
 
 
@@ -492,7 +526,6 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     CGFloat height = 0.01;
-    height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100];
     return height;
 }
 

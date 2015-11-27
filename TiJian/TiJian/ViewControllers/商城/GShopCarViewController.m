@@ -194,12 +194,11 @@
     if (_deleteState) {//删除
         NSArray *arr = [self getChoseProducts];
         NSMutableArray *pidsArray = [NSMutableArray arrayWithCapacity:1];
-        for (NSArray* oneArray in arr) {
-            for (ProductModel* model in oneArray) {
-                [pidsArray addObject:model.cart_pro_id];
-            }
-            
+       
+        for (ProductModel* model in arr) {
+            [pidsArray addObject:model.cart_pro_id];
         }
+        
         
         NSString *pids_str = [pidsArray componentsJoinedByString:@","];
         if (!_request) {

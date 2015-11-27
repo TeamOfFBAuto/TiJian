@@ -385,6 +385,7 @@
         tf_low_backView.layer.cornerRadius = 4;
         [view addSubview:tf_low_backView];
         
+        //最低价
         self.tf_low = [[UITextField alloc]initWithFrame:tf_low_backView.bounds];
         self.tf_low.textAlignment = NSTextAlignmentCenter;
         self.tf_low.delegate = self;
@@ -400,10 +401,26 @@
         tf_high_backView.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
         [view addSubview:tf_high_backView];
         
+        //最高价
         self.tf_high = [[UITextField alloc]initWithFrame:tf_low_backView.bounds];
         self.tf_high.textAlignment = NSTextAlignmentCenter;
+        self.tf_high.font = [UIFont systemFontOfSize:14];
         self.tf_high.delegate = self;
         [tf_high_backView addSubview:self.tf_high];
+        
+        
+        
+        //确定按钮
+        UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [quedingBtn setFrame:CGRectMake(CGRectGetMaxX(tf_high_backView.frame)+10, tf_high_backView.frame.origin.y, 55, tf_high_backView.frame.size.height)];
+        [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
+        quedingBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [view addSubview:quedingBtn];
+        
+        
+        
+        
+        
         
     }
     
@@ -726,8 +743,17 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
-    [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
-    [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+    if (DEVICE_HEIGHT>480) {
+        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+        [self.tab3 setContentOffset:CGPointMake(0, 50) animated:YES];
+    }else{
+        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
+        [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+    }
+    
+    
+    
+    
     return YES;
 }
 
