@@ -55,14 +55,19 @@
                    completion:(AFResultBlock)completionBlock
                     failBlock:(AFResultBlock)failBlock
 {
-    NSString *baseUrl = nil;
-//    if (IOS9_OR_LATER) {
-//        
-//        
-//    }else
-//    {
-        baseUrl = [SERVER_URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    }
+    //判断网络是否可用
+    if (![LTools NetworkReachable]) {
+        
+        
+        NSString *erroInfo = @"网络不可用";
+        NSDictionary *result = @{Erro_Info: erroInfo,
+                                 Erro_Code:[NSString stringWithFormat:@"%d",Erro_NetworkUnReachable]};
+        failBlock(result);
+        
+        return nil;
+    }
+    
+    NSString *baseUrl = [SERVER_URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
@@ -180,11 +185,13 @@
     NSData *data = operation.responseData;
     if (data.length == 0){
         
-        NSDictionary *failDic = @{Erro_Info:@"获取数据异常",Erro_Code:@"999"};
+        NSDictionary *failDic = @{Erro_Info:@"获取服务器数据异常",
+                                  Erro_Code:NSStringFromInt(Erro_ServerException)};
         
         failBlock(failDic);
         
-        NSLog(@"---->数据异常—后台返回原始数据 :response %@",operation.responseString);
+        DDLOG(@"服务器返回数据异常:%@",operation.responseString);
+        DDLOG_CURRENT_METHOD;
 
         return;
     }
@@ -211,7 +218,6 @@
                 
                 [self showErroInfo:erroInfo];
                 
-                
             }else
             {
                 NSLog(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
@@ -220,19 +226,14 @@
                 NSDictionary *result = @{Erro_Info: erroInfo,
                                          Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 failBlock(result);
-                
-                NSLog(@"---->获取数据异常 :response %@",operation.responseString);
-
             }
-
         }
-        
     }
     
     
     [self removeOperation:operation];
-//    completionBlock = nil;
-//    failBlock = nil;
+    completionBlock = nil;
+    failBlock = nil;
 }
 
 /**

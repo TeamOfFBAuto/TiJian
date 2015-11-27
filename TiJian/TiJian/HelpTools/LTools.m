@@ -10,6 +10,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "AppDelegate.h"
 #import <RongIMKit/RongIMKit.h>
+#import "Reachability.h"
 
 @implementation LTools
 {
@@ -69,6 +70,25 @@
                             md5Binary[12], md5Binary[13], md5Binary[14], md5Binary[15]
                             ];
     return md5String;
+}
+
+
+#pragma mark - 网络监控
+
+/**
+ *  判断网络wifi或者移动网络是否可用
+ *
+ *  @return YES or NO
+ */
++ (BOOL)NetworkReachable
+{
+    NetworkStatus wifi = [[Reachability reachabilityForLocalWiFi] currentReachabilityStatus];
+    NetworkStatus gprs = [[Reachability reachabilityForInternetConnection] currentReachabilityStatus];
+    if(wifi == NotReachable && gprs == NotReachable)
+    {
+        return NO;
+    }
+    return YES;
 }
 
 //#pragma - mark 网络数据请求

@@ -31,6 +31,23 @@
 
 #define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 
+//打印类、方法
+
+#pragma mark - Debug log macro
+#ifdef DEBUG
+
+#define DDLOG(...) NSLog(__VA_ARGS__)
+#define DDLOG_CURRENT_METHOD NSLog(@"%@-%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+
+#else
+
+#define DDLOG(...) ;
+#define DDLOG_CURRENT_METHOD ;
+
+#endif
+
+
+
 //适配6 PLUS 放大1.2倍
 #define FitScreen(a) (iPhone6PLUS ? a * 1.2 : a)
 

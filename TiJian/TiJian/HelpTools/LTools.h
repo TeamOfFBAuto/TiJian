@@ -58,6 +58,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (NSString *) md5:(NSString *) text;
 
+#pragma mark - 网络监控
+
+/**
+ *  判断网络wifi或者移动网络是否可用
+ *
+ *  @return YES or NO
+ */
++ (BOOL)NetworkReachable;
+
 
 #pragma mark - 版本更新信息
 

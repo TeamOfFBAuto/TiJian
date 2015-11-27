@@ -1235,6 +1235,7 @@
 		1303C3791BEB430C00700847 /* 个人中心 */ = {
 			isa = PBXGroup;
 			children = (
+				13F5F10B1C0853840045B5FA /* 收货地址 */,
 				13F8C5721C058594004C3FC7 /* 我的订单 */,
 				134822E21BECA2F200EA2E06 /* 家人管理 */,
 				1303C37A1BEB432900700847 /* PersonalCenterController.h */,
@@ -1943,6 +1944,13 @@
 				13F242251BF5CC36002C9D81 /* ArticleListController.m */,
 			);
 			path = "健康资讯";
+			sourceTree = "<group>";
+		};
+		13F5F10B1C0853840045B5FA /* 收货地址 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "收货地址";
 			sourceTree = "<group>";
 		};
 		13F8C5721C058594004C3FC7 /* 我的订单 */ = {

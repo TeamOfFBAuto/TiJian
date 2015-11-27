@@ -317,8 +317,9 @@
  */
 - (void)clickToPhone:(UIButton *)sender
 {
-    NSString *msg = [NSString stringWithFormat:@"拨打:%@",_orderModel.merchant_phone];
+    NSString *msg = [NSString stringWithFormat:@"拨打:%@",_orderModel.receiver_mobile];
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = ALERT_TAG_PHONE;
     [alert show];
 }
 
@@ -537,7 +538,7 @@
         
         if (buttonIndex == 1) {
             
-            NSString *phone = _orderModel.merchant_phone;
+            NSString *phone = _orderModel.receiver_mobile;
             [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",phone]]];
         }
     }else if (alertView.tag == ALERT_TAG_CANCEL_ORDER){
