@@ -157,6 +157,14 @@
 
 #pragma mark - 拓展新方法
 
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (self.dataArrayObeserverBlock) {
+        
+        self.dataArrayObeserverBlock(keyPath,change);
+    }
+}
+
 /**
  *  成功加载数据reload
  *
@@ -783,6 +791,7 @@
     //监测数据源
     [self addObserver:self forKeyPath:@"_dataArrayCount" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     _dataArrayObeserverBlock = dataArrayObeserverBlock;
+    
 }
 
 -(void)removeObserver
@@ -792,8 +801,6 @@
         [self removeObserver:self forKeyPath:@"_dataArrayCount"];
     }
 }
-
-
 
 
 @end

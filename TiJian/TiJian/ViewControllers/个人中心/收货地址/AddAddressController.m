@@ -7,7 +7,6 @@
 //
 
 #import "AddAddressController.h"
-#import "GchooseAreaViewController.h"
 
 @interface AddAddressController ()<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -23,9 +22,6 @@
     
     NSInteger _selectProvinceId;//选择或者修改后省id
     NSInteger _selectCityId;//选择或者修改后 城市id
-    
-    
-    YJYRequstManager *_request;
 }
 
 @property(nonatomic,strong)UIView *backPickView;//地区选择pickerView后面的背景view
@@ -91,7 +87,8 @@
                 NSString *pro_name = [GMAPI cityNameForId:[pro_id intValue]];
                 NSString *city_name = [GMAPI cityNameForId:[city_id intValue]];
                 
-
+                self.provinceId = [pro_id integerValue];
+                self.cityId = [city_id integerValue];
                 self.provinceName = pro_name;
                 self.cityName = city_name;
                 
@@ -119,7 +116,7 @@
             tf.width -= 18;
             
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 8, tf.top, 8, 50)];
-            imageView.image = [UIImage imageNamed:@"my_jiantou"];
+            imageView.image = [UIImage imageNamed:@"shopping cart_dd_top_jt"];
             [self.view addSubview:imageView];
             imageView.contentMode = UIViewContentModeCenter;
             
@@ -143,29 +140,22 @@
     }
     
     //设置默认
-    _defaultButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_defaultButton setFrame:CGRectMake(0, top, 110, 40)];
-    [_defaultButton setTitle:@"设为默认地址" forState:UIControlStateNormal];
-    _defaultButton.titleLabel.font = [UIFont systemFontOfSize:12];
-    [_defaultButton setTitleColor:RGBCOLOR(81, 82, 83) forState:UIControlStateNormal];
-    [_defaultButton setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
-    [_defaultButton setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
-    [_defaultButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    [_defaultButton addTarget:self action:@selector(defaultButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    
-    
+    _defaultButton = [[UIButton alloc]initWithframe:CGRectMake(0, top, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"shopping cart_normal"] selectedImage:[UIImage imageNamed:@"shopping cart_selected"] target:self action:@selector(clickToSelect:)];
     [self.view addSubview:_defaultButton];
     
     //设置是否默认地址
     _defaultButton.selected = [self.addressModel.default_address intValue] == 1 ? YES : NO;
     
-    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(_defaultButton.right + 5, _defaultButton.top, 160, 50)];
+    [self.view addSubview:label];
+    label.font = [UIFont systemFontOfSize:15];
+    label.text = @"设为默认地址";
     
     _saveButton = [[UIButton alloc]initWithframe:CGRectMake(33, DEVICE_HEIGHT - 64 - 25 - 43, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"保存" selectedTitle:nil target:self action:@selector(clickToSave:)];
     [self.view addSubview:_saveButton];
     [_saveButton addCornerRadius:3.f];
-    [_saveButton setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+    [_saveButton setTitleColor:[UIColor colorWithHexString:@"bcbcbc"] forState:UIControlStateNormal];
     [_saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_saveButton setBackgroundColor:[UIColor colorWithHexString:@"f0f0f0"]];
     
@@ -176,17 +166,9 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(controlSaveButton) name:UITextFieldTextDidEndEditingNotification object:nil];
     
     
-    if (self.isEditAddress) {
-        [self controlSaveButton];
-    }
     
+    [self createAreaPickView];
 }
-
-
--(void)defaultButtonClicked:(UIButton *)sender{
-    sender.selected = !sender.selected;
-}
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -223,7 +205,7 @@
     NSDictionary *params;
     NSString *api;
     
-    NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)_selectProvinceId,self.provinceName,(long)_selectCityId,self.cityName);
+    NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",self.provinceId,self.provinceName,self.cityId,self.cityName);
     
     //编辑
     if (self.isEditAddress) {
@@ -248,23 +230,24 @@
                                  @"mobile":mobile,
                                  @"default_address":[NSNumber numberWithInt:isDefault]};
     }
+
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    
-    
-    if (!_request) {
-        _request = [YJYRequstManager shareInstance];
-    }
-    
-    __weak typeof(self)weakSelf = self;
-    [_request requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ADDADDRESS object:nil];
-        [weakSelf performSelector:@selector(backAction) withObject:self afterDelay:0.3];
-    } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
+    __weak typeof(self)weakSelf = self;
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ADDADDRESS object:nil];
+        
+        [weakSelf performSelector:@selector(backAction) withObject:self afterDelay:0.3];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
     }];
 
 }
@@ -352,35 +335,9 @@
  */
 - (void)clickToSelectArea:(UIButton *)sender
 {
-
     
-    GchooseAreaViewController *chooseAddress = [[GchooseAreaViewController alloc]init];
-    
-    __weak typeof(self)weakSelf = self;
-    chooseAddress.updateParamsBlock = ^(NSDictionary *params){
-        
-        NSLog(@"params %@",params);
-
-        [weakSelf updateAreaInfo:params];
-        
-    };
-    
-    [self.navigationController pushViewController:chooseAddress animated:YES];
-    
-}
-
-- (void)updateAreaInfo:(NSDictionary *)params
-{
-    NSString *provinceName = [params stringValueForKey:@"provinceName"];
-    NSString *provinceId = [params stringValueForKey:@"provinceId"];
-    NSString *cityName = [params stringValueForKey:@"cityName"];
-    NSString *cityId = [params stringValueForKey:@"cityId"];
-    
-    //确定才修改select值
-    _selectProvinceId = [provinceId integerValue];
-    _selectCityId = [cityId integerValue];
-    
-    [self textFieldForTag:102].text = [NSString stringWithFormat:@"%@%@",provinceName,cityName];
+    [self clickToHidderKeyboard];//隐藏键盘
+    [self areaShow];
 }
 
 /**
@@ -534,6 +491,9 @@
     
     [self areaHidden];
     
+    self.provinceId = [GMAPI cityIdForName:self.provinceName];
+    self.cityId = [GMAPI cityIdForName:self.cityName];
+    
     //确定才修改select值
     _selectProvinceId = self.provinceId;
     _selectCityId = self.cityId;
@@ -592,7 +552,7 @@
         }
         NSString *cityStr = [NSString stringWithFormat:@"%@",cities[row][@"city"]];
         //字符转id
-        NSString *pppccc = [NSString stringWithFormat:@"%@",self.cityName];
+        NSString *pppccc = [NSString stringWithFormat:@"%@%@",self.provinceName,self.cityName];
         self.cityId = [GMAPI cityIdForName:pppccc];//上传
         
         return cityStr;

@@ -8,6 +8,7 @@
 
 #import "EditUserInfoViewController.h"
 #import "UpdateUserInfoController.h"
+#import "ShoppingAddressController.h"
 #import "LDatePicker.h"
 
 #define kTagSex 300
@@ -226,6 +227,9 @@
 - (void)clickToAddress
 {
     NSLog(@"我的收货地址");
+    ShoppingAddressController *address = [[ShoppingAddressController alloc]init];
+    [self.navigationController pushViewController:address animated:YES];
+    
 }
 
 - (void)clickToUpdateType:(UPDATEINFOTYPE)type
