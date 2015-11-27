@@ -336,7 +336,7 @@
     UILabel *aliLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(aliLabel1.left, aliLabel1.bottom, 100, 16) title:@"支付宝快捷支付" font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"636363"]];
     [secondView addSubview:aliLabel2];
     
-    aliButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 50, line1.bottom, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"shoppingcart_normal"] selectedImage:[UIImage imageNamed:@"shoppingcart_selected"] target:self action:@selector(clickToSelectStyle:)];
+    aliButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 50, line1.bottom, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"xuanzhong_no"] selectedImage:[UIImage imageNamed:@"xuanzhong"] target:self action:@selector(clickToSelectStyle:)];
     [secondView addSubview:aliButton];
     
     //线
@@ -357,7 +357,7 @@
     UILabel *wxLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(wxLabel1.left, wxLabel1.bottom, 100, 16) title:@"微信安全支付" font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"636363"]];
     [secondView addSubview:wxLabel2];
     
-    wxButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 50, line2.bottom, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"shoppingcart_normal"] selectedImage:[UIImage imageNamed:@"shoppingcart_selected"] target:self action:@selector(clickToSelectStyle:)];
+    wxButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 50, line2.bottom, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"xuanzhong_no"] selectedImage:[UIImage imageNamed:@"xuanzhong"] target:self action:@selector(clickToSelectStyle:)];
     [secondView addSubview:wxButton];
     
     

@@ -83,7 +83,7 @@
     [self.userInfo cacheUserInfo];//存储
     
     _titles = @[@"姓       名",@"昵       称",@"性       别",@"年       龄",@"出生日期",@"身份证号"];
-    //,@"手  机  号"
+//    ,@"手  机  号"
     
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.delegate = self;

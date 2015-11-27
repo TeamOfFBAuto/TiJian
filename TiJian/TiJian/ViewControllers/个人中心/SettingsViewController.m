@@ -9,6 +9,7 @@
 #import "SettingsViewController.h"
 #import "UpdatePWDController.h"
 #import "AboutUsController.h"
+#import "FeedBackViewController.h"
 
 //#import <RongIMKit/RongIMKit.h>
 
@@ -252,8 +253,8 @@
             break;
         case 3:
         {
-            
-            NSLog(@"");
+            FeedBackViewController *feedback = [[FeedBackViewController alloc]init];
+            [self.navigationController pushViewController:feedback animated:YES];
         }
             break;
             

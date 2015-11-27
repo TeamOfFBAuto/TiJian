@@ -463,8 +463,8 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    NSDictionary *dic = _table.dataArray[indexPath.row];
-    cc.productId = [dic stringValueForKey:@"product_id"];
+    ProductModel *aModel = _table.dataArray[indexPath.row];
+    cc.productId = aModel.product_id;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

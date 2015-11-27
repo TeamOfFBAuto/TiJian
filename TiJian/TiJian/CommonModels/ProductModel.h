@@ -32,6 +32,9 @@
 @property(nonatomic,retain)NSString *status;
 @property(nonatomic,retain)NSString *type_id;
 
+@property(nonatomic,retain)NSString *is_recommend;
+
+@property(nonatomic,retain)NSDictionary *small_cover_pic;
 //购物车相关
 @property(nonatomic,strong)NSString *product_name;
 @property(nonatomic,strong)NSString *current_price;
@@ -43,6 +46,8 @@
 
 //预约相关
 @property(nonatomic,strong)NSString *type;//1 公司购买套餐 2 公司代金券 3 普通套餐
+@property(nonatomic,strong)NSString *company_id;//公司id
+@property(nonatomic,strong)NSString *order_checkuper_id;//绑定的人
 @property(nonatomic,strong)NSDictionary *company_info;//"company_id": "1",company_name": "阿里集团"
 @property(nonatomic,strong)NSString *coupon_id;
 @property(nonatomic,strong)NSString *vouchers_price;//代金卷金额

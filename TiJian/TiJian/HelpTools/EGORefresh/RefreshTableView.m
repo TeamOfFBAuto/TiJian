@@ -272,7 +272,7 @@
 //代码触发刷新
 -(void)showRefreshHeader:(BOOL)animated
 {
-    self.isHaveLoaded = YES;
+    self.isHaveLoaded = YES;//记录已经加载过数据
     if (animated)
     {
         [UIView beginAnimations:nil context:NULL];

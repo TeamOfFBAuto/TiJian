@@ -30,7 +30,8 @@
     // Do any additional setup after loading the view.
     
     self.myTitle = @"修改密码";
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    self.rightString = @"完成";
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
     _maiScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _maiScrollView.delegate = self;
@@ -38,6 +39,8 @@
     _maiScrollView.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     [self.view addSubview:_maiScrollView];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyboard)];
+    [_maiScrollView addGestureRecognizer:tap];
     
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 25, DEVICE_WIDTH - 20, 15) title:@"修改密码后,您可以用手机号和新密码登录" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"646464"]];
     [_maiScrollView addSubview:label];
@@ -68,6 +71,12 @@
         tf.tag = 100 + i;
         tf.delegate = self;
         
+        if (i == 2) {
+            tf.returnKeyType = UIReturnKeyDone;
+        }
+        
+        tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+        
         UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(10, view.height - 0.5, DEVICE_WIDTH - 10, 0.5)];
         [view addSubview:line];
         line.backgroundColor = DEFAULT_LINECOLOR;
@@ -81,42 +90,73 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - 事件处理
 
+/**
+ *  隐藏键盘
+ */
+- (void)hiddenKeyboard
+{
+    [_maiScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
 
+    for (int i = 0; i < 3; i ++) {
+        UITextField *tf = [self textFieldForTag:100 + i];
+        if ([tf isFirstResponder]) {
+            [tf resignFirstResponder];
+        }
+    }
+}
 
 - (UITextField *)textFieldForTag:(int)tag
 {
     return (UITextField *)[self.view viewWithTag:tag];
 }
 
-
+#pragma mark - UITextFieldDelegate
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    if (textField.tag == 100) {//当前密码
+    
+    if (!iPhone4) {
+        return;
+    }
+    int tag = (int)textField.tag;
+
+    if (tag == 100) {//当前密码
         
-    }else if (textField.tag == 101){//新密码
-        [_maiScrollView setContentOffset:CGPointMake(0, 100) animated:YES];
+    }else if (tag == 101 || tag == 102){//确认新密码
         
-        
-    }else if (textField.tag == 102){//确认新密码
-        
-        [_maiScrollView setContentOffset:CGPointMake(0, 100) animated:YES];
-        
+        [_maiScrollView setContentOffset:CGPointMake(0, 80) animated:YES];
         
     }
 }
 
-
-
-
-
-
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    int tag = (int)textField.tag;
+    if (tag == 100) {//当前密码
+        
+        [[self textFieldForTag:101]becomeFirstResponder];
+        
+    }else if (tag == 101){//新密码
+        
+        [[self textFieldForTag:102]becomeFirstResponder];
+        
+    }else if (tag == 102){//确认新密码
+        
+        NSLog(@"done");
+        [self hiddenKeyboard];
+        [self rightButtonTap:nil];
+    }
+    
+    return YES;
+}
 
 
 #pragma - mark 事件处理
 
-- (void)clickToSure:(UIButton *)sender
+-(void)rightButtonTap:(UIButton *)sender
 {
+    
     NSString *password = [self textFieldForTag:100].text;//老密码
     NSString *newPWD = [self textFieldForTag:101].text;//新密码
     NSString *newPWD_second = [self textFieldForTag:102].text;//新密码确认
@@ -189,13 +229,17 @@
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         int errorcode = [result[Erro_Code]intValue];
+        
         if (errorcode == 0) {
             
             //修改成功
             
             [LTools showMBProgressWithText:result[Erro_Info] addToView:weakSelf.view];
             
-            [weakSelf cleanUserInfo];
+//            [weakSelf cleanUserInfo];
+            
+            [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
+
 
         }
         
@@ -208,10 +252,6 @@
     }];
 }
 
-//-(void)leftButtonTap:(UIButton *)sender
-//{
-//    [self.navigationController popToRootViewControllerAnimated:YES];
-//}
 
 /**
  *  退出登录清空用户信息
@@ -222,15 +262,8 @@
      *  归档的方式保存userInfo
      */
     
-    [[NSUserDefaults standardUserDefaults]setObject:nil forKey:@"userInfo"];
-    
-    [[NSUserDefaults standardUserDefaults]synchronize];
-    
-    
-    [LTools cache:nil ForKey:USER_NAME];
-    [LTools cache:nil ForKey:USER_UID];
-    [LTools cache:nil ForKey:USER_AUTHOD];
-    [LTools cache:nil ForKey:USER_HEAD_IMAGEURL];
+    [UserInfo cleanUserInfo];
+
     
     //保存登录状态 yes
     
@@ -241,6 +274,12 @@
      */
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGOUT object:nil];
     
-    [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
 }
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"---%f",scrollView.contentOffset.y);
+}
+
+
 @end

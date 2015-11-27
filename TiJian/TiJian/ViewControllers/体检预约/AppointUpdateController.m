@@ -125,10 +125,14 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
+    
     if (_isUpdated) {
         
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定重新预约？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];
+    }else
+    {
+        [self leftButtonTap:nil];
     }
 }
 

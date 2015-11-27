@@ -132,7 +132,11 @@
 //活动详情
 #define HUODONGXIANGQING @"/index.php?d=api&c=activity&m=get_activity_detail"
 
-//收货地址相关接口==================
+//16.意见反馈 post方式 authcode\suggest 意见  10~200个字符
+#define ADD_SUGGEST @"/index.php?d=api&c=user&m=add_suggest"
+
+
+//====================================收货地址相关接口====================================
 #pragma mark - 收货地址相关
 
 //获取用户的收货地址列表
@@ -189,6 +193,8 @@
 #define ORDER_GET_ORDER_INFO @"/index.php?d=api&c=order&m=get_order_info"
 
 //50、获取我的订单列表
+//authcode、status 订单状态（no_pay待付款，no_appointment待预约，no_comment待评价，complete已完成）、page 当前页、per_page 每页显示数量
+
 #define ORDER_GET_MY_ORDERS @"/index.php?d=api&c=order&m=get_my_orders"
 
 //51、查看订单支付状态
@@ -209,6 +215,9 @@
 //获取购物车数量
 
 #define GET_SHOPPINGCAR_NUM @"/index.php?d=api&c=order&m=get_cart_pro_num"
+
+//获取订单中的套餐列表 authcode\order_id
+#define GET_SETMEALS_BY_ORDER @"/index.php?d=api&c=order&m=get_setmeals_by_order"
 
 //***************家人管理****************//
 #pragma mark - 家人管理相关接口

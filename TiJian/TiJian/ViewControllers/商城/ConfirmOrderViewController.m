@@ -364,8 +364,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/250];
-    return height;
+    return [GconfirmOrderCell heightForCell];
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
@@ -417,8 +416,6 @@
     ProductModel *model = arr[indexPath.row];
     
     [cell loadCustomViewWithModel:model];
-    
-    
     
     return cell;
 }

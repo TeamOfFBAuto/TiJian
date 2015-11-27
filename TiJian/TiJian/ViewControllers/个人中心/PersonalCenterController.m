@@ -11,6 +11,9 @@
 #import "PeopleManageController.h"
 #import "EditUserInfoViewController.h"
 #import "AppointmentViewController.h"
+#import "GShopCarViewController.h"
+#import "ProductListViewController.h"
+#import "OrderViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -60,6 +63,9 @@
     _table.backgroundColor = [UIColor clearColor];
     
     [self createTableHeadView];
+    
+    UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5.f)];
+    _table.tableFooterView = footer;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -338,10 +344,16 @@
         if (indexPath.row == 0) {
             
             //@"我的订单";
+            OrderViewController *order = [[OrderViewController alloc]init];
+            order.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:order animated:YES];
             
         }else if (indexPath.row == 1){
             
             //@"我的购物车";
+            GShopCarViewController *shop = [[GShopCarViewController alloc]init];
+            shop.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:shop animated:YES];
             
         }else if (indexPath.row == 2){
             
@@ -359,6 +371,9 @@
         }else if (indexPath.row == 1){
             
             //@"我的收藏";
+            ProductListViewController *list = [[ProductListViewController alloc]init];
+            list.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:list animated:YES];
         }
     }else if (indexPath.section == 2){
         

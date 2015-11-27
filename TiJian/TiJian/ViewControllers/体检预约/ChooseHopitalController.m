@@ -11,6 +11,11 @@
 #import "SSLunarDate.h"
 #import "HospitalModel.h"
 
+typedef enum {
+    STATETYPE_OPEN = 0,//打开
+    STATETYPE_CLOSE //关闭
+}STATETYPE; //日历类型
+
 @interface ChooseHopitalController ()<UITableViewDataSource,RefreshDelegate>
 {
     UIView *_calendar_bgView;
@@ -27,12 +32,14 @@
     int _noAppointNum;//未预约数
     BOOL _isCompanyAppoint;//是否是公司预约
     BOOL _isJustSelect;//是否仅为选择时间和分院
+    
+    CGFloat _lastOffsetY;
 }
 
 @property (strong, nonatomic) NSCalendar *currentCalendar;
 @property(nonatomic,retain)UIButton *closeButton;
 @property(nonatomic,retain)UIImageView *closeImage;
-
+@property(nonatomic,retain)UIView *calendarView;//日历背景view
 
 @end
 
@@ -46,41 +53,16 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
     _currentCalendar = [NSCalendar currentCalendar];
-    self.calendar = [[FSCalendar alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300)];
-    _calendar.delegate = self;
-    _calendar.dataSource = self;
-    [self.view addSubview:_calendar];
-    _calendar.backgroundColor = [UIColor whiteColor];
-    _calendar.clipsToBounds = YES;
-    [_calendar setScope:FSCalendarScopeWeek];
-//    _calendar.minimumDate = [NSDate date];
-    [_calendar setCurrentPage:[NSDate date] animated:YES];
-    
-    FSCalendarAppearance *apprearance = _calendar.appearance;
-    
-    apprearance.todayColor = [UIColor redColor];
-    apprearance.selectionColor = [UIColor colorWithHexString:@"f88326"];
-    apprearance.headerTitleColor = [UIColor colorWithHexString:@"323232"];
-    apprearance.weekdayTextColor = [UIColor colorWithHexString:@"999999"];
-    
-    self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _closeButton.frame = CGRectMake(0, _calendar.bottom, DEVICE_WIDTH, 27);
-    _closeButton.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
-    [_closeButton addTarget:self action:@selector(clickToCloseClendar:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_closeButton];
-    
-    //图标
-    self.closeImage = [[UIImageView alloc]initWithFrame:_closeButton.bounds];
-    _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_down"];
-    _closeImage.contentMode = UIViewContentModeCenter;
-    [_closeButton addSubview:_closeImage];
-    
+
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _closeButton.bottom) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
     _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _table.backgroundColor = [UIColor whiteColor];
+    
+    _table.tableHeaderView = self.calendarView;
+    
     
     NSString *selectDate = [LTools timeDate:[NSDate date] withFormat:@"yyyy-MM-dd"];
     [self networkForCenter:selectDate];
@@ -103,6 +85,73 @@
     if ([_table respondsToSelector:@selector(setLayoutMargins:)]) {
         [_table setLayoutMargins:UIEdgeInsetsZero];
     }
+}
+
+#pragma mark - 视图创建
+
+- (UIView *)calendarView
+{
+    if (_calendarView) {
+        return _calendarView;
+    }
+    
+    self.calendarView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_HEIGHT, 300 + 27)];
+    _calendarView.backgroundColor = [UIColor whiteColor];
+    
+    [self.calendarView addSubview:self.calendar];
+    [self.calendarView addSubview:self.closeButton];
+    
+    return _calendarView;
+}
+
+- (UIButton *)closeButton
+{
+    if (_closeButton) {
+        return _closeButton;
+    }
+    //关闭按钮
+    self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _closeButton.frame = CGRectMake(0, _calendar.bottom, DEVICE_WIDTH, 27);
+    _closeButton.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
+    [_closeButton addTarget:self action:@selector(clickToCloseClendar:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //图标
+    self.closeImage = [[UIImageView alloc]initWithFrame:_closeButton.bounds];
+    _closeImage.image = [UIImage imageNamed:@"yuyue_jiantou_down"];
+    _closeImage.contentMode = UIViewContentModeCenter;
+    [_closeButton addSubview:_closeImage];
+    
+    return _closeButton;
+}
+
+-(FSCalendar *)calendar
+{
+    if (_calendar) {
+        return _calendar;
+    }
+    self.calendar = [[FSCalendar alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300)];
+    _calendar.delegate = self;
+    _calendar.dataSource = self;
+    _calendar.backgroundColor = [UIColor whiteColor];
+    _calendar.clipsToBounds = YES;
+    [_calendar setScope:FSCalendarScopeWeek];
+    [_calendar setCurrentPage:[NSDate date] animated:YES];
+    
+    FSCalendarAppearance *apprearance = _calendar.appearance;
+    apprearance.todayColor = [UIColor redColor];
+    apprearance.selectionColor = [UIColor colorWithHexString:@"f88326"];
+    apprearance.headerTitleColor = [UIColor colorWithHexString:@"323232"];
+    apprearance.weekdayTextColor = [UIColor colorWithHexString:@"999999"];
+    return _calendar;
+}
+
+- (void)updateCalendarState
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        self.calendarView.height = self.closeButton.bottom;
+        _table.tableHeaderView = self.calendarView;
+
+    }];
 }
 
 #pragma mark - 网络请求
@@ -345,15 +394,15 @@
 - (void)calendarCurrentScopeWillChange:(FSCalendar *)calendar animated:(BOOL)animated
 {
     CGSize size = [calendar sizeThatFits:calendar.frame.size];
+    
 
     _calendar.height = size.height;
     _closeButton.top = _calendar.bottom;
     
-    _table.top = _closeButton.bottom;
-    _table.height = DEVICE_HEIGHT - 64 - _closeButton.bottom;
+//    _table.top = _closeButton.bottom;
+//    _table.height = DEVICE_HEIGHT - 64 - _closeButton.bottom;
     
-//    [_calendar setCurrentPage:[NSDate date] animated:NO];
-
+    [self updateCalendarState];
     
     NSLog(@"size %f",size.height);
 }
@@ -391,6 +440,7 @@
     return [NSDate date];
 }
 //- (NSDate *)maximumDateForCalendar:(FSCalendar *)calendar;
+
 
 #pragma - mark UITableViewDelegate
 
@@ -512,8 +562,6 @@
     return [UIView new];
 }
 
-#pragma mark - 视图创建
-
 #pragma mark - 代理
 
 #pragma - mark RefreshDelegate <NSObject>
@@ -536,6 +584,20 @@
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     return 50.f;
+}
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if (_lastOffsetY > offsetY) {
+        
+        if (self.closeButton.selected) {
+            
+            [self clickToCloseClendar:self.closeButton];
+
+        }
+    }
+    _lastOffsetY = offsetY;
 }
 
 @end

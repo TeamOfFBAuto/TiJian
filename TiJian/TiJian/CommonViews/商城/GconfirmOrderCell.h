@@ -17,4 +17,6 @@
 
 -(void)loadCustomViewWithModel:(ProductModel *)model;
 
++ (CGFloat)heightForCell;
+
 @end

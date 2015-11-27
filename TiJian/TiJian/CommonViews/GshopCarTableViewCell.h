@@ -31,5 +31,11 @@
 
 -(void)loadCustomViewWithIndex:(NSIndexPath *)index;
 
+/**
+ *  cell高度
+ *
+ *  @return
+ */
++ (CGFloat)heightForCell;
 
 @end

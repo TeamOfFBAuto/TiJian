@@ -60,12 +60,19 @@ typedef enum{
 
 typedef enum{
     ORDERTYPE_DaiFu = 1, //待付款
-    ORDERTYPE_DaiFaHuo,//待发货
-    ORDERTYPE_PeiSong, //配送中
-    ORDERTYPE_DaiPingJia, //待评价
+    ORDERTYPE_NoAppoint,//待预约
+    ORDERTYPE_Appointed,//已预约
     ORDERTYPE_WanCheng, //完成
     ORDERTYPE_TuiHuan //退换
 }ORDERTYPE;
+
+typedef enum{
+    ORDERACTIONTYPE_Pay = 1, //去支付
+    ORDERACTIONTYPE_Appoint,//去预约
+    ORDERACTIONTYPE_Comment, //评价晒单
+    ORDERACTIONTYPE_BuyAgain, //再次购买
+    ORDERACTIONTYPE_Refund  //申请退款
+}ORDERACTIONTYPE; // 订单列表 操作类型
 
 
 typedef enum {

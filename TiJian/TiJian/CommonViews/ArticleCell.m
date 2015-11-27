@@ -22,7 +22,7 @@
         [self.contentView addSubview:view];
         //图标
         self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 12.5, 120, 75)];
-        _iconImageView.backgroundColor = DEFAULT_TEXTCOLOR;
+//        _iconImageView.backgroundColor = DEFAULT_TEXTCOLOR;
         [self.contentView addSubview:_iconImageView];
         //title
         CGFloat left = _iconImageView.right + 10;

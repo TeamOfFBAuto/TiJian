@@ -10,6 +10,14 @@
 #import "ProductModel.h"
 #import "GShopCarViewController.h"
 
+@interface GshopCarTableViewCell ()
+
+@property(nonatomic,retain)UIImageView *iconImageView;
+@property(nonatomic,retain)UILabel *contentLabel;
+@property(nonatomic,retain)UILabel *priceLabel;
+
+@end
+
 @implementation GshopCarTableViewCell
 
 - (void)awakeFromNib {
@@ -30,6 +38,75 @@
     [_request removeOperation:_requset_subShopCar];
 }
 
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        
+        CGFloat height = [GshopCarTableViewCell heightForCell];
+        
+        self.chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
+        [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
+        
+        CGFloat wAndH = 35;
+        [self.chooseBtn setFrame:CGRectMake(5, height * 0.5 - wAndH * 0.5, wAndH, wAndH)];
+        [self.chooseBtn addTarget:self action:@selector(chooseBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:self.chooseBtn];
+        
+        UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+5, 10, [GMAPI scaleWithHeight:height-20 width:0 theWHscale:252.0/158], height - 20)];
+        logoImv.backgroundColor = [UIColor redColor];
+        [self.contentView addSubview:logoImv];
+        self.iconImageView = logoImv;
+        
+        
+        UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame) + 15, logoImv.frame.origin.y, DEVICE_WIDTH - 15 - self.chooseBtn.frame.size.width - 5 - logoImv.frame.size.width - 5 - 5, logoImv.frame.size.height/3)];
+        contentLabel.font = [UIFont systemFontOfSize:12];
+        contentLabel.numberOfLines = 2;
+        [self.contentView addSubview:contentLabel];
+        self.contentLabel = contentLabel;
+        
+        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentLabel.frame.origin.x, CGRectGetMaxY(contentLabel.frame), contentLabel.frame.size.width, logoImv.frame.size.height/3)];
+        priceLabel.font = [UIFont systemFontOfSize:13];
+        priceLabel.textColor = RGBCOLOR(237, 108, 22);
+        [self.contentView addSubview:priceLabel];
+        
+        //加减
+        UIImageView *numImv = [[UIImageView alloc]initWithFrame:CGRectMake(priceLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), priceLabel.frame.size.height * 3, logoImv.frame.size.height/3)];
+        [numImv setImage:[UIImage imageNamed:@"shuliang.png"]];
+        numImv.userInteractionEnabled = YES;
+        [self.contentView addSubview:numImv];
+        UIButton *jianBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [jianBtn setFrame:CGRectMake(0, 0, numImv.frame.size.height, numImv.frame.size.height)];
+        [jianBtn setImage:[UIImage imageNamed:@"shuliang-.png"] forState:UIControlStateNormal];
+        [jianBtn addTarget:self action:@selector(jianBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [numImv addSubview:jianBtn];
+        
+        self.numLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jianBtn.frame), 0, numImv.frame.size.width/3, numImv.frame.size.height)];
+        self.numLabel.font = [UIFont systemFontOfSize:12];
+        self.numLabel.textColor = [UIColor blackColor];
+        self.numLabel.textAlignment = NSTextAlignmentCenter;
+        [numImv addSubview:self.numLabel];
+        
+        UIButton *jiaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [jiaBtn setFrame:CGRectMake(CGRectGetMaxX(self.numLabel.frame), 0, numImv.frame.size.width/3, numImv.frame.size.height)];
+        [jiaBtn setImage:[UIImage imageNamed:@"shuliang+.png"] forState:UIControlStateNormal];
+        [jiaBtn addTarget:self action:@selector(jiaBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [numImv addSubview:jiaBtn];
+    }
+    return self;
+}
+
+/**
+ *  cell高度
+ *
+ *  @return
+ */
++ (CGFloat)heightForCell
+{
+    CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/240];
+    return height;
+}
 
 -(void)loadCustomViewWithIndex:(NSIndexPath *)index{
     
@@ -39,65 +116,15 @@
     NSArray *arr = self.delegate.rTab.dataArray[index.section];
     ProductModel *model = arr[index.row];
     
-    
-    
-    CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/250];
-    
-    self.chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
-    [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
-    
     self.chooseBtn.selected = model.userChoose;
-    CGFloat wAndH = 35;
-    [self.chooseBtn setFrame:CGRectMake(5, height*0.5-wAndH*0.5, wAndH, wAndH)];
-    [self.chooseBtn addTarget:self action:@selector(chooseBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:self.chooseBtn];
     
-    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+5, 10, [GMAPI scaleWithHeight:height-20 width:0 theWHscale:252.0/158], height - 20)];
-    [logoImv l_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:nil];
-    logoImv.backgroundColor = [UIColor redColor];
+    [self.iconImageView l_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:nil];
     
-    [self.contentView addSubview:logoImv];
+    self.contentLabel.text = model.product_name;
     
+    self.priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
     
-    UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+5, logoImv.frame.origin.y, DEVICE_WIDTH - 5 - self.chooseBtn.frame.size.width - 5 - logoImv.frame.size.width - 5 - 5, logoImv.frame.size.height/3)];
-//    contentLabel.backgroundColor = [UIColor redColor];
-    contentLabel.font = [UIFont systemFontOfSize:12];
-    contentLabel.numberOfLines = 2;
-    contentLabel.text = model.product_name;
-    [self.contentView addSubview:contentLabel];
-    
-    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentLabel.frame.origin.x, CGRectGetMaxY(contentLabel.frame), contentLabel.frame.size.width, logoImv.frame.size.height/3)];
-    priceLabel.font = [UIFont systemFontOfSize:13];
-//    priceLabel.backgroundColor = [UIColor orangeColor];
-    priceLabel.textColor = RGBCOLOR(237, 108, 22);
-    priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
-    [self.contentView addSubview:priceLabel];
-    
-    //加减
-    UIImageView *numImv = [[UIImageView alloc]initWithFrame:CGRectMake(priceLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), priceLabel.frame.size.height*3, logoImv.frame.size.height/3)];
-    [numImv setImage:[UIImage imageNamed:@"shuliang.png"]];
-    numImv.userInteractionEnabled = YES;
-    [self.contentView addSubview:numImv];
-    UIButton *jianBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [jianBtn setFrame:CGRectMake(0, 0, numImv.frame.size.height, numImv.frame.size.height)];
-    [jianBtn setImage:[UIImage imageNamed:@"shuliang-.png"] forState:UIControlStateNormal];
-    [jianBtn addTarget:self action:@selector(jianBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [numImv addSubview:jianBtn];
-    
-    self.numLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jianBtn.frame), 0, numImv.frame.size.width/3, numImv.frame.size.height)];
-    self.numLabel.font = [UIFont systemFontOfSize:12];
-    self.numLabel.textColor = [UIColor blackColor];
     self.numLabel.text = model.product_num;
-    self.numLabel.textAlignment = NSTextAlignmentCenter;
-    [numImv addSubview:self.numLabel];
-    
-    UIButton *jiaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [jiaBtn setFrame:CGRectMake(CGRectGetMaxX(self.numLabel.frame), 0, numImv.frame.size.width/3, numImv.frame.size.height)];
-    [jiaBtn setImage:[UIImage imageNamed:@"shuliang+.png"] forState:UIControlStateNormal];
-    [jiaBtn addTarget:self action:@selector(jiaBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [numImv addSubview:jiaBtn];
-    
 
 }
 

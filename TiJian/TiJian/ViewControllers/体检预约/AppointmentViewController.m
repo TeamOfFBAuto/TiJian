@@ -26,6 +26,7 @@
     int _currentPage;//当前页面
 }
 @property(nonatomic,retain)UIScrollView *scroll;
+@property(nonatomic,retain)UIView *noAppointView;//待预约view
 
 @end
 
@@ -78,6 +79,59 @@
 }
 
 #pragma mark - 视图创建
+
+/**
+ *  待预约为空时
+ *
+ *  @return
+ */
+- (UIView *)noAppointView
+{
+    if (_noAppointView) {
+        
+        return _noAppointView;
+    }
+    
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+    CGFloat width = FitScreen(96);
+    width = iPhone4 ? width * 0.8 : width;
+    
+    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(38, 55, width, width)];
+    icon.image = [UIImage imageNamed:@"hema"];
+    [view addSubview:icon];
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, icon.bottom - 5, DEVICE_WIDTH, 15) title:@"您还没有任何套餐可以预约" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
+    [view addSubview:label];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(0, label.bottom + 5, DEVICE_WIDTH, 15) title:@"您可以先" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
+    [view addSubview:label];
+    
+    width = DEVICE_WIDTH / 3.f;
+    CGFloat aver = width / 5.f;
+    for (int i = 0; i < 2; i ++) {
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(aver * 2 + (width + aver) * i, label.bottom + 35, width, 35);
+        [view addSubview:btn];
+        [btn addCornerRadius:2.f];
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        if (i == 0) {
+            [btn setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
+            [btn setTitle:@"购买套餐" forState:UIControlStateNormal];
+            [btn setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(clickToBuy) forControlEvents:UIControlEventTouchUpInside];
+        }else
+        {
+            [btn setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
+            [btn setTitle:@"定制专属套餐" forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor colorWithHexString:@"ec7d24"] forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(clickToCustomization) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+    
+    return view;
+}
 
 - (RefreshTableView *)tableViewWithIndex:(int)index
 {
@@ -199,7 +253,25 @@
         
         _company = [ProductModel modelsFromArray:setmeal_list[@"company"]];
         _personal = [ProductModel modelsFromArray:setmeal_list[@"personal"]];
+        
+        
+        if (_company.count == 0 && _personal.count == 0) {
+            
+            //没有待预约
+            
+            UIView *view = self.noAppointView;
+            [[self tableViewWithIndex:0] addSubview:view];
+            
+        }else
+        {
+            [self.noAppointView removeFromSuperview];
+            self.noAppointView = nil;
+        }
+        
         [[self tableViewWithIndex:0]finishReloadigData];
+        
+        
+        
     }else if (index == 1){
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];

@@ -301,9 +301,8 @@
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    CGFloat height = 0;
-    height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/250];
-    return height;
+
+    return [GshopCarTableViewCell heightForCell];
 }
 
 - (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
@@ -372,11 +371,6 @@
     
 }
 
-
-
-
-
-
 -(UIView *)viewForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     return view;
@@ -391,9 +385,9 @@
         cell = [[GshopCarTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    for (UIView *view in cell.contentView.subviews) {
-        [view removeFromSuperview];
-    }
+//    for (UIView *view in cell.contentView.subviews) {
+//        [view removeFromSuperview];
+//    }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     

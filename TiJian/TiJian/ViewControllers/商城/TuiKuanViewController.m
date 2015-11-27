@@ -220,7 +220,7 @@
         [btn setTitle:@"提交申请" forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:12];
         btn.layer.cornerRadius = 4;
-        btn.backgroundColor = RGBCOLOR(244, 76, 139);
+        btn.backgroundColor = DEFAULT_TEXTCOLOR;
         [btn addTarget:self action:@selector(prepareNetData) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:btn];
     }
