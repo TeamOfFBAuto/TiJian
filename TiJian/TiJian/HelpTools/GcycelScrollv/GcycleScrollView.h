@@ -20,8 +20,8 @@
 #pragma mark - SGFocusImageFrameDelegate
 @protocol NewHuandengViewDelegate <NSObject>
 @optional
-- (void)testfoucusImageFrame:(NewHuandengView *)imageFrame didSelectItem:(SGFocusImageItem *)item;
-- (void)testfoucusImageFrame:(NewHuandengView *)imageFrame currentItem:(int)index;
+- (void)testfoucusImageFrame:(UIView *)imageFrame didSelectItem:(SGFocusImageItem *)item;
+- (void)testfoucusImageFrame:(UIView *)imageFrame currentItem:(int)index;
 
 @end
 

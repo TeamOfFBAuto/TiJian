@@ -361,14 +361,14 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
 
 -(void)shangchuan_text{
     //测试dic
-    NSDictionary *testDic = @{
-                              @"product_id":@"2",//商品id
-                              @"authcode":@"BnlXLlUsULZS6QyRU+MK3QClC+lXogPyU35SYwBlVmEHOVJhUTQCNAUxAjVePw5+BjE=",//用户标示
-                              @"order_no":@"201507230028",//订单号
-                              @"star_level":@"5",//评论星级
-                              @"content":@"挺好的不错啊哈哈哈哈哈哈哈哈",
-                              @"is_anony":@"1"
-                              };
+//    NSDictionary *testDic = @{
+//                              @"product_id":@"2",//商品id
+//                              @"authcode":@"BnlXLlUsULZS6QyRU+MK3QClC+lXogPyU35SYwBlVmEHOVJhUTQCNAUxAjVePw5+BjE=",//用户标示
+//                              @"order_no":@"201507230028",//订单号
+//                              @"star_level":@"5",//评论星级
+//                              @"content":@"挺好的不错啊哈哈哈哈哈哈哈哈",
+//                              @"is_anony":@"1"
+//                              };
     
     NSString *is_anony;
     if (_isniming) {

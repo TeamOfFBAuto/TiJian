@@ -111,7 +111,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     _scrollView.scrollsToTop = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.pagingEnabled = YES;
-    _scrollView.delegate = self;
+//    _scrollView.delegate = self;
     
     [self addSubview:_scrollView];
     
@@ -132,7 +132,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     
     // single tap gesture recognizer
     UITapGestureRecognizer *tapGestureRecognize = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureRecognizer:)];
-    tapGestureRecognize.delegate = self;
+//    tapGestureRecognize.delegate = self;
     tapGestureRecognize.numberOfTapsRequired = 1;
     [_scrollView addGestureRecognizer:tapGestureRecognize];
     _scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * imageItems.count, _scrollView.frame.size.height);
@@ -168,7 +168,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     _scrollView.scrollsToTop = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.pagingEnabled = YES;
-    _scrollView.delegate = self;
+//    _scrollView.delegate = self;
 
     [self addSubview:_scrollView];
     
@@ -186,7 +186,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
 
     // single tap gesture recognizer
     UITapGestureRecognizer *tapGestureRecognize = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureRecognizer:)];
-    tapGestureRecognize.delegate = self;
+//    tapGestureRecognize.delegate = self;
     tapGestureRecognize.numberOfTapsRequired = 1;
     [_scrollView addGestureRecognizer:tapGestureRecognize];
     _scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * imageItems.count, _scrollView.frame.size.height);
@@ -293,7 +293,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
             page = 0;
         }else if(page <0)
         {
-            page = _pagecontrol.numberOfPages -1;
+            page = (int)_pagecontrol.numberOfPages - 1;
         }
     }
     if (page!= _pagecontrol.currentPage)
@@ -330,9 +330,9 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
     NSArray *imageItems = objc_getAssociatedObject(self, (const void *)SG_FOCUS_ITEM_ASS_KEY);
     if ([imageItems count]>1)
     {
-        if (aIndex >= ([imageItems count]-2))
+        if (aIndex >= ([imageItems count] - 2))
         {
-            aIndex = [imageItems count]-3;
+            aIndex = (int)[imageItems count] - 3;
         }
         [self moveToTargetPosition:self.frame.size.width*(aIndex+1)];
     }else

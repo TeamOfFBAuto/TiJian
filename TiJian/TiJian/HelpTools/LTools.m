@@ -551,10 +551,10 @@
 + (id)cacheForKey:(NSString *)key
 {
     //test
-    if ([key isEqualToString:USER_AUTHOD]) {
-        
-        return @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
-    }
+//    if ([key isEqualToString:USER_AUTHOD]) {
+//        
+//        return @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
+//    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:key];
 }

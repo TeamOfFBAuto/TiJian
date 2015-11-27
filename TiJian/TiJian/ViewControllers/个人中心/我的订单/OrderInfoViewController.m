@@ -117,7 +117,7 @@
                              @"detail":[NSNumber numberWithInt:1]
                              };
     
-    __weak typeof(_table)weakTable = _table;
+//    __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
     
     [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_INFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {

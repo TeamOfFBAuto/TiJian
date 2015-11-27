@@ -428,9 +428,9 @@
 {
     if (buttonIndex == 1) {
         
-        NSString *authey = [GMAPI getAuthkey];
-
-        int index = (int)alertView.tag;
+//        NSString *authey = [GMAPI getAuthkey];
+//
+//        int index = (int)alertView.tag;
     }
 
 }

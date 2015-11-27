@@ -241,6 +241,12 @@
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"年龄/岁" rangeLow:0 rangeHigh:100 imageName:arrowImageName];
         [self addSubview:moveView];
         
+        if (iPhone4) {
+            
+            moveView.top += 20;
+            bgView.height -= 50;
+        }
+        
         _moveView = moveView;
         
         if (initNum > 0) {
@@ -306,6 +312,12 @@
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"身高/cm" rangeLow:90 rangeHigh:251 imageName:arrowImageName];
         [self addSubview:moveView];
         
+        if (iPhone4) {
+            
+            moveView.top += 20;
+            bgView.height -= 50;
+        }
+        
         _moveView = moveView;
         
         if (initNum > 0) {
@@ -359,6 +371,11 @@
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"体重/kg" rangeLow:45 rangeHigh:300 imageName:arrowImageName];
         [self addSubview:moveView];
         
+        if (iPhone4) {
+            
+            moveView.top += 20;
+            bgView.height -= 50;
+        }
         _moveView = moveView;
         
         if (initNum > 0) {

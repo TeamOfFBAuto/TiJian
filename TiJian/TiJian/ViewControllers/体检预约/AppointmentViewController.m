@@ -27,6 +27,7 @@
 }
 @property(nonatomic,retain)UIScrollView *scroll;
 @property(nonatomic,retain)UIView *noAppointView;//待预约view
+@property(nonatomic,retain)UIView *appointedView;//已预约view
 
 @end
 
@@ -133,6 +134,33 @@
     return view;
 }
 
+/**
+ *  已预约为空时
+ *
+ *  @return
+ */
+- (UIView *)appointedView
+{
+    if (_appointedView) {
+        
+        return _appointedView;
+    }
+    
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+    CGFloat width = FitScreen(96);
+    width = iPhone4 ? width * 0.8 : width;
+    
+    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(38, 55 + 20, width, width)];
+    icon.image = [UIImage imageNamed:@"hema"];
+    [view addSubview:icon];
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, icon.bottom - 5, DEVICE_WIDTH, 15) title:@"您还没有预约任何套餐" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
+    [view addSubview:label];
+    
+    return view;
+}
+
 - (RefreshTableView *)tableViewWithIndex:(int)index
 {
     return (RefreshTableView *)[self.view viewWithTag:kTagTableView + index];
@@ -218,18 +246,13 @@
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(table)weakTable = table;
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
-//        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
         [weakSelf parseDataWithResult:result withIndex:index];
         
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
-//        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
         [weakTable loadFail];
         
     }];
@@ -275,11 +298,14 @@
     }else if (index == 1){
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
-        [[self tableViewWithIndex:1]reloadData:temp isHaveMore:YES];
+        
+        [[self tableViewWithIndex:1]reloadData:temp pageSize:20 noDataView:self.appointedView];
+        
     }else if (index == 2){
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
-        [[self tableViewWithIndex:2]reloadData:temp isHaveMore:YES];
+        [[self tableViewWithIndex:2]reloadData:temp pageSize:20 noDataView:self.appointedView];
+
     }
 }
 

@@ -413,7 +413,7 @@
     
     UIButton *chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [chooseBtn setFrame:CGRectMake(5, v_height*0.5-17.5, 35, 35)];
-    [chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
+    [chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no"] forState:UIControlStateNormal];
     [chooseBtn setImage:[UIImage imageNamed:@"shoppingcart_selected.png"] forState:UIControlStateSelected];
     chooseBtn.selected = _open[section];
     chooseBtn.tag = 10+section;
