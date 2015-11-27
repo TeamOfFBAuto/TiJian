@@ -187,8 +187,8 @@
 //47、提交订单,后台生成订单号
 #define ORDER_SUBMIT @"/index.php?d=api&c=order&m=submit_order"
 
-//45、获取用户默认地址及运费
-#define ORDER_GET_DEFAULT_ADDRESS @"/index.php?d=api&c=order&m=get_default_address"
+//45、获取用户默认地址
+#define ORDER_GET_DEFAULT_ADDRESS @"/index.php?d=api&c=user&m=get_default_address"
 
 //46、获取运费
 
