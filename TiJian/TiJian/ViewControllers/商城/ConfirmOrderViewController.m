@@ -181,20 +181,95 @@
     liuyanView.backgroundColor = [UIColor whiteColor];
     [_tabFooterView addSubview:liuyanView];
     
-    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(7, 0, 75, 50)];
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(7, 0, 80, 50)];
     tLabel.font = [UIFont systemFontOfSize:15];
-    tLabel.text = @"给卖家留言";
-    tLabel.backgroundColor = [UIColor orangeColor];
+    tLabel.text = @"给卖家留言:";
     [liuyanView addSubview:tLabel];
-    UITextField *liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(liuyanView.frame)+10, 0, DEVICE_WIDTH - 7-7-10, 50)];
+    
+    UITextField *liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
     liuyantf.font = [UIFont systemFontOfSize:15];
+    liuyantf.placeholder = @"选填";
     [liuyanView addSubview:liuyantf];
     
     //第二条分割线
-    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(liuyanView.frame), DEVICE_WIDTH, 0.5)];
+    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(liuyanView.frame), DEVICE_WIDTH, 2)];
     line2.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:line2];
     
+    //联系卖家
+    UIButton *chatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [chatBtn setFrame:CGRectMake(0, CGRectGetMaxY(line2.frame), DEVICE_WIDTH/2, 45)];
+    [chatBtn setImage:[UIImage imageNamed:@"order_chat.png"] forState:UIControlStateNormal];
+    [chatBtn setTitle:@"联系卖家" forState:UIControlStateNormal];
+    [chatBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    chatBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [chatBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];
+    [_tabFooterView addSubview:chatBtn];
+    
+    
+    //竖条
+    UIView *line_shu = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(chatBtn.frame), chatBtn.frame.origin.y+10, 1, 25)];
+    line_shu.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line_shu];
+    
+    //拨打电话
+    UIButton *phoneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [phoneBtn setFrame:CGRectMake(CGRectGetMaxX(line_shu.frame), chatBtn.frame.origin.y, DEVICE_WIDTH/2, 45)];
+    [phoneBtn setImage:[UIImage imageNamed:@"order_phone.png"] forState:UIControlStateNormal];
+    [phoneBtn setTitle:@"拨打电话" forState:UIControlStateNormal];
+    [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    phoneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [phoneBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];
+    [_tabFooterView addSubview:phoneBtn];
+    
+    //第3条分割线
+    UIView *line3 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(phoneBtn.frame), DEVICE_WIDTH, 5)];
+    line3.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line3];
+    
+    //优惠券
+    UIView *youhuiquanView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line3.frame), DEVICE_WIDTH, 44)];
+    youhuiquanView.backgroundColor = [UIColor whiteColor];
+    UILabel *y_tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 50, 44)];
+    y_tLabel.font = [UIFont systemFontOfSize:15];
+    y_tLabel.text = @"优惠券";
+    y_tLabel.textColor = [UIColor blackColor];
+    [youhuiquanView addSubview:y_tLabel];
+    
+    
+    [_tabFooterView addSubview:youhuiquanView];
+    
+    //第4条分割线
+    UIView *line4 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(youhuiquanView.frame), DEVICE_WIDTH, 1)];
+    line4.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line4];
+    
+    
+    //代金券
+    UIView *daijinquanView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line4.frame), DEVICE_WIDTH, 44)];
+    daijinquanView.backgroundColor = [UIColor whiteColor];
+    [_tabFooterView addSubview:daijinquanView];
+    
+    //第5条分割线
+    UIView *line5 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(daijinquanView.frame), DEVICE_WIDTH, 1)];
+    line5.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line5];
+    
+    //积分
+    UIView *jifenView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line5.frame), DEVICE_WIDTH, 44)];
+    jifenView.backgroundColor = [UIColor whiteColor];
+    //第6条分割线
+    UIView *line6 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(jifenView.frame), DEVICE_WIDTH, 1)];
+    line6.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line6];
+    
+    //使用积分
+    UIView *userJifenView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line6.frame), DEVICE_WIDTH, 44)];
+    userJifenView.backgroundColor = [UIColor whiteColor];
+    //第7条分割线
+    UIView *line7 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(userJifenView.frame), DEVICE_WIDTH, 5)];
+    line6.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:line7];
     
     
     _tab.tableFooterView = _tabFooterView;
@@ -263,8 +338,9 @@
         addressLabel.text = theModel.address;
         [contentView addSubview:addressLabel];
         
+        
         //自适应地址label高度
-        [addressLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(phoneLabel.frame)+10) height:contentView.frame.size.height - nameLogoImv.frame.size.height -30 limitMaxWidth:DEVICE_WIDTH - 20];
+        [addressLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(phoneLabel.frame)+10) width:DEVICE_WIDTH - 20];
         
         //调整contentview高度
         [contentView setHeight:CGRectGetMaxY(addressLabel.frame)+10];
