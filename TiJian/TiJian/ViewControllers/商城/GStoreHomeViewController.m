@@ -74,6 +74,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    
     self.myTitle = @"体检商城";
     self.myTitleLabel.textColor = RGBCOLOR(91, 147, 203);
     

@@ -16,6 +16,8 @@
 #import "ArticleListController.h"//健康资讯列表
 #import "WebviewController.h"
 #import "ArticleModel.h"
+#import "LocationChooseViewController.h"//定位地区选择vc
+
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
@@ -34,7 +36,9 @@
 @end
 
 @implementation HomeViewController
-
+{
+    NSDictionary *_locationDic;
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -109,12 +113,154 @@
     
     //获取健康咨询
     [self getHealthArticlelist];
+    
+    //定位相关
+    [self creatNavcLeftLabel];
+    [self getLocalLocation];
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - 定位相关 gm - start
+
+//获取本地存储的位置信息
+-(void)getLocalLocation{
+    if ([GMAPI cacheForKey:USERLocation]) {
+        NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
+        NSString *str;
+        if ([[dic stringValueForKey:@"city"]intValue] == 0) {
+            int theId = [[dic stringValueForKey:@"province"]intValue];
+            str = [GMAPI cityNameForId:theId];
+        }else{
+            int theId = [[dic stringValueForKey:@"city"]intValue];
+            str = [GMAPI cityNameForId:theId];
+        }
+        self.leftLabel.text = str;
+        
+//        [self creatTableView];
+    }else{
+        
+        [self getjingweidu];
+        
+    }
+}
+
+
+//获取经纬度
+-(void)getjingweidu{
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (kCLAuthorizationStatusRestricted == status) {
+        NSLog(@"kCLAuthorizationStatusRestricted 开启定位失败");
+        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"开启定位失败" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [al show];
+        return;
+    }else if (kCLAuthorizationStatusDenied == status){
+        NSLog(@"请允许衣加衣使用定位服务");
+        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"请允许衣加衣使用定位服务" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [al show];
+        return;
+    }
+    
+    __weak typeof(self)weakSelf = self;
+    
+    [[GMAPI appDeledate]startDingweiWithBlock:^(NSDictionary *dic) {
+        
+        [weakSelf theLocationDictionary:dic];
+    }];
+    
+}
+
+- (void)theLocationDictionary:(NSDictionary *)dic{
+    
+    NSLog(@"%@",dic);
+    _locationDic = dic;
+    NSLog(@"%@",_locationDic);
+    
+    NSString *theString;
+    
+    int cityId = 0;
+    int procinceId = 0;
+    
+    if ([[dic stringValueForKey:@"province"]isEqualToString:@"北京市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"上海市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"天津市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"重庆市"]) {
+        theString = [dic stringValueForKey:@"province"];
+        procinceId = [GMAPI cityIdForName:theString];
+        cityId = 0;
+    }else{
+        theString = [dic stringValueForKey:@"city"];
+        procinceId =[GMAPI cityIdForName:[dic stringValueForKey:@"province"]];
+        cityId = [GMAPI cityIdForName:[dic stringValueForKey:@"city"]];
+    }
+    
+    self.leftLabel.text = theString;
+    int city_id = [GMAPI cityIdForName:theString];
+    NSLog(@"city_id : %d",city_id);
+    
+    
+    
+    NSDictionary *cachDic = @{
+                              @"province":[NSString stringWithFormat:@"%d",procinceId],
+                              @"city":[NSString stringWithFormat:@"%d",cityId]
+                              };
+    [GMAPI cache:cachDic ForKey:USERLocation];
+    
+    
+}
+
+
+
+
+//创建navigation左边显示label
+-(void)creatNavcLeftLabel{
+    self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 80, 40)];
+    self.leftLabel.textColor = DEFAULT_TEXTCOLOR;
+    self.leftLabel.font = [UIFont systemFontOfSize:15];
+    [self.leftLabel addTaget:self action:@selector(pushToLocationChoose) tag:0];
+    self.leftLabel.text = @"北京";
+    
+    UIBarButtonItem *leftBar = [[UIBarButtonItem alloc]initWithCustomView:self.leftLabel];
+    self.navigationItem.leftBarButtonItem = leftBar;
+}
+
+//跳转到定位区域选择vc
+-(void)pushToLocationChoose{
+    LocationChooseViewController *cc = [[LocationChooseViewController alloc]init];
+    cc.delegate = self;
+    cc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+
+-(void)setLocationDataWithCityStr:(NSString *)city provinceStr:(NSString *)province{
+    self.leftLabel.text = city;
+    
+    NSString *pStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:province]];
+    NSString *cStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:city]];
+    
+    if ([pStr isEqualToString:cStr]) {
+        cStr = @"0";
+    }
+    
+    NSDictionary *dic = @{
+                          @"province":pStr,
+                          @"city":cStr
+                          };
+    
+    
+    [GMAPI cache:dic ForKey:USERLocation];
+    
+    
+    
+    
+}
+#pragma mark - 定位相关 gm - end
+
+
+
 
 #pragma - mark 网络请求
 

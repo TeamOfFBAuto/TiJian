@@ -329,6 +329,21 @@
 		E335F9F41BFEF36000708BF6 /* qrdd_jiantou_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E335F9E71BFEF35F00708BF6 /* qrdd_jiantou_small@2x.png */; };
 		E335F9F91BFEFDE700708BF6 /* GuserAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E335F9F81BFEFDE700708BF6 /* GuserAddressViewController.m */; };
 		E335FAB91BFF172800708BF6 /* GuserAddressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E335FAB81BFF172800708BF6 /* GuserAddressTableViewCell.m */; };
+		E352F8FD1C0B7D240037E4AE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F8FC1C0B7D240037E4AE /* CoreLocation.framework */; };
+		E352F8FF1C0B7D2E0037E4AE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F8FE1C0B7D2E0037E4AE /* QuartzCore.framework */; };
+		E352F9011C0B7D370037E4AE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F9001C0B7D370037E4AE /* OpenGLES.framework */; };
+		E352F9031C0B7D400037E4AE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F9021C0B7D400037E4AE /* SystemConfiguration.framework */; };
+		E352F9051C0B7D4A0037E4AE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F9041C0B7D4A0037E4AE /* CoreGraphics.framework */; };
+		E352F9071C0B7D540037E4AE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F9061C0B7D540037E4AE /* Security.framework */; };
+		E352F9091C0B7D5D0037E4AE /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F9081C0B7D5D0037E4AE /* libsqlite3.0.tbd */; };
+		E352F90B1C0B7D670037E4AE /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F90A1C0B7D670037E4AE /* CoreTelephony.framework */; };
+		E352F90D1C0B7D740037E4AE /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F90C1C0B7D740037E4AE /* libstdc++.6.0.9.tbd */; };
+		E352F9101C0B7DDB0037E4AE /* LocationChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E352F90F1C0B7DDB0037E4AE /* LocationChooseViewController.m */; };
+		E352F9131C0B83490037E4AE /* Gmap.mm in Sources */ = {isa = PBXBuildFile; fileRef = E352F9121C0B83490037E4AE /* Gmap.mm */; };
+		E352F9181C0B91680037E4AE /* gouwuche_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9141C0B91680037E4AE /* gouwuche_pd@2x.png */; };
+		E352F9191C0B91680037E4AE /* kefu_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9151C0B91680037E4AE /* kefu_pd@2x.png */; };
+		E352F91A1C0B91680037E4AE /* pinpaidian_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9161C0B91680037E4AE /* pinpaidian_pd@2x.png */; };
+		E352F91B1C0B91680037E4AE /* shoucang_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */; };
 		E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */; };
 		E3796D091BFB37CD004B63F7 /* homepage_search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796CFE1BFB37CC004B63F7 /* homepage_search@2x.png */; };
 		E3796D0A1BFB37CD004B63F7 /* my_indent_no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796CFF1BFB37CC004B63F7 /* my_indent_no@2x.png */; };
@@ -954,6 +969,23 @@
 		E335F9F81BFEFDE700708BF6 /* GuserAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuserAddressViewController.m; sourceTree = "<group>"; };
 		E335FAB71BFF172800708BF6 /* GuserAddressTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuserAddressTableViewCell.h; sourceTree = "<group>"; };
 		E335FAB81BFF172800708BF6 /* GuserAddressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuserAddressTableViewCell.m; sourceTree = "<group>"; };
+		E352F8FC1C0B7D240037E4AE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E352F8FE1C0B7D2E0037E4AE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E352F9001C0B7D370037E4AE /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		E352F9021C0B7D400037E4AE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E352F9041C0B7D4A0037E4AE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E352F9061C0B7D540037E4AE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		E352F9081C0B7D5D0037E4AE /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		E352F90A1C0B7D670037E4AE /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		E352F90C1C0B7D740037E4AE /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		E352F90E1C0B7DDB0037E4AE /* LocationChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationChooseViewController.h; sourceTree = "<group>"; };
+		E352F90F1C0B7DDB0037E4AE /* LocationChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationChooseViewController.m; sourceTree = "<group>"; };
+		E352F9111C0B83490037E4AE /* Gmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gmap.h; sourceTree = "<group>"; };
+		E352F9121C0B83490037E4AE /* Gmap.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Gmap.mm; sourceTree = "<group>"; };
+		E352F9141C0B91680037E4AE /* gouwuche_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gouwuche_pd@2x.png"; sourceTree = "<group>"; };
+		E352F9151C0B91680037E4AE /* kefu_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kefu_pd@2x.png"; sourceTree = "<group>"; };
+		E352F9161C0B91680037E4AE /* pinpaidian_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinpaidian_pd@2x.png"; sourceTree = "<group>"; };
+		E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoucang_pd@2x.png"; sourceTree = "<group>"; };
 		E359ACA11BEC96EA00EF1527 /* GShopCarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GShopCarViewController.h; sourceTree = "<group>"; };
 		E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GShopCarViewController.m; sourceTree = "<group>"; };
 		E3796CFE1BFB37CC004B63F7 /* homepage_search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_search@2x.png"; sourceTree = "<group>"; };
@@ -1097,6 +1129,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E352F90D1C0B7D740037E4AE /* libstdc++.6.0.9.tbd in Frameworks */,
+				E352F90B1C0B7D670037E4AE /* CoreTelephony.framework in Frameworks */,
+				E352F9091C0B7D5D0037E4AE /* libsqlite3.0.tbd in Frameworks */,
+				E352F9071C0B7D540037E4AE /* Security.framework in Frameworks */,
+				E352F9051C0B7D4A0037E4AE /* CoreGraphics.framework in Frameworks */,
+				E352F9031C0B7D400037E4AE /* SystemConfiguration.framework in Frameworks */,
+				E352F9011C0B7D370037E4AE /* OpenGLES.framework in Frameworks */,
+				E352F8FF1C0B7D2E0037E4AE /* QuartzCore.framework in Frameworks */,
+				E352F8FD1C0B7D240037E4AE /* CoreLocation.framework in Frameworks */,
 				13F1F3EA1BBA9A4B00885D31 /* libSocialQQ.a in Frameworks */,
 				13F1F3EB1BBA9A4B00885D31 /* TencentOpenAPI.framework in Frameworks */,
 				82877FD86175F18F86C41D30 /* libPods.a in Frameworks */,
@@ -1354,6 +1395,8 @@
 				1324B6A41BD76B3C00FB47A9 /* 个人定制 */,
 				1324B6A11BD7671E00FB47A9 /* HomeViewController.h */,
 				1324B6A21BD7671E00FB47A9 /* HomeViewController.m */,
+				E352F90E1C0B7DDB0037E4AE /* LocationChooseViewController.h */,
+				E352F90F1C0B7DDB0037E4AE /* LocationChooseViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1783,6 +1826,8 @@
 				13F1F3141BBA9A4B00885D31 /* inc */,
 				13F1F3531BBA9A4B00885D31 /* libbaidumapapi.a */,
 				13F1F3541BBA9A4B00885D31 /* mapapi.bundle */,
+				E352F9111C0B83490037E4AE /* Gmap.h */,
+				E352F9121C0B83490037E4AE /* Gmap.mm */,
 			);
 			path = BaiduMap_IOSSDK_v2.6.0_Lib;
 			sourceTree = "<group>";
@@ -2074,6 +2119,15 @@
 		C107AAEE1FE31A66B80F6446 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E352F90C1C0B7D740037E4AE /* libstdc++.6.0.9.tbd */,
+				E352F90A1C0B7D670037E4AE /* CoreTelephony.framework */,
+				E352F9081C0B7D5D0037E4AE /* libsqlite3.0.tbd */,
+				E352F9061C0B7D540037E4AE /* Security.framework */,
+				E352F9041C0B7D4A0037E4AE /* CoreGraphics.framework */,
+				E352F9021C0B7D400037E4AE /* SystemConfiguration.framework */,
+				E352F9001C0B7D370037E4AE /* OpenGLES.framework */,
+				E352F8FE1C0B7D2E0037E4AE /* QuartzCore.framework */,
+				E352F8FC1C0B7D240037E4AE /* CoreLocation.framework */,
 				92E9949F3A6967C2DBC3922E /* libPods.a */,
 			);
 			name = Frameworks;
@@ -2240,6 +2294,10 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E352F9141C0B91680037E4AE /* gouwuche_pd@2x.png */,
+				E352F9151C0B91680037E4AE /* kefu_pd@2x.png */,
+				E352F9161C0B91680037E4AE /* pinpaidian_pd@2x.png */,
+				E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */,
 				E3E6C35D1BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png */,
 				E3E6C35E1BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png */,
 				E3E6C35F1BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png */,
@@ -2480,6 +2538,7 @@
 				139333DC1BE0DF3E00B4628B /* 2_1_bg@2x.png in Resources */,
 				1303C2D71BE9BEA600700847 /* tuichu_w@2x.png in Resources */,
 				E3D8AE191BF4B16D003AE2E3 /* roundgray@2x.png in Resources */,
+				E352F91B1C0B91680037E4AE /* shoucang_pd@2x.png in Resources */,
 				1303C3541BEB0D7100700847 /* personal_qianbao_youhuiquan@2x.png in Resources */,
 				139333AB1BE0DF3E00B4628B /* 14_2@2x.png in Resources */,
 				130D2E2F1BFDF2DC002E301F /* UMSLoginViewController.xib in Resources */,
@@ -2512,6 +2571,7 @@
 				131C11961BF073BE00629938 /* user_xuxian@2x.png in Resources */,
 				134822D51BEC795200EA2E06 /* default_hema@2x.png in Resources */,
 				1303C3481BEB0D7100700847 /* personal_jiantou_r@2x.png in Resources */,
+				E352F9181C0B91680037E4AE /* gouwuche_pd@2x.png in Resources */,
 				1303C35D1BEB0D7100700847 /* personal_yuyue@2x.png in Resources */,
 				139334001BE1F29A00B4628B /* 9_2@2x.png in Resources */,
 				139333F21BE0DF3E00B4628B /* 7_2@2x.png in Resources */,
@@ -2572,6 +2632,7 @@
 				139333AA1BE0DF3E00B4628B /* 14_1@2x.png in Resources */,
 				1303C34A1BEB0D7100700847 /* personal_jiaren_jiantou_b@2x.png in Resources */,
 				E3D8AE081BF49175003AE2E3 /* gexingdingzhi@2x.png in Resources */,
+				E352F9191C0B91680037E4AE /* kefu_pd@2x.png in Resources */,
 				E3796D211BFB389E004B63F7 /* shoppingcart_normal@2x.png in Resources */,
 				139333B11BE0DF3E00B4628B /* 16_4@2x.png in Resources */,
 				13F2421A1BF4925A002C9D81 /* yuyue_jiantou_up@2x.png in Resources */,
@@ -2659,6 +2720,7 @@
 				139333A81BE0DF3E00B4628B /* 13_1@2x.png in Resources */,
 				E3D8AE0A1BF49519003AE2E3 /* tijianxiangmu1@2x.png in Resources */,
 				13B07A121C06DB7300742AF7 /* homepage_star1@2x.png in Resources */,
+				E352F91A1C0B91680037E4AE /* pinpaidian_pd@2x.png in Resources */,
 				1303C3601BEB0D7100700847 /* personal_yuyue_xiugai@2x.png in Resources */,
 				139333DA1BE0DF3E00B4628B /* 29_1@2x.png in Resources */,
 				139333A21BE0DF3E00B4628B /* 10_2@2x.png in Resources */,
@@ -2792,6 +2854,7 @@
 				13F242341BF5F1D2002C9D81 /* AppointmentCell.m in Sources */,
 				E3D8AE331BF61CAC003AE2E3 /* ButtonProperty.m in Sources */,
 				E335F9F91BFEFDE700708BF6 /* GuserAddressViewController.m in Sources */,
+				E352F9131C0B83490037E4AE /* Gmap.mm in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
 				13F8C5811C05A9C8004C3FC7 /* AddCommentDetailViewController.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
@@ -2832,6 +2895,7 @@
 				1303C2E41BEA0DE600700847 /* ProductModel.m in Sources */,
 				1303C3061BEA14EB00700847 /* GRegisterViewController.m in Sources */,
 				13F8C5AB1C05AA7E004C3FC7 /* JKAssetsCollectionFooterView.m in Sources */,
+				E352F9101C0B7DDB0037E4AE /* LocationChooseViewController.m in Sources */,
 				1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */,
 				E3E2B4121BFB20A4007988C5 /* FBActionSheet.m in Sources */,
 				E3D8AE1A1BF4B16D003AE2E3 /* SGFocusImageItem.m in Sources */,

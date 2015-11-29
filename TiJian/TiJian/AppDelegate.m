@@ -9,15 +9,18 @@
 #import "AppDelegate.h"
 #import "RootViewController.h"
 #import "BMapKit.h"
-#define BAIDU_APPKEY @"xVfbtQq4cB5OLkTk8hmxlyLd" //appStore com.yijiayi.yijiayi
 #import <AlipaySDK/AlipaySDK.h>//支付宝
 #import "WXApi.h"//微信
 //#import "UMSocial.h"
 
-@interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate>
+@interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate,GgetllocationDelegate>
 {
+    
+    GMAPI *mapApi;
+    LocationBlock _locationBlock;
     BMKMapManager* _mapManager;
     CLLocationManager *_locationManager;
+
 }
 
 @end
@@ -44,14 +47,7 @@
     [_locationManager startUpdatingLocation];
     
     
-    // 要使用百度地图，请先启动BaiduMapManager
-    _mapManager = [[BMKMapManager alloc]init];
-    // 如果要关注网络及授权验证事件，请设定   BMKGeneralDelegate协议
     
-    BOOL ret = [_mapManager start:BAIDU_APPKEY  generalDelegate:self];
-    if (!ret) {
-        NSLog(@"manager start failed!");
-    }
     
     
     
@@ -63,6 +59,27 @@
     
     
     
+    
+    
+    //使用百度地图相关
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
+    {
+        //设置定位权限 仅ios8有意义
+        [_locationManager requestWhenInUseAuthorization];// 前台定位
+        
+        //  [locationManager requestAlwaysAuthorization];// 前后台同时定位
+    }
+    [_locationManager startUpdatingLocation];
+    
+    
+    // 要使用百度地图，请先启动BaiduMapManager
+    _mapManager = [[BMKMapManager alloc]init];
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    BOOL ret = [_mapManager start:BAIDUMAP_APPKEY  generalDelegate:self];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
+
     return YES;
 }
 
@@ -267,6 +284,50 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_PAY_WEIXIN_RESULT object:nil userInfo:params];
     }
 }
+
+
+
+
+#pragma mark - 获取坐标
+
+- (void)startDingweiWithBlock:(LocationBlock)location
+{
+    _locationBlock = location;
+    
+    //定位获取坐标
+    mapApi = [GMAPI sharedManager];
+    mapApi.delegate = self;
+    
+    [mapApi startDingwei];
+    
+}
+
+
+
+#pragma mark - 定位Delegate
+
+- (void)theLocationDictionary:(NSDictionary *)dic{
+    
+    NSLog(@"定位成功------>%@",dic);
+    
+    if (_locationBlock) {
+        
+        _locationBlock(dic);
+    }
+    
+    [GMAPI sharedManager].theLocationDic = [dic copy];
+}
+
+
+-(void)theLocationFaild:(NSDictionary *)dic{
+    
+    NSLog(@"定位失败----->%@",dic);
+    
+    if (_locationBlock) {
+        _locationBlock(dic);
+    }
+}
+
 
 
 

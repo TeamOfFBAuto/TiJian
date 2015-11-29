@@ -430,10 +430,19 @@
     
     CGFloat tw = (_downView.frame.size.width-theW)/4;
     NSArray *titleArray = @[@"客服",@"收藏",@"品牌店",@"购物车"];
+    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"pinpaidian_pd.png",@"gouwuche_pd.png"];
     for (int i = 0; i<4; i++) {
         UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
         [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
+        [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
+        if (i<2) {
+            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
+        }else{
+            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+        }
+        
+        [oneBtn setTitleEdgeInsets:UIEdgeInsetsMake(25, -20, 0, 0)];
         oneBtn.titleLabel.font = [UIFont systemFontOfSize:10];
         oneBtn.tag = 100+i;
         [oneBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -443,7 +452,7 @@
             _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
             _shopCarNumLabel.textColor = [UIColor whiteColor];
             _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
-            _shopCarNumLabel.layer.cornerRadius = 5;
+            _shopCarNumLabel.layer.cornerRadius = 7;
             _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
             _shopCarNumLabel.layer.borderWidth = 0.5f;
             _shopCarNumLabel.layer.masksToBounds = YES;
@@ -468,7 +477,7 @@
         [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
         CGFloat with = _shopCarNumLabel.frame.size.width + 5;
         UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
-        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with, -2, with, 11)];
+        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with-6, -2, with+5, 15)];
         
     }
     

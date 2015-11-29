@@ -137,7 +137,7 @@
 
 
 //百度地图
-#define baiduMapAk @"bBsNsfsiH9MBaiYs4XtuNgID"
+#define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
 
 
 #endif
