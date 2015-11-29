@@ -17,6 +17,7 @@
 #import "AddressModel.h"
 #import "GuserAddressViewController.h"
 #import "ShoppingAddressController.h"
+#import "MyCouponViewController.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -31,16 +32,25 @@
     
     NSMutableArray *_addressArray;
     
-    
     UIView *_tabFooterView;
     
     NSString *_selectAddressId;//选中的地址
     
-    
     NSMutableArray *_theData;//本类内部使用的二维数组
     
+    UIView *_theNewbilityView;//商品金额 运费 优惠券 代金券 积分 统计view
     
+    UILabel *_shifukuangLabel;//实付款label
     
+    UITextField *_liuyantf;//给卖家留言的label
+    
+    CGFloat _price_total;//商品金额
+    
+    CGFloat _finalPrice;//计算后的价钱
+    
+    UIButton *_confirmOrderBtn;//提交订单按钮
+    
+    AddressModel *_theAddressModel;//用户选择的收货地址
     
     
 }
@@ -106,6 +116,54 @@
 }
 
 
+//计算金额
+-(void)jisuanPrice{
+    
+    _confirmOrderBtn.userInteractionEnabled = NO;
+    
+    //商品金额
+    _price_total = 0;
+    for (ProductModel *model in self.dataArray) {
+        CGFloat tprice_one = ([model.current_price floatValue]*[model.product_num intValue]);
+        _price_total += tprice_one;
+    }
+    //运费
+    CGFloat yunfei = 0;
+    
+    //优惠券
+    CGFloat youhuiquan = 0;
+    
+    //代金券
+    CGFloat daijinquan = 0;
+    
+    //积分
+    CGFloat jifen = 0;
+    
+    //实付款
+    _finalPrice = 0;
+    _finalPrice = _price_total + yunfei - youhuiquan - daijinquan - jifen;
+    
+    UILabel *l0 = [_theNewbilityView viewWithTag:10];//商品金额
+    UILabel *l1 = [_theNewbilityView viewWithTag:11];//运费
+    UILabel *l2 = [_theNewbilityView viewWithTag:12];//优惠券
+    UILabel *l3 = [_theNewbilityView viewWithTag:13];//代金券
+    UILabel *l4 = [_theNewbilityView viewWithTag:14];//积分
+    
+    l0.text = [NSString stringWithFormat:@"￥%.2f",_price_total];
+    l1.text = [NSString stringWithFormat:@"+%.2f",yunfei];
+    l2.text = [NSString stringWithFormat:@"-%.2f",youhuiquan];
+    l3.text = [NSString stringWithFormat:@"-%.2f",daijinquan];
+    l4.text = [NSString stringWithFormat:@"-%.2f",jifen];
+    _shifukuangLabel.text = [NSString stringWithFormat:@"￥%.2f",_finalPrice];
+    
+    
+    _confirmOrderBtn.userInteractionEnabled = YES;
+    
+    
+}
+
+
+
 
 
 #pragma mark - 请求网络数据
@@ -116,7 +174,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth]
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
                           };
     
     if (!_request) {
@@ -142,9 +200,9 @@
             }
         }
         
+        [self creatDownView];
         [self creatTab];
         [self creatAddressViewWithModel:theModel];
-        [self creatDownView];
         
         
         
@@ -163,13 +221,13 @@
     _tab.dataSource = self;
     [self.view addSubview:_tab];
     
-    [self creatTabFooterViewWithUseScore:NO];
+    [self creatTabFooterViewWithUseState:NO];
     
 }
 
 
 //创建 更新 tabFooterView
--(void)creatTabFooterViewWithUseScore:(BOOL)state{
+-(void)creatTabFooterViewWithUseState:(BOOL)state{
     
     if (!_tabFooterView) {
         _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 435)];
@@ -195,10 +253,10 @@
     tLabel.text = @"给卖家留言:";
     [liuyanView addSubview:tLabel];
     
-    UITextField *liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
-    liuyantf.font = [UIFont systemFontOfSize:15];
-    liuyantf.placeholder = @"选填";
-    [liuyanView addSubview:liuyantf];
+    _liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
+    _liuyantf.font = [UIFont systemFontOfSize:15];
+    _liuyantf.placeholder = @"选填";
+    [liuyanView addSubview:_liuyantf];
     
     //第二条分割线
     UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(liuyanView.frame), DEVICE_WIDTH, 2)];
@@ -296,8 +354,6 @@
     UILabel *jifenMiaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jifenLabel.frame)+10, jifenLabel.frame.origin.y, DEVICE_WIDTH - 15 - 30 - 10 - 65, jifenLabel.frame.size.height)];
     jifenMiaoshuLabel.font = [UIFont systemFontOfSize:12];
     jifenMiaoshuLabel.text = @"共1008积分,可用600积分，抵6元";
-    jifenMiaoshuLabel.textColor = [UIColor blackColor];
-    jifenMiaoshuLabel.backgroundColor = [UIColor orangeColor];
     [jifenView addSubview:jifenMiaoshuLabel];
     
     UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
@@ -329,6 +385,7 @@
         
         
         UITextField *useScoreTf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb1.frame)+10, 10, 100, 24)];
+        useScoreTf.keyboardType = UIKeyboardTypeNumberPad;
         useScoreTf.font = [UIFont systemFontOfSize:15];
         useScoreTf.textAlignment = NSTextAlignmentCenter;
         useScoreTf.delegate = self;
@@ -364,17 +421,15 @@
     }
 
     //商品金额 运费 优惠券 代金券 积分 统计view
-    UIView *theNewbilityView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(lastLine.frame), DEVICE_WIDTH, 140)];
-    theNewbilityView.backgroundColor = [UIColor orangeColor];
-    [_tabFooterView addSubview:theNewbilityView];
+    _theNewbilityView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(lastLine.frame), DEVICE_WIDTH, 140)];
+    [_tabFooterView addSubview:_theNewbilityView];
     
     NSArray *titleArray = @[@"商品金额",@"运费",@"优惠券",@"代金券",@"积分"];
     for (int i = 0; i<titleArray.count; i++) {
         UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10+i*25, 70, 20)];
         tLabel.font = [UIFont systemFontOfSize:15];
-        tLabel.backgroundColor = RGBCOLOR_ONE;
         tLabel.text = titleArray[i];
-        [theNewbilityView addSubview:tLabel];
+        [_theNewbilityView addSubview:tLabel];
         
     }
     
@@ -384,11 +439,23 @@
         cLabel.textAlignment = NSTextAlignmentRight;
         cLabel.textColor = RGBCOLOR(237, 108, 22);
         cLabel.font = [UIFont systemFontOfSize:15];
-        cLabel.backgroundColor = RGBCOLOR_ONE;
-        [theNewbilityView addSubview:cLabel];
+        cLabel.tag = 10 + i;
+        [_theNewbilityView addSubview:cLabel];
     }
     
+    UIView *linelast = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_theNewbilityView.frame), DEVICE_WIDTH, 5)];
+    linelast.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:linelast];
+    
+    
+    [_tabFooterView setHeight:CGRectGetMaxY(linelast.frame)];
+    
+    
+    
     _tab.tableFooterView = _tabFooterView;
+    
+    [self jisuanPrice];
+    
 
 }
 
@@ -400,6 +467,9 @@
 
 
 -(void)creatAddressViewWithModel:(AddressModel*)theModel{
+    
+    _theAddressModel = theModel;
+    
     if (!_addressView) {
         _addressView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 115)];
         _addressView.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -515,14 +585,26 @@
     view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view];
     
-    UIButton *confirmOrderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [confirmOrderBtn setFrame:CGRectMake(DEVICE_WIDTH - 80, 0, 80, 50)];
-    confirmOrderBtn.backgroundColor = [UIColor orangeColor];
-    confirmOrderBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [confirmOrderBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [confirmOrderBtn setTitle:@"提交订单" forState:UIControlStateNormal];
-    [confirmOrderBtn addTarget:self action:@selector(confirmOrderBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:confirmOrderBtn];
+    UILabel *tl0 = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 50, 50)];
+    tl0.font = [UIFont systemFontOfSize:15];
+    tl0.text = @"实付款:";
+    [view addSubview:tl0];
+    
+    _shifukuangLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tl0.frame)+5, 0, DEVICE_WIDTH - 70 - 5 - 80, 50)];
+    _shifukuangLabel.font = [UIFont systemFontOfSize:15];
+    _shifukuangLabel.textColor = RGBCOLOR(225, 102, 18);
+    [view addSubview:_shifukuangLabel];
+
+    
+    
+    _confirmOrderBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_confirmOrderBtn setFrame:CGRectMake(DEVICE_WIDTH - 80, 0, 80, 50)];
+    _confirmOrderBtn.backgroundColor = [UIColor orangeColor];
+    _confirmOrderBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [_confirmOrderBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_confirmOrderBtn setTitle:@"提交订单" forState:UIControlStateNormal];
+    [_confirmOrderBtn addTarget:self action:@selector(confirmOrderBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:_confirmOrderBtn];
     
 }
 
@@ -532,19 +614,60 @@
 //选择使用优惠券
 -(void)youhuiquanViewClicked{
     NSLog(@"%s",__FUNCTION__);
+    
+    MyCouponViewController *cc = [[MyCouponViewController alloc]init];
+    cc.type = GCouponType_use_youhuiquan;
+    
+    
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+    CGFloat totolPrice = 0;
+    for (ProductModel *model in self.dataArray) {
+        NSString *price = [NSString stringWithFormat:@"%.2f",[model.current_price floatValue]*[model.product_num intValue]];
+        NSString *str = [NSString stringWithFormat:@"%@:%@",model.brand_id,price];
+        [arr addObject:str];
+        
+        totolPrice += ([model.current_price floatValue]*[model.product_num intValue]);
+        
+    }
+    
+    [arr addObject:[NSString stringWithFormat:@"0:%.2f",totolPrice]];
+
+    cc.coupon = [arr componentsJoinedByString:@"|"];
+    
+    NSLog(@"%@",cc.coupon);
+    
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    
+    
 }
 
 //选择使用代金券
 -(void)daijinquanViewClicked{
     NSLog(@"%s",__FUNCTION__);
+    
+    MyCouponViewController *cc = [[MyCouponViewController alloc]init];
+    cc.type = GCouponType_use_daijinquan;
+    
+    NSArray *brand_ids_Array = [NSMutableArray arrayWithCapacity:1];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    for (ProductModel *model in self.dataArray) {
+        [dic setValue:@"1" forKey:model.brand_id];
+    }
+    
+    brand_ids_Array = [dic allKeys];
+    NSString *brand_ids_str = [brand_ids_Array componentsJoinedByString:@","];
+    cc.brand_ids = brand_ids_str;
+    
+    [self.navigationController pushViewController:cc animated:YES];
+    
 }
 
 
+//获取开关按钮的值
 -(void)getValue:(UISwitch*)sender{
     
-    
-    [self creatTabFooterViewWithUseScore:sender.isOn];
-    
+    [self creatTabFooterViewWithUseState:sender.isOn];
     
 }
 
@@ -553,7 +676,7 @@
 //提交订单
 -(void)confirmOrderBtnClicked{
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     
     
     if (!_request) {
@@ -564,19 +687,15 @@
     
     NSMutableArray *product_ids_arr = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray *product_nums_arr = [NSMutableArray arrayWithCapacity:1];
-    NSString *total_price = @"0";
-    CGFloat price = 0;
+    
     for (NSArray *arr in _theData) {
         for (ProductModel *oneModel in arr) {
             [product_ids_arr addObject:oneModel.product_id];
             [product_nums_arr addObject:oneModel.product_num];
-            price += [oneModel.current_price floatValue] * [oneModel.product_num intValue];
         }
     }
     
-    _sumPrice_pay = price;
     
-    total_price = [NSString stringWithFormat:@"%.2f",price];
     
     
     NSLog(@"%@",product_ids_arr);
@@ -586,35 +705,27 @@
     
     
     
+    if (!_theAddressModel) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写收货地址" addToView:self.view];
+        return;
+    }
+    
     
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth],
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
                           @"product_ids":product_ids_str,
                           @"product_nums":product_nums_str,
-                          @"address_id":@"1",
-                          @"order_note":@"订单备注",
+                          @"address_id":_theAddressModel.address_id,
+                          @"order_note":_liuyantf.text,
                           @"is_use_score":@"0",
-                          @"total_price":total_price,
-                          @"real_price":total_price
+                          @"total_price":[NSString stringWithFormat:@"%.2f",_price_total],
+                          @"real_price":[NSString stringWithFormat:@"%.2f",_finalPrice]
                           };
     
     
-//    NSDictionary *dic1 = @{
-//                           @"authcode":[GMAPI testAuth],
-//                           @"product_ids":@"1,2",
-//                           @"product_nums":@"1,1",
-//                           @"address_id":@"订单id",
-//                           @"order_note":@"订单备注",
-//                           @"is_use_score":@"是否使用积分",
-//                           @"score":@"使用的积分",
-//                           @"coupon_id":@"优惠券id",
-//                           @"vouchers_id":@"代金券",
-//                           @"is_appoint":@"是否是预约页面跳转过来的 1：是； 由购物车跳转过来的不用传递这个参数",
-//                           @"total_price":@"总价格"
-//                           };
-    
     __weak typeof(self)weakSelf = self;
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _request_confirmOrder = [_request requestWithMethod:YJYRequstMethodPost api:ORDER_SUBMIT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -622,6 +733,7 @@
         NSLog(@"%@",result);
         NSString *orderId = [result stringValueForKey:@"order_id"];
         NSString *orderNum = [result stringValueForKey:@"order_no"];
+        _sumPrice_pay = _finalPrice;
         [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
         
     } failBlock:^(NSDictionary *result) {
@@ -668,9 +780,7 @@
     }else{//有收货地址
         
     }
-//    
-//    GuserAddressViewController *cc = [[GuserAddressViewController alloc]init];
-//    [self.navigationController pushViewController:cc animated:YES];
+
     
     
     __weak typeof(self)wealSelf = self;
@@ -680,7 +790,7 @@
     address.selectAddressBlock = ^(AddressModel *aModel){
         _selectAddressId = aModel.address_id;
         [wealSelf updateAddressInfoWithModel:aModel];//更新收货地址显示
-//        [wealSelf updateExpressFeeWithAddressId:aModel.address_id];//更新邮费
+
     };
     
     [self.navigationController pushViewController:address animated:YES];
@@ -805,22 +915,6 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
-//    [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100])];
-//    view.backgroundColor = [UIColor purpleColor];
-//    
-//    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/10])];
-//    upLine.backgroundColor = RGBCOLOR(244, 245, 246);
-//    [view addSubview:upLine];
-//    
-//    UIView *midView = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(upLine.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-//    midView.backgroundColor = [UIColor whiteColor];
-//    
-//    
-//    
-//    
-//    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(midView.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/10])];
-//    [view addSubview:downLine];
-    
     return view;
 }
 

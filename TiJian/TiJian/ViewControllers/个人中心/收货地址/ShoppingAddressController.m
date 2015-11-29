@@ -105,7 +105,7 @@
     __weak typeof(self)weakSelf = self;
     __weak AddressModel *aModel = [_table.dataArray objectAtIndex:sender.tag - kPadding_Default];
     
-    NSString *authkey = [GMAPI getAuthkey];
+    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
     NSDictionary *params = @{@"authcode":authkey,
                              @"address_id":aModel.address_id};
     [MBProgressHUD  showHUDAddedTo:self.view animated:YES];
@@ -145,7 +145,7 @@
 
     __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
-    NSString *authkey = [GMAPI getAuthkey];
+    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
     NSDictionary *params = @{@"authcode":authkey,
                              @"address_id":aModel.address_id};
     
@@ -167,7 +167,7 @@
 {
     __weak typeof(_table)weakTable = _table;
     
-    NSString *authey = [GMAPI getAuthkey];
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
 
     NSDictionary *params = @{@"authcode":authey,
                              @"page":[NSNumber numberWithInt:_table.pageNum],

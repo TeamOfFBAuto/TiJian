@@ -10,12 +10,15 @@
 //商品详情页
 
 #import "MyViewController.h"
+@class ProductModel;
 
 @interface GproductDetailViewController : MyViewController
 
 @property(nonatomic,strong)NSString *productId;
 
 @property(nonatomic,assign)BOOL isShopCarPush;
+
+@property(nonatomic,strong)ProductModel *theProductModel;//产品model
 
 -(void)goToCommentVc;
 

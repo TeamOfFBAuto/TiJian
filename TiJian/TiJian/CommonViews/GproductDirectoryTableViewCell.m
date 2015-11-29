@@ -31,8 +31,6 @@
     NSString *project_desc = [dic stringValueForKey:@"project_desc"];//项目描述
     
     
-    
-    
     UILabel *xuhaoLabel = [[UILabel alloc]initWithFrame:CGRectZero];
     xuhaoLabel.font = [UIFont systemFontOfSize:12];
     xuhaoLabel.text = xuhao;
@@ -64,6 +62,10 @@
     mingxiLabel.textAlignment = NSTextAlignmentCenter;
     zuheneirongLabel.textAlignment = NSTextAlignmentCenter;
     
+    if ([xuhao isEqualToString:@"1"] || [xuhao isEqualToString:@"2"] || [xuhao isEqualToString:@"3"]) {
+        
+        
+    }
     
     NSArray *arr = @[xuhaoLabel,mingxiLabel,zuheneirongLabel];
     CGFloat maxHeight = 0;

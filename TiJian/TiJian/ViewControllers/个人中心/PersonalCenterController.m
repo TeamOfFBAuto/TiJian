@@ -14,6 +14,7 @@
 #import "GShopCarViewController.h"
 #import "ProductListViewController.h"
 #import "OrderViewController.h"
+#import "MyWalletViewController.h"//我的钱包
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -367,6 +368,11 @@
         if (indexPath.row == 0) {
             
             //@"我的钱包";
+            
+            MyWalletViewController *cc = [[MyWalletViewController alloc]init];
+            cc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:cc animated:YES];
+            
             
         }else if (indexPath.row == 1){
             

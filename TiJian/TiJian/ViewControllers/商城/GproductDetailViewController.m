@@ -13,6 +13,7 @@
 #import "ProductCommentModel.h"
 #import "GcommentViewController.h"
 #import "ProductModel.h"
+#import "CouponModel.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -28,7 +29,7 @@
     
     UITableView *_tab;
     
-    ProductModel *_theProductModel;//产品model
+    
     
     GproductDetailTableViewCell *_tmpCell;
     GproductDirectoryTableViewCell *_tmpCell1;
@@ -187,9 +188,19 @@
 
 //套餐详情
 -(void)getProductDetail{
-    NSDictionary *parameters = @{
-                                 @"product_id":self.productId
-                                 };
+    
+    NSDictionary *parameters;
+    
+    if ([LoginViewController isLogin]) {
+        parameters = @{
+                       @"product_id":self.productId,
+                       @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                       };
+    }else{
+        parameters = @{
+                       @"product_id":self.productId
+                       };
+    }
     
     __weak typeof (self)bself = self;
     
@@ -197,8 +208,16 @@
         
         NSDictionary *dic = [result dictionaryValueForKey:@"data"];
         
-        _theProductModel = [[ProductModel alloc]initWithDictionary:dic];
+        self.theProductModel = [[ProductModel alloc]initWithDictionary:dic];
         
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (NSDictionary *dic in self.theProductModel.coupon_list) {
+            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+            [arr addObject:model];
+        }
+        
+        self.theProductModel.coupon_list = (NSArray*)arr;
+
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
         [bself prepareLookAgainNetData];
@@ -217,7 +236,7 @@
     }
     
     NSDictionary *dic = @{
-                          @"brand_id":_theProductModel.brand_id,
+                          @"brand_id":self.theProductModel.brand_id,
                           @"province_id":[GMAPI getCurrentProvinceId],
                           @"city_id":[GMAPI getCurrentCityId],
                           @"page":@"1",
@@ -246,29 +265,39 @@
 //获取购物车数量
 -(void)getshopcarNum{
     
+    if ([LoginViewController isLogin]) {
+       [self getShopcarNumWithLoginSuccess];
+    }else{
+        _count+=1;
+    }
     
     
+}
+
+
+-(void)getShopcarNumWithLoginSuccess{
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth]
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
                           };
-    _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _shopCarDic = result;
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        
-        
+ 
         
     } failBlock:^(NSDictionary *result) {
         
     }];
-    
 }
+
+
+
 
 -(void)updateShopCarNum{
     
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth]
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
                           };
     _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -322,7 +351,7 @@
 -(void)addProductToShopCar{
 
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth],
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
                           @"product_id":self.productId,
                           @"product_num":@"1"
                           };
@@ -463,7 +492,33 @@
 -(void)downBtnClicked:(UIButton *)sender{
     if (sender.tag == 100) {//客服
         
+        if ([LoginViewController isLogin]) {//已登录
+            
+        }else{
+            [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+                if (success) {//登录成功
+                    
+                }else{
+                    
+                }
+            }];
+        }
+        
+        
     }else if (sender.tag == 101){//收藏
+        
+        if ([LoginViewController isLogin]) {//已登录
+            
+        }else{
+            [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+                if (success) {//登录成功
+                    
+                }else{
+                    
+                }
+            }];
+        }
+        
         
     }else if (sender.tag == 102){//品牌店
         
@@ -472,8 +527,21 @@
         if (self.isShopCarPush) {
             [self.navigationController popViewControllerAnimated:YES];
         }else{
-            GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-            [self.navigationController pushViewController:cc animated:YES];
+            if ([LoginViewController isLogin]) {//已登录
+                GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+                [self.navigationController pushViewController:cc animated:YES];
+            }else{
+                [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+                    if (success) {
+                        GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+                        [self.navigationController pushViewController:cc animated:YES];
+                    }else{
+                        
+                    }
+                }];
+            }
+            
+            
         }
         
     }else if (sender.tag == 104){//加入购物车
@@ -488,7 +556,7 @@
 #pragma mark - UITableViewDelegate && UITableViewDataSource
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (tableView.tag == 1000) {
+    if (tableView.tag == 1000) {//单品详情
         static NSString *identifier = @"identifier";
         GproductDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         if (!cell) {
@@ -501,11 +569,11 @@
             [view removeFromSuperview];
         }
         
-        [cell loadCustomViewWithModel:_theProductModel index:indexPath productCommentArray:_productCommentArray lookAgainArray:_LookAgainProductListArray];
+        [cell loadCustomViewWithIndex:indexPath productCommentArray:_productCommentArray lookAgainArray:_LookAgainProductListArray];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
-    }else if (tableView.tag == 1001){
+    }else if (tableView.tag == 1001){//项目详情
         static NSString *identi = @"identi";
         GproductDirectoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identi];
         if (!cell) {
@@ -572,6 +640,7 @@
     }else if (tableView.tag == 1001){
         NSArray *arr = _productProjectListDataArray[section];
         num = arr.count;
+        
     }
     
     
@@ -586,11 +655,12 @@
     if (tableView.tag == 1000) {
         if (!_tmpCell) {
             _tmpCell = [[GproductDetailTableViewCell alloc]init];
+            _tmpCell.delegate = self;
         }
         for (UIView *view in _tmpCell.contentView.subviews) {
             [view removeFromSuperview];
         }
-        height = [_tmpCell loadCustomViewWithModel:_theProductModel index:indexPath productCommentArray:_productCommentArray lookAgainArray:_LookAgainProductListArray];
+        height = [_tmpCell loadCustomViewWithIndex:indexPath productCommentArray:_productCommentArray lookAgainArray:_LookAgainProductListArray];
     }else if (tableView.tag == 1001){
         if (!_tmpCell1) {
             _tmpCell1 = [[GproductDirectoryTableViewCell alloc]init];
@@ -603,6 +673,9 @@
         NSDictionary *dic = arr[indexPath.row];
         
         height = [_tmpCell1 loadCustomViewWithData:dic indexPath:indexPath];
+        
+        NSLog(@"小胖:%ld",(long)height);
+        
     }
     
     
@@ -618,7 +691,7 @@
     if (tableView.tag == 1000) {
         
     }else if (tableView.tag == 1001){
-        if (section == 0.01) {
+        if (section == 0) {
             height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/220];
         }else{
             height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60];

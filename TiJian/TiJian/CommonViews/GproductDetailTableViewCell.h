@@ -20,8 +20,8 @@
 }
 @property(nonatomic,assign)GproductDetailViewController *delegate;
 
-@property(nonatomic,strong)ProductModel *productModel;
 
--(CGFloat)loadCustomViewWithModel:(ProductModel*)theModel index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr lookAgainArray:(NSArray *)theLookArray;
+
+-(CGFloat)loadCustomViewWithIndex:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr lookAgainArray:(NSArray *)theLookArray;
 
 @end

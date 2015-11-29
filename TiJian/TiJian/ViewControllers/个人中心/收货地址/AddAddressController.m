@@ -211,7 +211,7 @@
     if (self.isEditAddress) {
         
         api = USER_ADDRESS_EDIT;
-        params = @{@"authcode":[GMAPI getAuthkey],
+        params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
                                  @"address_id":self.addressModel.address_id,
                                  @"pro_id":[NSNumber numberWithInteger:_selectProvinceId],
                                  @"city_id":[NSNumber numberWithInteger:_selectCityId],
@@ -222,7 +222,7 @@
     }else
     {
         api = USER_ADDRESS_ADD;
-        params = @{@"authcode":[GMAPI getAuthkey],
+        params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
                                  @"pro_id":[NSNumber numberWithInteger:_selectProvinceId],
                                  @"city_id":[NSNumber numberWithInteger:_selectCityId],
                                  @"street":street,

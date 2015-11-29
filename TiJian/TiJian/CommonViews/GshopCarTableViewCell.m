@@ -55,7 +55,6 @@
         [self.contentView addSubview:self.chooseBtn];
         
         UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+5, 10, [GMAPI scaleWithHeight:height-20 width:0 theWHscale:252.0/158], height - 20)];
-        logoImv.backgroundColor = [UIColor redColor];
         [self.contentView addSubview:logoImv];
         self.iconImageView = logoImv;
         
@@ -172,7 +171,7 @@
     
     _request = [YJYRequstManager shareInstance];
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth],
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
                           @"cart_pro_id":model.cart_pro_id,
                           @"product_num":@"1"
                           };
@@ -213,7 +212,7 @@
     _request = [YJYRequstManager shareInstance];
     
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI testAuth],
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
                           @"cart_pro_id":model.cart_pro_id,
                           @"product_num":@"-1"
                           };

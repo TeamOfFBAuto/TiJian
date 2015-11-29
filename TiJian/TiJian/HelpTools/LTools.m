@@ -857,13 +857,13 @@
  */
 + (UIImage *)imageForCoupeColorId:(NSString *)color
 {
-    UIImage *aImage = [UIImage imageNamed:@"youhuiquan_r_70"];
+    UIImage *aImage = [UIImage imageNamed:@"youhuiquan_r.png"];
     if ([color intValue] == 1) {
-        aImage = [UIImage imageNamed:@"youhuiquan_r_70"];
+        aImage = [UIImage imageNamed:@"youhuiquan_r.png"];
     }else if ([color intValue] == 2){
-        aImage = [UIImage imageNamed:@"youhuiquan_y_70"];
+        aImage = [UIImage imageNamed:@"youhuiquan_y.png"];
     }else if ([color intValue] == 3){
-        aImage = [UIImage imageNamed:@"youhuiquan_b_70"];
+        aImage = [UIImage imageNamed:@"youhuiquan_b.png"];
     }
     return aImage;
 }

@@ -19,11 +19,13 @@
 
 //时间转换 —— 年-月-日
 +(NSString *)timechangeYMD:(NSString *)placetime;
+//时间转换 —— 月-日
++(NSString *)timechangeMD:(NSString *)placetime;
 
 
-//测试authcode
-+(NSString *)getAuthkey;
-+(NSString *)testAuth;
+////测试authcode
+//+(NSString *)getAuthkey;
+//+(NSString *)testAuth;
 
 
 //地区选择相关

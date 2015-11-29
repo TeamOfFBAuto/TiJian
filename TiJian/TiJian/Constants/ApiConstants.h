@@ -44,6 +44,17 @@
 //领取优惠券
 #define USER_GETCOUPON @"/index.php?d=api&c=order&m=receive_coupon"
 
+//我的优惠券列表
+#define USER_MYYOUHUIQUANLIST @"/index.php?d=api&c=order&m=my_coupon_list"
+
+//我的代金券列表
+#define USER_MYDAIJINQUANLIST @"/index.php?d=api&c=order&m=my_vouchers_list"
+
+//下单时，可以使用的优惠券列表
+#define ORDER_GETYOUHUIQUANLIST @"/index.php?d=api&c=order&m=use_coupon_list"
+
+//下单时，可以使用的代金券列表
+#define ORDER_GETDAIJIQUANLIST @"/index.php?d=api&c=order&m=use_vouchers_list"
 
 //获取个性定制结果POST
 #define GET_CUSTOMIZAITION_RESULT @"/index.php?d=api&c=customization&m=get_customization_result"

@@ -105,7 +105,7 @@
     }
     
     NSDictionary *dic = @{
-                          @"authcode":[GMAPI getAuthkey],
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
                           @"page":[NSString stringWithFormat:@"%d",self.rtab.pageNum],
                           @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };

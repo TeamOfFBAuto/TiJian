@@ -12,58 +12,8 @@
 
 @implementation CoupeView
 
-//-(instancetype)initWithCouponArray:(NSArray *)couponArray
-//{
-//    self = [super initWithFrame:[UIScreen mainScreen].bounds];
-//    if (self) {
-//        
-//        self.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.5];
-//        
-//        CGFloat left = [LTools fitWidth:25];
-//        CGFloat aWidth = DEVICE_WIDTH - left * 2;
-//        
-//        NSArray *coupeList = couponArray;
-//        
-//        _coupeArray = couponArray;
-//        
-//        UIView *listView = [[UIView alloc]initWithFrame:CGRectMake(left, 0, aWidth, 0)];
-//        [self addSubview:listView];
-//        listView.backgroundColor = [UIColor whiteColor];
-//        [listView addCornerRadius:5.f];
-//        
-//        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, listView.width, [LTools fitHeight:40]) title:@"领取优惠劵" font:15 align:NSTextAlignmentCenter textColor:[UIColor blackColor]];
-//        [listView addSubview:titleLabel];
-//        
-//        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, titleLabel.bottom, listView.width, 0.5)];
-//        line.backgroundColor = DEFAULT_LINE_COLOR;
-//        [listView addSubview:line];
-//        
-//        CGFloat bottom = line.bottom;
-//        CGFloat top = line.bottom;
-//        NSInteger count = coupeList.count;
-//        for (int i = 0; i < count; i ++) {
-//            CouponModel *aModel = [[CouponModel alloc]initWithDictionary:coupeList[i]];
-//            UIView *aView = [self coupeViewWithCoupeModel:aModel frame:CGRectMake(0, top + [LTools fitHeight:50] * i, listView.width, [LTools fitHeight:50]) tag:100 + i];
-//            [listView addSubview:aView];
-//            bottom = aView.bottom;
-//        }
-//        
-//        UIButton *closeBtn = [[UIButton alloc]initWithframe:CGRectMake(0,bottom + [LTools fitHeight:15], [LTools fitWidth:173], [LTools fitHeight:25]) buttonType:UIButtonTypeCustom normalTitle:@"暂不领取" selectedTitle:nil target:self action:@selector(clickToCloseCoupeView)];
-//        [listView addSubview:closeBtn];
-//        closeBtn.backgroundColor = [UIColor colorWithHexString:@"999999"];
-//        [closeBtn addCornerRadius:5.f];
-//        [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-//        closeBtn.centerX = listView.width / 2.f;
-//        
-//        listView.height = closeBtn.bottom + [LTools fitHeight:15];
-//        listView.centerY = DEVICE_HEIGHT / 2.f;
-//        
-//    }
-//    return self;
-//}
 
 //使用优惠劵
-
 -(instancetype)initWithCouponArray:(NSArray *)couponArray
                          userStyle:(USESTYLE)userStyle
 {
@@ -92,7 +42,7 @@
         if (userStyle == USESTYLE_Get) {
             title = @"领取优惠劵";
             title_close = @"确定";
-            color_close = [UIColor colorWithHexString:@"999999"];
+            color_close = RGBCOLOR(246, 75, 136);
 
         }else if (userStyle == USESTYLE_Use){
             title = @"优惠劵";
@@ -202,7 +152,6 @@
     
     ButtonProperty *btn_get = [ButtonProperty buttonWithType:UIButtonTypeCustom];
     btn_get.frame = CGRectMake(view.width - [LTools fitWidth:10] - aWidth, [LTools fitHeight:16], aWidth, [LTools fitHeight:30]);
-//    btn_get.backgroundColor = [UIColor orangeColor];
     [btn_get setImage:image_normal forState:UIControlStateNormal];
     [btn_get setImage:image_selected forState:UIControlStateSelected];
     [btn_get addTarget:self action:@selector(clickToGetCoupe:) forControlEvents:UIControlEventTouchUpInside];

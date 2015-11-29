@@ -468,11 +468,11 @@ static int seconds = 60;//计时60s
         [LTools alertText:ALERT_ERRO_PASSWORD viewController:self];
         return;
     }
-    if (self.mimaTf.text.length != 6) {
-        
-        [LTools alertText:ALERT_ERRO_SECURITYCODE viewController:self];
-        return;
-    }
+//    if (self.mimaTf.text.length != 6) {
+//        
+//        [LTools alertText:ALERT_ERRO_PASSWORD viewController:self];
+//        return;
+//    }
     
     
     NSString *codestr = [NSString stringWithFormat:@"%d",code];

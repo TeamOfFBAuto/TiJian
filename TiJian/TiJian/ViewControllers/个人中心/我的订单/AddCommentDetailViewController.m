@@ -378,7 +378,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
     }
     NSDictionary *dic_upload = @{
                           @"product_id":self.theModel.product_id,//商品id
-                          @"authcode":[GMAPI getAuthkey],//用户标示
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD],//用户标示
                           @"order_no":self.dingdanhao,//订单号
                           @"star_level":[NSString stringWithFormat:@"%d",_theScore],//评论星级
                           @"content":_tv.text,

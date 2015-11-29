@@ -27,8 +27,8 @@
 }
 
 
--(CGFloat)loadCustomViewWithModel:(ProductModel*)theModel index:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr lookAgainArray:(NSArray *)theLookArray{
-    self.productModel = theModel;
+-(CGFloat)loadCustomViewWithIndex:(NSIndexPath*)theindexPath productCommentArray:(NSArray*)commentArr lookAgainArray:(NSArray *)theLookArray{
+    
     //6个section
     //0     logo图 套餐名 描述 价钱
     //1     优惠券
@@ -44,21 +44,21 @@
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
             
-            [imv l_setImageWithURL:[NSURL URLWithString:self.productModel.cover_pic] placeholderImage:nil];
+            [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil];
             [self.contentView addSubview:imv];
             height += imv.frame.size.height;
             
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(imv.frame)+15, DEVICE_WIDTH - 20, 0)];
             titleLabel.font = [UIFont systemFontOfSize:13];
-            titleLabel.text = self.productModel.setmeal_name;
+            titleLabel.text = self.delegate.theProductModel.setmeal_name;
             titleLabel.numberOfLines = 2;
             [titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(imv.frame)+15) width:DEVICE_WIDTH - 20];
             [self.contentView addSubview:titleLabel];
             height += titleLabel.frame.size.height+15;
             
             
-            NSString *xianjia = self.productModel.setmeal_price;
-            NSString *yuanjia = self.productModel.setmeal_original_price;
+            NSString *xianjia = self.delegate.theProductModel.setmeal_price;
+            NSString *yuanjia = self.delegate.theProductModel.setmeal_original_price;
             
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame)+12, DEVICE_WIDTH - 20, 15)];
             NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
@@ -119,14 +119,14 @@
         UILabel *brandNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, cView.frame.size.width, 12)];
         brandNameLabel.font = [UIFont systemFontOfSize:12];
         brandNameLabel.textColor = [UIColor blackColor];
-        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",self.productModel.brand_name];
+        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",self.delegate.theProductModel.brand_name];
         [cView addSubview:brandNameLabel];
         
         //适合人群
         UILabel *suitLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(brandNameLabel.frame)+5, cView.frame.size.width, 12)];
         suitLabel.font = [UIFont systemFontOfSize:12];
         suitLabel.textColor = [UIColor blackColor];
-        NSArray *suit_infoArray = self.productModel.suit_info;
+        NSArray *suit_infoArray = self.delegate.theProductModel.suit_info;
         NSString *suit_info_str = @"";
         for (NSDictionary *dic in suit_infoArray) {
             NSString *ss = [NSString stringWithFormat:@"%@  %@",suit_info_str,[dic stringValueForKey:@"suit_name"]];
@@ -139,7 +139,7 @@
         UILabel *projectInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(suitLabel.frame)+5, cView.frame.size.width, 12)];
         projectInfoLabel.font = [UIFont systemFontOfSize:12];
         projectInfoLabel.textColor = [UIColor blackColor];
-        NSArray *projectInfoArray = self.productModel.project_info;
+        NSArray *projectInfoArray = self.delegate.theProductModel.project_info;
         NSString *projectInfo_str = @"";
         for (NSDictionary *dic in projectInfoArray) {
             NSString *ss = [NSString stringWithFormat:@"%@  %@",projectInfo_str,[dic stringValueForKey:@"project_name"]];
@@ -152,7 +152,7 @@
         UILabel *cityInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5, cView.frame.size.width, 12)];
         cityInfoLabel.font = [UIFont systemFontOfSize:12];
         cityInfoLabel.textColor = [UIColor blackColor];
-        NSArray *cityInfoArray = self.productModel.city_info;
+        NSArray *cityInfoArray = self.delegate.theProductModel.city_info;
         NSString *cityInfo_str = @"";
         for (NSDictionary *dic in cityInfoArray) {
             NSString *ss = [NSString stringWithFormat:@"%@  %@",cityInfo_str,[dic stringValueForKey:@"city_name"]];
@@ -258,7 +258,7 @@
             
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
             imv.userInteractionEnabled = YES;
-            [imv l_setImageWithURL:[NSURL URLWithString:self.productModel.cover_pic] placeholderImage:nil];
+            [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil];
             [logoAndContentView addSubview:imv];
             
             UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(imv.frame)+5, theW-10, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/60])];
@@ -335,30 +335,38 @@
  */
 - (void)clickToCoupe
 {
-    if (_coupeView) {
-        [_coupeView removeFromSuperview];
-        _coupeView = nil;
-    }
-    
-    NSArray *arr = self.productModel.coupon_list;
-    NSMutableArray *coupons = [NSMutableArray arrayWithCapacity:1];
-    for (NSDictionary *dic in arr) {
-        CouponModel *amodel = [[CouponModel alloc]initWithDictionary:dic];
-        [coupons addObject:amodel];
-    }
-    
-    _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
-    
-    __weak typeof(self)weakSelf = self;
-    
-    _coupeView.coupeBlock = ^(NSDictionary *params){
+    [LoginViewController loginToDoWithViewController:self.delegate loginBlock:^(BOOL success) {
         
-        ButtonProperty *btn = params[@"button"];
-        CouponModel *aModel = params[@"model"];
-        
-        [weakSelf netWorkForCouponModel:aModel button:btn];
-    };
-    [_coupeView show];
+        if (success) {//登录成功
+            if (_coupeView) {
+                [_coupeView removeFromSuperview];
+                _coupeView = nil;
+            }
+            
+            NSArray *coupons = self.delegate.theProductModel.coupon_list;
+            
+            _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
+            
+            __weak typeof(self)weakSelf = self;
+            
+            _coupeView.coupeBlock = ^(NSDictionary *params){
+                
+                ButtonProperty *btn = params[@"button"];
+                CouponModel *aModel = params[@"model"];
+                
+                [weakSelf netWorkForCouponModel:aModel button:btn];
+            };
+            [_coupeView show];
+            
+        }else{//登录失败
+            
+        }
+  
+    }];
+    
+    
+    
+    
 }
 
 /**
@@ -370,24 +378,14 @@
 - (void)netWorkForCouponModel:(CouponModel *)aModel
                        button:(UIButton *)sender
 {
-    //    __weak typeof(self)weakSelf = self;
-    
-//    if (![LTools isLogin:self]) {
-//        
-//        [_coupeView removeFromSuperview];
-//        _coupeView = nil;
-//        
-//        return;
-//    }
-    
-    
+
     YJYRequstManager *rr = [YJYRequstManager shareInstance];
     NSDictionary *dic = @{
                           @"coupon_id":aModel.coupon_id,
-                          @"authcode":[GMAPI testAuth]
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
                           };
     
-    [rr requestWithMethod:YJYRequstMethodPost api:USER_GETCOUPON parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [rr requestWithMethod:YJYRequstMethodGet api:USER_GETCOUPON parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSLog(@"result %@",result);
         aModel.enable_receive = @"0";

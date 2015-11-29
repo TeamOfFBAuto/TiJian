@@ -83,4 +83,15 @@ typedef enum {
     
 }PAY_RESULT_TYPE;//支付结果
 
+
+typedef enum {
+    GCouponType_youhuiquan,//优惠券
+    GCouponType_daijinquan,//代金券
+    GCouponType_use_youhuiquan,//使用优惠券
+    GCouponType_use_daijinquan,//使用代金券
+    GCouponType_disUse_youhuiquan,//不可用的优惠券
+    GCouponType_disUse_daijinquan//不可用代金券
+}GCouponType;
+
+
 #endif

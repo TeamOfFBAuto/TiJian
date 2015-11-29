@@ -187,7 +187,7 @@
  */
 - (void)getOrderListWithStatus:(ORDERTYPE)orderType
 {
-    NSString *authey = [GMAPI getAuthkey];
+    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
     if (authey.length == 0) {
         return;
     }
