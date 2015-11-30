@@ -46,7 +46,7 @@
         
         NSString *imageUrl = product.cover_pic;
 
-        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_YIJIAYI];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
         self.titleLabel.text = product.product_name;
         _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
         _titleLabel.numberOfLines = 2;
@@ -87,7 +87,7 @@
 
                 NSString *imageUrl = product.cover_pic;
                 UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((60 + 10) * i, 0, 60, 60)];
-                [aImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_YIJIAYI];
+                [aImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
                 [_contentScroll addSubview:aImageView];
             }
         }

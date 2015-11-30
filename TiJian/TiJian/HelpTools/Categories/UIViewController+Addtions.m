@@ -53,7 +53,7 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
     
     UIImageView *defautlImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 34, 34)];
     [button_back addSubview:defautlImage];
-    defautlImage.image = DEFAULT_YIJIAYI;
+    defautlImage.image = DEFAULT_HEADIMAGE;
     defautlImage.centerY = self.view.height/2.f - 32;
     defautlImage.centerX = self.view.width/2.f;
     

@@ -142,7 +142,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
         UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(i*self.frame.size.width, 0, self.frame.size.width,self.frame.size.height)];
         imv.backgroundColor = RGBCOLOR_ONE;
         SGFocusImageItem *item = [imageItems objectAtIndex:i];
-        [imv l_setImageWithURL:[NSURL URLWithString:item.image] placeholderImage:DEFAULT_YIJIAYI];
+        [imv l_setImageWithURL:[NSURL URLWithString:item.image] placeholderImage:DEFAULT_HEADIMAGE];
         [_scrollView addSubview:imv];
         [imv release];
         
@@ -196,7 +196,7 @@ static CGFloat SWITCH_FOCUS_PICTURE_INTERVAL = 4.0; //switch interval time
         UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(i*DEVICE_WIDTH, 0, DEVICE_WIDTH,(int)(DEVICE_WIDTH*250/750))];
         imv.backgroundColor = RGBCOLOR_ONE;
         SGFocusImageItem *item = [imageItems objectAtIndex:i];
-        [imv l_setImageWithURL:[NSURL URLWithString:item.image] placeholderImage:DEFAULT_YIJIAYI];
+        [imv l_setImageWithURL:[NSURL URLWithString:item.image] placeholderImage:DEFAULT_HEADIMAGE];
         [_scrollView addSubview:imv];
         [imv release];
         

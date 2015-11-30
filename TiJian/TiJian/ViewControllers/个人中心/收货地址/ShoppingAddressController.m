@@ -67,7 +67,7 @@
     [_table showRefreshHeader:YES];
     
     __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
+//    __weak typeof(_table)weakTable = _table;
     [_table setDataArrayObeserverBlock:^(NSString *keyPath,NSDictionary *change){
                 
         int new = [change[@"new"]intValue];

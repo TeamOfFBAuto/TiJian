@@ -41,7 +41,7 @@
     
     
     [self.webView loadRequest:request progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        NSLog(@"%ld",bytesWritten);
+        NSLog(@"%ld",(unsigned long)bytesWritten);
         
     } success:^NSString *(NSHTTPURLResponse *response, NSString *HTML) {
         

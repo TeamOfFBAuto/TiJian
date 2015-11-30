@@ -91,7 +91,7 @@
 {
     dateBlock = aBlock;
     [[UIApplication sharedApplication].keyWindow addSubview:self];
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         bgView.top = self.height - bgView.height;
         self.alpha = 1.0;
     }];
@@ -99,7 +99,7 @@
 
 -(void)hidden
 {
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         bgView.top = self.height;
         self.alpha = 0.0;
     }];

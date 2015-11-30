@@ -78,7 +78,7 @@
         
         NSLog(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
+        [weakTable loadFail];
     }];
 }
 

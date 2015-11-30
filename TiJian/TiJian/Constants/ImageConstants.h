@@ -29,6 +29,5 @@
 #define DEFAULT_HEADIMAGE [UIImage imageNamed:@"default_hema"] //默认头像
 #define DEFAULT_BANNER_IMAGE [UIImage imageNamed:@"my_bg.png"] //默认banner
 
-#define DEFAULT_YIJIAYI [UIImage imageNamed:@"default"] //默认图标
 
 #endif
