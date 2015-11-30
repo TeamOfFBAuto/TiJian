@@ -344,6 +344,8 @@
 		E352F9191C0B91680037E4AE /* kefu_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9151C0B91680037E4AE /* kefu_pd@2x.png */; };
 		E352F91A1C0B91680037E4AE /* pinpaidian_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9161C0B91680037E4AE /* pinpaidian_pd@2x.png */; };
 		E352F91B1C0B91680037E4AE /* shoucang_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */; };
+		E352F91E1C0C419A0037E4AE /* coupon_feitongyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */; };
+		E352F91F1C0C419A0037E4AE /* coupon_tongyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */; };
 		E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */; };
 		E3796D091BFB37CD004B63F7 /* homepage_search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796CFE1BFB37CC004B63F7 /* homepage_search@2x.png */; };
 		E3796D0A1BFB37CD004B63F7 /* my_indent_no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796CFF1BFB37CC004B63F7 /* my_indent_no@2x.png */; };
@@ -986,6 +988,8 @@
 		E352F9151C0B91680037E4AE /* kefu_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kefu_pd@2x.png"; sourceTree = "<group>"; };
 		E352F9161C0B91680037E4AE /* pinpaidian_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinpaidian_pd@2x.png"; sourceTree = "<group>"; };
 		E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoucang_pd@2x.png"; sourceTree = "<group>"; };
+		E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coupon_feitongyong@2x.png"; sourceTree = "<group>"; };
+		E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coupon_tongyong@2x.png"; sourceTree = "<group>"; };
 		E359ACA11BEC96EA00EF1527 /* GShopCarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GShopCarViewController.h; sourceTree = "<group>"; };
 		E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GShopCarViewController.m; sourceTree = "<group>"; };
 		E3796CFE1BFB37CC004B63F7 /* homepage_search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_search@2x.png"; sourceTree = "<group>"; };
@@ -2331,6 +2335,8 @@
 		E3D8AE371BF6203F003AE2E3 /* 奖券 */ = {
 			isa = PBXGroup;
 			children = (
+				E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */,
+				E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */,
 				E3D8AE3C1BF6203F003AE2E3 /* jiangquan_yiduijiang@2x.png */,
 				E3D8AE3D1BF6203F003AE2E3 /* jiangquan_yiguoqi@2x.png */,
 				E3D8AE3E1BF6203F003AE2E3 /* youhui_lingqu@2x.png */,
@@ -2490,6 +2496,7 @@
 				1303C3581BEB0D7100700847 /* personal_youhuiquan_g@2x.png in Resources */,
 				131C118E1BF04BF100629938 /* user_fanhui@2x.png in Resources */,
 				139333EC1BE0DF3E00B4628B /* 4_2_e8bf78@2x.png in Resources */,
+				E352F91E1C0C419A0037E4AE /* coupon_feitongyong@2x.png in Resources */,
 				13F1F3CD1BBA9A4B00885D31 /* AlipaySDK.bundle in Resources */,
 				13426BAF1BE7482B00979279 /* hema.sqlite in Resources */,
 				139333CD1BE0DF3E00B4628B /* 24_1@2x.png in Resources */,
@@ -2520,6 +2527,7 @@
 				130D2E2A1BFDF2DC002E301F /* UMSCommentDetailController.xib in Resources */,
 				13F5F0E51C083AE20045B5FA /* xuanzhong@2x.png in Resources */,
 				E3D8AE181BF4B16D003AE2E3 /* roundblue@2x.png in Resources */,
+				E352F91F1C0C419A0037E4AE /* coupon_tongyong@2x.png in Resources */,
 				E335F9F41BFEF36000708BF6 /* qrdd_jiantou_small@2x.png in Resources */,
 				E3796D1F1BFB389E004B63F7 /* shoppingcart_bottom_normal@2x.png in Resources */,
 				E3796D201BFB389E004B63F7 /* shoppingcart_bottom_selected@2x.png in Resources */,

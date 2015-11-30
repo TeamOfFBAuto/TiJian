@@ -50,6 +50,9 @@
 //我的代金券列表
 #define USER_MYDAIJINQUANLIST @"/index.php?d=api&c=order&m=my_vouchers_list"
 
+//进入我的钱包 显示优惠券和代金券数量
+#define USER_WALLET_COUPON_NUM @"/index.php?d=api&c=order&m=my_wallet"
+
 //下单时，可以使用的优惠券列表
 #define ORDER_GETYOUHUIQUANLIST @"/index.php?d=api&c=order&m=use_coupon_list"
 

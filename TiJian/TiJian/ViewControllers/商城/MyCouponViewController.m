@@ -171,39 +171,77 @@
     }
     [_requst requestWithMethod:YJYRequstMethodGet api:url parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSArray *list = [result arrayValueForKey:@"coupon_list"];
+        NSDictionary *coupon_list_Dic = [result dictionaryValueForKey:@"coupon_list"];
         
+        //可用
+        NSDictionary *enableDic = [coupon_list_Dic dictionaryValueForKey:@"enable"];
+        //不可用
+        NSDictionary *disableDic = [coupon_list_Dic dictionaryValueForKey:@"disable"];
+       
+        //可用
         _tab0Array = [NSMutableArray arrayWithCapacity:1];
-        _tab1Array = [NSMutableArray arrayWithCapacity:1];
-        
         NSMutableArray *tab0_tongyongArray = [NSMutableArray arrayWithCapacity:1];
         NSMutableArray *tab0_feitongyongArray = [NSMutableArray arrayWithCapacity:1];
         
+        //不可用
+        _tab1Array = [NSMutableArray arrayWithCapacity:1];
         NSMutableArray *tab1_tongyongArray = [NSMutableArray arrayWithCapacity:1];
         NSMutableArray *tab1_feitongyongArray = [NSMutableArray arrayWithCapacity:1];
         
+        //可用里的通用
+        NSArray *enableDic_common_Array = [enableDic arrayValueForKey:@"common"];
+        //可用里的非通用
+        NSArray *enableDic_uncommon_Array = [enableDic arrayValueForKey:@"uncommon"];
         
+        //不可用里的通用
+        NSArray *disableDic_common_Array = [disableDic arrayValueForKey:@"common"];
+        //不可用里的非通用
+        NSArray *disableDic_uncommon_Array = [disableDic arrayValueForKey:@"uncommon"];
         
-        
-        
-        for (NSDictionary *dic in list) {
+        //dic转model
+        //可用-通用
+        for (NSDictionary *dic in enableDic_common_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (model.enable_use) {//可用
-                if (model.brand_id) {//非通用
-                    [tab0_feitongyongArray addObject:model];
-                }else{//通用
-                    [tab0_tongyongArray addObject:model];
-                }
-            }else{//不可用
-                if (model.brand_id) {//非通用
-                    [tab1_feitongyongArray addObject:model];
-                }else{//通用
-                    [tab1_tongyongArray addObject:model];
-                }
-            }
+            [tab0_tongyongArray addObject:model];
         }
         
+        //可用-非通用
+        for (NSDictionary *dic in enableDic_uncommon_Array) {
+            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+            [tab0_feitongyongArray addObject:model];
+        }
         
+        //不可用-通用
+        for (NSDictionary *dic in disableDic_common_Array) {
+            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+            [tab1_tongyongArray addObject:model];
+        }
+        
+        //不可用-非通用
+        for (NSDictionary *dic in disableDic_uncommon_Array) {
+            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+            [tab1_feitongyongArray addObject:model];
+        }
+   
+
+//        //接口没分组
+//        for (NSDictionary *dic in list) {
+//            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+//            if (model.enable_use) {//可用
+//                if (model.brand_id) {//非通用
+//                    [tab0_feitongyongArray addObject:model];
+//                }else{//通用
+//                    [tab0_tongyongArray addObject:model];
+//                }
+//            }else{//不可用
+//                if (model.brand_id) {//非通用
+//                    [tab1_feitongyongArray addObject:model];
+//                }else{//通用
+//                    [tab1_tongyongArray addObject:model];
+//                }
+//            }
+//        }
+       
         if (tab0_tongyongArray.count>0) {
             [_tab0Array addObject:tab0_tongyongArray];
         }
@@ -301,15 +339,21 @@
         model = arr[0];
     }
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 100, 45)];
+    
+    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, 15, 15, 15)];
+    [view addSubview:logoImv];
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+10, 0, 100, 45)];
     label.font = [UIFont systemFontOfSize:13];
     label.textColor = RGBCOLOR(134, 135, 136);
     [view addSubview:label];
     
     if (model.brand_id) {//非通用
         label.text = @"品牌优惠券";
+        [logoImv setImage:[UIImage imageNamed:@"coupon_feitongyong.png"]];
     }else{//通用
         label.text = @"通用优惠券";
+        [logoImv setImage:[UIImage imageNamed:@"coupon_tongyong.png"]];
     }
     
     

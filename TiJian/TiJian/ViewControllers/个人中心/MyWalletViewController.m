@@ -12,6 +12,12 @@
 @interface MyWalletViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *_tab;
+    YJYRequstManager *_request;
+    
+    NSString *_coupon_count;
+    NSString *_vouchers_count;
+    
+    
 }
 @end
 
@@ -25,7 +31,13 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"我的钱包";
     
+    
+    _coupon_count = nil;
+    _vouchers_count = nil;
+    
     [self creatTab];
+    
+    [self prepareNetData];
     
     
     
@@ -34,6 +46,43 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+
+#pragma mark - 网络请求
+-(void)prepareNetData{
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    
+    NSDictionary *dic = @{
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          };
+    
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:USER_WALLET_COUPON_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSDictionary *listDic = [result dictionaryValueForKey:@"list"];
+        
+        _coupon_count = [listDic stringValueForKey:@"coupon_count"];
+        _vouchers_count = [listDic stringValueForKey:@"vouchers_count"];
+        
+        [_tab reloadData];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 
@@ -137,22 +186,39 @@
     danweiLabel.textColor = [UIColor blackColor];
     [cell.contentView addSubview:danweiLabel];
 
+    
+    
+    
+    
     if (indexPath.row == 0) {//积分
         danweiLabel.text = @"分";
-        int score = 568;
-        cLabel.text = [NSString stringWithFormat:@"%d",score];
+        cLabel.text = [UserInfo userInfoForCache].score;
     }else if (indexPath.row == 1){//优惠券
         danweiLabel.text = @"张";
-        int num = 3;
-        cLabel.text = [NSString stringWithFormat:@"%d",num];
-        cLabel.hidden = YES;
-        danweiLabel.hidden = YES;
+        
+        if (_coupon_count.length>0) {
+            cLabel.text = _coupon_count;
+            cLabel.hidden = NO;
+            danweiLabel.hidden = NO;
+        }else{
+            cLabel.hidden = YES;
+            danweiLabel.hidden = YES;
+        }
+        
+        
     }else if (indexPath.row == 2){//代金券
         danweiLabel.text = @"张";
-        int num = 2;
-        cLabel.text = [NSString stringWithFormat:@"%d",num];
-        cLabel.hidden = YES;
-        danweiLabel.hidden = YES;
+        
+        if (_vouchers_count.length>0) {
+            cLabel.text = _vouchers_count;
+            cLabel.hidden = NO;
+            danweiLabel.hidden = NO;
+        }else{
+            cLabel.hidden = YES;
+            danweiLabel.hidden = YES;
+        }
+        
+        
     }
     
     
