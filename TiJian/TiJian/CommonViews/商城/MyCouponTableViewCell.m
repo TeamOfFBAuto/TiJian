@@ -9,6 +9,7 @@
 #import "MyCouponTableViewCell.h"
 #import "MyCouponViewController.h"
 #import "CouponModel.h"
+#import "MyCouponViewController.h"
 
 @implementation MyCouponTableViewCell
 
@@ -31,7 +32,7 @@
         CGFloat height = 70;//单元格高度
         
         //选择按钮
-        self.chooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.chooseBtn = [Gbtn buttonWithType:UIButtonTypeCustom];
         [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
         [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
         CGFloat wAndH = 35;//选择按钮的宽高
@@ -41,7 +42,8 @@
             [self.chooseBtn setFrame:CGRectMake(5, height * 0.5 - wAndH * 0.5, wAndH, wAndH)];
         }
         
-        [self.chooseBtn addTarget:self action:@selector(chooseBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        self.chooseBtn.theIndex = theIndex;
+        [self.chooseBtn addTarget:self action:@selector(chooseBtnClickedWithIndex:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.chooseBtn];
 
         
@@ -89,6 +91,9 @@
 
 #pragma mark - 赋值
 -(void)loadDataWithModel:(CouponModel*)theModel{
+    
+    self.chooseBtn.selected = theModel.isUsed;
+    
     [self.iconImageView l_setImageWithURL:[NSURL URLWithString:theModel.brand_logo] placeholderImage:nil];
     
     self.contentLabel.text = theModel.brand_name;
@@ -139,9 +144,23 @@
 
 
 #pragma mark - 点击方法
--(void)chooseBtnClicked{
+//选中按钮点击
+-(void)chooseBtnClickedWithIndex:(Gbtn*)sender{
     
+    self.chooseBtn.selected = !self.chooseBtn.selected;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cellSelectBtnClickedWithIndex:select:)]) {
+        [self.delegate cellSelectBtnClickedWithIndex:sender.theIndex select:sender.selected];
+    }
+    
+    
+    
+//    NSArray *arr = self.delegate.rTab.dataArray[self.theIndexPath.section];
+//    ProductModel *model = arr[self.theIndexPath.row];
+//    model.userChoose = !model.userChoose;
+//    self.chooseBtn.selected = model.userChoose;
+//    
+//    [self.delegate isAllChooseAndUpdateState];
+//    [self.delegate updateRtabTotolPrice];
 }
-
 
 @end

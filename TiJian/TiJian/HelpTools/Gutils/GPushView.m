@@ -60,7 +60,6 @@
     
     
     
-    
     //创建视图
     [self creatNavcView];
     [self creatTab];
@@ -242,6 +241,8 @@
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -3){//选择价格 返回到主筛选界面
         [self.tab3 removeFromSuperview];
+        self.userChoosePrice_low = nil;
+        self.userChoosePrice_high = nil;
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -4){//选择品牌 返回到主筛选界面
         [self.tab4 removeFromSuperview];
@@ -261,13 +262,74 @@
  */
 -(void)rightBtnClicked:(UIButton*)sender{
     if (sender.tag == -11) {//主筛选界面侧边栏消失
+        
+        NSLog(@"%@",self.userChooseCity);
+        NSLog(@"%@",self.userChoosePinpai);
+        NSLog(@"%@",self.userChoosePinpai_id);
+        NSLog(@"%@",self.userChoosePrice);
+        NSLog(@"%@",self.userChoosePrice_high);
+        NSLog(@"%@",self.userChoosePrice_low);
+        
+
+        
+        
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+        
+        //地区选择
+        if (self.userChooseCity) {
+            int cityId = [GMAPI cityIdForName:self.userChooseCity];
+            NSString *province_id = [GMAPI getProvineIdWithCityId:cityId];
+            [dic setValue:province_id forKey:@"province_id"];
+            [dic setValue:[NSString stringWithFormat:@"%d",cityId] forKey:@"city_id"];
+            
+        }
+        
+        
+        //品牌选择
+        if (self.userChoosePinpai_id) {
+            [dic setValue:self.userChoosePinpai_id forKey:@"brand_id"];
+        }
+        
+        //价格选择
+        if (self.userChoosePrice) {
+            [dic setValue:self.userChoosePrice_low forKey:@"low_price"];
+            [dic setValue:self.userChoosePrice_high forKey:@"high_price"];
+        }
+        
+        
+        //性别选择
+        NSString *gender = nil;
+        for (int i = 0; i<3; i++) {
+            UIButton *btn = _genderBtnArray[i];
+            if (btn.selected) {
+                if (i == 1) {
+                    gender = @"2";
+                }else if (i == 2){
+                    gender = @"1";
+                }
+            }
+        }
+        
+        if (gender) {
+            [dic setValue:gender forKey:@"gender"];
+        }
+        
+        
+        
+        [self.delegate shaixuanFinishWithDic:dic];
+        
         [self.delegate therightSideBarDismiss];
+        
+        
+        
     }else if (sender.tag == -12){//选择地区 返回到主筛选界面
         [self.tab2 removeFromSuperview];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -13){//选择价格 返回到主筛选界面
         [self.tab3 removeFromSuperview];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        [self.tab1 reloadData];
         
     }else if (sender.tag == -14){//选择品牌 返回到主筛选界面
         [self.tab4 removeFromSuperview];
@@ -305,13 +367,25 @@
         btn.layer.borderWidth = 0.5;
         [btn setTitleColor:RGBCOLOR(77, 78, 79) forState:UIControlStateNormal];
         btn.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
+        btn.selected = NO;
     }
     
     sender.layer.borderWidth = 0.5;
     [sender setTitleColor:RGBCOLOR(237, 108, 22) forState:UIControlStateNormal];
     sender.layer.borderColor = [RGBCOLOR(237, 108, 22)CGColor];
+    sender.selected = YES;
 }
 
+
+//选择价格tab 填写价格之后点击确认按钮
+-(void)priceQuerenBtnClicked{
+    [self.tab3 removeFromSuperview];
+    [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+    
+    self.userChoosePrice = [NSString stringWithFormat:@"%@——%@",self.tf_low.text,self.tf_high.text];
+    
+    [self.tab1 reloadData];
+}
 
 
 #pragma mark - UITableViewDataSource && UITableViewDelegate
@@ -340,6 +414,8 @@
         
     }else if (tableView.tag == 3){//价格选择
         num = _priceArray.count;
+    }else if (tableView.tag == 4){//体检品牌
+        num = self.delegate.brand_city_list.count;
     }
     return num;
 }
@@ -414,7 +490,9 @@
         UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [quedingBtn setFrame:CGRectMake(CGRectGetMaxX(tf_high_backView.frame)+10, tf_high_backView.frame.origin.y, 55, tf_high_backView.frame.size.height)];
         [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
+        quedingBtn.backgroundColor = RGBCOLOR(134, 135, 136);
         quedingBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [quedingBtn addTarget:self action:@selector(priceQuerenBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:quedingBtn];
         
         
@@ -496,6 +574,8 @@
         height = 44;
     }else if (tableView.tag ==3){//价格筛选
         height = 44;
+    }else if (tableView.tag == 4){//体检品牌
+        height = 44;
     }
     return height;
 }
@@ -574,8 +654,8 @@
                 
                 [cell.contentView addSubview:cLabel];
                 
-                UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 25, cLabel.frame.size.height*0.5-10, 20, 20)];
-                jiantouImv.backgroundColor = [UIColor purpleColor];
+                UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 20, cLabel.frame.size.height*0.5-8, 8, 16)];
+                [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
                 [cell.contentView addSubview:jiantouImv];
                 
                 
@@ -668,8 +748,34 @@
         
         
         
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
+    }else if (tableView.tag == 4){//体检品牌
+        static NSString *identi = @"ident3";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identi];
+        if (!cell) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identi];
+        }
+        
+        
+        for (UIView*view in cell.contentView.subviews) {
+            [view removeFromSuperview];
+        }
+        
+        cell.textLabel.font = [UIFont systemFontOfSize:14];
+        NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
+        cell.textLabel.text = [dic stringValueForKey:@"brand_name"];
+        
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
+        line.backgroundColor = RGBCOLOR(234, 235, 236);
+        [cell.contentView addSubview:line];
+        
+        
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+        
     }
     
     
@@ -723,6 +829,13 @@
         [self.tf_high resignFirstResponder];
         [self.tf_low resignFirstResponder];
         
+        self.userChoosePrice = _priceArray[indexPath.row];
+        
+        NSArray *paa = [self.userChoosePrice componentsSeparatedByString:@"—"];
+        self.userChoosePrice_low = paa[0];
+        self.userChoosePrice_high = paa[1];
+        
+        
         
         [self.tab3 reloadData];
         
@@ -731,7 +844,11 @@
         
         
     }else if (tableView.tag == 4){//体检品牌
-        
+        NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
+        self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
+        self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];
+        [self.tab4 removeFromSuperview];
+        [self.tab1 reloadData];
     }
     
 }

@@ -301,4 +301,11 @@
 
 
 
++(NSString*)getProvineIdWithCityId:(int)cityId{
+    
+    NSString *provinceId = [NSString stringWithFormat:@"%d00",cityId/100];
+    return provinceId;
+}
+
+
 @end

@@ -20,6 +20,7 @@
     RefreshTableView *_table;
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_ProductOneClass;
+    AFHTTPRequestOperation *_request_BrandListWithLocation;
     
     NSMutableArray *_productOneClassArray;
     
@@ -61,7 +62,7 @@
     
     [self creatTableView];
     [self creatRightTranslucentSideBar];
-    [self creatFilterBtn];
+    [self prepareBrandListWithLocation];
     
 }
 
@@ -81,6 +82,14 @@
     [_table showRefreshHeader:YES];
     
 }
+
+-(void)shaixuanFinishWithDic:(NSDictionary *)dic{
+    self.shaixuanDic = dic;
+    [_table showRefreshHeader:YES];
+}
+
+
+
 
 //创建侧滑栏
 -(void)creatRightTranslucentSideBar{
@@ -173,17 +182,25 @@
 
 #pragma mark - 请求网络数据
 
--(void)prepareNetData{
+-(void)prepareNetDataWithDic:(NSDictionary *)theDic{
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
     _count = 0;
 
+    NSDictionary *dic;
+    if (theDic) {
+        dic = theDic;
+    }else{
+        dic = @{
+                  @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
+                  @"province_id":[GMAPI getCurrentProvinceId],
+                  @"city_id":[GMAPI getCurrentCityId]
+                  };
+    }
     
-    NSDictionary *dic = @{
-                          @"category_id":[NSString stringWithFormat:@"%d",self.category_id]
-                          };
+    
     
     
     
@@ -200,13 +217,41 @@
         }
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        
+        [_table reloadData:_productOneClassArray pageSize:G_PER_PAGE];
     } failBlock:^(NSDictionary *result) {
         
     }];
  
     
 }
+
+//根据城市查询品牌列表
+-(void)prepareBrandListWithLocation{
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic = @{
+                          @"province_id":[GMAPI getCurrentProvinceId],
+                          @"city_id":[GMAPI getCurrentCityId]
+                          };
+    
+    _request_BrandListWithLocation = [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        
+        self.brand_city_list = [result arrayValueForKey:@"data"];
+        [self creatFilterBtn];
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+
+
+
 
 
 //网络请求完成
@@ -218,9 +263,9 @@
     
     NSNumber *num = [change objectForKey:@"new"];
     
-    if ([num intValue] == 1) {
+    if ([num intValue] >= 2) {
         
-        [_table reloadData:_productOneClassArray pageSize:G_PER_PAGE];
+        
         
     }
  
@@ -236,12 +281,12 @@
     
     [_request removeOperation:_request_ProductOneClass];
     
-    [self prepareNetData];
+    [self prepareNetDataWithDic:self.shaixuanDic];
     
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    [self prepareNetData];
+    [self prepareNetDataWithDic:self.shaixuanDic];
     
 }
 

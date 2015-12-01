@@ -12,19 +12,24 @@
 
 #import "MyViewController.h"
 #import "CouponModel.h"
-
-
-
+@class ConfirmOrderViewController;
 
 @interface MyCouponViewController : MyViewController
 
 @property(nonatomic,assign)GCouponType type;
 @property(nonatomic,strong)CouponModel *couponModel;
 
+
+@property(nonatomic,assign)ConfirmOrderViewController *delegate;
+
 //使用优惠券
 @property(nonatomic,strong)NSString *coupon;
 
 //使用代金券
 @property(nonatomic,strong)NSString *brand_ids;
+
+//cell的selectButton点击回调方法
+-(void)cellSelectBtnClickedWithIndex:(NSIndexPath *)theIndex select:(BOOL)theState;
+
 
 @end

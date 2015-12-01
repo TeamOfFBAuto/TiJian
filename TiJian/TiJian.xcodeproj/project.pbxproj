@@ -369,6 +369,7 @@
 		E38551081C0AE46A00CE23E7 /* MyWalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E38551071C0AE46A00CE23E7 /* MyWalletViewController.m */; };
 		E385510A1C0AF73700CE23E7 /* daijinquan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E38551091C0AF73700CE23E7 /* daijinquan@2x.png */; };
 		E39148481BFC573A004E26B0 /* GconfirmOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39148471BFC573A004E26B0 /* GconfirmOrderCell.m */; };
+		E39F1E0C1C0D013B00E9B41F /* Gbtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E39F1E0B1C0D013B00E9B41F /* Gbtn.m */; };
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
 		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; };
 		E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D71BD88D66001CF93D /* UILabel+GautoMatchedText.m */; };
@@ -1018,6 +1019,8 @@
 		E38551091C0AF73700CE23E7 /* daijinquan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daijinquan@2x.png"; sourceTree = "<group>"; };
 		E39148461BFC573A004E26B0 /* GconfirmOrderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GconfirmOrderCell.h; sourceTree = "<group>"; };
 		E39148471BFC573A004E26B0 /* GconfirmOrderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GconfirmOrderCell.m; sourceTree = "<group>"; };
+		E39F1E0A1C0D013B00E9B41F /* Gbtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gbtn.h; sourceTree = "<group>"; };
+		E39F1E0B1C0D013B00E9B41F /* Gbtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gbtn.m; sourceTree = "<group>"; };
 		E3A293D21BD88D66001CF93D /* GmoveImv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmoveImv.h; sourceTree = "<group>"; };
 		E3A293D31BD88D66001CF93D /* GmoveImv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GmoveImv.m; sourceTree = "<group>"; };
 		E3A293D41BD88D66001CF93D /* GTouchMoveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTouchMoveView.h; sourceTree = "<group>"; };
@@ -2291,6 +2294,8 @@
 				E3EE35F91BE88DE00089A89C /* GMAPI.m */,
 				E3EE361C1BEA13320089A89C /* GPushView.h */,
 				E3EE361D1BEA13320089A89C /* GPushView.m */,
+				E39F1E0A1C0D013B00E9B41F /* Gbtn.h */,
+				E39F1E0B1C0D013B00E9B41F /* Gbtn.m */,
 			);
 			path = Gutils;
 			sourceTree = "<group>";
@@ -2885,6 +2890,7 @@
 				E3E2B3F01BFAFEBF007988C5 /* AddressModel.m in Sources */,
 				139334031BE350CB00B4628B /* IgnoreConditionModel.m in Sources */,
 				13F8C5B61C05AA7E004C3FC7 /* UIView+JKPicker.m in Sources */,
+				E39F1E0C1C0D013B00E9B41F /* Gbtn.m in Sources */,
 				E3E2B41D1BFB2166007988C5 /* TuiKuanViewController.m in Sources */,
 				13F5F1111C0860FD0045B5FA /* AddAddressController.m in Sources */,
 				13F1F3C21BBA9A4B00885D31 /* LTools.m in Sources */,

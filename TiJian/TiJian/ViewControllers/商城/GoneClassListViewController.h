@@ -17,9 +17,12 @@
 
 @property(nonatomic,strong)NSString *className;//分类名称
 
+@property(nonatomic,strong)NSArray *brand_city_list;
+
+@property(nonatomic,strong)NSDictionary *shaixuanDic;//筛选参数字典
 
 -(void)therightSideBarDismiss;
 
-
+-(void)shaixuanFinishWithDic:(NSDictionary *)dic;
 
 @end

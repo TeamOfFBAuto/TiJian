@@ -52,11 +52,26 @@
     
     AddressModel *_theAddressModel;//用户选择的收货地址
     
+    AddressModel *_theDefaultAddressModel;//用户默认收货地址
+    
+    
+    UILabel *_userChooseYouhuiquan_label;
+    UILabel *_userChooseDaijinquan_label;
+    
+    int _count;//网络请求个数
+    
     
 }
 @end
 
 @implementation ConfirmOrderViewController
+
+
+- (void)dealloc
+{
+    [self removeObserver:self forKeyPath:@"_count"];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -68,9 +83,9 @@
     self.myTitle = @"确认订单";
     
     _sumPrice_pay = 0;
+
     
-    
-    
+    [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
     [self makeDyadicArray];
     
@@ -131,10 +146,65 @@
     CGFloat yunfei = 0;
     
     //优惠券
-    CGFloat youhuiquan = 0;
+    CGFloat youhuiquan = 0;//使用优惠券优惠的总价格
+    if (self.userSelectYouhuiquanArray.count>0) {
+        _userChooseYouhuiquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectYouhuiquanArray.count];
+        
+        for (CouponModel *coupon in self.userSelectYouhuiquanArray) {
+            if (coupon.brand_id) {//非通用 品牌优惠券
+                if ([coupon.type intValue] == 1) {//满减
+                    youhuiquan += [coupon.minus_money floatValue];
+                    
+                }else if ([coupon.type intValue] == 2){//打折
+                    CGFloat p_t_price = 0;
+                    for (ProductModel *product in self.dataArray) {
+                        if (coupon.brand_id == product.brand_id) {
+                            p_t_price += [product.product_price floatValue] *[product.product_num intValue];
+                        }
+                    }
+                    CGFloat zhe = coupon.discount_num.floatValue;
+                    youhuiquan += p_t_price * (1 - zhe);
+                    
+                    
+                    
+                }else if ([coupon.type intValue] == 3){//新人优惠
+                    
+                }
+            }else{//通用
+                if ([coupon.type intValue] == 1) {//满减
+                    youhuiquan += [coupon.minus_money floatValue];
+                }else if ([coupon.type intValue] == 2){//打折
+                    CGFloat zhe = coupon.discount_num.floatValue;
+                    youhuiquan += _price_total *(1 - zhe);
+                }else if ([coupon.type intValue] == 3){//新人优惠
+                    
+                }
+            }
+            
+            
+            
+            
+        }
+        
+        
+        
+        
+        
+        
+    }else{
+        _userChooseYouhuiquan_label.text = @"未使用";
+    }
     
     //代金券
     CGFloat daijinquan = 0;
+    if (self.userSelectDaijinquanArray.count>0) {
+        _userChooseDaijinquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectDaijinquanArray.count];
+        
+        
+    }else{
+        _userChooseDaijinquan_label.text = @"未使用";
+    }
+    
     
     //积分
     CGFloat jifen = 0;
@@ -166,12 +236,29 @@
 
 
 
+
+
+
 #pragma mark - 请求网络数据
 
-//获取用户收货地址
+
+//网路请求
 -(void)prepareNetData{
     
+    _count = 0;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    [self getUserDefaultAddress];
+//    [self getDaijinquanNum];
+//    [self getYouhuiquanNum];
+    
+}
+
+
+//获取用户收货地址
+-(void)getUserDefaultAddress{
+    
+    
     
     NSDictionary *dic = @{
                           @"authcode":[LTools cacheForKey:USER_AUTHOD]
@@ -193,23 +280,122 @@
             [_addressArray addObject:model];
         }
         
-        AddressModel *theModel = nil;
+        _theDefaultAddressModel = nil;
         for (AddressModel *model in _addressArray) {
             if ([model.default_address intValue] == 1) {
-                theModel = model;
+                _theDefaultAddressModel = model;
             }
         }
         
         [self creatDownView];
         [self creatTab];
-        [self creatAddressViewWithModel:theModel];
+        [self creatAddressViewWithModel:_theDefaultAddressModel];
         
         
+//        _count += 1;
         
     } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
     }];
 }
+
+
+
+//获取可用优惠券个数
+-(void)getYouhuiquanNum{
+    
+    
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+    CGFloat totolPrice = 0;
+    for (ProductModel *model in self.dataArray) {
+        NSString *price = [NSString stringWithFormat:@"%.2f",[model.current_price floatValue]*[model.product_num intValue]];
+        NSString *str = [NSString stringWithFormat:@"%@:%@",model.brand_id,price];
+        [arr addObject:str];
+        
+        totolPrice += ([model.current_price floatValue]*[model.product_num intValue]);
+        
+    }
+    
+    [arr addObject:[NSString stringWithFormat:@"0:%.2f",totolPrice]];
+    
+    NSString *coupon = [arr componentsJoinedByString:@"|"];
+    
+    
+    NSString *url = ORDER_GETYOUHUIQUANLIST;
+    NSDictionary *dic = @{
+            @"authcode":[LTools cacheForKey:USER_AUTHOD],
+            @"coupon":coupon
+            };
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:url parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _count += 1;
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    
+}
+
+//获取可用代金券个数
+-(void)getDaijinquanNum{
+    
+    NSArray *brand_ids_Array = [NSMutableArray arrayWithCapacity:1];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    for (ProductModel *model in self.dataArray) {
+        [dic setValue:@"1" forKey:model.brand_id];
+    }
+    
+    brand_ids_Array = [dic allKeys];
+    NSString *brand_ids_str = [brand_ids_Array componentsJoinedByString:@","];
+    NSString *brand_ids = brand_ids_str;
+    
+    NSString *url = ORDER_GETDAIJIQUANLIST;
+    NSDictionary *parm = @{
+            @"authcode":[LTools cacheForKey:USER_AUTHOD],
+            @"brand_ids":brand_ids
+            };
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:url parameters:parm constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _count +=1;
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    
+}
+
+#pragma mark - 网络请求完成
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+    if ([keyPath isEqualToString:@"contentSize"]) {
+        return;
+    }
+    
+    NSNumber *num = [change objectForKey:@"new"];
+    
+    if ([num intValue] == 1) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        [self creatDownView];
+        [self creatTab];
+        [self creatAddressViewWithModel:_theDefaultAddressModel];
+        
+    }
+    
+    
+}
+
 
 
 
@@ -305,6 +491,14 @@
     y_tLabel.textColor = [UIColor blackColor];
     [youhuiquanView addSubview:y_tLabel];
     
+    _userChooseYouhuiquan_label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(y_tLabel.frame)+5, y_tLabel.frame.origin.y, DEVICE_WIDTH - 20 - 5 - 15 - 50 - 5, y_tLabel.frame.size.height)];
+    _userChooseYouhuiquan_label.textAlignment = NSTextAlignmentRight;
+    _userChooseYouhuiquan_label.font = [UIFont systemFontOfSize:15];
+    _userChooseYouhuiquan_label.text = @"未使用";
+    [youhuiquanView addSubview:_userChooseYouhuiquan_label];
+    
+    
+
     UIImageView *jiantou_y = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
     [jiantou_y setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
     [youhuiquanView addSubview:jiantou_y];
@@ -328,6 +522,15 @@
     daijinquanLabel.font = [UIFont systemFontOfSize:15];
     daijinquanLabel.textColor = [UIColor blackColor];
     [daijinquanView addSubview:daijinquanLabel];
+    
+    _userChooseDaijinquan_label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(y_tLabel.frame)+5, y_tLabel.frame.origin.y, DEVICE_WIDTH - 20 - 5 - 15 - 50 - 5, y_tLabel.frame.size.height)];
+    _userChooseDaijinquan_label.textAlignment = NSTextAlignmentRight;
+    _userChooseDaijinquan_label.font = [UIFont systemFontOfSize:15];
+    _userChooseDaijinquan_label.text = @"未使用";
+    [daijinquanView addSubview:_userChooseDaijinquan_label];
+    
+    
+
     
     UIImageView *jiantou_d = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
     [jiantou_d setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
@@ -616,6 +819,7 @@
     NSLog(@"%s",__FUNCTION__);
     
     MyCouponViewController *cc = [[MyCouponViewController alloc]init];
+    cc.delegate = self;
     cc.type = GCouponType_use_youhuiquan;
     
     
@@ -647,6 +851,7 @@
     NSLog(@"%s",__FUNCTION__);
     
     MyCouponViewController *cc = [[MyCouponViewController alloc]init];
+    cc.delegate = self;
     cc.type = GCouponType_use_daijinquan;
     
     NSArray *brand_ids_Array = [NSMutableArray arrayWithCapacity:1];

@@ -62,11 +62,8 @@
 + (id)cacheForKey:(NSString *)key;
 
 
-//获取本地存储的province_id
-+(NSString *)getCurrentProvinceId;
-
-//获取本地存储city_id
-+(NSString *)getCurrentCityId;
+//根据city_id查询province_id;
++(NSString*)getProvineIdWithCityId:(int)cityId;
 
 
 @end

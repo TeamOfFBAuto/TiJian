@@ -55,10 +55,13 @@
  *  价钱选择
  */
 @property(nonatomic,strong)NSString *userChoosePrice;
+@property(nonatomic,strong)NSString *userChoosePrice_low;
+@property(nonatomic,strong)NSString *userChoosePrice_high;
 /**
  *  品牌选择
  */
 @property(nonatomic,strong)NSString *userChoosePinpai;
+@property(nonatomic,strong)NSString *userChoosePinpai_id;
 
 /**
  *  有没有性别选项

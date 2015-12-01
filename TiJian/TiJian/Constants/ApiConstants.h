@@ -35,6 +35,10 @@
 //per_page: 每页显示数量
 
 
+//根据城市查询品牌列表
+#define BrandList_oneClass @"/index.php?d=api&c=setmeal&m=brand_city_list"
+
+
 //套餐详情
 #define StoreProductDetail @"/index.php?d=api&c=setmeal&m=setmeal_detail"
 

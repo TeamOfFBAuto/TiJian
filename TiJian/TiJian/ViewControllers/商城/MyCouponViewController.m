@@ -8,6 +8,7 @@
 
 #import "MyCouponViewController.h"
 #import "MyCouponTableViewCell.h"
+#import "ConfirmOrderViewController.h"
 
 @interface MyCouponViewController ()<UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
 {
@@ -39,11 +40,13 @@
         [self setMyViewControllerLeftButtonType:0 WithRightButtonType:5];
         self.myTitle = @"我的代金券";
     }else if (self.type == GCouponType_use_youhuiquan){//使用优惠券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:5];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:2];
         self.myTitle = @"使用优惠券";
+        self.rightString = @"确定";
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:5];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:2];
         self.myTitle = @"使用代金券";
+        self.rightString = @"确定";
     }
     
     
@@ -57,6 +60,38 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - 重载方法
+-(void)rightButtonTap:(UIButton *)sender{
+    
+    
+    if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray *ar in _tab0Array) {
+            for (CouponModel *model in ar) {
+                if (model.isUsed) {
+                    [arr addObject:model];
+                }
+            }
+        }
+        self.delegate.userSelectYouhuiquanArray = arr;
+    }else if (self.type == GCouponType_use_daijinquan){//使用代金券
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray *ar in _tab0Array) {
+            for (CouponModel *model in ar) {
+                if (model.isUsed) {
+                    [arr addObject:model];
+                }
+            }
+        }
+        self.delegate.userSelectDaijinquanArray = arr;
+    }
+    
+    [self.delegate jisuanPrice];
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
 
 #pragma mark - 视图创建
 //创建上方选择btn 和 下方展示tab
@@ -127,6 +162,34 @@
     [self controlSelectedButtonTag:100];
     self.view.backgroundColor = [UIColor whiteColor];
 }
+
+
+#pragma mark - 逻辑处理
+
+-(void)cellSelectBtnClickedWithIndex:(NSIndexPath *)theIndex select:(BOOL)theState{
+    if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
+        NSArray *arr = _tab0Array[theIndex.section];
+        
+        CouponModel *model = arr[theIndex.row];
+        
+        for (CouponModel *oneModel in arr) {
+            if (oneModel.brand_id == model.brand_id) {
+                oneModel.isUsed = NO;
+            }
+            
+        }
+        
+        model.isUsed = theState;
+        
+        NSLog(@"%d",model.isUsed);
+        
+    }
+    
+    
+    
+}
+
+
 
 
 
@@ -373,6 +436,7 @@
         if (!cell) {
             
             cell = [[MyCouponTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify index:indexPath type:self.type];
+            cell.delegate = self;
         }
         
         NSArray *arr = _tab0Array[indexPath.section];
@@ -394,6 +458,7 @@
                 aa = GCouponType_disUse_youhuiquan;
             }
             cell = [[MyCouponTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify index:indexPath type:aa];
+            cell.delegate = self;
         }
         
         NSArray *arr = _tab1Array[indexPath.section];
