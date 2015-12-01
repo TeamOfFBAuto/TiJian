@@ -151,6 +151,8 @@
     if (aBlock) {
         aBlock(YES);//登录成功
     }
+    
+    aBlock = nil;
 }
 
 #pragma mark - 事件处理

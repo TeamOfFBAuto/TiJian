@@ -39,21 +39,44 @@
     return self;
 }
 
-
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
     self.navigationController.navigationBarHidden = NO;
-    
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
-//    {
-//        //iOS 5 new UINavigationBar custom background
-//        
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
-//    }
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.navigationController setNavigationBarHidden:self.lastPageNavigationHidden animated:animated];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    if (IOS7_OR_LATER) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
+    self.view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+    
+    spaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    _myTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
+    _myTitleLabel.textAlignment = NSTextAlignmentCenter;
+    _myTitleLabel.text = _myTitle;
+    _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
+    _myTitleLabel.font = [UIFont systemFontOfSize:17];
+    self.navigationItem.titleView = _myTitleLabel;
+
+}
 
 - (void)setNavigationStyle:(NAVIGATIONSTYLE)style
                      title:(NSString *)title
@@ -93,43 +116,10 @@
         backButton.frame = CGRectMake(0, navigationView.height - 44, 44, 44);
         [navigationView addSubview:backButton];
         [backButton addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-
+        
     }
     
     _myTitleLabel.text = title;
-}
-
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    [self.navigationController setNavigationBarHidden:self.lastPageNavigationHidden animated:animated];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    if (IOS7_OR_LATER) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-    
-    self.view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
-    
-    spaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    _myTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
-    _myTitleLabel.textAlignment = NSTextAlignmentCenter;
-    _myTitleLabel.text = _myTitle;
-    _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
-    _myTitleLabel.font = [UIFont systemFontOfSize:17];
-    self.navigationItem.titleView = _myTitleLabel;
-
 }
 
 -(void)setUpdateParamsBlock:(UpdateParamsBlock)updateParamsBlock
@@ -137,6 +127,10 @@
     _updateParamsBlock = updateParamsBlock;
 }
 
+-(void)setResultView:(UIView *)resultView
+{
+    _resultView = resultView;
+}
 
 -(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType WithRightButtonType:(MyViewControllerRightbuttonType)rightType
 {

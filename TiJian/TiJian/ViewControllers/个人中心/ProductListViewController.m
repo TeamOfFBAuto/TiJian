@@ -36,6 +36,19 @@
 
 #pragma mark - 视图创建
 
+-(UIView *)resultView
+{
+    if (_resultView) {
+        
+        return _resultView;
+    }
+    self.resultView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _resultView.backgroundColor = [UIColor clearColor];
+    
+    
+    return _resultView;
+}
+
 - (void)prepareRefreshTableView
 {
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];

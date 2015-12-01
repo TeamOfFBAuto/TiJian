@@ -317,6 +317,9 @@
 		13FCD6A31BFAD863005AE05B /* personal_yuyue_xiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */; };
 		13FCD6A51BFAD935005AE05B /* yuyue_wenhao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */; };
 		13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */; };
+		13FFBFC81C0D4FEA0077DD29 /* RCDChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFC71C0D4FEA0077DD29 /* RCDChatViewController.m */; };
+		13FFBFCE1C0D504B0077DD29 /* SimpleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCB1C0D504B0077DD29 /* SimpleMessage.m */; };
+		13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A311C05926400CB995D /* GcustomNavcView.m */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
@@ -954,6 +957,12 @@
 		13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_wenhao@2x.png"; sourceTree = "<group>"; };
 		13FCD6A61BFB316C005AE05B /* AppointUpdateController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointUpdateController.h; sourceTree = "<group>"; };
 		13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointUpdateController.m; sourceTree = "<group>"; };
+		13FFBFC61C0D4FEA0077DD29 /* RCDChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCDChatViewController.h; sourceTree = "<group>"; };
+		13FFBFC71C0D4FEA0077DD29 /* RCDChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCDChatViewController.m; sourceTree = "<group>"; };
+		13FFBFCA1C0D504B0077DD29 /* SimpleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleMessage.h; sourceTree = "<group>"; };
+		13FFBFCB1C0D504B0077DD29 /* SimpleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleMessage.m; sourceTree = "<group>"; };
+		13FFBFCC1C0D504B0077DD29 /* SimpleMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleMessageCell.h; sourceTree = "<group>"; };
+		13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleMessageCell.m; sourceTree = "<group>"; };
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1394,6 +1403,7 @@
 		1324B6A01BD766E600FB47A9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				13FFBFC51C0D4FEA0077DD29 /* 客服 */,
 				13F2421E1BF5C46F002C9D81 /* 健康资讯 */,
 				131A17701BF32CC700B12D2F /* 体检预约 */,
 				1303C3791BEB430C00700847 /* 个人中心 */,
@@ -2114,6 +2124,27 @@
 			path = "GimagePicker@3x";
 			sourceTree = "<group>";
 		};
+		13FFBFC51C0D4FEA0077DD29 /* 客服 */ = {
+			isa = PBXGroup;
+			children = (
+				13FFBFC61C0D4FEA0077DD29 /* RCDChatViewController.h */,
+				13FFBFC71C0D4FEA0077DD29 /* RCDChatViewController.m */,
+				13FFBFC91C0D504B0077DD29 /* RoncCloudCustomClass */,
+			);
+			path = "客服";
+			sourceTree = "<group>";
+		};
+		13FFBFC91C0D504B0077DD29 /* RoncCloudCustomClass */ = {
+			isa = PBXGroup;
+			children = (
+				13FFBFCA1C0D504B0077DD29 /* SimpleMessage.h */,
+				13FFBFCB1C0D504B0077DD29 /* SimpleMessage.m */,
+				13FFBFCC1C0D504B0077DD29 /* SimpleMessageCell.h */,
+				13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */,
+			);
+			path = RoncCloudCustomClass;
+			sourceTree = "<group>";
+		};
 		6D5116572F4D463C65E73ADC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -2826,6 +2857,7 @@
 				13F241E61BF4769D002C9D81 /* ChooseHopitalController.m in Sources */,
 				13F242211BF5C4B4002C9D81 /* WebviewController.m in Sources */,
 				13F8C5B41C05AA7E004C3FC7 /* JKUtil.m in Sources */,
+				13FFBFCE1C0D504B0077DD29 /* SimpleMessage.m in Sources */,
 				13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */,
 				13B07A0E1C06BBF900742AF7 /* OrderProductListController.m in Sources */,
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
@@ -2865,6 +2897,7 @@
 				E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */,
 				E3E2B42C1BFB2491007988C5 /* SelectAddressCell.m in Sources */,
 				13F242341BF5F1D2002C9D81 /* AppointmentCell.m in Sources */,
+				13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */,
 				E3D8AE331BF61CAC003AE2E3 /* ButtonProperty.m in Sources */,
 				E335F9F91BFEFDE700708BF6 /* GuserAddressViewController.m in Sources */,
 				E352F9131C0B83490037E4AE /* Gmap.mm in Sources */,
@@ -2900,6 +2933,7 @@
 				139334061BE3789000B4628B /* OptionModel.m in Sources */,
 				134822E11BEC8DF200EA2E06 /* EditUserInfoViewController.m in Sources */,
 				13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */,
+				13FFBFC81C0D4FEA0077DD29 /* RCDChatViewController.m in Sources */,
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
 				13F8C5AF1C05AA7E004C3FC7 /* JKAssetsViewCell.m in Sources */,
 				130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */,

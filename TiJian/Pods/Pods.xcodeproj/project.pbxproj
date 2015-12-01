@@ -301,7 +301,6 @@
 		1DE3D8A2DE205C20A1634BC8B48B17D7 /* SSHolidayChina.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSHolidayChina.m; path = SSLunarDate/SSHolidayChina.m; sourceTree = "<group>"; };
 		2078AF86C85FF4BB62BD6F67EA23AA10 /* SDWebImageCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCompat.h; path = SDWebImage/SDWebImageCompat.h; sourceTree = "<group>"; };
 		225CF668B02EE8FB1F4D78A08FA5D13D /* SSLunarDate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SSLunarDate.h; path = SSLunarDate/SSLunarDate.h; sourceTree = "<group>"; };
-		22C28A86C76CE32DF1C180697E745CBF /* en.lproj */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = en.lproj; path = Rong_Cloud_iOS_SDK_v2_2_11_dev/en.lproj; sourceTree = "<group>"; };
 		23987B930F2B5A7F2481793DE05BD6ED /* SSHolidayUK.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSHolidayUK.m; path = SSLunarDate/SSHolidayUK.m; sourceTree = "<group>"; };
 		24C9A8268E4F85196C9E028D4143C3AD /* libAFNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAFNetworking.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		260BF2C73837045E833A7FA986547A0E /* FSCalendarAppearance.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarAppearance.h; path = FSCalendar/FSCalendarAppearance.h; sourceTree = "<group>"; };
@@ -344,7 +343,7 @@
 		498FB035ADC5BED014505B754465B7CA /* MASViewAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewAttribute.h; path = Masonry/MASViewAttribute.h; sourceTree = "<group>"; };
 		4A01721EAA676F1E62A27E9895E540A8 /* SSLunarDateHoliday.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSLunarDateHoliday.m; path = SSLunarDate/SSLunarDateHoliday.m; sourceTree = "<group>"; };
 		4A18E91AD5C7D6DFA3744B411DE24B1C /* FMResultSet.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = src/fmdb/FMResultSet.h; sourceTree = "<group>"; };
-		4C93425EFE94F7FE9A1346400ABD62CB /* Emoji.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Emoji.plist; path = Rong_Cloud_iOS_SDK_v2_2_11_dev/Emoji.plist; sourceTree = "<group>"; };
+		4C16D9614B481F59627660D00256671C /* Emoji.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Emoji.plist; path = Rong_Cloud_iOS_SDK_v2_3_9_stable/Emoji.plist; sourceTree = "<group>"; };
 		4E3342D8184D807D8336D0EC43C0DAB6 /* FSCalendarHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarHeader.h; path = FSCalendar/FSCalendarHeader.h; sourceTree = "<group>"; };
 		4E762F23EC34ED4A6FF3312D84E33A40 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Pods.debug.xcconfig; sourceTree = "<group>"; };
 		4F926C9B7268AA2881B39D84A58ED5CC /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
@@ -358,7 +357,6 @@
 		5CF70C2E827850E2A54079E04D11C102 /* SSHolidayWest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SSHolidayWest.h; path = SSLunarDate/SSHolidayWest.h; sourceTree = "<group>"; };
 		5DA60F8DADD51A5D0B311585702A8C9D /* SSHolidayUK.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SSHolidayUK.h; path = SSLunarDate/SSHolidayUK.h; sourceTree = "<group>"; };
 		5DD6B6359BCDC8296FCD406D1BE7FF7D /* UIAlertView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+AFNetworking.h"; path = "UIKit+AFNetworking/UIAlertView+AFNetworking.h"; sourceTree = "<group>"; };
-		5E95C730792129D0D4FE96727F36FBA9 /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RongIMLib.framework; path = Rong_Cloud_iOS_SDK_v2_2_11_dev/RongIMLib.framework; sourceTree = "<group>"; };
 		5F3D83A8DB9593DA8DC4C30CF2FA2497 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		5F7B9818167212F7413F0950564EDA45 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		6096C1B25481A56E3073C005CD1C5F73 /* UIImage+MultiFormat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+MultiFormat.h"; path = "SDWebImage/UIImage+MultiFormat.h"; sourceTree = "<group>"; };
@@ -392,13 +390,13 @@
 		8A8AF6729A86533B521FC4CAB8EF15EA /* SDWebImagePrefetcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImagePrefetcher.h; path = SDWebImage/SDWebImagePrefetcher.h; sourceTree = "<group>"; };
 		8ABE0A27D0CFC1A91F68D553301C9C5C /* MASConstraintMaker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraintMaker.h; path = Masonry/MASConstraintMaker.h; sourceTree = "<group>"; };
 		8AEEEC5A3D583078129083D91C42FED8 /* FSCalendar+IBExtension.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "FSCalendar+IBExtension.m"; path = "FSCalendar/FSCalendar+IBExtension.m"; sourceTree = "<group>"; };
+		8B0A704964030133F4902A9EDD3B8BA1 /* en.lproj */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = en.lproj; path = Rong_Cloud_iOS_SDK_v2_3_9_stable/en.lproj; sourceTree = "<group>"; };
 		8BA9BEC8452292D77C527C1CF2C9A7CF /* FSCalendar.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendar.h; path = FSCalendar/FSCalendar.h; sourceTree = "<group>"; };
 		8CD7BE8B3459508238F91A4A2C66F40B /* UIImageView+HighlightedWebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+HighlightedWebCache.h"; path = "SDWebImage/UIImageView+HighlightedWebCache.h"; sourceTree = "<group>"; };
 		8EB9EB5274E13ABD82598AF16A85C83D /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIWebView+AFNetworking.h"; path = "UIKit+AFNetworking/UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		916E23C6D0865631C5F63A7E28B5F1D3 /* UIImageView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "SDWebImage/UIImageView+WebCache.h"; sourceTree = "<group>"; };
 		95B913AE27A8116ADCBA34FFA3EB4DC5 /* libFSCalendar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFSCalendar.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		98C98CDFB3F20F2925F6CD1F141BB14F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Pods.release.xcconfig; sourceTree = "<group>"; };
-		9A81EBEE8DE4EEFCEC84560E8E5E8A81 /* zh-Hans.lproj */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = "zh-Hans.lproj"; path = "Rong_Cloud_iOS_SDK_v2_2_11_dev/zh-Hans.lproj"; sourceTree = "<group>"; };
 		9A9EB04EBD118DD6C0B04C5F573498B9 /* MASLayoutConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASLayoutConstraint.h; path = Masonry/MASLayoutConstraint.h; sourceTree = "<group>"; };
 		9BB6DCECF1A9697BCFB2865C6DFEFEDD /* MASCompositeConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASCompositeConstraint.m; path = Masonry/MASCompositeConstraint.m; sourceTree = "<group>"; };
 		A1A36D34413696BE466E2CA0AFF194DA /* Pods-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-resources.sh"; sourceTree = "<group>"; };
@@ -412,6 +410,7 @@
 		A61270D8D74B96B0B4997421417F5389 /* UIButton+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+AFNetworking.m"; path = "UIKit+AFNetworking/UIButton+AFNetworking.m"; sourceTree = "<group>"; };
 		A6D0F44636B9C0C6806ADF7BA03DC2B1 /* Reachability-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Reachability-dummy.m"; sourceTree = "<group>"; };
 		AA4AE4829FBEF61FEDEB17AF66DE8143 /* libLunar.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = libLunar.c; path = SSLunarDate/libLunar.c; sourceTree = "<group>"; };
+		AA60C9764B795C7E88F40BE6ECCA5C90 /* RongIMKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RongIMKit.framework; path = Rong_Cloud_iOS_SDK_v2_3_9_stable/RongIMKit.framework; sourceTree = "<group>"; };
 		AC3AF8EDF0706BAA459CA13275B93D53 /* FSCalendarDynamicHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FSCalendarDynamicHeader.h; path = FSCalendar/FSCalendarDynamicHeader.h; sourceTree = "<group>"; };
 		AC4FCA461662B36438335A2B57A4D538 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLConnectionOperation.h; path = AFNetworking/AFURLConnectionOperation.h; sourceTree = "<group>"; };
 		AE7A42B0AF8AD07E17AA3E04CED6E57C /* UIButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+WebCache.h"; path = "SDWebImage/UIButton+WebCache.h"; sourceTree = "<group>"; };
@@ -419,7 +418,6 @@
 		AEE6A3B7D517C1E9D060E13F636167F0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		AFD12D67B74ED07AE4D906F8DC7781C1 /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
 		B0FF8009DBAFD94FABC614E712D80858 /* UIView+FSExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+FSExtension.h"; path = "FSCalendar/UIView+FSExtension.h"; sourceTree = "<group>"; };
-		B278ED7017A8172A0AA59177D3868C65 /* RongCloud.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = RongCloud.bundle; path = Rong_Cloud_iOS_SDK_v2_2_11_dev/RongCloud.bundle; sourceTree = "<group>"; };
 		B87FA926D6F701752872ABE3EFBD8F1C /* NSDate+FSExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSDate+FSExtension.h"; path = "FSCalendar/NSDate+FSExtension.h"; sourceTree = "<group>"; };
 		B94CE72299ABAE00C70A444F94456390 /* SDWebImageManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = SDWebImage/SDWebImageManager.m; sourceTree = "<group>"; };
 		B98C92E3453857A508E893193B5E42CB /* View+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "View+MASAdditions.m"; path = "Masonry/View+MASAdditions.m"; sourceTree = "<group>"; };
@@ -438,13 +436,14 @@
 		CC5C8D9DAB3C441A4F902789D5779A81 /* UIKit+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIKit+AFNetworking.h"; path = "UIKit+AFNetworking/UIKit+AFNetworking.h"; sourceTree = "<group>"; };
 		CDAA484E0DB85040C0CC67A06904B59C /* MASConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASConstraint.m; path = Masonry/MASConstraint.m; sourceTree = "<group>"; };
 		CE204F11DB9A4441ED08C30833529B60 /* MASViewConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewConstraint.m; path = Masonry/MASViewConstraint.m; sourceTree = "<group>"; };
+		CF4BC2B6660D087ACB7F7110D62D0249 /* libopencore-amrnb.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = "libopencore-amrnb.a"; path = "Rong_Cloud_iOS_SDK_v2_3_9_stable/libopencore-amrnb.a"; sourceTree = "<group>"; };
 		D0082EB3AE1A1896CD723640AC921E4F /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = src/fmdb/FMDatabaseAdditions.m; sourceTree = "<group>"; };
 		D03F6EDFC1D24DAC0433A24201E1A5B4 /* SSHolidayChina.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SSHolidayChina.h; path = SSLunarDate/SSHolidayChina.h; sourceTree = "<group>"; };
 		D16575A7BBC73E7AE0360A5AE6925F94 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ViewController+MASAdditions.m"; path = "Masonry/ViewController+MASAdditions.m"; sourceTree = "<group>"; };
 		D1CB49B2689C9CCA8330AB4A27A355C2 /* AFURLSessionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLSessionManager.h; path = AFNetworking/AFURLSessionManager.h; sourceTree = "<group>"; };
 		D213251F45FA917D6E70A3C731607792 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIWebView+AFNetworking.m"; path = "UIKit+AFNetworking/UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
-		D4D505C52BFD8F8FBA62F4358AC73BC1 /* RongIMKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RongIMKit.framework; path = Rong_Cloud_iOS_SDK_v2_2_11_dev/RongIMKit.framework; sourceTree = "<group>"; };
 		D515BA3133869A9D0423C42A6FB1E57D /* libSSLunarDate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSSLunarDate.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6D028936098B96CE6D37BCDD100A3BF /* zh-Hans.lproj */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = "zh-Hans.lproj"; path = "Rong_Cloud_iOS_SDK_v2_3_9_stable/zh-Hans.lproj"; sourceTree = "<group>"; };
 		D77826B39CC68B815468BE70C4299CCC /* MBProgressHUD-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD-dummy.m"; sourceTree = "<group>"; };
 		D9B5672DD907A90F830289AE92F0EC2B /* SDWebImageDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloader.h; path = SDWebImage/SDWebImageDownloader.h; sourceTree = "<group>"; };
 		DA3B2E44B3AAD4E6F34E6906DFD22AE8 /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSLayoutConstraint+MASDebugAdditions.m"; path = "Masonry/NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
@@ -460,6 +459,7 @@
 		E377A7E63E92554DD2F629457ACF0843 /* MASConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASConstraint.h; path = Masonry/MASConstraint.h; sourceTree = "<group>"; };
 		E3AF6AAC0A3811A685B430AFE843D1AA /* SSLunarDate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSLunarDate.m; path = SSLunarDate/SSLunarDate.m; sourceTree = "<group>"; };
 		E4D30239EEE0D8CD60F7E702FF43673A /* SSHolidayUS.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSHolidayUS.m; path = SSLunarDate/SSHolidayUS.m; sourceTree = "<group>"; };
+		E55DE352837696CBE01C967F7E89935D /* RongCloud.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = RongCloud.bundle; path = Rong_Cloud_iOS_SDK_v2_3_9_stable/RongCloud.bundle; sourceTree = "<group>"; };
 		E69C6C2578C5EE54655B31E8BD7F779B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		EA1496DF505DC677C9C8A7E35EA49BFF /* FSCalendar.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FSCalendar.xcconfig; sourceTree = "<group>"; };
 		EA562EDB9D9DCE1F4DC8EA00A929800F /* SSHolidayWest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSHolidayWest.m; path = SSLunarDate/SSHolidayWest.m; sourceTree = "<group>"; };
@@ -478,6 +478,7 @@
 		F2C4CA46A2B8CB8FED24A232EE451FAD /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		F33FB3C7DD29842917597913E440D70E /* JSONKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		F35AEE58B9BE96EEC1FC50A21EA51735 /* SSHolidayHK.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSHolidayHK.m; path = SSLunarDate/SSHolidayHK.m; sourceTree = "<group>"; };
+		F3ECBBD9A28213D34BC99C33F99991EA /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RongIMLib.framework; path = Rong_Cloud_iOS_SDK_v2_3_9_stable/RongIMLib.framework; sourceTree = "<group>"; };
 		F48581375BC777C3A19117131828D967 /* NSString+FSExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+FSExtension.h"; path = "FSCalendar/NSString+FSExtension.h"; sourceTree = "<group>"; };
 		F8599B1E60D98481C64CB5277E28255A /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworkActivityIndicatorManager.h; path = "UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h"; sourceTree = "<group>"; };
 		FA6EF88E6293BDC2EBF081A598299622 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseQueue.m; path = src/fmdb/FMDatabaseQueue.m; sourceTree = "<group>"; };
@@ -667,6 +668,17 @@
 			path = "../Target Support Files/Masonry";
 			sourceTree = "<group>";
 		};
+		1FA0CF629204529ADE04816C36C7AE31 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4C16D9614B481F59627660D00256671C /* Emoji.plist */,
+				8B0A704964030133F4902A9EDD3B8BA1 /* en.lproj */,
+				E55DE352837696CBE01C967F7E89935D /* RongCloud.bundle */,
+				D6D028936098B96CE6D37BCDD100A3BF /* zh-Hans.lproj */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		2C99D42FA368E8E14974E55C2AB21E11 /* common */ = {
 			isa = PBXGroup;
 			children = (
@@ -709,6 +721,16 @@
 			);
 			name = "Support Files";
 			path = "../Target Support Files/SSLunarDate";
+			sourceTree = "<group>";
+		};
+		43B62F9206F1D55A9892A5AEB0DF1911 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CF4BC2B6660D087ACB7F7110D62D0249 /* libopencore-amrnb.a */,
+				AA60C9764B795C7E88F40BE6ECCA5C90 /* RongIMKit.framework */,
+				F3ECBBD9A28213D34BC99C33F99991EA /* RongIMLib.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		494F1C948C178F0448A5DDD08D584A99 /* Products */ = {
@@ -771,7 +793,7 @@
 				4B1B17BEFB9A9C511504F599C8BF7240 /* Masonry */,
 				D52650869324F3AD68B8249839345976 /* MBProgressHUD */,
 				A27A9020EA7732D2EFB74E9E81CF5C7A /* Reachability */,
-				DDFD8585BB23CA4A332EECB897785CCF /* RongCloudIMKit */,
+				749B2B64EF7B7698D5002B9A361D7E78 /* RongCloudIMKit */,
 				0BEEFB49F389C915DA935374B093BF41 /* SDWebImage */,
 				0FA6FD03093D6071FBCA9879632FE7BE /* SSLunarDate */,
 				C6BFE7B179DE3D2097A126D95B35C4FA /* UMeng */,
@@ -836,6 +858,15 @@
 				75E513CFAD00D51BED2A18F105C336A9 /* Support Files */,
 			);
 			path = FSCalendar;
+			sourceTree = "<group>";
+		};
+		749B2B64EF7B7698D5002B9A361D7E78 /* RongCloudIMKit */ = {
+			isa = PBXGroup;
+			children = (
+				43B62F9206F1D55A9892A5AEB0DF1911 /* Frameworks */,
+				1FA0CF629204529ADE04816C36C7AE31 /* Resources */,
+			);
+			path = RongCloudIMKit;
 			sourceTree = "<group>";
 		};
 		75E513CFAD00D51BED2A18F105C336A9 /* Support Files */ = {
@@ -991,17 +1022,6 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
-		A4CA06CB9C075ED01CE350135C938DB2 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				4C93425EFE94F7FE9A1346400ABD62CB /* Emoji.plist */,
-				22C28A86C76CE32DF1C180697E745CBF /* en.lproj */,
-				B278ED7017A8172A0AA59177D3868C65 /* RongCloud.bundle */,
-				9A81EBEE8DE4EEFCEC84560E8E5E8A81 /* zh-Hans.lproj */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
 		A9C17DF531CB44069BFFCA845301A37C /* JSONKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -1010,15 +1030,6 @@
 				C4DB84BD29227BF9ED3E9383EDD37D0B /* Support Files */,
 			);
 			path = JSONKit;
-			sourceTree = "<group>";
-		};
-		AABD1EFD4F08039E56E5AD29C05159FA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				D4D505C52BFD8F8FBA62F4358AC73BC1 /* RongIMKit.framework */,
-				5E95C730792129D0D4FE96727F36FBA9 /* RongIMLib.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		B3C46606E16A0650120C379431E30129 /* Security */ = {
@@ -1083,15 +1094,6 @@
 				93691942B5FD5615A90498B066241FCC /* Support Files */,
 			);
 			path = MBProgressHUD;
-			sourceTree = "<group>";
-		};
-		DDFD8585BB23CA4A332EECB897785CCF /* RongCloudIMKit */ = {
-			isa = PBXGroup;
-			children = (
-				AABD1EFD4F08039E56E5AD29C05159FA /* Frameworks */,
-				A4CA06CB9C075ED01CE350135C938DB2 /* Resources */,
-			);
-			path = RongCloudIMKit;
 			sourceTree = "<group>";
 		};
 		FF83F052DF70FF92FFC233A54F1FAA13 /* Reachability */ = {

@@ -107,37 +107,33 @@
 #define USER_UPDATEHEADIMAGE_STATE @"updateHeadImage"//更新用户头像
 #define USER_NEWHEADIMAGE @"newHeadImage"//新头像
 
+
+//***************************** 三方平台appkey **********************************
+
+//友盟
 #define UmengAppkey @"558d25c867e58e9366002e68"//正式 umeng后台：wjxc2015@qq.com wjxc2015
 
+//sina
 #define SinaAppKey @"2480371284"
 #define SinaAppSecret @"d0ff7ad37ad8014b207c2a1eced4fdd0"
 
+//QQ
 #define QQAPPID @"1104757360" //tencent1104757360 十六进制:QQ41d94270; 生成方法:NSString *str = [ [NSString alloc] initWithFormat:@"%x",1104757360];
 #define QQAPPKEY @"m7DlzFpxeDxRBULc"
 
+//微信
 #define WXAPPID @"wx47f54e431de32846" //衣加衣
 #define WXAPPSECRET @"a71699732e3bef01aefdaf324e2f522c"
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
-
-/**
- *  融云
- */
-
-////开发
-//#define RONGCLOUD_IM_APPKEY    @"8luwapkvuf1nl" //融云账号 wjcx2015@qq.com
-//#define RONGCLOUD_IM_APPSECRET @"bl6uUMP8HdpsU"
-////融云客服id
-//#define SERVICE_ID @"KEFU1438066005020"
-
-//正式环境
-#define RONGCLOUD_IM_APPKEY    @"8brlm7ufr42x3" //融云账号 wjcx2015@qq.com
-#define RONGCLOUD_IM_APPSECRET @"PIKhQ5NndKx"
-//融云客服id
-#define SERVICE_ID @"KEFU1440670948804"
-
-
 //百度地图
 #define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
+
+//融云
+//1、开发环境
+#define RONGCLOUD_IM_APPKEY    @"p5tvi9dst1qn4" //融云账号 18600912932
+#define RONGCLOUD_IM_APPSECRET @"qCqG93VU6WBz"
+//融云客服id
+#define SERVICE_ID @"KEFU1448965696367"
 
 
 #endif

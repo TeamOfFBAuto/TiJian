@@ -12,6 +12,7 @@
 #import "GShopCarViewController.h"
 #import "ProductCommentModel.h"
 #import "GcommentViewController.h"
+#import "RCDChatViewController.h"
 #import "ProductModel.h"
 #import "CouponModel.h"
 
@@ -497,22 +498,77 @@
     
 }
 
+- (void)clickToChat
+{
+//    [self setProductMessageWithProductModel:self.theProductModel];
+    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
+    chatService.userName = @"客服";
+    chatService.targetId = SERVICE_ID;
+    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
+    chatService.title = chatService.userName;
+        [chatService setProductMessageWithProductModel:_theProductModel];
+    [self.navigationController pushViewController:chatService animated:YES];
+}
+
+- (void)setProductMessageWithProductModel:(ProductModel *)aModel
+{
+    ProductModel *_p_model = aModel;
+    //发送单品图文消息
+    if (_p_model) {
+        [self sendProductDetailMessageWithId:_p_model.product_id productName:_p_model.setmeal_name coverImageUrl:_p_model.cover_pic currentPrice:[_p_model.setmeal_original_price floatValue] originalPrice:[_p_model.setmeal_price floatValue]];
+    }
+}
+
+//发送产品图文链接
+
+-(void)sendProductDetailMessageWithId:(NSString *)productId
+                          productName:(NSString *)productName
+                        coverImageUrl:(NSString *)coverImageUrl
+                         currentPrice:(CGFloat)currentPrice
+                        originalPrice:(CGFloat)originalPrice
+{
+    NSString *imageUrl = coverImageUrl;
+    NSString *digest = [NSString stringWithFormat:@"\n现价:%.2f元\n原价:%.2f元",currentPrice,originalPrice];
+    
+    NSString *extra = [NSString stringWithFormat:@"productId:%@",productId];
+    
+    NSString *title = [NSString stringWithFormat:@"我在看:[%@]",productName];
+    
+    RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
+    [[RCIMClient sharedRCIMClient]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" success:^(long messageId) {
+        NSLog(@"messageid %ld",messageId);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+           
+//            RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
+//            chatService.userName = @"客服";
+//            chatService.targetId = SERVICE_ID;
+//            chatService.conversationType = ConversationType_CUSTOMERSERVICE;
+//            chatService.title = chatService.userName;
+//            //    [chatService setProductMessageWithProductModel:_theProductModel];
+//            [self.navigationController pushViewController:chatService animated:YES];
+        });
+        
+    } error:^(RCErrorCode nErrorCode, long messageId) {
+        NSLog(@"nErrorCode %ld",nErrorCode);
+        
+    }];
+}
+
 
 -(void)downBtnClicked:(UIButton *)sender{
+    
     if (sender.tag == 100) {//客服
         
-        if ([LoginViewController isLogin]) {//已登录
-            
-        }else{
-            [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
-                if (success) {//登录成功
-                    
-                }else{
-                    
-                }
-            }];
-        }
-        
+        [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+            if (success) {//登录成功
+                
+                [self clickToChat];
+                
+            }else{
+                
+            }
+        }];
         
     }else if (sender.tag == 101){//收藏
         

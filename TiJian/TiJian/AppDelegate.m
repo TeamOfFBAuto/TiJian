@@ -11,16 +11,21 @@
 #import "BMapKit.h"
 #import <AlipaySDK/AlipaySDK.h>//支付宝
 #import "WXApi.h"//微信
+#import "SimpleMessage.h"
 //#import "UMSocial.h"
 
-@interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate,GgetllocationDelegate>
+#define kAlertViewTag_token 100 //融云token
+#define kAlertViewTag_otherClient 101 //其他设备登陆
+
+@interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate,GgetllocationDelegate,RCIMReceiveMessageDelegate,RCIMUserInfoDataSource,RCIMConnectionStatusDelegate>
 {
-    
     GMAPI *mapApi;
     LocationBlock _locationBlock;
     BMKMapManager* _mapManager;
     CLLocationManager *_locationManager;
-
+    
+    int _getRongTokenTime;//获取融云token次数
+    NSTimer *_getRongTokenTimer;//获取融云token计时器
 }
 
 @end
@@ -33,53 +38,27 @@
     
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startLoginRongTimer) name:NOTIFICATION_LOGIN object:nil];
     
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
     
-    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
-    {
-        //设置定位权限 仅ios8有意义
-        [_locationManager requestWhenInUseAuthorization];// 前台定位
-        
-        //  [locationManager requestAlwaysAuthorization];// 前后台同时定位
-    }
-    [_locationManager startUpdatingLocation];
-    
-    
-    
-    
-    
-    
     
     //微信支付
     NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-    NSString *name = [NSString stringWithFormat:@"衣加衣%@",version];
+    NSString *name = [NSString stringWithFormat:@"河马%@",version];
     [WXApi registerApp:WXAPPID withDescription:name];
     
+    //百度地图
+    [self startBaiduService];
     
+    //注册远程通知
+    [self startRemoteNotificationWithAppilication:application];
     
-    
-    
-    //使用百度地图相关
-    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
-    {
-        //设置定位权限 仅ios8有意义
-        [_locationManager requestWhenInUseAuthorization];// 前台定位
-        
-        //  [locationManager requestAlwaysAuthorization];// 前后台同时定位
-    }
-    [_locationManager startUpdatingLocation];
-    
-    
-    // 要使用百度地图，请先启动BaiduMapManager
-    _mapManager = [[BMKMapManager alloc]init];
-    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
-    BOOL ret = [_mapManager start:BAIDUMAP_APPKEY  generalDelegate:self];
-    if (!ret) {
-        NSLog(@"manager start failed!");
-    }
+    //初始化融云SDK。
+    [self startRongCloud];
 
+    
     return YES;
 }
 
@@ -106,10 +85,100 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma - mark 
+/**
+ * 推送处理2
+ */
+//注册用户通知设置
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:
+(UIUserNotificationSettings *)notificationSettings {
+    
+    // register to receive notifications
+    [application registerForRemoteNotifications];
+}
+/**
+ * 推送处理3
+ */
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    NSString *token = [[[[deviceToken description]
+                        stringByReplacingOccurrencesOfString:@"<"withString:@""]
+                        stringByReplacingOccurrencesOfString:@">"withString:@""]
+                        stringByReplacingOccurrencesOfString:@" "withString:@""];
+    
+    [[RCIMClient sharedRCIMClient] setDeviceToken:token];
+}
 
-#pragma - mark 上传更新头像
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [LTools updateTabbarUnreadMessageNumber];
+    
+    NSLog(@"JPush2 remote %@",userInfo);
+    
+    UIApplicationState state = [application applicationState];
+    if (state == UIApplicationStateInactive){
+        NSLog(@"UIApplicationStateInactive %@",userInfo);
+        //程序在后台运行 点击消息进入走此处,做相应处理
+    }
+    if (state == UIApplicationStateActive) {
+        NSLog(@"UIApplicationStateActive %@",userInfo);
+        //程序就在前台
 
+    }
+    if (state == UIApplicationStateBackground)
+    {
+        NSLog(@"UIApplicationStateBackground %@",userInfo);
+    }
+    
+}
+
+#pragma  mark
+
+#pragma - mark 注册通知
+
+- (void)startRemoteNotificationWithAppilication:(UIApplication *)application
+{
+    /**
+     * 推送处理1
+     */
+    if ([application
+         respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings
+                                                settingsForTypes:(UIUserNotificationTypeBadge |
+                                                                  UIUserNotificationTypeSound |
+                                                                  UIUserNotificationTypeAlert)
+                                                categories:nil];
+        [application registerUserNotificationSettings:settings];
+    } else {
+        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge |
+        UIRemoteNotificationTypeAlert |
+        UIRemoteNotificationTypeSound;
+        [application registerForRemoteNotificationTypes:myTypes];
+    }
+}
+#pragma - mark  百度地图
+
+- (void)startBaiduService
+{
+    //使用百度地图相关
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
+    {
+        //设置定位权限 仅ios8有意义
+        [_locationManager requestWhenInUseAuthorization];// 前台定位
+        
+        //  [locationManager requestAlwaysAuthorization];// 前后台同时定位
+    }
+    [_locationManager startUpdatingLocation];
+    
+    // 要使用百度地图，请先启动BaiduMapManager
+    _mapManager = [[BMKMapManager alloc]init];
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    BOOL ret = [_mapManager start:BAIDUMAP_APPKEY  generalDelegate:self];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
+}
+
+#pragma mark - 上传更新头像
 
 /**
  *  上传头像
@@ -127,7 +196,6 @@
     }else
     {
         NSLog(@"需要更新头像");
-        
     }
     
     NSString *authcode = [LTools cacheForKey:USER_AUTHOD];
@@ -169,7 +237,6 @@
     }];
 }
 
-
 #pragma mark - BMKGeneralDelegate <NSObject>
 
 /**
@@ -191,6 +258,8 @@
 }
 
 
+#pragma mark - 支付宝支付回调
+
 /**
  这里处理新浪微博SSO授权之后跳转回来，和微信分享完成之后跳转回来
  */
@@ -200,8 +269,6 @@
     NSLog(@"openURL------ %@",url);
     
     //当支付宝客户端在操作时,商户 app 进程在后台被结束,只能通过这个 block 输出支付 结果。
-    
-#pragma mark - 支付宝支付回调
     
     //如果极简开发包不可用,会跳转支付宝钱包进行支付,需要将支付宝钱包的支付结果回传给开 发包
     if ([url.host isEqualToString:@"safepay"]) {
@@ -237,8 +304,7 @@
     return  [WXApi handleOpenURL:url delegate:self];
 }
 
-
-#pragma mark - 微信支付回调
+#pragma - mark 微信支付回调
 
 - (void)onResp:(BaseResp *)resp {
     
@@ -302,9 +368,7 @@
     
 }
 
-
-
-#pragma mark - 定位Delegate
+#pragma - mark 定位Delegate
 
 - (void)theLocationDictionary:(NSDictionary *)dic{
     
@@ -328,7 +392,290 @@
     }
 }
 
+#pragma mark - RongCloud
+
+- (void)startRongCloud
+{
+    //融云
+    
+    [[RCIM sharedRCIM] initWithAppKey:RONGCLOUD_IM_APPKEY];
+    
+    [[RCIM sharedRCIM]setReceiveMessageDelegate:self];
+    
+    [[RCIM sharedRCIM]setConnectionStatusDelegate:self];
+    
+    [[RCIM sharedRCIM]setUserInfoDataSource:self];//用户信息提供者
+    
+    [RCIM sharedRCIM].enableMessageAttachUserInfo = YES;
+
+    UserInfo *user = [UserInfo userInfoForCache];
+    
+    if (user) {
+        
+        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:user.uid name:user.user_name portrait:user.avatar];
+        [RCIM sharedRCIM].currentUserInfo = userInfo;
+    }
+    
+    //头像样式
+    [[RCIM sharedRCIM] setGlobalMessageAvatarStyle:RC_USER_AVATAR_CYCLE];
+    
+    //SDK 初始化方法 initWithAppKey 之后后注册消息类型
+    [[RCIMClient sharedRCIMClient]registerMessageType:SimpleMessage.class];
+    
+    //开始融云登录
+    [self startLoginRongTimer];
+    
+    //监控登录通知
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startLoginRongTimer) name:NOTIFICATION_LOGIN object:nil];
+}
+
+#pragma - mark  RCIMConnectionStatusDelegate <NSObject>
+
+/**
+ *  网络状态变化。
+ *
+ *  @param status 网络状态。
+ */
+- (void)onRCIMConnectionStatusChanged:(RCConnectionStatus)status
+{
+    //其他设备登陆
+    if (status == ConnectionStatus_KICKED_OFFLINE_BY_OTHER_CLIENT) {
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:@"提示"
+                              message:@"您的帐号在别的设备上登录，您被迫下线！"
+                              delegate:self
+                              cancelButtonTitle:@"知道了"
+                              otherButtonTitles:@"重新登录", nil];
+        alert.tag = kAlertViewTag_otherClient;
+        [alert show];
+        
+    }
+    //token不对
+    else if (status == ConnectionStatus_TOKEN_INCORRECT) {
+        NSLog(@"Token已过期，请重新登录");
+        [LTools cache:nil ForKey:USER_RONGCLOUD_TOKEN];
+        [self startLoginRongTimer];
+    }
+}
+
+#pragma - mark UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+}
 
 
+#pragma - mark RCIMReceiveMessageDelegate <NSObject>
+/**
+ 接收消息到消息后执行。
+ 
+ @param message 接收到的消息。
+ @param left    剩余消息数.
+ */
+- (void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left
+{
+    NSLog(@"RCIMReceiveMessageDelegate %d",left);
+    //接受到消息 更新未读消息
+    
+    if (0 == left) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
+            
+            [LTools updateTabbarUnreadMessageNumber];
+            
+        });
+        
+    }
+}
+
+#pragma - mark RCIMClientReceiveMessageDelegate
+- (void)onReceived:(RCMessage *)message left:(int)nLeft object:(id)object;
+{
+    NSLog(@"RCIMClientReceiveMessageDelegate %d",nLeft);
+    //接受到消息 更新未读消息
+    
+    if (0 == nLeft) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
+            
+            [LTools updateTabbarUnreadMessageNumber];
+            
+        });
+        
+    }
+    
+}
+
+
+#pragma - mark RCIMUserInfoDataSource <NSObject>
+
+/**
+ *  获取用户信息。
+ *
+ *  @param userId     用户 Id。
+ *  @param completion 用户信息
+ */
+- (void)getUserInfoWithUserId:(NSString *)userId
+                   completion:(void (^)(RCUserInfo *userInfo))completion
+{
+    NSLog(@"getUserInfoWithUserId %@",userId);
+    //客服就不需要了
+    if ([userId isEqualToString:SERVICE_ID]) {
+        
+        return;
+    }
+    
+    if ([userId isEqualToString:[UserInfo userInfoForCache].uid]) {
+        
+        UserInfo *user = [UserInfo userInfoForCache];
+        if (user) {
+            
+            RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:user.uid name:user.user_name portrait:user.avatar];
+            return completion(userInfo);
+        }
+    }
+    
+    
+    
+//    NSString *userName = [LTools rongCloudUserNameWithUid:userId];
+//    NSString *userIcon = [LTools rongCloudUserIconWithUid:userId];
+//    
+//    NSLog(@"userId %@ userIcon %@",userId,userIcon);
+//    
+//    NSLog(@"----->|%@|",userName);
+//    
+//    //没有保存用户名 或者 更新时间超过一个小时
+//    if ([LTools isEmpty:userName] || [LTools isEmpty:userIcon]  || [LTools rongCloudNeedRefreshUserId:userId]) {
+//        
+//        NSDictionary *params = @{@"uid":userId};
+//        [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:GET_USERINFO_ONLY_USERID parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+//            
+//            NSDictionary *dic = result[@"user_info"];
+//            if ([dic isKindOfClass:[NSDictionary class]]) {
+//                
+//                NSString *name = dic[@"user_name"];
+//                NSString *icon = dic[@"avatar"];
+//                
+//                //不为空
+//                if (![LTools isEmpty:name]) {
+//                    
+//                    [LTools cacheRongCloudUserName:name forUserId:userId];
+//                }
+//                
+//                [LTools cacheRongCloudUserIcon:icon forUserId:userId];
+//                
+//                RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:name portrait:icon];
+//                
+//                return completion(userInfo);
+//            }
+//            
+//        } failBlock:^(NSDictionary *result) {
+//            
+//        }];
+//    }
+//    
+//    NSLog(@"userId %@ %@",userId,userName);
+//    
+//    RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:userName portrait:userIcon];
+//    
+//    return completion(userInfo);
+}
+
+
+#pragma - mark 获取融云token
+
+- (void)getRongCloudToken
+{
+    if (_getRongTokenTime == 0) {
+        
+        [self stopRongTimer];
+        
+        return;
+    }
+    
+    _getRongTokenTime --;
+    
+    NSString *userToken = [LTools cacheForKey:USER_RONGCLOUD_TOKEN];
+    
+    if (userToken.length) {
+        
+        [self loginRongCloudWithToken:userToken];
+        
+        return;
+    }
+    
+    UserInfo *userInfo = [UserInfo userInfoForCache];
+    NSString *user_id = userInfo.uid;
+    
+    if (!user_id || user_id.length == 0
+        || [user_id isEqualToString:@"(null)"]
+        || [user_id isKindOfClass:[NSNull class]]) {
+        [self stopRongTimer];
+        return;
+    }
+    
+    __weak typeof(self)weakSelf = self;
+    NSString *user_name = userInfo.user_name;
+    NSString *icon = userInfo.avatar;
+    
+    NSDictionary *params = @{@"user_id":user_id,
+                             @"name":user_name,
+                             @"portrait_uri":icon};
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_GET_TOKEN parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSString *token = result[@"token"];
+        
+        [LTools cache:token ForKey:USER_RONGCLOUD_TOKEN];
+        
+        [weakSelf loginRongCloudWithToken:token];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        
+    }];
+}
+
+- (void)loginRongCloudWithToken:(NSString *)userToken
+{
+    if (userToken.length) {
+        
+        __weak typeof(self)weakSelf = self;
+        
+        [[RCIMClient sharedRCIMClient]connectWithToken:userToken success:^(NSString *userId) {
+            
+            NSLog(@"登录成功融云 userId %@",userId);
+            
+            [weakSelf stopRongTimer];//停止计时
+            
+        } error:^(RCConnectErrorCode status) {
+            
+            NSLog(@"RCConnectErrorCode %ld",status);
+            
+        } tokenIncorrect:^{
+            
+            NSLog(@"token不对");
+            
+            [LTools cache:nil ForKey:USER_RONGCLOUD_TOKEN];
+        }];
+    }else
+    {
+        [self getRongCloudToken];
+    }
+    
+}
+
+- (void)startLoginRongTimer
+{
+    _getRongTokenTime = 5;
+    [self getRongCloudToken];//先登录一次
+    _getRongTokenTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(getRongCloudToken) userInfo:nil repeats:YES];
+}
+
+- (void)stopRongTimer
+{
+    [_getRongTokenTimer invalidate];
+    _getRongTokenTimer = nil;
+}
 
 @end

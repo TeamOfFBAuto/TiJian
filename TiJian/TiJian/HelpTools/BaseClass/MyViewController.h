@@ -45,6 +45,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
     
     MyViewControllerLeftbuttonType leftType;
     MyViewControllerRightbuttonType myRightType;
+    UIView *_resultView;
 }
 
 @property(nonatomic,copy)UpdateParamsBlock updateParamsBlock;
@@ -73,6 +74,8 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 @property(nonatomic,assign)BOOL isAddGestureRecognizer;
 
 @property(nonatomic,assign)BOOL customNavigationTitleView;//是否自定义导航栏view
+
+@property(nonatomic,retain)UIView *resultView;//结果view
 
 
 -(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType WithRightButtonType:(MyViewControllerRightbuttonType)rightType;

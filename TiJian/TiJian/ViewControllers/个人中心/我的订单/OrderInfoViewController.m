@@ -20,6 +20,7 @@
 #import "TuiKuanViewController.h"//申请退款
 #import "BrandModel.h"//品牌model
 #import "GconfirmOrderCell.h"
+#import "RCDChatViewController.h"
 
 #import "RCIM.h"
 
@@ -297,17 +298,15 @@
  */
 - (void)clickToChat:(UIButton *)sender
 {
-//    NSString *text = [NSString stringWithFormat:@"订单编号:%@",_orderModel.order_no];
-//    RCTextMessage *msg = [[RCTextMessage alloc]init];
-//    msg.content = text;
-//    msg.extra = @"订单编号:";
-//    
-//    
-//    [[RCIM sharedRCIM]sendTextMessage:ConversationType_PRIVATE targetId:_orderModel.yy_uid textMessage:msg delegate:nil object:nil];
-//    
-//    
-//    [MiddleTools chatWithUserId:_orderModel.yy_uid userName:_orderModel.yy_username forViewController:self lastNavigationHidden:NO];
-
+    
+    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
+    chatService.userName = @"客服";
+    chatService.targetId = SERVICE_ID;
+    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
+    chatService.title = chatService.userName;
+    [chatService setOrderMessageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
+    [self.navigationController pushViewController:chatService animated:YES];
+    
 }
 
 /**

@@ -147,6 +147,10 @@
     userInfo.avatar = avatar;
     [userInfo cacheForKey:USERINFO_MODEL];
     
+    //融云信息更新
+    RCUserInfo *r_userInfo = [[RCUserInfo alloc]initWithUserId:userInfo.uid name:userInfo.user_name portrait:userInfo.avatar];
+    [[RCIM sharedRCIM]refreshUserInfoCache:r_userInfo withUserId:userInfo.uid];
+    
 }
 
 /**
