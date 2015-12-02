@@ -151,7 +151,7 @@
         _userChooseYouhuiquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectYouhuiquanArray.count];
         
         for (CouponModel *coupon in self.userSelectYouhuiquanArray) {
-            if (coupon.brand_id) {//非通用 品牌优惠券
+            if ([coupon.brand_id intValue]!=0) {//非通用 品牌优惠券
                 if ([coupon.type intValue] == 1) {//满减
                     youhuiquan += [coupon.minus_money floatValue];
                     
@@ -170,7 +170,7 @@
                 }else if ([coupon.type intValue] == 3){//新人优惠
                     
                 }
-            }else{//通用
+            }else if([coupon.brand_id intValue] == 0) {//通用
                 if ([coupon.type intValue] == 1) {//满减
                     youhuiquan += [coupon.minus_money floatValue];
                 }else if ([coupon.type intValue] == 2){//打折
@@ -819,6 +819,7 @@
     NSLog(@"%s",__FUNCTION__);
     
     MyCouponViewController *cc = [[MyCouponViewController alloc]init];
+    cc.userChooseYouhuiquanArray = self.userSelectYouhuiquanArray;
     cc.delegate = self;
     cc.type = GCouponType_use_youhuiquan;
     
@@ -851,6 +852,7 @@
     NSLog(@"%s",__FUNCTION__);
     
     MyCouponViewController *cc = [[MyCouponViewController alloc]init];
+    cc.userChooseDaijinquanArray = self.userSelectDaijinquanArray;
     cc.delegate = self;
     cc.type = GCouponType_use_daijinquan;
     

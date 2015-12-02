@@ -90,9 +90,29 @@
 
 
 #pragma mark - 赋值
--(void)loadDataWithModel:(CouponModel*)theModel{
+-(void)loadDataWithModel:(CouponModel*)theModel type:(GCouponType)theType{
     
     self.chooseBtn.selected = theModel.isUsed;
+    
+    if (theType == GCouponType_use_youhuiquan) {
+        for (CouponModel *model in self.delegate.userChooseYouhuiquanArray) {
+            NSLog(@"%@",model.coupon_id);
+            if (model.coupon_id == theModel.coupon_id) {
+                self.chooseBtn.selected = YES;
+            }
+        }
+    }else if (theType == GCouponType_use_daijinquan){
+        for (CouponModel *model in self.delegate.userChooseDaijinquanArray) {
+            NSLog(@"%@",model.coupon_id);
+            if (model.coupon_id == theModel.coupon_id) {
+                self.chooseBtn.selected = YES;
+            }
+        }
+    }
+    
+    
+    
+    
     
     [self.iconImageView l_setImageWithURL:[NSURL URLWithString:theModel.brand_logo] placeholderImage:nil];
     

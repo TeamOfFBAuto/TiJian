@@ -25,7 +25,7 @@
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier index:(NSIndexPath*)theIndex type:(GCouponType)theType;
 
 
--(void)loadDataWithModel:(CouponModel*)theModel;
+-(void)loadDataWithModel:(CouponModel*)theModel type:(GCouponType)theType;
 
 
 

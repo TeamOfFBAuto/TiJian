@@ -442,7 +442,7 @@
         NSArray *arr = _tab0Array[indexPath.section];
         CouponModel *model = arr[indexPath.row];
         
-        [cell loadDataWithModel:model];
+        [cell loadDataWithModel:model type:self.type];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
@@ -464,7 +464,7 @@
         NSArray *arr = _tab1Array[indexPath.section];
         CouponModel *model = arr[indexPath.row];
         
-        [cell loadDataWithModel:model];
+        [cell loadDataWithModel:model type:self.type];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         

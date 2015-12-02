@@ -28,6 +28,13 @@
 //使用代金券
 @property(nonatomic,strong)NSString *brand_ids;
 
+//用户选择使用的优惠券
+@property(nonatomic,strong)NSArray *userChooseYouhuiquanArray;
+
+//用户选择使用的优惠券
+@property(nonatomic,strong)NSArray *userChooseDaijinquanArray;
+
+
 //cell的selectButton点击回调方法
 -(void)cellSelectBtnClickedWithIndex:(NSIndexPath *)theIndex select:(BOOL)theState;
 
