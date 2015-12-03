@@ -207,7 +207,9 @@
     for (int i = 0; i<10; i++) {
         _isMark_price[i] = 0;
     }
-    
+    self.userChoosePrice = nil;
+    self.userChoosePrice_high = nil;
+    self.userChoosePrice_low = nil;
     [self setDefaultPriceImvHidden];
     [self.tab3 reloadData];
 }
@@ -847,6 +849,7 @@
         NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
         self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
         self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         [self.tab4 removeFromSuperview];
         [self.tab1 reloadData];
     }

@@ -159,7 +159,7 @@
                     CGFloat p_t_price = 0;
                     for (ProductModel *product in self.dataArray) {
                         if (coupon.brand_id == product.brand_id) {
-                            p_t_price += [product.product_price floatValue] *[product.product_num intValue];
+                            p_t_price += [product.current_price floatValue] *[product.product_num intValue];
                         }
                     }
                     CGFloat zhe = coupon.discount_num.floatValue;
@@ -918,16 +918,48 @@
     }
     
     
-    NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
-                          @"product_ids":product_ids_str,
-                          @"product_nums":product_nums_str,
-                          @"address_id":_theAddressModel.address_id,
-                          @"order_note":_liuyantf.text,
-                          @"is_use_score":@"0",
-                          @"total_price":[NSString stringWithFormat:@"%.2f",_price_total],
-                          @"real_price":[NSString stringWithFormat:@"%.2f",_finalPrice]
-                          };
+    
+    
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    [dic setValue:[LTools cacheForKey:USER_AUTHOD] forKey:@"authcode"];//authcode
+    [dic setValue:product_ids_str forKey:@"product_ids"];//产品id
+    [dic setValue:product_nums_str forKey:@"product_nums"];//产品数量
+    [dic setValue:_theAddressModel.address_id forKey:@"address_id"];//地址
+    [dic setValue:_liuyantf.text forKey:@"order_note"];//留言
+    [dic setValue:@"0" forKey:@"is_use_score"];//使用的积分
+    [dic setValue:[NSString stringWithFormat:@"%.2f",_price_total] forKey:@"total_price"];//总价钱
+    [dic setValue:[NSString stringWithFormat:@"%.2f",_finalPrice] forKey:@"real_price"];//实际价钱
+    
+    if (self.userSelectYouhuiquanArray.count>0) {//使用优惠券
+        
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (CouponModel *model in self.userSelectYouhuiquanArray) {
+            [arr addObject:model.coupon_id];
+        }
+        
+        NSString *coupon_id = [arr componentsJoinedByString:@","];
+        
+        [dic setValue:coupon_id forKey:@"coupon_id"];
+    }
+    
+    if (self.userSelectDaijinquanArray.count>0) {//使用代金券
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (CouponModel *model in self.userSelectDaijinquanArray) {
+            [arr addObject:model.coupon_id];
+        }
+        NSString *vouchers_id = [arr componentsJoinedByString:@","];
+        [dic setValue:vouchers_id forKey:@"vouchers_id"];
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     __weak typeof(self)weakSelf = self;

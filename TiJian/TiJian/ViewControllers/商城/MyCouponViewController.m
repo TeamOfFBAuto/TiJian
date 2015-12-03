@@ -98,9 +98,7 @@
 -(void)creatUpBtnAndDownScrollView{
     
     
-    if (self.type == GCouponType_youhuiquan || self.type == GCouponType_daijinquan) {
-        
-    }
+    
     
     int abelCount = 0;
     int disAbelCount = 0;
@@ -116,6 +114,13 @@
     
     NSString *ableNum = [NSString stringWithFormat:@"可用优惠券(%d)",abelCount];
     NSString *noAbleNum = [NSString stringWithFormat:@"不可用优惠券(%d)",disAbelCount];
+    
+    if (self.type == GCouponType_daijinquan || self.type == GCouponType_use_daijinquan) {
+        ableNum = [NSString stringWithFormat:@"可用代金券(%d)",abelCount];
+        noAbleNum = [NSString stringWithFormat:@"不可用代金券(%d)",disAbelCount];
+    }
+    
+    
     NSArray *titles = @[ableNum,noAbleNum];
     int count = (int)titles.count;
     CGFloat width = DEVICE_WIDTH / count;
@@ -169,19 +174,45 @@
 -(void)cellSelectBtnClickedWithIndex:(NSIndexPath *)theIndex select:(BOOL)theState{
     if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
         NSArray *arr = _tab0Array[theIndex.section];
-        
         CouponModel *model = arr[theIndex.row];
         
-        for (CouponModel *oneModel in arr) {
-            if (oneModel.brand_id == model.brand_id) {
+        
+        if ([model.brand_id intValue] == 0) {//通用
+            for (CouponModel *oneModel in arr) {
                 oneModel.isUsed = NO;
             }
-            
+            model.isUsed = theState;
+        }else{//非通用
+            for (CouponModel *oneModel in arr) {
+                if (oneModel.brand_id == model.brand_id) {
+                    oneModel.isUsed = NO;
+                }
+            }
+            model.isUsed = theState;
         }
         
-        model.isUsed = theState;
+        [_tab0 reloadData];
         
-        NSLog(@"%d",model.isUsed);
+        
+    }else if (self.type == GCouponType_use_daijinquan){//使用代金券
+        NSArray *arr = _tab0Array[theIndex.section];
+        CouponModel *model = arr[theIndex.row];
+        
+        if ([model.brand_id intValue] == 0) {//通用
+            for (CouponModel *oneModel in arr) {
+                oneModel.isUsed = NO;
+            }
+            model.isUsed = theState;
+        }else{//非通用
+            for (CouponModel *oneModel in arr) {
+                if (oneModel.brand_id == model.brand_id) {
+                    oneModel.isUsed = NO;
+                }
+            }
+            model.isUsed = theState;
+        }
+        
+        [_tab0 reloadData];
         
     }
     
@@ -234,12 +265,12 @@
     }
     [_requst requestWithMethod:YJYRequstMethodGet api:url parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSDictionary *coupon_list_Dic = [result dictionaryValueForKey:@"coupon_list"];
+        NSDictionary *listDic = [result dictionaryValueForKey:@"list"];
         
         //可用
-        NSDictionary *enableDic = [coupon_list_Dic dictionaryValueForKey:@"enable"];
+        NSDictionary *enableDic = [listDic dictionaryValueForKey:@"enable"];
         //不可用
-        NSDictionary *disableDic = [coupon_list_Dic dictionaryValueForKey:@"disable"];
+        NSDictionary *disableDic = [listDic dictionaryValueForKey:@"disable"];
        
         //可用
         _tab0Array = [NSMutableArray arrayWithCapacity:1];
@@ -411,12 +442,24 @@
     label.textColor = RGBCOLOR(134, 135, 136);
     [view addSubview:label];
     
-    if (model.brand_id) {//非通用
-        label.text = @"品牌优惠券";
-        [logoImv setImage:[UIImage imageNamed:@"coupon_feitongyong.png"]];
+    if ([model.brand_id intValue] != 0) {//非通用
+        if (self.type == GCouponType_youhuiquan || self.type == GCouponType_use_youhuiquan) {
+            label.text = @"品牌优惠券";
+            [logoImv setImage:[UIImage imageNamed:@"coupon_feitongyong.png"]];
+        }else if (self.type == GCouponType_daijinquan || self.type == GCouponType_use_daijinquan){
+            label.text = @"品牌代金券";
+            [logoImv setImage:[UIImage imageNamed:@"coupon_feitongyong.png"]];
+        }
+        
     }else{//通用
-        label.text = @"通用优惠券";
-        [logoImv setImage:[UIImage imageNamed:@"coupon_tongyong.png"]];
+        if (self.type == GCouponType_youhuiquan || self.type == GCouponType_use_youhuiquan) {
+            label.text = @"通用优惠券";
+            [logoImv setImage:[UIImage imageNamed:@"coupon_tongyong.png"]];
+        }else if (self.type == GCouponType_daijinquan || self.type == GCouponType_use_daijinquan){
+            label.text = @"通用代金券";
+            [logoImv setImage:[UIImage imageNamed:@"coupon_tongyong.png"]];
+        }
+        
     }
     
     

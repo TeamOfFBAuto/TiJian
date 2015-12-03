@@ -20,6 +20,10 @@
 @property(nonatomic,strong)UILabel *contentLabel;//优惠券描述
 @property(nonatomic,strong)UILabel *useTimeLabel;//使用期限
 @property(nonatomic,assign)MyCouponViewController *delegate;
+@property(nonatomic,strong)UILabel *daijinquan_priceLabel;//代金券上的价格
+@property(nonatomic,strong)UILabel *daijinquan_brandNameLabel;//代金券的品牌
+@property(nonatomic,strong)UILabel *daijinquan_timeLabel;//代金券的使用时间
+@property(nonatomic,strong)UILabel *companyLabel;//代金券前方公司名
 
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier index:(NSIndexPath*)theIndex type:(GCouponType)theType;

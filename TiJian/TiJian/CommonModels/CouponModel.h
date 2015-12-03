@@ -39,12 +39,13 @@
 @property(nonatomic,strong)NSString *uid;
 @property(nonatomic,strong)NSString *receive_time;//领取时间
 @property(nonatomic,strong)NSString *use_time;//使用时间
-@property(nonatomic,strong)NSString *brand_logo;//品牌logo
+@property(nonatomic,strong)NSString *cover_pic;//正方形图
 @property(nonatomic,strong)NSString *brand_name;//品牌名
 @property(nonatomic,strong)NSString *brand_id;//优惠券所属品牌id
 @property(nonatomic,strong)NSString *malll_name;//商场名
 @property(nonatomic,assign)int enable_use;//是否可用 1=>可以 , 0=>不可以
 @property(nonatomic,assign)int disable_use_reason;//不能使用原因    1=>已经使用过， 2=>过期
+@property(nonatomic,strong)NSString *vouchers_price;//代金券金额
 
 
 
