@@ -46,6 +46,7 @@
 @property(nonatomic,assign)int enable_use;//是否可用 1=>可以 , 0=>不可以
 @property(nonatomic,assign)int disable_use_reason;//不能使用原因    1=>已经使用过， 2=>过期
 @property(nonatomic,strong)NSString *vouchers_price;//代金券金额
+@property(nonatomic,strong)NSString *company_name;//代金券公司名
 
 
 

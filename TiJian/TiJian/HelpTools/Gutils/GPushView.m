@@ -296,7 +296,9 @@
         //价格选择
         if (self.userChoosePrice) {
             [dic setValue:self.userChoosePrice_low forKey:@"low_price"];
-            [dic setValue:self.userChoosePrice_high forKey:@"high_price"];
+            if (self.userChoosePrice_high) {
+                [dic setValue:self.userChoosePrice_high forKey:@"high_price"];
+            }
         }
         
         
@@ -831,11 +833,20 @@
         [self.tf_high resignFirstResponder];
         [self.tf_low resignFirstResponder];
         
+        
+        
         self.userChoosePrice = _priceArray[indexPath.row];
         
-        NSArray *paa = [self.userChoosePrice componentsSeparatedByString:@"—"];
-        self.userChoosePrice_low = paa[0];
-        self.userChoosePrice_high = paa[1];
+        if ([self.userChoosePrice isEqualToString:@"2000以上"]) {
+            self.userChoosePrice_low = @"2000";
+            self.userChoosePrice_high = nil;
+        }else{
+            NSArray *paa = [self.userChoosePrice componentsSeparatedByString:@"—"];
+            self.userChoosePrice_low = paa[0];
+            self.userChoosePrice_high = paa[1];
+        }
+        
+        
         
         
         

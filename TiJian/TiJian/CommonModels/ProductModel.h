@@ -48,6 +48,8 @@
 @property(nonatomic,strong)NSString *brand_name;
 @property(nonatomic,strong)NSString *cart_pro_id;//购物车id
 @property(nonatomic,strong)NSString *original_price;//原价
+@property(nonatomic,assign)CGFloat afterUsedYouhuiquan_Price;//使用优惠券之后的价钱
+@property(nonatomic,assign)CGFloat afterUsedDaijinquan_Price;//使用代金券之后的价钱
 
 //预约相关
 @property(nonatomic,strong)NSString *type;//1 公司购买套餐 2 公司代金券 3 普通套餐

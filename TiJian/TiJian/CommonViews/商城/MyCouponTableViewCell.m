@@ -36,7 +36,7 @@
         [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
         [self.chooseBtn setImage:[UIImage imageNamed:@"xuanzhong.png"] forState:UIControlStateSelected];
         CGFloat wAndH = 35;//选择按钮的宽高
-        if (theType == GCouponType_youhuiquan ||  theType == GCouponType_daijinquan) {//查看
+        if (theType == GCouponType_youhuiquan ||  theType == GCouponType_daijinquan || theType == GCouponType_disUse_youhuiquan || theType == GCouponType_disUse_daijinquan) {//查看
             [self.chooseBtn setFrame:CGRectZero];
         }else if (theType == GCouponType_use_daijinquan || theType == GCouponType_use_youhuiquan){//使用
             [self.chooseBtn setFrame:CGRectMake(5, height * 0.5 - wAndH * 0.5, wAndH, wAndH)];
@@ -49,7 +49,7 @@
         
         
         
-        if (theType == GCouponType_youhuiquan || theType == GCouponType_use_youhuiquan) {
+        if (theType == GCouponType_youhuiquan || theType == GCouponType_use_youhuiquan || theType == GCouponType_disUse_youhuiquan) {
             UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+5, 10, 50, 50)];
             
             //logo图
@@ -84,10 +84,7 @@
             //优惠券图
             self.couponImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 105, 15, 100, 40)];
             [self.contentView addSubview:self.couponImv];
-        }else if (theType == GCouponType_daijinquan || theType == GCouponType_use_daijinquan){
-            
-            
-            
+        }else if (theType == GCouponType_daijinquan || theType == GCouponType_use_daijinquan || theType == GCouponType_disUse_daijinquan){
             
             self.companyLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+10, 10, DEVICE_WIDTH *(200/750.0), 50)];
             if (theType == GCouponType_daijinquan) {
@@ -172,7 +169,7 @@
     
     
     
-    if (theType == GCouponType_youhuiquan || theType == GCouponType_use_youhuiquan) {
+    if (theType == GCouponType_youhuiquan || theType == GCouponType_use_youhuiquan || theType == GCouponType_disUse_youhuiquan) {
         [self.iconImageView l_setImageWithURL:[NSURL URLWithString:theModel.cover_pic] placeholderImage:nil];
         
         self.contentLabel.text = theModel.brand_name;
@@ -210,8 +207,8 @@
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [UIFont boldSystemFontOfSize:11];
         [self.couponImv addSubview:label];
-    }else if (theType == GCouponType_daijinquan || theType == GCouponType_use_daijinquan){
-        self.companyLabel.text = theModel.brand_name;
+    }else if (theType == GCouponType_daijinquan || theType == GCouponType_use_daijinquan || theType == GCouponType_disUse_daijinquan){
+        self.companyLabel.text = theModel.company_name;
         self.daijinquan_priceLabel.text = [NSString stringWithFormat:@"%@元",theModel.vouchers_price];
         self.daijinquan_brandNameLabel.text = theModel.brand_name;
         NSString *start_time = [GMAPI timechangeYMD:theModel.use_start_time];

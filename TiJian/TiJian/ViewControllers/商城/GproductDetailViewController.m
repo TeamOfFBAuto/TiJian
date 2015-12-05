@@ -15,6 +15,7 @@
 #import "RCDChatViewController.h"
 #import "ProductModel.h"
 #import "CouponModel.h"
+#import "GoneClassListViewController.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -586,6 +587,12 @@
         
         
     }else if (sender.tag == 102){//品牌店
+        GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+        cc.isProductDetailVcPush = YES;
+        cc.className = self.theProductModel.brand_name;
+        [self.navigationController pushViewController:cc animated:YES];
+        
+        
         
     }else if (sender.tag == 103){//购物车
         
@@ -615,6 +622,46 @@
         
     }
 }
+
+
+/**
+ *  收藏 取消收藏商品
+ *
+ *  @param type 1 收藏 2 取消收藏
+ */
+-(void)shoucangProductWithState:(int)type{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    
+    NSDictionary *dic = @{
+                          @"product_id":self.theProductModel.product_id,
+                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          };
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    
+    NSString *api;
+    if (type == 1) {
+        api = SHOUCANGRODUCT;
+    }else if (type == 2){
+        api = QUXIAOSHOUCANG;
+    }
+    
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:api parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+    
+}
+
+
 
 
 

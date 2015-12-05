@@ -112,6 +112,7 @@
 }
 
 -(void)creatFilterBtn{
+    
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     filterButton.frame = CGRectMake(17, 17, 38, 38);
     [filterButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
@@ -120,6 +121,11 @@
     
     [self.view addSubview:filterButton];
     [filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (self.isProductDetailVcPush) {
+        filterButton.hidden = YES;
+    }
+    
     
 }
 

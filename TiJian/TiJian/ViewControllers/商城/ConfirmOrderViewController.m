@@ -60,6 +60,17 @@
     
     int _count;//网络请求个数
     
+    UILabel *_jifenMiaoshuLabel;//积分描述label
+    
+    UITextField *_useScoreTf;//用户输入积分的tf
+    
+    UIView *_shouView;//用于收键盘的点击view
+    UILabel *_realScore_dijia;//用户使用积分后抵价多少
+    
+    NSInteger _keyongJifen;//使用完优惠券和代金券之后可用的积分
+    
+    BOOL _isUseScore;//是否使用积分
+    NSInteger _fanal_usedScore;//最终使用的积分
     
 }
 @end
@@ -84,6 +95,12 @@
     
     _sumPrice_pay = 0;
 
+    _keyongJifen = 0;
+    _fanal_usedScore = 0;
+    
+    
+    
+    
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
@@ -107,6 +124,14 @@
 
 //一维数组(里面装产品model)做成二维数组(以品牌id区分)
 -(void)makeDyadicArray{
+    
+    
+    for (ProductModel *model in self.dataArray) {
+        model.afterUsedYouhuiquan_Price = [model.current_price floatValue];
+        model.afterUsedDaijinquan_Price = [model.current_price floatValue];
+    }
+    
+    
     
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
     for (ProductModel *model in self.dataArray) {
@@ -153,13 +178,40 @@
         for (CouponModel *coupon in self.userSelectYouhuiquanArray) {
             if ([coupon.brand_id intValue]!=0) {//非通用 品牌优惠券
                 if ([coupon.type intValue] == 1) {//满减
-                    youhuiquan += [coupon.minus_money floatValue];
+                    CGFloat total_p = 0;
+                    for (ProductModel *product in self.dataArray) {
+                        if (product.brand_id == coupon.brand_id) {
+                            total_p +=[product.current_price floatValue]*[product.product_num intValue];
+                        }
+                    }
+                    
+                    float youhuiquan_1 = 0;
+                    
+                    if (total_p>[coupon.vouchers_price floatValue]) {
+                        youhuiquan_1 = [coupon.minus_money floatValue];
+                    }else{
+                        youhuiquan_1 = total_p;
+                    }
+                    
+                    youhuiquan +=youhuiquan_1;
+                    
+                    
+                    for (ProductModel *prodt in self.dataArray) {
+                        if (prodt.brand_id == coupon.brand_id) {
+                            //按比例均摊到每件商品上的满减价格
+                            CGFloat bili = [prodt.current_price floatValue] * [prodt.product_num intValue]/total_p;
+                            prodt.afterUsedYouhuiquan_Price = [prodt.current_price floatValue] - youhuiquan_1*bili;
+                        }
+                    }
+                    
+                    
                     
                 }else if ([coupon.type intValue] == 2){//打折
                     CGFloat p_t_price = 0;
                     for (ProductModel *product in self.dataArray) {
                         if (coupon.brand_id == product.brand_id) {
                             p_t_price += [product.current_price floatValue] *[product.product_num intValue];
+                            product.afterUsedYouhuiquan_Price = [product.current_price floatValue]*[coupon.discount_num floatValue];
                         }
                     }
                     CGFloat zhe = coupon.discount_num.floatValue;
@@ -172,46 +224,124 @@
                 }
             }else if([coupon.brand_id intValue] == 0) {//通用
                 if ([coupon.type intValue] == 1) {//满减
-                    youhuiquan += [coupon.minus_money floatValue];
+                    
+                    
+                    float youhuiquan_1 = 0;
+                    
+                    if (_price_total>[coupon.vouchers_price floatValue]) {
+                        youhuiquan_1 = [coupon.minus_money floatValue];
+                    }else{
+                        youhuiquan_1 = _price_total;
+                    }
+                    youhuiquan += youhuiquan_1;
+                    
+                    
+                    for (ProductModel *prodt in self.dataArray) {
+                        //按比例均摊到每件商品上的满减价格
+                        CGFloat bili = [prodt.current_price floatValue] * [prodt.product_num intValue]/_price_total;
+                        prodt.afterUsedYouhuiquan_Price = [prodt.current_price floatValue] - (youhuiquan_1*bili/[prodt.product_num intValue]);
+                    }
+                    
+                    
+                    
                 }else if ([coupon.type intValue] == 2){//打折
+                    
+                    CGFloat p_t_price = 0;
+                    for (ProductModel *product in self.dataArray) {
+                        p_t_price += [product.current_price floatValue] *[product.product_num intValue];
+                        product.afterUsedYouhuiquan_Price = [product.current_price floatValue]*[coupon.discount_num floatValue];
+                    }
+                    
+                    
                     CGFloat zhe = coupon.discount_num.floatValue;
-                    youhuiquan += _price_total *(1 - zhe);
+                    youhuiquan += p_t_price *(1 - zhe);
                 }else if ([coupon.type intValue] == 3){//新人优惠
                     
                 }
             }
             
-            
-            
-            
         }
-        
-        
-        
-        
-        
         
     }else{
         _userChooseYouhuiquan_label.text = @"未使用";
     }
     
     //代金券
-    CGFloat daijinquan = 0;
+    CGFloat daijinquan = 0;//使用优惠券优惠的总价格
     if (self.userSelectDaijinquanArray.count>0) {
         _userChooseDaijinquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectDaijinquanArray.count];
         
+        CGFloat afterUseYhqPrice_total = 0;//使用完优惠券之后的总价格
+        for (ProductModel *model in self.dataArray) {
+            afterUseYhqPrice_total += model.afterUsedYouhuiquan_Price *[model.product_num intValue];
+            model.afterUsedDaijinquan_Price  = model.afterUsedYouhuiquan_Price;
+        }
+        
+        
+        
+        for (CouponModel *model in self.userSelectDaijinquanArray) {
+            
+            if ([model.brand_id intValue] == 0) {//通用
+                if (afterUseYhqPrice_total > [model.vouchers_price floatValue]) {
+                    daijinquan += [model.vouchers_price floatValue];
+                }else{
+                    daijinquan += afterUseYhqPrice_total;
+                }
+            }else{//非通用
+                
+                CGFloat p_t_price = 0;
+                for (ProductModel *product in self.dataArray) {
+                    if (model.brand_id == product.brand_id) {
+                        p_t_price += product.afterUsedYouhuiquan_Price *[product.product_num intValue];
+                    }
+                }
+                
+                if (p_t_price > [model.vouchers_price floatValue]) {
+                    daijinquan += [model.vouchers_price floatValue];
+                }else{
+                    daijinquan += p_t_price;
+                }
+                
+                
+            }
+        }
         
     }else{
         _userChooseDaijinquan_label.text = @"未使用";
     }
     
     
-    //积分
-    CGFloat jifen = 0;
+    
+    
+    
+    
+    if (_isUseScore) {//使用积分
+        //积分
+        CGFloat jifen = 0;
+        
+        UserInfo *userInfoModel = [UserInfo userInfoForCache];
+        NSInteger maxAbleUseScore = [userInfoModel.score integerValue];
+        _keyongJifen = ((_price_total - youhuiquan - daijinquan)*100) > maxAbleUseScore ? maxAbleUseScore : ((_price_total - youhuiquan - daijinquan)*100);
+        
+        _jifenMiaoshuLabel.text = [NSString stringWithFormat:@"共%ld积分,可用%ld积分,抵%.2f元",(long)maxAbleUseScore,_keyongJifen,_keyongJifen/100.0];
+        
+        if ([_useScoreTf.text integerValue]> _keyongJifen) {
+            jifen = _keyongJifen;
+        }else{
+            jifen = [_useScoreTf.text integerValue];
+        }
+        
+        _fanal_usedScore = jifen;
+    }else{
+        _fanal_usedScore = 0;
+    }
+    
+    
+    
     
     //实付款
     _finalPrice = 0;
-    _finalPrice = _price_total + yunfei - youhuiquan - daijinquan - jifen;
+    _finalPrice = _price_total + yunfei - youhuiquan - daijinquan - _fanal_usedScore/100.0;
     
     UILabel *l0 = [_theNewbilityView viewWithTag:10];//商品金额
     UILabel *l1 = [_theNewbilityView viewWithTag:11];//运费
@@ -223,7 +353,7 @@
     l1.text = [NSString stringWithFormat:@"+%.2f",yunfei];
     l2.text = [NSString stringWithFormat:@"-%.2f",youhuiquan];
     l3.text = [NSString stringWithFormat:@"-%.2f",daijinquan];
-    l4.text = [NSString stringWithFormat:@"-%.2f",jifen];
+    l4.text = [NSString stringWithFormat:@"-%.2f",_fanal_usedScore/100.0];
     _shifukuangLabel.text = [NSString stringWithFormat:@"￥%.2f",_finalPrice];
     
     
@@ -441,6 +571,8 @@
     
     _liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
     _liuyantf.font = [UIFont systemFontOfSize:15];
+    _liuyantf.delegate = self;
+    _liuyantf.tag = 10000;
     _liuyantf.placeholder = @"选填";
     [liuyanView addSubview:_liuyantf];
     
@@ -554,12 +686,11 @@
     jifenLabel.textColor = [UIColor blackColor];
     [jifenView addSubview:jifenLabel];
     
-    UILabel *jifenMiaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jifenLabel.frame)+10, jifenLabel.frame.origin.y, DEVICE_WIDTH - 15 - 30 - 10 - 65, jifenLabel.frame.size.height)];
-    jifenMiaoshuLabel.font = [UIFont systemFontOfSize:12];
-    jifenMiaoshuLabel.text = @"共1008积分,可用600积分，抵6元";
-    [jifenView addSubview:jifenMiaoshuLabel];
+    _jifenMiaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jifenLabel.frame)+10, jifenLabel.frame.origin.y, DEVICE_WIDTH - 15 - 30 - 10 - 65, jifenLabel.frame.size.height)];
+    _jifenMiaoshuLabel.font = [UIFont systemFontOfSize:12];
+    [jifenView addSubview:_jifenMiaoshuLabel];
     
-    UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
+    UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, _jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
     switchView.onTintColor = RGBCOLOR(237, 108, 22);
     [switchView setOn:state];
     [jifenView addSubview:switchView];
@@ -587,27 +718,28 @@
         [useJifenView addSubview:lb1];
         
         
-        UITextField *useScoreTf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb1.frame)+10, 10, 100, 24)];
-        useScoreTf.keyboardType = UIKeyboardTypeNumberPad;
-        useScoreTf.font = [UIFont systemFontOfSize:15];
-        useScoreTf.textAlignment = NSTextAlignmentCenter;
-        useScoreTf.delegate = self;
-        useScoreTf.layer.borderWidth = 0.5;
-        useScoreTf.layer.cornerRadius = 4;
-        useScoreTf.layer.borderColor = [[UIColor grayColor]CGColor];
-        [useJifenView addSubview:useScoreTf];
+        _useScoreTf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb1.frame)+10, 10, 100, 24)];
+        _useScoreTf.keyboardType = UIKeyboardTypeNumberPad;
+        _useScoreTf.tag = 10001;
+        _useScoreTf.font = [UIFont systemFontOfSize:15];
+        _useScoreTf.textAlignment = NSTextAlignmentCenter;
+        _useScoreTf.delegate = self;
+        _useScoreTf.layer.borderWidth = 0.5;
+        _useScoreTf.layer.cornerRadius = 4;
+        _useScoreTf.layer.borderColor = [[UIColor grayColor]CGColor];
+        [useJifenView addSubview:_useScoreTf];
         
-        UILabel *lb2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(useScoreTf.frame)+10, 0, 40, 44)];
+        UILabel *lb2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_useScoreTf.frame)+10, 0, 40, 44)];
         lb2.text = @"积分,";
         lb2.textColor = [UIColor blackColor];
         lb2.font = [UIFont systemFontOfSize:15];
         [useJifenView addSubview:lb2];
         
-        UILabel *lb3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb2.frame), 0, 100, 44)];
-        lb3.textColor = RGBCOLOR(240, 109, 23);
-        lb3.font = [UIFont systemFontOfSize:15];
-        lb3.text = @"抵6元";
-        [useJifenView addSubview:lb3];
+        _realScore_dijia= [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb2.frame), 0, 100, 44)];
+        _realScore_dijia.textColor = RGBCOLOR(240, 109, 23);
+        _realScore_dijia.font = [UIFont systemFontOfSize:15];
+        _realScore_dijia.text = @"抵0.00元";
+        [useJifenView addSubview:_realScore_dijia];
         
         
         
@@ -874,6 +1006,8 @@
 //获取开关按钮的值
 -(void)getValue:(UISwitch*)sender{
     
+    _isUseScore = sender.isOn;
+    
     [self creatTabFooterViewWithUseState:sender.isOn];
     
 }
@@ -927,10 +1061,19 @@
     [dic setValue:product_ids_str forKey:@"product_ids"];//产品id
     [dic setValue:product_nums_str forKey:@"product_nums"];//产品数量
     [dic setValue:_theAddressModel.address_id forKey:@"address_id"];//地址
-    [dic setValue:_liuyantf.text forKey:@"order_note"];//留言
-    [dic setValue:@"0" forKey:@"is_use_score"];//使用的积分
     [dic setValue:[NSString stringWithFormat:@"%.2f",_price_total] forKey:@"total_price"];//总价钱
     [dic setValue:[NSString stringWithFormat:@"%.2f",_finalPrice] forKey:@"real_price"];//实际价钱
+    
+    //订单备注
+    if (_liuyantf.text.length>0) {
+        [dic setValue:_liuyantf.text forKey:@"order_note"];//留言
+    }
+    
+    
+    //是否从预约跳转过来
+    if (self.is_appoint) {
+        [dic setValue:@"1" forKey:@"is_appoint"];
+    }
     
     if (self.userSelectYouhuiquanArray.count>0) {//使用优惠券
         
@@ -955,7 +1098,11 @@
     
     
     
-    
+    if (_isUseScore) {//使用积分
+        NSString *aa = [NSString stringWithFormat:@"%ld",_fanal_usedScore];
+        [dic setValue:aa forKey:@"score"];//使用的积分
+        [dic setValue:@"1" forKey:@"is_use_score"];//是否使用积分
+    }
     
     
     
@@ -1096,11 +1243,80 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
-    CGSize ss = _tab.contentSize;
-    [_tab setContentSize:CGSizeMake(ss.width, ss.height+200)];
+    
+    if (!_shouView) {
+        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+        [_shouView addGestureRecognizer:tap];
+    }
+
+    [self.view addSubview:_shouView];
+//    
+//    
+//    CGSize ss = _tab.contentSize;
+//    [_tab setContentSize:CGSizeMake(ss.width, ss.height+200)];
     
     CGPoint pp = _tab.contentOffset;
     [_tab setContentOffset:CGPointMake(0, pp.y +200) animated:YES];
+    return YES;
+}
+
+
+-(void)hiddenKeyBord{
+    
+    [_shouView removeFromSuperview];
+    
+    CGPoint pp = _tab.contentOffset;
+    [_tab setContentOffset:CGPointMake(0, pp.y - 200) animated:YES];
+    
+    [_liuyantf resignFirstResponder];
+    [_useScoreTf resignFirstResponder];
+    
+    
+    [self jisuanPrice];
+    
+}
+
+
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    
+    if (textField.tag == 10001) {
+        if (string.length == 0) {//删除
+            NSInteger score = [[textField.text substringWithRange:NSMakeRange(0, textField.text.length-1)] integerValue];
+            if (score>_keyongJifen) {
+                
+            }else{
+                _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",score/100.0];
+            }
+            
+            
+        }else{//新输入
+            NSString *str = [NSString stringWithFormat:@"%@%@",textField.text,string];
+            NSInteger score = [str integerValue];
+            
+            if (score >_keyongJifen) {
+                NSString *aa = [NSString stringWithFormat:@"%ld",(long)_keyongJifen];
+                textField.text = aa;
+                 _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",_keyongJifen/100.0];
+                return NO;
+                
+            }else{
+                _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",score/100.0];
+            }
+            
+        }
+        
+        
+        
+        
+    }
+   
+    
+    
+    
+    
     return YES;
 }
 

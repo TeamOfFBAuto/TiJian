@@ -169,7 +169,7 @@
 }
 
 
-#pragma mark - 逻辑处理
+#pragma mark - 逻辑处理 cell的回调
 
 -(void)cellSelectBtnClickedWithIndex:(NSIndexPath *)theIndex select:(BOOL)theState{
     if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
@@ -182,6 +182,20 @@
                 oneModel.isUsed = NO;
             }
             model.isUsed = theState;
+            
+            
+            //非通用都置NO
+            for (NSArray *dd in _tab0Array) {
+                for (model in dd) {
+                    if ([model.brand_id intValue] != 0) {
+                        model.isUsed = NO;
+                    }
+                }
+            }
+            
+            
+            
+            
         }else{//非通用
             for (CouponModel *oneModel in arr) {
                 if (oneModel.brand_id == model.brand_id) {
@@ -189,7 +203,39 @@
                 }
             }
             model.isUsed = theState;
+            
+            //通用里的isUsed都置NO
+            for (NSArray *dd in _tab0Array) {
+                for (model in dd) {
+                    if ([model.brand_id intValue] == 0) {
+                        model.isUsed = NO;
+                    }
+                }
+            }
+            
+            
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        //重置userchoose数组 用于解决cellforrow里 对勾点不掉的bug
+        NSMutableArray *arr1 = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray *ar in _tab0Array) {
+            for (CouponModel *model in ar) {
+                if (model.isUsed) {
+                    [arr1 addObject:model];
+                }
+            }
+        }
+        
+        self.userChooseYouhuiquanArray = arr1;
+        
+        
         
         [_tab0 reloadData];
         
@@ -203,6 +249,19 @@
                 oneModel.isUsed = NO;
             }
             model.isUsed = theState;
+            
+            
+            //非通用都置NO
+            for (NSArray *dd in _tab0Array) {
+                for (model in dd) {
+                    if ([model.brand_id intValue] != 0) {
+                        model.isUsed = NO;
+                    }
+                }
+            }
+            
+            
+            
         }else{//非通用
             for (CouponModel *oneModel in arr) {
                 if (oneModel.brand_id == model.brand_id) {
@@ -210,7 +269,34 @@
                 }
             }
             model.isUsed = theState;
+            
+            
+            //通用都置NO
+            for (NSArray *dd in _tab0Array) {
+                for (model in dd) {
+                    if ([model.brand_id intValue] == 0) {
+                        model.isUsed = NO;
+                    }
+                }
+            }
+            
+            
+            
         }
+        
+        
+        
+        //重置userchoose数组 用于解决cellforrow里 对勾点不掉的bug
+        NSMutableArray *arr1 = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray *ar in _tab0Array) {
+            for (CouponModel *model in ar) {
+                if (model.isUsed) {
+                    [arr1 addObject:model];
+                }
+            }
+        }
+        self.userChooseDaijinquanArray = arr1;
+        
         
         [_tab0 reloadData];
         
@@ -495,9 +581,9 @@
         MyCouponTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
         if (!cell) {
             GCouponType aa;
-            if (self.type == GCouponType_use_daijinquan) {
+            if (self.type == GCouponType_use_daijinquan || self.type == GCouponType_daijinquan) {
                 aa = GCouponType_disUse_daijinquan;
-            }else if (self.type == GCouponType_use_youhuiquan){
+            }else if (self.type == GCouponType_use_youhuiquan || self.type == GCouponType_youhuiquan){
                 aa = GCouponType_disUse_youhuiquan;
             }
             cell = [[MyCouponTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify index:indexPath type:aa];

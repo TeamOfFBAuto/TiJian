@@ -65,13 +65,13 @@
         [self.contentView addSubview:contentLabel];
         self.contentLabel = contentLabel;
         
-        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentLabel.frame.origin.x, CGRectGetMaxY(contentLabel.frame), contentLabel.frame.size.width, logoImv.frame.size.height/3)];
-        priceLabel.font = [UIFont systemFontOfSize:13];
-        priceLabel.textColor = RGBCOLOR(237, 108, 22);
-        [self.contentView addSubview:priceLabel];
+        self.priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentLabel.frame.origin.x, CGRectGetMaxY(contentLabel.frame), contentLabel.frame.size.width, logoImv.frame.size.height/3)];
+        self.priceLabel.font = [UIFont systemFontOfSize:13];
+        self.priceLabel.textColor = RGBCOLOR(237, 108, 22);
+        [self.contentView addSubview:self.priceLabel];
         
         //加减
-        UIImageView *numImv = [[UIImageView alloc]initWithFrame:CGRectMake(priceLabel.frame.origin.x, CGRectGetMaxY(priceLabel.frame), priceLabel.frame.size.height * 3, logoImv.frame.size.height/3)];
+        UIImageView *numImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.priceLabel.frame.origin.x, CGRectGetMaxY(self.priceLabel.frame), self.priceLabel.frame.size.height * 3, logoImv.frame.size.height/3)];
         [numImv setImage:[UIImage imageNamed:@"shuliang.png"]];
         numImv.userInteractionEnabled = YES;
         [self.contentView addSubview:numImv];

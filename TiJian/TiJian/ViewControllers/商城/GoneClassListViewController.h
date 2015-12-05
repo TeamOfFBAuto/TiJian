@@ -21,6 +21,9 @@
 
 @property(nonatomic,strong)NSDictionary *shaixuanDic;//筛选参数字典
 
+@property(nonatomic,assign)BOOL isProductDetailVcPush;//是否从单品详情品牌店点击跳转过来的
+
+
 -(void)therightSideBarDismiss;
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic;
