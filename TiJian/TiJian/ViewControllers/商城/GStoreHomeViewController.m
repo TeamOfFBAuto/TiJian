@@ -466,8 +466,6 @@
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *aModel = _table.dataArray[indexPath.row];
     cc.productId = aModel.product_id;
-    ProductModel *model = _table.dataArray[indexPath.row];
-    cc.productId = model.product_id;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

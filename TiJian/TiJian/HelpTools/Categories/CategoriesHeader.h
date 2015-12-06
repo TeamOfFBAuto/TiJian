@@ -23,5 +23,6 @@
 #import "UIViewController+Addtions.h"
 
 #import "UIView+Frame.h"
+#import "UIImage+Additions.h"
 
 #endif

@@ -125,6 +125,17 @@
 		134822E11BEC8DF200EA2E06 /* EditUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134822E01BEC8DF200EA2E06 /* EditUserInfoViewController.m */; };
 		134822E51BECA32000EA2E06 /* PeopleManageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134822E41BECA32000EA2E06 /* PeopleManageController.m */; };
 		134822E81BECBD7A00EA2E06 /* AddPeopleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 134822E71BECBD7A00EA2E06 /* AddPeopleViewController.m */; };
+		1362765E1C12D3370077C75D /* report_paizhao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1362765C1C12D3370077C75D /* report_paizhao@2x.png */; };
+		1362765F1C12D3370077C75D /* report_zhaopian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1362765D1C12D3370077C75D /* report_zhaopian@2x.png */; };
+		136276621C12F37D0077C75D /* ReportDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276611C12F37D0077C75D /* ReportDetailController.m */; };
+		136276651C1312420077C75D /* MoreReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276641C1312420077C75D /* MoreReportViewController.m */; };
+		136276801C1320580077C75D /* PhotoBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1362767F1C1320580077C75D /* PhotoBrowserView.m */; };
+		136276841C1320770077C75D /* ZoomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276831C1320770077C75D /* ZoomScrollView.m */; };
+		1362768A1C1328130077C75D /* FBPhotoBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276891C1328130077C75D /* FBPhotoBrowserController.m */; };
+		137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780A91C1183AD00677363 /* MedicalReportController.m */; };
+		137780AC1C1188BE00677363 /* hema_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137780AB1C1188BE00677363 /* hema_heart@2x.png */; };
+		137780AF1C118A3200677363 /* ResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780AE1C118A3200677363 /* ResultView.m */; };
+		137780B21C119CF800677363 /* AddReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780B11C119CF800677363 /* AddReportViewController.m */; };
 		1391FC641BBBB112005E06A8 /* YJYRequstManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1391FC621BBBB112005E06A8 /* YJYRequstManager.m */; };
 		1393328C1BE0B31A00B4628B /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1393328B1BE0B31A00B4628B /* DBManager.m */; };
 		139333A11BE0DF3E00B4628B /* 10_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 139333451BE0DF3E00B4628B /* 10_1@2x.png */; };
@@ -230,6 +241,7 @@
 		13C97F311BF9B54700C66691 /* AppointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C97F301BF9B54700C66691 /* AppointModel.m */; };
 		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; };
 		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; };
+		13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E23DBC1C1411AA006FE62F /* UIImage+Additions.m */; };
 		13F1F2671BBA78ED00885D31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2661BBA78ED00885D31 /* main.m */; };
 		13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2691BBA78ED00885D31 /* AppDelegate.m */; };
 		13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F26C1BBA78ED00885D31 /* ViewController.m */; };
@@ -620,6 +632,25 @@
 		134822E41BECA32000EA2E06 /* PeopleManageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleManageController.m; sourceTree = "<group>"; };
 		134822E61BECBD7A00EA2E06 /* AddPeopleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddPeopleViewController.h; sourceTree = "<group>"; };
 		134822E71BECBD7A00EA2E06 /* AddPeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddPeopleViewController.m; sourceTree = "<group>"; };
+		1362765C1C12D3370077C75D /* report_paizhao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_paizhao@2x.png"; sourceTree = "<group>"; };
+		1362765D1C12D3370077C75D /* report_zhaopian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_zhaopian@2x.png"; sourceTree = "<group>"; };
+		136276601C12F37D0077C75D /* ReportDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportDetailController.h; sourceTree = "<group>"; };
+		136276611C12F37D0077C75D /* ReportDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportDetailController.m; sourceTree = "<group>"; };
+		136276631C1312420077C75D /* MoreReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreReportViewController.h; sourceTree = "<group>"; };
+		136276641C1312420077C75D /* MoreReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreReportViewController.m; sourceTree = "<group>"; };
+		1362767E1C1320580077C75D /* PhotoBrowserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoBrowserView.h; sourceTree = "<group>"; };
+		1362767F1C1320580077C75D /* PhotoBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoBrowserView.m; sourceTree = "<group>"; };
+		136276821C1320770077C75D /* ZoomScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomScrollView.h; sourceTree = "<group>"; };
+		136276831C1320770077C75D /* ZoomScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomScrollView.m; sourceTree = "<group>"; };
+		136276881C1328130077C75D /* FBPhotoBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBPhotoBrowserController.h; sourceTree = "<group>"; };
+		136276891C1328130077C75D /* FBPhotoBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBPhotoBrowserController.m; sourceTree = "<group>"; };
+		137780A81C1183AD00677363 /* MedicalReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalReportController.h; sourceTree = "<group>"; };
+		137780A91C1183AD00677363 /* MedicalReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalReportController.m; sourceTree = "<group>"; };
+		137780AB1C1188BE00677363 /* hema_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema_heart@2x.png"; sourceTree = "<group>"; };
+		137780AD1C118A3200677363 /* ResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultView.h; sourceTree = "<group>"; };
+		137780AE1C118A3200677363 /* ResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResultView.m; sourceTree = "<group>"; };
+		137780B01C119CF800677363 /* AddReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddReportViewController.h; sourceTree = "<group>"; };
+		137780B11C119CF800677363 /* AddReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddReportViewController.m; sourceTree = "<group>"; };
 		1391FC611BBBB112005E06A8 /* YJYRequstManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJYRequstManager.h; sourceTree = "<group>"; };
 		1391FC621BBBB112005E06A8 /* YJYRequstManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJYRequstManager.m; sourceTree = "<group>"; };
 		1393328A1BE0B31A00B4628B /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
@@ -736,6 +767,8 @@
 		13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseModel.m; sourceTree = "<group>"; };
 		13CCAF6A1BD8DCB100BF9AA8 /* QuestionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionModel.h; sourceTree = "<group>"; };
 		13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionModel.m; sourceTree = "<group>"; };
+		13E23DBB1C1411AA006FE62F /* UIImage+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Additions.h"; sourceTree = "<group>"; };
+		13E23DBC1C1411AA006FE62F /* UIImage+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Additions.m"; sourceTree = "<group>"; };
 		13F1F2621BBA78ED00885D31 /* TiJian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TiJian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13F1F2661BBA78ED00885D31 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		13F1F2681BBA78ED00885D31 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -1403,6 +1436,7 @@
 		1324B6A01BD766E600FB47A9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				137780A71C11839300677363 /* 体检报告 */,
 				13FFBFC51C0D4FEA0077DD29 /* 客服 */,
 				13F2421E1BF5C46F002C9D81 /* 健康资讯 */,
 				131A17701BF32CC700B12D2F /* 体检预约 */,
@@ -1458,6 +1492,8 @@
 				13F2422B1BF5D5E0002C9D81 /* ArticleCell.m */,
 				13F242321BF5F1D2002C9D81 /* AppointmentCell.h */,
 				13F242331BF5F1D2002C9D81 /* AppointmentCell.m */,
+				137780AD1C118A3200677363 /* ResultView.h */,
+				137780AE1C118A3200677363 /* ResultView.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -1465,6 +1501,7 @@
 		1324B6AC1BD7742F00FB47A9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				1362765B1C12D3370077C75D /* 体检报告 */,
 				13B07A0F1C06DB5500742AF7 /* 我的订单 */,
 				E335F9DC1BFEF35F00708BF6 /* 收货地址 */,
 				E3796D141BFB389E004B63F7 /* 购物车 */,
@@ -1481,6 +1518,7 @@
 				1303C2C81BE9AEC900700847 /* back_w@2x.png */,
 				1303C2CA1BE9B6EE00700847 /* back@2x.png */,
 				134822D41BEC795200EA2E06 /* default_hema@2x.png */,
+				137780AB1C1188BE00677363 /* hema_heart@2x.png */,
 				130D2E021BFC7332002E301F /* gpin@2x.png */,
 				139333441BE0DF3E00B4628B /* 个性定制 */,
 			);
@@ -1496,6 +1534,41 @@
 				134822E71BECBD7A00EA2E06 /* AddPeopleViewController.m */,
 			);
 			path = "家人管理";
+			sourceTree = "<group>";
+		};
+		1362765B1C12D3370077C75D /* 体检报告 */ = {
+			isa = PBXGroup;
+			children = (
+				1362765C1C12D3370077C75D /* report_paizhao@2x.png */,
+				1362765D1C12D3370077C75D /* report_zhaopian@2x.png */,
+			);
+			path = "体检报告";
+			sourceTree = "<group>";
+		};
+		136276811C1320770077C75D /* ZoomScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				136276821C1320770077C75D /* ZoomScrollView.h */,
+				136276831C1320770077C75D /* ZoomScrollView.m */,
+			);
+			path = ZoomScrollView;
+			sourceTree = "<group>";
+		};
+		137780A71C11839300677363 /* 体检报告 */ = {
+			isa = PBXGroup;
+			children = (
+				137780A81C1183AD00677363 /* MedicalReportController.h */,
+				137780A91C1183AD00677363 /* MedicalReportController.m */,
+				137780B01C119CF800677363 /* AddReportViewController.h */,
+				137780B11C119CF800677363 /* AddReportViewController.m */,
+				136276601C12F37D0077C75D /* ReportDetailController.h */,
+				136276611C12F37D0077C75D /* ReportDetailController.m */,
+				136276631C1312420077C75D /* MoreReportViewController.h */,
+				136276641C1312420077C75D /* MoreReportViewController.m */,
+				136276881C1328130077C75D /* FBPhotoBrowserController.h */,
+				136276891C1328130077C75D /* FBPhotoBrowserController.m */,
+			);
+			path = "体检报告";
 			sourceTree = "<group>";
 		};
 		1391FC5E1BBBB112005E06A8 /* Requests */ = {
@@ -1747,6 +1820,9 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				136276811C1320770077C75D /* ZoomScrollView */,
+				1362767E1C1320580077C75D /* PhotoBrowserView.h */,
+				1362767F1C1320580077C75D /* PhotoBrowserView.m */,
 				13F8C5BD1C05AA99004C3FC7 /* TQStarRatingView.h */,
 				13F8C5BE1C05AA99004C3FC7 /* TQStarRatingView.m */,
 				E3D8AE0B1BF4B16D003AE2E3 /* GcycelScrollv */,
@@ -1776,6 +1852,8 @@
 				13F1F2A81BBA9A4B00885D31 /* UIButton+Additions.m */,
 				13F1F2A91BBA9A4B00885D31 /* UIImageView+Extensions.h */,
 				13F1F2AA1BBA9A4B00885D31 /* UIImageView+Extensions.m */,
+				13E23DBB1C1411AA006FE62F /* UIImage+Additions.h */,
+				13E23DBC1C1411AA006FE62F /* UIImage+Additions.m */,
 				13F1F2AB1BBA9A4B00885D31 /* UILabel+Additions.h */,
 				13F1F2AC1BBA9A4B00885D31 /* UILabel+Additions.m */,
 				13F1F2AD1BBA9A4B00885D31 /* UIView+Additions.h */,
@@ -2545,6 +2623,7 @@
 				1303C3561BEB0D7100700847 /* personal_shoucang@2x.png in Resources */,
 				139333B91BE0DF3E00B4628B /* 19_1@2x.png in Resources */,
 				1303C3591BEB0D7100700847 /* personal_youhuiquan_r@2x.png in Resources */,
+				137780AC1C1188BE00677363 /* hema_heart@2x.png in Resources */,
 				1303C36E1BEB0D7100700847 /* report_g@2x.png in Resources */,
 				E3E2B4281BFB2466007988C5 /* AddressCell.xib in Resources */,
 				139333C31BE0DF3E00B4628B /* 22_1@2x.png in Resources */,
@@ -2552,6 +2631,7 @@
 				139333E31BE0DF3E00B4628B /* 2_w_2@2x.png in Resources */,
 				13F1F3D31BBA9A4B00885D31 /* PushConfig.plist in Resources */,
 				1303C3491BEB0D7100700847 /* personal_jiaren@2x.png in Resources */,
+				1362765F1C12D3370077C75D /* report_zhaopian@2x.png in Resources */,
 				139333D31BE0DF3E00B4628B /* 26_3@2x.png in Resources */,
 				139333E81BE0DF3E00B4628B /* 3_m_2_6fcbe7@2x.png in Resources */,
 				139333A91BE0DF3E00B4628B /* 13_2@2x.png in Resources */,
@@ -2658,6 +2738,7 @@
 				E3D8AE4E1BF6203F003AE2E3 /* youhuiquan_b@2x.png in Resources */,
 				139333C71BE0DF3E00B4628B /* 22_5@2x.png in Resources */,
 				139333C21BE0DF3E00B4628B /* 21_2@2x.png in Resources */,
+				1362765E1C12D3370077C75D /* report_paizhao@2x.png in Resources */,
 				131C11901BF04BF100629938 /* user_mima@2x.png in Resources */,
 				139333B41BE0DF3E00B4628B /* 17_3@2x.png in Resources */,
 				1303C3701BEB0D7100700847 /* appoint_duihao@2x.png in Resources */,
@@ -2856,12 +2937,14 @@
 				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,
 				13F241E61BF4769D002C9D81 /* ChooseHopitalController.m in Sources */,
 				13F242211BF5C4B4002C9D81 /* WebviewController.m in Sources */,
+				1362768A1C1328130077C75D /* FBPhotoBrowserController.m in Sources */,
 				13F8C5B41C05AA7E004C3FC7 /* JKUtil.m in Sources */,
 				13FFBFCE1C0D504B0077DD29 /* SimpleMessage.m in Sources */,
 				13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */,
 				13B07A0E1C06BBF900742AF7 /* OrderProductListController.m in Sources */,
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
 				E3E2B41A1BFB2144007988C5 /* OrderOtherInfoCell.m in Sources */,
+				136276801C1320580077C75D /* PhotoBrowserView.m in Sources */,
 				E3E2B3FC1BFB1E90007988C5 /* PayActionViewController.m in Sources */,
 				E38551021C0AC8A500CE23E7 /* MyCouponViewController.m in Sources */,
 				E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */,
@@ -2893,6 +2976,7 @@
 				13020A6E1C04480D006FC365 /* ProductListViewController.m in Sources */,
 				13C97F311BF9B54700C66691 /* AppointModel.m in Sources */,
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
+				13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */,
 				1303C2E11BE9FB2400700847 /* NSArray+Additons.m in Sources */,
 				E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */,
 				E3E2B42C1BFB2491007988C5 /* SelectAddressCell.m in Sources */,
@@ -2903,6 +2987,8 @@
 				E352F9131C0B83490037E4AE /* Gmap.mm in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
 				13F8C5811C05A9C8004C3FC7 /* AddCommentDetailViewController.m in Sources */,
+				137780B21C119CF800677363 /* AddReportViewController.m in Sources */,
+				136276621C12F37D0077C75D /* ReportDetailController.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
 				13F8C5AD1C05AA7E004C3FC7 /* JKAssetsGroupsView.m in Sources */,
 				E3D8AE301BF61C2E003AE2E3 /* CoupeView.m in Sources */,
@@ -2943,6 +3029,7 @@
 				1303C2E41BEA0DE600700847 /* ProductModel.m in Sources */,
 				1303C3061BEA14EB00700847 /* GRegisterViewController.m in Sources */,
 				13F8C5AB1C05AA7E004C3FC7 /* JKAssetsCollectionFooterView.m in Sources */,
+				137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */,
 				E352F9101C0B7DDB0037E4AE /* LocationChooseViewController.m in Sources */,
 				1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */,
 				E3E2B4121BFB20A4007988C5 /* FBActionSheet.m in Sources */,
@@ -2960,14 +3047,17 @@
 				1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */,
 				1303C2DB1BE9F42D00700847 /* ProjectModel.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
+				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
 				131A177D1BF341E900B12D2F /* PreViewCell.m in Sources */,
 				E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */,
 				1393328C1BE0B31A00B4628B /* DBManager.m in Sources */,
 				1303C30D1BEA159200700847 /* UserInfo.m in Sources */,
 				13F8C5B21C05AA7E004C3FC7 /* JKPhotoBrowserCell.m in Sources */,
+				136276651C1312420077C75D /* MoreReportViewController.m in Sources */,
 				E39148481BFC573A004E26B0 /* GconfirmOrderCell.m in Sources */,
 				1303C2C31BE9A8B800700847 /* PhysicalTestResultController.m in Sources */,
 				13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */,
+				137780AF1C118A3200677363 /* ResultView.m in Sources */,
 				13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */,
 				13F1F39D1BBA9A4B00885D31 /* UILabel+Additions.m in Sources */,
 				13B07A181C06FE3A00742AF7 /* BrandModel.m in Sources */,

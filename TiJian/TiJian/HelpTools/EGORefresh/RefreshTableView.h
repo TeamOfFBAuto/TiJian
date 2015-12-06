@@ -12,30 +12,32 @@
 
 @class HelperConnection;
 
+@class RefreshTableView;
+
 @protocol RefreshDelegate <NSObject>
 
 @optional
 
-- (void)loadNewDataForTableView:(UITableView *)tableView;
-- (void)loadMoreDataForTableView:(UITableView *)tableView;
+- (void)loadNewDataForTableView:(RefreshTableView *)tableView;
+- (void)loadMoreDataForTableView:(RefreshTableView *)tableView;
 
 //新加
-- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView;
-- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView;
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView;
+- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView;
 
-- (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView;
-- (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView;
+- (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView;
+- (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView;
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView;
 
 //meng新加
--(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView;
--(UIView *)viewForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView;
+-(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView;
+-(UIView *)viewForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView;
 
 //将要显示
-- (void)refreshTableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)refreshTableView:(RefreshTableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
 //显示完了
-- (void)refreshTableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0);
+- (void)refreshTableView:(RefreshTableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath NS_AVAILABLE_IOS(6_0);
 
 @end
 
@@ -78,15 +80,10 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 
 @property (nonatomic,copy)OBSERVERBLOCK dataArrayObeserverBlock;//监控数据源
 
-
--(void)createHeaderView;
--(void)removeHeaderView;
-
--(void)beginToReloadData:(EGORefreshPos)aRefreshPos;
 -(void)showRefreshHeader:(BOOL)animated;//代码出发刷新
 - (void)finishReloadigData;
 
--(void)showRefreshNoOffset;//无偏移刷新数据
+-(void)refreshNewData;//刷新数据 无偏移
 
 - (void)reloadData:(NSArray *)data total:(int)totalPage;//更新数据
 - (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave;
@@ -106,12 +103,7 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
  */
 -(id)initWithFrame:(CGRect)frame superView:(UIView *)superView;
 
-//买衣日志扩展
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)theStyle;
-- (void)reloadData1:(NSArray *)data1 pageSize:(int)pageSize;
-
-//万聚鲜城活动详情扩展
-- (void)reloadDataSuccess:(NSArray *)data isHaveMore:(BOOL)isHave;
 
 /**
  *  成功加载数据reload 
@@ -125,6 +117,11 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 - (void)reloadData:(NSArray *)data
           pageSize:(int)pageSize
         noDataView:(UIView *)noDataView;
+
+/**
+ *  移除没有没有数据时自定义视图
+ */
+- (void)removeNodataView;
 
 /**
  *  请求数据失败 显示自定义view

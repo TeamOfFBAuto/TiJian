@@ -49,5 +49,6 @@
 
 #import "LoginViewController.h"
 #import "UserInfo.h"
+#import "ResultView.h"
 
 #endif

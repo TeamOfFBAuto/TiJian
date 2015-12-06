@@ -45,12 +45,17 @@
     
     self.navigationController.navigationBarHidden = NO;
     
-    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
-    {
-        //iOS 5 new UINavigationBar custom background
-        
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"back_w"] forBarMetrics: UIBarMetricsDefault];
-    }
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
+//    {
+//        //iOS 5 new UINavigationBar custom background
+//        
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7DAOHANGLANBEIJING_PUSH] forBarMetrics: UIBarMetricsDefault];
+//    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 -(void)viewDidLoad

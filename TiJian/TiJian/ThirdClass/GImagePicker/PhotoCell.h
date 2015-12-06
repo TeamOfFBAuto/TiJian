@@ -12,5 +12,9 @@
 @interface PhotoCell : UICollectionViewCell
 
 @property (nonatomic, strong) JKAssets  *asset;
+@property (nonatomic, strong) UIImageView *imageView;
+
+
+- (void)setImageUrl:(NSString *)url;
 
 @end
