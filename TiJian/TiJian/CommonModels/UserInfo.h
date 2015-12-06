@@ -74,6 +74,14 @@
 @property(nonatomic,retain)NSString *family_user_name;//家人name
 @property(nonatomic,retain)NSString *id_card;//身份证号
 
+//体检报告
+@property(nonatomic,retain)NSString *checkup_time;//体检时间
+@property(nonatomic,retain)NSString *report_id;//报告id
+@property(nonatomic,retain)NSString *is_read;//是否解读
+@property(nonatomic,retain)NSArray *img;//报告图片
+@property(nonatomic,retain)NSString *url;//解读详情
+
+
 /**
  *  归档的方式存model对象 重写了编码解码方法
  *

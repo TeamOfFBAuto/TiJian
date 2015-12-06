@@ -11,7 +11,6 @@
 
 @interface PhotoCell()
 
-@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
@@ -29,6 +28,11 @@
     }
     
     return self;
+}
+
+- (void)setImageUrl:(NSString *)url
+{
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
 }
 
 - (void)setAsset:(JKAssets *)asset{
@@ -50,14 +54,14 @@
 - (UIImageView *)imageView{
     if (!_imageView) {
         _imageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        NSLog(@"------------%@",NSStringFromCGRect(_imageView.frame));
         
         _imageView.backgroundColor = [UIColor clearColor];
         _imageView.clipsToBounds = YES;
-//        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //        _imageView.layer.cornerRadius = 6.0f;
 //        _imageView.layer.borderColor = [UIColor clearColor].CGColor;
 //        _imageView.layer.borderWidth = 0.5;
+//        _imageView.contentMode = UIViewContentModeTopLeft;
         [self.contentView addSubview:_imageView];
     }
     return _imageView;

@@ -12,6 +12,7 @@
 #import "PhysicalTestResultController.h"//测试结果
 #import "ChooseHopitalController.h"//选择分院和时间
 #import "AppointDetailController.h"//预约详情
+#import "GStoreHomeViewController.h"//商城
 #import "ProductModel.h"
 #import "AppointmentCell.h"
 #import "AppointModel.h"
@@ -147,17 +148,17 @@
     }
     
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-    view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+//    view.backgroundColor = [UIColor redColor];
     CGFloat width = FitScreen(96);
     width = iPhone4 ? width * 0.8 : width;
     
-    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(38, 55 + 20, width, width)];
+    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(38, 55, width, width)];
     icon.image = [UIImage imageNamed:@"hema"];
     [view addSubview:icon];
     
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, icon.bottom - 5, DEVICE_WIDTH, 15) title:@"您还没有预约任何套餐" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
     [view addSubview:label];
-    
+        
     return view;
 }
 
@@ -231,7 +232,6 @@
                    @"expired":@"0",
                    @"page":NSStringFromInt(table.pageNum),
                    @"per_page":@"20"};
-        
     }
     //已过期
     else if ([self tableViewWithIndex:2])
@@ -241,9 +241,7 @@
                    @"expired":@"1",
                    @"page":NSStringFromInt(table.pageNum),
                    @"per_page":@"20"};
-
     }
-    
     __weak typeof(self)weakSelf = self;
     __weak typeof(table)weakTable = table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -298,13 +296,26 @@
     }else if (index == 1){
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
-        
-        [[self tableViewWithIndex:1]reloadData:temp pageSize:20 noDataView:self.appointedView];
+        if (temp.count == 0) {
+            [[self tableViewWithIndex:1]addSubview:self.appointedView];
+        }else
+        {
+            [self.appointedView removeFromSuperview];
+            self.appointedView = nil;
+        }
+        [[self tableViewWithIndex:1]finishReloadigData];
         
     }else if (index == 2){
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
-        [[self tableViewWithIndex:2]reloadData:temp pageSize:20 noDataView:self.appointedView];
+        if (temp.count == 0) {
+            [[self tableViewWithIndex:2]addSubview:self.appointedView];
+        }else
+        {
+            [self.appointedView removeFromSuperview];
+            self.appointedView = nil;
+        }
+        [[self tableViewWithIndex:2]finishReloadigData];
 
     }
 }
@@ -346,7 +357,8 @@
 
 - (void)clickToBuy
 {
-    NSLog(@"代金卷去购买");
+    GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];
+    [self.navigationController pushViewController:cc animated:YES];
 }
 - (void)clickToCustomization
 {

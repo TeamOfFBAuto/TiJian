@@ -307,4 +307,21 @@
 #define UPDATE_APPOINT @"/index.php?d=api&c=appoint&m=update_appoint"
 
 
+//=======================================================
+
+#pragma - mark 体检报告
+
+//1.报告列表 authcode\page\per_page
+#define REPORT_LIST @"/index.php?d=api&c=report&m=report_list"
+
+//2.报告详情 authcode\report_id\page\per_page
+#define REPORT_DETAIL @"/index.php?d=api&c=report&m=report_detail"
+
+//3.添加报告 post authcode\family_uid\checkup_time family_uid和is_myself任意传一个 体检时间
+#define REPORT_ADD @"/index.php?d=api&c=report&m=add_report"
+
+//4.删除报告 get 方式 authcode\report_id
+#define REPORT_DEL @"/index.php?d=api&c=report&m=del_report"
+
+
 #endif

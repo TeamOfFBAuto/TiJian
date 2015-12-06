@@ -10,23 +10,19 @@
 
 typedef enum
 {
-    MyViewControllerLeftbuttonTypeBack=0,
-    MyViewControllerLeftbuttonTypelogo=1,
-    MyViewControllerLeftbuttonTypeOther=2,
-    MyViewControllerLeftbuttonTypeNull=3,
-    MyViewControllerLeftbuttonTypeText = 4
+    MyViewControllerLeftbuttonTypeBack = 0,//返回按钮
+    MyViewControllerLeftbuttonTypeOther,//自定义image
+    MyViewControllerLeftbuttonTypeNull ,//无返回按钮
+    MyViewControllerLeftbuttonTypeText //文字
 }MyViewControllerLeftbuttonType;
 
 
 typedef enum
 {
-    MyViewControllerRightbuttonTypeRefresh=0,
-    MyViewControllerRightbuttonTypeSearch=1,
-    MyViewControllerRightbuttonTypeText=2,
-    MyViewControllerRightbuttonTypePerson=3,
-    MyViewControllerRightbuttonTypeDelete=4,
-    MyViewControllerRightbuttonTypeNull=5,
-    MyViewControllerRightbuttonTypeOther
+    MyViewControllerRightbuttonTypeText = 0,//文字
+    MyViewControllerRightbuttonTypeNull ,//空
+    MyViewControllerRightbuttonTypeOther //图片
+    
 }MyViewControllerRightbuttonType;
 
 typedef enum {

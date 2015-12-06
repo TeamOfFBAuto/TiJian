@@ -8,6 +8,7 @@
 
 #import "RecommendMedicalCheckController.h"
 #import "GProductCellTableViewCell.h"
+#import "GproductDetailViewController.h"
 #import "ProjectModel.h"
 #import "ProductModel.h"
 
@@ -166,6 +167,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"跳转至体检套餐购买页面");
+    
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    ProductModel *aModel = _dataArray[indexPath.row];
+    cc.productId = aModel.product_id;
+    [self.navigationController pushViewController:cc animated:YES];
 }
 
 #pragma - mark UITableViewDataSource<NSObject>
