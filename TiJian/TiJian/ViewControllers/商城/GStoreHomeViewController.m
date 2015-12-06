@@ -19,16 +19,16 @@
 #import "PhysicalTestResultController.h"
 #import "PersonalCustomViewController.h"
 
+#import "LBannerView.h"
+#import "UIImageView+WebCache.h"
+#import "UIImageView+ProgressView.h"
+
 
 @interface GStoreHomeViewController ()<NewHuandengViewDelegate,RefreshDelegate,UITableViewDataSource>
 {
-    NSMutableArray *_com_id_array;//幻灯的id
-    NSMutableArray *_com_type_array;//幻灯的type
-    NSMutableArray *_com_link_array;//幻灯的外链
-    NSMutableArray *_com_title_array;//幻灯的index
-    NSMutableArray *_cycleAdvViewData;//循环滚动view的数据数组
     
-    GcycleScrollView *_topScrollView;
+    LBannerView *_bannerView;//轮播图
+    
     
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_adv;
@@ -39,16 +39,16 @@
     
     int _count;//网络请求个数
     
-    NSDictionary *_StoreCycleAdvDic;
+    NSDictionary *_StoreCycleAdvDic;//轮播图dic
     NSDictionary *_StoreProductClassDic;
     NSMutableArray *_StoreProductListArray;
     
     
 }
 
-@property(nonatomic,strong)NSMutableArray *contentArray;
+@property(nonatomic,strong)NSMutableArray *upAdvArray;
 
-@property(nonatomic,strong)UIView *topView;;
+@property(nonatomic,strong)UIView *theTopView;;
 
 @end
 
@@ -63,8 +63,6 @@
     [_request removeOperation:_request_ProductClass];
     [_request removeOperation:_request_ProductRecommend];
     
-    _topScrollView.delegate = nil;
-    _topScrollView = nil;
     
     [self removeObserver:self forKeyPath:@"_count"];
 }
@@ -92,143 +90,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-#pragma mark - 循环滚动view相关=======
--(void)setTopScrollViewWithDic:(NSDictionary *)result{
-    
-    _com_id_array=[NSMutableArray array];
-    _com_link_array=[NSMutableArray array];
-    _com_type_array=[NSMutableArray array];
-    _com_title_array=[NSMutableArray array];
-    
-    self.contentArray=[NSMutableArray arrayWithArray:[result objectForKey:@"advertisements_data"]];
-    
-    if (self.contentArray.count>0) {
-        NSMutableArray *imgarray=[NSMutableArray array];
-        _cycleAdvViewData = [NSMutableArray arrayWithCapacity:1];
-        
-        for ( int i=0; i<[self.contentArray count]; i++) {
-            NSDictionary *dic_ofcomment=[self.contentArray objectAtIndex:i];
-            NSString *strimg=[dic_ofcomment stringValueForKey:@"img_url"];
-            
-            CycleAdvModel *amodel = [[CycleAdvModel alloc]initWithDictionary:dic_ofcomment];
-            [_cycleAdvViewData addObject:amodel];
-            
-            
-            if ([LTools isEmpty:strimg]) {
-                strimg = @" ";
-            }
-            [imgarray addObject:strimg];
-            
-            //第几个
-            NSString *str_rec_title = [NSString stringWithFormat:@"%d",i];
-            if ([LTools isEmpty:str_rec_title]) {
-                str_rec_title = @" ";
-            }
-            [_com_title_array addObject:str_rec_title];
-            
-            //图片url
-            NSString *redirect_url=[dic_ofcomment objectForKey:@"redirect_url"];
-            if ([LTools isEmpty:redirect_url]) {
-                redirect_url = @" ";
-            }
-            [_com_link_array addObject:redirect_url];
-            
-            //类型 暂时无用
-            NSString *adv_type_val=[dic_ofcomment objectForKey:@"adv_type_val"];
-            if ([LTools isEmpty:adv_type_val]) {
-                adv_type_val = @" ";
-            }
-            [_com_type_array addObject:adv_type_val];
-            
-            //id 暂时无用
-            NSString *str__id=[dic_ofcomment objectForKey:@"id"];
-            if ([LTools isEmpty:str__id]) {
-                str__id = @" ";
-            }
-            [_com_id_array addObject:str__id];
-            
-            
-        }
-        NSInteger length = self.contentArray.count;
-        NSMutableArray *tempArray = [NSMutableArray array];
-        for (int i = 0 ; i < length; i++)
-        {
-            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  [NSString stringWithFormat:@"%@",[_com_title_array objectAtIndex:i]],@"title" ,
-                                  [NSString stringWithFormat:@"%@",[imgarray objectAtIndex:i]],@"image",[NSString stringWithFormat:@"%@",[_com_link_array objectAtIndex:i]],@"link",
-                                  [NSString stringWithFormat:@"%@",[_com_type_array objectAtIndex:i]],@"type",[NSString stringWithFormat:@"%@",[_com_id_array objectAtIndex:i]],@"idoftype",nil];
-            
-            
-            [tempArray addObject:dict];
-        }
-        
-        NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:length+2];
-        if (length > 1)
-        {
-            NSDictionary *dict = [tempArray objectAtIndex:length-1];
-            SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithDict:dict tag:-1] ;
-            [itemArray addObject:item];
-        }
-        for (int i = 0; i < length; i++)
-        {
-            NSDictionary *dict = [tempArray objectAtIndex:i];
-            SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithDict:dict tag:i] ;
-            [itemArray addObject:item];
-            
-        }
-        //添加第一张图 用于循环
-        if (length >1)
-        {
-            NSDictionary *dict = [tempArray objectAtIndex:0];
-            SGFocusImageItem *item = [[SGFocusImageItem alloc] initWithDict:dict tag:length];
-            [itemArray addObject:item];
-        }
-        
-        
-        if (!_topScrollView) {
-            _topScrollView = [[GcycleScrollView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, (int)(DEVICE_WIDTH*300/750)) delegate:self imageItems:itemArray isAuto:YES pageControlNum:self.contentArray.count];
-            
-            
-        }
-        
-        [_topScrollView scrollToIndex:0];
-        [self.topView addSubview:_topScrollView];
-        
-    }
-}
-
-#pragma mark-SGFocusImageItem的代理
-- (void)testfoucusImageFrame:(GcycleScrollView *)imageFrame didSelectItem:(SGFocusImageItem *)item
-{
-    NSLog(@"%s \n click===>%@",__FUNCTION__,item.title);
-    
-    NSInteger index = [item.title integerValue];
-    if (_cycleAdvViewData.count == 0) {
-        
-        return;
-    }
-    CycleAdvModel *amodel = _cycleAdvViewData[index];
-    if ([amodel.redirect_type intValue] == 1) {//外链
-        GwebViewController *ccc = [[GwebViewController alloc]init];
-        ccc.urlstring = amodel.theme_id;
-        ccc.isSaoyisao = YES;
-        ccc.hidesBottomBarWhenPushed = YES;
-        UINavigationController *navc = [[UINavigationController alloc]initWithRootViewController:ccc];
-        [self presentViewController:navc animated:YES completion:^{
-            
-        }];
-    }else if ([amodel.redirect_type intValue] == 0){//应用内
-        
-    }
-    
-}
-
-- (void)testfoucusImageFrame:(GcycleScrollView *)imageFrame currentItem:(int)index{
-    
-}
-#pragma mark - 循环滚动view相关=======
-
 
 
 
@@ -311,7 +172,7 @@
         
         
         //refresh头部
-        self.topView = [[UIView alloc]initWithFrame:CGRectMake(0,
+        self.theTopView = [[UIView alloc]initWithFrame:CGRectMake(0,
                                                                0,
                                                                DEVICE_WIDTH,
                                                                [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/300]//轮播图高度
@@ -320,18 +181,18 @@
                                                                +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
                                                                +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
                                                                )];
-        self.topView.backgroundColor = RGBCOLOR(244, 245, 246);
-        _table.tableHeaderView = self.topView;
+        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
+        _table.tableHeaderView = self.theTopView;
         
         
         
         //设置轮播图
-        [self setTopScrollViewWithDic:_StoreCycleAdvDic];
+        [self creatUpCycleScrollView];
         
         //设置版块
-        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_topScrollView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
+        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
         bankuaiView.backgroundColor = [UIColor whiteColor];
-        [self.topView addSubview:bankuaiView];
+        [self.theTopView addSubview:bankuaiView];
         
         
         
@@ -377,7 +238,7 @@
         
         [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
         
-        [self.topView addSubview:dingzhiImv];
+        [self.theTopView addSubview:dingzhiImv];
         
         
         
@@ -389,7 +250,7 @@
                                                                          DEVICE_WIDTH,
                                                                          [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
         jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.topView addSubview:jingpintuijian];
+        [self.theTopView addSubview:jingpintuijian];
         UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
         ttl.font = [UIFont systemFontOfSize:15];
         [jingpintuijian addSubview:ttl];
@@ -425,6 +286,7 @@
 
 #pragma mark - 视图创建
 
+//创建tabelview
 -(void)creatTableView{
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
@@ -433,10 +295,90 @@
     [self.view addSubview:_table];
     [_table showRefreshHeader:YES];
     
+}
+
+
+-(void)creatUpCycleScrollView{
     
+    
+    self.upAdvArray = [NSMutableArray arrayWithCapacity:1];
+    
+    NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
+    
+    NSMutableArray *urls = [NSMutableArray arrayWithCapacity:1];
+    
+    if (advertisements_data.count>0) {
+        
+        for (NSDictionary *dic in advertisements_data) {
+            CycleAdvModel *model = [[CycleAdvModel alloc]initWithDictionary:dic];
+            [self.upAdvArray addObject:model];
+        }
+        
+        
+        for (CycleAdvModel *model in self.upAdvArray) {
+            [urls addObject:model.img_url];
+        }
+        
+        
+        NSMutableArray *views = [NSMutableArray arrayWithCapacity:urls.count];
+        for (int i = 0; i < urls.count; i ++) {
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 300)];
+            UIProgressView *progress = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil usingProgressView:progress];
+            [views addObject:imageView];
+            
+        }
+        
+        
+        
+        
+        _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300/750.0*DEVICE_WIDTH)];
+        [_bannerView setContentViews:views];
+        [_bannerView showPageControl];
+        [_bannerView setBackgroundColor:[UIColor lightGrayColor]];
+        
+        
+        __weak typeof  (self)bself = self;
+        
+        [_bannerView setTapActionBlock:^(NSInteger index) {
+            NSLog(@"--tap index %ld",index);
+            
+            CycleAdvModel *amodel = bself.upAdvArray[index];
+            if ([amodel.redirect_type intValue] == 1) {//外链
+                GwebViewController *ccc = [[GwebViewController alloc]init];
+                ccc.urlstring = amodel.redirect_url;
+                ccc.hidesBottomBarWhenPushed = YES;
+                [bself.navigationController pushViewController:ccc animated:YES];
+                
+            }else if ([amodel.redirect_type intValue] == 0){//应用内
+                if ([amodel.adv_type_val intValue] == 1) {//套餐 单品详情
+                    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+                    cc.productId = amodel.theme_id;
+                    [bself.navigationController pushViewController:cc animated:YES];
+                }else if ([amodel.adv_type_val intValue] == 2){//企业预约首页
+                    
+                }
+                
+                
+            }
+
+            
+            
+            
+            
+        }];
+        
+        [_bannerView setAutomicScrollingDuration:3];
+        
+        [self.theTopView addSubview:_bannerView];
+    
+    
+    }
     
     
 }
+
 
 
 #pragma - mark RefreshDelegate

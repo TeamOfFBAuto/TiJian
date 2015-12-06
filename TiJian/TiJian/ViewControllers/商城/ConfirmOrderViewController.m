@@ -18,6 +18,7 @@
 #import "GuserAddressViewController.h"
 #import "ShoppingAddressController.h"
 #import "MyCouponViewController.h"
+#import "PayResultViewController.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -1120,7 +1121,13 @@
         NSString *orderId = [result stringValueForKey:@"order_id"];
         NSString *orderNum = [result stringValueForKey:@"order_no"];
         _sumPrice_pay = _finalPrice;
-        [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
+        
+        if (_sumPrice_pay == 0) {
+            [weakSelf payResultSuccess:PAY_RESULT_TYPE_Success erroInfo:nil oderid:orderId sumPrice:_sumPrice_pay orderNum:orderNum];
+        }else{
+            [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
+        }
+        
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -1154,6 +1161,37 @@
         return;
     }
     [self.navigationController pushViewController:pay animated:YES];
+}
+
+
+
+/**
+ *  支付成功
+ */
+- (void)payResultSuccess:(PAY_RESULT_TYPE)resultType
+                erroInfo:(NSString *)erroInfo
+                  oderid:(NSString *)theOderId
+                sumPrice:(CGFloat)theSumPrice
+                orderNum:(NSString *)theOrderNum
+{
+    //更新购物车
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+    
+    //支付成功通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_PAY_SUCCESS object:nil];
+    
+    PayResultViewController *result = [[PayResultViewController alloc]init];
+    result.orderId = theOderId;
+    result.orderNum = theOrderNum;
+    result.sumPrice = theSumPrice;
+    result.payResultType = resultType;
+    result.erroInfo = erroInfo;
+    if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
+        [self.lastViewController.navigationController popViewControllerAnimated:NO];
+        [self.lastViewController.navigationController pushViewController:result animated:YES];
+        return;
+    }
+    [self.navigationController pushViewController:result animated:YES];
 }
 
 

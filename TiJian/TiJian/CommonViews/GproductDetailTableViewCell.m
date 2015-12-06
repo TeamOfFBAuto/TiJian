@@ -257,7 +257,6 @@
             
             
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
-            imv.userInteractionEnabled = YES;
             [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil];
             [logoAndContentView addSubview:imv];
             

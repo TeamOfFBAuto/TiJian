@@ -322,6 +322,13 @@
 		13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A311C05926400CB995D /* GcustomNavcView.m */; };
+		E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86E21C14526F00914824 /* yishoucang@2x.png */; };
+		E31F86E91C14595A00914824 /* LBannerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E31F86E61C14595A00914824 /* LBannerItem.m */; };
+		E31F86EA1C14595A00914824 /* LBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31F86E81C14595A00914824 /* LBannerView.m */; };
+		E31F86ED1C145A7700914824 /* UIImageView+ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31F86EC1C145A7700914824 /* UIImageView+ProgressView.m */; };
+		E31F86F01C146B7000914824 /* ios7_goahead4032@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86EE1C146B7000914824 /* ios7_goahead4032@2x.png */; };
+		E31F86F11C146B7000914824 /* ios7_goback4032@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86EF1C146B7000914824 /* ios7_goback4032@2x.png */; };
+		E31F86F31C146DBD00914824 /* ios7_refresh4139@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6951BDF50AB0057D3BE /* (null) in Sources */ = {isa = PBXBuildFile; };
 		E329A8B81C00AD440017A5D3 /* personalxiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */; };
@@ -968,6 +975,16 @@
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E31E1A301C05926400CB995D /* GcustomNavcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcustomNavcView.h; sourceTree = "<group>"; };
 		E31E1A311C05926400CB995D /* GcustomNavcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcustomNavcView.m; sourceTree = "<group>"; };
+		E31F86E21C14526F00914824 /* yishoucang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yishoucang@2x.png"; sourceTree = "<group>"; };
+		E31F86E51C14595A00914824 /* LBannerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBannerItem.h; sourceTree = "<group>"; };
+		E31F86E61C14595A00914824 /* LBannerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBannerItem.m; sourceTree = "<group>"; };
+		E31F86E71C14595A00914824 /* LBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBannerView.h; sourceTree = "<group>"; };
+		E31F86E81C14595A00914824 /* LBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBannerView.m; sourceTree = "<group>"; };
+		E31F86EB1C145A7700914824 /* UIImageView+ProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ProgressView.h"; sourceTree = "<group>"; };
+		E31F86EC1C145A7700914824 /* UIImageView+ProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ProgressView.m"; sourceTree = "<group>"; };
+		E31F86EE1C146B7000914824 /* ios7_goahead4032@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_goahead4032@2x.png"; sourceTree = "<group>"; };
+		E31F86EF1C146B7000914824 /* ios7_goback4032@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_goback4032@2x.png"; sourceTree = "<group>"; };
+		E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_refresh4139@2x.png"; sourceTree = "<group>"; };
 		E31FC68C1BDF24D60057D3BE /* GStoreHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStoreHomeViewController.h; sourceTree = "<group>"; };
 		E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GStoreHomeViewController.m; sourceTree = "<group>"; };
 		E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personalxiugai@2x.png"; sourceTree = "<group>"; };
@@ -1747,6 +1764,9 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				E31F86EB1C145A7700914824 /* UIImageView+ProgressView.h */,
+				E31F86EC1C145A7700914824 /* UIImageView+ProgressView.m */,
+				E31F86E41C14595A00914824 /* LBannerView */,
 				13F8C5BD1C05AA99004C3FC7 /* TQStarRatingView.h */,
 				13F8C5BE1C05AA99004C3FC7 /* TQStarRatingView.m */,
 				E3D8AE0B1BF4B16D003AE2E3 /* GcycelScrollv */,
@@ -2171,6 +2191,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E31F86E41C14595A00914824 /* LBannerView */ = {
+			isa = PBXGroup;
+			children = (
+				E31F86E51C14595A00914824 /* LBannerItem.h */,
+				E31F86E61C14595A00914824 /* LBannerItem.m */,
+				E31F86E71C14595A00914824 /* LBannerView.h */,
+				E31F86E81C14595A00914824 /* LBannerView.m */,
+			);
+			path = LBannerView;
+			sourceTree = "<group>";
+		};
 		E31FC68B1BDF24970057D3BE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2334,6 +2365,10 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */,
+				E31F86EE1C146B7000914824 /* ios7_goahead4032@2x.png */,
+				E31F86EF1C146B7000914824 /* ios7_goback4032@2x.png */,
+				E31F86E21C14526F00914824 /* yishoucang@2x.png */,
 				E352F9141C0B91680037E4AE /* gouwuche_pd@2x.png */,
 				E352F9151C0B91680037E4AE /* kefu_pd@2x.png */,
 				E352F9161C0B91680037E4AE /* pinpaidian_pd@2x.png */,
@@ -2529,6 +2564,7 @@
 				E3E6C3601BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png in Resources */,
 				1303C34D1BEB0D7100700847 /* personal_jiaren_kaiguan2@2x.png in Resources */,
 				139333CB1BE0DF3E00B4628B /* 23_4@2x.png in Resources */,
+				E31F86F01C146B7000914824 /* ios7_goahead4032@2x.png in Resources */,
 				1303C3581BEB0D7100700847 /* personal_youhuiquan_g@2x.png in Resources */,
 				131C118E1BF04BF100629938 /* user_fanhui@2x.png in Resources */,
 				139333EC1BE0DF3E00B4628B /* 4_2_e8bf78@2x.png in Resources */,
@@ -2740,11 +2776,13 @@
 				139333BD1BE0DF3E00B4628B /* 1_2_boy@2x.png in Resources */,
 				139333BF1BE0DF3E00B4628B /* 20_1@2x.png in Resources */,
 				1303C3731BEB0D7200700847 /* guanbi@2x.png in Resources */,
+				E31F86F31C146DBD00914824 /* ios7_refresh4139@2x.png in Resources */,
 				1303C3571BEB0D7100700847 /* personal_youhuiquan_b@2x.png in Resources */,
 				1303C3471BEB0D7100700847 /* personal_gouwuche@2x.png in Resources */,
 				130D2E331BFDF2DC002E301F /* UMSocialLocalizable 20-01-19-799.strings in Resources */,
 				1303C36F1BEB0D7100700847 /* back@2x.png in Resources */,
 				E3796D091BFB37CD004B63F7 /* homepage_search@2x.png in Resources */,
+				E31F86F11C146B7000914824 /* ios7_goback4032@2x.png in Resources */,
 				130D2E311BFDF2DC002E301F /* UMSShareListController.xib in Resources */,
 				E3796D0B1BFB37CD004B63F7 /* my_weixin@2x.png in Resources */,
 				139333C91BE0DF3E00B4628B /* 23_2@2x.png in Resources */,
@@ -2754,6 +2792,7 @@
 				130D2E2E1BFDF2DC002E301F /* UMShareEditViewControlleriPad.xib in Resources */,
 				1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */,
 				E3796D0F1BFB37CD004B63F7 /* shopping_cart_address_add@2x.png in Resources */,
+				E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */,
 				139333E01BE0DF3E00B4628B /* 2_m_4@2x.png in Resources */,
 				139333EB1BE0DF3E00B4628B /* 4_1_bg@2x.png in Resources */,
 				E3796D111BFB37CD004B63F7 /* zhifuchenggong@2x.png in Resources */,
@@ -2863,6 +2902,7 @@
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
 				E3E2B41A1BFB2144007988C5 /* OrderOtherInfoCell.m in Sources */,
 				E3E2B3FC1BFB1E90007988C5 /* PayActionViewController.m in Sources */,
+				E31F86ED1C145A7700914824 /* UIImageView+ProgressView.m in Sources */,
 				E38551021C0AC8A500CE23E7 /* MyCouponViewController.m in Sources */,
 				E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */,
 				13F8C5B31C05AA7E004C3FC7 /* JKPromptView.m in Sources */,
@@ -2949,9 +2989,11 @@
 				E3D8AE1A1BF4B16D003AE2E3 /* SGFocusImageItem.m in Sources */,
 				13F8C5751C0585B7004C3FC7 /* OrderViewController.m in Sources */,
 				E3D8AE271BF5EB00003AE2E3 /* ProductCommentModel.m in Sources */,
+				E31F86EA1C14595A00914824 /* LBannerView.m in Sources */,
 				130D2E091BFDC0FE002E301F /* LDatePicker.m in Sources */,
 				134822DE1BEC80F200EA2E06 /* UpdatePWDController.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
+				E31F86E91C14595A00914824 /* LBannerItem.m in Sources */,
 				134822DB1BEC80E700EA2E06 /* AboutUsController.m in Sources */,
 				E3D8AE2D1BF60C4B003AE2E3 /* GcommentTableViewCell.m in Sources */,
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,

@@ -50,6 +50,7 @@
     NSMutableArray *_LookAgainProductListArray;//看了又看
     
     
+    UIButton *_shoucang_btn;//收藏
     
 }
 
@@ -181,7 +182,7 @@
         [self setValue:[NSNumber numberWithInt:_count + 1] forKey:@"_count"];
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
     
@@ -226,7 +227,7 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
 }
 
@@ -258,7 +259,7 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
 }
 
@@ -289,7 +290,7 @@
  
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
 }
 
@@ -315,7 +316,7 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
 }
@@ -341,7 +342,7 @@
         _productCommentArray = array;
         [self setValue:[NSNumber numberWithInt:_count + 1] forKey:@"_count"];
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
     
@@ -351,20 +352,25 @@
 
 //添加商品到购物车
 -(void)addProductToShopCar{
-
     NSDictionary *dic = @{
                           @"authcode":[LTools cacheForKey:USER_AUTHOD],
                           @"product_id":self.productId,
                           @"product_num":@"1"
                           };
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [_request requestWithMethod:YJYRequstMethodPost api:ORDER_ADD_TO_CART parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
         int count = [_shopCarNumLabel.text intValue];
         count+=1;
         _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",count];
         [self updateShopCarNumAndFrame];
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
 }
@@ -438,6 +444,17 @@
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
         [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
         [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
+        if (i == 1) {
+            _shoucang_btn = oneBtn;
+            [oneBtn setImage:[UIImage imageNamed:@"shoucang_pd.png"] forState:UIControlStateNormal];
+            [oneBtn setImage:[UIImage imageNamed:@"yishoucang.png"] forState:UIControlStateSelected];
+            if ([self.theProductModel.is_favor intValue] == 1) {//已收藏
+                oneBtn.selected = YES;
+            }else{
+                oneBtn.selected = NO;
+            }
+            
+        }
         if (i<2) {
             [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
         }else{
@@ -574,11 +591,11 @@
     }else if (sender.tag == 101){//收藏
         
         if ([LoginViewController isLogin]) {//已登录
-            
+            [self shoucangProductWithState:sender.selected];
         }else{
             [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
                 if (success) {//登录成功
-                    
+                    [self shoucangProductWithState:sender.selected];
                 }else{
                     
                 }
@@ -629,7 +646,7 @@
  *
  *  @param type 1 收藏 2 取消收藏
  */
--(void)shoucangProductWithState:(int)type{
+-(void)shoucangProductWithState:(BOOL)type{
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
@@ -640,20 +657,30 @@
                           @"authcode":[LTools cacheForKey:USER_AUTHOD]
                           };
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     
     
     NSString *api;
-    if (type == 1) {
-        api = SHOUCANGRODUCT;
-    }else if (type == 2){
+    if (type) {//已收藏
         api = QUXIAOSHOUCANG;
+    }else{
+        api = SHOUCANGRODUCT;
     }
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [_request requestWithMethod:YJYRequstMethodGet api:api parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        if (type) {//已收藏变未收藏
+            _shoucang_btn.selected = NO;
+        }else{
+            _shoucang_btn.selected = YES;
+        }
+        
+        [GMAPI showAutoHiddenMBProgressWithText:[result stringValueForKey:@"msg"] addToView:self.view];
+        
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

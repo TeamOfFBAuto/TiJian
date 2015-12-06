@@ -14,5 +14,6 @@
 @property(nonatomic,strong)NSString *adv_type_val; //广告类型1=》外链 2=》商场活动 3=》商铺活动 4=》单品  根据这个参数进行跳转
 @property(nonatomic,strong)NSString *redirect_type;//0 原生 1 h5打开
 @property(nonatomic,strong)NSString *theme_id;//关联id
+@property(nonatomic,strong)NSString *redirect_url;//如果是外链的话 需要跳转的url
 
 @end
