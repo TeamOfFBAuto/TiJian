@@ -787,7 +787,16 @@
         
     }else if (sender.tag == 104){//加入购物车
         
-        [self addProductToShopCar];
+        
+        if ([LoginViewController isLogin]) {
+            [self addProductToShopCar];
+        }else{
+            [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+                
+            }];
+        }
+        
+        
         
     }
 }
