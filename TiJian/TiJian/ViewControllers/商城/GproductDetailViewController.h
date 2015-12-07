@@ -20,6 +20,8 @@
 
 @property(nonatomic,strong)ProductModel *theProductModel;//产品model
 
+@property(nonatomic,strong)UIImage *gouwucheProductImage;//动画image
+
 -(void)goToCommentVc;
 
 -(void)goToProductDetailVcWithId:(NSString *)productId;

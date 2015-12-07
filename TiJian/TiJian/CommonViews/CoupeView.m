@@ -41,12 +41,12 @@
         
         if (userStyle == USESTYLE_Get) {
             title = @"领取优惠劵";
-            title_close = @"确定";
-            color_close = RGBCOLOR(246, 75, 136);
+            title_close = @"取消";
+            color_close = RGBCOLOR(92, 146, 203);
 
         }else if (userStyle == USESTYLE_Use){
             title = @"优惠劵";
-            title_close = @"确定";
+            title_close = @"取消";
             color_close = DEFAULT_TEXTCOLOR;
         }
         

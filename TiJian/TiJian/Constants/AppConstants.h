@@ -89,6 +89,9 @@
 
 #define USERLocation @"locationInfo"
 
+
+#define USERCOMMONLYUSEDADDRESS @"USERCOMMONLYUSEDADDRESS"//用户常用地址
+
 //两个登陆标识
 #define LOGIN_SERVER_STATE @"user_login_state" //服务器 no是未登陆  yes是已登陆
 #define LOGIN_RONGCLOUD_STATE @"rongcloudLoginState"//融云登陆状态

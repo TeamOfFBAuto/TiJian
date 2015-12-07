@@ -65,5 +65,13 @@
 //根据city_id查询province_id;
 +(NSString*)getProvineIdWithCityId:(int)cityId;
 
+//判断是否为整形：
++ (BOOL)isPureInt:(NSString*)string;
+
+//判断是否为浮点形：
++ (BOOL)isPureFloat:(NSString*)string;
+
+//是否为数字
++(BOOL)isPureNum:(NSString*)string;
 
 @end

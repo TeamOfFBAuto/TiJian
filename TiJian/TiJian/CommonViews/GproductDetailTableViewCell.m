@@ -43,8 +43,9 @@
         if (theindexPath.row == 0) {
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
-            
-            [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil];
+            [imv sd_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                self.delegate.gouwucheProductImage = image;
+            }];
             [self.contentView addSubview:imv];
             height += imv.frame.size.height;
             
@@ -211,9 +212,10 @@
             
         }else{
             if (commentArr.count == 0) {//暂无评论
-                UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH, 30)];
-                tt.text = @"暂无评论";
-                tt.font = [UIFont systemFontOfSize:13];
+                UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, DEVICE_WIDTH, 30)];
+                tt.text = @"暂无数据";
+                tt.textColor = [UIColor grayColor];
+                tt.font = [UIFont systemFontOfSize:11];
                 [self.contentView addSubview:tt];
                 height = 30;
             }else{
@@ -234,7 +236,13 @@
         
         
     }else if (theindexPath.section == 4){//看了又看
-        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 60, 15)];
+        
+        UIView *upline = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
+        upline.backgroundColor = RGBCOLOR(244, 245, 246);
+        [self.contentView addSubview:upline];
+        height += upline.frame.size.height;
+        
+        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, height + 10, 60, 15)];
         tLabel.textColor = [UIColor blackColor];
         tLabel.text = @"看了又看";
         tLabel.font = [UIFont systemFontOfSize:13];
@@ -245,6 +253,7 @@
         CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
         CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
         NSInteger count = theLookArray.count;
+        
         for (int i = 0; i<count; i++) {
             ProductModel *amodel = theLookArray[i];
             UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), CGRectGetMaxY(tLabel.frame)+10, theW, theH)];
@@ -257,7 +266,6 @@
             
             
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
-            imv.userInteractionEnabled = YES;
             [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil];
             [logoAndContentView addSubview:imv];
             
@@ -285,24 +293,48 @@
             
         }
         
-        height += theH +10;
+        if (count>0) {
+            height += theH +20;
+        }else{
+            
+            UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, height+10, DEVICE_WIDTH, 0.5)];
+            line.backgroundColor = RGBCOLOR(244, 245, 246);
+            [self.contentView addSubview:line];
+            height+=line.frame.size.height+10;
+            
+            UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, height, DEVICE_WIDTH, 30)];
+            tt.text = @"暂无数据";
+            tt.font = [UIFont systemFontOfSize:11];
+            tt.textColor = [UIColor grayColor];
+            [self.contentView addSubview:tt];
+            height += tt.frame.size.height;
+        }
         
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tLabel.frame)+10+theH+10, DEVICE_WIDTH, 5)];
-        line.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.contentView addSubview:line];
-        height += line.frame.size.height+10;
+        
         
         
         
     }else if (theindexPath.section == 5){//上拉显示体检项目详情
-        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-        tLabel.font = [UIFont systemFontOfSize:12];
-        tLabel.textAlignment = NSTextAlignmentCenter;
-        tLabel.text = @"上拉显示体检项目详情";
-        [self.contentView addSubview:tLabel];
-        height += tLabel.frame.size.height;
         
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tLabel.frame), DEVICE_WIDTH, 5)];
+        UIView *upline = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
+        upline.backgroundColor = RGBCOLOR(244, 245, 246);
+        [self.contentView addSubview:upline];
+        height += upline.frame.size.height;
+        
+        UIButton *tishiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [tishiBtn setFrame:CGRectMake(0, height, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+        tishiBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+        [tishiBtn setImage:[UIImage imageNamed:@"jiantou_up.png"] forState:UIControlStateNormal];
+        [tishiBtn setTitle:@"上拉显示体检项目详情" forState:UIControlStateNormal];
+        [tishiBtn setTitleColor:RGBCOLOR(26, 27, 28) forState:UIControlStateNormal];
+        
+        [tishiBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+        
+        
+        [self.contentView addSubview:tishiBtn];
+        height += tishiBtn.frame.size.height;
+        
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tishiBtn.frame), DEVICE_WIDTH, 5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
         [self.contentView addSubview:line];
         height += line.frame.size.height+10;
@@ -335,34 +367,38 @@
  */
 - (void)clickToCoupe
 {
-    [LoginViewController loginToDoWithViewController:self.delegate loginBlock:^(BOOL success) {
-        
-        if (success) {//登录成功
-            if (_coupeView) {
-                [_coupeView removeFromSuperview];
-                _coupeView = nil;
-            }
-            
-            NSArray *coupons = self.delegate.theProductModel.coupon_list;
-            
-            _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
-            
-            __weak typeof(self)weakSelf = self;
-            
-            _coupeView.coupeBlock = ^(NSDictionary *params){
-                
-                ButtonProperty *btn = params[@"button"];
-                CouponModel *aModel = params[@"model"];
-                
-                [weakSelf netWorkForCouponModel:aModel button:btn];
-            };
-            [_coupeView show];
-            
-        }else{//登录失败
-            
+    
+    
+    
+    if ([LoginViewController isLogin]) {
+        if (_coupeView) {
+            [_coupeView removeFromSuperview];
+            _coupeView = nil;
         }
-  
-    }];
+        
+        NSArray *coupons = self.delegate.theProductModel.coupon_list;
+        
+        _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
+        
+        __weak typeof(self)weakSelf = self;
+        
+        _coupeView.coupeBlock = ^(NSDictionary *params){
+            
+            ButtonProperty *btn = params[@"button"];
+            CouponModel *aModel = params[@"model"];
+            
+            [weakSelf netWorkForCouponModel:aModel button:btn];
+        };
+        [_coupeView show];
+    }else{
+        [LoginViewController loginToDoWithViewController:self.delegate loginBlock:^(BOOL success) {
+            
+            
+        }];
+    }
+    
+    
+    
     
     
     

@@ -31,6 +31,8 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
+    self.myTitle = @"评论";
+    
     [self creatRtab];
     
     
