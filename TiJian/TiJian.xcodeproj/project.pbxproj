@@ -341,6 +341,10 @@
 		E31F86F01C146B7000914824 /* ios7_goahead4032@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86EE1C146B7000914824 /* ios7_goahead4032@2x.png */; };
 		E31F86F11C146B7000914824 /* ios7_goback4032@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86EF1C146B7000914824 /* ios7_goback4032@2x.png */; };
 		E31F86F31C146DBD00914824 /* ios7_refresh4139@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */; };
+		E31F86F51C147E8B00914824 /* jiantou_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86F41C147E8B00914824 /* jiantou_up@2x.png */; };
+		E31F86F71C147F8400914824 /* jiantou_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86F61C147F8400914824 /* jiantou_down@2x.png */; };
+		E31F86FD1C14CF9400914824 /* TabCartSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86FC1C14CF9400914824 /* TabCartSelected@2x.png */; };
+		E31F86FF1C1518DE00914824 /* daijinquan_bukeyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86FE1C1518DE00914824 /* daijinquan_bukeyong@2x.png */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6951BDF50AB0057D3BE /* (null) in Sources */ = {isa = PBXBuildFile; };
 		E329A8B81C00AD440017A5D3 /* personalxiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */; };
@@ -1018,6 +1022,10 @@
 		E31F86EE1C146B7000914824 /* ios7_goahead4032@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_goahead4032@2x.png"; sourceTree = "<group>"; };
 		E31F86EF1C146B7000914824 /* ios7_goback4032@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_goback4032@2x.png"; sourceTree = "<group>"; };
 		E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7_refresh4139@2x.png"; sourceTree = "<group>"; };
+		E31F86F41C147E8B00914824 /* jiantou_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jiantou_up@2x.png"; sourceTree = "<group>"; };
+		E31F86F61C147F8400914824 /* jiantou_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jiantou_down@2x.png"; sourceTree = "<group>"; };
+		E31F86FC1C14CF9400914824 /* TabCartSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabCartSelected@2x.png"; sourceTree = "<group>"; };
+		E31F86FE1C1518DE00914824 /* daijinquan_bukeyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daijinquan_bukeyong@2x.png"; sourceTree = "<group>"; };
 		E31FC68C1BDF24D60057D3BE /* GStoreHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStoreHomeViewController.h; sourceTree = "<group>"; };
 		E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GStoreHomeViewController.m; sourceTree = "<group>"; };
 		E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personalxiugai@2x.png"; sourceTree = "<group>"; };
@@ -2345,6 +2353,7 @@
 		E3796D141BFB389E004B63F7 /* 购物车 */ = {
 			isa = PBXGroup;
 			children = (
+				E31F86FC1C14CF9400914824 /* TabCartSelected@2x.png */,
 				E329A8BE1C0308DF0017A5D3 /* shoppingcart_selected@2x.png */,
 				E3796D151BFB389E004B63F7 /* shopping_cart_icon@2x.png */,
 				E3796D161BFB389E004B63F7 /* shoppingcart_bottom_normal@2x.png */,
@@ -2443,6 +2452,8 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E31F86F61C147F8400914824 /* jiantou_down@2x.png */,
+				E31F86F41C147E8B00914824 /* jiantou_up@2x.png */,
 				E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */,
 				E31F86EE1C146B7000914824 /* ios7_goahead4032@2x.png */,
 				E31F86EF1C146B7000914824 /* ios7_goback4032@2x.png */,
@@ -2484,6 +2495,7 @@
 		E3D8AE371BF6203F003AE2E3 /* 奖券 */ = {
 			isa = PBXGroup;
 			children = (
+				E31F86FE1C1518DE00914824 /* daijinquan_bukeyong@2x.png */,
 				E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */,
 				E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */,
 				E3D8AE3C1BF6203F003AE2E3 /* jiangquan_yiduijiang@2x.png */,
@@ -2731,6 +2743,7 @@
 				131C11961BF073BE00629938 /* user_xuxian@2x.png in Resources */,
 				134822D51BEC795200EA2E06 /* default_hema@2x.png in Resources */,
 				1303C3481BEB0D7100700847 /* personal_jiantou_r@2x.png in Resources */,
+				E31F86FF1C1518DE00914824 /* daijinquan_bukeyong@2x.png in Resources */,
 				E352F9181C0B91680037E4AE /* gouwuche_pd@2x.png in Resources */,
 				1303C35D1BEB0D7100700847 /* personal_yuyue@2x.png in Resources */,
 				139334001BE1F29A00B4628B /* 9_2@2x.png in Resources */,
@@ -2765,6 +2778,7 @@
 				E329A8BD1C0301810017A5D3 /* personal_jiaren_shanchu@2x.png in Resources */,
 				131A177A1BF33B7900B12D2F /* yuyue@2x.png in Resources */,
 				1303C3661BEB0D7100700847 /* homepage_4@2x.png in Resources */,
+				E31F86F51C147E8B00914824 /* jiantou_up@2x.png in Resources */,
 				1303C3651BEB0D7100700847 /* homepage_3@2x.png in Resources */,
 				E335F9F31BFEF36000708BF6 /* qrdd_jiantou_big@2x.png in Resources */,
 				13F1F2721BBA78ED00885D31 /* Assets.xcassets in Resources */,
@@ -2837,6 +2851,7 @@
 				E3D8AE521BF6203F003AE2E3 /* youhuiquan_yiguoqi@2x.png in Resources */,
 				1303C3451BEB0D7100700847 /* bianji@2x.png in Resources */,
 				139333C01BE0DF3E00B4628B /* 20_2@2x.png in Resources */,
+				E31F86F71C147F8400914824 /* jiantou_down@2x.png in Resources */,
 				139333D71BE0DF3E00B4628B /* 27_2@2x.png in Resources */,
 				139333E11BE0DF3E00B4628B /* 2_m_5_4fb8ce@2x.png in Resources */,
 				1324B6991BD7485500FB47A9 /* age.jpg in Resources */,
@@ -2854,6 +2869,7 @@
 				E3796D121BFB37CD004B63F7 /* zhifuchulizhong@2x.png in Resources */,
 				E3E2B4071BFB203B007988C5 /* ProductBuyCell.xib in Resources */,
 				E3D93F501BEB45BB00C0BE52 /* garea.plist in Resources */,
+				E31F86FD1C14CF9400914824 /* TabCartSelected@2x.png in Resources */,
 				139333BD1BE0DF3E00B4628B /* 1_2_boy@2x.png in Resources */,
 				139333BF1BE0DF3E00B4628B /* 20_1@2x.png in Resources */,
 				1303C3731BEB0D7200700847 /* guanbi@2x.png in Resources */,

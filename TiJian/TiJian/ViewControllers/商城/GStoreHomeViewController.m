@@ -326,6 +326,7 @@
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 300)];
             UIProgressView *progress = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
             [imageView sd_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil usingProgressView:progress];
+                        
             [views addObject:imageView];
             
         }

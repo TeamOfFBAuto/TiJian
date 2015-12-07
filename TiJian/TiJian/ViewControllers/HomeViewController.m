@@ -142,7 +142,6 @@
         }
         self.leftLabel.text = str;
         
-//        [self creatTableView];
     }else{
         
         [self getjingweidu];
@@ -196,17 +195,26 @@
         cityId = [GMAPI cityIdForName:[dic stringValueForKey:@"city"]];
     }
     
-    self.leftLabel.text = theString;
-    int city_id = [GMAPI cityIdForName:theString];
-    NSLog(@"city_id : %d",city_id);
+    
+    
+    if ([LTools isEmpty:theString]) {
+        self.leftLabel.text = @"北京市";
+        NSDictionary *cachDic = @{
+                                  @"province":[NSString stringWithFormat:@"%d",1000],
+                                  @"city":[NSString stringWithFormat:@"%d",1005]
+                                  };
+        [GMAPI cache:cachDic ForKey:USERLocation];
+    }else{
+        self.leftLabel.text = theString;
+        NSDictionary *cachDic = @{
+                                  @"province":[NSString stringWithFormat:@"%d",procinceId],
+                                  @"city":[NSString stringWithFormat:@"%d",cityId]
+                                  };
+        [GMAPI cache:cachDic ForKey:USERLocation];
+    }
     
     
     
-    NSDictionary *cachDic = @{
-                              @"province":[NSString stringWithFormat:@"%d",procinceId],
-                              @"city":[NSString stringWithFormat:@"%d",cityId]
-                              };
-    [GMAPI cache:cachDic ForKey:USERLocation];
     
     
 }
@@ -220,7 +228,7 @@
     self.leftLabel.textColor = DEFAULT_TEXTCOLOR;
     self.leftLabel.font = [UIFont systemFontOfSize:15];
     [self.leftLabel addTaget:self action:@selector(pushToLocationChoose) tag:0];
-    self.leftLabel.text = @"北京";
+    
     
     UIBarButtonItem *leftBar = [[UIBarButtonItem alloc]initWithCustomView:self.leftLabel];
     self.navigationItem.leftBarButtonItem = leftBar;
@@ -252,7 +260,6 @@
     
     
     [GMAPI cache:dic ForKey:USERLocation];
-    
     
     
     

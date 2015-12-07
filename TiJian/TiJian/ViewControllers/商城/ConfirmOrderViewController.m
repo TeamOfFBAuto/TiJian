@@ -20,7 +20,7 @@
 #import "MyCouponViewController.h"
 #import "PayResultViewController.h"
 
-@interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 {
     UITableView *_tab;
     UIView *_addressView;
@@ -1048,7 +1048,11 @@
     
     
     if (!_theAddressModel) {
-        [GMAPI showAutoHiddenMBProgressWithText:@"请填写收货地址" addToView:self.view];
+        
+        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"请选择收货地址" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [al show];
+        
+        
         return;
     }
     
@@ -1166,7 +1170,7 @@
 
 
 /**
- *  支付成功
+ *  订单金额为0直接支付成功
  */
 - (void)payResultSuccess:(PAY_RESULT_TYPE)resultType
                 erroInfo:(NSString *)erroInfo
@@ -1423,8 +1427,26 @@
     
     [cell loadCustomViewWithModel:model];
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     return cell;
 }
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex == 0) {//取消
+        
+    }else if (buttonIndex == 1){
+        [self goToAddressVC];
+    }
+    
+    
+    
+}
+
 
 
 @end

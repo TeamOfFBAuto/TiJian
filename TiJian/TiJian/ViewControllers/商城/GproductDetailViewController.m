@@ -52,6 +52,21 @@
     
     UIButton *_shoucang_btn;//收藏
     
+    UIButton *_addShopCarBtn;//加入购物车按钮
+    UIButton *_gouwucheOneBtn;//购物车btn
+    int _gouwucheNum;//购物车里商品数量
+    
+    //动画相关
+    CALayer     *layer;
+    UIImageView *_imageView;
+    UIButton    *_btn;
+    UIBezierPath *_path;
+    
+    
+    
+    
+    
+    
 }
 
 @end
@@ -84,11 +99,14 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     self.myTitle = @"产品详情";
-    
+    _gouwucheNum = 0;
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
     [self prepareNetData];
     
@@ -277,7 +295,7 @@
     
 }
 
-
+//获取购物车数量
 -(void)getShopcarNumWithLoginSuccess{
     NSDictionary *dic = @{
                           @"authcode":[LTools cacheForKey:USER_AUTHOD]
@@ -285,6 +303,7 @@
     _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _shopCarDic = result;
+        _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
  
@@ -296,7 +315,7 @@
 
 
 
-
+//登录成功更新购物车数量
 -(void)updateShopCarNum{
     
     NSDictionary *dic = @{
@@ -309,6 +328,7 @@
         if (_shopCarNumLabel) {
             
             _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
             
             [self updateShopCarNumAndFrame];
         }
@@ -318,6 +338,51 @@
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
+    
+}
+
+//登录成功更新商品收藏和购物车数量
+-(void)updateIsFavorAndShopCarNum{
+    NSDictionary *parameters;
+    
+    if ([LoginViewController isLogin]) {
+        parameters = @{
+                       @"product_id":self.productId,
+                       @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                       };
+    }else{
+        parameters = @{
+                       @"product_id":self.productId
+                       };
+    }
+    
+    _request_productDetail = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductDetail parameters:parameters constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSDictionary *dic = [result dictionaryValueForKey:@"data"];
+        
+        self.theProductModel = [[ProductModel alloc]initWithDictionary:dic];
+        
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (NSDictionary *dic in self.theProductModel.coupon_list) {
+            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+            [arr addObject:model];
+        }
+        
+        self.theProductModel.coupon_list = (NSArray*)arr;
+        
+        if ([self.theProductModel.is_favor intValue] == 1) {//已收藏
+            _shoucang_btn.selected = YES;
+        }else{
+            _shoucang_btn.selected = NO;
+        }
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+    
+    
+    [self updateShopCarNum];
+    
     
 }
 
@@ -360,20 +425,104 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
+    __weak typeof (self)bself = self;
     [_request requestWithMethod:YJYRequstMethodPost api:ORDER_ADD_TO_CART parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
-        int count = [_shopCarNumLabel.text intValue];
-        count+=1;
-        _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",count];
-        [self updateShopCarNumAndFrame];
+        _gouwucheNum += 1;
+        
+        [bself startShopCarAnimation];
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
 }
+
+
+#pragma mark - 动画相关
+//加入购物车动画效果
+-(void)startShopCarAnimation{
+    
+    
+    if (!_path) {
+        _path = [UIBezierPath bezierPath];
+        [_path moveToPoint:CGPointMake(DEVICE_WIDTH-_addShopCarBtn.frame.size.width*0.25, DEVICE_HEIGHT - _addShopCarBtn.frame.size.height - 64)];//开始点
+        [_path addQuadCurveToPoint:CGPointMake(DEVICE_WIDTH - _addShopCarBtn.frame.size.width - _shoucang_btn.frame.size.width*0.5, DEVICE_HEIGHT - 64 - _shoucang_btn.frame.size.height*0.5) controlPoint:CGPointMake(DEVICE_WIDTH - _addShopCarBtn.frame.size.width, DEVICE_HEIGHT - 300)];//结束点
+    }
+    
+    
+    if (!layer) {
+        _btn.enabled = NO;
+        layer = [CALayer layer];
+        
+        layer.contents = (__bridge id)[UIImage imageNamed:@"TabCartSelected.png"].CGImage;
+        if (self.gouwucheProductImage) {
+            layer.contents = (__bridge id)self.gouwucheProductImage.CGImage;
+        }
+        layer.contentsGravity = kCAGravityResizeAspectFill;
+        layer.bounds = CGRectMake(0, 0, 20, 15);
+//        [layer setCornerRadius:CGRectGetHeight([layer bounds]) / 2];
+        layer.masksToBounds = YES;
+        layer.position =CGPointMake(50, 150);
+        [self.view.layer addSublayer:layer];
+    }
+    [self groupAnimation];
+    
+}
+
+-(void)groupAnimation{
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    animation.path = _path.CGPath;
+    animation.rotationMode = kCAAnimationRotateAuto;
+    CABasicAnimation *expandAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    expandAnimation.duration = 0.6f;
+    expandAnimation.fromValue = [NSNumber numberWithFloat:1];
+    expandAnimation.toValue = [NSNumber numberWithFloat:2.0f];
+    expandAnimation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    
+    CABasicAnimation *narrowAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    narrowAnimation.beginTime = 0.6;
+    narrowAnimation.fromValue = [NSNumber numberWithFloat:2.0f];
+    narrowAnimation.duration = 0.6f;
+    narrowAnimation.toValue = [NSNumber numberWithFloat:0.5f];
+    
+    narrowAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    
+    CAAnimationGroup *groups = [CAAnimationGroup animation];
+    groups.animations = @[animation,expandAnimation,narrowAnimation];
+    groups.duration = 1.2f;
+    groups.removedOnCompletion=NO;
+    groups.fillMode=kCAFillModeForwards;
+    groups.delegate = self;
+    [layer addAnimation:groups forKey:@"group"];
+}
+
+-(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    if (anim == [layer animationForKey:@"group"]) {
+        _btn.enabled = YES;
+        [layer removeFromSuperlayer];
+        layer = nil;
+        
+        CABasicAnimation *shakeAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
+        shakeAnimation.duration = 0.25f;
+        shakeAnimation.fromValue = [NSNumber numberWithFloat:-5];
+        shakeAnimation.toValue = [NSNumber numberWithFloat:5];
+        shakeAnimation.autoreverses = YES;
+//        [_shopCarNumLabel.layer addAnimation:shakeAnimation forKey:nil];
+//        [_gouwucheOneBtn.imageView.layer addAnimation:shakeAnimation forKey:nil];
+        [_gouwucheOneBtn.layer addAnimation:shakeAnimation forKey:nil];
+        
+        _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",_gouwucheNum];
+        
+        [self updateShopCarNumAndFrame];
+        
+    }
+}
+
+
 
 
 
@@ -425,16 +574,16 @@
     _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50-64, DEVICE_WIDTH, 50)];
     _downView.backgroundColor = RGBCOLOR(38, 51, 62);
     
-    UIButton *addShopCarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addShopCarBtn.tag = 104;
+    _addShopCarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _addShopCarBtn.tag = 104;
     CGFloat theW = [GMAPI scaleWithHeight:50 width:0 theWHscale:180.0/100];
-    [addShopCarBtn setFrame:CGRectMake(_downView.frame.size.width-theW, 0, theW, 50)];
-    addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
-    [addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
-    [addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-    [addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [_downView addSubview:addShopCarBtn];
+    [_addShopCarBtn setFrame:CGRectMake(_downView.frame.size.width-theW, 0, theW, 50)];
+    _addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
+    [_addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
+    [_addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [_addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_downView addSubview:_addShopCarBtn];
     
     CGFloat tw = (_downView.frame.size.width-theW)/4;
     NSArray *titleArray = @[@"客服",@"收藏",@"品牌店",@"购物车"];
@@ -481,6 +630,9 @@
             _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
             
             [oneBtn addSubview:_shopCarNumLabel];
+            
+            _gouwucheOneBtn = oneBtn;
+            
         }
         
     }
@@ -595,7 +747,7 @@
         }else{
             [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
                 if (success) {//登录成功
-                    [self shoucangProductWithState:sender.selected];
+                    
                 }else{
                     
                 }
@@ -874,15 +1026,18 @@
     }else if (tableView.tag == 1001){
         if (section == 0) {
             [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/220])];
-            UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
-            tishiLabel.backgroundColor = [UIColor whiteColor];
-            tishiLabel.font = [UIFont systemFontOfSize:12];
-            tishiLabel.textAlignment = NSTextAlignmentCenter;
-            tishiLabel.textColor = [UIColor blackColor];
-            tishiLabel.text = @"下拉显示套餐详情";
-            [view addSubview:tishiLabel];
             
-            UIView *titleView =[[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tishiLabel.frame),DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100])];
+            UIButton *tishiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [tishiBtn setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
+            tishiBtn.backgroundColor = [UIColor whiteColor];
+            tishiBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+            [tishiBtn setTitleColor:RGBCOLOR(26, 27, 28) forState:UIControlStateNormal];
+            [tishiBtn setImage:[UIImage imageNamed:@"jiantou_down"] forState:UIControlStateNormal];
+            [tishiBtn setTitle:@"下拉显示套餐详情" forState:UIControlStateNormal];
+            [tishiBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+            [view addSubview:tishiBtn];
+            
+            UIView *titleView =[[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tishiBtn.frame),DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/100])];
             titleView.backgroundColor = [UIColor whiteColor];
             [view addSubview:titleView];
             

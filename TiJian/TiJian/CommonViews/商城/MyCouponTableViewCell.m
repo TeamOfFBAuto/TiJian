@@ -84,47 +84,60 @@
             //优惠券图
             self.couponImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 105, 15, 100, 40)];
             [self.contentView addSubview:self.couponImv];
+            
+            
+            self.disable_use_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.couponImv.frame.size.width*0.5-self.couponImv.frame.size.height*0.5, 0, self.couponImv.frame.size.height, self.couponImv.frame.size.height)];
+            [self.couponImv addSubview:self.disable_use_imv];
+            self.disable_use_imv.hidden = YES;
+            
+            
         }else if (theType == GCouponType_daijinquan || theType == GCouponType_use_daijinquan || theType == GCouponType_disUse_daijinquan){
             
             self.companyLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+10, 10, DEVICE_WIDTH *(200/750.0), 50)];
             if (theType == GCouponType_daijinquan) {
                 [self.companyLabel  setFrame:CGRectMake(CGRectGetMaxX(self.chooseBtn.frame)+10, 10, DEVICE_WIDTH *(280/750.0), 50)];
             }
-            self.companyLabel .font = [UIFont systemFontOfSize:14];
+            self.companyLabel .font = [UIFont systemFontOfSize:13];
             self.companyLabel.textAlignment = NSTextAlignmentCenter;
-            self.companyLabel .numberOfLines = 2;
+            self.companyLabel .numberOfLines = 3;
             [self.contentView addSubview:self.companyLabel ];
             
-            UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.companyLabel .frame)+10, 8, DEVICE_WIDTH - CGRectGetMaxX(self.companyLabel .frame) - 20, 70-16)];
-            imv.image = [UIImage imageNamed:@"yuyue_daijinquan.png"];
-            [self.contentView addSubview:imv];
+            //代金券图
+            self.daijiquanImv = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.companyLabel .frame)+10, 8, DEVICE_WIDTH - CGRectGetMaxX(self.companyLabel .frame) - 20, 70-16)];
+            self.daijiquanImv.image = [UIImage imageNamed:@"yuyue_daijinquan.png"];
+            [self.contentView addSubview:self.daijiquanImv];
             
-            self.daijinquan_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 0, imv.frame.size.width*210/540.0-5, imv.frame.size.height*0.5)];
+            self.daijinquan_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 0, self.daijiquanImv.frame.size.width*210/540.0-5, self.daijiquanImv.frame.size.height*0.5)];
             self.daijinquan_priceLabel.font = [UIFont systemFontOfSize:12];
             self.daijinquan_priceLabel.textAlignment = NSTextAlignmentRight;
             self.daijinquan_priceLabel.textColor = RGBCOLOR(91, 146, 199);
-            [imv addSubview:self.daijinquan_priceLabel];
+            [self.daijiquanImv addSubview:self.daijinquan_priceLabel];
             
-            UILabel *miaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(self.daijinquan_priceLabel.frame), self.daijinquan_priceLabel.frame.size.width, self.daijinquan_priceLabel.frame.size.height)];
-            miaoshuLabel.font = [UIFont systemFontOfSize:11];
-            miaoshuLabel.text = @"超额补差价";
-            miaoshuLabel.textAlignment = NSTextAlignmentRight;
-            miaoshuLabel.textColor = RGBCOLOR(134, 135, 136);
-            [imv addSubview:miaoshuLabel];
+            self.miaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(self.daijinquan_priceLabel.frame), self.daijinquan_priceLabel.frame.size.width, self.daijinquan_priceLabel.frame.size.height)];
+            self.miaoshuLabel.font = [UIFont systemFontOfSize:11];
+            self.miaoshuLabel.text = @"超额补差价";
+            self.miaoshuLabel.textAlignment = NSTextAlignmentRight;
+            self.miaoshuLabel.textColor = RGBCOLOR(134, 135, 136);
+            [self.daijiquanImv addSubview:self.miaoshuLabel];
             
             
-            self.daijinquan_brandNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.daijinquan_priceLabel.right, self.daijinquan_priceLabel.frame.origin.y, imv.frame.size.width - self.daijinquan_priceLabel.frame.size.width, imv.frame.size.height*0.5)];
+            self.daijinquan_brandNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.daijinquan_priceLabel.right, self.daijinquan_priceLabel.frame.origin.y, self.daijiquanImv.frame.size.width - self.daijinquan_priceLabel.frame.size.width, self.daijiquanImv.frame.size.height*0.5)];
             self.daijinquan_brandNameLabel.textAlignment = NSTextAlignmentCenter;
             self.daijinquan_brandNameLabel.font = [UIFont systemFontOfSize:12];
             self.daijinquan_brandNameLabel.textColor = RGBCOLOR(91, 146, 199);
-            [imv addSubview:self.daijinquan_brandNameLabel];
+            [self.daijiquanImv addSubview:self.daijinquan_brandNameLabel];
             
             self.daijinquan_timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.daijinquan_brandNameLabel.frame.origin.x, CGRectGetMaxY(self.daijinquan_brandNameLabel.frame), self.daijinquan_brandNameLabel.frame.size.width, self.daijinquan_brandNameLabel.frame.size.height)];
             self.daijinquan_timeLabel.textAlignment = NSTextAlignmentCenter;
             self.daijinquan_timeLabel.font = [UIFont systemFontOfSize:11];
             self.daijinquan_timeLabel.textColor = RGBCOLOR(91, 146, 199);
-            [imv addSubview:self.daijinquan_timeLabel];
+            [self.daijiquanImv addSubview:self.daijinquan_timeLabel];
             
+            
+            
+            self.disable_use_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.daijiquanImv.frame.size.width*0.5-self.daijiquanImv.frame.size.height*0.5, 0, self.daijiquanImv.frame.size.height, self.daijiquanImv.frame.size.height)];
+            [self.daijiquanImv addSubview:self.disable_use_imv];
+            self.disable_use_imv.hidden = YES;
             
             
         }
@@ -207,6 +220,27 @@
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [UIFont boldSystemFontOfSize:11];
         [self.couponImv addSubview:label];
+        
+        
+        if (theModel.enable_use == 0){//不可用
+            if (theModel.disable_use_reason == 1) {//已经使用
+                [self.disable_use_imv setImage:[UIImage imageNamed:@"youhuiquan_yishiyong.png"]];
+            }else if (theModel.disable_use_reason == 2){//已过期
+                [self.disable_use_imv setImage:[UIImage imageNamed:@"youhuiquan_yiguoqi.png"]];
+            }
+            
+            self.disable_use_imv.hidden = NO;
+            
+            [self.couponImv setImage:[UIImage imageNamed:@"youhuiquan_g.png"]];
+            
+        }else if (theModel.enable_use == 1){//可用
+            self.disable_use_imv.hidden = YES;
+        }
+        
+        
+        
+        
+        
     }else if (theType == GCouponType_daijinquan || theType == GCouponType_use_daijinquan || theType == GCouponType_disUse_daijinquan){
         self.companyLabel.text = theModel.company_name;
         self.daijinquan_priceLabel.text = [NSString stringWithFormat:@"%@元",theModel.vouchers_price];
@@ -214,6 +248,37 @@
         NSString *start_time = [GMAPI timechangeYMD:theModel.use_start_time];
         NSString *end_time = [GMAPI timechangeMD:theModel.use_end_time];
         self.daijinquan_timeLabel.text = [NSString stringWithFormat:@"%@-%@",start_time,end_time];
+        
+        
+        if (theModel.enable_use == 0){//不可用
+            
+            if (theModel.disable_use_reason == 1) {//已经使用
+                [self.disable_use_imv setImage:[UIImage imageNamed:@"youhuiquan_yishiyong.png"]];
+            }else if (theModel.disable_use_reason == 2){//已过期
+                [self.disable_use_imv setImage:[UIImage imageNamed:@"youhuiquan_yiguoqi.png"]];
+            }
+            
+            self.disable_use_imv.hidden = NO;
+            
+            [self.daijiquanImv setImage:[UIImage imageNamed:@"daijinquan_bukeyong.png"]];
+            
+            self.miaoshuLabel.textColor = RGBCOLOR(204, 204, 204);
+            self.daijinquan_brandNameLabel.textColor = RGBCOLOR(204, 204, 204);
+            self.daijinquan_priceLabel.textColor = RGBCOLOR(204, 204, 204);
+            self.daijinquan_timeLabel.textColor = RGBCOLOR(204, 204, 204);
+            
+            
+        }else if (theModel.enable_use == 1){//可用
+            self.disable_use_imv.hidden = YES;
+            
+            self.miaoshuLabel.textColor = RGBCOLOR(134, 135, 136);
+            self.daijinquan_brandNameLabel.textColor = RGBCOLOR(91, 146, 199);
+            self.daijinquan_priceLabel.textColor = RGBCOLOR(91, 146, 199);
+            self.daijinquan_timeLabel.textColor = RGBCOLOR(91, 146, 199);
+        }
+        
+        
+        
     }
 
     

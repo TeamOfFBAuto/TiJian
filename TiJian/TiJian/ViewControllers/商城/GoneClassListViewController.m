@@ -27,6 +27,8 @@
     int _count;//网络请求个数
     
     
+    UIView *_backBlackView;//筛选界面下面的黑色透明view
+    
     
     
 }
@@ -58,6 +60,10 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = self.className;
+    
+    _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+    _backBlackView.backgroundColor = [UIColor blackColor];
+    _backBlackView.alpha = 0.5;
     
     
     [self creatTableView];
@@ -133,22 +139,30 @@
 #pragma mark - 逻辑处理
 
 -(void)therightSideBarDismiss{
+    
     [self.rightSideBar dismiss];
 }
 
 
 -(void)clickToFilter:(UIButton *)sender{
+    
+    
     [self.rightSideBar show];
 }
 
 #pragma mark - Gesture Handler
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
 {
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-//        CGPoint startPoint = [recognizer locationInView:self.view];
-            self.rightSideBar.isCurrentPanGestureTarget = YES;
-    }
     
+    
+//    if (recognizer.state == UIGestureRecognizerStateBegan) {
+//        
+//        CGPoint startPoint = [recognizer locationInView:self.view];
+//        NSLog(@"startPoint.x :%f  startPoint.y :%f",startPoint.x,startPoint.y);
+//        self.rightSideBar.isCurrentPanGestureTarget = YES;
+//    }
+    
+    self.rightSideBar.isCurrentPanGestureTarget = YES;
     [self.rightSideBar handlePanGestureToShow:recognizer inView:self.view];
     
 }
@@ -159,6 +173,7 @@
     
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did appear");
+        
     }
 }
 
@@ -166,6 +181,9 @@
 {
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will appear");
+        
+        [self.navigationController.view addSubview:_backBlackView];
+        
     }
 }
 
@@ -174,6 +192,7 @@
     
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did disappear");
+        [_backBlackView removeFromSuperview];
     }
 }
 
@@ -181,6 +200,7 @@
 {
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will disappear");
+        
     }
 }
 

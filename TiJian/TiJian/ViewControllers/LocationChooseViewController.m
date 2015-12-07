@@ -51,6 +51,8 @@
     
     
     
+    
+    
     //收键盘
     UIControl *ccc = [[UIControl alloc]initWithFrame:self.view.bounds];
     [ccc addTarget:self action:@selector(gShou) forControlEvents:UIControlEventTouchUpInside];
@@ -131,17 +133,14 @@
     UIView *view;
 
     view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 100, 44)];
-    titleLabel.font = [UIFont systemFontOfSize:15];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 100, 44)];
+    titleLabel.font = [UIFont systemFontOfSize:13];
     NSString*provinceStr = _provinceArray[section];
     titleLabel.text = provinceStr;
-        
     [view addSubview:titleLabel];
     view.backgroundColor = [UIColor whiteColor];
-    
     view.tag = section +10;
-    
-    
     
     if ([provinceStr isEqualToString:@"北京市"] || [provinceStr isEqualToString:@"上海市"] || [provinceStr isEqualToString:@"天津市"] || [provinceStr isEqualToString:@"重庆市"]){
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseTheStr:)];
@@ -152,19 +151,25 @@
         [view addGestureRecognizer:tap];
         
         UIButton *jiantouBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        jiantouBtn.backgroundColor = [UIColor redColor];
         [jiantouBtn setFrame:CGRectMake(DEVICE_WIDTH-44, 0, 44, 44)];
         jiantouBtn.userInteractionEnabled = NO;
         [view addSubview:jiantouBtn];
         
         if ( !_isOpen[view.tag-10]) {
-            [jiantouBtn setImage:[UIImage imageNamed:@"buy_jiantou_d.png"] forState:UIControlStateNormal];
+            [jiantouBtn setImage:[UIImage imageNamed:@"jiantou_down.png"] forState:UIControlStateNormal];
         }else{
-            [jiantouBtn setImage:[UIImage imageNamed:@"buy_jiantou_u.png"] forState:UIControlStateNormal];
+            [jiantouBtn setImage:[UIImage imageNamed:@"jiantou_up.png"] forState:UIControlStateNormal];
+            UIView *line = [[UIView alloc]initWithFrame:CGRectMake(20, 43.5, DEVICE_WIDTH-30, 0.5)];
+            line.backgroundColor = RGBCOLOR(244, 245, 246);
+            [view addSubview:line];
         }
     }
     
-        
+    
+    
+    
+    
+    
     return view;
 }
 
@@ -177,6 +182,7 @@
     NSString *provinceName = _provinceArray[indexPath.section];
     
     [self.delegate setLocationDataWithCityStr:cityName provinceStr:provinceName];
+    [self setuserCommonlyUsedCityWithStr:cityName];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -190,6 +196,7 @@
      NSString *str = _provinceArray[ges.view.tag - 10];
     
     [self.delegate setLocationDataWithCityStr:str provinceStr:str];
+    [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
     
     
@@ -218,8 +225,7 @@
 
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.5)];
-    view.backgroundColor = RGBCOLOR(200, 199, 204);
+    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     return view;
 }
 
@@ -242,11 +248,11 @@
     }
     
     
-    cell.backgroundColor= RGBCOLOR(217, 217, 217);
+    cell.backgroundColor= [UIColor whiteColor];
     
     
-    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH-20, 44)];
-    tLabel.font = [UIFont systemFontOfSize:15];
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 0, DEVICE_WIDTH-20, 44)];
+    tLabel.font = [UIFont systemFontOfSize:12];
     
     
     NSArray *citiesArray = _citiesArray[indexPath.section];
@@ -257,8 +263,9 @@
     [cell.contentView addSubview:tLabel];
     
     
-    
-    
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(30, 43.5, DEVICE_WIDTH-30, 0.5)];
+    line.backgroundColor = RGBCOLOR(244, 245, 246);
+    [cell.contentView addSubview:line];
     
     
     
@@ -271,69 +278,167 @@
 
 
 
+#pragma mark - 视图创建
 -(UIView*)creatHotCityView{
     
     CGFloat height = 0.0f;
     
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
-    view.backgroundColor = [UIColor whiteColor];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
+    view.backgroundColor = [UIColor orangeColor];
     
+    //定位城市
+    UIView *locationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
+    locationView.backgroundColor = RGBCOLOR(244, 245, 246);
+    [view addSubview:locationView];
+    UILabel *ttl1 = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, DEVICE_WIDTH-20, 40)];
+    ttl1.textColor = [UIColor blackColor];
+    ttl1.text = @"定位城市";
+    ttl1.font = [UIFont systemFontOfSize:13];
+    [locationView addSubview:ttl1];
+    height +=locationView.frame.size.height;
     
-    UILabel *lab = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 60, 20)];
-    lab.text = @"热门城市";
-    lab.font = [UIFont boldSystemFontOfSize:15];
-    [view addSubview:lab];
+    //定位城市内容
+    UIView *locationView_c = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 50)];
+    locationView_c.backgroundColor = [UIColor whiteColor];
+    [view addSubview:locationView_c];
+    self.nowLocationBtn_c = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.nowLocationBtn_c setFrame:CGRectMake(20, 12, 85, 25)];
+    self.nowLocationBtn_c.titleLabel.font = [UIFont systemFontOfSize:12];
+    [self.nowLocationBtn_c setTitleColor:RGBCOLOR(92, 146, 203) forState:UIControlStateNormal];
+    self.nowLocationBtn_c.layer.borderWidth = 0.5;
+    self.nowLocationBtn_c.layer.borderColor = [RGBCOLOR(92, 146, 203)CGColor];
+    self.nowLocationBtn_c.layer.masksToBounds = YES;
+    [self.nowLocationBtn_c setTitle:@"正在定位..." forState:UIControlStateNormal];
+    self.nowLocationBtn_c.userInteractionEnabled = NO;
     
-    UILabel *nowLocationLabel_t = [[UILabel alloc]initWithFrame:CGRectMake(30, CGRectGetMaxY(lab.frame)+15, 85, 12)];
-    nowLocationLabel_t.font = [UIFont systemFontOfSize:12];
-    nowLocationLabel_t.text = @"当前地理位置为";
-    [view addSubview:nowLocationLabel_t];
-    
-    self.nowLocationLabel_c = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(nowLocationLabel_t.frame)+15, nowLocationLabel_t.frame.origin.y, 85, 12)];
-    self.nowLocationLabel_c.font = [UIFont systemFontOfSize:12];
-    [view addSubview:self.nowLocationLabel_c];
-    
+    [locationView_c addSubview:self.nowLocationBtn_c];
     
     __weak typeof (self)bself = self;
-    
     [[GMAPI appDeledate]startDingweiWithBlock:^(NSDictionary *dic) {
         
         [bself theLocationDictionary:dic];
     }];
+    height += locationView_c.frame.size.height;
     
     
     
-    NSInteger totle = _hotCityArray.count;
+    
+    //最近访问城市
+    UIView *zuijinfangwenCity = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 40)];
+    zuijinfangwenCity.backgroundColor = RGBCOLOR(244, 245, 246);
+    [view addSubview:zuijinfangwenCity];
+    UILabel *ttl2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, DEVICE_WIDTH-20, 40)];
+    ttl2.textColor = [UIColor blackColor];
+    ttl2.text = @"最近访问城市";
+    ttl2.font = [UIFont systemFontOfSize:13];
+    [zuijinfangwenCity addSubview:ttl2];
+    height += zuijinfangwenCity.frame.size.height;
+    
+    //最近访问城市内容
+    UIView *zuijinfangwenCity_c = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 40)];
+    zuijinfangwenCity_c.backgroundColor = [UIColor whiteColor];
+    [view addSubview:zuijinfangwenCity_c];
+    
+    NSMutableArray *userCommonlyAdressArray = [GMAPI cacheForKey:USERCOMMONLYUSEDADDRESS];
     CGFloat jianju = 10;//间距
     int sumOneRow = 5;//每行几个
     int btnHeight = 25;//按钮高
     CGFloat theWidth = (DEVICE_WIDTH - 60 - sumOneRow * jianju)*1.0f/sumOneRow;//按钮宽度
+    NSInteger ddddc = (userCommonlyAdressArray.count >5)?5:userCommonlyAdressArray.count;
+    if (userCommonlyAdressArray.count>0) {
+        for (int i = 0; i<ddddc; i++) {
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [btn setTitle:userCommonlyAdressArray[i] forState:UIControlStateNormal];
+            btn.layer.borderColor = [RGBCOLOR(80, 81, 82) CGColor];
+            [btn setTitleColor:RGBCOLOR(80, 81, 82) forState:UIControlStateNormal];
+            btn.layer.borderWidth = 0.5;
+            btn.layer.cornerRadius = 4;
+            btn.titleLabel.font = [UIFont systemFontOfSize:12];
+            btn.layer.masksToBounds = YES;
+            btn.tag = i+10000;
+            
+            [btn setFrame:CGRectMake(30+i%sumOneRow*(jianju +theWidth), 10 +i/sumOneRow*(25+jianju) ,theWidth, btnHeight)];
+            
+            [zuijinfangwenCity_c addSubview:btn];
+            
+            [btn addTarget:self action:@selector(zuijinfangwenBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            
+        }
+    }else{
+        UILabel *ll = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 50, 40)];
+        ll.font = [UIFont systemFontOfSize:13];
+        ll.textColor = [UIColor blackColor];
+        ll.text = @"暂无";
+        [zuijinfangwenCity_c addSubview:ll];
+    }
+    
+    
+    
+    height += zuijinfangwenCity_c.frame.size.height;
+    
+    
+    //热门城市
+    UIView *hotCityView = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 40)];
+    hotCityView.backgroundColor = RGBCOLOR(244, 245, 246);
+    [view addSubview:hotCityView];
+    UILabel *ttl3 = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, DEVICE_WIDTH-20, 40)];
+    ttl3.textColor = [UIColor blackColor];
+    ttl3.font = [UIFont systemFontOfSize:13];
+    ttl3.text = @"热门城市";
+    [hotCityView addSubview:ttl3];
+    height += hotCityView.frame.size.height;
+    
+    //热门城市内容
+    
+    UIView *hotCityView_c = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 40)];
+    hotCityView_c.backgroundColor = [UIColor whiteColor];
+    [view addSubview:hotCityView_c];
+    
+    
+    NSInteger totle = _hotCityArray.count;
+    
+    
+    CGFloat hotCityHight = 0;
     
     for (int i = 0; i<totle; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         [btn setTitle:_hotCityArray[i] forState:UIControlStateNormal];
-        btn.layer.borderColor = [DEFAULT_TEXTCOLOR CGColor];
-        [btn setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+        btn.layer.borderColor = [RGBCOLOR(80, 81, 82) CGColor];
+        [btn setTitleColor:RGBCOLOR(80, 81, 82) forState:UIControlStateNormal];
         btn.layer.borderWidth = 0.5;
         btn.layer.cornerRadius = 4;
         btn.titleLabel.font = [UIFont systemFontOfSize:12];
         btn.layer.masksToBounds = YES;
         btn.tag = i+10000;
         
-        [btn setFrame:CGRectMake(nowLocationLabel_t.frame.origin.x+i%sumOneRow*(jianju +theWidth), CGRectGetMaxY(nowLocationLabel_t.frame)+10 +i/sumOneRow*(25+jianju) ,theWidth, btnHeight)];
-        [view addSubview:btn];
+        [btn setFrame:CGRectMake(30+i%sumOneRow*(jianju +theWidth), 10 +i/sumOneRow*(25+jianju) ,theWidth, btnHeight)];
         
-        height = CGRectGetMaxY(btn.frame)+10;
+        [hotCityView_c addSubview:btn];
+        
+        hotCityHight = CGRectGetMaxY(btn.frame)+10;
         
         [btn addTarget:self action:@selector(hotCityClicked:) forControlEvents:UIControlEventTouchUpInside];
         
     }
     
-    CGRect r = view.frame;
-    r.size.height = height;
-    view.frame = r;
     
-    NSLog(@"-------------------------%f",r.size.height);
+    if (hotCityHight<40) {
+        
+    }else{
+        [hotCityView_c setHeight:hotCityHight];
+    }
+    
+    
+    height += hotCityView_c.frame.size.height;
+    
+    
+    UIView *hotDownLine = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 5)];
+    hotDownLine.backgroundColor = RGBCOLOR(244, 245, 246);
+    [view addSubview:hotDownLine];
+    height += hotDownLine.frame.size.height;
+    
+    
+    [view setHeight:height];
     
     return view;
     
@@ -352,6 +457,21 @@
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
     [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    [self setuserCommonlyUsedCityWithStr:str];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void)zuijinfangwenBtnClicked:(UIButton *)sender{
+    NSString *str = [NSString stringWithFormat:@"%@",sender.titleLabel.text];
+    int aa = [GMAPI cityIdForName:str];
+    NSString *aaa = [NSString stringWithFormat:@"%d",aa];
+    aaa = [aaa substringWithRange:NSMakeRange(0, 2)];
+    aaa = [aaa stringByAppendingString:@"00"];
+    aa = [aaa intValue];
+    NSString *ppp = [GMAPI cityNameForId:aa];
+    [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -460,17 +580,92 @@
         
     }
     
-    self.nowLocationLabel_c.text = theString;
-    self.nowLocationLabel_c.textColor = RGBCOLOR(241, 115, 0);
-    int city_id = [GMAPI cityIdForName:theString];
-    NSLog(@"city_id : %d",city_id);
+    
+    self.nowLocationBtn_cityid = [GMAPI cityIdForName:theString];
+    if ([LTools isEmpty:theString]) {
+        [self.nowLocationBtn_c setTitle:@"定位失败默认城市为北京" forState:UIControlStateNormal];
+        [self.nowLocationBtn_c setWidth:145];
+    }else{
+        [self.nowLocationBtn_c setTitle:theString forState:UIControlStateNormal];
+        [self.nowLocationBtn_c setWidth:85];
+    }
+    
+    
+    self.nowLocationBtn_c.userInteractionEnabled = YES;
+    
+    
+    [self.nowLocationBtn_c addTarget:self action:@selector(nowLocationBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    
     
 }
 
 
+//定位城市选择
+-(void)nowLocationBtnClicked{
+    
+    NSString *str;
+    
+    if (self.nowLocationBtn_cityid == 0) {
+        str = [NSString stringWithFormat:@"%@市",@"北京"];
+    }else{
+        str = self.nowLocationBtn_c.titleLabel.text;
+    }
+    
+    
+    int aa = [GMAPI cityIdForName:str];
+    NSString *aaa = [NSString stringWithFormat:@"%d",aa];
+    aaa = [aaa substringWithRange:NSMakeRange(0, 2)];
+    aaa = [aaa stringByAppendingString:@"00"];
+    aa = [aaa intValue];
+    NSString *ppp = [GMAPI cityNameForId:aa];
+    [self setuserCommonlyUsedCityWithStr:str];
+    [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    [self setuserCommonlyUsedCityWithStr:str];
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
 
 
-
+//设置最近访问城市
+-(void)setuserCommonlyUsedCityWithStr:(NSString*)cityName{
+    
+    
+    NSArray *arr = [GMAPI cacheForKey:USERCOMMONLYUSEDADDRESS];
+    if (!arr) {
+        NSMutableArray *adressArray = [[NSMutableArray alloc]initWithCapacity:5];
+        [adressArray addObject:cityName];
+        [GMAPI cache:(NSArray*)adressArray ForKey:USERCOMMONLYUSEDADDRESS];
+    }else{
+        BOOL isHave = NO;
+        for (NSString*str in arr) {
+            if ([str isEqualToString:cityName]) {
+                isHave = YES;
+                continue;
+            }
+        }
+        
+        NSMutableArray *adressMutabelArray = [NSMutableArray arrayWithArray:arr];
+        
+        if (isHave) {//有
+            
+        }else{//没有
+            if (arr.count<5) {
+                [adressMutabelArray addObject:cityName];
+                
+            }else{
+                [adressMutabelArray removeObjectAtIndex:0];
+                [adressMutabelArray addObject:cityName];
+            }
+            
+            [GMAPI cache:(NSArray*)adressMutabelArray ForKey:USERCOMMONLYUSEDADDRESS];
+            
+            
+        }
+        
+    }
+}
 
 
 

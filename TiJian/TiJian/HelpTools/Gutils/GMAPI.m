@@ -290,12 +290,20 @@
     NSString *str;
     NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
     str = [dic stringValueForKey:@"province"];
+    
+    if ([LTools isEmpty:str]) {
+        str = @"1000";//北京
+    }
+    
     return str;
 }
 +(NSString *)getCurrentCityId{
     NSString *str;
     NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
     str = [dic stringValueForKey:@"city"];
+    if ([LTools isEmpty:str]) {
+        str = @"1005";//海淀
+    }
     return str;
 }
 
@@ -306,6 +314,45 @@
     NSString *provinceId = [NSString stringWithFormat:@"%d00",cityId/100];
     return provinceId;
 }
+
+
+
+//判断是否为整形：
++ (BOOL)isPureInt:(NSString*)string{
+    
+    NSScanner* scan = [NSScanner scannerWithString:string];
+    
+    int val;
+    
+    return[scan scanInt:&val] && [scan isAtEnd];
+    
+}
+
+
+//判断是否为浮点形：
++ (BOOL)isPureFloat:(NSString*)string{
+    
+    NSScanner* scan = [NSScanner scannerWithString:string];
+    
+    float val;
+    
+    return[scan scanFloat:&val] && [scan isAtEnd];
+    
+}
+
+//是否为数字
++(BOOL)isPureNum:(NSString*)string{
+    
+    BOOL bb = NO;
+    
+    if ([self isPureInt:string] || [self isPureFloat:string]) {
+        bb = YES;
+    }
+    
+    return bb;
+}
+
+
 
 
 @end
