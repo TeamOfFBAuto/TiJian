@@ -225,6 +225,7 @@
 //创建navigation左边显示label
 -(void)creatNavcLeftLabel{
     self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 80, 40)];
+    self.leftLabel.text = @"正在定位...";
     self.leftLabel.textColor = DEFAULT_TEXTCOLOR;
     self.leftLabel.font = [UIFont systemFontOfSize:15];
     [self.leftLabel addTaget:self action:@selector(pushToLocationChoose) tag:0];
