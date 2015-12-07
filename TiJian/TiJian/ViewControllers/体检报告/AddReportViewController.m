@@ -162,14 +162,14 @@
     if (_isMyself) {
         
         dic_upload = @{
-                       @"authcode":[LTools cacheForKey:USER_AUTHOD],//用户标示
+                       @"authcode":[UserInfo getAuthkey],//用户标示
                        @"myself":@"1",
                        @"checkup_time":checkup_time
                        };
     }else
     {
         dic_upload = @{
-                       @"authcode":[LTools cacheForKey:USER_AUTHOD],//用户标示
+                       @"authcode":[UserInfo getAuthkey],//用户标示
                        @"family_uid":family_uid,//评论星级
                        @"checkup_time":checkup_time
                        };

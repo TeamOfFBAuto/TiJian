@@ -87,7 +87,7 @@
 //    id_card 身份证号
 //    mobile 手机
     
-    NSString *authKey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authKey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authKey};
     if (_updateType == UPDATEINFOTYPE_REALNAME) {
         

@@ -102,7 +102,7 @@
     //退出融云登录
 //    [[RCIM sharedRCIM] disconnect];
 //    [[RCIM sharedRCIM] logout];
-    [LTools cache:nil ForKey:USER_RONGCLOUD_TOKEN];
+    [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
     
     [self cleanUserInfo];
 
@@ -117,15 +117,9 @@
      *  归档的方式保存userInfo
      */
     [UserInfo cleanUserInfo];
-    
-    [LTools cache:nil ForKey:USER_NAME];
-    [LTools cache:nil ForKey:USER_UID];
-    [LTools cache:nil ForKey:USER_AUTHOD];
-    [LTools cache:nil ForKey:USER_HEAD_IMAGEURL];
-    
+
     //保存登录状态 yes
-    
-    [LTools cacheBool:NO ForKey:LOGIN_SERVER_STATE];
+    [LTools setBool:NO forKey:LOGIN_SERVER_STATE];
     
     [LTools showMBProgressWithText:@"退出成功" addToView:self.view];
     

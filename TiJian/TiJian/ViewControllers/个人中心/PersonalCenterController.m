@@ -105,7 +105,7 @@
     _headImageView = logo;
     
     //设置头像
-    BOOL updateState = [LTools cacheBoolForKey:USER_UPDATEHEADIMAGE_STATE];
+    BOOL updateState = [LTools boolForKey:USER_UPDATEHEADIMAGE_STATE];
     if (!updateState) { //不需要上传,则正常显示url
         [logo sd_setImageWithURL:[NSURL URLWithString:_userInfo.avatar] placeholderImage:DEFAULT_HEADIMAGE];
     }else
@@ -308,7 +308,7 @@
     image = [LTools scaleToSizeWithImage:image size:CGSizeMake(200, 200)];
     //TODO：将图片发给服务器
     
-    [LTools cacheBool:YES ForKey:USER_UPDATEHEADIMAGE_STATE];//需要更新头像
+    [LTools setBool:YES forKey:USER_UPDATEHEADIMAGE_STATE];//需要更新头像
     
     //存储更新头像image
     

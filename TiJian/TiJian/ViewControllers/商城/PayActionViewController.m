@@ -103,7 +103,7 @@
 
 - (void)networkForPayValidate
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"order_id":self.orderId};
     __weak typeof(self)weakSelf = self;
@@ -165,8 +165,7 @@
 - (void)getOrderSignWithType:(NSString *)signType
 {
     
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
-
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{
                              @"authcode":authkey,
                              @"order_id":self.orderId,

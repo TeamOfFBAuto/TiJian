@@ -22,21 +22,6 @@ typedef void(^ urlRequestBlock)(NSDictionary *result,NSError *erro);
 typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent);//版本更新
 
 @interface LTools : NSObject<NSURLConnectionDelegate,NSURLConnectionDataDelegate>
-{
-//    urlRequestBlock successBlock;
-//    urlRequestBlock failBlock;
-//    versionBlock aVersionBlock;
-//    
-    NSString *requestUrl;
-    NSData *requestData;
-    BOOL isPostRequest;//是否是post请求
-//
-//    NSURLConnection *connection;
-    
-    NSString *_appid;
-    
-    NSString *_downUrl;//更新地址
-}
 
 + (id)shareInstance;
 
@@ -73,7 +58,7 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 /**
  *  获取是否有最新版本
  */
-+ (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version;//是否有新版本、新版本更新下地址
+- (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version;//是否有新版本、新版本更新下地址
 
 #pragma mark - NSUserDefault缓存
 
@@ -112,7 +97,7 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 #pragma - mark NSUserDefaults本地缓存
 
 /**
- *  归档的方式
+ *  归档的方式 归档的方式 model必须遵循 NSSecureCoding
  *
  *  @param aModel
  *  @param modelKey
@@ -121,16 +106,11 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (id)cacheModelForKey:(NSString *)modelKey;
 
-//存
-+ (void)cache:(id)dataInfo ForKey:(NSString *)key;
++ (void)setObject:(id)object forKey:(NSString *)key;//存
++ (id)objectForKey:(NSString *)key;//取
 
-//取
-+ (id)cacheForKey:(NSString *)key;
-
-+ (void)cacheBool:(BOOL)boo ForKey:(NSString *)key;
-
-+ (BOOL)cacheBoolForKey:(NSString *)key;
-
++ (void)setBool:(BOOL)boo forKey:(NSString *)key;
++ (BOOL)boolForKey:(NSString *)key;
 
 #pragma mark - 常用视图快速创建
 

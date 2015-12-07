@@ -12,6 +12,17 @@
 #import <RongIMKit/RongIMKit.h>
 #import "Reachability.h"
 
+@interface LTools ()
+{
+    NSString *requestUrl;
+    NSData *requestData;
+    BOOL isPostRequest;//是否是post请求
+    NSString *_appid;
+    NSString *_downUrl;//更新地址
+}
+
+@end
+
 @implementation LTools
 {
     NSMutableData *_data;
@@ -91,176 +102,6 @@
     return YES;
 }
 
-//#pragma - mark 网络数据请求
-//
-//- (id)initWithUrl:(NSString *)url isPost:(BOOL)isPost postData:(NSData *)postData//post
-//{
-//    self = [super init];
-//    if (self) {
-//        requestUrl = url;
-//        
-//        if (isPost) {
-//            requestData = postData;
-//            isPostRequest = isPost;
-//        }
-//    }
-//    return self;
-//}
-//
-//- (void)requestCompletion:(void(^)(NSDictionary *result,NSError *erro))completionBlock failBlock:(void(^)(NSDictionary *failDic,NSError *erro))failedBlock{
-//    successBlock = completionBlock;
-//    failBlock = failedBlock;
-//    
-//    NSString *newStr = [requestUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    
-//    NSLog(@"requestUrl %@",newStr);
-//    NSURL *urlS = [NSURL URLWithString:newStr];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlS cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
-//    
-//    if (isPostRequest) {
-//        
-//        [request setHTTPMethod:@"POST"];
-//        
-//        [request setHTTPBody:requestData];
-//    }
-//    
-//    connection = [NSURLConnection connectionWithRequest:request delegate:self];
-//    
-//    [connection start];
-//}
-//
-//- (void)cancelRequest
-//{
-//    NSLog(@"取消请求");
-//    [connection cancel];
-//}
-//
-//
-//#pragma mark - NSURLConnectionDataDelegate
-//
-//- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-//{
-//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-//    
-//    _data = [NSMutableData data];
-//    
-//    NSLog(@"response :%@",response);
-//}
-//
-//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-//{
-//    [_data appendData:data];
-//}
-//
-//
-//- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-//{
-//    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//    
-//    
-//    //    NSString *str = [[NSString alloc]initWithData:_data encoding:NSUTF8StringEncoding];
-//    
-//    //    NSLog(@"response string %@",str);
-//    
-//    if (_data.length > 0) {
-//        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:_data options:0 error:nil];
-//        
-//        if ([dic isKindOfClass:[NSDictionary class]]) {
-//            
-//            int erroCode = [[dic objectForKey:RESULT_CODE]intValue];
-//            NSString *erroInfo = [dic objectForKey:RESULT_INFO];
-//            
-//            if (erroCode != 0) { //0代表无错误,  && erroCode != 1 1代表无结果
-//                
-//                
-//                //大于2000的可以正常提示错误,小于2000的为内部错误 参数错误等
-//                if (erroCode > 2000) {
-//                    
-//                    NSDictionary *failDic = @{RESULT_INFO:erroInfo,RESULT_CODE:[NSString stringWithFormat:@"%d",erroCode]};
-//                    failBlock(failDic,0);
-//                    
-//                    [self showErroInfo:erroInfo];
-//
-//                    
-//                }else
-//                {
-//                    NSLog(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
-//                    
-//                    NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:[NSString stringWithFormat:@"%d",erroCode]};
-//                    failBlock(failDic,0);
-//                }
-//                
-//                
-//            }else
-//            {
-//                successBlock(dic,0);//传递的已经是没有错误的结果
-//            }
-//        }else
-//        {
-//            NSLog(@"-----------解析数据为空");
-//            
-//            NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:@"999"};
-//            failBlock(failDic,0);
-//            
-////            [self showErroInfo:@"获取数据异常"];
-//        }
-//        
-//    }else
-//    {
-//        
-//        NSLog(@"-----------请求数据为空");
-//        
-//        NSDictionary *failDic = @{RESULT_INFO:@"获取数据异常",RESULT_CODE:@"999"};
-//        
-//        failBlock(failDic,0);
-////        [self showErroInfo:@"获取数据异常"];
-//
-//    }
-//    
-//    
-//}
-//
-//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-//{
-//    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//    
-//    NSLog(@"data 为空 connectionError %@",error);
-//    
-//    NSString *errInfo = @"网络有问题,请检查网络";
-//    switch (error.code) {
-//        case NSURLErrorNotConnectedToInternet:
-//            
-//            errInfo = @"无网络连接";
-//            break;
-//        case NSURLErrorTimedOut:
-//            
-//            errInfo = @"网络连接超时";
-//            break;
-//        default:
-//            break;
-//    }
-//    
-//    //- 11 代表网络问题
-//    NSDictionary *failDic = @{RESULT_INFO: errInfo,RESULT_CODE:NSStringFromInt(-11)};
-//    failBlock(failDic,error);
-//    
-//    [self showErroInfo:errInfo];
-//    
-//}
-//
-///**
-// *  显示错误提示
-// *
-// *  @param errInfo
-// */
-//- (void)showErroInfo:(NSString *)errInfo
-//{
-//    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//    
-//    [LTools showMBProgressWithText:errInfo addToView:[UIApplication sharedApplication].keyWindow];
-//}
-
-
 #pragma mark - 版本更新信息
 
 - (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version//是否有新版本、新版本更新下地址
@@ -268,7 +109,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
     //test FBLife 605673005 fbauto 904576362
-    NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@",appid];
+    NSString *url = [NSString stringWithFormat:@"https://itunes.apple.com/lookup?id=%@",appid];
 
     NSString *newStr = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
@@ -354,78 +195,6 @@
     }
 }
 
-/**
- *  获取是否有最新版本
- */
-+ (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version//是否有新版本、新版本更新下地址
-{
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
-    //test FBLife 605673005
-    NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@",appid];
-    
-    NSString *newStr = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    NSLog(@"requestUrl %@",newStr);
-    NSURL *urlS = [NSURL URLWithString:newStr];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlS cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        
-        if (data.length > 0) {
-            
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:Nil];
-            
-            NSArray *results = [dic objectForKey:@"results"];
-            
-            if (results.count == 0) {
-                version(NO,@"no",@"没有更新");
-                return ;
-            }
-            
-            //appStore 版本
-            NSString *newVersion = [[[dic objectForKey:@"results"] objectAtIndex:0]objectForKey:@"version"];
-            NSString *updateContent = [[[dic objectForKey:@"results"] objectAtIndex:0]objectForKey:@"releaseNotes"];
-            //本地版本
-            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-            NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-            NSString *downUrl = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/us/app/id%@?mt=8",appid];
-            BOOL isNew = NO;
-            if (newVersion && ([newVersion compare:currentVersion] == 1)) {
-                isNew = YES;
-            }
-            version(isNew,downUrl,updateContent);
-            
-        }else
-        {
-            NSLog(@"data 为空 connectionError %@",connectionError);
-            
-            NSString *errInfo = @"网络有问题,请检查网络";
-            switch (connectionError.code) {
-                case NSURLErrorNotConnectedToInternet:
-                    
-                    errInfo = @"无网络连接";
-                    break;
-                case NSURLErrorTimedOut:
-                    
-                    errInfo = @"网络连接超时";
-                    break;
-                default:
-                    break;
-            }
-            
-            NSDictionary *failDic = @{RESULT_INFO: errInfo};
-            
-            NSLog(@"version erro %@",failDic);
-            
-        }
-        
-    }];
-
-}
-
 #pragma mark - NSUserDefault缓存
 
 #pragma mark 缓存融云用户数据
@@ -462,24 +231,24 @@
 + (void)cacheRongCloudUserName:(NSString *)userName forUserId:(NSString *)userId
 {
     NSString *key = [NSString stringWithFormat:@"userName_%@",userId];
-    [LTools cache:userName ForKey:key];
+    [LTools setObject:userName forKey:key];
 }
 + (NSString *)rongCloudUserNameWithUid:(NSString *)userId
 {
     NSString *key = [NSString stringWithFormat:@"userName_%@",userId];
-    return [LTools cacheForKey:key];
+    return [LTools objectForKey:key];
 }
 
 + (void)cacheRongCloudUserIcon:(NSString *)iconUrl forUserId:(NSString *)userId
 {
     NSString *key = [NSString stringWithFormat:@"userIcon_%@",userId];
-    [LTools cache:iconUrl ForKey:key];
+    [LTools setObject:iconUrl forKey:key];
 }
 
 + (NSString *)rongCloudUserIconWithUid:(NSString *)userId
 {
     NSString *key = [NSString stringWithFormat:@"userIcon_%@",userId];
-    return [LTools cacheForKey:key];
+    return [LTools objectForKey:key];
 }
 
 /**
@@ -493,7 +262,7 @@
     
     NSString *nowTime = [LTools timechangeToDateline];
     
-    [LTools cache:nowTime ForKey:key];
+    [LTools setObject:nowTime forKey:key];
 }
 
 /**
@@ -524,7 +293,7 @@
 #pragma - mark NSUserDefaults本地缓存
 
 /**
- *  归档的方式
+ *  归档的方式 model必须遵循 NSSecureCoding
  *
  *  @param aModel
  *  @param modelKey
@@ -545,14 +314,13 @@
 }
 
 //存
-+ (void)cache:(id)dataInfo ForKey:(NSString *)key
++ (void)setObject:(id)object forKey:(NSString *)key;
 {
-    
     @try {
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:nil forKey:key];
-        [defaults setObject:dataInfo forKey:key];
+        [defaults setObject:object forKey:key];
         [defaults synchronize];
         
     }
@@ -568,24 +336,19 @@
 }
 
 //取
-+ (id)cacheForKey:(NSString *)key
++ (id)objectForKey:(NSString *)key
 {
-    //test
-//    if ([key isEqualToString:USER_AUTHOD]) {
-//        
-//        return @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
-//    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:key];
 }
 
-+ (void)cacheBool:(BOOL)boo ForKey:(NSString *)key
++ (void)setBool:(BOOL)boo forKey:(NSString *)key;
 {
     [[NSUserDefaults standardUserDefaults]setBool:boo forKey:key];
     [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
-+ (BOOL)cacheBoolForKey:(NSString *)key
++ (BOOL)boolForKey:(NSString *)key
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults boolForKey:key];
@@ -1190,7 +953,7 @@
 
 + (BOOL)isLogin
 {
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authey = [LTools objectForKey:USER_AUTHOD];
     
     if (authey.length > 0) {
         

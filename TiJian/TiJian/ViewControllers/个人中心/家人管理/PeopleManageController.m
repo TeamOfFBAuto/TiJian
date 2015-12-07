@@ -92,7 +92,7 @@
 
 - (void)getFamily
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
 //    __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:GET_FAMILY parameters:@{@"authcode":authkey} constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -111,8 +111,8 @@
 {
     UserInfo *aModel = _table.dataArray[index];
 
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
-    NSDictionary *params = @{@"authcode":authey,
+    NSString *authkey = [UserInfo getAuthkey];
+    NSDictionary *params = @{@"authcode":authkey,
                              @"family_uids":aModel.family_uid};
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -179,7 +179,7 @@
     //myself 是否包括本人 1是 0不是（若是个人买单，则要传）
     NSString *myself = _isMyselfSelected ? @"1" : @"0";
     
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
 
     NSDictionary *params = @{@"authcode":authkey,
                              @"order_id":_order_id,

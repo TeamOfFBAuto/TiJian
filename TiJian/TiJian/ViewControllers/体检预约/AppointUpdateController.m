@@ -80,7 +80,7 @@
 - (void)netWorkForUpdateAppoint
 {
 //    myself 1 表示本人
-    NSString *authcode = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authcode = [UserInfo getAuthkey];
     NSDictionary *params;
     
     if (_isMyself) {

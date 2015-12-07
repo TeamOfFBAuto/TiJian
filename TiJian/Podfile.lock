@@ -36,6 +36,7 @@ PODS:
   - SDWebImage/Core (3.7.3)
   - SSLunarDate (0.0.1)
   - UMeng (2.2.1)
+  - UMengAnalytics-NO-IDFA (3.6.7)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.3.1)
@@ -49,6 +50,7 @@ DEPENDENCIES:
   - SDWebImage (~> 3.7.1)
   - SSLunarDate (~> 0.0.1)
   - UMeng (~> 2.2.1)
+  - UMengAnalytics-NO-IDFA
 
 SPEC CHECKSUMS:
   AFNetworking: 05b9f6e3aa5ac45bc383b4bb108ef338080a26c7
@@ -62,5 +64,6 @@ SPEC CHECKSUMS:
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SSLunarDate: d5d7d581f7e7e157c8d704a5f053b4ebcf760bba
   UMeng: a4fe3231efeb223015d9649e92538dd16a92685f
+  UMengAnalytics-NO-IDFA: 6d02561a00579b2e37718f204eb81347df5d7b8b
 
 COCOAPODS: 0.39.0

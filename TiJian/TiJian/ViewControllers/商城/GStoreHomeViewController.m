@@ -545,7 +545,7 @@
 - (void)pushToPhysicaResult
 {
     //先判断是否个性化定制过
-    BOOL isOver = [LTools cacheBoolForKey:USER_CUSTOMIZATON_RESULT];
+    BOOL isOver = [LTools boolForKey:USER_CUSTOMIZATON_RESULT];
     if (isOver) {
         //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];

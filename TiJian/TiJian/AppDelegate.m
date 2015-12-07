@@ -12,7 +12,8 @@
 #import <AlipaySDK/AlipaySDK.h>//支付宝
 #import "WXApi.h"//微信
 #import "SimpleMessage.h"
-//#import "UMSocial.h"
+#import "UMSocial.h"
+#import "MobClick.h"
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
@@ -57,7 +58,12 @@
     
     //初始化融云SDK。
     [self startRongCloud];
-
+    
+    //友盟统计
+    [MobClick startWithAppkey:UmengAppkey];
+    
+    //检查版本
+    [self checkVersion];
     
     return YES;
 }
@@ -178,6 +184,15 @@
     }
 }
 
+#pragma mark - 版本检查
+
+- (void)checkVersion
+{
+    //版本更新
+    [[LTools shareInstance]versionForAppid:AppStore_Appid Block:^(BOOL isNewVersion, NSString *updateUrl, NSString *updateContent) {
+                
+    }];
+}
 #pragma mark - 上传更新头像
 
 /**
@@ -188,7 +203,7 @@
 - (void)uploadHeadImage
 {
     //不需要更新,return
-    if (![LTools cacheBoolForKey:USER_UPDATEHEADIMAGE_STATE]) {
+    if (![LTools boolForKey:USER_UPDATEHEADIMAGE_STATE]) {
         
         NSLog(@"不需要更新头像");
         
@@ -198,17 +213,17 @@
         NSLog(@"需要更新头像");
     }
     
-    NSString *authcode = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     
     //没有authcode return
-    if (authcode.length == 0) {
+    if (authkey.length == 0) {
         
         return;
     }
     
     UIImage *image = [[SDImageCache sharedImageCache]imageFromDiskCacheForKey:USER_NEWHEADIMAGE];
     
-    NSDictionary *params = @{@"authcode":authcode};
+    NSDictionary *params = @{@"authcode":authkey};
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_UPLOAD_HEADIMAGE parameters:params constructingBodyBlock:^(id<AFMultipartFormData> formData) {
         
         if (image != nil) {
@@ -220,7 +235,7 @@
         
         NSLog(@"completion result %@",result[Erro_Info]);
         
-        [LTools cacheBool:NO ForKey:USER_UPDATEHEADIMAGE_STATE];//不需要更新头像
+        [LTools setBool:NO forKey:USER_UPDATEHEADIMAGE_STATE];//不需要更新头像
         
         [[SDImageCache sharedImageCache] removeImageForKey:USER_NEWHEADIMAGE fromDisk:YES];
         
@@ -453,7 +468,7 @@
     //token不对
     else if (status == ConnectionStatus_TOKEN_INCORRECT) {
         NSLog(@"Token已过期，请重新登录");
-        [LTools cache:nil ForKey:USER_RONGCLOUD_TOKEN];
+        [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
         [self startLoginRongTimer];
     }
 }
@@ -462,7 +477,13 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
+    if (alertView.tag == kAlertViewTag_otherClient) {
+        
+        if (buttonIndex == 1) {
+            
+            [self startLoginRongTimer];
+        }
+    }
 }
 
 
@@ -596,7 +617,7 @@
     
     _getRongTokenTime --;
     
-    NSString *userToken = [LTools cacheForKey:USER_RONGCLOUD_TOKEN];
+    NSString *userToken = [UserInfo getAuthkey];
     
     if (userToken.length) {
         
@@ -626,7 +647,7 @@
         
         NSString *token = result[@"token"];
         
-        [LTools cache:token ForKey:USER_RONGCLOUD_TOKEN];
+        [LTools setObject:token forKey:USER_RONGCLOUD_TOKEN];
         
         [weakSelf loginRongCloudWithToken:token];
         
@@ -656,7 +677,7 @@
             
             NSLog(@"token不对");
             
-            [LTools cache:nil ForKey:USER_RONGCLOUD_TOKEN];
+            [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
         }];
     }else
     {

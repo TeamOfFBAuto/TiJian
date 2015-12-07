@@ -148,7 +148,7 @@
     
     YJYRequstManager *request = [YJYRequstManager shareInstance];
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"address_id":model.address_id
                           };
 

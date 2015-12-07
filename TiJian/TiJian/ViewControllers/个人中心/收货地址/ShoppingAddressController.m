@@ -105,7 +105,7 @@
     __weak typeof(self)weakSelf = self;
     __weak AddressModel *aModel = [_table.dataArray objectAtIndex:sender.tag - kPadding_Default];
     
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"address_id":aModel.address_id};
     [MBProgressHUD  showHUDAddedTo:self.view animated:YES];
@@ -145,7 +145,7 @@
 
     __weak typeof(_table)weakTable = _table;
     __weak typeof(self)weakSelf = self;
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"address_id":aModel.address_id};
     
@@ -167,9 +167,9 @@
 {
     __weak typeof(_table)weakTable = _table;
     
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
 
-    NSDictionary *params = @{@"authcode":authey,
+    NSDictionary *params = @{@"authcode":authkey,
                              @"page":[NSNumber numberWithInt:_table.pageNum],
                              @"per_page":[NSNumber numberWithInt:G_PER_PAGE]};
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_ADDRESS_LIST parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {

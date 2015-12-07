@@ -72,7 +72,7 @@
     }
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"order_id":self.orderId,
                           @"refund_reason":_refund_reason_tf.text
                           };

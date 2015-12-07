@@ -71,7 +71,7 @@
     [self resetState];
         
     //post:参数authcode、 姓名、 称谓、 身份证号、gender 性别（1=》男 2=》女）、age 年龄、mobile 手机号
-    NSString *authcode = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authcode = [UserInfo getAuthkey];
     NSString *family_user_name = [self textFieldWithTag:100].text;
     NSString *appellation = [self textFieldWithTag:101].text;
     NSString *id_card = [self textFieldWithTag:102].text;

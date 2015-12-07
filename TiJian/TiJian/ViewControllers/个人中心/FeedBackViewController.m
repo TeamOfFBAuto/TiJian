@@ -64,7 +64,7 @@
         return;
     }
     
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":[LTools objectForKey:USER_AUTHOD],
                              @"suggest":content};;
     NSString *api = ADD_SUGGEST;
     

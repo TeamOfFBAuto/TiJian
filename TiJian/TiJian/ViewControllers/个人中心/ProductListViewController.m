@@ -62,7 +62,7 @@
 
 - (void)netWorkForList
 {
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
                              @"page":NSStringFromInt(_table.pageNum),
                              @"per_page":@"20"};;
     NSString *api = PRODUCT_COLLECT_LIST;

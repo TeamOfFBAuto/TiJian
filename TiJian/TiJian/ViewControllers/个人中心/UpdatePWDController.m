@@ -208,7 +208,7 @@
        confirmPassword:(NSString *)passwordConfirm
                 oldPwd:(NSString *)oldPwd
 {
-    NSString *authcode = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authcode = [UserInfo getAuthkey];
     if (!authcode || authcode.length == 0) {
         
         return;
@@ -216,7 +216,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":authcode,
                              @"new_password":password,
                              @"confirm_password":passwordConfirm,
                              @"old_password":oldPwd};
@@ -267,7 +267,7 @@
     
     //保存登录状态 yes
     
-    [LTools cacheBool:NO ForKey:LOGIN_SERVER_STATE];
+    [LTools setBool:NO forKey:LOGIN_SERVER_STATE];
     
     /**
      *  退出登录通知

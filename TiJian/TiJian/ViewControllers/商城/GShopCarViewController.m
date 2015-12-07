@@ -206,7 +206,7 @@
         }
         
         NSDictionary *dic = @{
-                              @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                              @"authcode":[UserInfo getAuthkey],
                               @"cart_pro_id":pids_str
                               };
         
@@ -282,7 +282,7 @@
 -(void)prepareNetData{
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"page":[NSString stringWithFormat:@"%d",_rTab.pageNum],
                           @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };

@@ -80,7 +80,7 @@
     }
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"page":[NSString stringWithFormat:@"%d",self.tab.pageNum],
                           @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                           };

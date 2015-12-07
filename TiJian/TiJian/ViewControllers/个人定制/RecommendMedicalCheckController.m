@@ -112,7 +112,7 @@
  */
 - (void)getCustomizationResult
 {
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authey = [UserInfo getAuthkey];
     authey = authey.length ? authey : @"";
     NSDictionary *params;
     NSString *api;
@@ -144,7 +144,7 @@
 
 - (void)parseDataWithResult:(NSDictionary *)result
 {
-    [LTools cacheBool:YES ForKey:USER_CUSTOMIZATON_RESULT];//记录已体检过
+    [LTools setBool:YES forKey:USER_CUSTOMIZATON_RESULT];//记录已体检过
     NSDictionary *data = result[@"data"];
     NSArray *setmeal_product_list = data[@"setmeal_product_list"];
     _dataArray = [ProductModel modelsFromArray:setmeal_product_list];

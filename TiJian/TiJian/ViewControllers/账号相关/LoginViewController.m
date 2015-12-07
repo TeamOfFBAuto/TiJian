@@ -81,7 +81,7 @@
 
 + (BOOL)isLogin
 {
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authey = [UserInfo getAuthkey];
     
     if (authey.length > 0) {
         
@@ -92,7 +92,7 @@
 
 + (BOOL)isLogin:(UIViewController *)viewController
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     
     if (!authkey || authkey.length == 0) {
         
@@ -111,7 +111,7 @@
 + (BOOL)isLogin:(UIViewController *)viewController
      loginBlock:(LoginBlock)aBlock
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
 
     if (!authkey || authkey.length == 0) {
 
@@ -132,7 +132,7 @@
 + (void)loginToDoWithViewController:(UIViewController *)viewController
      loginBlock:(LoginBlock)aBlock
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     
     if (!authkey || authkey.length == 0) {
         
@@ -354,7 +354,7 @@
     
     __weak typeof(self)weakSelf = self;
     
-    NSString *token = [LTools cacheForKey:USER_DEVICE_TOKEN];
+    NSString *token = [UserInfo getAuthkey];
     
     if (token.length == 0) {
         token = @"noToken";
@@ -412,14 +412,9 @@
          */
         [user cacheUserInfo];
         
-        [LTools cache:user.user_name ForKey:USER_NAME];
-        [LTools cache:user.uid ForKey:USER_UID];
-        [LTools cache:user.authcode ForKey:USER_AUTHOD];
-        [LTools cache:user.avatar ForKey:USER_HEAD_IMAGEURL];
-        
         //保存登录状态 yes
         
-        [LTools cacheBool:YES ForKey:LOGIN_SERVER_STATE];
+        [LTools setBool:YES forKey:LOGIN_SERVER_STATE];
         
         [LTools showMBProgressWithText:result[RESULT_INFO] addToView:self.view];
         

@@ -125,6 +125,7 @@
         _webView.backgroundColor = [UIColor clearColor];
         _webView.scrollView.backgroundColor = [UIColor clearColor];
         [_webView setOpaque:NO];
+        _webView.scrollView.scrollEnabled = NO;
         
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:report.url]];
         [_webView loadRequest:request progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -148,7 +149,7 @@
         [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
         return;
     }
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
                              @"report_id":self.reportId};;
     NSString *api = REPORT_DETAIL;
     
@@ -178,7 +179,7 @@
         [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
         return;
     }
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
                              @"report_id":self.reportId};;
     NSString *api = REPORT_DEL;
     

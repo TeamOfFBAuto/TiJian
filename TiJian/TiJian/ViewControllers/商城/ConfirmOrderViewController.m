@@ -391,7 +391,7 @@
     
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          @"authcode":[UserInfo getAuthkey]
                           };
     
     if (!_request) {
@@ -453,7 +453,7 @@
     
     NSString *url = ORDER_GETYOUHUIQUANLIST;
     NSDictionary *dic = @{
-            @"authcode":[LTools cacheForKey:USER_AUTHOD],
+            @"authcode":[UserInfo getAuthkey],
             @"coupon":coupon
             };
     
@@ -486,7 +486,7 @@
     
     NSString *url = ORDER_GETDAIJIQUANLIST;
     NSDictionary *parm = @{
-            @"authcode":[LTools cacheForKey:USER_AUTHOD],
+            @"authcode":[UserInfo getAuthkey],
             @"brand_ids":brand_ids
             };
     
@@ -1057,7 +1057,7 @@
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
     
-    [dic setValue:[LTools cacheForKey:USER_AUTHOD] forKey:@"authcode"];//authcode
+    [dic setValue:[UserInfo getAuthkey] forKey:@"authcode"];//authcode
     [dic setValue:product_ids_str forKey:@"product_ids"];//产品id
     [dic setValue:product_nums_str forKey:@"product_nums"];//产品数量
     [dic setValue:_theAddressModel.address_id forKey:@"address_id"];//地址

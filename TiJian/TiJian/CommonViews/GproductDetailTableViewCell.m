@@ -382,7 +382,7 @@
     YJYRequstManager *rr = [YJYRequstManager shareInstance];
     NSDictionary *dic = @{
                           @"coupon_id":aModel.coupon_id,
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          @"authcode":[LTools objectForKey:USER_AUTHOD]
                           };
     
     [rr requestWithMethod:YJYRequstMethodGet api:USER_GETCOUPON parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {

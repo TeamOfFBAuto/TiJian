@@ -196,7 +196,7 @@
     if ([LoginViewController isLogin]) {
         parameters = @{
                        @"product_id":self.productId,
-                       @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                       @"authcode":[UserInfo getAuthkey]
                        };
     }else{
         parameters = @{
@@ -279,7 +279,7 @@
 
 -(void)getShopcarNumWithLoginSuccess{
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          @"authcode":[UserInfo getAuthkey]
                           };
     _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -299,7 +299,7 @@
 -(void)updateShopCarNum{
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          @"authcode":[UserInfo getAuthkey]
                           };
     _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -353,7 +353,7 @@
 -(void)addProductToShopCar{
 
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"product_id":self.productId,
                           @"product_num":@"1"
                           };
@@ -633,15 +633,11 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    
-    
     NSDictionary *dic = @{
                           @"product_id":self.theProductModel.product_id,
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          @"authcode":[UserInfo getAuthkey]
                           };
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
     
     NSString *api;
     if (type == 1) {

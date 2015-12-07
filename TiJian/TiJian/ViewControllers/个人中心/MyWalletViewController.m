@@ -59,7 +59,7 @@
     
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                          @"authcode":[UserInfo getAuthkey]
                           };
     
     

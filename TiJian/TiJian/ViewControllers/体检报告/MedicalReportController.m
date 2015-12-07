@@ -92,7 +92,7 @@
 
         return;
     }
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
                                  @"page":NSStringFromInt(_table.pageNum),
                              @"per_page":NSStringFromInt(G_PER_PAGE)};;
     NSString *api = REPORT_LIST;

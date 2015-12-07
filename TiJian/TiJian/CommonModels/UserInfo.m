@@ -136,6 +136,21 @@
     return [NSKeyedUnarchiver unarchiveObjectWithData:data];
 }
 
+
+#pragma mark - 获取用户信息
+
++ (NSString *)getAuthkey
+{
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    NSString *value = userInfo.authcode;
+    if (value) {
+        return value;
+    }
+    return @"";
+}
+
+#pragma mark - 用户信息更新
+
 /**
  *  更新头像
  *

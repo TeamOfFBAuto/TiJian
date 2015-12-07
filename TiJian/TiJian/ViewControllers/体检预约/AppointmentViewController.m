@@ -216,7 +216,7 @@
     NSDictionary *params;
     NSString *api;
     
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     
     //待预约
     if (table == [self tableViewWithIndex:0]) {
@@ -363,7 +363,7 @@
 - (void)clickToCustomization
 {
     //先判断是否个性化定制过
-    BOOL isOver = [LTools cacheBoolForKey:USER_CUSTOMIZATON_RESULT];
+    BOOL isOver = [LTools boolForKey:USER_CUSTOMIZATON_RESULT];
     if (isOver) {
         //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];

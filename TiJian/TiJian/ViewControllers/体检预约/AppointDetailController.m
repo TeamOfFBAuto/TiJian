@@ -213,7 +213,7 @@
 
 - (void)netWorkForList
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"appoint_id":self.appoint_id};
     NSString *api = GET_APPOINT_DETAIL;
@@ -239,7 +239,7 @@
  */
 - (void)netWorkForCancelAppoint
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"appoint_id":self.appoint_id};
     NSString *api = CANCEL_APPOINT;

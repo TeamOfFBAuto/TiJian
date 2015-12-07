@@ -84,14 +84,6 @@
 
 /**
  *  归档的方式存model对象 重写了编码解码方法
- *
- *  @param aModel
- *  @param modelKey
- */
-//- (void)cacheForKey:(NSString *)modelKey;
-
-/**
- *  归档方式存储用户信息
  */
 - (void)cacheUserInfo;
 
@@ -106,6 +98,13 @@
  *  清除本地存储的用户信息
  */
 + (void)cleanUserInfo;
+
+
+#pragma mark - 用户信息获取
+
++ (NSString *)getAuthkey;
+
+#pragma mark - 用户信息更新
 
 /**
  *  更新头像

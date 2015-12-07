@@ -110,8 +110,10 @@
 
 //***************************** 三方平台appkey **********************************
 
+#define AppStore_Appid @"951259287"//appStore appid 951259287
+
 //友盟
-#define UmengAppkey @"558d25c867e58e9366002e68"//正式 umeng后台：wjxc2015@qq.com wjxc2015
+#define UmengAppkey @"562455d167e58ede5000b699"//正式 umeng后 mobile@jiruijia.com
 
 //sina
 #define SinaAppKey @"2480371284"

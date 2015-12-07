@@ -187,7 +187,7 @@
  */
 - (void)getOrderListWithStatus:(ORDERTYPE)orderType
 {
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authey = [UserInfo getAuthkey];
     if (authey.length == 0) {
         return;
     }

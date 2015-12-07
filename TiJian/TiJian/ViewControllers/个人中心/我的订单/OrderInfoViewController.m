@@ -104,7 +104,7 @@
  */
 - (void)getOrderInfo
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
 
     if ([self.order_id intValue] == 0) {
         
@@ -544,7 +544,7 @@
         
         if (buttonIndex == 1) {
             
-            NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+            NSString *authkey = [UserInfo getAuthkey];
             
             __weak typeof(self)weakSelf = self;
             NSDictionary *params = @{
@@ -567,7 +567,7 @@
     }else if (alertView.tag == ALERT_TAG_DEL_ORDER){
         
         if (buttonIndex == 1) {
-            NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+            NSString *authkey = [UserInfo getAuthkey];
             
             __weak typeof(self)weakSelf = self;
             NSDictionary *params = @{@"authcode":authkey,
@@ -588,7 +588,7 @@
      
         if (buttonIndex == 1) {
             
-            NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+            NSString *authkey = [UserInfo getAuthkey];
             
             __weak typeof(self)weakSelf = self;
             NSDictionary *params = @{

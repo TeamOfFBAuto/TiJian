@@ -174,7 +174,7 @@ typedef enum {
     
     _exam_center_id = NSStringFromInt(_selectHospitalId);
     
-    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authey = [LTools objectForKey:USER_AUTHOD];
     NSDictionary *params = @{@"authcode":authey,
                              @"order_id":_order_id,
                              @"product_id":_productId,

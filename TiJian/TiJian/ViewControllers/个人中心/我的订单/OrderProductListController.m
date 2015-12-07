@@ -60,7 +60,7 @@
 
 - (void)netWorkForList
 {
-    NSDictionary *params = @{@"authcode":[LTools cacheForKey:USER_AUTHOD],
+    NSDictionary *params = @{@"authcode":[LTools objectForKey:USER_AUTHOD],
                              @"order_id":self.orderId};;
     NSString *api = GET_SETMEALS_BY_ORDER;
     

@@ -171,7 +171,7 @@
     
     _request = [YJYRequstManager shareInstance];
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"cart_pro_id":model.cart_pro_id,
                           @"product_num":@"1"
                           };
@@ -212,7 +212,7 @@
     _request = [YJYRequstManager shareInstance];
     
     NSDictionary *dic = @{
-                          @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                          @"authcode":[UserInfo getAuthkey],
                           @"cart_pro_id":model.cart_pro_id,
                           @"product_num":@"-1"
                           };

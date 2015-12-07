@@ -324,23 +324,23 @@
     if (self.type == GCouponType_youhuiquan) {//查看优惠券
         url = USER_MYYOUHUIQUANLIST;
         dic = @{
-                @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                @"authcode":[UserInfo getAuthkey]
                 };
     }else if (self.type == GCouponType_use_youhuiquan){//使用优惠券
         url = ORDER_GETYOUHUIQUANLIST;
         dic = @{
-                @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                @"authcode":[UserInfo getAuthkey],
                 @"coupon":self.coupon
                 };
     }else if (self.type == GCouponType_daijinquan){//查看代金券
         url = USER_MYDAIJINQUANLIST;
         dic = @{
-                @"authcode":[LTools cacheForKey:USER_AUTHOD]
+                @"authcode":[UserInfo getAuthkey]
                 };
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
         url = ORDER_GETDAIJIQUANLIST;
         dic = @{
-                @"authcode":[LTools cacheForKey:USER_AUTHOD],
+                @"authcode":[UserInfo getAuthkey],
                 @"brand_ids":self.brand_ids
                 };
     }

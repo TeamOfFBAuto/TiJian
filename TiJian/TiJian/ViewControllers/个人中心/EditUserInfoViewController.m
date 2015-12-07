@@ -141,7 +141,7 @@
     //    id_card 身份证号
     //    mobile 手机
     
-    NSString *authKey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authKey = [UserInfo getAuthkey];
     NSDictionary *params;
     if (type == UPDATEINFOTYPE_AGE) {
         
@@ -196,7 +196,7 @@
 
 - (void)netWorkForList
 {
-    NSString *authkey = [LTools cacheForKey:USER_AUTHOD];
+    NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey};;
     NSString *api = GET_USERINFO_WITHID;
     
@@ -532,7 +532,7 @@
     image = [LTools scaleToSizeWithImage:image size:CGSizeMake(200, 200)];
     //TODO：将图片发给服务器
     
-    [LTools cacheBool:YES ForKey:USER_UPDATEHEADIMAGE_STATE];//需要更新头像
+    [LTools setBool:YES forKey:USER_UPDATEHEADIMAGE_STATE];//需要更新头像
     
     //存储更新头像image
     
