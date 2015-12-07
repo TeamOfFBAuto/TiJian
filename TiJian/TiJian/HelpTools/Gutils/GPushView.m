@@ -33,7 +33,6 @@
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender{
     self = [super initWithFrame:frame];
     
-    
     //数据部分
     self.gender = theGender;
     _tab1TitleDataArray = @[@"城市",@"价格",@"体检品牌"];
@@ -47,8 +46,6 @@
         _isMark_price[i] = 0;
     }
     
-    
-    
     //地区数据
     NSString *path = [[NSBundle mainBundle]pathForResource:@"garea" ofType:@"plist"];
     _areaData = [NSArray arrayWithContentsOfFile:path];
@@ -56,8 +53,6 @@
     
     //价格筛选
     _priceArray = @[@"0—300",@"300—500",@"500—800",@"800—1000",@"1000—1500",@"1500—2000",@"2000以上"];
-    
-    
     
     
     //创建视图
@@ -129,8 +124,6 @@
     self.tab2.tag = 2;
     self.tab2.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self creatTab2Header];
-    
-    
     
     
     //价格
@@ -831,11 +824,9 @@
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identi];
         }
         
-        
         for (UIView *view in cell.contentView.subviews) {
             [view removeFromSuperview];
         }
-        
         
         cell.backgroundColor= [UIColor whiteColor];
         UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 0, DEVICE_WIDTH-20, 44)];
@@ -848,9 +839,6 @@
         line.backgroundColor = RGBCOLOR(244, 245, 246);
         [cell.contentView addSubview:line];
         
-        
-        
-        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }else if (tableView.tag == 3){//价格选择
@@ -859,7 +847,6 @@
         if (!cell) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identi];
         }
-        
         
         for (UIView*view in cell.contentView.subviews) {
             [view removeFromSuperview];
@@ -878,9 +865,6 @@
             [cell.contentView addSubview:mark_imv];
         }
         
-        
-        
-        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }else if (tableView.tag == 4){//体检品牌
@@ -889,7 +873,6 @@
         if (!cell) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identi];
         }
-        
         
         for (UIView*view in cell.contentView.subviews) {
             [view removeFromSuperview];
@@ -902,8 +885,6 @@
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
         line.backgroundColor = RGBCOLOR(234, 235, 236);
         [cell.contentView addSubview:line];
-        
-        
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -976,15 +957,9 @@
             self.userChoosePrice_high = paa[1];
         }
         
-        
-        
-        
-        
         [self.tab3 reloadData];
         
         [self setDefaultPriceImvHidden];
-        
-        
         
     }else if (tableView.tag == 4){//体检品牌
         NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];

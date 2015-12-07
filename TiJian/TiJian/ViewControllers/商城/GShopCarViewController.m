@@ -242,7 +242,6 @@
             [GMAPI showAutoHiddenMBProgressWithText:@"请选择套餐" addToView:self.view];
         }
     }
- 
     
 }
 

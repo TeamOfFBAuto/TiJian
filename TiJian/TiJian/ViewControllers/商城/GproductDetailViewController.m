@@ -13,6 +13,7 @@
 #import "ProductCommentModel.h"
 #import "GcommentViewController.h"
 #import "RCDChatViewController.h"
+#import "ConfirmOrderViewController.h"
 #import "ProductModel.h"
 #import "CouponModel.h"
 #import "GoneClassListViewController.h"
@@ -61,12 +62,6 @@
     UIImageView *_imageView;
     UIButton    *_btn;
     UIBezierPath *_path;
-    
-    
-    
-    
-    
-    
 }
 
 @end
@@ -417,6 +412,7 @@
 
 //添加商品到购物车
 -(void)addProductToShopCar{
+    
     NSDictionary *dic = @{
                           @"authcode":[UserInfo getAuthkey],
                           @"product_id":self.productId,
@@ -761,8 +757,6 @@
         cc.className = self.theProductModel.brand_name;
         [self.navigationController pushViewController:cc animated:YES];
         
-        
-        
     }else if (sender.tag == 103){//购物车
         
         if (self.isShopCarPush) {
@@ -787,20 +781,30 @@
         
     }else if (sender.tag == 104){//加入购物车
         
-        
-        if ([LoginViewController isLogin]) {
-            [self addProductToShopCar];
-        }else{
-            [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
-                
-            }];
-        }
-        
-        
-        
+        [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+            if (success) {
+                //代金卷过来 直接去确认订单
+                if (self.isVoucherPush) {
+                    
+                    [self pushToConfirmOrder];
+                    
+                }else
+                {
+                    [self addProductToShopCar];
+                }
+            }
+        }];
     }
 }
 
+
+- (void)pushToConfirmOrder
+{
+    ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+    cc.lastViewController = self;
+    cc.dataArray = [NSArray arrayWithObject:self.theProductModel];
+    [self.navigationController pushViewController:cc animated:YES];
+}
 
 /**
  *  收藏 取消收藏商品
@@ -969,8 +973,6 @@
         NSDictionary *dic = arr[indexPath.row];
         
         height = [_tmpCell1 loadCustomViewWithData:dic indexPath:indexPath];
-        
-        NSLog(@"小胖:%ld",(long)height);
         
     }
     

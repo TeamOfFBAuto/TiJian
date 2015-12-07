@@ -13,6 +13,8 @@
 #import "ChooseHopitalController.h"//选择分院和时间
 #import "AppointDetailController.h"//预约详情
 #import "GStoreHomeViewController.h"//商城
+#import "GoneClassListViewController.h"
+
 #import "ProductModel.h"
 #import "AppointmentCell.h"
 #import "AppointModel.h"
@@ -218,6 +220,9 @@
     
     NSString *authkey = [UserInfo getAuthkey];
     
+    //update by lcw
+    authkey = @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
+    
     //待预约
     if (table == [self tableViewWithIndex:0]) {
         
@@ -378,6 +383,21 @@
     }
 }
 
+/**
+ *  使用代金卷购买
+ */
+- (void)clickToBugUseVoucher:(PropertyButton *)sender
+{
+    ProductModel *aModel = sender.aModel;
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.isVoucherPush = YES;
+    cc.className = @"使用代金卷";
+    cc.vouchers_id = aModel.coupon_id;//代金卷
+    cc.brandId = aModel.brand_id;
+    cc.brandName = aModel.brand_name;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
 #pragma mark - 代理
 
 #pragma - mark UIScrollDelegate
@@ -507,7 +527,8 @@
                 cell = [[AppointmentCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier type:2];
             }
             
-            [cell.buyButton addTarget:self action:@selector(clickToBuy) forControlEvents:UIControlEventTouchUpInside];
+            cell.buyButton.aModel = aModel;
+            [cell.buyButton addTarget:self action:@selector(clickToBugUseVoucher:) forControlEvents:UIControlEventTouchUpInside];
             [cell.customButton addTarget:self action:@selector(clickToCustomization) forControlEvents:UIControlEventTouchUpInside];
             
         }else

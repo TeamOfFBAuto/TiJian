@@ -74,6 +74,7 @@
     NSInteger _fanal_usedScore;//最终使用的积分
     
 }
+
 @end
 
 @implementation ConfirmOrderViewController

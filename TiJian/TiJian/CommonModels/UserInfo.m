@@ -149,6 +149,16 @@
     return @"";
 }
 
++ (NSString *)getUserId
+{
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    NSString *value = userInfo.uid;
+    if (value) {
+        return value;
+    }
+    return @"";
+}
+
 #pragma mark - 用户信息更新
 
 /**

@@ -100,8 +100,8 @@
     [self logout];
     
     //退出融云登录
-//    [[RCIM sharedRCIM] disconnect];
-//    [[RCIM sharedRCIM] logout];
+    [[RCIM sharedRCIM] disconnect];
+    [[RCIM sharedRCIM] logout];
     [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
     
     [self cleanUserInfo];

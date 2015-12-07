@@ -48,7 +48,6 @@
 @property(nonatomic,retain)NSString *favor_num;
 @property(nonatomic,retain)NSString *authcode;
 @property(nonatomic,retain)NSString *attentions_num; //关注数
-@property(nonatomic,retain)NSString *division_t;//值表示1=》待审核搭配师 2=》已是搭配师 0=》普通
 @property(nonatomic,retain)NSString *gold_coin;
 @property(nonatomic,retain)NSString *recommend_uid;
 @property(nonatomic,retain)NSString *shopman;//shopman的值表示 1=》店主审核 2=》已是店主 0=》普通
@@ -103,6 +102,7 @@
 #pragma mark - 用户信息获取
 
 + (NSString *)getAuthkey;
++ (NSString *)getUserId;
 
 #pragma mark - 用户信息更新
 

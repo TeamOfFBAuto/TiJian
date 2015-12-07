@@ -214,6 +214,8 @@
         number_str = [NSString stringWithFormat:@"%d",unreadMsgCount];
     }
     
+    [UIApplication sharedApplication].applicationIconBadgeNumber = [number_str intValue];
+    
     NSLog(@"--%d %d",[[RCIMClient sharedRCIMClient]getTotalUnreadCount],unreadMsgCount);
     
 //    UITabBarController *root = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
@@ -1093,14 +1095,6 @@
         return YES;
     }
     return NO;
-}
-
-+ (NSString *)safeString:(NSString *)string
-{
-    if (string == nil) {
-        return @"";
-    }
-    return string;
 }
 
 /**

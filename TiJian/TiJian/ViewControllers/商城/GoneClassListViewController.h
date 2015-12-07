@@ -23,6 +23,11 @@
 
 @property(nonatomic,assign)BOOL isProductDetailVcPush;//是否从单品详情品牌店点击跳转过来的
 
+//代金卷购买套餐
+@property(nonatomic,assign)BOOL isVoucherPush;//from 公司代金卷前去购买
+@property(nonatomic,strong)NSString *vouchers_id;//代金卷id
+@property(nonatomic,strong)NSString *brandId;//品牌id
+@property(nonatomic,strong)NSString *brandName;//品牌name
 
 -(void)therightSideBarDismiss;
 

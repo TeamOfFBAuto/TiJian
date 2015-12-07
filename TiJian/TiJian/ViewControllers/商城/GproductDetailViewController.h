@@ -19,8 +19,9 @@
 @property(nonatomic,assign)BOOL isShopCarPush;
 
 @property(nonatomic,strong)ProductModel *theProductModel;//产品model
-
 @property(nonatomic,strong)UIImage *gouwucheProductImage;//动画image
+
+@property(nonatomic,assign)BOOL isVoucherPush;//是否是代金卷过来
 
 -(void)goToCommentVc;
 

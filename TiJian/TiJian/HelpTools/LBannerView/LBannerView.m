@@ -95,7 +95,7 @@
     if (nil == _pageControl) {
         _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.frame) - 100)/2, CGRectGetHeight(self.frame) - 30, 100, 30)];
         _pageControl.pageIndicatorTintColor = [UIColor colorWithRed:238/255.0f green:238/255.0f blue:238/255.0f alpha:1.0f];
-        _pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:245/255.0f green:121/255.0f blue:33/255.0f alpha:1.0f];
+        _pageControl.currentPageIndicatorTintColor = DEFAULT_TEXTCOLOR;
         [self addSubview:_pageControl];
     }
     return _pageControl;

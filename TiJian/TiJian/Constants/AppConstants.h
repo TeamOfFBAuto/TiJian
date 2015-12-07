@@ -34,10 +34,12 @@
 //打印类、方法
 
 #pragma mark - Debug log macro
+//start
 #ifdef DEBUG
 
-#define DDLOG(...) NSLog(__VA_ARGS__)
+#define DDLOG( s , ...) NSLog( @"<%@:(%d)> %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 #define DDLOG_CURRENT_METHOD NSLog(@"%@-%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+
 
 #else
 
@@ -45,8 +47,7 @@
 #define DDLOG_CURRENT_METHOD ;
 
 #endif
-
-
+//end
 
 //适配6 PLUS 放大1.2倍
 #define FitScreen(a) (iPhone6PLUS ? a * 1.2 : a)
@@ -55,7 +56,7 @@
 #define ROOTVIEWCONTROLLER (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController
 
 //图片比例
-#define W_H_RATIO 200/320
+#define W_H_RATIO 200.f/320
 //计算BMI
 #define BMI(weight,height) (weight / powf(height * 0.01, 2))
 
@@ -113,10 +114,23 @@
 
 //***************************** 三方平台appkey **********************************
 
-#define AppStore_Appid @"951259287"//appStore appid 951259287
+#define AppStore_Appid @"1065404194"//appStore 河马医生
 
 //友盟
 #define UmengAppkey @"562455d167e58ede5000b699"//正式 umeng后 mobile@jiruijia.com
+
+//百度地图
+#define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
+
+//融云
+//1、开发环境
+#define RONGCLOUD_IM_APPKEY    @"p5tvi9dst1qn4" //融云账号 18600912932
+#define RONGCLOUD_IM_APPSECRET @"qCqG93VU6WBz"
+//融云客服id
+#define SERVICE_ID @"KEFU1448965696367"
+
+
+//==========================待注册
 
 //sina
 #define SinaAppKey @"2480371284"
@@ -130,15 +144,6 @@
 #define WXAPPID @"wx47f54e431de32846" //衣加衣
 #define WXAPPSECRET @"a71699732e3bef01aefdaf324e2f522c"
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
-//百度地图
-#define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
-
-//融云
-//1、开发环境
-#define RONGCLOUD_IM_APPKEY    @"p5tvi9dst1qn4" //融云账号 18600912932
-#define RONGCLOUD_IM_APPSECRET @"qCqG93VU6WBz"
-//融云客服id
-#define SERVICE_ID @"KEFU1448965696367"
 
 
 #endif

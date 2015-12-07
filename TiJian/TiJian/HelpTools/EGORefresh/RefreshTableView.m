@@ -560,7 +560,7 @@
 {
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(refreshTableView:willDisplayCell:forRowAtIndexPath:)]) {
         
-        [_refreshDelegate refreshTableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+        [_refreshDelegate refreshTableView:(RefreshTableView *)tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
     }
 }
 //显示完了
@@ -568,7 +568,7 @@
 {
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(refreshTableView:didEndDisplayingCell:forRowAtIndexPath:)]) {
         
-        [_refreshDelegate refreshTableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:indexPath];
+        [_refreshDelegate refreshTableView:(RefreshTableView *)tableView didEndDisplayingCell:cell forRowAtIndexPath:indexPath];
     }
 }
 
@@ -584,7 +584,7 @@
     CGFloat aHeight = 0.0;
     
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(heightForRowIndexPath:tableView:)]) {
-        aHeight = [_refreshDelegate heightForRowIndexPath:indexPath tableView:tableView];
+        aHeight = [_refreshDelegate heightForRowIndexPath:indexPath tableView:(RefreshTableView *)tableView];
     }
     
     return aHeight;
@@ -593,7 +593,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(didSelectRowAtIndexPath:tableView:)]) {
-        [_refreshDelegate didSelectRowAtIndexPath:indexPath tableView:tableView];
+        [_refreshDelegate didSelectRowAtIndexPath:indexPath tableView:(RefreshTableView *)tableView];
     }
 }
 
@@ -601,7 +601,7 @@
 {
     UIView *aView;
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(viewForHeaderInSection:tableView:)]) {
-        aView = [_refreshDelegate viewForHeaderInSection:section tableView:tableView];
+        aView = [_refreshDelegate viewForHeaderInSection:section tableView:(RefreshTableView *)tableView];
     }
     return aView;
 }
@@ -610,7 +610,7 @@
 {
     CGFloat aHeight = 0.0;
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(heightForHeaderInSection:tableView:)]) {
-        aHeight = [_refreshDelegate heightForHeaderInSection:section tableView:tableView];
+        aHeight = [_refreshDelegate heightForHeaderInSection:section tableView:(RefreshTableView *)tableView];
     }
     return aHeight;
 }
@@ -624,7 +624,7 @@
     
     UIView *aView;
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(viewForFooterInSection:tableView:)]) {
-        aView = [_refreshDelegate viewForFooterInSection:section tableView:tableView];
+        aView = [_refreshDelegate viewForFooterInSection:section tableView:(RefreshTableView *)tableView];
         return aView;
     }else{
         return [UIView new];
@@ -637,7 +637,7 @@
     
     CGFloat aHeight = 0.0;
     if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(heightForFooterInSection:tableView:)]) {
-        aHeight = [_refreshDelegate heightForFooterInSection:section tableView:tableView];
+        aHeight = [_refreshDelegate heightForFooterInSection:section tableView:(RefreshTableView *)tableView];
         return aHeight;
     }else{
         return 0.5;

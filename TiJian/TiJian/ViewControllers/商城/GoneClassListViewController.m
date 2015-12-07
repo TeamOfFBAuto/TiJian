@@ -94,9 +94,6 @@
     [_table showRefreshHeader:YES];
 }
 
-
-
-
 //创建侧滑栏
 -(void)creatRightTranslucentSideBar{
     
@@ -110,6 +107,9 @@
     // Add PanGesture to Show SideBar by PanGesture
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     [self.view addGestureRecognizer:panGestureRecognizer];
+    
+    //避免滑动返回手势与此冲突
+    [panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
 
     GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:YES];
     pushView.delegate = self;
@@ -131,8 +131,6 @@
     if (self.isProductDetailVcPush) {
         filterButton.hidden = YES;
     }
-    
-    
 }
 
 
@@ -219,18 +217,15 @@
     if (theDic) {
         dic = theDic;
     }else{
+        
         dic = @{
                   @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
                   @"province_id":[GMAPI getCurrentProvinceId],
-                  @"city_id":[GMAPI getCurrentCityId]
+                  @"city_id":[GMAPI getCurrentCityId],
+                  @"vouchers_id":self.vouchers_id ? self.vouchers_id : @""
                   };
     }
     
-    
-    
-    
-    
-    //首页精品推荐
     _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
@@ -254,6 +249,21 @@
 //根据城市查询品牌列表
 -(void)prepareBrandListWithLocation{
     
+    //代金卷购买,并且非通用
+    if (self.isVoucherPush && [self.brandId intValue] > 0) {
+        //过滤掉其他品牌
+        if ([LTools isEmpty:self.brandName]) {
+            self.brandName = @"未知品牌";
+        }
+        NSDictionary *dic = @{@"brand_id":self.brandId,
+                              @"brand_name":self.brandName};
+        [self creatFilterBtn];
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        self.brand_city_list = @[dic];
+        
+        return;
+    }
+    
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
@@ -263,10 +273,11 @@
                           @"city_id":[GMAPI getCurrentCityId]
                           };
     
+//    __weak typeof(self)weakSelf = self;
     _request_BrandListWithLocation = [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        
-        self.brand_city_list = [result arrayValueForKey:@"data"];
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        self.brand_city_list = [NSArray arrayWithArray:arr];
         [self creatFilterBtn];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
@@ -274,11 +285,6 @@
         
     }];
 }
-
-
-
-
-
 
 //网络请求完成
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
@@ -291,14 +297,9 @@
     
     if ([num intValue] >= 2) {
         
-        
-        
-    }
- 
     
+    }
 }
-
-
 
 #pragma - mark RefreshDelegate
 
@@ -327,6 +328,7 @@
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *model = _table.dataArray[indexPath.row];
     cc.productId = model.product_id;
+    cc.isVoucherPush = self.isVoucherPush;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

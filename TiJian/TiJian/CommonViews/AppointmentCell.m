@@ -95,7 +95,7 @@
             [view addSubview:line];
             //两个按钮
             for (int i = 0; i < 2; i ++) {
-                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                PropertyButton *btn = [PropertyButton buttonWithType:UIButtonTypeCustom];
                 btn.frame = CGRectMake(DEVICE_WIDTH/2.f * i, imageView.bottom + 10,DEVICE_WIDTH/2.f ,130 - imageView.bottom - 10);
                 btn.titleLabel.font = [UIFont systemFontOfSize:14.f];
                 [view addSubview:btn];

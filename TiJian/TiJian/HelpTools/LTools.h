@@ -149,7 +149,7 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 #pragma - mark 判断为空或者是空格
 
-+ (BOOL) isEmpty:(NSString *) str;
++ (BOOL)isEmpty:(NSString *) str;
 
 #pragma - mark 验证邮箱、电话等有效性
 
@@ -356,7 +356,6 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 + (BOOL)NSStringIsNull:(NSString *)text;
 
-+ (NSString *)safeString:(NSString *)string;
 
 /**
  *  去除开头的空格

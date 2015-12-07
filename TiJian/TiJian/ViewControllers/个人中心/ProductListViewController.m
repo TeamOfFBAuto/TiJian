@@ -8,6 +8,7 @@
 
 #import "ProductListViewController.h"
 #import "GProductCellTableViewCell.h"
+#import "GproductDetailViewController.h"
 
 @interface ProductListViewController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -46,6 +47,8 @@
     _resultView.backgroundColor = [UIColor clearColor];
     
     
+    self.resultView = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"温馨提示" content:@"您还没有添加收藏"];
+    
     return _resultView;
 }
 
@@ -64,7 +67,7 @@
 {
     NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
                              @"page":NSStringFromInt(_table.pageNum),
-                             @"per_page":@"20"};;
+                             @"per_page":NSStringFromInt(G_PER_PAGE)};;
     NSString *api = PRODUCT_COLLECT_LIST;
     
     __weak typeof(self)weakSelf = self;
@@ -74,14 +77,37 @@
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
-        NSArray *temp = [ProductModel modelsFromArray:result[@"data"]];
-        [weakTable reloadData:temp pageSize:20];
+        NSArray *temp = [ProductModel modelsFromArray:result[@"list"]];
+        [weakTable reloadData:temp pageSize:G_PER_PAGE noDataView:weakSelf.resultView];
         
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
+    }];
+}
+
+/**
+ *  收藏 取消收藏商品
+ *
+ *  @param type 1 收藏 2 取消收藏
+ */
+-(void)cancelCollectProductid:(NSString *)productId
+{
+    NSDictionary *dic = @{
+                          @"product_id":productId,
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:QUXIAOSHOUCANG parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
     }];
 }
 
@@ -104,7 +130,10 @@
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    ProductModel *model = _table.dataArray[indexPath.row];
+    cc.productId = model.product_id;
+    [self.navigationController pushViewController:cc animated:YES];
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
@@ -112,8 +141,6 @@
 }
 
 #pragma - mark UITableViewDataSource
-
-#pragma - mark UITableViewDataSource<NSObject>
 
 - (NSInteger)tableView:(RefreshTableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
@@ -140,6 +167,35 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        //todo
+        
+        ProductModel *model = _table.dataArray[indexPath.row];
+        [_table.dataArray removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self cancelCollectProductid:model.product_id];
+        if (_table.dataArray.count == 0) {
+            [_table reloadData:nil pageSize:G_PER_PAGE noDataView:self.resultView];
+        }
+    }
+}
+
+
+// 这里默认删除的按钮为英文，想要改变成中文，需要再实现一个方法。
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0){
+    
+    return @"删除";
 }
 
 @end

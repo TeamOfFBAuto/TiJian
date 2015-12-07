@@ -39,11 +39,10 @@
     
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startLoginRongTimer) name:NOTIFICATION_LOGIN object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startRongCloud) name:NOTIFICATION_LOGIN object:nil];
     
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
-    
     
     //微信支付
     NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
@@ -73,7 +72,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-   
+    [LTools updateTabbarUnreadMessageNumber];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -118,23 +117,29 @@
 {
     [LTools updateTabbarUnreadMessageNumber];
     
-    NSLog(@"JPush2 remote %@",userInfo);
+    DDLOG(@"JPush2 remote %@",userInfo);
     
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateInactive){
-        NSLog(@"UIApplicationStateInactive %@",userInfo);
+        DDLOG(@"UIApplicationStateInactive %@",userInfo);
         //程序在后台运行 点击消息进入走此处,做相应处理
     }
     if (state == UIApplicationStateActive) {
-        NSLog(@"UIApplicationStateActive %@",userInfo);
+        DDLOG(@"UIApplicationStateActive %@",userInfo);
         //程序就在前台
 
     }
     if (state == UIApplicationStateBackground)
     {
-        NSLog(@"UIApplicationStateBackground %@",userInfo);
+        DDLOG(@"UIApplicationStateBackground %@",userInfo);
     }
     
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    DDLOG(@"%@",notification.userInfo);
+    //在此获取rongcloud本地通知消息
 }
 
 #pragma  mark
@@ -180,7 +185,7 @@
     // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
     BOOL ret = [_mapManager start:BAIDUMAP_APPKEY  generalDelegate:self];
     if (!ret) {
-        NSLog(@"manager start failed!");
+        DDLOG(@"manager start failed!");
     }
 }
 
@@ -205,12 +210,12 @@
     //不需要更新,return
     if (![LTools boolForKey:USER_UPDATEHEADIMAGE_STATE]) {
         
-        NSLog(@"不需要更新头像");
+        DDLOG(@"不需要更新头像");
         
         return;
     }else
     {
-        NSLog(@"需要更新头像");
+        DDLOG(@"需要更新头像");
     }
     
     NSString *authkey = [UserInfo getAuthkey];
@@ -233,7 +238,7 @@
         
     } completion:^(NSDictionary *result) {
         
-        NSLog(@"completion result %@",result[Erro_Info]);
+        DDLOG(@"completion result %@",result[Erro_Info]);
         
         [LTools setBool:NO forKey:USER_UPDATEHEADIMAGE_STATE];//不需要更新头像
         
@@ -247,7 +252,7 @@
         
     } failBlock:^(NSDictionary *result) {
         
-        NSLog(@"failBlock result %@",result[Erro_Info]);
+        DDLOG(@"failBlock result %@",result[Erro_Info]);
         
     }];
 }
@@ -281,7 +286,7 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     
-    NSLog(@"openURL------ %@",url);
+    DDLOG(@"openURL------ %@",url);
     
     //当支付宝客户端在操作时,商户 app 进程在后台被结束,只能通过这个 block 输出支付 结果。
     
@@ -290,7 +295,7 @@
         [[AlipaySDK defaultService] processOrderWithPaymentResult:url
                                                   standbyCallback:^(NSDictionary *resultDic) {
                                                       
-                                                      NSLog(@"ali result = %@",resultDic);
+                                                      DDLOG(@"ali result = %@",resultDic);
                                                       
                                                       
                                                   }]; }
@@ -298,7 +303,7 @@
     if ([url.host isEqualToString:@"platformapi"]){//支付宝钱包快登授权返回 authCode
         [[AlipaySDK defaultService] processAuthResult:url standbyCallback:^(NSDictionary *resultDic) {
             
-            NSLog(@"ali result = %@",resultDic);
+            DDLOG(@"ali result = %@",resultDic);
             
         }];
     }
@@ -332,7 +337,7 @@
             case WXSuccess:
             {
                 //服务器端查询支付通知或查询API返回的结果再提示成功
-                NSLog(@"支付成功");
+                DDLOG(@"支付成功");
                 errInfo = @"支付成功";
                 result = YES;
             }
@@ -340,22 +345,22 @@
             case WXErrCodeCommon:
             case WXErrCodeSentFail:
             {
-                NSLog(@"1、可能的原因：签名错误、未注册APPID、项目设置APPID不正确、注册的APPID与设置的不匹配、其他异常等.\n2、发送失败");
+                DDLOG(@"1、可能的原因：签名错误、未注册APPID、项目设置APPID不正确、注册的APPID与设置的不匹配、其他异常等.\n2、发送失败");
                 errInfo = @"微信支付异常";
             }
                 break;
             case WXErrCodeUserCancel:
-                NSLog(@"用户取消支付");
+                DDLOG(@"用户取消支付");
                 errInfo = @"用户取消支付";
                 
                 break;
             case WXErrCodeAuthDeny:
                 
-                NSLog(@"授权失败");
+                DDLOG(@"授权失败");
                 errInfo = @"微信支付授权失败";
                 break;
             default:
-                NSLog(@"支付失败， retcode=%d",resp.errCode);
+                DDLOG(@"支付失败， retcode=%d",resp.errCode);
                 
                 errInfo = @"微信支付失败";
                 break;
@@ -387,7 +392,7 @@
 
 - (void)theLocationDictionary:(NSDictionary *)dic{
     
-    NSLog(@"定位成功------>%@",dic);
+    DDLOG(@"定位成功------>%@",dic);
     
     if (_locationBlock) {
         
@@ -400,7 +405,7 @@
 
 -(void)theLocationFaild:(NSDictionary *)dic{
     
-    NSLog(@"定位失败----->%@",dic);
+    DDLOG(@"定位失败----->%@",dic);
     
     if (_locationBlock) {
         _locationBlock(dic);
@@ -411,8 +416,13 @@
 
 - (void)startRongCloud
 {
-    //融云
+    if (![LoginViewController isLogin]) {
+        
+        DDLOG(@"未登录不需要start rongcloud");
+        return;
+    }
     
+    //融云
     [[RCIM sharedRCIM] initWithAppKey:RONGCLOUD_IM_APPKEY];
     
     [[RCIM sharedRCIM]setReceiveMessageDelegate:self];
@@ -439,9 +449,6 @@
     
     //开始融云登录
     [self startLoginRongTimer];
-    
-    //监控登录通知
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startLoginRongTimer) name:NOTIFICATION_LOGIN object:nil];
 }
 
 #pragma - mark  RCIMConnectionStatusDelegate <NSObject>
@@ -467,7 +474,7 @@
     }
     //token不对
     else if (status == ConnectionStatus_TOKEN_INCORRECT) {
-        NSLog(@"Token已过期，请重新登录");
+        DDLOG(@"Token已过期，请重新登录");
         [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
         [self startLoginRongTimer];
     }
@@ -496,38 +503,18 @@
  */
 - (void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left
 {
-    NSLog(@"RCIMReceiveMessageDelegate %d",left);
+//    DDLOG(@"RCIMReceiveMessageDelegate 剩余 %d",left);
     //接受到消息 更新未读消息
     
     if (0 == left) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
+            [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
             
             [LTools updateTabbarUnreadMessageNumber];
             
         });
-        
     }
 }
-
-#pragma - mark RCIMClientReceiveMessageDelegate
-- (void)onReceived:(RCMessage *)message left:(int)nLeft object:(id)object;
-{
-    NSLog(@"RCIMClientReceiveMessageDelegate %d",nLeft);
-    //接受到消息 更新未读消息
-    
-    if (0 == nLeft) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
-            
-            [LTools updateTabbarUnreadMessageNumber];
-            
-        });
-        
-    }
-    
-}
-
 
 #pragma - mark RCIMUserInfoDataSource <NSObject>
 
@@ -540,7 +527,7 @@
 - (void)getUserInfoWithUserId:(NSString *)userId
                    completion:(void (^)(RCUserInfo *userInfo))completion
 {
-    NSLog(@"getUserInfoWithUserId %@",userId);
+    DDLOG(@"getUserInfoWithUserId %@",userId);
     //客服就不需要了
     if ([userId isEqualToString:SERVICE_ID]) {
         
@@ -562,9 +549,9 @@
 //    NSString *userName = [LTools rongCloudUserNameWithUid:userId];
 //    NSString *userIcon = [LTools rongCloudUserIconWithUid:userId];
 //    
-//    NSLog(@"userId %@ userIcon %@",userId,userIcon);
+//    DDLOG(@"userId %@ userIcon %@",userId,userIcon);
 //    
-//    NSLog(@"----->|%@|",userName);
+//    DDLOG(@"----->|%@|",userName);
 //    
 //    //没有保存用户名 或者 更新时间超过一个小时
 //    if ([LTools isEmpty:userName] || [LTools isEmpty:userIcon]  || [LTools rongCloudNeedRefreshUserId:userId]) {
@@ -596,7 +583,7 @@
 //        }];
 //    }
 //    
-//    NSLog(@"userId %@ %@",userId,userName);
+//    DDLOG(@"userId %@ %@",userId,userName);
 //    
 //    RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:userName portrait:userIcon];
 //    
@@ -617,7 +604,7 @@
     
     _getRongTokenTime --;
     
-    NSString *userToken = [UserInfo getAuthkey];
+    NSString *userToken = [LTools objectForKey:USER_RONGCLOUD_TOKEN];
     
     if (userToken.length) {
         
@@ -639,7 +626,9 @@
     __weak typeof(self)weakSelf = self;
     NSString *user_name = userInfo.user_name;
     NSString *icon = userInfo.avatar;
-    
+    if ([LTools isEmpty:icon]) {
+        icon = @"default";
+    }
     NSDictionary *params = @{@"user_id":user_id,
                              @"name":user_name,
                              @"portrait_uri":icon};
@@ -663,19 +652,13 @@
         
         __weak typeof(self)weakSelf = self;
         
-        [[RCIMClient sharedRCIMClient]connectWithToken:userToken success:^(NSString *userId) {
-            
-            NSLog(@"登录成功融云 userId %@",userId);
-            
+        [[RCIM sharedRCIM]connectWithToken:userToken success:^(NSString *userId) {
+            DDLOG(@"登录成功融云 userId %@",userId);
             [weakSelf stopRongTimer];//停止计时
-            
         } error:^(RCConnectErrorCode status) {
-            
-            NSLog(@"RCConnectErrorCode %ld",status);
-            
+            DDLOG(@"RCConnectErrorCode %ld",status);
         } tokenIncorrect:^{
-            
-            NSLog(@"token不对");
+            DDLOG(@"token不对");
             
             [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
         }];

@@ -23,7 +23,7 @@
 
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-    NSLog(@"forUndefinedKey %@",key);
+//    NSLog(@"forUndefinedKey %@",key);
 }
 
 + (NSArray *)modelsFromArray:(NSArray *)array

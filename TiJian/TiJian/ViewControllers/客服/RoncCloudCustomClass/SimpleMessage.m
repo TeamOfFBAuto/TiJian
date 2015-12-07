@@ -95,7 +95,7 @@
         NSObject *__object = [json objectForKey:@"user"];
         NSDictionary *userinfoDic = nil;
         if (__object &&[__object isMemberOfClass:[NSDictionary class]]) {
-            userinfoDic =__object;
+            userinfoDic = (NSDictionary *)__object;
         }
         if (userinfoDic) {
             RCUserInfo *userinfo =[RCUserInfo new];
