@@ -43,8 +43,16 @@
         if (theindexPath.row == 0) {
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
+            
+            
+            __weak typeof (self)bself = self;
             [imv sd_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                self.delegate.gouwucheProductImage = image;
+                
+                if (bself.delegate) {
+                    bself.delegate.gouwucheProductImage = image;
+                }
+                
+                
             }];
             [self.contentView addSubview:imv];
             height += imv.frame.size.height;
