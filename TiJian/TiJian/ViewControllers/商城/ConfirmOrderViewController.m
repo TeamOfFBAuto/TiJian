@@ -91,7 +91,6 @@
     // Do any additional setup after loading the view.
     
     
-    
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"确认订单";
     
@@ -100,20 +99,11 @@
     _keyongJifen = 0;
     _fanal_usedScore = 0;
     
-    
-    
-    
-    
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
     [self makeDyadicArray];
     
-    
     [self prepareNetData];
-    
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -174,7 +164,7 @@
     
     //优惠券
     CGFloat youhuiquan = 0;//使用优惠券优惠的总价格
-    if (self.userSelectYouhuiquanArray.count>0) {
+    if (self.userSelectYouhuiquanArray.count > 0) {
         _userChooseYouhuiquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectYouhuiquanArray.count];
         
         for (CouponModel *coupon in self.userSelectYouhuiquanArray) {
@@ -351,11 +341,11 @@
     UILabel *l3 = [_theNewbilityView viewWithTag:13];//代金券
     UILabel *l4 = [_theNewbilityView viewWithTag:14];//积分
     
-    l0.text = [NSString stringWithFormat:@"￥%.2f",_price_total];
-    l1.text = [NSString stringWithFormat:@"+%.2f",yunfei];
-    l2.text = [NSString stringWithFormat:@"-%.2f",youhuiquan];
-    l3.text = [NSString stringWithFormat:@"-%.2f",daijinquan];
-    l4.text = [NSString stringWithFormat:@"-%.2f",_fanal_usedScore/100.0];
+    l0.text = [NSString stringWithFormat:@"￥ %.2f",_price_total];
+    l1.text = [NSString stringWithFormat:@"+ %.2f",yunfei];
+    l2.text = [NSString stringWithFormat:@"- %.2f",youhuiquan];
+    l3.text = [NSString stringWithFormat:@"- %.2f",daijinquan];
+    l4.text = [NSString stringWithFormat:@"- %.2f",_fanal_usedScore/100.0];
     _shifukuangLabel.text = [NSString stringWithFormat:@"￥%.2f",_finalPrice];
     
     
@@ -363,13 +353,6 @@
     
     
 }
-
-
-
-
-
-
-
 
 #pragma mark - 请求网络数据
 
@@ -528,16 +511,13 @@
     
 }
 
-
-
-
-
 #pragma mark - 视图创建
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStylePlain];
     _tab.delegate = self;
     _tab.dataSource = self;
     [self.view addSubview:_tab];
+    _tab.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     [self creatTabFooterViewWithUseState:NO];
     
@@ -566,9 +546,10 @@
     liuyanView.backgroundColor = [UIColor whiteColor];
     [_tabFooterView addSubview:liuyanView];
     
-    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(7, 0, 80, 50)];
-    tLabel.font = [UIFont systemFontOfSize:15];
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 80, 50)];
+    tLabel.font = [UIFont systemFontOfSize:14];
     tLabel.text = @"给卖家留言:";
+    tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [liuyanView addSubview:tLabel];
     
     _liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
@@ -620,9 +601,9 @@
     [youhuiquanView addTaget:self action:@selector(youhuiquanViewClicked) tag:0];
     
     UILabel *y_tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 50, 44)];
-    y_tLabel.font = [UIFont systemFontOfSize:15];
+    y_tLabel.font = [UIFont systemFontOfSize:14];
     y_tLabel.text = @"优惠券";
-    y_tLabel.textColor = [UIColor blackColor];
+    y_tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [youhuiquanView addSubview:y_tLabel];
     
     _userChooseYouhuiquan_label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(y_tLabel.frame)+5, y_tLabel.frame.origin.y, DEVICE_WIDTH - 20 - 5 - 15 - 50 - 5, y_tLabel.frame.size.height)];
@@ -653,8 +634,8 @@
     
     UILabel *daijinquanLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 50, 44)];
     daijinquanLabel.text = @"代金券";
-    daijinquanLabel.font = [UIFont systemFontOfSize:15];
-    daijinquanLabel.textColor = [UIColor blackColor];
+    daijinquanLabel.font = [UIFont systemFontOfSize:14];
+    daijinquanLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [daijinquanView addSubview:daijinquanLabel];
     
     _userChooseDaijinquan_label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(y_tLabel.frame)+5, y_tLabel.frame.origin.y, DEVICE_WIDTH - 20 - 5 - 15 - 50 - 5, y_tLabel.frame.size.height)];
@@ -684,12 +665,13 @@
     [_tabFooterView addSubview:jifenView];
     UILabel *jifenLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 30, 44)];
     jifenLabel.text = @"积分";
-    jifenLabel.font = [UIFont systemFontOfSize:15];
-    jifenLabel.textColor = [UIColor blackColor];
+    jifenLabel.font = [UIFont systemFontOfSize:14];
+    jifenLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [jifenView addSubview:jifenLabel];
     
     _jifenMiaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(jifenLabel.frame)+10, jifenLabel.frame.origin.y, DEVICE_WIDTH - 15 - 30 - 10 - 65, jifenLabel.frame.size.height)];
     _jifenMiaoshuLabel.font = [UIFont systemFontOfSize:12];
+    _jifenMiaoshuLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [jifenView addSubview:_jifenMiaoshuLabel];
     
     UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, _jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
@@ -714,8 +696,8 @@
         [_tabFooterView addSubview:useJifenView];
         
         UILabel *lb1 = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 40, 44)];
-        lb1.textColor = [UIColor blackColor];
-        lb1.font = [UIFont systemFontOfSize:15];
+        lb1.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
+        lb1.font = [UIFont systemFontOfSize:14];
         lb1.text = @"使用";
         [useJifenView addSubview:lb1];
         
@@ -727,13 +709,13 @@
         _useScoreTf.textAlignment = NSTextAlignmentCenter;
         _useScoreTf.delegate = self;
         _useScoreTf.layer.borderWidth = 0.5;
-        _useScoreTf.layer.cornerRadius = 4;
+        _useScoreTf.layer.cornerRadius = 2;
         _useScoreTf.layer.borderColor = [[UIColor grayColor]CGColor];
         [useJifenView addSubview:_useScoreTf];
         
         UILabel *lb2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_useScoreTf.frame)+10, 0, 40, 44)];
         lb2.text = @"积分,";
-        lb2.textColor = [UIColor blackColor];
+        lb2.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
         lb2.font = [UIFont systemFontOfSize:15];
         [useJifenView addSubview:lb2];
         
@@ -764,8 +746,9 @@
     NSArray *titleArray = @[@"商品金额",@"运费",@"优惠券",@"代金券",@"积分"];
     for (int i = 0; i<titleArray.count; i++) {
         UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10+i*25, 70, 20)];
-        tLabel.font = [UIFont systemFontOfSize:15];
+        tLabel.font = [UIFont systemFontOfSize:14];
         tLabel.text = titleArray[i];
+        tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
         [_theNewbilityView addSubview:tLabel];
         
     }
@@ -775,7 +758,7 @@
         UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(90, 10+i*25, DEVICE_WIDTH-100, 20)];
         cLabel.textAlignment = NSTextAlignmentRight;
         cLabel.textColor = RGBCOLOR(237, 108, 22);
-        cLabel.font = [UIFont systemFontOfSize:15];
+        cLabel.font = [UIFont systemFontOfSize:14];
         cLabel.tag = 10 + i;
         [_theNewbilityView addSubview:cLabel];
     }
@@ -784,24 +767,13 @@
     linelast.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:linelast];
     
-    
     [_tabFooterView setHeight:CGRectGetMaxY(linelast.frame)];
-    
-    
     
     _tab.tableFooterView = _tabFooterView;
     
     [self jisuanPrice];
     
-
 }
-
-
-
-
-
-
-
 
 -(void)creatAddressViewWithModel:(AddressModel*)theModel{
     
@@ -816,11 +788,7 @@
         }
     }
     
-    
-    
     if (!theModel) {//没有地址
-        
-        
         
         //上分割线
         UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 2.5)];
@@ -909,10 +877,6 @@
         
         _tab.tableHeaderView = _addressView;
     }
-    
-    
-    
-    
 }
 
 
@@ -1014,19 +978,12 @@
     
 }
 
-
-
 //提交订单
 -(void)confirmOrderBtnClicked{
-    
-    
-    
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    
-    
     
     NSMutableArray *product_ids_arr = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray *product_nums_arr = [NSMutableArray arrayWithCapacity:1];
@@ -1038,16 +995,10 @@
         }
     }
     
-    
-    
-    
     NSLog(@"%@",product_ids_arr);
     NSString *product_ids_str = [product_ids_arr componentsJoinedByString:@","];
     NSString *product_nums_str = [product_nums_arr componentsJoinedByString:@","];
 
-    
-    
-    
     if (!_theAddressModel) {
         
         UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"请选择收货地址" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
@@ -1109,11 +1060,6 @@
         [dic setValue:aa forKey:@"score"];//使用的积分
         [dic setValue:@"1" forKey:@"is_use_score"];//是否使用积分
     }
-    
-    
-    
-    
-    
     
     __weak typeof(self)weakSelf = self;
     
@@ -1209,9 +1155,6 @@
     }else{//有收货地址
         
     }
-
-    
-    
     __weak typeof(self)wealSelf = self;
     ShoppingAddressController *address = [[ShoppingAddressController alloc]init];
     address.isSelectAddress = YES;
@@ -1239,11 +1182,6 @@
     
     [self creatAddressViewWithModel:aModel];
 }
-
-
-
-
-
 
 
 /**
@@ -1351,14 +1289,7 @@
             
         }
         
-        
-        
-        
     }
-   
-    
-    
-    
     
     return YES;
 }
@@ -1443,11 +1374,7 @@
     }else if (buttonIndex == 1){
         [self goToAddressVC];
     }
-    
-    
-    
 }
-
 
 
 @end

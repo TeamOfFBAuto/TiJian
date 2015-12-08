@@ -31,6 +31,7 @@
 @property(nonatomic,retain)UIScrollView *scroll;
 @property(nonatomic,retain)UIView *noAppointView;//待预约view
 @property(nonatomic,retain)UIView *appointedView;//已预约view
+@property(nonatomic,retain)UIView *appointedOverView;//已预约过期view
 
 @end
 
@@ -149,8 +150,28 @@
         return _appointedView;
     }
     
+    _appointedView = [self viewForResult];
+        
+    return _appointedView;
+}
+
+/**
+ *  已预约过期
+ *
+ *  @return
+ */
+-(UIView *)appointedOverView
+{
+    if (_appointedOverView) {
+        return _appointedOverView;
+    }
+    _appointedOverView = [self viewForResult];
+    return _appointedOverView;
+}
+
+- (UIView *)viewForResult
+{
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-//    view.backgroundColor = [UIColor redColor];
     CGFloat width = FitScreen(96);
     width = iPhone4 ? width * 0.8 : width;
     
@@ -160,7 +181,6 @@
     
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, icon.bottom - 5, DEVICE_WIDTH, 15) title:@"您还没有预约任何套餐" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
     [view addSubview:label];
-        
     return view;
 }
 
@@ -266,11 +286,12 @@
 - (void)parseDataWithResult:(NSDictionary *)result
                   withIndex:(int)index
 {
-    NSDictionary *setmeal_list = result[@"setmeal_list"];
 
     //待预约
     if (index == 0) {
         
+        NSDictionary *setmeal_list = result[@"setmeal_list"];
+
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
             
             [[self tableViewWithIndex:0]finishReloadigData];
@@ -314,11 +335,11 @@
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
         if (temp.count == 0) {
-            [[self tableViewWithIndex:2]addSubview:self.appointedView];
+            [[self tableViewWithIndex:2]addSubview:self.appointedOverView];
         }else
         {
-            [self.appointedView removeFromSuperview];
-            self.appointedView = nil;
+            [self.appointedOverView removeFromSuperview];
+            self.appointedOverView = nil;
         }
         [[self tableViewWithIndex:2]finishReloadigData];
 
@@ -612,7 +633,14 @@
 {
     int index = (int)tableView.tag - kTagTableView;
     if (index == 0) {
-        return 2;
+        int sum = 0;
+        if (_company.count > 0) {
+            sum += 1;
+        }
+        if (_personal.count > 0) {
+            sum += 1;
+        }
+        return sum;
     }
     return 1;
 }

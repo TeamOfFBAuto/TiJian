@@ -350,6 +350,15 @@ typedef enum {
         return;
     }
     
+    
+    int index = _selectHospitalId;
+    if (index <= 0) {
+        
+        [LTools alertText:@"请选择体检分院" viewController:self];
+        
+        return;
+    }
+    
     //公司预约提交预约信息
     if (_isCompanyAppoint) {
         
