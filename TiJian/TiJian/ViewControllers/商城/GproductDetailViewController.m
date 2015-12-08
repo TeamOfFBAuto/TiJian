@@ -378,10 +378,7 @@
     
     [self updateShopCarNum];
     
-    
 }
-
-
 
 
 
@@ -802,6 +799,10 @@
 {
     ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
     cc.lastViewController = self;
+//    aModel.current_price\product_num、brand_name、cover_pic
+    self.theProductModel.product_num = @"1";
+    self.theProductModel.current_price = _theProductModel.setmeal_price;
+    self.theProductModel.product_name = _theProductModel.setmeal_name;
     cc.dataArray = [NSArray arrayWithObject:self.theProductModel];
     [self.navigationController pushViewController:cc animated:YES];
 }
