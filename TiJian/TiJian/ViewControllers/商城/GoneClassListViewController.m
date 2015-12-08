@@ -329,6 +329,9 @@
     ProductModel *model = _table.dataArray[indexPath.row];
     cc.productId = model.product_id;
     cc.isVoucherPush = self.isVoucherPush;
+    if (self.isVoucherPush) {
+        cc.VoucherId = self.vouchers_id;
+    }
     [self.navigationController pushViewController:cc animated:YES];
 }
 

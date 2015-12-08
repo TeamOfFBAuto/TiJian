@@ -256,4 +256,17 @@
     [userInfo cacheForKey:USERINFO_MODEL];
 }
 
+/**
+ *  更新积分
+ */
++ (void)updateUserScrore:(NSString *)score
+{
+    if (!score) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.score = score;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
 @end

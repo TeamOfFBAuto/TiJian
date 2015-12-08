@@ -96,13 +96,50 @@
         [self.contentView addSubview:tLabel];
         height += tLabel.frame.size.height;
         
+        
+        
+        
+        
+        
+        
+        //领取优惠券按钮
         UIButton *getCouponBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [getCouponBtn setFrame:CGRectMake(DEVICE_WIDTH - 80, 0, 80, tLabel.frame.size.height)];
         getCouponBtn.titleLabel.font = [UIFont systemFontOfSize:13];
-        [getCouponBtn setTitle:@"点击领取" forState:UIControlStateNormal];
+        [getCouponBtn setTitle:@" " forState:UIControlStateNormal];
         [getCouponBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [getCouponBtn addTarget:self action:@selector(clickToCoupe) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:getCouponBtn];
+        
+        
+        
+        
+        
+        if (self.delegate.theProductModel.coupon_list.count>0) {
+            getCouponBtn.hidden = YES;
+            
+            NSInteger count = self.delegate.theProductModel.coupon_list.count;
+            if (count>3) {
+                count = 3;
+            }
+            
+            CGFloat v_high = tLabel.frame.size.height - 18;
+            CGFloat v_width = v_high *2.66;
+            
+            for (int i = 0; i<count; i++) {
+                 UIView *view = [self coupeViewWithCoupeModel:self.delegate.theProductModel.coupon_list[i] frame:CGRectMake(DEVICE_WIDTH - 5 - (i+1) * v_width, 9, v_width, v_high)];
+                [self.contentView addSubview:view];
+            }
+            
+            
+            
+            
+            
+            
+            
+        }else{
+            [getCouponBtn setTitle:@"暂无优惠券" forState:UIControlStateNormal];
+        }
         
         
         
@@ -354,6 +391,54 @@
     
 }
 
+//创建优惠券
+- (UIView *)coupeViewWithCoupeModel:(CouponModel *)aModel
+                              frame:(CGRect)frame
+{
+    UIView *view = [[UIView alloc]initWithFrame:frame];
+    
+    UIImage *aImage = [LTools imageForCoupeColorId:aModel.color];
+    
+    //券
+    UIButton *btn = [[UIButton alloc]initWithframe:view.bounds buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil nornalImage:aImage selectedImage:nil target:self action:nil];
+    [view addSubview:btn];
+    [btn addTarget:self action:@selector(clickToCoupe) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    int type = [aModel.type intValue];
+    
+    NSString *title_minus;
+    NSString *title_full;
+    NSString *title;
+    //满减
+    if (type == 1) {
+        
+        title_minus = [NSString stringWithFormat:@"￥%@",aModel.minus_money];
+        title_full = [NSString stringWithFormat:@"满%@即可使用",aModel.full_money];
+        title = [NSString stringWithFormat:@"满%@减%@",aModel.full_money,aModel.minus_money];
+    }
+    //折扣
+    else if (type == 2){
+        
+        NSString *discount = [NSString stringWithFormat:@"%.1f",[aModel.discount_num floatValue] * 10];
+        discount = [NSString stringWithFormat:@"%@",[discount stringByRemoveTrailZero]];
+        title_minus = @"优惠券";
+        title_full = [NSString stringWithFormat:@"本店享%@折优惠",discount];
+        title = [NSString stringWithFormat:@"%@折",discount];
+    }
+    
+    CGFloat aHeight = btn.height / 2.f - 5;
+    UILabel *minusLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, btn.width - 10, aHeight) title:title_minus font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+    [btn addSubview:minusLabel];
+    UILabel *fullLabel = [[UILabel alloc]initWithFrame:CGRectMake(minusLabel.left, minusLabel.bottom, minusLabel.width, aHeight) title:title_full font:8 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+    [btn addSubview:fullLabel];
+    
+    
+    return view;
+    
+}
+
+
 
 
 #pragma mark - 点击方法
@@ -379,37 +464,36 @@
     
     
     if ([LoginViewController isLogin]) {
-        if (_coupeView) {
-            [_coupeView removeFromSuperview];
-            _coupeView = nil;
+        
+        if (self.delegate.theProductModel.coupon_list.count>0) {
+            if (_coupeView) {
+                [_coupeView removeFromSuperview];
+                _coupeView = nil;
+            }
+            
+            NSArray *coupons = self.delegate.theProductModel.coupon_list;
+            
+            _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
+            
+            __weak typeof(self)weakSelf = self;
+            
+            _coupeView.coupeBlock = ^(NSDictionary *params){
+                
+                ButtonProperty *btn = params[@"button"];
+                CouponModel *aModel = params[@"model"];
+                
+                [weakSelf netWorkForCouponModel:aModel button:btn];
+            };
+            [_coupeView show];
         }
         
-        NSArray *coupons = self.delegate.theProductModel.coupon_list;
         
-        _coupeView = [[CoupeView alloc]initWithCouponArray:coupons userStyle:USESTYLE_Get];
-        
-        __weak typeof(self)weakSelf = self;
-        
-        _coupeView.coupeBlock = ^(NSDictionary *params){
-            
-            ButtonProperty *btn = params[@"button"];
-            CouponModel *aModel = params[@"model"];
-            
-            [weakSelf netWorkForCouponModel:aModel button:btn];
-        };
-        [_coupeView show];
     }else{
         [LoginViewController loginToDoWithViewController:self.delegate loginBlock:^(BOOL success) {
             
             
         }];
     }
-    
-    
-    
-    
-    
-    
     
 }
 

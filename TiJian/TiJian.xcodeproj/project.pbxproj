@@ -399,6 +399,8 @@
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
 		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; };
 		E3A293DA1BD88D66001CF93D /* UILabel+GautoMatchedText.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D71BD88D66001CF93D /* UILabel+GautoMatchedText.m */; };
+		E3A679C41C16DEAC00309ECD /* nan_saixuan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A679C21C16DEAC00309ECD /* nan_saixuan@2x.png */; };
+		E3A679C51C16DEAC00309ECD /* nv_saixuan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A679C31C16DEAC00309ECD /* nv_saixuan@2x.png */; };
 		E3A7099B1BE0754300750D27 /* NSDictionary+GJson.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A7099A1BE0754300750D27 /* NSDictionary+GJson.m */; };
 		E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */; };
 		E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A71BE0B07000750D27 /* GwebViewController.m */; };
@@ -1095,6 +1097,8 @@
 		E3A293D51BD88D66001CF93D /* GTouchMoveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTouchMoveView.m; sourceTree = "<group>"; };
 		E3A293D61BD88D66001CF93D /* UILabel+GautoMatchedText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+GautoMatchedText.h"; sourceTree = "<group>"; };
 		E3A293D71BD88D66001CF93D /* UILabel+GautoMatchedText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+GautoMatchedText.m"; sourceTree = "<group>"; };
+		E3A679C21C16DEAC00309ECD /* nan_saixuan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nan_saixuan@2x.png"; sourceTree = "<group>"; };
+		E3A679C31C16DEAC00309ECD /* nv_saixuan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nv_saixuan@2x.png"; sourceTree = "<group>"; };
 		E3A709991BE0754300750D27 /* NSDictionary+GJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+GJson.h"; sourceTree = "<group>"; };
 		E3A7099A1BE0754300750D27 /* NSDictionary+GJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+GJson.m"; sourceTree = "<group>"; };
 		E3A709A31BE0AE7100750D27 /* CycleAdvModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CycleAdvModel.h; sourceTree = "<group>"; };
@@ -2469,6 +2473,8 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E3A679C21C16DEAC00309ECD /* nan_saixuan@2x.png */,
+				E3A679C31C16DEAC00309ECD /* nv_saixuan@2x.png */,
 				E31F86F61C147F8400914824 /* jiantou_down@2x.png */,
 				E31F86F41C147E8B00914824 /* jiantou_up@2x.png */,
 				E31F86F21C146DBD00914824 /* ios7_refresh4139@2x.png */,
@@ -2704,6 +2710,7 @@
 				13F1F2751BBA78ED00885D31 /* LaunchScreen.storyboard in Resources */,
 				13B07A221C071A4200742AF7 /* order_phone@2x.png in Resources */,
 				13F8C5B81C05AA7E004C3FC7 /* ImagesPicker.xcassets in Resources */,
+				E3A679C51C16DEAC00309ECD /* nv_saixuan@2x.png in Resources */,
 				130D2E2C1BFDF2DC002E301F /* UMSCommentInputControlleriPad.xib in Resources */,
 				130D2E2A1BFDF2DC002E301F /* UMSCommentDetailController.xib in Resources */,
 				13F5F0E51C083AE20045B5FA /* xuanzhong@2x.png in Resources */,
@@ -2903,6 +2910,7 @@
 				E3E2B4171BFB2122007988C5 /* SelectCell.xib in Resources */,
 				1303C3611BEB0D7100700847 /* sex_nan@2x.png in Resources */,
 				130D2E2E1BFDF2DC002E301F /* UMShareEditViewControlleriPad.xib in Resources */,
+				E3A679C41C16DEAC00309ECD /* nan_saixuan@2x.png in Resources */,
 				1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */,
 				E3796D0F1BFB37CD004B63F7 /* shopping_cart_address_add@2x.png in Resources */,
 				E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */,

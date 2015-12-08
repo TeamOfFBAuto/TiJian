@@ -23,6 +23,8 @@
 
 @property(nonatomic,assign)BOOL isVoucherPush;//是否是代金卷过来
 
+@property(nonatomic,strong)NSString *VoucherId;//代金券id
+
 -(void)goToCommentVc;
 
 -(void)goToProductDetailVcWithId:(NSString *)productId;

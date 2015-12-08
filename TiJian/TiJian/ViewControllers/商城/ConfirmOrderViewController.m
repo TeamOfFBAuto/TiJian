@@ -29,7 +29,7 @@
     AFHTTPRequestOperation *_request_confirmOrder;
     AFHTTPRequestOperation *_request_address;
     
-    CGFloat _sumPrice_pay;
+    CGFloat _sumPrice_pay;//实付款
     
     NSMutableArray *_addressArray;
     
@@ -1135,16 +1135,16 @@
     //是否从预约跳转过来
     if (self.isVoucherPush) {
         
-        BOOL isTure = NO;//是否选择了这张代金券
+        BOOL isTrue = NO;//是否选择了这张代金券
         
         for (CouponModel *model in self.userSelectDaijinquanArray) {
             if ([model.coupon_id intValue] == [self.voucherId intValue]) {
-                isTure = YES;
+                isTrue = YES;
                 continue;
             }
         }
         
-        if (isTure) {
+        if (isTrue) {
             [dic setValue:@"1" forKey:@"is_appoint"];
             [dic setValue:self.voucherId forKey:@"appoint_vouchers_id"];
             [dic setValue:[UserInfo getUserId] forKey:@"company_user_id"];
@@ -1189,6 +1189,10 @@
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
+        [weakSelf updateUserInfo];
+        
+        
+        
         NSLog(@"%@",result);
         NSString *orderId = [result stringValueForKey:@"order_id"];
         NSString *orderNum = [result stringValueForKey:@"order_no"];
@@ -1208,6 +1212,37 @@
     
     
 }
+
+
+/**
+ *  更新用户积分
+ *
+ *  @return void
+ */
+-(void)updateUserInfo{
+    NSString *authkey = [UserInfo getAuthkey];
+    NSDictionary *params = @{@"authcode":authkey};;
+    NSString *api = GET_USERINFO_WITHID;
+    
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        //score
+        NSDictionary *user_info = [result dictionaryValueForKey:@"user_info"];
+        NSString *score = [user_info stringValueForKey:@"score"];
+        [UserInfo updateUserScrore:score];
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        
+    }];
+}
+
+
+
+
 
 
 /**
@@ -1343,6 +1378,7 @@
 
 
 #pragma mark - UITextFieldDelegate
+
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
     

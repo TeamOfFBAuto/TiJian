@@ -143,4 +143,9 @@
  */
 + (void)updateUserName:(NSString *)userName;
 
+/**
+ *  更新积分
+ */
++ (void)updateUserScrore:(NSString *)score;
+
 @end

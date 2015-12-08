@@ -240,8 +240,8 @@
     
     NSString *authkey = [UserInfo getAuthkey];
     
-    //update by lcw
-    authkey = @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
+//    //update by lcw
+//    authkey = @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
     
     //待预约
     if (table == [self tableViewWithIndex:0]) {

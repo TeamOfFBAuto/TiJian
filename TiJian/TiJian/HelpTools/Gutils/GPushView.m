@@ -594,14 +594,14 @@
     }if (tableView.tag == 1) {//主筛选
         [view setFrame:CGRectMake(0, 0, self.frame.size.width, 60)];
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setTitle:@"清空筛选条件" forState:UIControlStateNormal];
+        [btn setTitle:@"清除筛选" forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:13];
         btn.layer.borderWidth = 0.5;
-        btn.layer.borderColor = [RGBCOLOR(91, 145, 201) CGColor];
+        btn.layer.borderColor = [RGBCOLOR(37, 38, 38) CGColor];
         btn.layer.cornerRadius = 4;
         btn.layer.masksToBounds = YES;
         [btn setFrame:CGRectMake(self.frame.size.width*0.5-50, 15, 100, 30)];
-        [btn setTitleColor:RGBCOLOR(91, 145, 201) forState:UIControlStateNormal];
+        [btn setTitleColor:RGBCOLOR(37, 38, 38) forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(qingkongshaixuanBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:btn];
     }
@@ -739,7 +739,13 @@
                         btn.layer.borderColor = [RGBCOLOR(237, 108, 22)CGColor];
                     }else{
                         btn.layer.borderWidth = 0.5;
+                        if (i == 1) {
+                            [btn setImage:[UIImage imageNamed:@"nv_saixuan"] forState:UIControlStateNormal];
+                        }else{
+                            [btn setImage:[UIImage imageNamed:@"nan_saixuan.png"] forState:UIControlStateNormal];
+                        }
                         [btn setTitleColor:RGBCOLOR(77, 78, 79) forState:UIControlStateNormal];
+                        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
                         btn.layer.borderColor = [RGBCOLOR(37, 38, 38)CGColor];
                     }
                     [cView addSubview:btn];
@@ -761,11 +767,11 @@
                 cLabel.textAlignment = NSTextAlignmentRight;
                 cLabel.font = [UIFont systemFontOfSize:13];
                 if (indexPath.row == 1) {
-                    cLabel.text = self.userChooseCity;
+                    cLabel.text = self.userChooseCity ? self.userChooseCity: @"北京";
                 }else if (indexPath.row == 2){
-                    cLabel.text = self.userChoosePrice;
+                    cLabel.text = self.userChoosePrice ? self.userChoosePrice : @"全部" ;
                 }else if (indexPath.row == 3){
-                    cLabel.text = self.userChoosePinpai;
+                    cLabel.text = self.userChoosePinpai ? self.userChoosePinpai : @"全部" ;;
                 }
                 
                 [cell.contentView addSubview:cLabel];
@@ -790,7 +796,6 @@
             
             
             UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(titleLabel.frame)+5, 0, self.frame.size.width - titleLabel.frame.size.width - 15 - 5 - 30, titleLabel.frame.size.height)];
-            cLabel.backgroundColor = [UIColor orangeColor];
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentCenter;
             

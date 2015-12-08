@@ -573,6 +573,9 @@
     [_addShopCarBtn setFrame:CGRectMake(_downView.frame.size.width-theW, 0, theW, 50)];
     _addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
     [_addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
+    if (self.isVoucherPush) {
+        [_addShopCarBtn setTitle:@"立即购买" forState:UIControlStateNormal];
+    }
     [_addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [_addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -799,6 +802,7 @@
 {
     ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
     cc.lastViewController = self;
+    cc.voucherId = self.VoucherId;
 //    aModel.current_price\product_num、brand_name、cover_pic
     self.theProductModel.product_num = @"1";
     self.theProductModel.current_price = _theProductModel.setmeal_price;
