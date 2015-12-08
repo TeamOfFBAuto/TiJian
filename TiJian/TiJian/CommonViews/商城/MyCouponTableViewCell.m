@@ -270,7 +270,7 @@
             
         }else if (theModel.enable_use == 1){//可用
             self.disable_use_imv.hidden = YES;
-            
+            self.daijiquanImv.image = [UIImage imageNamed:@"yuyue_daijinquan.png"];
             self.miaoshuLabel.textColor = RGBCOLOR(134, 135, 136);
             self.daijinquan_brandNameLabel.textColor = RGBCOLOR(91, 146, 199);
             self.daijinquan_priceLabel.textColor = RGBCOLOR(91, 146, 199);

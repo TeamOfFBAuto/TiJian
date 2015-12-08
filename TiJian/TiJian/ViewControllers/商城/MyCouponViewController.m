@@ -34,17 +34,17 @@
     
     
     if (self.type == GCouponType_youhuiquan) {//优惠券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:5];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         self.myTitle = @"我的优惠券";
     }else if (self.type == GCouponType_daijinquan){//代金券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:5];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         self.myTitle = @"我的代金券";
     }else if (self.type == GCouponType_use_youhuiquan){//使用优惠券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:2];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
         self.myTitle = @"使用优惠券";
         self.rightString = @"确定";
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:2];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
         self.myTitle = @"使用代金券";
         self.rightString = @"确定";
     }
