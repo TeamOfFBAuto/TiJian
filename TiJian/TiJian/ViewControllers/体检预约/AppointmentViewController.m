@@ -286,12 +286,11 @@
 - (void)parseDataWithResult:(NSDictionary *)result
                   withIndex:(int)index
 {
+    NSDictionary *setmeal_list = result[@"setmeal_list"];
 
     //待预约
     if (index == 0) {
         
-        NSDictionary *setmeal_list = result[@"setmeal_list"];
-
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
             
             [[self tableViewWithIndex:0]finishReloadigData];
@@ -329,7 +328,7 @@
             [self.appointedView removeFromSuperview];
             self.appointedView = nil;
         }
-        [[self tableViewWithIndex:1]finishReloadigData];
+        [[self tableViewWithIndex:1] reloadData:temp pageSize:G_PER_PAGE];
         
     }else if (index == 2){
         
@@ -341,7 +340,7 @@
             [self.appointedOverView removeFromSuperview];
             self.appointedOverView = nil;
         }
-        [[self tableViewWithIndex:2]finishReloadigData];
+        [[self tableViewWithIndex:2] reloadData:temp pageSize:G_PER_PAGE];
 
     }
 }
