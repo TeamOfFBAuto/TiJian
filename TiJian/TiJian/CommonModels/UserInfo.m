@@ -141,8 +141,7 @@
 
 + (NSString *)getAuthkey
 {
-    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
-    NSString *value = userInfo.authcode;
+    NSString *value = [LTools objectForKey:USER_AUTHOD];
     if (value) {
         return value;
     }

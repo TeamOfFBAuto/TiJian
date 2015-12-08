@@ -81,6 +81,7 @@
     NSDictionary *user_info = result[@"user_info"];
     
     self.userInfo = [[UserInfo alloc]initWithDictionary:user_info];
+
     [self.userInfo cacheUserInfo];//存储
     
     _titles = @[@"姓       名",@"昵       称",@"性       别",@"年       龄",@"出生日期",@"身份证号"];

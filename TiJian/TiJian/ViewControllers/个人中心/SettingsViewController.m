@@ -120,6 +120,7 @@
 
     //保存登录状态 yes
     [LTools setBool:NO forKey:LOGIN_SERVER_STATE];
+    [LTools setObject:nil forKey:USER_AUTHOD];
     
     [LTools showMBProgressWithText:@"退出成功" addToView:self.view];
     

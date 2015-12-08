@@ -412,6 +412,9 @@
          */
         [user cacheUserInfo];
         
+        //记录authkey
+        [LTools setObject:user.authcode forKey:USER_AUTHOD];
+        
         //保存登录状态 yes
         
         [LTools setBool:YES forKey:LOGIN_SERVER_STATE];
