@@ -170,6 +170,8 @@
     for (ProductModel *model in self.dataArray) {
         CGFloat tprice_one = ([model.current_price floatValue]*[model.product_num intValue]);
         _price_total += tprice_one;
+        model.afterUsedYouhuiquan_Price = [model.current_price floatValue];
+        
     }
     //运费
     CGFloat yunfei = 0;

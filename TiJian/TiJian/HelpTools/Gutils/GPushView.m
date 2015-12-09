@@ -739,6 +739,7 @@
                         btn.layer.borderColor = [RGBCOLOR(237, 108, 22)CGColor];
                     }else{
                         btn.layer.borderWidth = 0.5;
+
                         if (i == 1) {
                             [btn setImage:[UIImage imageNamed:@"nv_saixuan"] forState:UIControlStateNormal];
                         }else{
