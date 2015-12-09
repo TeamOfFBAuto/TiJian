@@ -307,6 +307,12 @@
     return str;
 }
 
++(NSString *)getCurrentCityName{
+    NSString *ss = [self getCurrentCityId];
+    NSString *cc = [self cityNameForId:[ss intValue]];
+    return cc;
+}
+
 
 
 +(NSString*)getProvineIdWithCityId:(int)cityId{

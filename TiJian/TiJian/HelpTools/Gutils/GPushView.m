@@ -154,15 +154,32 @@
     view.backgroundColor = [UIColor whiteColor];
     self.tab2.tableHeaderView = view;
     
-    UILabel *locationCityLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, self.frame.size.width-90, 44)];
+    UILabel *locationCityLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, self.frame.size.width-150, 44)];
     locationCityLabel.textColor = [UIColor grayColor];
-    locationCityLabel.text = @"北京";
+    NSString *curent_city_Name = [GMAPI getCurrentCityName];
+    
+    
+    
+    
+    locationCityLabel.text = curent_city_Name;
     locationCityLabel.font = [UIFont systemFontOfSize:14];
     [view addSubview:locationCityLabel];
     
+    locationCityLabel.backgroundColor = [UIColor orangeColor];
+    
     UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(locationCityLabel.frame)+5, 0, 65, 44)];
     tishiLabel.font = [UIFont systemFontOfSize:10];
-    tishiLabel.text = @"当前所在位置";
+    
+    if ([LTools isEmpty:curent_city_Name]) {
+        locationCityLabel.text = @"北京市";
+        tishiLabel.text = @"定位失败默认北京";
+    }else{
+        locationCityLabel.text = curent_city_Name;
+        tishiLabel.text = @"当前所在位置";
+    }
+    
+    
+    
     tishiLabel.textColor = RGBCOLOR(134, 135, 136);
     [view addSubview:tishiLabel];
 }

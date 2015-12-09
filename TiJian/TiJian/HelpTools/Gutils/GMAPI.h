@@ -45,6 +45,8 @@
 +(NSString *)getCurrentProvinceId;
 +(NSString *)getCurrentCityId;
 
++(NSString *)getCurrentCityName;
+
 //获取appdelegate
 + (AppDelegate *)appDeledate;
 
