@@ -40,16 +40,14 @@
         [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         self.myTitle = @"我的代金券";
     }else if (self.type == GCouponType_use_youhuiquan){//使用优惠券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         self.myTitle = @"使用优惠券";
-        self.rightString = @"确定";
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         self.myTitle = @"使用代金券";
-        self.rightString = @"确定";
     }
     
-    
+    self.view.backgroundColor = RGBCOLOR(245, 245, 245);
     
     [self prepareNetData];
     
@@ -61,34 +59,53 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    NSString *btnTitle;
+    SEL selector = NULL;
+    if (type == PageResultType_requestFail) {
+        
+        content = @"获取数据异常,点击重新加载";
+//        btnTitle = @"重新加载";
+//        selector = @selector(clickToResfresh);
+        
+    }else if (type == PageResultType_nodata){
+        
+        if (self.type == GCouponType_daijinquan || self.type == GCouponType_disUse_daijinquan || self.type == GCouponType_use_daijinquan) {
+            content = @"您还没有可用的代金券";
+        }else if (self.type == GCouponType_disUse_youhuiquan || self.type == GCouponType_use_youhuiquan || self.type == GCouponType_youhuiquan){
+            content = @"您还没有可用的优惠券";
+        }
+        
+//        btnTitle = @"立即上传";
+//        selector = @selector(clickToUploadReport);
+        
+    }
+    
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    
+    
+    return result;
+}
+
+
+
+
+
+
+
+
 #pragma mark - 重载方法
 -(void)rightButtonTap:(UIButton *)sender{
     
     
-    if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
-        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
-        for (NSArray *ar in _tab0Array) {
-            for (CouponModel *model in ar) {
-                if (model.isUsed) {
-                    [arr addObject:model];
-                }
-            }
-        }
-        self.delegate.userSelectYouhuiquanArray = arr;
-    }else if (self.type == GCouponType_use_daijinquan){//使用代金券
-        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
-        for (NSArray *ar in _tab0Array) {
-            for (CouponModel *model in ar) {
-                if (model.isUsed) {
-                    [arr addObject:model];
-                }
-            }
-        }
-        self.delegate.userSelectDaijinquanArray = arr;
-    }
     
-    [self.delegate jisuanPrice];
-    [self.navigationController popViewControllerAnimated:YES];
     
 }
 
@@ -96,8 +113,6 @@
 #pragma mark - 视图创建
 //创建上方选择btn 和 下方展示tab
 -(void)creatUpBtnAndDownScrollView{
-    
-    
     
     
     int abelCount = 0;
@@ -125,6 +140,12 @@
     int count = (int)titles.count;
     CGFloat width = DEVICE_WIDTH / count;
     _buttonNum = count;
+    
+    
+    UIView *upline = [[UIView alloc]initWithFrame:CGRectMake(0, 39.5, DEVICE_WIDTH, 0.5)];
+    upline.backgroundColor = RGBCOLOR(235, 235, 235);
+    [self.view addSubview:upline];
+    
     _scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 40)];
     _scroll.delegate = self;
     _scroll.contentSize = CGSizeMake(DEVICE_WIDTH * count, _scroll.height);
@@ -149,14 +170,27 @@
         btn.selected = YES;
         
         UITableView *_table = [[UITableView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * i, 0, DEVICE_WIDTH,_scroll.height) style:UITableViewStyleGrouped];
+        _table.backgroundColor = RGBCOLOR(245, 245, 245);
         _table.delegate = self;
         _table.dataSource = self;
         [_scroll addSubview:_table];
         _table.tag = 200 + i;
         
+        
+        
+        
+        
         if (_table.tag == 200) {
+            if (_tab0Array.count == 0) {
+                UIView *immm = [self resultViewWithType:PageResultType_nodata];
+                _table.tableFooterView = immm;
+            }
             _tab0 = _table;
         }else if (_table.tag == 201){
+            if (_tab1Array.count == 0) {
+                UIView *immm = [self resultViewWithType:PageResultType_nodata];
+                _table.tableFooterView = immm;
+            }
             _tab1 = _table;
         }
         
@@ -166,6 +200,11 @@
     //默认选中第一个
     [self controlSelectedButtonTag:100];
     self.view.backgroundColor = [UIColor whiteColor];
+    
+    
+    
+    
+    
 }
 
 
@@ -446,6 +485,28 @@
         
         [self creatUpBtnAndDownScrollView];
         
+        
+        if (_tab0Array.count>0) {
+            
+            if (self.type == GCouponType_use_daijinquan || self.type == GCouponType_use_youhuiquan) {
+                UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 55)];
+                
+                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [btn setFrame:CGRectMake(DEVICE_WIDTH*0.5-100, 10, 200, 35)];
+                btn.layer.cornerRadius = 4;
+                btn.backgroundColor = RGBCOLOR(92, 146, 203);
+                btn.titleLabel.font = [UIFont systemFontOfSize:15];
+                [btn setTitle:@"使 用" forState:UIControlStateNormal];
+                [btn addTarget:self action:@selector(useBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+                [view addSubview:btn];
+                
+                _tab0.tableFooterView = view;
+            }
+            
+            
+        }
+        
+        
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         
@@ -460,6 +521,37 @@
     
     
 }
+
+
+
+-(void)useBtnClicked{
+    if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray *ar in _tab0Array) {
+            for (CouponModel *model in ar) {
+                if (model.isUsed) {
+                    [arr addObject:model];
+                }
+            }
+        }
+        self.delegate.userSelectYouhuiquanArray = arr;
+    }else if (self.type == GCouponType_use_daijinquan){//使用代金券
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray *ar in _tab0Array) {
+            for (CouponModel *model in ar) {
+                if (model.isUsed) {
+                    [arr addObject:model];
+                }
+            }
+        }
+        self.delegate.userSelectDaijinquanArray = arr;
+    }
+    
+    [self.delegate jisuanPrice];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
 
 
 

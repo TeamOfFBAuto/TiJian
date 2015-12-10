@@ -79,6 +79,7 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
+    
     [self creatTableView];
     
 }
@@ -87,6 +88,124 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - 缓存
+-(void)loadCache{
+    
+    
+    _StoreCycleAdvDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
+    
+    _StoreProductClassDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreProductClassDic"];
+    
+    NSDictionary *storeProductListDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreProductListDic"];
+    
+    
+    if (storeProductListDic && _StoreProductClassDic && _StoreCycleAdvDic) {
+        
+        
+        //精品推荐数据
+        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *arr = [storeProductListDic arrayValueForKey:@"data"];
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_StoreProductListArray addObject:model];
+        }
+        
+        
+        
+        //数据数组
+        NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
+        
+        //共几行
+        int hang = (int)classData.count/2;
+        if (hang<classData.count/2.0) {
+            hang+=1;
+        };
+        //每行几列
+        int lie = 2;
+        
+        //refresh头部
+        self.theTopView = [[UIView alloc]initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  DEVICE_WIDTH,
+                                                                  [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/300]//轮播图高度
+                                                                  +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
+                                                                  +5
+                                                                  +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
+                                                                  +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
+                                                                  )];
+        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
+        _table.tableHeaderView = self.theTopView;
+        
+        //设置轮播图
+        [self creatUpCycleScrollView];
+        
+        //设置版块
+        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
+        bankuaiView.backgroundColor = [UIColor whiteColor];
+        [self.theTopView addSubview:bankuaiView];
+        
+        //宽
+        CGFloat kk = DEVICE_WIDTH*0.5;
+        //高
+        CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+        
+        for (int i = 0; i<classData.count; i++) {
+            NSDictionary *dic = classData[i];
+            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*hh, kk, hh)];
+            [bankuaiView addSubview:view];
+            view.backgroundColor = RGBCOLOR_ONE;
+            
+            //图片
+            UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
+            [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+            [view addSubview:imv];
+            //标题
+            //            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, imv.frame.size.width, imv.frame.size.height * 0.25)];
+            //            titleLabel.text = [dic stringValueForKey:@"name"];
+            //            titleLabel.textColor = [UIColor blackColor];
+            //            titleLabel.font = [UIFont systemFontOfSize:15];
+            //            [imv addSubview:titleLabel];
+            
+            
+            int imvTag = i+10;
+            [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
+        }
+        
+        UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
+                                                                               CGRectGetMaxY(bankuaiView.frame)+5,
+                                                                               DEVICE_WIDTH,
+                                                                               [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
+                                                                               )];
+        [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
+        [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
+        [self.theTopView addSubview:dingzhiImv];
+        
+        //设置精品推荐
+        UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
+                                                                         CGRectGetMaxY(dingzhiImv.frame),
+                                                                         DEVICE_WIDTH,
+                                                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+        jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
+        [self.theTopView addSubview:jingpintuijian];
+        UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
+        ttl.font = [UIFont systemFontOfSize:15];
+        [jingpintuijian addSubview:ttl];
+        ttl.text = @"精品推荐";
+        ttl.textColor = [UIColor blackColor];
+        
+        [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
+    }
+    
+    
+    
+    
+    
+}
+
+
+
 
 
 
@@ -104,6 +223,10 @@
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
+        [GMAPI cache:_StoreCycleAdvDic ForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
+        
+        
+        
         
         
     } failBlock:^(NSDictionary *result) {
@@ -117,6 +240,10 @@
         _StoreProductClassDic = result;
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+        [GMAPI cache:_StoreProductClassDic ForKey:@"GStoreHomeVc_StoreProductClassDic"];
+        
+        
         
     } failBlock:^(NSDictionary *result) {
         
@@ -132,7 +259,16 @@
             ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
             [_StoreProductListArray addObject:model];
         }
+        
+        
+        
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        
+        
+        [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
+        
+        
+        
         
     } failBlock:^(NSDictionary *result) {
         
@@ -165,8 +301,6 @@
         };
         //每行几列
         int lie = 2;
-        
-        
         
         //refresh头部
         self.theTopView = [[UIView alloc]initWithFrame:CGRectMake(0,
@@ -263,6 +397,14 @@
 }
 
 
+
+
+
+
+
+
+
+
 -(void)classImvClicked:(UIImageView*)sender{
     NSLog(@"%s",__FUNCTION__);
     NSLog(@"%ld",(long)sender.tag);
@@ -290,6 +432,11 @@
     _table.dataSource = self;
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
+    
+    
+    [self loadCache];
+    
+    
     [_table showRefreshHeader:YES];
     
 }

@@ -107,6 +107,9 @@
 //修改用户信息
 #define USER_UPDATE_USEINFO @"/index.php?d=api&c=user&m=update_user_info"
 
+//获取用户积分
+#define USER_GETJIFEN @"/index.php?d=api&c=user&m=get_my_score&authcode="
+
 //20、融云获取token
 #define USER_GET_TOKEN @"/index.php?d=api&c=chat&m=get_token"
 

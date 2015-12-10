@@ -32,8 +32,7 @@
     
     UIButton *_jiesuanBtn;//结算 删除按钮
     
-    
-    
+    UIButton *_rightBtn;//右边按钮
     
 }
 @end
@@ -72,9 +71,10 @@
     // Do any additional setup after loading the view.
     
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     self.myTitle = @"购物车";
     _deleteState = NO;
+
     
     for (int i = 0; i<500; i++) {
         _open[i] = 0;
@@ -87,7 +87,7 @@
     _totolPrice = 0;
     
     
-    [self creatNoProductView];
+//    [self creatNoProductView];
     
     [self creaTab];
     
@@ -104,7 +104,7 @@
 #pragma mark - 视图创建
 //创建主tableview
 -(void)creaTab{
-    self.rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStyleGrouped];
+    self.rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
     self.rTab.refreshDelegate = self;
     self.rTab.dataSource = self;
     
@@ -169,21 +169,21 @@
     
 }
 
-//创建购物车没有东西的提示界面
--(void)creatNoProductView{
-    _noProductView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-    
-    UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
-    tishiLabel.center = _noProductView.center;
-    tishiLabel.font = [UIFont systemFontOfSize:15];
-    tishiLabel.text = @"~空空如也~";
-    tishiLabel.textAlignment = NSTextAlignmentCenter;
-    tishiLabel.textColor = [UIColor grayColor];
-    [_noProductView addSubview:tishiLabel];
-    
-    _noProductView.hidden = YES;
-    [self.view addSubview:_noProductView];
-}
+////创建购物车没有东西的提示界面
+//-(void)creatNoProductView{
+//    _noProductView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+//    
+//    UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
+//    tishiLabel.center = _noProductView.center;
+//    tishiLabel.font = [UIFont systemFontOfSize:15];
+//    tishiLabel.text = @"~空空如也~";
+//    tishiLabel.textAlignment = NSTextAlignmentCenter;
+//    tishiLabel.textColor = [UIColor grayColor];
+//    [_noProductView addSubview:tishiLabel];
+//    
+//    _noProductView.hidden = YES;
+//    [self.view addSubview:_noProductView];
+//}
 
 
 
@@ -217,12 +217,18 @@
         
         [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
             
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            _deleteState = NO;
+            [bself.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
+            [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
             bself.totolPriceLabel.hidden = NO;
             bself.detailPriceLabel.hidden = NO;
-            [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+            _totolPrice = 0;
             
-            [bself.rTab.dataArray removeAllObjects];
+//            [bself.rTab.dataArray removeAllObjects];
+            
+//            [self deleteUserChooseProducts];
+            
+//            [bself.rTab reloadData];
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
         } failBlock:^(NSDictionary *result) {
@@ -248,22 +254,20 @@
 //删除按钮
 -(void)rightButtonTap:(UIButton *)sender{
     
-    if ([sender.titleLabel.text isEqualToString:@"删除"]) {
-        _deleteState = YES;
-        [sender setTitle:@"完成" forState:UIControlStateNormal];
+    _deleteState = !_deleteState;
+    
+    if (_deleteState) {//删除
+        [self.my_right_button setTitle:@"取消" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"删除" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = YES;
         self.detailPriceLabel.hidden = YES;
-        
     }else{
-        
-        _deleteState = NO;
-        [sender setTitle:@"删除" forState:UIControlStateNormal];
+        [self.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = NO;
         self.detailPriceLabel.hidden = NO;
-        
     }
+    
     
 }
 
@@ -321,6 +325,18 @@
             _noProductView.hidden = YES;
             _downView.hidden = NO;
         }
+        
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        
+        
+        if (dataArray.count == 0) {
+            [_rTab reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
+        }
+        
+        
+        
         
         
     } failBlock:^(NSDictionary *result) {
@@ -525,6 +541,21 @@
 }
 
 
+-(void)deleteUserChooseProducts{
+    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
+    
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel *model in arr) {
+            if (model.userChoose) {
+                [theArr addObject:model];
+            }
+        }
+    }
+  
+    
+}
+
+
 //更新下边价格信息view
 -(void)updateRtabTotolPrice{
     
@@ -642,6 +673,30 @@
 -(void)setOpenArray0WithIndex:(int)index{
     _open[index] = 0;
 }
+
+
+
+
+#pragma mark - 无数据默认view
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"购物车空空如也";
+        
+    }
+    
+
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    
+    
+    return result;
+}
+
 
 
 @end

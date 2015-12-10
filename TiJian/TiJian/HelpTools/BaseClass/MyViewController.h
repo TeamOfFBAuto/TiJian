@@ -53,6 +53,8 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 @property(nonatomic,strong)NSString * myTitle;//视图标题
 @property(nonatomic,retain)UIView *resultView;//结果view
 
+@property(nonatomic,strong)UIButton *my_right_button;//右边文字button
+
 
 -(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType WithRightButtonType:(MyViewControllerRightbuttonType)rightType;
 

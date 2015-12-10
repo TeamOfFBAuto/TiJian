@@ -333,6 +333,8 @@
         
         if ([_useScoreTf.text integerValue]> _keyongJifen) {
             jifen = _keyongJifen;
+            _useScoreTf.text = [NSString stringWithFormat:@"%ld",(long)_keyongJifen];
+            _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",_keyongJifen/100.0];
         }else{
             jifen = [_useScoreTf.text integerValue];
         }
@@ -1200,7 +1202,7 @@
         NSString *orderNum = [result stringValueForKey:@"order_no"];
         _sumPrice_pay = _finalPrice;
         
-        if (_sumPrice_pay == 0) {
+        if (_sumPrice_pay <0.01) {
             [weakSelf payResultSuccess:PAY_RESULT_TYPE_Success erroInfo:nil oderid:orderId sumPrice:_sumPrice_pay orderNum:orderNum];
         }else{
             [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];

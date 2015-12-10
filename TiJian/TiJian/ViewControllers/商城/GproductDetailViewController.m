@@ -147,14 +147,14 @@
         [UIView animateWithDuration:0.3 animations:^{
             _tab.top = -500;
             _hiddenView.top = 0;
-            _downView.top = self.view.size.height;
+//            _downView.top = self.view.size.height;
             self.myTitle = @"体检项目";
         }];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
             _tab.top = 0;
             _hiddenView.top = CGRectGetMaxY(_tab.frame);
-            _downView.top = DEVICE_HEIGHT - 50-64;
+//            _downView.top = DEVICE_HEIGHT - 50-64;
             self.myTitle = @"体检项目";
         }];
     }

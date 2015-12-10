@@ -189,16 +189,23 @@
         [cView addSubview:projectInfoLabel];
         
         //适用地区
-        UILabel *cityInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5, cView.frame.size.width, 12)];
+        
+        UILabel *city_titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5, 52, 12)];
+        city_titleLabel.font = [UIFont systemFontOfSize:12];
+        city_titleLabel.text = @"适用地区:";
+        [cView addSubview:city_titleLabel];
+        
+        UILabel *cityInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(city_titleLabel.frame), city_titleLabel.frame.origin.y, cView.frame.size.width - city_titleLabel.frame.size.width, 12)];
         cityInfoLabel.font = [UIFont systemFontOfSize:12];
         cityInfoLabel.textColor = [UIColor blackColor];
-        NSArray *cityInfoArray = self.delegate.theProductModel.city_info;
-        NSString *cityInfo_str = @"";
-        for (NSDictionary *dic in cityInfoArray) {
-            NSString *ss = [NSString stringWithFormat:@"%@  %@",cityInfo_str,[dic stringValueForKey:@"city_name"]];
-            cityInfo_str = ss;
+        
+        NSMutableArray *cityInfoArray = [NSMutableArray arrayWithCapacity:1];
+        for (NSDictionary *dic in self.delegate.theProductModel.city_info) {
+            NSString *str = [dic stringValueForKey:@"city_name"];
+            [cityInfoArray addObject:str];
         }
-        cityInfoLabel.text = [NSString stringWithFormat:@"适用地区:%@",cityInfo_str];
+        NSString *cityInfo_str = [cityInfoArray componentsJoinedByString:@" "];
+        cityInfoLabel.text = [NSString stringWithFormat:@"%@ 北京市 北京市 北京市 北京市 北京市 北京市",cityInfo_str];
         [cView addSubview:cityInfoLabel];
         
         
@@ -206,7 +213,11 @@
         [brandNameLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) width:cView.frame.size.width];
         [suitLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(brandNameLabel.frame)+5) width:cView.frame.size.width];
         [projectInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(suitLabel.frame)+5) width:cView.frame.size.width];
-        [cityInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5) width:cView.frame.size.width];
+        [projectInfoLabel setHeight:12];
+        
+        [city_titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5) width:52];
+        
+        [cityInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(CGRectGetMaxX(city_titleLabel.frame)+5, CGRectGetMaxY(projectInfoLabel.frame)+5) width:cView.frame.size.width - city_titleLabel.frame.size.width];
         
         CGFloat hh = brandNameLabel.frame.size.height + 5 + suitLabel.frame.size.height + 5 + projectInfoLabel.frame.size.height + 5 + cityInfoLabel.frame.size.height;
         
@@ -228,16 +239,18 @@
             UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
             [self.contentView addSubview:view];
             UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 50, view.frame.size.height)];
-            tLabel.font = [UIFont systemFontOfSize:14];
+            tLabel.font = [UIFont systemFontOfSize:13];
             tLabel.text = @"评价";
             [view addSubview:tLabel];
             
             
             if (commentArr.count>0) {
                 UIButton *moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [moreBtn setFrame:CGRectMake(view.frame.size.width-60, 0, 60, view.frame.size.height)];
-                moreBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [moreBtn setFrame:CGRectMake(view.frame.size.width-70, 0, 60, view.frame.size.height)];
+                moreBtn.titleLabel.font = [UIFont systemFontOfSize:12];
                 [moreBtn setTitle:@"更多" forState:UIControlStateNormal];
+                [moreBtn setImage:[UIImage imageNamed:@"personal_jiantou_r.png"] forState:UIControlStateNormal];
+                [moreBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 50, 0, 0)];
                 [moreBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [moreBtn addTarget:self action:@selector(goToCommentVc) forControlEvents:UIControlEventTouchUpInside];
                 [self.contentView addSubview:moreBtn];

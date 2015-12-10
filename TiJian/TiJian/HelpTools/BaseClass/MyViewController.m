@@ -18,7 +18,6 @@
     MyViewControllerRightbuttonType myRightType;
 }
 //右上角按钮
-@property(nonatomic,strong)UIButton * my_right_button;
 @property(nonatomic,strong)UILabel * navTitleLabel;//导航栏label
 
 @end

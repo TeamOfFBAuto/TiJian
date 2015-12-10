@@ -28,6 +28,8 @@
     
     UIImageView *_defaultPriceImv;
     
+    UILabel *_locationCityLabel;//定位城市label
+    
     
 }
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender{
@@ -152,37 +154,89 @@
     
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
     view.backgroundColor = [UIColor whiteColor];
+    [view addTaget:self action:@selector(tab2HeaderClicked) tag:0];
     self.tab2.tableHeaderView = view;
     
-    UILabel *locationCityLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, self.frame.size.width-150, 44)];
-    locationCityLabel.textColor = [UIColor grayColor];
+    //定位城市label
+    _locationCityLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, self.frame.size.width-150, 44)];
+    _locationCityLabel.textColor = RGBCOLOR(236, 108, 20);
+    NSString *province_id = [GMAPI getCurrentProvinceId];
+    NSString *province_name = [GMAPI cityNameForId:[province_id intValue]];
     NSString *curent_city_Name = [GMAPI getCurrentCityName];
+    if ([province_name isEqualToString:@"北京市"] || [province_name isEqualToString:@"上海市"] || [province_name isEqualToString:@"天津市"] || [province_name isEqualToString:@"重庆市"]){
+        curent_city_Name = province_name;
+    }
     
     
     
+    _locationCityLabel.text = curent_city_Name;
+    _locationCityLabel.font = [UIFont systemFontOfSize:13];
+    [view addSubview:_locationCityLabel];
     
-    locationCityLabel.text = curent_city_Name;
-    locationCityLabel.font = [UIFont systemFontOfSize:14];
-    [view addSubview:locationCityLabel];
-    
-    locationCityLabel.backgroundColor = [UIColor orangeColor];
-    
-    UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(locationCityLabel.frame)+5, 0, 65, 44)];
+    //提示信息label
+    UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width - 70, 0, 65, 44)];
+    tishiLabel.textAlignment = NSTextAlignmentRight;
     tishiLabel.font = [UIFont systemFontOfSize:10];
+    tishiLabel.textColor = RGBCOLOR(134, 135, 136);
     
     if ([LTools isEmpty:curent_city_Name]) {
-        locationCityLabel.text = @"北京市";
+        _locationCityLabel.text = @"北京市";
         tishiLabel.text = @"定位失败默认北京";
     }else{
-        locationCityLabel.text = curent_city_Name;
+        _locationCityLabel.text = curent_city_Name;
         tishiLabel.text = @"当前所在位置";
     }
     
     
     
-    tishiLabel.textColor = RGBCOLOR(134, 135, 136);
+    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
+    downLine.backgroundColor = RGBCOLOR(222, 223, 224);
+    [view addSubview:downLine];
+    
+    
+    
+//    //箭头
+//    if ([self.userChooseCity isEqualToString:province_name]) {
+//        UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+//        [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+//        [view addSubview:mark_imv];
+//        [tishiLabel setFrame:CGRectMake(self.frame.size.width - 30-70, 0, 65, 44)];
+//    }
+    
+    
+    
     [view addSubview:tishiLabel];
 }
+
+
+-(void)tab2HeaderClicked{
+    self.userChooseCity = _locationCityLabel.text;
+    
+    [self.tab2 reloadData];
+    [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+    [self hiddenTab:self.tab2];
+    [self.tab1 reloadData];
+    
+    
+}
+
+
+
+
+-(void)reloadTab2Header{
+    for (UIView *view in self.tab2.tableHeaderView.subviews) {
+        [view removeFromSuperview];
+    }
+    
+    [self creatTab2Header];
+    
+    
+}
+
+
+
+
+
 
 //创建价格选择的tabelHeader 显示默认全部
 -(void)creatTab3Header{
@@ -520,6 +574,13 @@
         
         if ([provinceStr isEqualToString:@"北京市"] || [provinceStr isEqualToString:@"上海市"] || [provinceStr isEqualToString:@"天津市"] || [provinceStr isEqualToString:@"重庆市"]){
             
+            if ([self.userChooseCity isEqualToString:provinceStr]) {
+                UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+                [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+                [view addSubview:mark_imv];
+            }
+            
+            
         }else{
             
             UIButton *jiantouBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -646,13 +707,20 @@
     int aa = _isopen[sender.tag-10];
     
     if (tt == 0 || tt == 1 || tt == 2 || tt == 3) {//4个直辖市
-        [self hiddenTab:self.tab2];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        
+        
+        
         
         NSDictionary *dic = _areaData[tt];
         NSString *provinceName = [dic stringValueForKey:@"State"];
-        
         self.userChooseCity = provinceName;
+        
+        [self.tab2 reloadData];
+//        [self reloadTab2Header];
+        
+        [self hiddenTab:self.tab2];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        
         
         [self.tab1 reloadData];
         
@@ -668,6 +736,7 @@
     }
     
     [self.tab2 reloadData];
+//    [self reloadTab2Header];
 }
 
 
@@ -785,7 +854,13 @@
                 cLabel.textAlignment = NSTextAlignmentRight;
                 cLabel.font = [UIFont systemFontOfSize:13];
                 if (indexPath.row == 1) {
-                    cLabel.text = self.userChooseCity ? self.userChooseCity: @"北京";
+                    
+                    NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
+                    if ([LTools isEmpty:cityName]) {
+                        cityName = @"北京市";
+                    }
+                    
+                    cLabel.text = self.userChooseCity ? self.userChooseCity: cityName;
                 }else if (indexPath.row == 2){
                     cLabel.text = self.userChoosePrice ? self.userChoosePrice : @"全部" ;
                 }else if (indexPath.row == 3){
@@ -818,7 +893,11 @@
             cLabel.textAlignment = NSTextAlignmentCenter;
             
             if (indexPath.row == 0) {
-                cLabel.text = self.userChooseCity;
+                NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
+                if ([LTools isEmpty:cityName]) {
+                    cityName = @"北京市";
+                }
+                cLabel.text = self.userChooseCity ? self.userChooseCity: cityName;
             }else if (indexPath.row == 1){
                 cLabel.text = self.userChoosePrice;
             }else if (indexPath.row == 2){
@@ -857,6 +936,18 @@
         NSArray * cities = _areaData[indexPath.section][@"Cities"];
         tLabel.text = cities[indexPath.row][@"city"];
         [cell.contentView addSubview:tLabel];
+        
+        
+        
+        if ([self.userChooseCity isEqualToString:tLabel.text]) {
+            UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+            [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+            [cell.contentView addSubview:mark_imv];
+        }
+        
+        
+        
+        
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(30, 43.5, DEVICE_WIDTH-30, 0.5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -951,6 +1042,8 @@
         NSArray * cities = _areaData[indexPath.section][@"Cities"];
         NSString *cityStr = cities[indexPath.row][@"city"];
         self.userChooseCity = cityStr;
+        [self.tab2 reloadData];
+//        [self reloadTab2Header];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         [self hiddenTab:self.tab2];
         [self.tab1 reloadData];

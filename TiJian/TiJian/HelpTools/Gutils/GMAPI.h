@@ -67,6 +67,12 @@
 //根据city_id查询province_id;
 +(NSString*)getProvineIdWithCityId:(int)cityId;
 
+
+//根据cityid 拿到city名 如果cityid是4个直辖市的区id 则取provinceName
++(NSString *)getCityNameOf4CityWithCityId:(int)cityId;
+
+
+
 //判断是否为整形：
 + (BOOL)isPureInt:(NSString*)string;
 

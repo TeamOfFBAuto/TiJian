@@ -30,6 +30,8 @@
     UIView *_backBlackView;//筛选界面下面的黑色透明view
     
     
+    UIButton *_filterButton;//筛选按钮
+    
     
 }
 
@@ -119,17 +121,19 @@
 
 -(void)creatFilterBtn{
     
-    UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    filterButton.frame = CGRectMake(17, 17, 38, 38);
-    [filterButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
-    [filterButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [filterButton setImage:[UIImage imageNamed:@"shaixuan"] forState:UIControlStateNormal];
+    _filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _filterButton.frame = CGRectMake(17, 17, 38, 38);
+    [_filterButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+    [_filterButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [_filterButton setImage:[UIImage imageNamed:@"shaixuan.png"] forState:UIControlStateNormal];
     
-    [self.view addSubview:filterButton];
-    [filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_filterButton];
+    [_filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
     
-    if (self.isProductDetailVcPush) {
-        filterButton.hidden = YES;
+    if (self.isProductDetailVcPush || _table.dataArray.count == 0) {
+        _filterButton.hidden = YES;
+    }else{
+        _filterButton.hidden = NO;
     }
 }
 
@@ -239,6 +243,17 @@
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         [_table reloadData:_productOneClassArray pageSize:G_PER_PAGE];
+        
+        if (_productOneClassArray.count == 0) {
+            _filterButton.hidden = YES;
+            [_table reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
+            
+        }else{
+            _filterButton.hidden = NO;
+        }
+        
+        
+        
     } failBlock:^(NSDictionary *result) {
         
     }];
@@ -411,5 +426,26 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.5;
 }
+
+
+
+#pragma mark - 无数据默认view
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"暂无可用套餐";
+    }
+    
+    
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    return result;
+}
+
+
 
 @end

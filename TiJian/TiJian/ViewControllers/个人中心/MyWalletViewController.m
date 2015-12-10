@@ -18,6 +18,8 @@
     NSString *_vouchers_count;
     
     
+    NSString *_user_score;
+    
 }
 @end
 
@@ -34,6 +36,7 @@
     
     _coupon_count = nil;
     _vouchers_count = nil;
+    _user_score = 0;
     
     [self creatTab];
     
@@ -77,6 +80,20 @@
     }];
     
     
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:USER_GETJIFEN parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _user_score = [result stringValueForKey:@"score"];
+        
+        [_tab reloadData];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
     
     
     
@@ -192,7 +209,7 @@
     
     if (indexPath.row == 0) {//积分
         danweiLabel.text = @"分";
-        cLabel.text = [UserInfo userInfoForCache].score;
+        cLabel.text = _user_score;
     }else if (indexPath.row == 1){//优惠券
         danweiLabel.text = @"张";
         
