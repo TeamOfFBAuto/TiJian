@@ -48,6 +48,7 @@
     [super viewWillAppear:animated];
 
     self.navigationController.navigationBarHidden = NO;
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
 - (void)dealloc
@@ -107,8 +108,8 @@
         _navTitleLabel.textColor = DEFAULT_TEXTCOLOR;
         
     }else if (style == NAVIGATIONSTYLE_CUSTOM){
-        
-        self.navigationController.navigationBarHidden = YES;
+                
+        [self.navigationController setNavigationBarHidden:YES];
         
         UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, IOS7_OR_LATER ? 0 : 20, DEVICE_WIDTH, IOS7_OR_LATER ? 64 : 44)];
         [self.view addSubview:navigationView];

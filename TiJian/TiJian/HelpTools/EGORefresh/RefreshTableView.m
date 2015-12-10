@@ -246,16 +246,13 @@
     //有数据
     else
     {
-        //总数小于一页时 但是有数据时 不显示tableViewFooter
-        if (self.dataArray.count < pageSize) {
+        if (self.tableFooterView == self.resultView) {
             
-            if (self.tableFooterView == self.resultView) {
-                
-                [self.resultView removeFromSuperview];
-            }
-            self.tableFooterView = nil;
-        }else
-        {
+            [self.resultView removeFromSuperview];
+        }
+        self.tableFooterView = nil;
+        //总数小于一页时 但是有数据时 不显示tableViewFooter
+        if (self.dataArray.count > pageSize) {
             [self createFooterView];
         }
     }

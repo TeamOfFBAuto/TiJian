@@ -112,9 +112,9 @@
             [url appendString:param];
         }
         
-        NSLog(@"urlString --- %@",baseUrl);
-        NSLog(@"params --- %@",paramsDic);
-        NSLog(@"url---:%@",url);
+        DDLOG(@"urlString --- %@",baseUrl);
+        DDLOG(@"params --- %@",paramsDic);
+        DDLOG(@"url---:%@",url);
         
         if (method == YJYRequstMethodGet) {
             
@@ -220,7 +220,7 @@
                 
             }else
             {
-                NSLog(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
+                DDLOG(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
                 
                 erroInfo = erroInfo ? : @"获取数据异常";
                 NSDictionary *result = @{Erro_Info: erroInfo,
@@ -247,7 +247,7 @@
                     error:(NSError *)error
               failtBlock:(AFResultBlock)failBlock
 {
-    NSLog(@"failure %@",operation.responseString);
+    DDLOG(@"failure %@",operation.responseString);
     NSString *errInfo = @"网络有问题,请检查网络";
     switch (error.code) {
         case NSURLErrorNotConnectedToInternet:

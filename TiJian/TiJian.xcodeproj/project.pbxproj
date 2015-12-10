@@ -112,6 +112,7 @@
 		131C11941BF04EF000629938 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 131C11931BF04EF000629938 /* LoginViewController.xib */; };
 		131C11961BF073BE00629938 /* user_xuxian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131C11951BF073BE00629938 /* user_xuxian@2x.png */; };
 		13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 13217C9B1BDF1E9D00020C40 /* PropertyButton.m */; };
+		1322B6A71C1965E500596DAE /* CoupeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322B6A61C1965E500596DAE /* CoupeView.m */; };
 		1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B69E1BD7499900FB47A9 /* RootViewController.m */; };
 		1324B6A31BD7671E00FB47A9 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A21BD7671E00FB47A9 /* HomeViewController.m */; };
 		1324B6A71BD76B6A00FB47A9 /* PersonalCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */; };
@@ -419,7 +420,6 @@
 		E3D8AE271BF5EB00003AE2E3 /* ProductCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE261BF5EB00003AE2E3 /* ProductCommentModel.m */; };
 		E3D8AE2A1BF6054B003AE2E3 /* GcommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE291BF6054B003AE2E3 /* GcommentViewController.m */; };
 		E3D8AE2D1BF60C4B003AE2E3 /* GcommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE2C1BF60C4B003AE2E3 /* GcommentTableViewCell.m */; };
-		E3D8AE301BF61C2E003AE2E3 /* CoupeView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE2F1BF61C2E003AE2E3 /* CoupeView.m */; };
 		E3D8AE331BF61CAC003AE2E3 /* ButtonProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE321BF61CAC003AE2E3 /* ButtonProperty.m */; };
 		E3D8AE361BF61D70003AE2E3 /* CouponModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D8AE351BF61D70003AE2E3 /* CouponModel.m */; };
 		E3D8AE4A1BF6203F003AE2E3 /* jiangquan_yiduijiang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE3C1BF6203F003AE2E3 /* jiangquan_yiduijiang@2x.png */; };
@@ -621,6 +621,8 @@
 		131C11951BF073BE00629938 /* user_xuxian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_xuxian@2x.png"; sourceTree = "<group>"; };
 		13217C9A1BDF1E9D00020C40 /* PropertyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyButton.h; sourceTree = "<group>"; };
 		13217C9B1BDF1E9D00020C40 /* PropertyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyButton.m; sourceTree = "<group>"; };
+		1322B6A51C1965E500596DAE /* CoupeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoupeView.h; sourceTree = "<group>"; };
+		1322B6A61C1965E500596DAE /* CoupeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoupeView.m; sourceTree = "<group>"; };
 		1324B69D1BD7499900FB47A9 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		1324B69E1BD7499900FB47A9 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		1324B6A11BD7671E00FB47A9 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
@@ -1128,8 +1130,6 @@
 		E3D8AE291BF6054B003AE2E3 /* GcommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcommentViewController.m; sourceTree = "<group>"; };
 		E3D8AE2B1BF60C4B003AE2E3 /* GcommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GcommentTableViewCell.h; path = ../GcommentTableViewCell.h; sourceTree = "<group>"; };
 		E3D8AE2C1BF60C4B003AE2E3 /* GcommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GcommentTableViewCell.m; path = ../GcommentTableViewCell.m; sourceTree = "<group>"; };
-		E3D8AE2E1BF61C2E003AE2E3 /* CoupeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoupeView.h; sourceTree = "<group>"; };
-		E3D8AE2F1BF61C2E003AE2E3 /* CoupeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoupeView.m; sourceTree = "<group>"; };
 		E3D8AE311BF61CAC003AE2E3 /* ButtonProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonProperty.h; sourceTree = "<group>"; };
 		E3D8AE321BF61CAC003AE2E3 /* ButtonProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonProperty.m; sourceTree = "<group>"; };
 		E3D8AE341BF61D70003AE2E3 /* CouponModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouponModel.h; sourceTree = "<group>"; };
@@ -1501,8 +1501,8 @@
 				E3796D271BFB3CB6004B63F7 /* 商城 */,
 				E3D8AE311BF61CAC003AE2E3 /* ButtonProperty.h */,
 				E3D8AE321BF61CAC003AE2E3 /* ButtonProperty.m */,
-				E3D8AE2E1BF61C2E003AE2E3 /* CoupeView.h */,
-				E3D8AE2F1BF61C2E003AE2E3 /* CoupeView.m */,
+				1322B6A51C1965E500596DAE /* CoupeView.h */,
+				1322B6A61C1965E500596DAE /* CoupeView.m */,
 				1324B6A91BD76DEF00FB47A9 /* LQuestionView.h */,
 				1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */,
 				13217C9A1BDF1E9D00020C40 /* PropertyButton.h */,
@@ -3065,7 +3065,6 @@
 				136276621C12F37D0077C75D /* ReportDetailController.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
 				13F8C5AD1C05AA7E004C3FC7 /* JKAssetsGroupsView.m in Sources */,
-				E3D8AE301BF61C2E003AE2E3 /* CoupeView.m in Sources */,
 				E3D8AE161BF4B16D003AE2E3 /* GcycleScrollView.m in Sources */,
 				E3E2B3FF1BFB1F19007988C5 /* PayResultViewController.m in Sources */,
 				E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */,
@@ -3106,6 +3105,7 @@
 				13F8C5AB1C05AA7E004C3FC7 /* JKAssetsCollectionFooterView.m in Sources */,
 				137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */,
 				E352F9101C0B7DDB0037E4AE /* LocationChooseViewController.m in Sources */,
+				1322B6A71C1965E500596DAE /* CoupeView.m in Sources */,
 				1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */,
 				E3E2B4121BFB20A4007988C5 /* FBActionSheet.m in Sources */,
 				E3D8AE1A1BF4B16D003AE2E3 /* SGFocusImageItem.m in Sources */,

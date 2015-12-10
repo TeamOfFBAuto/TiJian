@@ -32,7 +32,7 @@
 
 - (void)setImageUrl:(NSString *)url
 {
-    [self.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
+    [self.imageView l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
 }
 
 - (void)setAsset:(JKAssets *)asset{

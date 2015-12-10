@@ -194,9 +194,15 @@
     label = [[UILabel alloc]initWithFrame:CGRectMake(_loginView.width - arrow.width - 100 - 20, _loginView.height - 20 - 12 + 2, 100, 30) title:@"账户管理、收货地址" font:11 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
     [_loginView addSubview:label];
     label.font = [UIFont boldSystemFontOfSize:11];
-    [label addTaget:self action:@selector(clickToEditUserInfo) tag:0];
+//    [label addTaget:self action:@selector(clickToEditUserInfo) tag:0];
 //    label.backgroundColor = [UIColor orangeColor];
     arrow.centerY = label.centerY;
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = _loginView.bounds;
+    [btn addTarget:self action:@selector(clickToEditUserInfo) forControlEvents:UIControlEventTouchUpInside];
+//    btn.backgroundColor = [UIColor orangeColor];
+    [_loginView addSubview:btn];
     
     return _loginView;
 }

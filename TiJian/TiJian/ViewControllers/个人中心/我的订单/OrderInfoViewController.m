@@ -307,6 +307,14 @@
     [chatService setOrderMessageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
     [self.navigationController pushViewController:chatService animated:YES];
     
+    
+//    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
+//    chatService.userName = @"客服";
+//    chatService.targetId = SERVICE_ID;
+//    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
+//    chatService.title = chatService.userName;
+//    [chatService setOrderMessageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
+//    [self.navigationController pushViewController:chatService animated:YES];
 }
 
 /**

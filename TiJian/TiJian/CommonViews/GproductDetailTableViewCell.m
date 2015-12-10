@@ -96,12 +96,6 @@
         [self.contentView addSubview:tLabel];
         height += tLabel.frame.size.height;
         
-        
-        
-        
-        
-        
-        
         //领取优惠券按钮
         UIButton *getCouponBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [getCouponBtn setFrame:CGRectMake(DEVICE_WIDTH - 80, 0, 80, tLabel.frame.size.height)];

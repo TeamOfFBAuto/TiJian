@@ -91,10 +91,11 @@
     for (int i = 0; i < (count > 6 ? 6 : count); i ++) {
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(left + (width + left/2.f) * (i % 3), 110 + 10 + (height + left/2.f) * (i / 3), width, height)];
         NSString *url = img[i][@"img"];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
+        [imageView l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
         [_scrollView addSubview:imageView];
-        imageView.backgroundColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
         [imageView addTaget:self action:@selector(clickToBrowser:) tag:200 + i];
+        
+        [imageView setBorderWidth:0.5 borderColor:[[UIColor blackColor] colorWithAlphaComponent:0.5]];
         
         [temp addObject:url];
         
@@ -119,7 +120,7 @@
         [_scrollView addSubview:label];
     }else
     {
-        self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, top + 10, DEVICE_WIDTH, 10)];
+        self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, top + 10, DEVICE_WIDTH, _scrollView.height - top - 10)];
         _webView.delegate = self;
         [_scrollView addSubview:_webView];
         _webView.backgroundColor = [UIColor clearColor];

@@ -48,7 +48,8 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
     PhotoCell *cell = (PhotoCell *)[collectionView dequeueReusableCellWithReuseIdentifier:kPhotoCellIdentifier forIndexPath:indexPath];
     cell.backgroundColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
     [cell setImageUrl:self.imageUrlArray[indexPath.row]];
-    
+    [cell setBorderWidth:0.5 borderColor:[[UIColor blackColor] colorWithAlphaComponent:0.5]];
+
     return cell;
     
 }

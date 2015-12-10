@@ -54,14 +54,15 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
+    
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    
+        
     _questionDictionary = [NSMutableDictionary dictionary];
     _groupSortArray = [NSMutableArray array];
     _groupId = 0;//初始化,第一个组合不能获取到组合id,默认为0

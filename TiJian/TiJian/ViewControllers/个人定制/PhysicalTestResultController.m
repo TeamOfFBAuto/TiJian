@@ -20,9 +20,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self setNavigationStyle:NAVIGATIONSTYLE_CUSTOM title:@"测试结果"];
-
-
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 - (void)viewDidLoad {
@@ -30,6 +28,7 @@
     // Do any additional setup after loading the view.
     
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    [self setNavigationStyle:NAVIGATIONSTYLE_CUSTOM title:@"测试结果"];
     
     NSString *title = @"已经完成测试,快来看看结果吧";
     
@@ -102,7 +101,7 @@
 - (void)clickToTest:(UIButton *)btn
 {
     PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
-    custom.hidesBottomBarWhenPushed = YES;
+//    custom.hidesBottomBarWhenPushed = YES;
     custom.lastViewController = self;
     [self.navigationController pushViewController:custom animated:YES];
 }
@@ -113,7 +112,7 @@
 - (void)clickToQuestionResult
 {
     RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
-    recommend.hidesBottomBarWhenPushed = YES;
+//    recommend.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:recommend animated:YES];
 }
 

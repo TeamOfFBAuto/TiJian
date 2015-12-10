@@ -295,7 +295,7 @@
 {
     self.healthView.hidden = NO;
     self.articleModel = aModel;
-    [self.icon_health sd_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    [self.icon_health l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
     self.title_health.text = aModel.title;
     self.subTitle_health.text = aModel.summary;
 }

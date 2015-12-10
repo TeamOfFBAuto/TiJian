@@ -77,8 +77,8 @@
         self.priceLabel.text = @"";
         
         if (!self.contentScroll) {
-            self.contentScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(10, 10, DEVICE_WIDTH - 20, 60)];
-            _contentScroll.contentSize = CGSizeMake(productNum * (60 + 10), 60);
+            self.contentScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(10, 14, DEVICE_WIDTH - 20, 60)];
+            _contentScroll.contentSize = CGSizeMake(productNum * (80 + 5), 50);
             [self.contentView addSubview:_contentScroll];
             
             for (int i = 0; i < productNum; i ++) {
@@ -86,7 +86,7 @@
                 ProductModel *product = [[ProductModel alloc]initWithDictionary:[aModel.products objectAtIndex:i]];
 
                 NSString *imageUrl = product.cover_pic;
-                UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((60 + 10) * i, 0, 60, 60)];
+                UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((80 + 5) * i, 0, 80, 50)];
                 [aImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
                 [_contentScroll addSubview:aImageView];
             }

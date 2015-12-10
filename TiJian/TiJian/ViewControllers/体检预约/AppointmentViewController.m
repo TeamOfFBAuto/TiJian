@@ -632,14 +632,7 @@
 {
     int index = (int)tableView.tag - kTagTableView;
     if (index == 0) {
-        int sum = 0;
-        if (_company.count > 0) {
-            sum += 1;
-        }
-        if (_personal.count > 0) {
-            sum += 1;
-        }
-        return sum;
+        return 2;
     }
     return 1;
 }

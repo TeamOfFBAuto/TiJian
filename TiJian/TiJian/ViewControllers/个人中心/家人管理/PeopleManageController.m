@@ -40,6 +40,8 @@
 
 }
 
+@property(nonatomic,retain)ResultView *nodataView;
+
 @end
 
 @implementation PeopleManageController
@@ -93,12 +95,12 @@
 - (void)getFamily
 {
     NSString *authkey = [UserInfo getAuthkey];
-//    __weak typeof(self)weakSelf = self;
+    __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:GET_FAMILY parameters:@{@"authcode":authkey} constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *temp = [UserInfo modelsFromArray:result[@"family_list"]];
-        [weakTable reloadData:temp pageSize:1000 noDataView:nil];
+        [weakTable reloadData:temp pageSize:1000 noDataView:[weakSelf resultViewWithType:PageResultType_nodata]];
         _numLabel.text = [NSString stringWithFormat:@"%d位",(int)weakTable.dataArray.count];
         
     } failBlock:^(NSDictionary *result) {
@@ -159,19 +161,6 @@
  */
 - (void)networkForMakeAppoint
 {
-//    3、提交预约信息
-//http://123.57.56.167:85/index.php?d=api&c=appoint&m=make_appoint
-
-//    NSString *authey = [LTools cacheForKey:USER_AUTHOD];
-//    NSDictionary *params = @{@"authcode":authey,
-//                             @"order_id":_order_id,
-//                             @"product_id":_product_id,
-//                             @"exam_center_id":_exam_center_id,
-//                             @"date":_date,
-//                             @"company_id":_company_id ? : @"", //公司订单才有的
-//                             @"order_checkuper_id":_order_checkuper_id ? : @"", //公司订单才有的
-//                             };
-    
     //个人
     //家人id 多个用英文逗号隔开（若是个人买单，则要传）
     
@@ -316,45 +305,6 @@
     }
 }
 
-
-///**
-// *  查看本人信息
-// */
-//- (void)clickToMe
-//{
-//    if (self.isChoose) {
-//        
-//        if (_isMyselfSelected) {
-//            
-//            _selectedIcon.hidden = YES;
-//            _isMyselfSelected = NO;
-//            
-//        }else
-//        {
-//            if ([self enableSelectNewPeople]) {
-//                
-//                
-//                //需要判断信息是否完整
-//                
-//                if ([self isUserInfoWell]) {
-//                    
-//                    _isMyselfSelected = YES;
-//                    _selectedIcon.hidden = NO;
-//                }else
-//                {
-//                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"用户信息不完整,去完善？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去完善", nil];
-//                    alert.tag = KTag_EditUserInfo;
-//                    [alert show];
-//                }
-//            }
-//        }
-//        
-//        return;
-//    }
-//    
-//    [self clickToEditUserInfoIsFull:NO];
-//}
-
 /**
  *  跳转至用户详情页
  *
@@ -484,6 +434,32 @@
 }
 
 #pragma - mark 创建视图
+
+/**
+ *  请求结果 为空、等特殊情况
+ */
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"您还没有添加家人";
+    }
+    
+    if (_nodataView) {
+        
+        [_nodataView setContent:content];
+        return _nodataView;
+    }
+    
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    self.nodataView = result;
+    
+    return result;
+}
 
 - (void)createNavigationbarTools
 {
@@ -749,6 +725,7 @@
             UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (56-7-15)/2.f, 7, 14)];
             arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
             [bgView addSubview:arrow];
+            arrow.tag = 104;
         }else
         {
             //图标 对号
@@ -759,7 +736,6 @@
             icon.tag = 103;
         }
         
-        //本人
         UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(15 * 2, 0, 100, bgView.height) title:nil font:16 align:NSTextAlignmentLeft textColor:[UIColor blackColor]];
         [bgView addSubview:titleLable];
         titleLable.tag = 100;
@@ -793,10 +769,13 @@
     UIButton *deleteBtn = (UIButton *)[cell.contentView viewWithTag:102];
     
     UIImageView *icon = [cell.contentView viewWithTag:103];
+    UIImageView *arrow = [cell.contentView viewWithTag:104];
     
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         deleteBtn.left = _isEdit ? DEVICE_WIDTH - 70 : DEVICE_WIDTH;
-
+        arrow.hidden = _isEdit;
+        title.left = _isEdit ? 5 : 30;
+        nameLabel.left = title.right;
     }];
     
     UserInfo *aModel = _table.dataArray[indexPath.row];
