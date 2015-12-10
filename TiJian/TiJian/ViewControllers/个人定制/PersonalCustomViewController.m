@@ -549,23 +549,6 @@
 - (void)actionForFinishQuestionWithGroupId:(int)groupId
 {
     
-//    NSString *g_name = [[DBManager shareInstance] queryGroupNameById:groupId];
-//    NSString *text = [NSString stringWithFormat:@"组合结束 %@",g_name];
-//    
-//    NSLog(@"%@",g_name);
-//    
-//    if (g_name.length > 0) {
-//        [_questionDictionary setObject:g_name forKeyedSubscript:Q_RESULT];//记录结果
-//    }
-//    
-//    [LTools showMBProgressWithText:text addToView:self.view];
-    
-    //组合信息
-    //最终结束组合id
-    //n1_type+id
-    
-//    NSMutableDictionary *groupArray = [NSMutableArray arrayWithCapacity:_groupSortArray.count];
-    
     NSMutableDictionary *groupDic = [NSMutableDictionary dictionary];
     NSMutableArray *n1_ids_array = [NSMutableArray array];
     //组合id
@@ -577,12 +560,6 @@
             NSNumber *height = [_questionDictionary objectForKey:Q_HEIGHT];
             NSNumber *weight = [_questionDictionary objectForKey:Q_WEIGHT];
             NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
-            
-//            NSDictionary *groupOne = @{groupId:@{Q_SEX:sex,
-//                                                 Q_HEIGHT:height,
-//                                                 Q_WEIGHT:weight,
-//                                                 Q_AGE:age}};
-//            [groupArray addObject:groupOne];
             
             [groupDic setObject:@{Q_SEX:sex,
                                   Q_HEIGHT:height,

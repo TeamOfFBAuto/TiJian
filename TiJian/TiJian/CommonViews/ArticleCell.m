@@ -45,7 +45,7 @@
 {
     self.titleLable.text = aModel.title;
     self.subTitleLabel.text = aModel.summary;
-    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    [self.iconImageView l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
 }
 
 @end

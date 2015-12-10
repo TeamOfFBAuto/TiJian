@@ -305,7 +305,7 @@
         
         
         if (self.rTab.pageNum == 1 && dataArray.count == 0) {
-            self.navigationItem.rightBarButtonItems = @[spaceButton];
+            [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         }else{
             [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
             bself.rightString = @"删除";

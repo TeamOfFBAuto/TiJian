@@ -29,7 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.myTitleLabel.text = @"添加家人";
+    self.myTitle = @"添加家人";
     _items = @[@"姓名:",@"称谓:",@"身份证号:",@"性别:",@"年龄:",@"手机号:"];
 
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];

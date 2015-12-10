@@ -474,7 +474,7 @@
         
         
         if (_enabledNum_coupon_label) {
-            _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%d张可用",_enabledNum_coupon];
+            _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
         }
   
         
@@ -535,7 +535,7 @@
         _enabledNum_vouchers = enableDic_common_Array.count +enableDic_uncommon_Array.count;
         
         if (_enabledNum_vouchers_label) {
-            _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%d张可用",_enabledNum_vouchers];
+            _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
         }
         
         
@@ -704,7 +704,7 @@
     _enabledNum_coupon_label.layer.cornerRadius = 4;
     _enabledNum_coupon_label.layer.masksToBounds = YES;
     _enabledNum_coupon_label.textAlignment = NSTextAlignmentCenter;
-    _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%d张可用",_enabledNum_vouchers];
+    _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
     [youhuiquanView addSubview:_enabledNum_coupon_label];
     
     
@@ -747,7 +747,7 @@
     _enabledNum_vouchers_label.font = [UIFont systemFontOfSize:11];
     _enabledNum_vouchers_label.textColor = [UIColor whiteColor];
     _enabledNum_vouchers_label.textAlignment = NSTextAlignmentCenter;
-    _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%d张可用",_enabledNum_coupon];
+    _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
     [daijinquanView addSubview:_enabledNum_vouchers_label];
     
     

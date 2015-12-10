@@ -258,6 +258,10 @@
             
             errInfo = @"网络连接超时";
             break;
+        case 3840:
+            
+            errInfo = @"获取数据异常";
+            break;
         default:
             break;
     }

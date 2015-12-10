@@ -235,6 +235,7 @@
 		13B07A1E1C070B0300742AF7 /* OrderInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07A1D1C070B0300742AF7 /* OrderInfoViewController.m */; };
 		13B07A211C071A4200742AF7 /* order_chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A1F1C071A4200742AF7 /* order_chat@2x.png */; };
 		13B07A221C071A4200742AF7 /* order_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A201C071A4200742AF7 /* order_phone@2x.png */; };
+		13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */; };
 		13C97F2E1BF98A5200C66691 /* yuyue_daijinquan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */; };
 		13C97F311BF9B54700C66691 /* AppointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C97F301BF9B54700C66691 /* AppointModel.m */; };
 		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; };
@@ -259,8 +260,6 @@
 		13F1F39D1BBA9A4B00885D31 /* UILabel+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2AC1BBA9A4B00885D31 /* UILabel+Additions.m */; };
 		13F1F39E1BBA9A4B00885D31 /* UIView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2AE1BBA9A4B00885D31 /* UIView+Additions.m */; };
 		13F1F39F1BBA9A4B00885D31 /* UIViewController+Addtions.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2B01BBA9A4B00885D31 /* UIViewController+Addtions.m */; };
-		13F1F3A41BBA9A4B00885D31 /* bluedown1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13F1F2BB1BBA9A4B00885D31 /* bluedown1@2x.png */; };
-		13F1F3A51BBA9A4B00885D31 /* blueup1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13F1F2BC1BBA9A4B00885D31 /* blueup1@2x.png */; };
 		13F1F3C21BBA9A4B00885D31 /* LTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F2F61BBA9A4B00885D31 /* LTools.m */; };
 		13F1F3CD1BBA9A4B00885D31 /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 13F1F3101BBA9A4B00885D31 /* AlipaySDK.bundle */; };
 		13F1F3CE1BBA9A4B00885D31 /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13F1F3111BBA9A4B00885D31 /* AlipaySDK.framework */; };
@@ -770,6 +769,7 @@
 		13B07A1D1C070B0300742AF7 /* OrderInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderInfoViewController.m; sourceTree = "<group>"; };
 		13B07A1F1C071A4200742AF7 /* order_chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_chat@2x.png"; sourceTree = "<group>"; };
 		13B07A201C071A4200742AF7 /* order_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_phone@2x.png"; sourceTree = "<group>"; };
+		13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh_arrow_down@2x.png"; sourceTree = "<group>"; };
 		13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_daijinquan@2x.png"; sourceTree = "<group>"; };
 		13C97F2F1BF9B54700C66691 /* AppointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointModel.h; sourceTree = "<group>"; };
 		13C97F301BF9B54700C66691 /* AppointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointModel.m; sourceTree = "<group>"; };
@@ -825,8 +825,6 @@
 		13F1F2AE1BBA9A4B00885D31 /* UIView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Additions.m"; sourceTree = "<group>"; };
 		13F1F2AF1BBA9A4B00885D31 /* UIViewController+Addtions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Addtions.h"; sourceTree = "<group>"; };
 		13F1F2B01BBA9A4B00885D31 /* UIViewController+Addtions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Addtions.m"; sourceTree = "<group>"; };
-		13F1F2BB1BBA9A4B00885D31 /* bluedown1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluedown1@2x.png"; sourceTree = "<group>"; };
-		13F1F2BC1BBA9A4B00885D31 /* blueup1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueup1@2x.png"; sourceTree = "<group>"; };
 		13F1F2BD1BBA9A4B00885D31 /* EGOViewCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGOViewCommon.h; sourceTree = "<group>"; };
 		13F1F2F51BBA9A4B00885D31 /* LTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTools.h; sourceTree = "<group>"; };
 		13F1F2F61BBA9A4B00885D31 /* LTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTools.m; sourceTree = "<group>"; };
@@ -1866,6 +1864,7 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				13F1F2A11BBA9A4B00885D31 /* Categories */,
 				13E617351C1584D100E370E5 /* PhotoBrowserView */,
 				13E617381C1584D100E370E5 /* TQStarRatingView */,
 				E31F86E41C14595A00914824 /* LBannerView */,
@@ -1875,7 +1874,6 @@
 				E3A709981BE0754300750D27 /* Gutils */,
 				E3A293D11BD88D66001CF93D /* GTouchMoveView */,
 				13F1F3F01BBA9C2500885D31 /* BaseClass */,
-				13F1F2A11BBA9A4B00885D31 /* Categories */,
 				13F1F2BA1BBA9A4B00885D31 /* EGORefresh */,
 				13F1F2F51BBA9A4B00885D31 /* LTools.h */,
 				13F1F2F61BBA9A4B00885D31 /* LTools.m */,
@@ -1922,10 +1920,9 @@
 		13F1F2BA1BBA9A4B00885D31 /* EGORefresh */ = {
 			isa = PBXGroup;
 			children = (
+				13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */,
 				13F1F4061BBA9F6B00885D31 /* RefreshTableView.h */,
 				13F1F4071BBA9F6B00885D31 /* RefreshTableView.m */,
-				13F1F2BB1BBA9A4B00885D31 /* bluedown1@2x.png */,
-				13F1F2BC1BBA9A4B00885D31 /* blueup1@2x.png */,
 				13F1F2BD1BBA9A4B00885D31 /* EGOViewCommon.h */,
 				13F1F4001BBA9D5500885D31 /* RefreshHeaderView.h */,
 				13F1F4011BBA9D5500885D31 /* RefreshHeaderView.m */,
@@ -2825,7 +2822,6 @@
 				139333CA1BE0DF3E00B4628B /* 23_3@2x.png in Resources */,
 				13F1F3EC1BBA9A4B00885D31 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				E3796D101BFB37CD004B63F7 /* Ttaixq_youhuiquan1@2x.png in Resources */,
-				13F1F3A51BBA9A4B00885D31 /* blueup1@2x.png in Resources */,
 				139333A31BE0DF3E00B4628B /* 11_1@2x.png in Resources */,
 				1303C36D1BEB0D7100700847 /* report_b@2x.png in Resources */,
 				139333AA1BE0DF3E00B4628B /* 14_1@2x.png in Resources */,
@@ -2847,9 +2843,9 @@
 				1303C35F1BEB0D7100700847 /* personal_yuyue_dianhua@2x.png in Resources */,
 				130D2E2D1BFDF2DC002E301F /* UMShareEditViewController.xib in Resources */,
 				139333B71BE0DF3E00B4628B /* 18_3@2x.png in Resources */,
+				13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */,
 				139333CE1BE0DF3E00B4628B /* 24_2@2x.png in Resources */,
 				1303C3771BEB0D7200700847 /* tijianren@2x.png in Resources */,
-				13F1F3A41BBA9A4B00885D31 /* bluedown1@2x.png in Resources */,
 				131C11911BF04BF100629938 /* user_shoujihao@2x.png in Resources */,
 				139333B61BE0DF3E00B4628B /* 18_2@2x.png in Resources */,
 				13F242191BF4925A002C9D81 /* yuyue_jiantou_down@2x.png in Resources */,

@@ -12,11 +12,11 @@
 
 @interface ResultView : UIView
 
-@property(nonatomic,retain)UIImageView *imageView;
-@property(nonatomic,retain)UILabel *titleLabel;
-@property(nonatomic,retain)UILabel *contentLabel;
-
 @property(nonatomic,retain)UIView *bottomView;//支持自定义
+
+@property(nonatomic,retain)UIImage *image;
+@property(nonatomic,retain)NSString *title;
+@property(nonatomic,retain)NSString *content;
 
 /**
  *  页面结果view

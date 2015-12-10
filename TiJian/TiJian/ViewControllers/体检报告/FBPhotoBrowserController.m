@@ -58,7 +58,7 @@
     }
     
     bgScroll.contentOffset = CGPointMake(DEVICE_WIDTH * self.showIndex, 0);
-    self.myTitleLabel.text = [NSString stringWithFormat:@"%d/%lu",self.showIndex + 1,(unsigned long)_imagesArray.count];
+    self.myTitle = [NSString stringWithFormat:@"%d/%lu",self.showIndex + 1,(unsigned long)_imagesArray.count];
 }
 
 #pragma mark - 保存图片到本地
@@ -92,7 +92,7 @@
     
     self.showIndex = (int)index - 1;
     
-    self.myTitleLabel.text = [NSString stringWithFormat:@"%ld/%lu",(long)index,(unsigned long)_imagesArray.count];
+    self.myTitle = [NSString stringWithFormat:@"%ld/%lu",(long)index,(unsigned long)_imagesArray.count];
     NSLog(@"hh");
 }
 

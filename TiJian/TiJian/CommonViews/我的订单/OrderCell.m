@@ -46,7 +46,7 @@
         
         NSString *imageUrl = product.cover_pic;
 
-        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
         self.titleLabel.text = product.product_name;
         _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
         _titleLabel.numberOfLines = 2;

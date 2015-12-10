@@ -10,24 +10,28 @@
 
 @interface MyViewController ()
 {
-    UIPanGestureRecognizer * panGestureRecognizer;
     UISwipeGestureRecognizer * swipe;
     UIButton *_backButton;//返回按钮
+    UIBarButtonItem * spaceButton;
+    
+    MyViewControllerLeftbuttonType leftType;
+    MyViewControllerRightbuttonType myRightType;
 }
+//右上角按钮
+@property(nonatomic,strong)UIButton * my_right_button;
+@property(nonatomic,strong)UILabel * navTitleLabel;//导航栏label
 
 @end
 
 @implementation MyViewController
-@synthesize leftButtonType = _leftButtonType;
+
 @synthesize rightString = _rightString;
 @synthesize leftImageName = _leftImageName;
 @synthesize rightImageName = _rightImageName;
 @synthesize leftString = _leftString;
-
 @synthesize my_right_button = _my_right_button;
 
-
-
+#pragma mark -
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -58,6 +62,11 @@
     [self.navigationController setNavigationBarHidden:self.lastPageNavigationHidden animated:animated];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -67,16 +76,18 @@
     }
     
     self.view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
-    
+        
     spaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    _myTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
-    _myTitleLabel.textAlignment = NSTextAlignmentCenter;
-    _myTitleLabel.text = _myTitle;
-    _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
-    _myTitleLabel.font = [UIFont systemFontOfSize:17];
-    self.navigationItem.titleView = _myTitleLabel;
-
+    _navTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
+    _navTitleLabel.textAlignment = NSTextAlignmentCenter;
+    _navTitleLabel.text = _myTitle;
+    _navTitleLabel.textColor = DEFAULT_TEXTCOLOR;
+    _navTitleLabel.font = [UIFont systemFontOfSize:17];
+    self.navigationItem.titleView = _navTitleLabel;
 }
+
+
+#pragma mark - 视图个性化method
 
 - (void)setNavigationStyle:(NAVIGATIONSTYLE)style
                      title:(NSString *)title
@@ -87,13 +98,13 @@
         {
             [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
             [_backButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
-            _myTitleLabel.textColor = [UIColor whiteColor];//白色字体
+            _navTitleLabel.textColor = [UIColor whiteColor];//白色字体
         }
     }else if (style == NAVIGATIONSTYLE_WHITE){
         
         [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics: UIBarMetricsDefault];
         [_backButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
-        _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
+        _navTitleLabel.textColor = DEFAULT_TEXTCOLOR;
         
     }else if (style == NAVIGATIONSTYLE_CUSTOM){
         
@@ -109,7 +120,7 @@
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor whiteColor];
         [navigationView addSubview:label];
-        _myTitleLabel = label;
+        _navTitleLabel = label;
         
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [backButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];
@@ -119,7 +130,7 @@
         
     }
     
-    _myTitleLabel.text = title;
+    _navTitleLabel.text = title;
 }
 
 -(void)setUpdateParamsBlock:(UpdateParamsBlock)updateParamsBlock
@@ -234,7 +245,7 @@
 -(void)setMyTitle:(NSString *)myTitle
 {
     _myTitle = myTitle;
-    _myTitleLabel.text = _myTitle;
+    _navTitleLabel.text = _myTitle;
 }
 
 -(void)setLeftString:(NSString *)leftString
@@ -265,16 +276,7 @@
     [self setMyViewControllerLeftButtonType:leftType WithRightButtonType:myRightType];
 }
 
--(void)setIsAddGestureRecognizer:(BOOL)isAddGestureRecognizer
-{
-    _isAddGestureRecognizer = isAddGestureRecognizer;
-    if (!isAddGestureRecognizer)
-    {
-        [self.view removeGestureRecognizer:panGestureRecognizer];
-        [self.view removeGestureRecognizer:swipe];
-    }
-}
-
+#pragma mark - 事件处理method
 
 -(void)rightButtonTap:(UIButton *)sender
 {

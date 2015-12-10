@@ -20,13 +20,7 @@
 @property(nonatomic,strong)UILabel *originalPriceLabel;
 @property(nonatomic,strong)UILabel *priceLabel;
 
--(void)loadCustomView;
-
 -(void)loadData:(ProductModel *)theModel;
-
--(void)loadCustomViewWithData:(ProductModel*)theModel;
-
-- (void)setCellWithModel:(id)aModel;//add by lcw
 
 
 @end

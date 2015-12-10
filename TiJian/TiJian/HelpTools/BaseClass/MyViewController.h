@@ -12,15 +12,16 @@ typedef enum
 {
     MyViewControllerLeftbuttonTypeBack = 0,//返回按钮
     MyViewControllerLeftbuttonTypeOther,//自定义image
-    MyViewControllerLeftbuttonTypeNull ,//无返回按钮
-    MyViewControllerLeftbuttonTypeText //文字
+    MyViewControllerLeftbuttonTypeText ,//文字
+    MyViewControllerLeftbuttonTypeNull //无返回按钮
+
 }MyViewControllerLeftbuttonType;
 
 
 typedef enum
 {
-    MyViewControllerRightbuttonTypeText = 0,//文字
-    MyViewControllerRightbuttonTypeNull ,//空
+    MyViewControllerRightbuttonTypeNull = 0,//空
+    MyViewControllerRightbuttonTypeText ,//文字
     MyViewControllerRightbuttonTypeOther //图片
     
 }MyViewControllerRightbuttonType;
@@ -37,40 +38,19 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @interface MyViewController : UIViewController
 {
-    UIBarButtonItem * spaceButton;
-    
-    MyViewControllerLeftbuttonType leftType;
-    MyViewControllerRightbuttonType myRightType;
     UIView *_resultView;
 }
-
-@property(nonatomic,copy)UpdateParamsBlock updateParamsBlock;
-
-@property(nonatomic,assign)MyViewControllerLeftbuttonType * leftButtonType;
-
-@property(nonatomic,strong)NSString * rightString;
-
-@property(nonatomic,strong)NSString * leftString;
-
+@property(nonatomic,strong)NSString * rightString;//navigationbar right button text
+@property(nonatomic,strong)NSString * leftString;//navigationbar left button text
 @property(nonatomic,strong)NSString * leftImageName;
-
 @property(nonatomic,strong)NSString * rightImageName;//图片名字
 @property(nonatomic,strong)UIImage * rightImage;//image
 
-
+@property(nonatomic,copy)UpdateParamsBlock updateParamsBlock;//用户视图间数据回调
 @property(nonatomic,assign)BOOL lastPageNavigationHidden;//上一级是否隐藏navigationBar
-@property(nonatomic,retain)UIViewController *lastViewController;
+@property(nonatomic,retain)UIViewController *lastViewController;//上一个视图
 
-///标题
-@property(nonatomic,strong)UILabel * myTitleLabel;
-@property(nonatomic,strong)NSString * myTitle;
-//右上角按钮
-@property(nonatomic,strong)UIButton * my_right_button;
-///是否添加滑动到侧边栏手势
-@property(nonatomic,assign)BOOL isAddGestureRecognizer;
-
-@property(nonatomic,assign)BOOL customNavigationTitleView;//是否自定义导航栏view
-
+@property(nonatomic,strong)NSString * myTitle;//视图标题
 @property(nonatomic,retain)UIView *resultView;//结果view
 
 
@@ -78,6 +58,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 - (void)setNavigationStyle:(NAVIGATIONSTYLE)style
                      title:(NSString *)title;
+
 -(void)leftButtonTap:(UIButton *)sender;
 
 -(void)rightButtonTap:(UIButton *)sender;

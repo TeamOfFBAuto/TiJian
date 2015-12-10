@@ -726,7 +726,7 @@
     
     if (sender.tag == 100) {//客服
         
-        [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
             if (success) {//登录成功
                 
                 [self clickToChat];
@@ -741,7 +741,7 @@
         if ([LoginViewController isLogin]) {//已登录
             [self shoucangProductWithState:sender.selected];
         }else{
-            [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
                 if (success) {//登录成功
                     
                 }else{
@@ -766,7 +766,7 @@
                 GShopCarViewController *cc = [[GShopCarViewController alloc]init];
                 [self.navigationController pushViewController:cc animated:YES];
             }else{
-                [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+                [LoginViewController isLogin:self loginBlock:^(BOOL success) {
                     if (success) {
                         GShopCarViewController *cc = [[GShopCarViewController alloc]init];
                         [self.navigationController pushViewController:cc animated:YES];
@@ -775,13 +775,11 @@
                     }
                 }];
             }
-            
-            
         }
         
     }else if (sender.tag == 104){//加入购物车
         
-        [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
             if (success) {
                 //代金卷过来 直接去确认订单
                 if (self.isVoucherPush) {

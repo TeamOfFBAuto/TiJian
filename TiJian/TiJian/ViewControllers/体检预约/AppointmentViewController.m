@@ -388,7 +388,7 @@
 - (void)clickToCustomization
 {
     //先判断是否个性化定制过
-    BOOL isOver = [LTools boolForKey:USER_CUSTOMIZATON_RESULT];
+    BOOL isOver = [UserInfo getCustomState];
     if (isOver) {
         //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];

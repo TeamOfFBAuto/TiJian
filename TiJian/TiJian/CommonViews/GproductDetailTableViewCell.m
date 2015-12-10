@@ -46,7 +46,7 @@
             
             
             __weak typeof (self)bself = self;
-            [imv sd_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 
                 if (bself.delegate) {
                     bself.delegate.gouwucheProductImage = image;
@@ -489,7 +489,7 @@
         
         
     }else{
-        [LoginViewController loginToDoWithViewController:self.delegate loginBlock:^(BOOL success) {
+        [LoginViewController isLogin:self.delegate loginBlock:^(BOOL success) {
             
             
         }];

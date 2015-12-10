@@ -15,9 +15,13 @@
     RefreshTableView *_table;
 }
 
+@property(nonatomic,retain)ResultView *nodataView;//未登录view
+@property(nonatomic,retain)UIButton *stateButton;//结果页的按钮
+
 @end
 
 @implementation MedicalReportController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,12 +30,20 @@
     self.myTitle = @"体检报告";
     self.rightImage = [UIImage imageNamed:@"personal_jiaren_tianjia"];
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
-    [self prepareRefreshTableView];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_REPORT_ADD_SUCCESS object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_REPORT_DEL_SUCCESS object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_LOGOUT object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_LOGIN object:nil];
     
+    [self prepareRefreshTableView];
+    
+    if ([LoginManager isLogin]) {
+        
+        [_table showRefreshHeader:YES];
+    }else
+    {
+        [_table reloadData:nil pageSize:0 noDataView:[self resultViewWithType:PageResultType_nologin]];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,29 +67,56 @@
     _table.dataSource = self;
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
-    [_table showRefreshHeader:YES];
 }
 
--(UIView *)resultView
+-(ResultView *)resultViewWithType:(PageResultType)type
 {
-    if (_resultView) {
-        return _resultView;
+    NSString *content;
+    NSString *btnTitle;
+    SEL selector = NULL;
+    if (type == PageResultType_requestFail) {
+        
+        content = @"获取数据异常,点击重新加载";
+        btnTitle = @"重新加载";
+        selector = @selector(clickToResfresh);
+        
+    }else if (type == PageResultType_nodata){
+        
+        content = @"您还没有上传过体检报告,赶快去上传吧";
+        btnTitle = @"立即上传";
+        selector = @selector(clickToUploadReport);
+        
+    }else if (type == PageResultType_nologin){
+        
+        content = @"登录后可查询上传的体检报告";
+        btnTitle = @"登录";
+        selector = @selector(clickToLogin);
     }
+    
+    if (_nodataView) {
+        
+        [_nodataView setContent:content];
+        [self.stateButton setTitle:btnTitle forState:UIControlStateNormal];
+        
+        return _nodataView;
+    }
+    
     ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
                                                     title:@"温馨提示"
-                                                  content:@"您还没有上传过体检报告,赶快去上传吧"];
-    
+                                                  content:content];
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 140, 36);
     [btn addCornerRadius:5.f];
     btn.backgroundColor = DEFAULT_TEXTCOLOR;
-    [btn setTitle:@"立即上传" forState:UIControlStateNormal];
+    [btn setTitle:btnTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-    [btn addTarget:self action:@selector(clickToUploadReport) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
     [result setBottomView:btn];
     
-    self.resultView = result;
+    self.stateButton = btn;
+    
+    self.nodataView = result;
     
     return result;
 }
@@ -86,12 +125,13 @@
 
 - (void)netWorkForList
 {
-    if (![LoginViewController isLogin]) {
+    if (![LoginManager isLogin]) {
         
-        [_table reloadData:nil pageSize:G_PER_PAGE noDataView:self.resultView];
+        [_table reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nologin]];
 
         return;
     }
+    
     NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
                                  @"page":NSStringFromInt(_table.pageNum),
                              @"per_page":NSStringFromInt(G_PER_PAGE)};;
@@ -99,32 +139,47 @@
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         NSArray *temp = [UserInfo modelsFromArray:result[@"list"]];
-        [weakTable reloadData:temp pageSize:G_PER_PAGE];
+        [weakTable reloadData:temp pageSize:G_PER_PAGE noDataView:[weakSelf resultViewWithType:PageResultType_nodata]];
         
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        [weakTable loadFailWithView:nil pageSize:G_PER_PAGE];
-        
+        [weakTable reloadData:nil pageSize:G_PER_PAGE noDataView:[weakSelf resultViewWithType:PageResultType_requestFail]];
     }];
 }
 
 #pragma mark - 数据解析处理
 
 #pragma mark - 事件处理
+
+- (void)clickToResfresh
+{
+    [_table showRefreshHeader:YES];
+}
+
+- (void)clickToLogin
+{
+    [LoginManager isLogin:self loginBlock:^(BOOL success) {
+       
+        if (success) {
+            [_table showRefreshHeader:YES];
+        }
+    }];
+}
+
 /**
  *  去上传报告
  */
 - (void)clickToUploadReport
 {
-    [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+    [LoginManager isLogin:self loginBlock:^(BOOL success) {
         if (success) {
             
             AddReportViewController *add = [[AddReportViewController alloc]init];

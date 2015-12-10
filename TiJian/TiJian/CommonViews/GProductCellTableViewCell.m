@@ -8,6 +8,13 @@
 
 #import "GProductCellTableViewCell.h"
 
+@interface GProductCellTableViewCell ()
+
+-(void)loadCustomView;
+-(void)loadCustomViewWithData:(ProductModel*)theModel;
+
+@end
+
 @implementation GProductCellTableViewCell
 
 - (void)awakeFromNib {
@@ -78,23 +85,6 @@
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, p.length)];
     [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, p.length)];
 
-    
-    self.originalPriceLabel.attributedText = aaa;
-}
-
-- (void)setCellWithModel:(ProductModel *)aModel
-{
-    [self.logoImv l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:nil];
-    self.titleLabel.text = aModel.setmeal_name;
-    
-    NSString *priceString = [NSString stringWithFormat:@"￥%@",aModel.setmeal_price];
-    self.priceLabel.text = priceString;
-    
-    NSString *p = [NSString stringWithFormat:@"%@",aModel.setmeal_original_price];
-    NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:p];
-    [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(80, 81, 82) range:NSMakeRange(0, p.length)];
-    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, p.length)];
-    [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, p.length)];
     
     self.originalPriceLabel.attributedText = aaa;
 }

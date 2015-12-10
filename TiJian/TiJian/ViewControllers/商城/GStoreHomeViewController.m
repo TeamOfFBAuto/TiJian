@@ -72,10 +72,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    
     self.myTitle = @"体检商城";
-    self.myTitleLabel.textColor = RGBCOLOR(91, 147, 203);
-    
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
@@ -331,13 +328,11 @@
             
         }
         
-        
-        
-        
+
         _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300/750.0*DEVICE_WIDTH)];
         [_bannerView setContentViews:views];
         [_bannerView showPageControl];
-        [_bannerView setBackgroundColor:[UIColor lightGrayColor]];
+        [_bannerView setBackgroundColor:DEFAULT_VIEW_BACKGROUNDCOLOR];
         
         
         __weak typeof  (self)bself = self;
@@ -466,7 +461,7 @@
 - (void)pushToPersonalCustom
 {
     __weak typeof(self)weakSelf = self;
-    BOOL isLogin = [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+    [LoginViewController isLogin:self loginBlock:^(BOOL success) {
         
         if (success) {
             [weakSelf pushToPhysicaResult];
@@ -475,11 +470,6 @@
             NSLog(@"没登陆成功");
         }
     }];
-    //登录成功
-    if (isLogin) {
-        
-        [weakSelf pushToPhysicaResult];
-    }
 }
 
 /**
@@ -488,7 +478,7 @@
 - (void)pushToPhysicaResult
 {
     //先判断是否个性化定制过
-    BOOL isOver = [LTools boolForKey:USER_CUSTOMIZATON_RESULT];
+    BOOL isOver = [UserInfo getCustomState];
     if (isOver) {
         //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];

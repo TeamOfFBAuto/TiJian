@@ -79,6 +79,7 @@
 @property(nonatomic,retain)NSString *is_read;//是否解读
 @property(nonatomic,retain)NSArray *img;//报告图片
 @property(nonatomic,retain)NSString *url;//解读详情
+@property(nonatomic,retain)NSString *customed;//是否个性化定制过
 
 
 /**
@@ -103,6 +104,7 @@
 
 + (NSString *)getAuthkey;
 + (NSString *)getUserId;
++ (BOOL)getCustomState;//是否定制化过
 
 #pragma mark - 用户信息更新
 
@@ -147,5 +149,9 @@
  *  更新积分
  */
 + (void)updateUserScrore:(NSString *)score;
+/**
+ *  更新个性化定制状态
+ */
++ (void)updateUserCustomed:(NSString *)customed;
 
 @end

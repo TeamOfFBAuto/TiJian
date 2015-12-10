@@ -158,6 +158,16 @@
     return @"";
 }
 
++ (BOOL)getCustomState
+{
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    NSString *value = userInfo.customed;
+    if ([value intValue] == 1) {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - 用户信息更新
 
 /**
@@ -266,6 +276,19 @@
     }
     UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
     userInfo.score = score;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
+/**
+ *  更新个性化定制状态
+ */
++ (void)updateUserCustomed:(NSString *)customed
+{
+    if (!customed) {
+        return;
+    }
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.customed = customed;
     [userInfo cacheForKey:USERINFO_MODEL];
 }
 

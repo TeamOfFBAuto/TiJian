@@ -41,13 +41,11 @@
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
         _statusLabel=label;
-        //		[label release];
         
         CALayer *layer = [CALayer layer];
-        layer.frame = CGRectMake(75.0f, frame.size.height - 40.0f, 16.0f, 31.0f);
+        layer.frame = CGRectMake(35, frame.size.height - 35.0f, 20.0f, 20.0f);
         layer.contentsGravity = kCAGravityResizeAspect;
-        //		layer.contents = (id)[UIImage imageNamed:arrow].CGImage;
-        //        layer.contents = (id)[UIImage imageNamed:@"blueArrow.png"].CGImage;
+        layer.contents = (id)[UIImage imageNamed:arrow].CGImage;
         
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
         if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
@@ -59,13 +57,12 @@
         _arrowImage=layer;
         
         UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        //		view.frame = CGRectMake(72.0f, frame.size.height - 35.0f, 20.0f, 20.0f);
         
-        view.frame = CGRectMake(25.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
+        view.frame = CGRectMake(35.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
         
         [self addSubview:view];
         _activityView = view;
-        //		[view release];
+        
         
         [self setState:L_EGOOPullRefreshNormal];
         
@@ -76,7 +73,7 @@
 }
 
 - (id)initWithFrame:(CGRect)frame  {
-    return [self initWithFrame:frame arrowImageName:@"icon_refresh111.png" textColor:nil];
+    return [self initWithFrame:frame arrowImageName:@"refresh_arrow_down" textColor:nil];
 }
 
 #pragma mark -
@@ -210,15 +207,6 @@
 }
 
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
-    
-    //    [UIView animateWithDuration:0.5 animations:^{
-    //        
-    //        [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-    //        
-    //    } completion:^(BOOL finished) {
-    //        
-    //        [self setState:L_EGOOPullRefreshNormal];
-    //    }];
     
     [UIView beginAnimations:@"hh" context:nil];
     [UIView setAnimationDuration:0.5];

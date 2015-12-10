@@ -213,8 +213,8 @@ typedef enum {
      */
     if (_isJustSelect) {
         params = @{@"product_id":self.productId,
-                   @"province_id":@"1000",
-                   @"city_id":@"1001",
+                   @"province_id":[GMAPI getCurrentProvinceId],
+                   @"city_id":[GMAPI getCurrentCityId],
                    @"date":date,
                    @"page":NSStringFromInt(_table.pageNum),
                    @"per_page":@"50",
@@ -223,8 +223,8 @@ typedef enum {
     }else
     {
         params = @{@"product_id":self.productId,
-                   @"province_id":@"1000",
-                   @"city_id":@"1001",
+                   @"province_id":[GMAPI getCurrentProvinceId],
+                   @"city_id":[GMAPI getCurrentCityId],
                    @"date":date,
                    @"page":NSStringFromInt(_table.pageNum),
                    @"per_page":@"50"};

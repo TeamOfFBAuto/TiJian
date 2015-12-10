@@ -964,40 +964,6 @@
     return NO;
 }
 
-//+ (BOOL)isLogin:(UIViewController *)viewController
-//{
-//    if ([LTools cacheBoolForKey:LOGIN_SERVER_STATE] == NO) {
-//        
-//        LoginViewController *login = [[LoginViewController alloc]init];
-//        
-//        LNavigationController *unVc = [[LNavigationController alloc]initWithRootViewController:login];
-//        
-//        [viewController presentViewController:unVc animated:YES completion:nil];
-//        
-//        return NO;
-//    }
-//    
-//    return YES;
-//}
-
-//+ (BOOL)isLogin:(UIViewController *)viewController loginBlock:(LoginBlock)aBlock
-//{
-//    if ([LTools cacheBoolForKey:LOGIN_SERVER_STATE] == NO) {
-//        
-//        LoginViewController *login = [[LoginViewController alloc]init];
-//        
-//        [login setLoginBlock:aBlock];//登录block
-//        
-//        LNavigationController *unVc = [[LNavigationController alloc]initWithRootViewController:login];
-//        
-//        [viewController presentViewController:unVc animated:YES completion:nil];
-//        
-//        return NO;
-//    }
-//    
-//    return YES;
-//}
-
 #pragma - mark 身份证安全性处理
 /**
  *  处理身份证号

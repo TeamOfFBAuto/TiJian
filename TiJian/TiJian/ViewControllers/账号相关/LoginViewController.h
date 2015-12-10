@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "MyViewController.h"
 
 typedef void(^LoginBlock)(BOOL success);
@@ -39,15 +38,21 @@ typedef void(^LoginBlock)(BOOL success);
 
 + (BOOL)isLogin;
 + (BOOL)isLogin:(UIViewController *)viewController;
-+ (BOOL)isLogin:(UIViewController *)viewController
-     loginBlock:(LoginBlock)aBlock;
+
 /**
  *  登录了直接进行下一步操作
  *
  *  @param viewController
  *  @param aBlock         直接下一步操作
  */
-+ (void)loginToDoWithViewController:(UIViewController *)viewController
-                         loginBlock:(LoginBlock)aBlock;
++ (BOOL)isLogin:(UIViewController *)viewController
+     loginBlock:(LoginBlock)aBlock;
+
+@end
+
+/**
+ *  主要用户判断是否登录状态
+ */
+@interface LoginManager : LoginViewController
 
 @end

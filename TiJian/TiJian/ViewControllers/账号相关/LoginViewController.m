@@ -20,6 +20,17 @@
 
 @implementation LoginViewController
 
++ (LoginViewController *)shareInstance
+{
+    static dispatch_once_t once_t;
+    static LoginViewController *login;
+    dispatch_once(&once_t, ^{
+       
+        login = [[LoginViewController alloc]init];
+    });
+    return login;
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -47,7 +58,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
         
-    self.myTitleLabel.text = @"登录";    
+    self.myTitle = @"登录";    
 
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     self.view.backgroundColor = [UIColor colorWithHexString:@"6da0cf"];
@@ -83,7 +94,7 @@
 {
     NSString *authey = [UserInfo getAuthkey];
     
-    if (authey.length > 0) {
+    if (authey && authey.length > 0) {
         
         return YES;
     }
@@ -92,67 +103,36 @@
 
 + (BOOL)isLogin:(UIViewController *)viewController
 {
-    NSString *authkey = [UserInfo getAuthkey];
-    
-    if (!authkey || authkey.length == 0) {
-        
-        LoginViewController *login = [[LoginViewController alloc]init];
-        
-        LNavigationController *unVc = [[LNavigationController alloc]initWithRootViewController:login];
-        
-        [viewController presentViewController:unVc animated:YES completion:nil];
-        
-        return NO;
-    }
-    
-    return YES;
+    return [self isLogin:viewController loginBlock:nil];
 }
 
-+ (BOOL)isLogin:(UIViewController *)viewController
-     loginBlock:(LoginBlock)aBlock
++ (BOOL)isLogin:(UIViewController *)viewController loginBlock:(LoginBlock)aBlock
 {
-    NSString *authkey = [UserInfo getAuthkey];
+    if (![self isLogin]) {
 
-    if (!authkey || authkey.length == 0) {
-
-        LoginViewController *login = [[LoginViewController alloc]init];
+        LoginViewController *login = [LoginViewController shareInstance];
 
         [login setLoginBlock:aBlock];//登录block
+        
+        //如果已经登录直接进行下一步操作
+        if (aBlock) {
+            aBlock(NO);//登录成功
+            aBlock = nil;
+        }
 
         LNavigationController *unVc = [[LNavigationController alloc]initWithRootViewController:login];
 
         [viewController presentViewController:unVc animated:YES completion:nil];
 
         return NO;
-    }
-
-    return YES;
-}
-
-+ (void)loginToDoWithViewController:(UIViewController *)viewController
-     loginBlock:(LoginBlock)aBlock
-{
-    NSString *authkey = [UserInfo getAuthkey];
-    
-    if (!authkey || authkey.length == 0) {
-        
-        LoginViewController *login = [[LoginViewController alloc]init];
-        
-        [login setLoginBlock:aBlock];//登录block
-        
-        LNavigationController *unVc = [[LNavigationController alloc]initWithRootViewController:login];
-        
-        [viewController presentViewController:unVc animated:YES completion:nil];
-        
-        return;
     }
     
     //如果已经登录直接进行下一步操作
     if (aBlock) {
         aBlock(YES);//登录成功
+        aBlock = nil;
     }
-    
-    aBlock = nil;
+    return YES;
 }
 
 #pragma mark - 事件处理
@@ -160,7 +140,6 @@
 - (void)loginResultIsSuccess:(BOOL)isSuccess
 {
     if (_aLoginBlock) {
-        
         _aLoginBlock(isSuccess);
     }
 }
@@ -169,7 +148,6 @@
 {
     _aLoginBlock = aBlock;
 }
-
 
 
 /**
@@ -435,8 +413,12 @@
     
 }
 
+@end
 
+/**
+ *  主要目的实现loginManager
+ */
 
-
+@implementation LoginManager
 
 @end

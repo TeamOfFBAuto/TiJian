@@ -94,4 +94,10 @@ typedef enum {
 }GCouponType;
 
 
+typedef enum {
+    PageResultType_nologin = 1,//未登录
+    PageResultType_nodata = 2,//数据为空
+    PageResultType_requestFail = 3 //请求异常
+}PageResultType;//页面结果类型
+
 #endif

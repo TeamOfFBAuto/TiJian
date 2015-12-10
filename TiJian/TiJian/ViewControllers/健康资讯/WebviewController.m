@@ -11,6 +11,9 @@
 #import "ArticleListController.h"
 
 @interface WebviewController ()<UIWebViewDelegate>
+{
+    UIView *_progressview;
+}
 
 @property(nonatomic,retain)UIWebView *webView;
 
@@ -37,11 +40,15 @@
     self.webView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [self.view addSubview:_webView];
     
+    _progressview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 3.f)];
+    _progressview.backgroundColor = RGBCOLOR(0, 188, 22);
+    [self.view addSubview:_progressview];
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.webUrl]];
-    
-    
     [self.webView loadRequest:request progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        NSLog(@"%ld",(unsigned long)bytesWritten);
+        NSLog(@"bytesWritten:%ld totalBytesWritten:%ld totalBytesExpectedToWrite:%lld",bytesWritten,(unsigned long)totalBytesWritten,totalBytesExpectedToWrite);
+        
+        [self test:(totalBytesWritten/totalBytesExpectedToWrite)];
         
     } success:^NSString *(NSHTTPURLResponse *response, NSString *HTML) {
         
@@ -50,7 +57,27 @@
     } failure:^(NSError *error) {
         NSLog(@"erro %@",error);
         [LTools alertText:@"页面访问出现错误" viewController:self];
+        [self leftButtonTap:nil];
     }];
+    
+}
+
+- (void)test:(CGFloat)x
+{
+    if (x >= 1.0) {
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            _progressview.width = DEVICE_WIDTH * x;
+        } completion:^(BOOL finished) {
+            if (finished) {
+                
+                [_progressview removeFromSuperview];
+            }
+        }];
+    }else
+    {
+        _progressview.width = DEVICE_WIDTH * x;
+    }
     
 }
 
@@ -58,6 +85,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - 事件处理
 
@@ -75,11 +103,11 @@
 }
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+//    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
 {

@@ -48,7 +48,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.myTitleLabel.text = @"个人中心";
+    self.myTitle = @"个人中心";
     self.rightImageName = @"personal_message";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     

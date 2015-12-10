@@ -27,7 +27,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.myTitleLabel.text = @"推荐项目";
+    self.myTitle = @"推荐项目";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         
@@ -49,8 +49,7 @@
     [self.view addSubview:_table];
     _table.backgroundColor = [UIColor clearColor];
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-//    NSArray *items = @[@"总胆固醇",@"胸镜要透视内科",@"内科",@"心电图",@"甘油内科内科三酯",@"尿常规",@"内科",@"心电图",@"甘油三酯",@"尿常规",@"胸镜透视",@"内科",@"心电图"];
+
     
     NSArray *items = projects;
     UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
@@ -118,15 +117,15 @@
     NSString *api;
     if (self.jsonString) {
         params = @{@"c_result":self.jsonString,
-                   @"province_id":@"1000",
-                   @"city_id":@"1001",
+                   @"province_id":[GMAPI getCurrentProvinceId],
+                   @"city_id":[GMAPI getCurrentCityId],
                    @"authcode":authey};
         api = GET_CUSTOMIZAITION_RESULT;
     }else
     {
         //获取最近体检结果
-        params = @{@"province_id":@"1000",
-                   @"city_id":@"1001",
+        params = @{@"province_id":[GMAPI getCurrentProvinceId],
+                   @"city_id":[GMAPI getCurrentCityId],
                    @"authcode":authey};
         api = GET_LATEST_CUSTOMIZATION_RESULT;
     }
@@ -144,7 +143,7 @@
 
 - (void)parseDataWithResult:(NSDictionary *)result
 {
-    [LTools setBool:YES forKey:USER_CUSTOMIZATON_RESULT];//记录已体检过
+    [UserInfo updateUserCustomed:@"1"];//记录已个性化定制过状态
     NSDictionary *data = result[@"data"];
     NSArray *setmeal_product_list = data[@"setmeal_product_list"];
     _dataArray = [ProductModel modelsFromArray:setmeal_product_list];
@@ -194,7 +193,7 @@
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     ProductModel *product = _dataArray[indexPath.row];
-    [cell setCellWithModel:product];
+    [cell loadData:product];
     
     return cell;
 }

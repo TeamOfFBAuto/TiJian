@@ -11,6 +11,14 @@
 #define kDisOne 20
 #define kDisTwo 5
 
+@interface ResultView ()
+
+@property(nonatomic,retain)UIImageView *imageView;
+@property(nonatomic,retain)UILabel *titleLabel;
+@property(nonatomic,retain)UILabel *contentLabel;
+
+@end
+
 @implementation ResultView
 
 -(instancetype)init
@@ -96,5 +104,25 @@
         self.height = bottomView.bottom;
     }
 }
+
+-(void)setImage:(UIImage *)image
+{
+    _image = image;
+    self.imageView.image = image;
+}
+
+-(void)setTitle:(NSString *)title
+{
+    _title = title;
+    self.titleLabel.text = title;
+}
+
+-(void)setContent:(NSString *)content
+{
+    _content = content;
+    self.contentLabel.text = content;
+}
+
+
 
 @end

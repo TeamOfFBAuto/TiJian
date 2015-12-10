@@ -213,10 +213,6 @@
         [GMAPI cache:cachDic ForKey:USERLocation];
     }
     
-    
-    
-    
-    
 }
 
 
@@ -330,7 +326,7 @@
 - (void)pushToPersonalCustom
 {
     __weak typeof(self)weakSelf = self;
-    BOOL isLogin = [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+    [LoginViewController isLogin:self loginBlock:^(BOOL success) {
        
         if (success) {
             [weakSelf pushToPhysicaResult];
@@ -339,11 +335,6 @@
             NSLog(@"没登陆成功");
         }
     }];
-    //登录成功
-    if (isLogin) {
-        
-        [weakSelf pushToPhysicaResult];
-    }
 }
 
 /**
@@ -352,7 +343,7 @@
 - (void)pushToPhysicaResult
 {
     //先判断是否个性化定制过
-    BOOL isOver = [LTools boolForKey:USER_CUSTOMIZATON_RESULT];
+    BOOL isOver = [UserInfo getCustomState];
     if (isOver) {
         //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];
@@ -404,7 +395,7 @@
 {
     __weak typeof(self)weakSelf = self;
         
-    [LoginViewController loginToDoWithViewController:self loginBlock:^(BOOL success) {
+    [LoginViewController isLogin:self loginBlock:^(BOOL success) {
         if (success) {
             [weakSelf loginToAppoint];
         }
