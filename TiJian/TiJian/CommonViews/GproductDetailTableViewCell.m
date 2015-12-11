@@ -205,7 +205,7 @@
             [cityInfoArray addObject:str];
         }
         NSString *cityInfo_str = [cityInfoArray componentsJoinedByString:@" "];
-        cityInfoLabel.text = [NSString stringWithFormat:@"%@ 北京市 北京市 北京市 北京市 北京市 北京市",cityInfo_str];
+        cityInfoLabel.text = [NSString stringWithFormat:@"%@",cityInfo_str];
         [cView addSubview:cityInfoLabel];
         
         

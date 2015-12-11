@@ -412,8 +412,8 @@
     NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
     NSDictionary *dic = classData[sender.tag - 10];
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-    cc.category_id = (int)(sender.tag - 10);
     cc.className = [dic stringValueForKey:@"name"];
+    cc.category_id = [[dic stringValueForKey:@"category_id"] intValue];
     
     [self.navigationController pushViewController:cc animated:YES];
     

@@ -166,18 +166,28 @@
     _confirmOrderBtn.userInteractionEnabled = NO;
     
     //商品金额
-    _price_total = 0;
+    _price_total = 0.0f;
     for (ProductModel *model in self.dataArray) {
-        CGFloat tprice_one = ([model.current_price floatValue]*[model.product_num intValue]);
+        
+        
+        [model.current_price floatValue];
+        
+        
+        CGFloat x = 0.0f;
+        x = [model.current_price floatValue] * 100.0f;
+        x = x / 100.f;
+        CGFloat tprice_one = (x * [model.product_num intValue]);
         _price_total += tprice_one;
         model.afterUsedYouhuiquan_Price = [model.current_price floatValue];
         
+        
+        
     }
     //运费
-    CGFloat yunfei = 0;
+    CGFloat yunfei = 0.0f;
     
     //优惠券
-    CGFloat youhuiquan = 0;//使用优惠券优惠的总价格
+    CGFloat youhuiquan = 0.0f;//使用优惠券优惠的总价格
     if (self.userSelectYouhuiquanArray.count > 0) {
         _userChooseYouhuiquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectYouhuiquanArray.count];
         
@@ -193,10 +203,10 @@
                     
                     float youhuiquan_1 = 0;
                     
-                    if (total_p>[coupon.vouchers_price floatValue]) {
+                    if (total_p > [coupon.full_money floatValue]) {
                         youhuiquan_1 = [coupon.minus_money floatValue];
                     }else{
-                        youhuiquan_1 = total_p;
+                        youhuiquan_1 = 0;
                     }
                     
                     youhuiquan +=youhuiquan_1;
@@ -234,10 +244,10 @@
                     
                     float youhuiquan_1 = 0;
                     
-                    if (_price_total>[coupon.vouchers_price floatValue]) {
+                    if (_price_total>[coupon.full_money floatValue]) {
                         youhuiquan_1 = [coupon.minus_money floatValue];
                     }else{
-                        youhuiquan_1 = _price_total;
+                        youhuiquan_1 = 0;
                     }
                     youhuiquan += youhuiquan_1;
                     
@@ -273,7 +283,7 @@
     }
     
     //代金券
-    CGFloat daijinquan = 0;//使用优惠券优惠的总价格
+    CGFloat daijinquan = 0.0f;//使用优惠券优惠的总价格
     if (self.userSelectDaijinquanArray.count>0) {
         _userChooseDaijinquan_label.text = [NSString stringWithFormat:@"使用%lu张",(unsigned long)self.userSelectDaijinquanArray.count];
         
@@ -348,7 +358,7 @@
     
     
     //实付款
-    _finalPrice = 0;
+    _finalPrice = 0.0f;
     _finalPrice = _price_total + yunfei - youhuiquan - daijinquan - _fanal_usedScore/100.0;
     
     UILabel *l0 = [_theNewbilityView viewWithTag:10];//商品金额

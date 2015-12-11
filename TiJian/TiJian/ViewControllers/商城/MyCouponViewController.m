@@ -22,6 +22,9 @@
     NSMutableArray *_tab0Array;//可用的数据源
     NSMutableArray *_tab1Array;//不可用的数据源
     
+    
+    UIButton *_use_btn;
+    
 }
 @end
 
@@ -142,7 +145,7 @@
     _buttonNum = count;
     
     
-    UIView *upline = [[UIView alloc]initWithFrame:CGRectMake(0, 39.5, DEVICE_WIDTH, 0.5)];
+    UIView *upline = [[UIView alloc]initWithFrame:CGRectMake(0, 35, DEVICE_WIDTH, 5)];
     upline.backgroundColor = RGBCOLOR(235, 235, 235);
     [self.view addSubview:upline];
     
@@ -182,14 +185,27 @@
         
         if (_table.tag == 200) {
             if (_tab0Array.count == 0) {
+                
+                UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 200)];
+                
+                UIView *imv_view = [[UIView alloc]initWithFrame:CGRectMake(0, 25, DEVICE_WIDTH, 175)];
+                [footView addSubview:imv_view];
+                
                 UIView *immm = [self resultViewWithType:PageResultType_nodata];
-                _table.tableFooterView = immm;
+                [imv_view addSubview:immm];
+                _table.tableFooterView = footView;
             }
             _tab0 = _table;
         }else if (_table.tag == 201){
             if (_tab1Array.count == 0) {
+                UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 200)];
+                
+                UIView *imv_view = [[UIView alloc]initWithFrame:CGRectMake(0, 25, DEVICE_WIDTH, 175)];
+                [footView addSubview:imv_view];
+                
                 UIView *immm = [self resultViewWithType:PageResultType_nodata];
-                _table.tableFooterView = immm;
+                [imv_view addSubview:immm];
+                _table.tableFooterView = footView;
             }
             _tab1 = _table;
         }
@@ -276,6 +292,18 @@
         
         
         
+        
+        
+        
+        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
+            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+        }else{
+            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
+        }
+        
+        
+        
+        
         [_tab0 reloadData];
         
         
@@ -335,6 +363,15 @@
             }
         }
         self.userChooseDaijinquanArray = arr1;
+        
+        
+        
+        
+        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
+            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+        }else{
+            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
+        }
         
         
         [_tab0 reloadData];
@@ -491,14 +528,22 @@
             if (self.type == GCouponType_use_daijinquan || self.type == GCouponType_use_youhuiquan) {
                 UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 55)];
                 
-                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [btn setFrame:CGRectMake(DEVICE_WIDTH*0.5-100, 10, 200, 35)];
-                btn.layer.cornerRadius = 4;
-                btn.backgroundColor = RGBCOLOR(92, 146, 203);
-                btn.titleLabel.font = [UIFont systemFontOfSize:15];
-                [btn setTitle:@"使 用" forState:UIControlStateNormal];
-                [btn addTarget:self action:@selector(useBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-                [view addSubview:btn];
+                _use_btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [_use_btn setFrame:CGRectMake(33, 10, DEVICE_WIDTH - 65, 40)];
+                _use_btn.layer.cornerRadius = 4;
+                
+                
+                
+                if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
+                    _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+                }else{
+                    _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
+                }
+                
+                _use_btn.titleLabel.font = [UIFont systemFontOfSize:15];
+                [_use_btn setTitle:@"使 用" forState:UIControlStateNormal];
+                [_use_btn addTarget:self action:@selector(useBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+                [view addSubview:_use_btn];
                 
                 _tab0.tableFooterView = view;
             }
