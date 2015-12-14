@@ -101,8 +101,14 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     ProductModel *aModel = _table.dataArray[indexPath.row];
-
+    aModel.order_id = self.orderId;
     ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+    
+    if (!aModel.order_id) {
+        [LTools showMBProgressWithText:@"订单无效！" addToView:self.view];
+        [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
+        return;
+    }
     
     //公司
     if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {

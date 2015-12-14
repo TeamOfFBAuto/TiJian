@@ -88,13 +88,6 @@
     [mingxiLabel setHeight:height];
     [zuheneirongLabel setHeight:height];
     
-    
-    
-    NSLog(@"%@",NSStringFromCGRect(xuhaoLabel.frame));
-    NSLog(@"%@",NSStringFromCGRect(mingxiLabel.frame));
-    NSLog(@"%@",NSStringFromCGRect(zuheneirongLabel.frame));
-    
-    
     return height;
 }
 

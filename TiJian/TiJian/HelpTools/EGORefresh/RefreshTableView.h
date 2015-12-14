@@ -21,7 +21,6 @@
 - (void)loadNewDataForTableView:(RefreshTableView *)tableView;
 - (void)loadMoreDataForTableView:(RefreshTableView *)tableView;
 
-//新加
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView;
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView;
 
@@ -30,7 +29,6 @@
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView;
 
-//meng新加
 -(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView;
 -(UIView *)viewForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView;
 

@@ -522,7 +522,6 @@
     
     [rr requestWithMethod:YJYRequstMethodGet api:USER_GETCOUPON parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSLog(@"result %@",result);
         aModel.enable_receive = @"0";
         sender.selected = YES;
         

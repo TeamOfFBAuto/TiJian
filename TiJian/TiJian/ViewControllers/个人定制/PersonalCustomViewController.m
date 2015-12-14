@@ -985,7 +985,7 @@
         //设置初始值
         int height = [[_questionDictionary objectForKey:Q_HEIGHT]intValue];
         if (height > 0) {
-            [_view_Age setInitValue:NSStringFromInt(height)];
+            [_view_Height setInitValue:NSStringFromInt(height)];
         }
         _view_Height = [[LQuestionView alloc]initHeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:height resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             

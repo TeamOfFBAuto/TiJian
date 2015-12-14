@@ -516,6 +516,27 @@
     return 0.f;
 }
 
+-(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
+{
+    int index = (int)tableView.tag - kTagTableView;
+    if (index == 0)
+    {
+        return 5.f;
+    }
+    return 0.f;
+}
+-(UIView *)viewForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
+{
+    int index = (int)tableView.tag - kTagTableView;
+    if (index == 0) {
+        
+        UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40.f)];
+        head.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+        return head;
+    }
+    return nil;
+}
+
 #pragma - mark UITableViewDataSource
 
 #pragma - mark UITableViewDataSource<NSObject>

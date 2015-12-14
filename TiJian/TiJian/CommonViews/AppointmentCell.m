@@ -126,7 +126,6 @@
             
             //套餐图
             self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(left, (75 - 50)/2.f, 80, 50)];
-            _iconImageView.backgroundColor = DEFAULT_TEXTCOLOR;
             [tc_bgView addSubview:_iconImageView];
             //套餐name
             self.productNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(_iconImageView.right + 8, 14, tc_bgView.width - _iconImageView.right - 8 - left - 80, 30) title:@"爱康国宾粉红真爱体检套餐全国通用爱康国宾粉红真爱体检套餐全国通用" font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
@@ -164,7 +163,7 @@
         return;
     }
     
-    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    [self.iconImageView l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
     self.productNameLabel.text = aModel.product_name;
     NSString *text = [aModel.appointed_num intValue] > 0 ? @"剩" : @"共";
     if ([aModel.type intValue] == 1) {

@@ -49,8 +49,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.navigationBarHidden = NO;
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 #pragma - mark 通知处理
@@ -399,9 +398,9 @@
     result.sumPrice = self.sumPrice;
     result.payResultType = resultType;
     result.erroInfo = erroInfo;
-    if (self.lastVc && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
-        [self.lastVc.navigationController popViewControllerAnimated:NO];
-        [self.lastVc.navigationController pushViewController:result animated:YES];
+    if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
+       [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
+        [self.lastViewController.navigationController pushViewController:result animated:YES];
     }
     [self.navigationController pushViewController:result animated:YES];
 }

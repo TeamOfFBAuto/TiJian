@@ -357,7 +357,7 @@
     pay.orderNum = orderNum;
     pay.sumPrice = sumPrice;
     pay.payStyle = payStyle;
-    pay.lastVc = self;
+    pay.lastViewController = self;
     [self.navigationController pushViewController:pay animated:YES];
 }
 
@@ -458,6 +458,7 @@
 
     OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
     orderInfo.order_id = aModel.order_id;
+    orderInfo.lastViewController = self;
     [self.navigationController pushViewController:orderInfo animated:YES];
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView

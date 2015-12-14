@@ -10,6 +10,7 @@
 #import "PeopleManageController.h"
 #import "SSLunarDate.h"
 #import "HospitalModel.h"
+#import "NSDate+FSExtension.h"
 
 typedef enum {
     STATETYPE_OPEN = 0,//打开
@@ -41,6 +42,7 @@ typedef enum {
 @property(nonatomic,retain)UIImageView *closeImage;
 @property(nonatomic,retain)UIView *calendarView;//日历背景view
 @property(nonatomic,retain)ResultView *nodataView;
+@property(nonatomic,retain)NSDate *beginDate;//开始时间
 
 @end
 
@@ -60,14 +62,13 @@ typedef enum {
     _table.dataSource = self;
     [self.view addSubview:_table];
     _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    _table.backgroundColor = [UIColor whiteColor];
+    _table.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     _table.tableHeaderView = self.calendarView;
     
     
-    NSString *selectDate = [LTools timeDate:[NSDate date] withFormat:@"yyyy-MM-dd"];
+    NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"yyyy-MM-dd"];
     [self networkForCenter:selectDate];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -86,6 +87,15 @@ typedef enum {
     if ([_table respondsToSelector:@selector(setLayoutMargins:)]) {
         [_table setLayoutMargins:UIEdgeInsetsZero];
     }
+}
+
+-(NSDate *)beginDate
+{
+    if (_beginDate) {
+        return _beginDate;
+    }
+    _beginDate = [[NSDate date]fs_dateByAddingDays:1];
+    return _beginDate;
 }
 
 #pragma mark - 视图创建
@@ -162,7 +172,8 @@ typedef enum {
     _calendar.backgroundColor = [UIColor whiteColor];
     _calendar.clipsToBounds = YES;
     [_calendar setScope:FSCalendarScopeWeek];
-    [_calendar setCurrentPage:[NSDate date] animated:YES];
+    [_calendar setCurrentPage:self.beginDate animated:YES];
+    [_calendar selectDate:self.beginDate];
     
     FSCalendarAppearance *apprearance = _calendar.appearance;
     apprearance.todayColor = [UIColor redColor];
@@ -355,7 +366,6 @@ typedef enum {
 
     [_calendar setScope:selectedScope animated:YES];
     
-//    [_calendar setCurrentPage:[NSDate date] animated:NO];
 }
 
 -(void)rightButtonTap:(UIButton *)sender
@@ -402,13 +412,7 @@ typedef enum {
     people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;
     [people setAppointOrderId:self.order_id productId:self.productId examCenterId:NSStringFromInt(_selectHospitalId) date:_selectDate noAppointNum:self.noAppointNum];
     
-    //先pop掉 选择时间分院,在push
-    if (self.lastViewController) {
-        
-        [self.lastViewController.navigationController popViewControllerAnimated:NO];
-        [self.lastViewController.navigationController pushViewController:people animated:YES];
-        return;
-    }
+    people.lastViewController = self.lastViewController;
     
     [self.navigationController pushViewController:people animated:YES];
     
@@ -445,13 +449,19 @@ typedef enum {
 
 - (void)calendarCurrentPageDidChange:(FSCalendar *)calendar
 {
-//    [calendar selectDate:[NSDate date] scrollToDate:YES];
-//    
-//    [calendar setCurrentPage:[NSDate date] animated:YES];
 }
 
 - (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date
 {
+    if ([date fs_isEqualToDateForDay:[NSDate date]]) {
+        
+        if ([date fs_isEqualToDateForDay:[NSDate date]]) {
+            
+            [LTools showMBProgressWithText:@"只能预约今天以后分院!" addToView:self.view];
+        }
+        
+        return NO;
+    }
     return YES;
 }
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date

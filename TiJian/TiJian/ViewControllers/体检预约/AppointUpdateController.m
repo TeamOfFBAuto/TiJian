@@ -107,7 +107,9 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
+        if ([result[RESULT_CODE]intValue] == 0) {
+            [LTools showMBProgressWithText:result[RESULT_INFO] addToView:weakSelf.view];
+        }
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_UPDATE_SUCCESS object:nil];
         [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
         
@@ -278,8 +280,8 @@
         brandIcon.image = [UIImage imageNamed:@"tijianren_duo"];
         brandName.text = @"体检人信息";
         
-        //大于0 是公司套餐
-        if ([_appointModel.company_id intValue] > 0) {
+        //大于0 是公司套餐 公司套餐不能选择人
+        if ([_appointModel.company_id intValue] == 0) {
             [view addTaget:self action:@selector(clickToSelectUserInfo) tag:0];
 
         }

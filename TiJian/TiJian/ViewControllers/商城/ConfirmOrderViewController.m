@@ -1274,7 +1274,8 @@
     pay.orderId = orderId;
     pay.orderNum = orderNum;
     pay.sumPrice = _sumPrice_pay;
-    pay.lastVc = self;
+    pay.lastViewController = self.lastViewController;
+    
     if (self.lastViewController) {
         
         [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];

@@ -170,14 +170,27 @@
     
     NSString *authkey = [UserInfo getAuthkey];
 
-    NSDictionary *params = @{@"authcode":authkey,
-                             @"order_id":_order_id,
-                             @"product_id":_product_id,
-                             @"exam_center_id":_exam_center_id,
-                             @"date":_date,
-                             @"family_uid":family_uid,
-                             @"myself":myself
-                             };
+    NSDictionary *params = nil;
+    
+    if (_isMyselfSelected) {
+        params = @{@"authcode":authkey,
+                   @"order_id":_order_id,
+                   @"product_id":_product_id,
+                   @"exam_center_id":_exam_center_id,
+                   @"date":_date,
+                   @"myself":myself
+                   };
+    }else
+    {
+        params = @{@"authcode":authkey,
+                   @"order_id":_order_id,
+                   @"product_id":_product_id,
+                   @"exam_center_id":_exam_center_id,
+                   @"date":_date,
+                   @"family_uid":family_uid,
+                   @"myself":myself
+                   };
+    }
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak typeof(self)weakSelf = self;
@@ -203,8 +216,11 @@
 {
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-//    AppointResultController *result = [[AppointResultController alloc]init];
-//    [self.navigationController pushViewController:result animated:YES];
+
+    if (self.navigationController) {
+        [self.navigationController popToViewController:self.lastViewController animated:YES];
+        return;
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

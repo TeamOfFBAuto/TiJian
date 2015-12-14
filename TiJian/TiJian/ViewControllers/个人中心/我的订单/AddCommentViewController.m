@@ -24,28 +24,10 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.navigationBarHidden = NO;
+    
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    //在navigationController中移除 确认订单viewController
-    
-    //确认订单之后到支付页面,这时候不能再返回到确认订单页面
-    
-    NSArray *vcArray = self.navigationController.viewControllers;
-    
-    for (UIViewController *viewController in vcArray) {
-        
-        if ([viewController isKindOfClass:NSClassFromString(@"OrderInfoViewController")]) {
-            
-            [viewController removeFromParentViewController];
-        }
-    }
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
