@@ -119,7 +119,8 @@
         params = @{@"c_result":self.jsonString,
                    @"province_id":[GMAPI getCurrentProvinceId],
                    @"city_id":[GMAPI getCurrentCityId],
-                   @"authcode":authey};
+                   @"authcode":authey,
+                   @"vouchers_id":self.vouchers_id ? self.vouchers_id : @""};
         api = GET_CUSTOMIZAITION_RESULT;
     }else
     {
@@ -170,6 +171,10 @@
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *aModel = _dataArray[indexPath.row];
     cc.productId = aModel.product_id;
+    if ([self.vouchers_id intValue] > 0) {
+        cc.isVoucherPush = YES;
+        cc.VoucherId = self.vouchers_id;
+    }
     [self.navigationController pushViewController:cc animated:YES];
 }
 

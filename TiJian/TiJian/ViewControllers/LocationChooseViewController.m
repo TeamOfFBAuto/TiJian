@@ -557,10 +557,6 @@
         
         [weakSelf theLocationDictionary:dic];
     }];
-    
-    
-    
-    
 }
 
 
@@ -576,10 +572,7 @@
         theString = [dic stringValueForKey:@"province"];
     }else{
         theString = [dic stringValueForKey:@"city"];
-        
-        
     }
-    
     
     self.nowLocationBtn_cityid = [GMAPI cityIdForName:theString];
     if ([LTools isEmpty:theString]) {
@@ -595,9 +588,6 @@
     
     
     [self.nowLocationBtn_c addTarget:self action:@selector(nowLocationBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    
     
 }
 

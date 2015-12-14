@@ -12,4 +12,6 @@
 
 @interface PersonalCustomViewController : MyViewController
 
+@property(nonatomic,retain)NSString *vouchers_id;
+
 @end

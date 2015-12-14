@@ -131,7 +131,7 @@
             [btn setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
             [btn setTitle:@"定制专属套餐" forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor colorWithHexString:@"ec7d24"] forState:UIControlStateNormal];
-            [btn addTarget:self action:@selector(clickToCustomization) forControlEvents:UIControlEventTouchUpInside];
+            [btn addTarget:self action:@selector(clickToCustomization:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -385,8 +385,10 @@
     GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];
     [self.navigationController pushViewController:cc animated:YES];
 }
-- (void)clickToCustomization
+- (void)clickToCustomization:(PropertyButton *)sender
 {
+    
+    ProductModel *aModel = [sender isKindOfClass:[PropertyButton class]] ? sender.aModel : nil;
     //先判断是否个性化定制过
     BOOL isOver = [UserInfo getCustomState];
     if (isOver) {
@@ -397,8 +399,8 @@
     }else
     {
         PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
+        custom.vouchers_id = aModel.coupon_id;
         custom.lastViewController = self;
-        custom.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:custom animated:YES];
     }
 }
@@ -549,7 +551,8 @@
             
             cell.buyButton.aModel = aModel;
             [cell.buyButton addTarget:self action:@selector(clickToBugUseVoucher:) forControlEvents:UIControlEventTouchUpInside];
-            [cell.customButton addTarget:self action:@selector(clickToCustomization) forControlEvents:UIControlEventTouchUpInside];
+            cell.customButton.aModel = aModel;
+            [cell.customButton addTarget:self action:@selector(clickToCustomization:) forControlEvents:UIControlEventTouchUpInside];
             
         }else
         {

@@ -40,6 +40,7 @@ typedef enum {
 @property(nonatomic,retain)UIButton *closeButton;
 @property(nonatomic,retain)UIImageView *closeImage;
 @property(nonatomic,retain)UIView *calendarView;//日历背景view
+@property(nonatomic,retain)ResultView *nodataView;
 
 @end
 
@@ -88,6 +89,32 @@ typedef enum {
 }
 
 #pragma mark - 视图创建
+
+/**
+ *  请求结果 为空、等特殊情况
+ */
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"没有找到对应的可预约分院";
+    }
+    
+    if (_nodataView) {
+        
+        [_nodataView setContent:content];
+        return _nodataView;
+    }
+    
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    self.nodataView = result;
+    
+    return result;
+}
 
 - (UIView *)calendarView
 {
@@ -307,7 +334,7 @@ typedef enum {
 {
     NSArray *temp = [HospitalModel modelsFromArray:result[@"center_list"]];
     
-    [_table reloadData:temp pageSize:50];
+    [_table reloadData:temp pageSize:50 noDataView:[self resultViewWithType:PageResultType_nodata]];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
 }

@@ -365,13 +365,6 @@ static int seconds = 60;//计时60s
     
     [self gShou];//收键盘
     
-    //test
-//    [self changeTheUpViewStateWithNum:2];
-//    [_downScrollView setContentOffset:CGPointMake(DEVICE_WIDTH, 0) animated:YES];
-//    [self startTimer];
-//
-//    return;
-    
     SecurityCode_Type type;//默认注册
     type = 1;
     
@@ -468,12 +461,6 @@ static int seconds = 60;//计时60s
         [LTools alertText:ALERT_ERRO_PASSWORD viewController:self];
         return;
     }
-//    if (self.mimaTf.text.length != 6) {
-//        
-//        [LTools alertText:ALERT_ERRO_PASSWORD viewController:self];
-//        return;
-//    }
-    
     
     NSString *codestr = [NSString stringWithFormat:@"%d",code];
     NSDictionary *params = @{@"mobile":mobile,

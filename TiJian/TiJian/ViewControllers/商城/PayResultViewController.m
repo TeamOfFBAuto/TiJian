@@ -8,6 +8,7 @@
 
 #import "PayResultViewController.h"
 #import "OrderInfoViewController.h"
+#import "OrderProductListController.h"
 
 @interface PayResultViewController ()
 
@@ -68,7 +69,7 @@
         [btn1 setTitleColor:[UIColor colorWithHexString:@"323232"] forState:UIControlStateNormal];
         
         //继续购买
-        UIButton *btn2 = [[UIButton alloc]initWithframe:CGRectMake(btn1.right + 20, label2.bottom + 30, btnWith, 33) buttonType:UIButtonTypeCustom normalTitle:@"再去逛逛" selectedTitle:nil target:self action:@selector(clickToShopping:)];
+        UIButton *btn2 = [[UIButton alloc]initWithframe:CGRectMake(btn1.right + 20, label2.bottom + 30, btnWith, 33) buttonType:UIButtonTypeCustom normalTitle:@"前去预约" selectedTitle:nil target:self action:@selector(clickToAppoint)];
         [self.view addSubview:btn2];
         [btn2 addCornerRadius:5.f];
         [btn2 setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
@@ -153,6 +154,14 @@
     
     UITabBarController *root = (UITabBarController *)((LNavigationController *)ROOTVIEWCONTROLLER).topViewController;
     root.selectedIndex = 1;
+}
+
+///前去预约
+- (void)clickToAppoint
+{
+    OrderProductListController *list = [[OrderProductListController alloc]init];
+    list.orderId = self.orderId;
+    [self.navigationController pushViewController:list animated:YES];
 }
 
 @end

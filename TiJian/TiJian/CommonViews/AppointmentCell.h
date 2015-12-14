@@ -13,7 +13,7 @@
 @interface AppointmentCell : BasicTableViewCell
 
 @property(nonatomic,retain)PropertyButton *buyButton;//购买套餐button
-@property(nonatomic,retain)UIButton *customButton;//定制button
+@property(nonatomic,retain)PropertyButton *customButton;//定制button
 
 /**
  *  cell初始化

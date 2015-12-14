@@ -470,22 +470,22 @@
     animation.path = _path.CGPath;
     animation.rotationMode = kCAAnimationRotateAuto;
     CABasicAnimation *expandAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    expandAnimation.duration = 0.6f;
+    expandAnimation.duration = 0.3f;
     expandAnimation.fromValue = [NSNumber numberWithFloat:1];
     expandAnimation.toValue = [NSNumber numberWithFloat:2.0f];
     expandAnimation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     
     CABasicAnimation *narrowAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    narrowAnimation.beginTime = 0.6;
+    narrowAnimation.beginTime = 0.3;
     narrowAnimation.fromValue = [NSNumber numberWithFloat:2.0f];
-    narrowAnimation.duration = 0.6f;
+    narrowAnimation.duration = 0.3f;
     narrowAnimation.toValue = [NSNumber numberWithFloat:0.5f];
     
     narrowAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     
     CAAnimationGroup *groups = [CAAnimationGroup animation];
     groups.animations = @[animation,expandAnimation,narrowAnimation];
-    groups.duration = 1.2f;
+    groups.duration = 0.6f;
     groups.removedOnCompletion=NO;
     groups.fillMode=kCAFillModeForwards;
     groups.delegate = self;

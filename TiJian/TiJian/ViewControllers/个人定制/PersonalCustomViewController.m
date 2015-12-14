@@ -189,6 +189,8 @@
 {
     RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
     recommend.jsonString = _jsonString;
+    recommend.vouchers_id = self.vouchers_id;
+    recommend.hidesBottomBarWhenPushed = YES;
     [self.lastViewController.navigationController popViewControllerAnimated:NO];
     [self.lastViewController.navigationController pushViewController:recommend animated:YES];
 }
