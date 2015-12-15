@@ -286,7 +286,7 @@
     if (self.isReloadData) {
         
         [self.dataArray removeAllObjects];
-        
+        [self reloadData];
     }
     [self.dataArray addObjectsFromArray:data];
     
@@ -343,6 +343,7 @@
     if (self.isReloadData) {
         
         [self.dataArray removeAllObjects];
+        [self reloadData];
         
     }
     [self.dataArray addObjectsFromArray:data];

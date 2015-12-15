@@ -21,6 +21,7 @@
 #import "BrandModel.h"//品牌model
 #import "GconfirmOrderCell.h"
 #import "RCDChatViewController.h"
+#import "AddCommentViewController.h"
 
 #import "RCIM.h"
 
@@ -65,6 +66,7 @@
 }
 
 @property(nonatomic,retain)NSArray *dataArray;
+@property(nonatomic,retain)NSArray *products;//订单对应商品列表
 
 @end
 
@@ -148,13 +150,6 @@
         b_model.productsArray = [NSArray arrayWithArray:p_temp];
         [temp addObject:b_model];
         
-//        //test
-//        BrandModel *c_model = [[BrandModel alloc]init];
-//        c_model.brand_id = @"2";
-//        c_model.brand_name = @"慈铭体检";
-//        c_model.productsArray = [NSArray arrayWithArray:p_temp];
-//        [temp addObject:c_model];
-        
     }
     _dataArray = [NSArray arrayWithArray:temp];
     
@@ -166,6 +161,33 @@
 }
 
 #pragma mark - 事件处理
+
+///获取订单商品列表
+-(NSArray *)products
+{
+    if (_products.count) {
+        return _products;
+    }
+    
+    OrderModel *order = _orderModel;
+    NSMutableArray *temp = [NSMutableArray array];
+    for (NSDictionary *aDic in order.products) {
+        
+        if ([aDic isKindOfClass:[NSDictionary class]]) {
+            NSArray *list = aDic[@"list"];
+            NSString *brandId = aDic[@"brand_id"];
+            NSString *brandName = aDic[@"brand_name"];
+            for (NSDictionary *p_dic in list) {
+                ProductModel *aModel = [[ProductModel alloc]initWithDictionary:p_dic];
+                aModel.brand_id = brandId;
+                aModel.brand_name = brandName;
+                [temp addObject:aModel];
+            }
+        }
+    }
+    _products = [NSArray arrayWithArray:temp];
+    return temp;
+}
 
 /**
  *  判断section是否是显示单品
@@ -206,13 +228,19 @@
  */
 - (void)buyAgain:(OrderModel *)order
 {
-    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
-    for (NSDictionary *aDic in order.products) {
-        
-        ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
-        [temp addObject:aModel];
-    }
-    NSArray *productArr = temp;
+//    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
+//    
+//    for (NSDictionary *aDic in order.products) {
+//        
+//        if ([aDic isKindOfClass:[NSDictionary class]]) {
+//            NSArray *list = aDic[@"list"];
+//            for (NSDictionary *p_dic in list) {
+//                ProductModel *aModel = [[ProductModel alloc]initWithDictionary:p_dic];
+//                [temp addObject:aModel];
+//            }
+//        }
+//    }
+    NSArray *productArr = self.products;
     ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
     confirm.dataArray = productArr;
     [self.navigationController pushViewController:confirm animated:YES];
@@ -266,6 +294,21 @@
         tuiKuan.orderId = aModel.order_id;
         tuiKuan.lastVc = self;
         [self.navigationController pushViewController:tuiKuan animated:YES];
+    }else if ([text isEqualToString:@"评价晒单"]){
+        
+        OrderModel *aModel = _orderModel;
+        //评价晒单
+//        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:aModel.products.count];
+//        for (NSDictionary *aDic in aModel.products) {
+//            
+//            ProductModel *t_Model = [[ProductModel alloc]initWithDictionary:aDic];
+//            [temp addObject:t_Model];
+//        }
+        AddCommentViewController *comment = [[AddCommentViewController alloc]init];
+        comment.dingdanhao = aModel.order_id;
+        comment.theModelArray = self.products;
+        [self.navigationController pushViewController:comment animated:YES];
+
     }
 }
 
@@ -323,7 +366,7 @@
  */
 - (void)clickToPhone:(UIButton *)sender
 {
-    NSString *msg = [NSString stringWithFormat:@"拨打:%@",_orderModel.receiver_mobile];
+    NSString *msg = [NSString stringWithFormat:@"拨打:%@",_orderModel.merchant_phone];
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     alert.tag = ALERT_TAG_PHONE;
     [alert show];
@@ -544,7 +587,7 @@
         
         if (buttonIndex == 1) {
             
-            NSString *phone = _orderModel.receiver_mobile;
+            NSString *phone = _orderModel.merchant_phone;
             [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",phone]]];
         }
     }else if (alertView.tag == ALERT_TAG_CANCEL_ORDER){
@@ -727,7 +770,11 @@
         }
     }
     
-    return 50 + 5;
+    NSString *note = [LTools isEmpty:_orderModel.order_note] ? @"无" : _orderModel.order_note;
+    CGFloat width = DEVICE_WIDTH - 30 - 80;
+    CGFloat height = [LTools heightForText:note width:width font:14];
+    
+    return height + 5 + 16 + 5;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -802,26 +849,42 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
         UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 50)];
         view.backgroundColor = [UIColor whiteColor];
+        view.tag = 102;
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH - 15, 50) title:@"" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
-        titleLabel.backgroundColor = [UIColor whiteColor];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 80, 50) title:@"给商家留言:" font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
+//        titleLabel.backgroundColor = [UIColor orangeColor];
         [view addSubview:titleLabel];
         titleLabel.tag = 100;
+        
+        
+        UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.right, 16, DEVICE_WIDTH - 30 - 80, 15) title:@"" font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
+//        contentLabel.backgroundColor = [UIColor redColor];
+        [view addSubview:contentLabel];
+        contentLabel.numberOfLines = 0;
+        contentLabel.lineBreakMode = NSLineBreakByCharWrapping;
+        contentLabel.tag = 101;
         
         //line
         UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, view.height - 0.5, DEVICE_WIDTH, 0.5)];
         line.backgroundColor = DEFAULT_LINECOLOR;
         [view addSubview:line];
         [cell.contentView addSubview:view];
+        line.tag = 104;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
-    UILabel *label = [cell.contentView viewWithTag:100];
+    UILabel *label = [cell.contentView viewWithTag:101];
+    NSString *note = [LTools isEmpty:_orderModel.order_note] ? @"无" : _orderModel.order_note;
+    label.text = note;
     
-    NSString *title = @"给商家留言:";
-    NSString *note = _orderModel.order_note ? _orderModel.order_note : @"无";
-    NSString *content = [NSString stringWithFormat:@"%@%@",title,note];
-    [label setAttributedText:[LTools attributedString:content keyword:title color:[UIColor colorWithHexString:@"979797"]]];
+    CGFloat width = DEVICE_WIDTH - 30 - 80;
+    CGFloat height = [LTools heightForText:note width:width font:14];
+    label.height = height;
+    
+    UIView *view = [cell.contentView viewWithTag:102];
+    view.height = label.bottom + 5;
+    UIView *line = [cell.contentView viewWithTag:104];
+    line.top = view.height - 0.5;
     
     return cell;
     

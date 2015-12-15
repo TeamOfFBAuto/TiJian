@@ -16,6 +16,7 @@
 @property(nonatomic,retain)NSString *order_no;
 @property(nonatomic,retain)NSString *address;
 @property(nonatomic,retain)NSArray *products;//单品列表
+@property(nonatomic,retain)NSArray *list;
 @property(nonatomic,retain)NSArray *shop_products;//单品列表(不同地方不同叫法)
 @property(nonatomic,retain)NSString *order_note;//备注
 

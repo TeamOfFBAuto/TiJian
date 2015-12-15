@@ -118,7 +118,7 @@
     for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell loadCustomViewWithModel:_rTab.dataArray[indexPath.row]];
     
     return cell;

@@ -141,7 +141,7 @@
     __weak typeof(_table)weakTable = _table;
 
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"success result %@",result);
+        DDLOG(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         NSArray *temp = [UserInfo modelsFromArray:result[@"list"]];
@@ -149,7 +149,7 @@
         
     } failBlock:^(NSDictionary *result) {
         
-        NSLog(@"fail result %@",result);
+        DDLOG(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         [weakTable reloadData:nil pageSize:G_PER_PAGE noDataView:[weakSelf resultViewWithType:PageResultType_requestFail]];
     }];

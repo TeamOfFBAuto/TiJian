@@ -634,7 +634,7 @@
     
     NSLog(@"result %@",jsonString);
     
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定提交结果" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"确定", nil];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"个性化定制完成,是否确定提交结果" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"确定", nil];
     alert.tag = 10000;
     [alert show];
 }
