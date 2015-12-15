@@ -219,14 +219,23 @@
 
     NSDictionary *dic;
     if (theDic) {
-        dic = theDic;
+        NSString *voucherId = self.vouchers_id ? self.vouchers_id : @"";
+        if (voucherId.length > 0) {
+            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+            [temp_dic setObject:voucherId forKey:@"vouchers_id"];//加上代金卷id
+            dic = temp_dic;
+        }else
+        {
+            dic = theDic;
+
+        }
     }else{
         
         dic = @{
                   @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
                   @"province_id":[GMAPI getCurrentProvinceId],
                   @"city_id":[GMAPI getCurrentCityId],
-                  @"vouchers_id":self.vouchers_id ? self.vouchers_id : @""
+                  @"vouchers_id":self.vouchers_id ? self.vouchers_id : @"" //加上代金卷id
                   };
     }
     

@@ -8,7 +8,7 @@
 
 #import "SimpleMessage.h"
 #import <RongIMLib/RCUtilities.h>
-#import <RongIMLib/RCJSONConverter.h>
+//#import <RongIMLib/RCJSONConverter.h>
 
 @implementation SimpleMessage
 

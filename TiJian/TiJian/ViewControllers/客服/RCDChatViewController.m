@@ -44,13 +44,6 @@
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBarHidden = NO;
-    
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
-//    {
-//        //iOS 5 new UINavigationBar custom background
-//        
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7DAOHANGLANBEIJING_PUSH] forBarMetrics: UIBarMetricsDefault];
-//    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -112,13 +105,11 @@
     NSString *orderInfo = [NSString stringWithFormat:@"orderId=%@",orderId];
     NSString *title = [NSString stringWithFormat:@"订单编号:%@",orderNum];
     RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:orderInfo];
-    [[RCIMClient sharedRCIMClient]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" success:^(long messageId) {
-        NSLog(@"messageid %ld",messageId);
-        
-        
+    
+    [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
+        DDLOG(@"messageid %ld",messageId);
     } error:^(RCErrorCode nErrorCode, long messageId) {
-        NSLog(@"nErrorCode %ld",nErrorCode);
-        
+        DDLOG(@"nErrorCode %ld",nErrorCode);
     }];
 }
 
@@ -153,21 +144,11 @@
     NSString *title = [NSString stringWithFormat:@"我在看:[%@]",productName];
     
     RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
-    [[RCIMClient sharedRCIMClient]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" success:^(long messageId) {
-        NSLog(@"messageid %ld",messageId);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [[RCIMClient sharedRCIMClient] setMessageSentStatus:messageId sentStatus:SentStatus_SENT];
-            
-            [self.conversationMessageCollectionView reloadData];
-
-        });
-        
-//        [self.conversationMessageCollectionView reloadData];
+    [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
+        DDLOG(@"messageid %ld",messageId);
         
     } error:^(RCErrorCode nErrorCode, long messageId) {
-        NSLog(@"nErrorCode %ld",nErrorCode);
+        DDLOG(@"nErrorCode %ld",nErrorCode);
         
     }];
 }

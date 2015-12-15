@@ -666,7 +666,6 @@
 
 - (void)clickToChat
 {
-//    [self setProductMessageWithProductModel:self.theProductModel];
     RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
     chatService.userName = @"客服";
     chatService.targetId = SERVICE_ID;
