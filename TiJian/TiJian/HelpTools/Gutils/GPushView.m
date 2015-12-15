@@ -22,6 +22,7 @@
     NSArray *_priceArray;//价格区间
     
     int _isMark_price[10];
+    int _isMark_brand[200];
     
     
     UIView *_tab3Header;//价格选择的tabHeader
@@ -47,6 +48,11 @@
     for (int i = 0; i<10; i++) {
         _isMark_price[i] = 0;
     }
+    
+    for (int i = 0; i<200; i++) {
+        _isMark_brand[i] = 0;
+    }
+    
     
     //地区数据
     NSString *path = [[NSBundle mainBundle]pathForResource:@"garea" ofType:@"plist"];
@@ -425,6 +431,7 @@
         
     }else if (sender.tag == -14){//选择品牌 返回到主筛选界面
         [self hiddenTab:self.tab4];
+        [self.tab1 reloadData];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }
 }
@@ -690,6 +697,7 @@
 -(void)qingkongshaixuanBtnClicked{
     self.userChooseCity = nil;
     self.userChoosePinpai = nil;
+    self.userChoosePinpai_id = nil;
     self.userChoosePrice = nil;
     self.userChoosePrice_high = nil;
     self.userChoosePrice_low = nil;
@@ -1000,6 +1008,15 @@
         line.backgroundColor = RGBCOLOR(234, 235, 236);
         [cell.contentView addSubview:line];
         
+        
+        if (_isMark_brand[indexPath.row]) {
+            UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+            [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+            [cell.contentView addSubview:mark_imv];
+        }
+        
+        
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
         
@@ -1081,9 +1098,20 @@
         NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
         self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
         self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
-        [self hiddenTab:self.tab4];
-        [self.tab1 reloadData];
+        
+        for (int i = 0; i<200; i++) {
+            _isMark_brand[i] = 0;
+        }
+        
+        _isMark_brand[indexPath.row] = 1;
+        
+        [self.tab4 reloadData];
+        
+        
+        
+//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+//        [self hiddenTab:self.tab4];
+//        [self.tab1 reloadData];
     }
     
 }

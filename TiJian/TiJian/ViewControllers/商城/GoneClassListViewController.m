@@ -91,10 +91,7 @@
     
 }
 
--(void)shaixuanFinishWithDic:(NSDictionary *)dic{
-    self.shaixuanDic = dic;
-    [_table showRefreshHeader:YES];
-}
+
 
 //创建侧滑栏
 -(void)creatRightTranslucentSideBar{
@@ -139,6 +136,13 @@
 
 
 #pragma mark - 逻辑处理
+
+
+-(void)shaixuanFinishWithDic:(NSDictionary *)dic{
+    self.shaixuanDic = dic;
+    [_table showRefreshHeader:YES];
+}
+
 
 -(void)therightSideBarDismiss{
     
@@ -254,7 +258,7 @@
         [_table reloadData:_productOneClassArray pageSize:G_PER_PAGE];
         
         if (_productOneClassArray.count == 0) {
-            _filterButton.hidden = YES;
+//            _filterButton.hidden = YES;
             [_table reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
             
         }else{
