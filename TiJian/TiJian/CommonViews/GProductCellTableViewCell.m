@@ -72,7 +72,7 @@
     
     
     [self.logoImv l_setImageWithURL:[NSURL URLWithString:theModel.cover_pic] placeholderImage:nil];
-    self.titleLabel.text = theModel.brand_name;
+    self.titleLabel.text = theModel.setmeal_name;
     
     NSString *priceString = [NSString stringWithFormat:@"￥%@",theModel.setmeal_price];
     

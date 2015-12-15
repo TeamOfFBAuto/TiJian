@@ -49,9 +49,9 @@
     
     
     //自适应高度
-    [xuhaoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) width:DEVICE_WIDTH/4];
-    [mingxiLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/4, 0) width:DEVICE_WIDTH/4];
-    [zuheneirongLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/2, 0) width:DEVICE_WIDTH/2];
+    [xuhaoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 4) width:DEVICE_WIDTH/4];
+    [mingxiLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/4, 4) width:DEVICE_WIDTH/4];
+    [zuheneirongLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/2, 4) width:DEVICE_WIDTH/2];
     
     [xuhaoLabel setWidth:DEVICE_WIDTH/4];
     [mingxiLabel setWidth:DEVICE_WIDTH/4];
@@ -87,6 +87,9 @@
     [xuhaoLabel setHeight:height];
     [mingxiLabel setHeight:height];
     [zuheneirongLabel setHeight:height];
+    
+    
+    height += 8;
     
     return height;
 }
