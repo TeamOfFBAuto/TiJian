@@ -20,6 +20,10 @@
 @property(nonatomic,strong)UILabel *originalPriceLabel;
 @property(nonatomic,strong)UILabel *priceLabel;
 
+
++(CGFloat)getCellHight;
+
+
 -(void)loadData:(ProductModel *)theModel;
 
 

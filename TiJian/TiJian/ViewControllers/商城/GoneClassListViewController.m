@@ -60,8 +60,9 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     self.myTitle = self.className;
+    self.rightImage = [UIImage imageNamed:@"shaixuan.png"];
     
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
@@ -116,23 +117,23 @@
 
 }
 
--(void)creatFilterBtn{
-    
-    _filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _filterButton.frame = CGRectMake(17, 17, 38, 38);
-    [_filterButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
-    [_filterButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [_filterButton setImage:[UIImage imageNamed:@"shaixuan.png"] forState:UIControlStateNormal];
-    
-    [self.view addSubview:_filterButton];
-    [_filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
-    
-    if (self.isProductDetailVcPush || _table.dataArray.count == 0) {
-        _filterButton.hidden = YES;
-    }else{
-        _filterButton.hidden = NO;
-    }
-}
+//-(void)creatFilterBtn{
+//    
+//    _filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    _filterButton.frame = CGRectMake(17, 17, 38, 38);
+//    [_filterButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+//    [_filterButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+//    [_filterButton setImage:[UIImage imageNamed:@"shaixuan.png"] forState:UIControlStateNormal];
+//    
+//    [self.view addSubview:_filterButton];
+//    [_filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    if (self.isProductDetailVcPush || _table.dataArray.count == 0) {
+//        _filterButton.hidden = YES;
+//    }else{
+//        _filterButton.hidden = NO;
+//    }
+//}
 
 
 #pragma mark - 逻辑处理
@@ -147,6 +148,11 @@
 -(void)therightSideBarDismiss{
     
     [self.rightSideBar dismiss];
+}
+
+
+-(void)rightButtonTap:(UIButton *)sender{
+    [self.rightSideBar show];
 }
 
 
@@ -285,7 +291,7 @@
         }
         NSDictionary *dic = @{@"brand_id":self.brandId,
                               @"brand_name":self.brandName};
-        [self creatFilterBtn];
+//        [self creatFilterBtn];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         self.brand_city_list = @[dic];
         
@@ -306,7 +312,7 @@
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         self.brand_city_list = [NSArray arrayWithArray:arr];
-        [self creatFilterBtn];
+//        [self creatFilterBtn];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
     } failBlock:^(NSDictionary *result) {

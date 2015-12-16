@@ -669,8 +669,9 @@
         UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [quedingBtn setFrame:CGRectMake(CGRectGetMaxX(tf_high_backView.frame)+15, tf_high_backView.frame.origin.y, 60, tf_high_backView.frame.size.height)];
         [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
-        quedingBtn.backgroundColor = RGBCOLOR(134, 135, 136);
+        quedingBtn.backgroundColor = RGBCOLOR(125, 163, 208);
         quedingBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+        quedingBtn.titleLabel.textColor = [UIColor whiteColor];
         quedingBtn.layer.cornerRadius = 4;
         [quedingBtn addTarget:self action:@selector(priceQuerenBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:quedingBtn];

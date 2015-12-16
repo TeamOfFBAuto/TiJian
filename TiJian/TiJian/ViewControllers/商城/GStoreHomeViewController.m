@@ -555,7 +555,9 @@
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    CGFloat height = 100;
+    
+    CGFloat height = 0.01;
+    height = [GProductCellTableViewCell getCellHight];
     return height;
 }
 //将要显示
