@@ -286,11 +286,10 @@
     if (self.isReloadData) {
         
         [self.dataArray removeAllObjects];
-        [self reloadData];
     }
     [self.dataArray addObjectsFromArray:data];
     
-    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0];
+    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
 }
 
 //成功加载数据 隐藏加载更多
@@ -300,11 +299,10 @@
     if (self.isReloadData) {
         
         [self.dataArray removeAllObjects];
-        
     }
     [self.dataArray addObjectsFromArray:data];
     
-    [self performSelector:@selector(finishReloadigDataAndHiddenMore) withObject:nil afterDelay:0];
+    [self performSelector:@selector(finishReloadigDataAndHiddenMore) withObject:nil afterDelay:0.f];
 }
 
 
@@ -342,9 +340,7 @@
     
     if (self.isReloadData) {
         
-        [self.dataArray removeAllObjects];
-        [self reloadData];
-        
+        [self.dataArray removeAllObjects];        
     }
     [self.dataArray addObjectsFromArray:data];
     
@@ -354,7 +350,7 @@
         
     }else
     {
-        [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0];
+        [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
     }
 }
 
@@ -369,7 +365,7 @@
             self.pageNum = 1;
         }
     }
-    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.3];
+    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
     
 }
 

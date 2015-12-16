@@ -39,7 +39,7 @@
 -(void)loadCustomView{
     //图片宽高比 255.0/160
     
-    CGFloat imv_W = 255.0/750 *DEVICE_WIDTH;
+    CGFloat imv_W = 255.0/750 * DEVICE_WIDTH;
     self.logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, imv_W, [GMAPI scaleWithHeight:0 width:imv_W theWHscale:255.0/160])];
     [self.contentView addSubview:self.logoImv];
     
@@ -72,11 +72,11 @@
     
     CGFloat height = 0.01;
     
-    CGFloat imv_W = 255.0/750 *DEVICE_WIDTH;
+    CGFloat imv_W = 255.0/750 * DEVICE_WIDTH;
     
     height = [GMAPI scaleWithHeight:0 width:imv_W theWHscale:255.0/160];
     
-    return height;
+    return height + 20;
 }
 
 

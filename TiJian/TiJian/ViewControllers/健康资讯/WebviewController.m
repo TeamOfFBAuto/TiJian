@@ -46,7 +46,7 @@
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.webUrl]];
     [self.webView loadRequest:request progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        NSLog(@"bytesWritten:%ld totalBytesWritten:%ld totalBytesExpectedToWrite:%lld",bytesWritten,(unsigned long)totalBytesWritten,totalBytesExpectedToWrite);
+        NSLog(@"bytesWritten:%ld totalBytesWritten:%ld totalBytesExpectedToWrite:%lld",(unsigned long)bytesWritten,(unsigned long)totalBytesWritten,totalBytesExpectedToWrite);
         
         [self test:(totalBytesWritten/totalBytesExpectedToWrite)];
         

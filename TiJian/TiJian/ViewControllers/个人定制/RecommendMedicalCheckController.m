@@ -162,7 +162,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    return [GProductCellTableViewCell getCellHight];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -192,9 +192,6 @@
     GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 99.5, DEVICE_WIDTH, 0.5)];
-        line.backgroundColor = DEFAULT_LINECOLOR;
-        [cell.contentView addSubview:line];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     ProductModel *product = _dataArray[indexPath.row];

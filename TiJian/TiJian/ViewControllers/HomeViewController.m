@@ -313,6 +313,11 @@
 
 #pragma - mark 事件处理
 
+-(void)rightButtonTap:(UIButton *)sender
+{
+    [LTools showMBProgressWithText:@"暂无活动,敬请期待！" addToView:self.view];
+}
+
 - (void)clickToPush:(UIButton *)sender
 {
     int tag = (int)sender.tag;

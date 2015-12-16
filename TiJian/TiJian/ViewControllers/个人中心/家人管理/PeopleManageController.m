@@ -231,16 +231,15 @@
 {
     
     //选择自己或者选择了至少一个其他人
-    if (_isMyselfSelected || _selectedArray.count == 0) {
+    if (_isMyselfSelected || _selectedArray.count > 0) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
+        alert.tag = kTag_Appoint;
+        [alert show];
+    }else{
         
         [LTools showMBProgressWithText:@"请选择体检人" addToView:self.view];
         
-        return;
     }
-    
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
-    alert.tag = kTag_Appoint;
-    [alert show];
 }
 
 /**
@@ -735,7 +734,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"GProductCellTableViewCell";
+    static NSString *identifier = @"peopleManagerCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         

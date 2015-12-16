@@ -139,7 +139,7 @@
     //支付成功 更新
     
     [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu]showRefreshHeader:YES];//待付款
-    [[self refreshTableForIndex:TABLEVIEW_TAG_NoAppoint]showRefreshHeader:YES];//
+    [[self refreshTableForIndex:TABLEVIEW_TAG_NoAppoint]showRefreshHeader:YES];
 }
 
 /**
@@ -156,7 +156,7 @@
  */
 - (void)notificationForCancelOrder:(NSNotification *)notify
 {
-    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu]showRefreshHeader:YES];//待付款
+    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu ]showRefreshHeader:YES];//待付款
 }
 
 /**

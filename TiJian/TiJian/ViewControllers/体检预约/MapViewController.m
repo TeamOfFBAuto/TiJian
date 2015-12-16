@@ -212,7 +212,7 @@
 -(void)tiaozhuanBiduMap{
 
     ///name:起始位置
-    NSString * string = [NSString stringWithFormat:@"baidumap://map/direction?origin=%f,%f&destination=%f,%f&mode=driving&src=gaizhuang",_userLocation.location.coordinate.latitude,_userLocation.location.coordinate.longitude,self.coordinate.latitude,self.coordinate.longitude];
+    NSString * string = [NSString stringWithFormat:@"baidumap://map/direction?origin=%f,%f&destination=%f,%f&mode=driving&src=hema",_userLocation.location.coordinate.latitude,_userLocation.location.coordinate.longitude,self.coordinate.latitude,self.coordinate.longitude];
     
     UIApplication *app = [UIApplication sharedApplication];
     

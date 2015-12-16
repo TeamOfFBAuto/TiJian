@@ -485,7 +485,7 @@
         __weak typeof  (self)bself = self;
         
         [_bannerView setTapActionBlock:^(NSInteger index) {
-            NSLog(@"--tap index %ld",index);
+            NSLog(@"--tap index %ld",(long)index);
             
             CycleAdvModel *amodel = bself.upAdvArray[index];
             if ([amodel.redirect_type intValue] == 1) {//外链

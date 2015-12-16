@@ -134,7 +134,7 @@
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    return 100.f;
+    return [GProductCellTableViewCell getCellHight];
 }
 
 #pragma - mark UITableViewDataSource

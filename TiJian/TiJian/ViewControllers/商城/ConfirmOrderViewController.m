@@ -339,7 +339,7 @@
         NSInteger maxAbleUseScore = [userInfoModel.score integerValue];
         _keyongJifen = ((_price_total - youhuiquan - daijinquan)*100) > maxAbleUseScore ? maxAbleUseScore : ((_price_total - youhuiquan - daijinquan)*100);
         
-        _jifenMiaoshuLabel.text = [NSString stringWithFormat:@"共%ld积分,可用%ld积分,抵%.2f元",(long)maxAbleUseScore,_keyongJifen,_keyongJifen/100.0];
+        _jifenMiaoshuLabel.text = [NSString stringWithFormat:@"共%ld积分,可用%ld积分,抵%.2f元",(long)maxAbleUseScore,(long)_keyongJifen,_keyongJifen/100.0];
         
         if ([_useScoreTf.text integerValue]> _keyongJifen) {
             jifen = _keyongJifen;
@@ -1191,7 +1191,7 @@
     
     
     if (_isUseScore) {//使用积分
-        NSString *aa = [NSString stringWithFormat:@"%ld",_fanal_usedScore];
+        NSString *aa = [NSString stringWithFormat:@"%ld",(long)_fanal_usedScore];
         [dic setValue:aa forKey:@"score"];//使用的积分
         [dic setValue:@"1" forKey:@"is_use_score"];//是否使用积分
     }

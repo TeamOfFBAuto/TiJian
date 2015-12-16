@@ -406,7 +406,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"GProductCellTableViewCell";
+    static NSString *identifier = @"peopleCell";
     RightTextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[RightTextFieldCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier textFieldDelegate:self];
