@@ -12,7 +12,7 @@
 #import "GproductDetailViewController.h"
 #import "ConfirmOrderViewController.h"
 
-@interface GShopCarViewController ()<UITableViewDataSource,RefreshDelegate>
+@interface GShopCarViewController ()<UITableViewDataSource,RefreshDelegate,UIActionSheetDelegate>
 {
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_shopCarDetail;
@@ -192,48 +192,15 @@
     
     
     if (_deleteState) {//删除
+        
+        
         NSArray *arr = [self getChoseProducts];
-        NSMutableArray *pidsArray = [NSMutableArray arrayWithCapacity:1];
-       
-        for (ProductModel* model in arr) {
-            [pidsArray addObject:model.cart_pro_id];
-        }
+        int ccc = (int)arr.count;
+        
+        UIActionSheet *aaa = [[UIActionSheet alloc]initWithTitle:[NSString stringWithFormat:@"确认要删除这%d种商品吗",ccc] delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [aaa showInView:self.view];
         
         
-        NSString *pids_str = [pidsArray componentsJoinedByString:@","];
-        if (!_request) {
-            _request = [YJYRequstManager shareInstance];
-        }
-        
-        NSDictionary *dic = @{
-                              @"authcode":[UserInfo getAuthkey],
-                              @"cart_pro_id":pids_str
-                              };
-        
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        
-        
-        __weak typeof (self)bself = self;
-        
-        [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-            
-            _deleteState = NO;
-            [bself.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
-            [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
-            bself.totolPriceLabel.hidden = NO;
-            bself.detailPriceLabel.hidden = NO;
-            _totolPrice = 0;
-            
-//            [bself.rTab.dataArray removeAllObjects];
-            
-//            [self deleteUserChooseProducts];
-            
-//            [bself.rTab reloadData];
-            
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
-        } failBlock:^(NSDictionary *result) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        }];
     }else{
         if (_totolPrice != 0) {
             ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
@@ -270,6 +237,58 @@
     
     
 }
+
+
+#pragma mark - UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex == 0) {
+        NSArray *arr = [self getChoseProducts];
+        
+        NSMutableArray *pidsArray = [NSMutableArray arrayWithCapacity:1];
+        
+        for (ProductModel* model in arr) {
+            [pidsArray addObject:model.cart_pro_id];
+        }
+        
+        
+        NSString *pids_str = [pidsArray componentsJoinedByString:@","];
+        if (!_request) {
+            _request = [YJYRequstManager shareInstance];
+        }
+        
+        NSDictionary *dic = @{
+                              @"authcode":[UserInfo getAuthkey],
+                              @"cart_pro_id":pids_str
+                              };
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        
+        __weak typeof (self)bself = self;
+        
+        [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+            
+            _deleteState = NO;
+            [bself.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
+            [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
+            bself.totolPriceLabel.hidden = NO;
+            bself.detailPriceLabel.hidden = NO;
+            _totolPrice = 0;
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+        } failBlock:^(NSDictionary *result) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        }];
+    }
+    
+    
+    
+    
+    
+}
+
+
 
 
 #pragma mark - 请求网络数据
