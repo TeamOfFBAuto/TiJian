@@ -378,7 +378,7 @@
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     CGFloat height = 0.01;
-    CGFloat imv_W = 255.0/750 *DEVICE_WIDTH;
+    CGFloat imv_W = 255.0/750 * DEVICE_WIDTH;
     height = [GMAPI scaleWithHeight:0 width:imv_W theWHscale:255.0/160]+20;
     return height;
 }

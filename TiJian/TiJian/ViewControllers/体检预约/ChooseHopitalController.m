@@ -67,7 +67,7 @@ typedef enum {
     _table.tableHeaderView = self.calendarView;
     
     
-    NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"yyyy-MM-dd"];
+    NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"YYYY-MM-dd"];
     [self networkForCenter:selectDate];
 }
 

@@ -299,6 +299,7 @@
     NSArray *productArr = temp;
     ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
     confirm.dataArray = productArr;
+    confirm.lastViewController = self;
     [self.navigationController pushViewController:confirm animated:YES];
     
 }
@@ -493,28 +494,26 @@
     
     int refund_status = 0;
     
-    if (indexPath.row < table.dataArray.count) {
+    
+    OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
+    [cell setCellWithModel:aModel];
+    
+    cell.commentButton.aModel = aModel;
+    cell.actionButton.aModel = aModel;
+    
+    refund_status = [aModel.refund_status intValue];
+    
+    //代表有退款状态
+    if (refund_status > 0) {
         
-        OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
-        [cell setCellWithModel:aModel];
-        
-        cell.commentButton.aModel = aModel;
-        cell.actionButton.aModel = aModel;
-        
-        refund_status = [aModel.refund_status intValue];
-        
-        //代表有退款状态
-        if (refund_status > 0) {
-            
-            if (refund_status == 1 || refund_status == 2) {
-                text = @"退款中";
-            }else if (refund_status == 3){
-                text = @"退款成功";
-            }else if (refund_status == 4 || refund_status == 5){
-                text = @"退款失败";
-            }
-            
+        if (refund_status == 1 || refund_status == 2) {
+            text = @"退款中";
+        }else if (refund_status == 3){
+            text = @"退款成功";
+        }else if (refund_status == 4 || refund_status == 5){
+            text = @"退款失败";
         }
+        
     }
     
     cell.actionButton.hidden = YES;
@@ -545,6 +544,15 @@
             [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
             cell.actionButton.hidden = NO;
             cell.actionButton.actionType = ORDERACTIONTYPE_Comment;
+            
+            //代表已评价
+            if ([aModel.is_comment intValue] == 0) {
+                cell.actionButton.hidden = NO;
+            }else
+            {
+                cell.actionButton.hidden = YES;
+            }
+            
             cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
             [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
         }

@@ -87,7 +87,7 @@
 
                 NSString *imageUrl = product.cover_pic;
                 UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((80 + 5) * i, 0, 80, 50)];
-                [aImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+                [aImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
                 [_contentScroll addSubview:aImageView];
             }
         }

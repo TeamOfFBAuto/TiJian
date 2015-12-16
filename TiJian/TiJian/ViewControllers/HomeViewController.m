@@ -50,18 +50,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.rightImage = [UIImage imageNamed:@"homepage_message"];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+    
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     
     UIScrollView *bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 48 - 64)];
     [self.view addSubview:bgScroll];
     
+    CGFloat width_sum = DEVICE_WIDTH - 10 * 2;
+    
     UIImage *image = [UIImage imageNamed:@"homepage_1"];
+    
     CGFloat radio = image.size.height / image.size.width;
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setImage:image forState:UIControlStateNormal];
+    [btn setBackgroundImage:image forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(pushToPersonalCustom) forControlEvents:UIControlEventTouchUpInside];
     [bgScroll addSubview:btn];
-    CGFloat width = DEVICE_WIDTH - 10 * 2;
+    CGFloat width = width_sum;
     CGFloat height = width *radio;
     btn.frame = CGRectMake(10, 15, width, height);
     
@@ -69,23 +75,28 @@
                         [UIImage imageNamed:@"homepage_3"],
                         [UIImage imageNamed:@"homepage_4"]];
     
-    radio = 200.f / 120.f;//高/宽
-    CGFloat width_small = (DEVICE_WIDTH - 10 * 4) / 3.f;
-    CGFloat height_small = radio * width_small;
+    
     CGFloat bottom = btn.bottom;
     for (int i = 0; i < 3; i ++) {
         
+        UIImage *image = images[i];
+        radio = image.size.height / image.size.width;//高/宽
+        CGFloat width_small = (DEVICE_WIDTH - 10 * 4) / 3.f;
+        CGFloat height_small = radio * width_small;
+        
         UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn1 setImage:images[i] forState:UIControlStateNormal];
+        [btn1 setBackgroundImage:image forState:UIControlStateNormal];
         [btn1 addTarget:self action:@selector(clickToPush:) forControlEvents:UIControlEventTouchUpInside];
-        btn1.frame = CGRectMake(10 + (width_small + 10) * i, btn.bottom, width_small, height_small);
+        btn1.frame = CGRectMake(10 + (width_small + 10) * i, btn.bottom + 10, width_small, height_small);
         [bgScroll addSubview:btn1];
+//        btn1.backgroundColor = [UIColor orangeColor];
+
         btn1.tag = 100 + i;
         bottom = btn1.bottom;
     }
     
     //健康信息
-    UIView *view_health = [[UIView alloc]initWithFrame:CGRectMake(0, bottom + 15, DEVICE_WIDTH, 77.5)];
+    UIView *view_health = [[UIView alloc]initWithFrame:CGRectMake(10, bottom + 15, DEVICE_WIDTH - 20, 77.5)];
     view_health.backgroundColor = [UIColor whiteColor];
     [bgScroll addSubview:view_health];
     [view_health addTaget:self action:@selector(clickToPush:) tag:kTagHealth];

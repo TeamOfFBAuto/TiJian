@@ -243,6 +243,7 @@
     NSArray *productArr = self.products;
     ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
     confirm.dataArray = productArr;
+    confirm.lastViewController = self;
     [self.navigationController pushViewController:confirm animated:YES];
 }
 
