@@ -26,6 +26,7 @@
 #define NOTIFICATION_RECIEVE_CONFIRM @"recieve_confirm" //确认收货通知
 #define NOTIFICATION_ORDER_CANCEL @"cancelOrder" //取消订单
 #define NOTIFICATION_ORDER_DEL @"delOrder" //删除订单
+#define NOTIFICATION_ORDER_COMMIT @"commitOrder" //提交订单成功
 
 #define NOTIFICATION_GO_TO_PAY @"goToPayOrder" //去支付订单
 

@@ -114,11 +114,13 @@
     //默认选中第一个
     [self controlSelectedButtonTag:100];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForPaySuccess:) name:NOTIFICATION_PAY_SUCCESS object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForPaySuccess:) name:NOTIFICATION_PAY_SUCCESS object:nil];//支付成功
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForRecieveConfirm:) name:NOTIFICATION_RECIEVE_CONFIRM object:nil];//确认收货
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCancelOrder:) name:NOTIFICATION_ORDER_CANCEL object:nil];//取消订单
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDelOrder:) name:NOTIFICATION_ORDER_DEL object:nil];//删除订单
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForTuiKuan:) name:NOTIFICATION_TUIKUAN_SUCCESS object:nil];//退款
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCommitOrderSuccess:) name:NOTIFICATION_ORDER_COMMIT object:nil];//提交订单
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCommentSuccess:) name:NOTIFICATION_COMMENTSUCCESS object:nil];//评论
 
 }
 
@@ -128,7 +130,26 @@
 }
 
 #pragma - mark 通知处理
-
+/**
+ *  提交订单成功
+ *
+ *  @param notify
+ */
+- (void)notificationForCommentSuccess:(NSNotification *)notify
+{
+    //支付成功 更新
+    [[self refreshTableForIndex:TABLEVIEW_TAG_WanCheng]showRefreshHeader:YES];//待付款
+}
+/**
+ *  提交订单成功
+ *
+ *  @param notify
+ */
+- (void)notificationForCommitOrderSuccess:(NSNotification *)notify
+{
+    //支付成功 更新
+    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu]showRefreshHeader:YES];//待付款
+}
 /**
  *  支付成功通知
  *
@@ -335,7 +356,7 @@
             [temp addObject:t_Model];
         }
         AddCommentViewController *comment = [[AddCommentViewController alloc]init];
-        comment.dingdanhao = aModel.order_id;
+        comment.dingdanhao = aModel.order_no;
         comment.theModelArray = temp;
         [self.navigationController pushViewController:comment animated:YES];
         

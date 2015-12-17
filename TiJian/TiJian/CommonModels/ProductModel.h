@@ -33,7 +33,7 @@
 @property(nonatomic,retain)NSString *type_id;
 
 @property(nonatomic,retain)NSString *is_recommend;
-
+@property(nonatomic,retain)NSString *is_comment;//是否评论
 @property(nonatomic,retain)NSDictionary *small_cover_pic;
 //单品详情相关
 @property(nonatomic,strong)NSArray *suit_info;

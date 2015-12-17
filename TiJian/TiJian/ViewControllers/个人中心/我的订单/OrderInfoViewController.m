@@ -299,14 +299,11 @@
         
         OrderModel *aModel = _orderModel;
         //评价晒单
-//        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:aModel.products.count];
-//        for (NSDictionary *aDic in aModel.products) {
-//            
-//            ProductModel *t_Model = [[ProductModel alloc]initWithDictionary:aDic];
-//            [temp addObject:t_Model];
-//        }
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getOrderInfo) name:NOTIFICATION_COMMENTSUCCESS object:nil];
+        
         AddCommentViewController *comment = [[AddCommentViewController alloc]init];
-        comment.dingdanhao = aModel.order_id;
+        comment.dingdanhao = aModel.order_no;
         comment.theModelArray = self.products;
         [self.navigationController pushViewController:comment animated:YES];
 
@@ -433,9 +430,18 @@
         }
         else if (status == 4){
             //已完成
-            text1 = @"再次购买";
-            text2 = @"评价晒单";
-            text3 = @"删除订单";
+            
+            int is_comment = [_orderModel.is_comment intValue];
+            if (is_comment == 1) { //已评价完
+                
+                text1 = @"再次购买";
+                text2 = @"删除订单";
+            }else
+            {
+                text1 = @"再次购买";
+                text2 = @"评价晒单";
+                text3 = @"删除订单";
+            }
         }
     }
     

@@ -43,8 +43,8 @@
 //    [self.view addSubview:_aWebview];
 //    _aWebview.dataDetectorTypes = UIDataDetectorTypeNone;
     
-    NSArray *titles = @[@"客服电话",@"联系邮箱",@"万聚鲜城"];
-    NSArray *contents = @[@"4000-626-010",@"zhangleiorc@163.com",@"万聚鲜城-互联网生鲜体验品牌。我们致力于用我们为之骄傲的环球海底珍鲜加上我们最极致的体验式服务为您开启全新的生鲜消费方式,让您感受不一样的生鲜品牌时代。"];
+    NSArray *titles = @[@"客服电话",@"联系邮箱",@"河马医生"];
+    NSArray *contents = @[@"4000-626-010",@"mobile@jiruijia.com",@"河马医生是一款私人定制健康体检和健康管理移动应用。通过美国圣路易斯大学医学博士后及专家组对中国健康管理现状及互联网化的研究，解决体检行业存在的体检项目标准化、体检报告看不懂、检后管理服务缺失、健康数据不连贯等多个问题。河马医生针对团体及个人实现一站式的体检项目专业个性化定制、在线预约、检后报告深度解读、在线咨询、复查管理、理疗和就医服务。"];
     
     for (int i = 0 ; i < titles.count; i ++) {
         

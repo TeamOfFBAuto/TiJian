@@ -1210,9 +1210,9 @@
         
         [weakSelf updateUserInfo];
         
+        //提交订单成功
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_COMMIT object:nil];
         
-        
-        NSLog(@"%@",result);
         NSString *orderId = [result stringValueForKey:@"order_id"];
         NSString *orderNum = [result stringValueForKey:@"order_no"];
         _sumPrice_pay = _finalPrice;
@@ -1258,10 +1258,6 @@
         
     }];
 }
-
-
-
-
 
 
 /**

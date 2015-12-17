@@ -42,12 +42,11 @@
     
     for (int i = 0; i<self.theModelArray.count; i++) {
         ProductModel *amodel = self.theModelArray[i];
-        if ([amodel.is_recommend intValue] == 1) {
+        if ([amodel.is_comment intValue] == 1) {
             _pingjiaSuccess[i] = 1;
         }else{
             _pingjiaSuccess[i] = 0;
         }
-        
     }
     [self creatTableView];
 }
@@ -180,13 +179,10 @@
 }
 
 
-
 -(void)updateView_pingjiaSuccessWithIndex:(NSInteger)index_row{
     _pingjiaSuccess[index_row] = 1;
     [_tab reloadData];
 }
-
-
 
 
 @end

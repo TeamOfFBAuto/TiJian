@@ -220,7 +220,7 @@
     imagePickerController.showsCancelButton = YES;
     imagePickerController.allowsMultipleSelection = YES;
     imagePickerController.minimumNumberOfSelection = 0;
-    imagePickerController.maximumNumberOfSelection = 9;
+    imagePickerController.maximumNumberOfSelection = 3;
     imagePickerController.selectedAssetArray = self.assetsArray;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:imagePickerController];
     [self presentViewController:navigationController animated:YES completion:NULL];
@@ -278,7 +278,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"，，，，，%ld",(long)[indexPath row]);
+//    NSLog(@"，，，，，%ld",(long)[indexPath row]);
     
 }
 
@@ -315,8 +315,6 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
     
     self.uploadImageArray = [NSMutableArray arrayWithCapacity:1];
     
-    NSLog(@"-------%lu",(unsigned long)self.assetsArray.count);
-    
     for (int i = 0;i<self.assetsArray.count;i++) {
         
         JKAssets* jkAsset = self.assetsArray[i];
@@ -330,7 +328,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
                 [self.uploadImageArray addObject:image];
                 
                 if (self.uploadImageArray.count == self.assetsArray.count) {
-                    [self shangChuan];
+                    [self upLoadImage:self.uploadImageArray];
                 }
             }
             
@@ -341,72 +339,17 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
     }
     
     
-    
-    
     if (self.assetsArray.count == 0) {//没图
+        
         if (self.assetsArray.count == 0 && _tv.text.length == 0) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            [GMAPI showAutoHiddenMBProgressWithText:@"请填写评论或添加图片" addToView:self.view];
+            [LTools showMBProgressWithText:@"请填写评论或添加图片" addToView:self.view];
         }else{
-            [self shangchuan_text];
-        }
-    }
-    
-    
-    
-}
-
-
-
-
--(void)shangchuan_text{
-    
-    NSString *is_anony;
-    if (_isniming) {
-        is_anony = @"1";
-    }else{
-        is_anony = @"0";
-    }
-    
-    NSDictionary *dic_upload = @{
-                          @"product_id":self.theModel.product_id,//商品id
-                          @"authcode":[UserInfo getAuthkey],//用户标示
-                          @"order_no":self.dingdanhao,//订单号
-                          @"star":[NSString stringWithFormat:@"%d",_theScore],//评论星级
-                          @"content":_tv.text,
-                          @"is_anony":is_anony
-                          };
-    
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:ADD_PRODUCT_PINGLUN parameters:dic_upload constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
-        if ([[result stringValueForKey:@"errorcode"]intValue]==0) {
-            [self performSelector:@selector(pingjiaSuccessToGoBack) withObject:[NSNumber numberWithBool:YES] afterDelay:1];
             
+            [self upLoadImage:nil];
         }
-    } failBlock:^(NSDictionary *result) {
-       
-        [LTools showMBProgressWithText:[result stringValueForKey:@"msg"] addToView:self.view];
-        
-    }];
-    
-    
-    
-    
+    }
 }
-
-
-//上传
--(void)shangChuan{
-    
-    NSLog(@"let us begin to upload data");
-    
-    [self upLoadImage:self.uploadImageArray];
-    
-}
-
-
 
 #pragma mark - 上传图片
 //上传
@@ -427,15 +370,25 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
                        @"product_id":self.theModel.product_id,//商品id
                        @"authcode":[UserInfo getAuthkey],//用户标示
                        @"order_no":self.dingdanhao,//订单号
-                       @"star_level":[NSString stringWithFormat:@"%d",_theScore],//评论星级
+                       @"star":[NSString stringWithFormat:@"%d",_theScore],//评论星级
                        @"is_anony":is_anony
                        };
     }else{
+        
+        
+        if (_tv.text.length < 10) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [LTools showMBProgressWithText:@"评论内容长度不能少于10个字" addToView:self.view];
+
+            return;
+        }
+        
         dic_upload = @{
                        @"product_id":self.theModel.product_id,//商品id
                        @"authcode":[UserInfo getAuthkey],//用户标示
                        @"order_no":self.dingdanhao,//订单号
-                       @"star_level":[NSString stringWithFormat:@"%d",_theScore],//评论星级
+                       @"star":[NSString stringWithFormat:@"%d",_theScore],//评论星级
                        @"content":_tv.text,
                        @"is_anony":is_anony
                        };
@@ -450,7 +403,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
             
             NSData * data= UIImageJPEGRepresentation(aImage, 0.5);
             
-            NSLog(@"---> 大小 %ld",(unsigned long)data.length);
+            DDLOG(@"---> 大小 %ld",(unsigned long)data.length);
             
             NSString *imageName = [NSString stringWithFormat:@"icon%d.jpg",i];
             
@@ -470,7 +423,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
             
             [GMAPI showAutoHiddenMBProgressWithText:@"评价成功" addToView:self.view];
             
-            [self performSelector:@selector(pingjiaSuccessToGoBack) withObject:[NSNumber numberWithBool:YES] afterDelay:2];
+            [self performSelector:@selector(pingjiaSuccessToGoBack) withObject:[NSNumber numberWithBool:YES] afterDelay:1.f];
         }
 
         
@@ -488,6 +441,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_COMMENTSUCCESS object:nil];
     
+    self.theModel.is_comment = @"1";//标记为已评价
     
     [self.delegate updateView_pingjiaSuccessWithIndex:self.theIndex_row];
     
