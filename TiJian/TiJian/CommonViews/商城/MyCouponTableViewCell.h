@@ -29,6 +29,8 @@
 
 @property(nonatomic,strong)UIImageView *disable_use_imv;//不可用的imv
 
+@property(nonatomic,strong)UILabel *imvTitleLabel;//优惠标题
+
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier index:(NSIndexPath*)theIndex type:(GCouponType)theType;
 

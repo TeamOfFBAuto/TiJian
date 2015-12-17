@@ -85,6 +85,12 @@
             self.couponImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 105, 15, 100, 40)];
             [self.contentView addSubview:self.couponImv];
             
+            //优惠标题
+            self.imvTitleLabel = [[UILabel alloc]initWithFrame:self.couponImv.bounds];
+            self.imvTitleLabel.textColor = [UIColor whiteColor];
+            self.imvTitleLabel.textAlignment = NSTextAlignmentCenter;
+            self.imvTitleLabel.font = [UIFont boldSystemFontOfSize:11];
+            [self.couponImv addSubview:self.imvTitleLabel];
             
             self.disable_use_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.couponImv.frame.size.width*0.5-self.couponImv.frame.size.height*0.5, 0, self.couponImv.frame.size.height, self.couponImv.frame.size.height)];
             [self.couponImv addSubview:self.disable_use_imv];
@@ -214,15 +220,13 @@
         }
         
         //优惠标题
-        UILabel *label = [[UILabel alloc]initWithFrame:self.couponImv.bounds];
-        label.text = title;
-        label.textColor = [UIColor whiteColor];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.font = [UIFont boldSystemFontOfSize:11];
-        [self.couponImv addSubview:label];
+        self.imvTitleLabel.text = title;
+        
         
         
         if (theModel.enable_use == 0){//不可用
+            [self.couponImv setImage:[UIImage imageNamed:@"youhuiquan_g.png"]];
+            
             if (theModel.disable_use_reason == 1) {//已经使用
                 [self.disable_use_imv setImage:[UIImage imageNamed:@"youhuiquan_yishiyong.png"]];
             }else if (theModel.disable_use_reason == 2){//已过期
@@ -231,7 +235,7 @@
             
             self.disable_use_imv.hidden = NO;
             
-            [self.couponImv setImage:[UIImage imageNamed:@"youhuiquan_g.png"]];
+            
             
         }else if (theModel.enable_use == 1){//可用
             self.disable_use_imv.hidden = YES;
