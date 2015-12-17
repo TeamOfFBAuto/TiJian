@@ -37,6 +37,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    //友盟统计
+    
+    [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
+//    [MobClick setCrashReportEnabled:YES];
+    [MobClick setLogEnabled:YES];
+    
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startRongCloud) name:NOTIFICATION_LOGIN object:nil];
@@ -57,9 +63,6 @@
     
     //初始化融云SDK。
     [self startRongCloud];
-    
-    //友盟统计
-    [MobClick startWithAppkey:UmengAppkey];
     
     //检查版本
     [self checkVersion];

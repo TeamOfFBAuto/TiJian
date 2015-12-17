@@ -294,10 +294,6 @@ library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.
 
 
-## UMeng
-
-LICENSE Copyright 2009 - 2012 UMeng.com, Inc. All rights reserved.
-
 ## UMengAnalytics-NO-IDFA
 
 Copyright 2011 - 2015 UMeng.com. All rights reserved.

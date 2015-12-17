@@ -89,7 +89,6 @@
         [btn1 addTarget:self action:@selector(clickToPush:) forControlEvents:UIControlEventTouchUpInside];
         btn1.frame = CGRectMake(10 + (width_small + 10) * i, btn.bottom + 10, width_small, height_small);
         [bgScroll addSubview:btn1];
-//        btn1.backgroundColor = [UIColor orangeColor];
 
         btn1.tag = 100 + i;
         bottom = btn1.bottom;

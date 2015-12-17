@@ -343,14 +343,6 @@ Public License instead of this License.
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>LICENSE Copyright 2009 - 2012 UMeng.com, Inc. All rights reserved.</string>
-			<key>Title</key>
-			<string>UMeng</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>FooterText</key>
 			<string>Copyright 2011 - 2015 UMeng.com. All rights reserved.
 </string>
 			<key>Title</key>
