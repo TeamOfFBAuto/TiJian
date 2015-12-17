@@ -67,8 +67,8 @@
 -(ResultView *)resultViewWithType:(PageResultType)type
 {
     NSString *content;
-    NSString *btnTitle;
-    SEL selector = NULL;
+//    NSString *btnTitle;
+//    SEL selector = NULL;
     if (type == PageResultType_requestFail) {
         
         content = @"获取数据异常,点击重新加载";

@@ -155,8 +155,6 @@
 	<string>YES</string>
 	<key>SBUsesNetwork</key>
 	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string></string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

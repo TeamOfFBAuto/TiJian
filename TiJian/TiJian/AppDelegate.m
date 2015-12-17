@@ -37,6 +37,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+//    sleep(3);
     //友盟统计
     
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
