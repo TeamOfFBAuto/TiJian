@@ -747,10 +747,23 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     
-    int page = floor((scrollView.contentOffset.x - DEVICE_WIDTH / 2) / DEVICE_WIDTH) + 1;//只要大于半页就算下一页
-    NSLog(@"page %d",page);
-    //选中状态
-    [self controlSelectedButtonTag:page + 100];
+    
+    if (scrollView == _scroll) {
+        int page = floor((scrollView.contentOffset.x - DEVICE_WIDTH / 2) / DEVICE_WIDTH) + 1;//只要大于半页就算下一页
+        NSLog(@"page %d",page);
+        
+        
+        NSLog(@"x = %f",scrollView.contentOffset.x);
+        NSLog(@"y = %f",scrollView.contentOffset.y);
+        
+        
+        
+        //选中状态
+        [self controlSelectedButtonTag:page + 100];
+    }
+    
+    
+    
     
 }
 
