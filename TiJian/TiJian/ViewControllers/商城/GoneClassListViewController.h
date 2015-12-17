@@ -23,6 +23,8 @@
 
 @property(nonatomic,assign)BOOL isProductDetailVcPush;//是否从单品详情品牌店点击跳转过来的
 
+@property(nonatomic,assign)BOOL haveChooseGender;//yes 可以选择性别  no 限定性别
+
 //代金卷购买套餐
 @property(nonatomic,assign)BOOL isVoucherPush;//from 公司代金卷前去购买
 @property(nonatomic,strong)NSString *vouchers_id;//代金卷id

@@ -544,7 +544,12 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
     if (tableView.tag == 1) {//主筛选
-        num = 4;
+        if (self.gender) {
+            num = 4;
+        }else{
+            num = 3;
+        }
+        
         
     }else if (tableView.tag == 2){
         
@@ -892,14 +897,14 @@
             
         }else{//无性别
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/90])];
-            titleLabel.text = _tab1TitleDataArray[indexPath.row-1];
+            titleLabel.text = _tab1TitleDataArray[indexPath.row];
             titleLabel.font = [UIFont systemFontOfSize:13];
             [cell.contentView addSubview:titleLabel];
             
             
             UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(titleLabel.frame)+5, 0, self.frame.size.width - titleLabel.frame.size.width - 15 - 5 - 30, titleLabel.frame.size.height)];
             cLabel.font = [UIFont systemFontOfSize:13];
-            cLabel.textAlignment = NSTextAlignmentCenter;
+            cLabel.textAlignment = NSTextAlignmentRight;
             
             if (indexPath.row == 0) {
                 NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
@@ -915,8 +920,8 @@
             
             [cell.contentView addSubview:cLabel];
             
-            UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 25, cLabel.frame.size.height*0.5-10, 20, 20)];
-            jiantouImv.backgroundColor = [UIColor purpleColor];
+            UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 20, cLabel.frame.size.height*0.5-8, 8, 16)];
+            [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
             [cell.contentView addSubview:jiantouImv];
             
             
@@ -1126,7 +1131,7 @@
     
     if (DEVICE_HEIGHT>480) {
         [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
-        [self.tab3 setContentOffset:CGPointMake(0, 50) animated:YES];
+        [self.tab3 setContentOffset:CGPointMake(0, 65) animated:YES];
     }else{
         [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
         [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];

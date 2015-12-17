@@ -648,11 +648,16 @@
     tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [liuyanView addSubview:tLabel];
     
-    _liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
+    
+    if (!_liuyantf) {
+        _liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
+    }
     _liuyantf.font = [UIFont systemFontOfSize:15];
     _liuyantf.delegate = self;
     _liuyantf.tag = 10000;
+    _liuyantf.returnKeyType = UIReturnKeyDone;
     _liuyantf.placeholder = @"选填";
+    
     [liuyanView addSubview:_liuyantf];
     
     //第二条分割线
@@ -1393,6 +1398,17 @@
 
 
 #pragma mark - UITextFieldDelegate
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    if (textField.tag == 10000) {
+        [self hiddenKeyBord];
+    }
+    return YES;
+}
+
+
+
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     

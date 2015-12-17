@@ -412,6 +412,11 @@
     NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
     NSDictionary *dic = classData[sender.tag - 10];
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    if ([[dic stringValueForKey:@"gender"] intValue] == 1 || [[dic stringValueForKey:@"gender"] intValue] == 2) {
+        cc.haveChooseGender = NO;
+    }else if ([[dic stringValueForKey:@"gender"] intValue] == 99){
+        cc.haveChooseGender = YES;
+    }
     cc.className = [dic stringValueForKey:@"name"];
     cc.category_id = [[dic stringValueForKey:@"category_id"] intValue];
     
