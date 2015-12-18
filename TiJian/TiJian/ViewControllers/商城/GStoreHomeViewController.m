@@ -254,7 +254,16 @@
     
     
     //首页精品推荐
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    
+    
+    NSDictionary *listDic = @{
+                              @"province_id":[GMAPI getCurrentProvinceId],
+                              @"city_id":[GMAPI getCurrentCityId]
+                              };
+    
+    
+    
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *arr = [result arrayValueForKey:@"data"];
