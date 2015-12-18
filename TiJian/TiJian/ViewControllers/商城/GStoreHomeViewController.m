@@ -23,6 +23,8 @@
 #import "UIImageView+WebCache.h"
 #import "UIImageView+ProgressView.h"
 
+#import "GShopCarViewController.h"
+
 
 @interface GStoreHomeViewController ()<NewHuandengViewDelegate,RefreshDelegate,UITableViewDataSource>
 {
@@ -77,8 +79,9 @@
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
+    self.rightImage = [UIImage imageNamed:@"personal_gouwuche.png"];
     
     [self creatTableView];
     
@@ -526,6 +529,26 @@
     
     
 }
+
+
+#pragma mark - 点击方法
+-(void)rightButtonTap:(UIButton *)sender{
+    
+    if ([LoginViewController isLogin]) {//已登录
+        GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+        [self.navigationController pushViewController:cc animated:YES];
+    }else{
+        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+            if (success) {
+                GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+                [self.navigationController pushViewController:cc animated:YES];
+            }else{
+                
+            }
+        }];
+    }
+}
+
 
 
 
