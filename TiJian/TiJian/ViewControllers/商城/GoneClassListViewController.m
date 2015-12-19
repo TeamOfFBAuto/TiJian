@@ -117,25 +117,6 @@
 
 }
 
-//-(void)creatFilterBtn{
-//    
-//    _filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    _filterButton.frame = CGRectMake(17, 17, 38, 38);
-//    [_filterButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
-//    [_filterButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-//    [_filterButton setImage:[UIImage imageNamed:@"shaixuan.png"] forState:UIControlStateNormal];
-//    
-//    [self.view addSubview:_filterButton];
-//    [_filterButton addTarget:self action:@selector(clickToFilter:) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    if (self.isProductDetailVcPush || _table.dataArray.count == 0) {
-//        _filterButton.hidden = YES;
-//    }else{
-//        _filterButton.hidden = NO;
-//    }
-//}
-
-
 #pragma mark - 逻辑处理
 
 
@@ -228,16 +209,19 @@
     _count = 0;
 
     NSDictionary *dic;
+    
     if (theDic) {
         NSString *voucherId = self.vouchers_id ? self.vouchers_id : @"";
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+        
         if (voucherId.length > 0) {
-            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
             [temp_dic setObject:voucherId forKey:@"vouchers_id"];//加上代金卷id
             dic = temp_dic;
         }else
         {
-            dic = theDic;
-
+            dic = temp_dic;
         }
     }else{
         
@@ -245,7 +229,9 @@
                   @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
                   @"province_id":[GMAPI getCurrentProvinceId],
                   @"city_id":[GMAPI getCurrentCityId],
-                  @"vouchers_id":self.vouchers_id ? self.vouchers_id : @"" //加上代金卷id
+                  @"vouchers_id":self.vouchers_id ? self.vouchers_id : @"", //加上代金卷id
+                  @"page":NSStringFromInt(_table.pageNum),
+                  @"per_page":NSStringFromInt(PAGESIZE_MID)
                   };
     }
     
@@ -261,20 +247,19 @@
         }
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        [_table reloadData:_productOneClassArray pageSize:G_PER_PAGE];
+        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID];
         
         if (_productOneClassArray.count == 0) {
-//            _filterButton.hidden = YES;
-            [_table reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
+            [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
             
         }else{
             _filterButton.hidden = NO;
         }
         
         
-        
     } failBlock:^(NSDictionary *result) {
         
+        [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
     }];
  
     

@@ -91,7 +91,7 @@
     for (int i = 0; i < (count > 6 ? 6 : count); i ++) {
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(left + (width + left/2.f) * (i % 3), 110 + 10 + (height + left/2.f) * (i / 3), width, height)];
         NSString *url = img[i][@"img"];
-        [imageView l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
+        [imageView l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:nil];
         [_scrollView addSubview:imageView];
         [imageView addTaget:self action:@selector(clickToBrowser:) tag:200 + i];
         

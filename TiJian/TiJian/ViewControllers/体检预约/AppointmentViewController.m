@@ -511,6 +511,19 @@
 {
     int index = (int)tableView.tag - kTagTableView;
     if (index == 0) {
+        
+        if (section == 0) {
+            
+            if (_company.count == 0) {
+                return 0.f;
+            }
+        }
+        if (section == 1) {
+            if (_personal.count == 0) {
+                return 0.f;
+            }
+        }
+        
         return 40.f;
     }
     return 0.f;

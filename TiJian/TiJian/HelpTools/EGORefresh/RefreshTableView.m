@@ -18,6 +18,18 @@
 @interface RefreshTableView ()
 
 @property(nonatomic,retain)UIView *resultView;
+@property(nonatomic,retain)UIActivityIndicatorView *loadingIndicator;
+@property(nonatomic,retain)UILabel *normalLabel;
+@property(nonatomic,retain)UILabel *loadingLabel;
+
+@property (nonatomic,retain)RefreshHeaderView * refreshHeaderView;//顶部刷新view
+@property (nonatomic,retain)UIView *refreshFooterView;//底部加载更多view
+
+
+@property (nonatomic,assign)BOOL                        isReloadData;      //是否是下拉刷新数据
+@property (nonatomic,assign)BOOL                        reloading;         //是否正在loading
+@property (nonatomic,assign)BOOL                        isLoadMoreData;    //是否是载入更多
+@property (nonatomic,assign)BOOL                        isHaveMoreData;    //是否还有更多数据,决定是否有更多view
 
 -(void)createHeaderView;
 -(void)removeHeaderView;
@@ -39,17 +51,12 @@
     NSLog(@"%s dealloc",__FUNCTION__);
 }
 
+#pragma mark - 初始化
+
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-        self.pageNum = 1;
-        self.dataArray = [NSMutableArray array];
-        [self createHeaderView];
-        self.delegate = self;
-    }
-    return self;
+    RefreshTableView *table = [self initWithFrame:frame style:UITableViewStylePlain];
+    return table;
 }
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)theStyle
@@ -57,7 +64,9 @@
     self = [super initWithFrame:frame style:theStyle];
     if (self) {
         // Initialization code
-        _neverShowLoadMore = YES;
+        
+        self.hiddenLoadMoreWhenNoData = YES;//当没有更多数据时,默认隐藏底部view
+        self.neverShowLoadMore = NO;//默认显示加载更多
         self.pageNum = 1;
         self.dataArray = [NSMutableArray array];
         [self createHeaderView];
@@ -85,24 +94,251 @@
     return self;
 }
 
--(id)initWithFrame:(CGRect)frame showLoadMore:(BOOL)show
+#pragma mark - 刷新数据
+
+//代码触发刷新
+-(void)showRefreshHeader:(BOOL)animated
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+    self.isHaveLoaded = YES;//记录已经加载过数据
+    if (animated)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.0];
+        self.contentInset = UIEdgeInsetsMake(65.0f, 0.0f, 0.0f, 0.0f);
+        [self scrollRectToVisible:CGRectMake(0, 0.0f, 1, 1) animated:NO];
+        [UIView commitAnimations];
+    }
+    else
+    {
+        self.contentInset = UIEdgeInsetsMake(65.0f, 0.0f, 0.0f, 0.0f);
+        [self scrollRectToVisible:CGRectMake(0, 0.0f, 1, 1) animated:NO];
+    }
+    
+    [_refreshHeaderView setState:L_EGOOPullRefreshLoading];
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:self];
+}
+
+/**
+ *  刷新数据 无偏移
+ */
+-(void)refreshNewData
+{
+    _isHaveLoaded = YES;
+    
+    _isReloadData = YES;
+    
+    _reloading = YES;
+    
+    if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(loadNewDataForTableView:)]) {
         
         self.pageNum = 1;
-        self.dataArray = [NSMutableArray array];
-        self.delegate = self;
-        [self createHeaderView];
+        [_refreshDelegate loadNewDataForTableView:self];
+    }
+}
+
+
+#pragma mark - 完成数据加载
+
+- (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave
+{
+    self.isHaveMoreData = isHave;
+    
+    if (self.isReloadData) {
         
-        _neverShowLoadMore = !show;
-        if (show) {
+        [self.dataArray removeAllObjects];
+    }
+    [self.dataArray addObjectsFromArray:data];
+    
+    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
+}
+
+/**
+ *  reload 数据
+ *
+ *  @param data      每次请求数据
+ *  @param totalPage 总页数
+ */
+- (void)reloadData:(NSArray *)data total:(int)totalPage
+{
+    BOOL isHaveMore = (self.pageNum < totalPage) ? YES : NO;//当前页数 与 总页数比较
+
+    [self reloadData:data isHaveMore:isHaveMore];
+}
+
+//成功加载
+- (void)reloadData:(NSArray *)data pageSize:(int)pageSize
+{
+    BOOL isHaveMore = (data.count < pageSize) ? NO : YES;//每页实际请求条数 与 每页条数
+    [self reloadData:data isHaveMore:isHaveMore];
+}
+
+/**
+ *  成功加载数据reload
+ *
+ *  @param data       每次请求数据
+ *  @param pageSize   每页个数
+ *  @param noDataView 自定义没有数据时view
+ */
+- (void)reloadData:(NSArray *)data
+          pageSize:(int)pageSize
+        noDataView:(UIView *)noDataView
+{
+    BOOL isHaveMore = (data.count < pageSize) ? NO : YES;//每页实际请求条数 与 每页条数
+    self.isHaveMoreData = isHaveMore;
+    
+    if (self.isReloadData) {
+        
+        [self.dataArray removeAllObjects];
+    }
+    [self.dataArray addObjectsFromArray:data];
+    [self finishReloadDataWithView:noDataView pageSize:pageSize];
+}
+
+//完成数据加载
+
+- (void)finishReloadDataWithView:(UIView *)noDataView
+                        pageSize:(int)pageSize
+{
+    
+    [self finishReloadigData];
+    
+    NSLog(@"%s",__FUNCTION__);
+    
+    //没有数据时
+    if (self.dataArray.count == 0) {
+        
+        if (self.tableFooterView != self.resultView) {
+            [self.tableFooterView removeFromSuperview];
+            self.tableFooterView = self.resultView;
+            [self.resultView addSubview:noDataView];
+            noDataView.center = CGPointMake(_resultView.width/2.f, _resultView.height / 3.f);
+        }
+    }
+    //有数据
+    else
+    {
+        if (self.tableFooterView == self.resultView) {
             
+            [self.resultView removeFromSuperview];
+        }
+        self.tableFooterView = nil;
+        //总数小于一页时 但是有数据时 不显示tableViewFooter
+        if (self.dataArray.count > pageSize) {
             [self createFooterView];
         }
     }
-    return self;
+}
+
+//完成数据加载
+
+- (void)finishReloadigData
+{
+    NSLog(@"finishReloadigData完成加载");
+    
+    _reloading = NO;
+    if (_refreshHeaderView) {
+        [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self];
+        self.isReloadData = NO;
+    }
+    
+    if (self.tableFooterView == nil) {
+        [self createFooterView];
+    }
+    
+    [self reloadData];
+    
+    //如果有更多数据,重新设置footerview  frame
+    if (self.isHaveMoreData)
+    {
+        [self stopLoading:1];
+        
+    }else {
+        
+        [self stopLoading:2];
+    }
+    
+    //设置数据个数
+    [self setValue:[NSNumber numberWithInteger:_dataArray.count] forKey:@"_dataArrayCount"];
+    
+}
+
+#pragma mark - 数据加载失败
+
+
+/**
+ *  请求数据失败 显示自定义view
+ *
+ *  @param view
+ */
+- (void)loadFailWithView:(UIView *)view
+                pageSize:(int)pageSize
+{
+    if (self.isLoadMoreData) {
+        self.pageNum --;
+        
+        if (self.pageNum < 1) {
+            self.pageNum = 1;
+        }
+    }
+    
+    self.isHaveMoreData = NO;
+    
+    [self finishReloadDataWithView:view pageSize:pageSize];
+}
+
+
+//请求数据失败
+
+- (void)loadFail
+{
+    if (self.isLoadMoreData) {
+        self.pageNum --;
+        
+        if (self.pageNum < 1) {
+            self.pageNum = 1;
+        }
+    }
+    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
+    
+}
+
+#pragma mark - other
+
+/**
+ *  移除没有数据视图
+ */
+- (void)removeNodataView
+{
+    if (self.tableFooterView == self.resultView) {
+        [self.resultView removeFromSuperview];
+        self.resultView = nil;
+    }
+}
+
+-(UIView *)resultView
+{
+    if (_resultView) {
+        return _resultView;
+    }
+    self.resultView = [[UIView alloc]initWithFrame:self.bounds];
+    _resultView.backgroundColor = [UIColor clearColor];
+    return _resultView;
+}
+
+//get 方法
+-(UIView *)refreshFooterView
+{
+    if (_refreshFooterView) {
+        return _refreshFooterView;
+    }
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320, TABLEFOOTER_HEIGHT)];
+    
+    [tableFooterView addSubview:self.loadingIndicator];
+    [tableFooterView addSubview:self.loadingLabel];
+    [tableFooterView addSubview:self.normalLabel];
+    tableFooterView.backgroundColor = [UIColor clearColor];
+    _refreshFooterView = tableFooterView;
+    return _refreshFooterView;
 }
 
 /**
@@ -150,7 +386,9 @@
         
         return;
     }
-    
+
+    DDLOG_CURRENT_METHOD;
+
     UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320, TABLEFOOTER_HEIGHT)];
     
     [tableFooterView addSubview:self.loadingIndicator];
@@ -170,314 +408,6 @@
         self.dataArrayObeserverBlock(keyPath,change);
     }
 }
-
-#pragma mark - 数据加载处理
-
-/**
- *  成功加载数据reload
- *
- *  @param data       每次请求数据
- *  @param pageSize   每页个数
- *  @param noDataView 自定义没有数据时view
- */
-- (void)reloadData:(NSArray *)data
-          pageSize:(int)pageSize
-        noDataView:(UIView *)noDataView
-{
-    if (data.count < pageSize) {
-        
-        self.isHaveMoreData = NO;
-    }else
-    {
-        self.isHaveMoreData = YES;
-    }
-    
-    if (self.isReloadData) {
-        
-        [self.dataArray removeAllObjects];
-        
-    }
-    [self.dataArray addObjectsFromArray:data];
-    
-    [self finishReloadDataWithView:noDataView pageSize:pageSize];
-}
-
-/**
- *  移除没有数据视图
- */
-- (void)removeNodataView
-{
-    if (self.tableFooterView == self.resultView) {
-        [self.resultView removeFromSuperview];
-        self.resultView = nil;
-    }
-}
-
--(UIView *)resultView
-{
-    if (_resultView) {
-        return _resultView;
-    }
-    self.resultView = [[UIView alloc]initWithFrame:self.bounds];
-    _resultView.backgroundColor = [UIColor clearColor];
-    return _resultView;
-}
-
-//完成数据加载
-
-- (void)finishReloadDataWithView:(UIView *)noDataView
-                        pageSize:(int)pageSize
-{
-    NSLog(@"%s",__FUNCTION__);
-    
-    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0];
-    
-    //没有数据时
-    if (self.dataArray.count == 0) {
-        
-        if (self.tableFooterView != self.resultView) {
-            [self.tableFooterView removeFromSuperview];
-            self.tableFooterView = self.resultView;
-            [self.resultView addSubview:noDataView];
-            noDataView.center = CGPointMake(_resultView.width/2.f, _resultView.height / 3.f);
-        }
-        
-    }
-    //有数据
-    else
-    {
-        if (self.tableFooterView == self.resultView) {
-            
-            [self.resultView removeFromSuperview];
-        }
-        self.tableFooterView = nil;
-        //总数小于一页时 但是有数据时 不显示tableViewFooter
-        if (self.dataArray.count > pageSize) {
-            [self createFooterView];
-        }
-    }
-}
-
-/**
- *  请求数据失败 显示自定义view
- *
- *  @param view
- */
-- (void)loadFailWithView:(UIView *)view
-                pageSize:(int)pageSize
-{
-    if (self.isLoadMoreData) {
-        self.pageNum --;
-        
-        if (self.pageNum < 1) {
-            self.pageNum = 1;
-        }
-    }
-    
-    self.isHaveMoreData = NO;
-    
-    [self finishReloadDataWithView:view pageSize:pageSize];
-}
-
-- (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave
-{
-    self.isHaveMoreData = isHave;
-    
-    if (self.isReloadData) {
-        
-        [self.dataArray removeAllObjects];
-    }
-    [self.dataArray addObjectsFromArray:data];
-    
-    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
-}
-
-//成功加载数据 隐藏加载更多
-- (void)reloadDataSuccess:(NSArray *)data isHaveMore:(BOOL)isHave{
-    self.isHaveMoreData = isHave;
-    
-    if (self.isReloadData) {
-        
-        [self.dataArray removeAllObjects];
-    }
-    [self.dataArray addObjectsFromArray:data];
-    
-    [self performSelector:@selector(finishReloadigDataAndHiddenMore) withObject:nil afterDelay:0.f];
-}
-
-
-//成功加载
-- (void)reloadData:(NSArray *)data total:(int)totalPage
-{
-    if (self.pageNum < totalPage) {
-        
-        self.isHaveMoreData = YES;
-    }else
-    {
-        self.isHaveMoreData = NO;
-    }
-    
-    if (self.isReloadData) {
-        
-        [self.dataArray removeAllObjects];
-        
-    }
-    [self.dataArray addObjectsFromArray:data];
-    
-    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0];
-}
-
-//成功加载
-- (void)reloadData:(NSArray *)data pageSize:(int)pageSize
-{
-    if (data.count < pageSize) {
-        
-        self.isHaveMoreData = NO;
-    }else
-    {
-        self.isHaveMoreData = YES;
-    }
-    
-    if (self.isReloadData) {
-        
-        [self.dataArray removeAllObjects];        
-    }
-    [self.dataArray addObjectsFromArray:data];
-    
-    if (self.dataArray.count < pageSize) {
-        
-        [self finishReloadigDataAndHiddenMore];
-        
-    }else
-    {
-        [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
-    }
-}
-
-//请求数据失败
-
-- (void)loadFail
-{
-    if (self.isLoadMoreData) {
-        self.pageNum --;
-        
-        if (self.pageNum < 1) {
-            self.pageNum = 1;
-        }
-    }
-    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
-    
-}
-
-//完成数据加载
-
-- (void)finishReloadigData
-{
-    NSLog(@"finishReloadigData完成加载");
-    
-    _reloading = NO;
-    if (_refreshHeaderView) {
-        [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self];
-        self.isReloadData = NO;
-    }
-    
-    if (self.tableFooterView == nil) {
-        [self createFooterView];
-    }
-    
-    [self reloadData];
-    
-    //如果有更多数据，重新设置footerview  frame
-    if (self.isHaveMoreData)
-    {
-        [self stopLoading:1];
-        
-    }else {
-        
-        [self stopLoading:2];
-    }
-    
-    //设置数据个数
-    [self setValue:[NSNumber numberWithInteger:_dataArray.count] forKey:@"_dataArrayCount"];
-    
-}
-
-//完成数据加载 隐藏加载更多
-- (void)finishReloadigDataAndHiddenMore
-{
-    NSLog(@"finishReloadigData完成加载");
-    
-    _reloading = NO;
-    if (_refreshHeaderView) {
-        [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self];
-        self.isReloadData = NO;
-    }
-    
-    self.tableFooterView = nil;
-    
-    @try {
-        
-        [self reloadData];
-        
-    }
-    @catch (NSException *exception) {
-        
-        NSLog(@"%@",exception);
-    }
-    @finally {
-        
-    }
-    
-    [self stopLoading:100];
-    
-    self.userInteractionEnabled = YES;
-    
-    //设置数据个数
-    [self setValue:[NSNumber numberWithInteger:_dataArray.count] forKey:@"_dataArrayCount"];
-    
-}
-
-
-#pragma mark-
-#pragma mark force to show the refresh headerView
-//代码触发刷新
--(void)showRefreshHeader:(BOOL)animated
-{
-    self.isHaveLoaded = YES;//记录已经加载过数据
-    if (animated)
-    {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.0];
-        self.contentInset = UIEdgeInsetsMake(65.0f, 0.0f, 0.0f, 0.0f);
-        [self scrollRectToVisible:CGRectMake(0, 0.0f, 1, 1) animated:NO];
-        [UIView commitAnimations];
-    }
-    else
-    {
-        self.contentInset = UIEdgeInsetsMake(65.0f, 0.0f, 0.0f, 0.0f);
-        [self scrollRectToVisible:CGRectMake(0, 0.0f, 1, 1) animated:NO];
-    }
-    
-    [_refreshHeaderView setState:L_EGOOPullRefreshLoading];
-    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:self];
-}
-
-/**
- *  刷新数据 无偏移
- */
--(void)refreshNewData
-{
-    _isReloadData = YES;
-    
-    _reloading = YES;
-    
-    if (_refreshDelegate && [_refreshDelegate respondsToSelector:@selector(loadNewDataForTableView:)]) {
-        
-        self.pageNum = 1;
-        [_refreshDelegate loadNewDataForTableView:self];
-    }
-}
-
 
 #pragma mark - EGORefreshTableDelegate
 - (void)egoRefreshTableDidTriggerRefresh:(EGORefreshPos)aRefreshPos
@@ -742,10 +672,6 @@
             break;
     }
 }
-
-
-
-
 
 //监控数据源的block
 

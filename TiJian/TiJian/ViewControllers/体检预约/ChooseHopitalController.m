@@ -341,6 +341,23 @@ typedef enum {
     _selectHospitalId = [examCenterId intValue];
 }
 
+/**
+ *  仅选择时间和分院,不做其他操作
+ *
+ *  @param productId
+ *  @param examCenterId 分院id
+ */
+- (void)setSelectParamWithProductId:(NSString *)productId
+                       examCenterId:(NSString *)examCenterId
+                     examCenterName:(NSString *)examCenterName
+{
+    _isJustSelect = YES;
+    _productId = productId;
+    _exam_center_id = examCenterId;
+    _selectHospitalId = [examCenterId intValue];
+    _selectCenterName = examCenterName;
+}
+
 - (void)parseDataWithResult:(NSDictionary *)result
 {
     NSArray *temp = [HospitalModel modelsFromArray:result[@"center_list"]];
@@ -469,9 +486,9 @@ typedef enum {
     NSString *selectDate = [LTools timeDate:date withFormat:@"YYYY-MM-dd"];
     NSLog(@"did select date %@",selectDate);
     
-    _table.pageNum = 1;
-    _table.isReloadData = YES;
-    [self networkForCenter:selectDate];
+    _selectDate = selectDate;//important
+    
+    [_table refreshNewData];
 }
 
 #pragma mark - FSCalendarDataSource

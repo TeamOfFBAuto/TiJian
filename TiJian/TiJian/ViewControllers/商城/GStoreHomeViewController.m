@@ -201,16 +201,7 @@
         [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
     }
     
-    
-    
-    
-    
 }
-
-
-
-
-
 
 #pragma mark - 请求网络数据
 
@@ -229,11 +220,11 @@
         [GMAPI cache:_StoreCycleAdvDic ForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
         
         
-        
-        
-        
     } failBlock:^(NSDictionary *result) {
         NSLog(@"%s",__FUNCTION__);
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+
     }];
     
     
@@ -272,23 +263,15 @@
             [_StoreProductListArray addObject:model];
         }
         
-        
-        
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
-        
-        
-        
     } failBlock:^(NSDictionary *result) {
         
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+
     }];
-    
-    
-    
-    
 }
 
 
@@ -409,14 +392,6 @@
 }
 
 
-
-
-
-
-
-
-
-
 -(void)classImvClicked:(UIImageView*)sender{
     NSLog(@"%s",__FUNCTION__);
     NSLog(@"%ld",(long)sender.tag);
@@ -468,7 +443,7 @@
     
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:1];
     
-    if (advertisements_data.count>0) {
+    if (advertisements_data.count > 0) {
         
         for (NSDictionary *dic in advertisements_data) {
             CycleAdvModel *model = [[CycleAdvModel alloc]initWithDictionary:dic];
@@ -485,9 +460,7 @@
         for (int i = 0; i < urls.count; i ++) {
             
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 300)];
-            UIProgressView *progress = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
-            [imageView sd_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil usingProgressView:progress];
-                        
+            [imageView l_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil];
             [views addObject:imageView];
             
         }
@@ -503,6 +476,10 @@
         
         [_bannerView setTapActionBlock:^(NSInteger index) {
             NSLog(@"--tap index %ld",(long)index);
+            
+            if (index >= bself.upAdvArray.count) {
+                return ;
+            }
             
             CycleAdvModel *amodel = bself.upAdvArray[index];
             if ([amodel.redirect_type intValue] == 1) {//外链
@@ -520,23 +497,14 @@
                     
                 }
                 
-                
             }
-
-            
-            
-            
             
         }];
         
         [_bannerView setAutomicScrollingDuration:3];
         
         [self.theTopView addSubview:_bannerView];
-    
-    
     }
-    
-    
 }
 
 

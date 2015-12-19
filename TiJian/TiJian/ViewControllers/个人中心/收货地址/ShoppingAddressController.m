@@ -59,7 +59,7 @@
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     }
     
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - 64) showLoadMore:NO];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - 64)];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -144,15 +144,13 @@
     __weak AddressModel *aModel = [_table.dataArray objectAtIndex:index];
 
     __weak typeof(_table)weakTable = _table;
-    __weak typeof(self)weakSelf = self;
+//    __weak typeof(self)weakSelf = self;
     NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"address_id":aModel.address_id};
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_ADDRESS_DELETE parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        weakTable.pageNum = 1;
-        weakTable.isReloadData = YES;
-        [weakSelf getAddressList];
+        [weakTable refreshNewData];//刷新数据
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

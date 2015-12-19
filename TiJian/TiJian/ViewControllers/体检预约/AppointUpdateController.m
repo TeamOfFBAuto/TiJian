@@ -56,7 +56,6 @@
         self.myTitle = @"预约修改";
     }
     _appointModel = aModel;
-    
     [self prepareRefreshTableView];
 }
 
@@ -185,7 +184,7 @@
     _isUpdated = YES;
     
     ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-    [choose setSelectParamWithProductId:_appointModel.product_id examCenterId:_appointModel.exam_center_id];
+    [choose setSelectParamWithProductId:_appointModel.product_id examCenterId:_appointModel.exam_center_id examCenterName:_appointModel.center_name];
     [self.navigationController pushViewController:choose animated:YES];
     
     __weak typeof(self)weakSelf = self;

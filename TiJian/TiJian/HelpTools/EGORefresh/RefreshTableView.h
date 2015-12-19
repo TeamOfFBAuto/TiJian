@@ -51,45 +51,28 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 
 @interface RefreshTableView : UITableView<L_EGORefreshTableDelegate,UITableViewDataSource,UITableViewDelegate>
 {
-    BOOL _neverShowLoadMore;//是否永远不显示加载更多
     
     int _dataArrayCount;//数据源个数
 }
 
-
-@property (nonatomic,retain)RefreshHeaderView * refreshHeaderView;
-
 @property (nonatomic,weak)id<RefreshDelegate>refreshDelegate;
-@property (nonatomic,assign)BOOL                        isReloadData;      //是否是下拉刷新数据
-@property (nonatomic,assign)BOOL                        reloading;         //是否正在loading
-@property (nonatomic,assign)BOOL                        isLoadMoreData;    //是否是载入更多
-@property (nonatomic,assign)BOOL                        isHaveMoreData;    //是否还有更多数据,决定是否有更多view
 
-@property (nonatomic,assign)BOOL                        isHaveLoaded;    //是否已经加载过数据
-
-
+@property (nonatomic,assign)BOOL isHaveLoaded;    //是否已经加载过数据
 @property (nonatomic,assign)int pageNum;//页数
 @property (nonatomic,retain)NSMutableArray *dataArray;//数据源
 
-@property(nonatomic,retain)UIActivityIndicatorView *loadingIndicator;
-@property(nonatomic,retain)UILabel *normalLabel;
-@property(nonatomic,retain)UILabel *loadingLabel;
-@property(nonatomic,assign)BOOL hiddenLoadMore;//隐藏加载更多,默认隐藏
+@property(nonatomic,assign)BOOL hiddenLoadMoreWhenNoData;//没有更多数据时是否隐藏底部view,default YES
+@property(nonatomic,assign)BOOL neverShowLoadMore;//是否永远不显示加载更多
+
 
 @property (nonatomic,copy)OBSERVERBLOCK dataArrayObeserverBlock;//监控数据源
 
--(void)showRefreshHeader:(BOOL)animated;//代码出发刷新
-- (void)finishReloadigData;
 
--(void)refreshNewData;//刷新数据 无偏移
+#pragma mark - 初始化
 
-- (void)reloadData:(NSArray *)data total:(int)totalPage;//更新数据
-- (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave;
-- (void)reloadData:(NSArray *)data pageSize:(int)pageSize;//根据pageSize判断是否有更多
+//-(id)initWithFrame:(CGRect)frame showLoadMore:(BOOL)show;
 
-- (void)loadFail;//请求数据失败
-
--(id)initWithFrame:(CGRect)frame showLoadMore:(BOOL)show;
+- (id)initWithFrame:(CGRect)frame;
 
 /**
  *  创建refreshTableView
@@ -102,6 +85,18 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 -(id)initWithFrame:(CGRect)frame superView:(UIView *)superView;
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)theStyle;
+
+#pragma mark - 刷新数据
+
+-(void)showRefreshHeader:(BOOL)animated;//代码出发刷新
+-(void)refreshNewData;//刷新数据 无偏移
+
+#pragma mark - 完成数据加载
+
+- (void)finishReloadigData;//完成加载操作
+- (void)reloadData:(NSArray *)data total:(int)totalPage;//更新数据
+- (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave;
+- (void)reloadData:(NSArray *)data pageSize:(int)pageSize;//根据pageSize判断是否有更多
 
 /**
  *  成功加载数据reload 
@@ -116,11 +111,7 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
           pageSize:(int)pageSize
         noDataView:(UIView *)noDataView;
 
-/**
- *  移除没有没有数据时自定义视图
- */
-- (void)removeNodataView;
-
+#pragma mark - 数据加载失败
 /**
  *  请求数据失败 显示自定义view
  *
@@ -129,6 +120,13 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 - (void)loadFailWithView:(UIView *)view
                 pageSize:(int)pageSize;
 
+- (void)loadFail;//请求数据失败
+
+#pragma mark - other
+/**
+ *  移除没有没有数据时自定义视图
+ */
+- (void)removeNodataView;
 
 
 -(void)setDataArrayObeserverBlock:(OBSERVERBLOCK)dataArrayObeserverBlock;
