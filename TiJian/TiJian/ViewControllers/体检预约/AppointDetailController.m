@@ -197,7 +197,7 @@
         [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         sender.titleLabel.font = [UIFont systemFontOfSize:14];
         sender.frame = CGRectMake(25, _bgView.bottom + 30, DEVICE_WIDTH - 50, 45);
-        sender.backgroundColor = [UIColor colorWithHexString:@"ed1f1f"];
+        sender.backgroundColor = DEFAULT_TEXTCOLOR;
         [sender addTarget:self action:@selector(clickToCancelAppoint) forControlEvents:UIControlEventTouchUpInside];
         [_scroll addSubview:sender];
         
