@@ -308,7 +308,7 @@
         [self stopLoading:1];
         
     }else {
-        
+        //
         [self stopLoading:2];
         
         if (self.tableFooterView == self.refreshFooterView) {
