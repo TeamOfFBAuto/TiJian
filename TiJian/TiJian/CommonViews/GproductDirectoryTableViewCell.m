@@ -51,11 +51,11 @@
     //自适应高度
     [xuhaoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 4) width:DEVICE_WIDTH/4];
     [mingxiLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/4, 4) width:DEVICE_WIDTH/4];
-    [zuheneirongLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/2, 4) width:DEVICE_WIDTH/2];
+    [zuheneirongLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/2, 4) width:DEVICE_WIDTH/2-5];
     
     [xuhaoLabel setWidth:DEVICE_WIDTH/4];
     [mingxiLabel setWidth:DEVICE_WIDTH/4];
-    [zuheneirongLabel setWidth:DEVICE_WIDTH/2];
+    [zuheneirongLabel setWidth:DEVICE_WIDTH/2-5];
     
     
     xuhaoLabel.textAlignment = NSTextAlignmentCenter;

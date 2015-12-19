@@ -148,7 +148,9 @@
             str = [GMAPI cityNameForId:theId];
         }else{
             int theId = [[dic stringValueForKey:@"city"]intValue];
-            str = [GMAPI cityNameForId:theId];
+            
+            str = [GMAPI getCityNameOf4CityWithCityId:theId];
+            
         }
         self.leftLabel.text = str;
         

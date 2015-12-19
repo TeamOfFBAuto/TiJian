@@ -603,7 +603,12 @@
         if (i<2) {
             [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
         }else{
-            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+            if (DEVICE_WIDTH<375) {//4s 5s
+                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
+            }else{
+                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+            }
+            
         }
         
         [oneBtn setTitleEdgeInsets:UIEdgeInsetsMake(25, -20, 0, 0)];

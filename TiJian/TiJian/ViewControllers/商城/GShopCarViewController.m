@@ -34,6 +34,9 @@
     
     UIButton *_rightBtn;//右边按钮
     
+    NSMutableArray *_buyStateProductUserChooseArray;//购买状态用户选择的商品
+    
+    
 }
 @end
 
@@ -131,6 +134,9 @@
     
     
     [self.allChooseBtn addTarget:self action:@selector(downViewallChooseBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    
     [_downView addSubview:self.allChooseBtn];
     
     UIView *midleView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.allChooseBtn.frame), 0, DEVICE_WIDTH*380.0/750, 50)];
@@ -224,11 +230,33 @@
     _deleteState = !_deleteState;
     
     if (_deleteState) {//删除
+        
+        [self recordBuyStateProductUserChoose];
+        
+        [self setDownViewAllChooseBtnNoSelect];
+        
         [self.my_right_button setTitle:@"取消" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"删除" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = YES;
         self.detailPriceLabel.hidden = YES;
     }else{
+        
+        
+        for (NSArray *arr in self.rTab.dataArray) {
+            for (ProductModel *model in arr) {
+                for (ProductModel *chooseModel in _buyStateProductUserChooseArray) {
+                    if ([chooseModel.cart_pro_id intValue] == [model.cart_pro_id intValue]) {
+                        model.userChoose = YES;
+                    }
+                }
+            }
+        }
+        
+        
+        [self.rTab reloadData];
+        [self updateRtabTotolPrice];
+        [self isAllChooseAndUpdateState];
+        
         [self.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = NO;
@@ -237,6 +265,223 @@
     
     
 }
+
+
+
+#pragma mark - 逻辑处理
+
+-(NSArray *)getChoseProducts{
+    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel *model in arr) {
+            if (model.userChoose) {
+                [theArr addObject:model];
+            }
+        }
+    }
+    
+    return theArr;
+}
+
+
+-(void)deleteUserChooseProducts{
+    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
+    
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel *model in arr) {
+            if (model.userChoose) {
+                [theArr addObject:model];
+            }
+        }
+    }
+    
+    
+}
+
+
+//更新下边价格信息view
+-(void)updateRtabTotolPrice{
+    
+    _totolPrice = 0;
+    
+    CGFloat totolPrice_o = 0;
+    
+    
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel*model in arr) {
+            if (model.userChoose) {
+                CGFloat current_price = [model.current_price floatValue];
+                _totolPrice += current_price * [model.product_num intValue];
+                
+                CGFloat o_price = [model.original_price floatValue];
+                totolPrice_o += o_price * [model.product_num intValue];
+                
+            }
+            
+        }
+    }
+    
+    
+    //现价统计
+    NSString *pStr = [NSString stringWithFormat:@"%.2f",_totolPrice];
+    NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
+    NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
+    [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 3)];
+    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:15] range:NSMakeRange(0, 3)];
+    
+    [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(237, 108, 22) range:NSMakeRange(3, pStr.length+1)];
+    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(3, pStr.length+1)];
+    self.totolPriceLabel.attributedText = aaa;
+    
+    //原价统计
+    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,totolPrice_o - _totolPrice];
+    
+    
+}
+
+//判断全选 并改变左下角全选状态
+-(void)isAllChooseAndUpdateState{
+    
+    BOOL isAllChoose = YES;//全部全选
+    
+    NSInteger count = self.rTab.dataArray.count;
+    
+    for (int i = 0; i<count; i++) {
+        BOOL isAllChooseOneSection = YES;//每个section全选
+        NSArray *arr = self.rTab.dataArray[i];
+        for (ProductModel *model in arr) {
+            if (model.userChoose == NO) {
+                isAllChooseOneSection = NO;
+                isAllChoose = NO;
+            }
+            
+        }
+        if (isAllChooseOneSection) {//每个section全选
+            [self setOpenArray1WithIndex:i];
+        }else{
+            [self setOpenArray0WithIndex:i];
+        }
+        
+    }
+    
+    if (isAllChoose) {//全选
+        self.allChooseBtn.selected = YES;
+    }else{
+        self.allChooseBtn.selected = NO;
+    }
+    
+    [self.rTab reloadData];
+}
+
+
+
+
+
+//设置全选
+-(void)setDownViewAllChooseBtnSelect{
+    self.allChooseBtn.selected = YES;
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel*model in arr) {
+            model.userChoose = YES;
+        }
+    }
+    
+    for (int i = 0; i<500; i++) {
+        _open[i] = 1;
+    }
+    
+    [self.rTab reloadData];
+    [self updateRtabTotolPrice];
+    
+    
+}
+
+//设置全不选
+-(void)setDownViewAllChooseBtnNoSelect{
+    
+    self.allChooseBtn.selected = NO;
+    
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel*model in arr) {
+            model.userChoose = NO;
+        }
+    }
+    
+    for (int i = 0; i<500; i++) {
+        _open[i] = 0;
+    }
+    
+    
+    [self.rTab reloadData];
+    [self updateRtabTotolPrice];
+}
+
+
+//记录购买状态下各个单品的userchoose
+-(void)recordBuyStateProductUserChoose{
+    _buyStateProductUserChooseArray = [NSMutableArray arrayWithCapacity:1];
+    
+    for (NSArray *arr in self.rTab.dataArray) {
+        for (ProductModel *model in arr) {
+            if (model.userChoose) {
+                [_buyStateProductUserChooseArray addObject:model];
+            }
+        }
+    }
+    
+    
+}
+
+
+
+
+
+
+//全选 反选
+-(void)downViewallChooseBtnClicked:(UIButton*)sender{
+    if (sender.selected) {//全部取消
+        
+        for (NSArray *arr in self.rTab.dataArray) {
+            for (ProductModel*model in arr) {
+                model.userChoose = NO;
+            }
+        }
+        
+        for (int i = 0; i<500; i++) {
+            _open[i] = 0;
+        }
+        
+    }else{//全选
+        
+        for (NSArray *arr in self.rTab.dataArray) {
+            for (ProductModel*model in arr) {
+                model.userChoose = YES;
+            }
+        }
+        
+        for (int i = 0; i<500; i++) {
+            _open[i] = 1;
+        }
+        
+    }
+    
+    sender.selected = !sender.selected;
+    [self.rTab reloadData];
+    [self updateRtabTotolPrice];
+}
+
+//设置header上的选择按钮
+-(void)setOpenArray1WithIndex:(int)index{
+    _open[index] = 1;
+}
+-(void)setOpenArray0WithIndex:(int)index{
+    _open[index] = 0;
+}
+
+
+
+
+
 
 
 #pragma mark - UIActionSheetDelegate
@@ -321,6 +566,11 @@
             NSMutableArray *oneBrandArray = [NSMutableArray arrayWithCapacity:1];
             for (NSDictionary *dic in arr) {
                 ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                if (_deleteState) {
+                    
+                }else{
+                    model.userChoose = YES;
+                }
                 [oneBrandArray addObject:model];
             }
             [dataArray addObject:oneBrandArray];
@@ -330,12 +580,20 @@
         if (self.rTab.pageNum == 1 && dataArray.count == 0) {
             [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         }else{
-            [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
-            bself.rightString = @"删除";
+            if (_deleteState) {
+                [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+                bself.rightString = @"取消";
+            }else{
+                [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+                bself.rightString = @"删除";
+            }
+            
         }
         
         
         [self.rTab reloadData:dataArray pageSize:G_PER_PAGE];
+        [self updateRtabTotolPrice];
+        [self isAllChooseAndUpdateState];
         
         if (_rTab.pageNum == 1 && list.count == 0) {
             _noProductView.hidden = NO;
@@ -354,6 +612,9 @@
             [_rTab reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
         }
         
+        
+        
+
         
         
         
@@ -543,155 +804,8 @@
 }
 
 
-#pragma makr - 逻辑处理
 
 
--(NSArray *)getChoseProducts{
-    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
-    for (NSArray *arr in self.rTab.dataArray) {
-        for (ProductModel *model in arr) {
-            if (model.userChoose) {
-                [theArr addObject:model];
-            }
-        }
-    }
-    
-    return theArr;
-}
-
-
--(void)deleteUserChooseProducts{
-    NSMutableArray *theArr = [NSMutableArray arrayWithCapacity:1];
-    
-    for (NSArray *arr in self.rTab.dataArray) {
-        for (ProductModel *model in arr) {
-            if (model.userChoose) {
-                [theArr addObject:model];
-            }
-        }
-    }
-  
-    
-}
-
-
-//更新下边价格信息view
--(void)updateRtabTotolPrice{
-    
-    _totolPrice = 0;
-    
-    CGFloat totolPrice_o = 0;
-    
-    
-    for (NSArray *arr in self.rTab.dataArray) {
-        for (ProductModel*model in arr) {
-            if (model.userChoose) {
-                CGFloat current_price = [model.current_price floatValue];
-                _totolPrice += current_price * [model.product_num intValue];
-                
-                CGFloat o_price = [model.original_price floatValue];
-                totolPrice_o += o_price * [model.product_num intValue];
-                
-            }
-            
-        }
-    }
-    
-    
-    //现价统计
-    NSString *pStr = [NSString stringWithFormat:@"%.2f",_totolPrice];
-    NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
-    NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
-    [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 3)];
-    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:15] range:NSMakeRange(0, 3)];
-    
-    [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(237, 108, 22) range:NSMakeRange(3, pStr.length+1)];
-    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(3, pStr.length+1)];
-    self.totolPriceLabel.attributedText = aaa;
-    
-    //原价统计
-    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,totolPrice_o - _totolPrice];
-    
-    
-}
-
-//判断全选 并改变左下角全选状态
--(void)isAllChooseAndUpdateState{
-    
-    BOOL isAllChoose = YES;//全部全选
-    
-    NSInteger count = self.rTab.dataArray.count;
-    
-    for (int i = 0; i<count; i++) {
-        BOOL isAllChooseOneSection = YES;//每个section全选
-        NSArray *arr = self.rTab.dataArray[i];
-        for (ProductModel *model in arr) {
-            if (model.userChoose == NO) {
-                isAllChooseOneSection = NO;
-                isAllChoose = NO;
-            }
-            
-        }
-        if (isAllChooseOneSection) {//每个section全选
-            [self setOpenArray1WithIndex:i];
-        }else{
-            [self setOpenArray0WithIndex:i];
-        }
-        
-    }
-    
-    if (isAllChoose) {//全选
-        self.allChooseBtn.selected = YES;
-    }else{
-        self.allChooseBtn.selected = NO;
-    }
-    
-    [self.rTab reloadData];
-}
-
-
-
-
-//全选 反选
--(void)downViewallChooseBtnClicked:(UIButton*)sender{
-    if (sender.selected) {//全部取消
-        
-        for (NSArray *arr in self.rTab.dataArray) {
-            for (ProductModel*model in arr) {
-                model.userChoose = NO;
-            }
-        }
-        
-        for (int i = 0; i<500; i++) {
-            _open[i] = 0;
-        }
-        
-    }else{//全选
-        
-        for (NSArray *arr in self.rTab.dataArray) {
-            for (ProductModel*model in arr) {
-                model.userChoose = YES;
-            }
-        }
-        
-        for (int i = 0; i<500; i++) {
-            _open[i] = 1;
-        }
-        
-    }
-    
-    sender.selected = !sender.selected;
-    [self.rTab reloadData];
-    [self updateRtabTotolPrice];
-}
-
-//设置header上的选择按钮
--(void)setOpenArray1WithIndex:(int)index{
-    _open[index] = 1;
-}
--(void)setOpenArray0WithIndex:(int)index{
-    _open[index] = 0;
-}
 
 
 

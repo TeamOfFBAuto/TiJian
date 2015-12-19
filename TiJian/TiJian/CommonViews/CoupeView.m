@@ -80,7 +80,7 @@
             [listView addSubview:closeBtn];
             closeBtn.backgroundColor = color_close;
             [closeBtn addCornerRadius:5.f];
-            [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+            [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
             closeBtn.centerX = listView.width / 2.f;
             
             listView.height = closeBtn.bottom + [LTools fitHeight:15];
@@ -113,7 +113,7 @@
             [listView addSubview:closeBtn];
             closeBtn.backgroundColor = color_close;
             [closeBtn addCornerRadius:5.f];
-            [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+            [closeBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
             closeBtn.centerX = listView.width / 2.f;
 
         }
