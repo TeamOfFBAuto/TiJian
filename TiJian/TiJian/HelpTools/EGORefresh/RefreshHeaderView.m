@@ -209,13 +209,33 @@
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
     
     [UIView beginAnimations:@"hh" context:nil];
-    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDuration:0.3];
     [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
     [UIView commitAnimations];
     
     [self setState:L_EGOOPullRefreshNormal];
 }
 
+
+- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView
+                                              completion:(void(^)())completion
+{
+    __weak typeof(self)weakSelf = self;
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+
+    } completion:^(BOOL finished) {
+        if (finished) {
+            
+            [weakSelf setState:L_EGOOPullRefreshNormal];
+            if (completion) {
+                completion();
+            }
+
+        }
+    }];
+}
 
 #pragma mark -
 #pragma mark Dealloc

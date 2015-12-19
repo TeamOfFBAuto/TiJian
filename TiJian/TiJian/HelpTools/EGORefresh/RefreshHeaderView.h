@@ -50,6 +50,8 @@ typedef enum{
 - (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView;
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView;
+- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView
+                                              completion:(void(^)())completion;
 - (void)setState:(L_EGOPullRefreshState)aState;
 
 @end

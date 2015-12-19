@@ -148,7 +148,7 @@
         [self.dataArray removeAllObjects];
     }
     [self.dataArray addObjectsFromArray:data];
-    
+    [self reloadData];
     [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0.f];
 }
 
@@ -191,8 +191,62 @@
         [self.dataArray removeAllObjects];
     }
     [self.dataArray addObjectsFromArray:data];
+    [self reloadData];
     [self finishReloadDataWithView:noDataView pageSize:pageSize];
 }
+
+
+//- (void)fini1111shReloadDataWithView:(UIView *)noDataView
+//                        pageSize:(int)pageSize
+//{
+//    [self reloadData];
+//    
+//    if (!self.isHaveLoaded) {
+//        
+//        [self performSelector:@selector(resetHeaderView) withObject:nil afterDelay:0];//有等待操作
+//        self.isHaveLoaded = YES;//记录已经加载过数据
+//        
+//    }else
+//    {
+////        [self resetHeaderView];//没有等待操作
+//        
+//    }
+//    
+//    
+//    _reloading = NO;
+//    
+//    //设置数据个数
+//    [self setValue:[NSNumber numberWithInteger:_dataArray.count] forKey:@"_dataArrayCount"];
+//    
+//    
+//    //如果有更多数据,重新设置footerview  frame
+//    if (self.isHaveMoreData)
+//    {
+//        self.tableFooterView = self.refreshFooterView;
+//        [self stopLoading:1];
+//        
+//    }else
+//    {
+//        //没有数据时
+//        if (self.dataArray.count == 0) {
+//            
+//            //没有数据自定义view
+//            if (self.tableFooterView != self.resultView) {
+//                [self.tableFooterView removeFromSuperview];
+//                self.tableFooterView = self.resultView;
+//                [self.resultView addSubview:noDataView];
+//                noDataView.center = CGPointMake(_resultView.width/2.f, _resultView.height / 3.f);
+//            }
+//        }
+//        //有数据 没有更多
+//        else
+//        {
+//            [self.resultView removeFromSuperview];
+//            self.tableFooterView = nil;
+//        }
+//        
+//    }
+//}
 
 //完成数据加载
 
@@ -200,7 +254,7 @@
                         pageSize:(int)pageSize
 {
     
-    [self finishReloadigData];
+    [self performSelector:@selector(finishReloadigData) withObject:nil afterDelay:0];
     
     NSLog(@"%s",__FUNCTION__);
     
@@ -220,11 +274,16 @@
         if (self.tableFooterView == self.resultView) {
             
             [self.resultView removeFromSuperview];
+            self.tableFooterView = nil;
         }
-        self.tableFooterView = nil;
-        //总数小于一页时 但是有数据时 不显示tableViewFooter
-        if (self.dataArray.count > pageSize) {
+        
+        if (self.isHaveMoreData) {
+            
             [self createFooterView];
+        }else
+        {
+            [self.refreshFooterView removeFromSuperview];
+            self.refreshFooterView = nil;
         }
     }
 }
@@ -235,17 +294,13 @@
 {
     NSLog(@"finishReloadigData完成加载");
     
+    [self reloadData];
+    
     _reloading = NO;
     if (_refreshHeaderView) {
         [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self];
         self.isReloadData = NO;
     }
-    
-    if (self.tableFooterView == nil) {
-        [self createFooterView];
-    }
-    
-    [self reloadData];
     
     //如果有更多数据,重新设置footerview  frame
     if (self.isHaveMoreData)
@@ -255,8 +310,13 @@
     }else {
         
         [self stopLoading:2];
+        
+        if (self.tableFooterView == self.refreshFooterView) {
+            self.tableFooterView = nil;
+            [self.refreshFooterView removeFromSuperview];
+            self.refreshFooterView = nil;
+        }
     }
-    
     //设置数据个数
     [self setValue:[NSNumber numberWithInteger:_dataArray.count] forKey:@"_dataArrayCount"];
     

@@ -247,7 +247,7 @@
         }
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID];
+        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
         
         if (_productOneClassArray.count == 0) {
             [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
