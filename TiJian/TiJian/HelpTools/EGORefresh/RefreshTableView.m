@@ -305,6 +305,8 @@
     //如果有更多数据,重新设置footerview  frame
     if (self.isHaveMoreData)
     {
+        [self createFooterView];
+
         [self stopLoading:1];
         
     }else {
@@ -441,22 +443,24 @@
 
 - (void)createFooterView
 {
-    //不显示加载更多
-    if (_neverShowLoadMore) {
-        
-        return;
-    }
-
-    DDLOG_CURRENT_METHOD;
-
-    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320, TABLEFOOTER_HEIGHT)];
     
-    [tableFooterView addSubview:self.loadingIndicator];
-    [tableFooterView addSubview:self.loadingLabel];
-    [tableFooterView addSubview:self.normalLabel];
-    
-    tableFooterView.backgroundColor = [UIColor clearColor];
-    self.tableFooterView = tableFooterView;
+    self.tableFooterView = self.refreshFooterView;
+//    //不显示加载更多
+//    if (_neverShowLoadMore) {
+//        
+//        return;
+//    }
+//
+//    DDLOG_CURRENT_METHOD;
+//
+//    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320, TABLEFOOTER_HEIGHT)];
+//    
+//    [tableFooterView addSubview:self.loadingIndicator];
+//    [tableFooterView addSubview:self.loadingLabel];
+//    [tableFooterView addSubview:self.normalLabel];
+//    
+//    tableFooterView.backgroundColor = [UIColor clearColor];
+//    self.tableFooterView = tableFooterView;
 }
 
 #pragma mark - 拓展新方法

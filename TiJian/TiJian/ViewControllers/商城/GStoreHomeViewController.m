@@ -249,7 +249,9 @@
     
     NSDictionary *listDic = @{
                               @"province_id":[GMAPI getCurrentProvinceId],
-                              @"city_id":[GMAPI getCurrentCityId]
+                              @"city_id":[GMAPI getCurrentCityId],
+                              @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
+                              @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
                               };
     
     
@@ -273,6 +275,41 @@
 
     }];
 }
+
+
+//首页精品推荐上拉加载更多
+-(void)prepareMoreProducts{
+    //首页精品推荐
+    NSDictionary *listDic = @{
+                              @"province_id":[GMAPI getCurrentProvinceId],
+                              @"city_id":[GMAPI getCurrentCityId],
+                              @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
+                              @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
+                              };
+    
+    
+    
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_StoreProductListArray addObject:model];
+        }
+        
+        
+        [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+        
+    }];
+}
+
+
+
 
 
 
@@ -542,7 +579,7 @@
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    [self prepareNetData];
+    [self prepareMoreProducts];
 
 }
 
