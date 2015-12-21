@@ -57,6 +57,12 @@
 - (void)resetTimer {
     [self stopTimer];
     if (self.automicScrolling) {
+        
+        //小于等于1时不需要自动播放
+        if (_contentViews.count <= 1) {
+            return;
+        }
+        
         self.timer = [NSTimer scheduledTimerWithTimeInterval:self.automicScrollingDuration target:self selector:@selector(timerAction:) userInfo:nil repeats:YES];
     }
 }
@@ -227,6 +233,11 @@
 - (void)configItemsWithScrollView:(UIScrollView *)scrollView
 {
     NSInteger index = scrollView.contentOffset.x/CGRectGetWidth(self.frame);
+    
+    //页数必须小于总页数
+    if (index >= _totalNum) {
+        return;
+    }
     
     if (index == 2) {
         _currentPage = _currentPage + 1;

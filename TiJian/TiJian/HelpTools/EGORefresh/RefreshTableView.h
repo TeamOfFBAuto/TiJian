@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "LRefreshTableHeaderView.h"
 #import "RefreshHeaderView.h"
 
 @class HelperConnection;
@@ -48,6 +47,14 @@
  */
 typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 
+/**
+ *  上拉加载更多数据类型
+ */
+typedef NS_ENUM(NSInteger,RefreshLoadingMoreStyle) {
+    RefreshLoadingMoreStyleDefault = 0,//默认上拉加载更多
+    RefreshLoadingMoreStyleMore,//有更多数据
+    RefreshLoadingMoreStyleMoreAndHidden //有更多数据但是显示
+};
 
 @interface RefreshTableView : UITableView<L_EGORefreshTableDelegate,UITableViewDataSource,UITableViewDelegate>
 {

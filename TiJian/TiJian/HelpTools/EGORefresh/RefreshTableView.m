@@ -280,6 +280,8 @@
         if (self.isHaveMoreData) {
             
             [self createFooterView];
+            
+            NSLog(@"%s",__FUNCTION__);
         }else
         {
             [self.refreshFooterView removeFromSuperview];
@@ -305,12 +307,15 @@
     //如果有更多数据,重新设置footerview  frame
     if (self.isHaveMoreData)
     {
+        NSLog(@"%s",__FUNCTION__);
+
         [self createFooterView];
 
-        [self stopLoading:1];
+//        [self stopLoading:1];
+        [self stopLoadingMore:RefreshLoadingMoreStyleMore];//有更多数据
         
     }else {
-        //
+        
         [self stopLoading:2];
         
         if (self.tableFooterView == self.refreshFooterView) {
@@ -728,6 +733,32 @@
             [self.loadingLabel setHidden:YES];
             break;
         case 3: //没有更多数据时不显示
+            
+            [self.normalLabel setHidden:YES];
+            [self.loadingLabel setHidden:YES];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)stopLoadingMore:(RefreshLoadingMoreStyle)loadingStyle
+{
+    _isLoadMoreData = NO;
+    
+    [self.loadingIndicator stopAnimating];
+    switch (loadingStyle) {
+        case RefreshLoadingMoreStyleDefault:
+            [self.normalLabel setHidden:NO];
+            [self.normalLabel setText:NSLocalizedString(NORMAL_TEXT, nil)];
+            [self.loadingLabel setHidden:YES];
+            break;
+        case RefreshLoadingMoreStyleMore:
+            [self.normalLabel setHidden:NO];
+            [self.normalLabel setText:NSLocalizedString(NOMORE_TEXT, nil)];
+            [self.loadingLabel setHidden:YES];
+            break;
+        case RefreshLoadingMoreStyleMoreAndHidden: //没有更多数据时不显示
             
             [self.normalLabel setHidden:YES];
             [self.loadingLabel setHidden:YES];
