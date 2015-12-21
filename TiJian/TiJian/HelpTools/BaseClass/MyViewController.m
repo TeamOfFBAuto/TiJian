@@ -28,7 +28,7 @@
 @synthesize leftImageName = _leftImageName;
 @synthesize rightImageName = _rightImageName;
 @synthesize leftString = _leftString;
-@synthesize my_right_button = _my_right_button;
+@synthesize right_button = _right_button;
 
 #pragma mark -
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -195,22 +195,22 @@
     
     if(rightType == MyViewControllerRightbuttonTypeText)
     {
-        _my_right_button = [UIButton buttonWithType:UIButtonTypeCustom];
+        _right_button = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        _my_right_button.frame = CGRectMake(0,0,60,44);
+        _right_button.frame = CGRectMake(0,0,60,44);
         
-        _my_right_button.titleLabel.textAlignment = NSTextAlignmentRight;
+        _right_button.titleLabel.textAlignment = NSTextAlignmentRight;
         
-        [_my_right_button setTitle:_rightString forState:UIControlStateNormal];
+        [_right_button setTitle:_rightString forState:UIControlStateNormal];
         
-        [_my_right_button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-        _my_right_button.titleLabel.font = [UIFont systemFontOfSize:15];
+        [_right_button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        _right_button.titleLabel.font = [UIFont systemFontOfSize:15];
         
-        [_my_right_button setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+        [_right_button setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
                 
-        [_my_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+        [_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
         
-        self.navigationItem.rightBarButtonItems = @[spaceButton,[[UIBarButtonItem alloc] initWithCustomView:_my_right_button]];
+        self.navigationItem.rightBarButtonItems = @[spaceButton,[[UIBarButtonItem alloc] initWithCustomView:_right_button]];
         
     }else if(rightType == MyViewControllerRightbuttonTypeOther)
     {
@@ -224,15 +224,15 @@
             rightImage = self.rightImage;
         }
         
-        _my_right_button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _right_button = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        [_my_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+        [_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
         
-        [_my_right_button setImage:rightImage forState:UIControlStateNormal];
+        [_right_button setImage:rightImage forState:UIControlStateNormal];
         
-        _my_right_button.frame = CGRectMake(0,0,rightImage.size.width,rightImage.size.height);
+        _right_button.frame = CGRectMake(0,0,rightImage.size.width,rightImage.size.height);
         
-        UIBarButtonItem * rightBarButton = [[UIBarButtonItem alloc] initWithCustomView:_my_right_button];
+        UIBarButtonItem * rightBarButton = [[UIBarButtonItem alloc] initWithCustomView:_right_button];
         
         self.navigationItem.rightBarButtonItems = @[spaceButton,rightBarButton];;
         

@@ -235,7 +235,7 @@
         
         [self setDownViewAllChooseBtnNoSelect];
         
-        [self.my_right_button setTitle:@"取消" forState:UIControlStateNormal];
+        [self.right_button setTitle:@"取消" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"删除" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = YES;
         self.detailPriceLabel.hidden = YES;
@@ -257,7 +257,7 @@
         [self updateRtabTotolPrice];
         [self isAllChooseAndUpdateState];
         
-        [self.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
+        [self.right_button setTitle:@"删除" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = NO;
         self.detailPriceLabel.hidden = NO;
@@ -515,7 +515,7 @@
         [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
             
             _deleteState = NO;
-            [bself.my_right_button setTitle:@"删除" forState:UIControlStateNormal];
+            [bself.right_button setTitle:@"删除" forState:UIControlStateNormal];
             [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
             bself.totolPriceLabel.hidden = NO;
             bself.detailPriceLabel.hidden = NO;

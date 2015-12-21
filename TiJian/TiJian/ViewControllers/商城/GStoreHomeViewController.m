@@ -78,10 +78,10 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
-    
+    self.rightImage = [UIImage imageNamed:@"personal_gouwuche.png"];
+
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
-    self.rightImage = [UIImage imageNamed:@"personal_gouwuche.png"];
     
     [self creatTableView];
     

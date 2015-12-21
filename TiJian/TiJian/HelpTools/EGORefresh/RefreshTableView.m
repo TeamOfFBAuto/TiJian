@@ -155,7 +155,7 @@
  */
 - (void)reloadData:(NSArray *)data total:(int)totalPage
 {
-    BOOL isHaveMore = (self.pageNum < totalPage) ? YES : NO;//当前页数 与 总页数比较
+    BOOL isHaveMore = (self.pageNum < totalPage && data.count > 0) ? YES : NO;//当前页数 与 总页数比较
 
     [self reloadData:data isHaveMore:isHaveMore];
 }
@@ -163,7 +163,7 @@
 //成功加载
 - (void)reloadData:(NSArray *)data pageSize:(int)pageSize
 {
-    BOOL isHaveMore = (data.count < pageSize) ? NO : YES;//每页实际请求条数 与 每页条数
+    BOOL isHaveMore = (data.count < pageSize || data.count == 0) ? NO : YES;//每页实际请求条数 与 每页条数
     [self reloadData:data isHaveMore:isHaveMore];
 }
 
@@ -178,7 +178,7 @@
           pageSize:(int)pageSize
         noDataView:(UIView *)noDataView
 {
-    BOOL isHaveMore = (data.count < pageSize) ? NO : YES;//每页实际请求条数 与 每页条数
+    BOOL isHaveMore = (data.count < pageSize || data.count == 0) ? NO : YES;//每页实际请求条数 与 每页条数
     self.isHaveMoreData = isHaveMore;
     
     if (self.isReloadData) {
