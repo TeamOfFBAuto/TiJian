@@ -1024,20 +1024,20 @@
             blueView.backgroundColor = RGBCOLOR(222, 245, 255);
             [view addSubview:blueView];
             
-            UILabel *xuhaoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, blueView.frame.size.width/4, blueView.frame.size.height)];
+            UILabel *xuhaoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, blueView.frame.size.width*1/7, blueView.frame.size.height)];
             xuhaoLabel.text = @"序号";
             xuhaoLabel.font = [UIFont systemFontOfSize:12];
             xuhaoLabel.textAlignment = NSTextAlignmentCenter;
             [blueView addSubview:xuhaoLabel];
             
-            UILabel *mingxiLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(xuhaoLabel.frame), 0, xuhaoLabel.frame.size.width, xuhaoLabel.frame.size.height)];
+            UILabel *mingxiLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(xuhaoLabel.frame), 0, blueView.frame.size.width*2/7, xuhaoLabel.frame.size.height)];
             mingxiLabel.text = @"明细";
             mingxiLabel.font = [UIFont systemFontOfSize:12];
             mingxiLabel.textAlignment = NSTextAlignmentCenter;
             [blueView addSubview:mingxiLabel];
             
             
-            UILabel *zuheneirongLbel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(mingxiLabel.frame), 0, blueView.frame.size.width/2, blueView.frame.size.height)];
+            UILabel *zuheneirongLbel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(mingxiLabel.frame), 0, blueView.frame.size.width*4/7, blueView.frame.size.height)];
             zuheneirongLbel.text = @"组合内容";
             zuheneirongLbel.font = [UIFont systemFontOfSize:12];
             zuheneirongLbel.textAlignment = NSTextAlignmentCenter;

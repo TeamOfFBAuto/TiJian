@@ -49,18 +49,24 @@
     
     
     //自适应高度
-    [xuhaoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 4) width:DEVICE_WIDTH/4];
-    [mingxiLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/4, 4) width:DEVICE_WIDTH/4];
-    [zuheneirongLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH/2, 4) width:DEVICE_WIDTH/2-5];
+    [xuhaoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 4) width:DEVICE_WIDTH*1/7];
+    [mingxiLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH*1/7, 4) width:DEVICE_WIDTH*2/7];
+    [zuheneirongLabel setMatchedFrame4LabelWithOrigin:CGPointMake(DEVICE_WIDTH*3/7, 4) width:DEVICE_WIDTH*4/7-5];
     
-    [xuhaoLabel setWidth:DEVICE_WIDTH/4];
-    [mingxiLabel setWidth:DEVICE_WIDTH/4];
-    [zuheneirongLabel setWidth:DEVICE_WIDTH/2-5];
+    [xuhaoLabel setWidth:DEVICE_WIDTH*1/7];
+    [mingxiLabel setWidth:DEVICE_WIDTH*2/7];
+    [zuheneirongLabel setWidth:DEVICE_WIDTH*4/7-5];
     
     
     xuhaoLabel.textAlignment = NSTextAlignmentCenter;
     mingxiLabel.textAlignment = NSTextAlignmentCenter;
     zuheneirongLabel.textAlignment = NSTextAlignmentCenter;
+    
+//    xuhaoLabel.backgroundColor = RGBCOLOR_ONE;
+//    mingxiLabel.backgroundColor = RGBCOLOR_ONE;
+//    zuheneirongLabel.backgroundColor = RGBCOLOR_ONE;
+    
+    
     
     if ([xuhao isEqualToString:@"1"] || [xuhao isEqualToString:@"2"] || [xuhao isEqualToString:@"3"]) {
         
