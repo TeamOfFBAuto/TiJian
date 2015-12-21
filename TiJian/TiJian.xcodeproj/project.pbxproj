@@ -372,6 +372,7 @@
 		E352F91E1C0C419A0037E4AE /* coupon_feitongyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */; };
 		E352F91F1C0C419A0037E4AE /* coupon_tongyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */; };
 		E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */; };
+		E359F7011C27C4DA005CB719 /* shaixuan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E359F7001C27C4DA005CB719 /* shaixuan@2x.png */; };
 		E3796D091BFB37CD004B63F7 /* homepage_search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796CFE1BFB37CC004B63F7 /* homepage_search@2x.png */; };
 		E3796D0A1BFB37CD004B63F7 /* my_indent_no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796CFF1BFB37CC004B63F7 /* my_indent_no@2x.png */; };
 		E3796D0B1BFB37CD004B63F7 /* my_weixin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3796D001BFB37CC004B63F7 /* my_weixin@2x.png */; };
@@ -406,7 +407,6 @@
 		E3B720991BF3268B007F7FFE /* shuliang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B720981BF3268B007F7FFE /* shuliang@2x.png */; };
 		E3B7209C1BF32887007F7FFE /* shuliang-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */; };
 		E3B7209D1BF32887007F7FFE /* shuliang+@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */; };
-		E3B9EEB11C213A1200EB3394 /* shaixuan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B9EEB01C213A1200EB3394 /* shaixuan@2x.png */; };
 		E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D0850B1BF0A48500279DFC /* GshopCarTableViewCell.m */; };
 		E3D8AE081BF49175003AE2E3 /* gexingdingzhi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE071BF49175003AE2E3 /* gexingdingzhi@2x.png */; };
 		E3D8AE0A1BF49519003AE2E3 /* tijianxiangmu1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE091BF49519003AE2E3 /* tijianxiangmu1@2x.png */; };
@@ -1061,6 +1061,7 @@
 		E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coupon_tongyong@2x.png"; sourceTree = "<group>"; };
 		E359ACA11BEC96EA00EF1527 /* GShopCarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GShopCarViewController.h; sourceTree = "<group>"; };
 		E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GShopCarViewController.m; sourceTree = "<group>"; };
+		E359F7001C27C4DA005CB719 /* shaixuan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shaixuan@2x.png"; sourceTree = "<group>"; };
 		E3796CFE1BFB37CC004B63F7 /* homepage_search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_search@2x.png"; sourceTree = "<group>"; };
 		E3796CFF1BFB37CC004B63F7 /* my_indent_no@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_indent_no@2x.png"; sourceTree = "<group>"; };
 		E3796D001BFB37CC004B63F7 /* my_weixin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_weixin@2x.png"; sourceTree = "<group>"; };
@@ -1106,7 +1107,6 @@
 		E3B720981BF3268B007F7FFE /* shuliang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang@2x.png"; sourceTree = "<group>"; };
 		E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang-@2x.png"; sourceTree = "<group>"; };
 		E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang+@2x.png"; sourceTree = "<group>"; };
-		E3B9EEB01C213A1200EB3394 /* shaixuan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shaixuan@2x.png"; sourceTree = "<group>"; };
 		E3D0850A1BF0A48500279DFC /* GshopCarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GshopCarTableViewCell.h; path = ../GshopCarTableViewCell.h; sourceTree = "<group>"; };
 		E3D0850B1BF0A48500279DFC /* GshopCarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GshopCarTableViewCell.m; path = ../GshopCarTableViewCell.m; sourceTree = "<group>"; };
 		E3D8AE071BF49175003AE2E3 /* gexingdingzhi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gexingdingzhi@2x.png"; sourceTree = "<group>"; };
@@ -2467,7 +2467,7 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
-				E3B9EEB01C213A1200EB3394 /* shaixuan@2x.png */,
+				E359F7001C27C4DA005CB719 /* shaixuan@2x.png */,
 				E3A679C21C16DEAC00309ECD /* nan_saixuan@2x.png */,
 				E3A679C31C16DEAC00309ECD /* nv_saixuan@2x.png */,
 				E31F86F61C147F8400914824 /* jiantou_down@2x.png */,
@@ -2677,6 +2677,7 @@
 				139333EC1BE0DF3E00B4628B /* 4_2_e8bf78@2x.png in Resources */,
 				E352F91E1C0C419A0037E4AE /* coupon_feitongyong@2x.png in Resources */,
 				13F1F3CD1BBA9A4B00885D31 /* AlipaySDK.bundle in Resources */,
+				E359F7011C27C4DA005CB719 /* shaixuan@2x.png in Resources */,
 				13426BAF1BE7482B00979279 /* hema.sqlite in Resources */,
 				139333CD1BE0DF3E00B4628B /* 24_1@2x.png in Resources */,
 				13F242231BF5CBE7002C9D81 /* article_more@2x.png in Resources */,
@@ -2685,7 +2686,6 @@
 				1303C2D21BE9B72100700847 /* result_nv@2x.png in Resources */,
 				E3796D241BFB389E004B63F7 /* shoppingcart_right@2x.png in Resources */,
 				1303C3621BEB0D7100700847 /* sex_nv@2x.png in Resources */,
-				E3B9EEB11C213A1200EB3394 /* shaixuan@2x.png in Resources */,
 				1303C3561BEB0D7100700847 /* personal_shoucang@2x.png in Resources */,
 				139333B91BE0DF3E00B4628B /* 19_1@2x.png in Resources */,
 				1303C3591BEB0D7100700847 /* personal_youhuiquan_r@2x.png in Resources */,

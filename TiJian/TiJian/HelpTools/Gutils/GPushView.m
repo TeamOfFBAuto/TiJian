@@ -418,21 +418,21 @@
         
         
     }else if (sender.tag == -12){//选择地区 返回到主筛选界面
-        [self hiddenTab:self.tab2];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+//        [self hiddenTab:self.tab2];
+//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -13){//选择价格 返回到主筛选界面
         
-        [self.tf_low resignFirstResponder];
-        [self.tf_high resignFirstResponder];
-        
-        [self hiddenTab:self.tab3];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
-        [self.tab1 reloadData];
+//        [self.tf_low resignFirstResponder];
+//        [self.tf_high resignFirstResponder];
+//        
+//        [self hiddenTab:self.tab3];
+//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+//        [self.tab1 reloadData];
         
     }else if (sender.tag == -14){//选择品牌 返回到主筛选界面
-        [self hiddenTab:self.tab4];
-        [self.tab1 reloadData];
-        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+//        [self hiddenTab:self.tab4];
+//        [self.tab1 reloadData];
+//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }
 }
 
@@ -701,7 +701,12 @@
 }
 
 -(void)qingkongshaixuanBtnClicked{
-    self.userChooseCity = nil;
+    
+    NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
+    if ([LTools isEmpty:cityName]) {
+        cityName = @"北京市";
+    }
+    self.userChooseCity = cityName;
     self.userChoosePinpai = nil;
     self.userChoosePinpai_id = nil;
     self.userChoosePrice = nil;
@@ -710,7 +715,28 @@
     self.tf_low.text = nil;
     self.tf_high.text = nil;
     _defaultPriceImv.hidden = NO;
+    
+    
+//    int _isMark_price[10];
+//    int _isMark_brand[200];
+    
+    for (int i = 0; i < 10; i++) {
+        _isMark_price[i] = 0;
+    }
+    
+    for (int i = 0; i<200; i++) {
+        _isMark_brand[i] = 0;
+    }
+    
+    
+    
+    
+    
+    
     [self.tab1 reloadData];
+    [self.tab2 reloadData];
+    [self.tab3 reloadData];
+    [self.tab4 reloadData];
 }
 
 
@@ -1100,6 +1126,17 @@
         
         [self setDefaultPriceImvHidden];
         
+        
+        [self.tf_low resignFirstResponder];
+        [self.tf_high resignFirstResponder];
+        
+        [self hiddenTab:self.tab3];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        [self.tab1 reloadData];
+        
+        
+        
+        
     }else if (tableView.tag == 4){//体检品牌
         NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
         self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
@@ -1113,11 +1150,12 @@
         
         [self.tab4 reloadData];
         
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        [self hiddenTab:self.tab4];
+        [self.tab1 reloadData];
         
         
-//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
-//        [self hiddenTab:self.tab4];
-//        [self.tab1 reloadData];
+
     }
     
 }

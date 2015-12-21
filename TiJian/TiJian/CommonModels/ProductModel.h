@@ -37,6 +37,7 @@
 @property(nonatomic,retain)NSDictionary *small_cover_pic;
 //单品详情相关
 @property(nonatomic,strong)NSArray *suit_info;
+@property(nonatomic,strong)NSString *gender_id;//1男 2女
 @property(nonatomic,strong)NSArray *project_info;
 @property(nonatomic,strong)NSArray *coupon_list;
 @property(nonatomic,strong)NSString *is_favor;//是否收藏 1收藏 2未收藏

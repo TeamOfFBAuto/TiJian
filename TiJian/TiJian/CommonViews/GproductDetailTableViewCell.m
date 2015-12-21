@@ -162,8 +162,27 @@
         brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",self.delegate.theProductModel.brand_name];
         [cView addSubview:brandNameLabel];
         
+        //适用性别
+        UILabel *genderLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(brandNameLabel.frame)+5, cView.frame.size.width, 12)];
+        genderLabel.font = [UIFont systemFontOfSize:12];
+        NSString *attributedText1 = @"适用性别：";
+        NSString *attributedText2;
+        if ([self.delegate.theProductModel.gender_id intValue] == 1) {//男
+            attributedText2 = @"[仅供男性适用]";
+        }else if ([self.delegate.theProductModel.gender_id intValue] == 2){//女
+            attributedText2 = @"[仅供女性适用]";
+        }else{
+            attributedText2 = @"[男女不限]";
+        }
+        
+        NSAttributedString *attributedText4 = [LTools attributedString:[NSString stringWithFormat:@"%@%@",attributedText1,attributedText2] keyword:attributedText2 color:RGBCOLOR(224, 103, 20)];
+        [genderLabel setAttributedText:attributedText4];
+        [cView addSubview:genderLabel];
+        
+        
+        
         //适合人群
-        UILabel *suitLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(brandNameLabel.frame)+5, cView.frame.size.width, 12)];
+        UILabel *suitLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(genderLabel.frame)+5, cView.frame.size.width, 12)];
         suitLabel.font = [UIFont systemFontOfSize:12];
         suitLabel.textColor = [UIColor blackColor];
         NSArray *suit_infoArray = self.delegate.theProductModel.suit_info;
@@ -172,7 +191,15 @@
             NSString *ss = [NSString stringWithFormat:@"%@  %@",suit_info_str,[dic stringValueForKey:@"suit_name"]];
             suit_info_str = ss;
         }
+        
+//        NSString *attributedText1 = @"适用人群：";
+//        NSString *attributedText2 = @"[男]";
+//        NSString *attributedText3 = suit_info_str;
+//        NSAttributedString *attributedText4 = [LTools attributedString:[NSString stringWithFormat:@"%@%@%@",attributedText1,attributedText2,attributedText3] keyword:attributedText2 color:RGBCOLOR(224, 103, 20)];
+//        [suitLabel setAttributedText:attributedText4];
+        
         suitLabel.text = [NSString stringWithFormat:@"适用人群:%@",suit_info_str];
+        
         [cView addSubview:suitLabel];
         
         //体检项目
@@ -211,7 +238,11 @@
         
         
         [brandNameLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) width:cView.frame.size.width];
-        [suitLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(brandNameLabel.frame)+5) width:cView.frame.size.width];
+        
+        [genderLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(brandNameLabel.frame)+5) width:cView.frame.size.width];
+        
+        [suitLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(genderLabel.frame)+5) width:cView.frame.size.width];
+        
         [projectInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(suitLabel.frame)+5) width:cView.frame.size.width];
         [projectInfoLabel setHeight:12];
         
@@ -219,7 +250,14 @@
         
         [cityInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(CGRectGetMaxX(city_titleLabel.frame)+5, CGRectGetMaxY(projectInfoLabel.frame)+5) width:cView.frame.size.width - city_titleLabel.frame.size.width];
         
-        CGFloat hh = brandNameLabel.frame.size.height + 5 + suitLabel.frame.size.height + 5 + projectInfoLabel.frame.size.height + 5 + cityInfoLabel.frame.size.height;
+        
+//        brandNameLabel.backgroundColor = RGBCOLOR_ONE;
+        
+        
+        
+        
+        
+        CGFloat hh = brandNameLabel.frame.size.height + 5 +genderLabel.frame.size.height + 5 + suitLabel.frame.size.height + 5 + projectInfoLabel.frame.size.height + 5 + cityInfoLabel.frame.size.height;
         
         [cView setHeight:hh];
         
