@@ -35,6 +35,9 @@
 //时间转换 —— 月-日
 +(NSString *)timechangeMD:(NSString *)placetime;
 
+//时间转换 -- 年月日时分秒
++(NSString *)timechangeYMDhms:(NSString *)placetime;
+
 //地区选择相关
 //根据name找id
 + (int)cityIdForName:(NSString *)cityName;
@@ -70,6 +73,8 @@
 
 //根据cityid 拿到city名 如果cityid是4个直辖市的区id 则取provinceName
 +(NSString *)getCityNameOf4CityWithCityId:(int)cityId;
+
+
 
 
 

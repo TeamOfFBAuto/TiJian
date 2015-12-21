@@ -816,12 +816,12 @@
     NSString *content;
     if (type == PageResultType_nodata){
         
-        content = @"购物车空空如也";
+        content = @"购物车还是空的";
         
     }
     
 
-    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"gouwuche-kong.png"]
                                                     title:@"温馨提示"
                                                   content:content];
     

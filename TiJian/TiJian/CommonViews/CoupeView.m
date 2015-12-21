@@ -42,7 +42,7 @@
         
         if (userStyle == USESTYLE_Get) {
             title = @"领取优惠劵";
-            title_close = @"取消";
+            title_close = @"关闭";
             color_close = [UIColor colorWithHexString:@"999999"];
             
         }else if (userStyle == USESTYLE_Use){

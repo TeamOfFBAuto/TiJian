@@ -110,6 +110,9 @@
 //获取用户积分
 #define USER_GETJIFEN @"/index.php?d=api&c=user&m=get_my_score&authcode="
 
+//我的积分明细
+#define USER_SCORE_DETAIL @"/index.php?d=api&c=user&m=my_score_detail"
+
 //20、融云获取token
 #define USER_GET_TOKEN @"/index.php?d=api&c=chat&m=get_token"
 

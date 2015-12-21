@@ -8,6 +8,7 @@
 
 #import "MyWalletViewController.h"
 #import "MyCouponViewController.h"
+#import "GScoreDetailViewController.h"
 
 @interface MyWalletViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -252,6 +253,9 @@
     }else if (indexPath.row == 2){//代金券
         MyCouponViewController *cc = [[MyCouponViewController alloc]init];
         cc.type = GCouponType_daijinquan;
+        [self.navigationController pushViewController:cc animated:YES];
+    }else if (indexPath.row == 0){//积分
+        GScoreDetailViewController *cc = [[GScoreDetailViewController alloc]init];
         [self.navigationController pushViewController:cc animated:YES];
     }
     
