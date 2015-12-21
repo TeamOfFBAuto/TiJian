@@ -19,6 +19,8 @@
 @property(nonatomic,retain)NSString *order_id;
 @property(nonatomic,assign)int noAppointNum;//剩余未预约个数
 
+@property(nonatomic,assign)Gender gender;//性别
+
 ///**
 // *  仅选择时间和分院,不做其他操作
 // *

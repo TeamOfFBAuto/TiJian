@@ -102,6 +102,8 @@
     CGFloat width = FitScreen(96);
     width = iPhone4 ? width * 0.8 : width;
     
+    _noAppointView = view;
+    
     UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(38, 55, width, width)];
     icon.image = [UIImage imageNamed:@"hema"];
     [view addSubview:icon];
@@ -240,9 +242,6 @@
     
     NSString *authkey = [UserInfo getAuthkey];
     
-//    //update by lcw
-//    authkey = @"WiUHflsiULYOtVfKVeVciwitUbMD9lKjAi8CM186ATEFNVVgBGVWZAUzV2FSNA5+BjI=";
-    
     //待预约
     if (table == [self tableViewWithIndex:0]) {
         
@@ -256,7 +255,7 @@
         params = @{@"authcode":authkey,
                    @"expired":@"0",
                    @"page":NSStringFromInt(table.pageNum),
-                   @"per_page":@"20"};
+                   @"per_page":NSStringFromInt(PAGESIZE_MID)};
     }
     //已过期
     else if ([self tableViewWithIndex:2])
@@ -265,7 +264,7 @@
         params = @{@"authcode":authkey,
                    @"expired":@"1",
                    @"page":NSStringFromInt(table.pageNum),
-                   @"per_page":@"20"};
+                   @"per_page":NSStringFromInt(PAGESIZE_MID)};
     }
     __weak typeof(self)weakSelf = self;
     __weak typeof(table)weakTable = table;
@@ -293,7 +292,7 @@
         
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
             
-            [[self tableViewWithIndex:0]finishReloadigData];
+            [[self tableViewWithIndex:0]finishReloadingData];
             return;
         }
         
@@ -314,8 +313,7 @@
             self.noAppointView = nil;
         }
         
-        [[self tableViewWithIndex:0]finishReloadigData];
-        
+        [[self tableViewWithIndex:0] finishReloadingData];
         
         
     }else if (index == 1){
@@ -328,7 +326,7 @@
             [self.appointedView removeFromSuperview];
             self.appointedView = nil;
         }
-        [[self tableViewWithIndex:1] reloadData:temp pageSize:G_PER_PAGE];
+        [[self tableViewWithIndex:1] reloadData:temp pageSize:PAGESIZE_MID];
         
     }else if (index == 2){
         
@@ -340,7 +338,7 @@
             [self.appointedOverView removeFromSuperview];
             self.appointedOverView = nil;
         }
-        [[self tableViewWithIndex:2] reloadData:temp pageSize:G_PER_PAGE];
+        [[self tableViewWithIndex:2] reloadData:temp pageSize:PAGESIZE_MID];
 
     }
 }
@@ -459,6 +457,7 @@
         
         ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
         
+        choose.gender = [aModel.gender intValue];
         //公司
         if ([aModel.type intValue] == 1) {
             

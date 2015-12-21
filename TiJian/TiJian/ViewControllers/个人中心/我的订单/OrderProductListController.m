@@ -103,10 +103,14 @@
     ProductModel *aModel = _table.dataArray[indexPath.row];
     aModel.order_id = self.orderId;
     ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-    
+    choose.gender = [aModel.gender intValue];
     if (!aModel.order_id) {
         [LTools showMBProgressWithText:@"订单无效！" addToView:self.view];
         [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
+        return;
+    }
+    
+    if ([aModel.no_appointed_num intValue] == 0) {
         return;
     }
     

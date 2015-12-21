@@ -228,17 +228,17 @@
     
     [_questionDictionary setObject:result[@"result"] forKey:key];
     
-    NSLog(@"---%@",_questionDictionary);
+    DDLOG(@"---%@",_questionDictionary);
     
 }
 
 - (void)clickToSelectSex:(UIButton *)sender
 {
     
-    int tag = (int)sender.tag - 100;
-    _selectedGender = tag == 1 ? Gender_Girl : Gender_Boy;//记录选择性别
+    int tag = (int)sender.tag;
+    _selectedGender = (tag == 100) ? Gender_Boy : Gender_Girl;//记录选择性别
     
-    [self updateQuestionType:QUESTIONTYPE_SEX result:@{@"result":[NSNumber numberWithInt:tag]}];
+    [self updateQuestionType:QUESTIONTYPE_SEX result:@{@"result":[NSNumber numberWithInt:_selectedGender]}];
     
     UIView *currentView = _view_sex;
     UIView *toView = [self configItemWithQuestionId:2 forward:YES];//下一个问题id 2 年龄
@@ -368,8 +368,8 @@
         CGFloat weight = [[_questionDictionary objectForKey:Q_WEIGHT] floatValue];
         CGFloat height = [[_questionDictionary objectForKey:Q_HEIGHT] floatValue];
         
-        NSLog(@"result %@",_questionDictionary);
-        NSLog(@"BMI : %.2f",BMI(weight, height));
+        DDLOG(@"result %@",_questionDictionary);
+        DDLOG(@"BMI : %.2f",BMI(weight, height));
         
         //需要切换组合
         
@@ -409,7 +409,7 @@
         
         if (count == 0) {
             
-            NSLog(@"该组合没有问题选项");
+            DDLOG(@"该组合没有问题选项");
             return;
         }
         
@@ -420,7 +420,7 @@
         int questionId = 0;
         if (index == count - 1) { //已经是组合最后一个了
             
-            NSLog(@"切换组合------%@",_questionDictionary);
+            DDLOG(@"切换组合------%@",_questionDictionary);
 
             //需要切换到下一个组合
             
@@ -632,7 +632,7 @@
     NSString *jsonString = [LTools JSONStringWithObject:result];
     _jsonString = jsonString;
     
-    NSLog(@"result %@",jsonString);
+    DDLOG(@"result %@",jsonString);
     
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"个性化定制完成,是否确定提交结果" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"确定", nil];
     alert.tag = 10000;
@@ -680,13 +680,13 @@
                 
             }else
             {
-                NSLog(@"需要忽略问题id:%@_optionId:%@",q_id,optionId);
+                DDLOG(@"需要忽略问题id:%@_optionId:%@",q_id,optionId);
             }
             
         }
         
     }
-    NSLog(@"组合对应的答案串 %@",answerString);
+    DDLOG(@"组合对应的答案串 %@",answerString);
     
     return answerString;
 }
@@ -854,7 +854,7 @@
     
     
     int nextGroupId = [[DBManager shareInstance]queryNextGroupIdByGroupId:groupId answerString:answerString];
-    NSLog(@"nextGroupId %d",nextGroupId);
+    DDLOG(@"nextGroupId %d",nextGroupId);
     
     if (nextGroupId > 0) {
         _groupId = nextGroupId;//记录当前groupId
@@ -869,7 +869,7 @@
         [_questionDictionary setObject:questions forKey:NSStringFromInt(nextGroupId)];//记录组合对应的问题ids
     }else
     {
-        NSLog(@"逗我呢 %d 对应问题id 为空",nextGroupId);
+        DDLOG(@"逗我呢 %d 对应问题id 为空",nextGroupId);
     }
     return nextGroupId;
 }
@@ -940,7 +940,7 @@
     
     _questionId = (int)questionId;//记录当前问题id
     
-    NSLog(@"questionId: %d - %d",_groupId,_questionId);
+    DDLOG(@"questionId: %d - %d",_groupId,_questionId);
     
     UIView *view = nil;
     __weak typeof(self)weakSelf = self;
@@ -968,7 +968,7 @@
             [_view_Age setInitValue:NSStringFromInt(age)];
         }
         
-        Gender gender = [[_questionDictionary objectForKey:Q_SEX]intValue] == 1 ? Gender_Girl : Gender_Boy;
+        Gender gender = [[_questionDictionary objectForKey:Q_SEX]intValue];
         _view_Age = [[LQuestionView alloc]initAgeViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH :0,  0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:gender initNum:age resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             
             [weakSelf updateQuestionType:type result:result];
@@ -1163,6 +1163,7 @@
     int weight = [[_questionDictionary objectForKey:Q_WEIGHT]intValue];
     [temp appendString:[self BMIString:BMI(weight, height)]];
 
+    DDLOG(@"%@",temp);
     return temp;
 }
 

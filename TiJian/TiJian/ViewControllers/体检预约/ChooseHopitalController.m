@@ -424,13 +424,13 @@ typedef enum {
     
     //确认 分院、时间
     
-    //选择人
+    //选择人 预约
     PeopleManageController *people = [[PeopleManageController alloc]init];
     people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;
     [people setAppointOrderId:self.order_id productId:self.productId examCenterId:NSStringFromInt(_selectHospitalId) date:_selectDate noAppointNum:self.noAppointNum];
     
     people.lastViewController = self.lastViewController;
-    
+    people.gender = self.gender;
     [self.navigationController pushViewController:people animated:YES];
     
 }

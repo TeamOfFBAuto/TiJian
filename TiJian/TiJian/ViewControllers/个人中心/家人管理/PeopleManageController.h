@@ -18,9 +18,10 @@ typedef enum{
 
 @interface PeopleManageController : MyViewController
 
-//@property(nonatomic,assign)BOOL isChoose;//是否是选择人
 @property(nonatomic,assign)int noAppointNum;//未预约个数
 @property(nonatomic,assign)PEOPLEACTIONTYPE actionType;
+
+@property(nonatomic,assign)Gender gender;
 
 
 /**

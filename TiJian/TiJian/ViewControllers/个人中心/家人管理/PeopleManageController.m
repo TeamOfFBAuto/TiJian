@@ -266,6 +266,20 @@
  */
 - (void)clickToMe
 {
+    //大于0表示需要判断性别
+    //男或者女时判断选择人的性别
+    if (self.gender == Gender_Boy || self.gender == Gender_Girl) {
+        
+        Gender gender_select = [[UserInfo userInfoForCache].gender intValue];
+        
+        if (gender_select != self.gender) {
+            
+            NSString *title = self.gender == Gender_Girl ? @"本套餐仅适用于\"女\"性" : @"本套餐仅适用于\"男\"性";
+            [LTools showMBProgressWithText:title addToView:self.view];
+            return;
+        }
+    }
+    
     //普通
     if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
         
@@ -617,6 +631,20 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     UserInfo *aModel = _table.dataArray[indexPath.row];
+    
+    //大于0表示需要判断性别
+    //男或者女时判断选择人的性别
+    if (self.gender == Gender_Boy || self.gender == Gender_Girl) {
+        
+        Gender gender_select = [aModel.gender intValue];
+        
+        if (gender_select != self.gender) {
+            
+            NSString *title = self.gender == Gender_Girl ? @"本套餐仅适用于\"女\"性" : @"本套餐仅适用于\"男\"性";
+            [LTools showMBProgressWithText:title addToView:self.view];
+            return;
+        }
+    }
 
     if (_isEdit) {//在编辑
         NSLog(@"删除");

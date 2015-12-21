@@ -21,8 +21,10 @@ typedef enum{
 
 //性别
 typedef enum{
-    Gender_Girl = 1,
-    Gender_Boy
+    Gender_NO = 0,//未知
+    Gender_Boy = 1, //1 男
+    Gender_Girl = 2, //2  女
+    Gender_Other // 通用
 }Gender;
 
 //个人定制 问题的类型

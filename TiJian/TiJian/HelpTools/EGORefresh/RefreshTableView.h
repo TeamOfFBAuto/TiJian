@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "RefreshHeaderView.h"
-
-@class HelperConnection;
+#import "RefreshFooterView.h"
 
 @class RefreshTableView;
 
@@ -46,15 +45,6 @@
  *  @param change  值得变化
  */
 typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
-
-/**
- *  上拉加载更多数据类型
- */
-typedef NS_ENUM(NSInteger,RefreshLoadingMoreStyle) {
-    RefreshLoadingMoreStyleDefault = 0,//默认上拉加载更多
-    RefreshLoadingMoreStyleMore,//有更多数据
-    RefreshLoadingMoreStyleMoreAndHidden //有更多数据但是显示
-};
 
 @interface RefreshTableView : UITableView<L_EGORefreshTableDelegate,UITableViewDataSource,UITableViewDelegate>
 {
@@ -100,7 +90,7 @@ typedef NS_ENUM(NSInteger,RefreshLoadingMoreStyle) {
 
 #pragma mark - 完成数据加载
 
-- (void)finishReloadigData;//完成加载操作
+- (void)finishReloadingData;//完成加载操作
 - (void)reloadData:(NSArray *)data total:(int)totalPage;//更新数据
 - (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave;
 - (void)reloadData:(NSArray *)data pageSize:(int)pageSize;//根据pageSize判断是否有更多

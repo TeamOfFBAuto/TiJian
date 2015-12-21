@@ -19,6 +19,9 @@
 @property(nonatomic,retain)UILabel *timeLabel;//时间label
 @property(nonatomic,retain)UILabel *typeLabel;//用途label
 
+@property(nonatomic,retain)UIButton *appointButton;//前去预约按钮
+@property(nonatomic,retain)UIImageView *arrowImage;//箭头
+
 @end
 
 @implementation AppointmentCell
@@ -128,7 +131,7 @@
             self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(left, (75 - 50)/2.f, 80, 50)];
             [tc_bgView addSubview:_iconImageView];
             //套餐name
-            self.productNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(_iconImageView.right + 8, 14, tc_bgView.width - _iconImageView.right - 8 - left - 80, 30) title:@"爱康国宾粉红真爱体检套餐全国通用爱康国宾粉红真爱体检套餐全国通用" font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+            self.productNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(_iconImageView.right + 8, 14, tc_bgView.width - _iconImageView.right - 8 - left - 80, 30) title:@"" font:12 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
             [tc_bgView addSubview:_productNameLabel];
             _productNameLabel.numberOfLines = 2;
             _productNameLabel.lineBreakMode = NSLineBreakByCharWrapping;
@@ -140,15 +143,19 @@
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             [btn setTitle:@"前去预约" forState:UIControlStateNormal];
             btn.titleLabel.font = [UIFont systemFontOfSize:12];
-            btn.frame = CGRectMake(DEVICE_WIDTH - left - 10 - 50, 0, 50, tc_bgView.height);
+            btn.frame = CGRectMake(DEVICE_WIDTH - left - 10 - 70, 0, 70, tc_bgView.height);
             [btn setTitleColor:DEFAULT_TEXTCOLOR_TITLE_THIRD forState:UIControlStateNormal];
             [tc_bgView addSubview:btn];
             btn.userInteractionEnabled = NO;
+            [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+            self.appointButton = btn;
+            
             //箭头 6 12
             UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - left - 6, 0, 6, tc_bgView.height)];
             arrow.image = [UIImage imageNamed:@"jiantou"];
             arrow.contentMode = UIViewContentModeCenter;
             [tc_bgView addSubview:arrow];
+            self.arrowImage = arrow;
         }
     }
     return self;
@@ -169,6 +176,16 @@
     if ([aModel.type intValue] == 1) {
         aModel.no_appointed_num = @"1";
     }
+    
+    if ([aModel.no_appointed_num intValue] == 0) {
+        self.arrowImage.hidden = YES;
+        [self.appointButton setTitle:@"已预约完成" forState:UIControlStateNormal];
+    }else
+    {
+        self.arrowImage.hidden = NO;
+        [self.appointButton setTitle:@"前去预约" forState:UIControlStateNormal];
+    }
+    
     NSString *priceString = [NSString stringWithFormat:@"￥%.2f",[aModel.product_price floatValue]];
     NSString *noAppoint = [NSString stringWithFormat:@"%@%d份",text,[aModel.no_appointed_num intValue]];
     
