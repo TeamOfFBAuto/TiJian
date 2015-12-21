@@ -311,8 +311,8 @@
 
         [self createFooterView];
 
-//        [self stopLoading:1];
-        [self stopLoadingMore:RefreshLoadingMoreStyleMore];//有更多数据
+        [self stopLoading:1];
+//        [self stopLoadingMore:RefreshLoadingMoreStyleMore];//有更多数据
         
     }else {
         
