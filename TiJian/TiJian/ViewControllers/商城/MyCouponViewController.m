@@ -295,13 +295,14 @@
         
         
         
-        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
-            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
-        }else{
-            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
-        }
+//        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
+//            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+//        }else{
+//            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
+//        }
         
         
+        _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
         
         
         [_tab0 reloadData];
@@ -367,12 +368,14 @@
         
         
         
-        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
-            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
-        }else{
-            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
-        }
+//        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
+//            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+//        }else{
+//            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
+//        }
         
+        
+        _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
         
         [_tab0 reloadData];
         
@@ -534,14 +537,16 @@
                 
                 
                 
-                if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
-                    _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
-                }else{
-                    _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
-                }
+//                if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
+//                    _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+//                }else{
+//                    _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
+//                }
+                
+                _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
                 
                 _use_btn.titleLabel.font = [UIFont systemFontOfSize:15];
-                [_use_btn setTitle:@"使 用" forState:UIControlStateNormal];
+                [_use_btn setTitle:@"确 定" forState:UIControlStateNormal];
                 [_use_btn addTarget:self action:@selector(useBtnClicked) forControlEvents:UIControlEventTouchUpInside];
                 [view addSubview:_use_btn];
                 
