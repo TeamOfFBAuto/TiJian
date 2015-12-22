@@ -103,6 +103,10 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
+    
+    
+    
+    
     [self prepareNetData];
     
     
@@ -664,6 +668,7 @@
     _hiddenView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_tab.frame), DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
     _hiddenView.delegate = self;
     _hiddenView.dataSource = self;
+    _hiddenView.backgroundColor = [UIColor whiteColor];
     _hiddenView.tag = 1001;
     [self.view addSubview:_hiddenView];
     

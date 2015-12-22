@@ -963,7 +963,7 @@
         [nameLogoImv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_name.png"]];
         [contentView addSubview:nameLogoImv];
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(nameLogoImv.frame)+8, 10, 80, nameLogoImv.frame.size.height)];
-        nameLabel.font = [UIFont systemFontOfSize:14];
+        nameLabel.font = [UIFont systemFontOfSize:13];
         nameLabel.textColor = [UIColor blackColor];
         nameLabel.text = theModel.receiver_username;
         [contentView addSubview:nameLabel];
@@ -973,20 +973,21 @@
         [phoneLogoImv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_phone.png"]];
         [contentView addSubview:phoneLogoImv];
         UILabel *phoneLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(phoneLogoImv.frame)+8, 10, 110, phoneLogoImv.frame.size.height)];
-        phoneLabel.font = [UIFont systemFontOfSize:14];
+        phoneLabel.font = [UIFont systemFontOfSize:13];
         phoneLabel.text = theModel.mobile;
         [contentView addSubview:phoneLabel];
         
         //详细地址
         UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(phoneLabel.frame)+10, DEVICE_WIDTH - 20, contentView.frame.size.height - nameLogoImv.frame.size.height -30)];
-        addressLabel.font = [UIFont systemFontOfSize:14];
+        addressLabel.font = [UIFont systemFontOfSize:12];
         addressLabel.textColor = [UIColor blackColor];
         addressLabel.text = theModel.address;
         [contentView addSubview:addressLabel];
         
         
         //自适应地址label高度
-        [addressLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(phoneLabel.frame)+10) width:DEVICE_WIDTH - 20];
+        [addressLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(phoneLabel.frame)+10) width:DEVICE_WIDTH - 36];
+        
         
         //调整contentview高度
         [contentView setHeight:CGRectGetMaxY(addressLabel.frame)+10];
@@ -998,6 +999,15 @@
         
         //调整addressview高度
         [_addressView setHeight:CGRectGetMaxY(imv1.frame)+5];
+        
+        
+        
+        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, _addressView.frame.size.height*0.5-8, 8, 16)];
+        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+        [contentView addSubview:jiantouImv];
+        
+        
+        
         
         _tab.tableHeaderView = _addressView;
     }

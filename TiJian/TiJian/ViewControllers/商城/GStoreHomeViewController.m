@@ -7,8 +7,6 @@
 //
 
 #import "GStoreHomeViewController.h"
-#import "SGFocusImageItem.h"
-#import "GcycleScrollView.h"
 #import "NSDictionary+GJson.h"
 #import "RefreshTableView.h"
 #import "GwebViewController.h"
@@ -26,7 +24,7 @@
 #import "GShopCarViewController.h"
 
 
-@interface GStoreHomeViewController ()<NewHuandengViewDelegate,RefreshDelegate,UITableViewDataSource>
+@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource>
 {
     
     LBannerView *_bannerView;//轮播图
@@ -81,7 +79,7 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
-    self.rightImage = [UIImage imageNamed:@"personal_gouwuche.png"];
+    self.rightImage = [UIImage imageNamed:@"storehome_gouwuche.png"];
     
     [self creatTableView];
     
