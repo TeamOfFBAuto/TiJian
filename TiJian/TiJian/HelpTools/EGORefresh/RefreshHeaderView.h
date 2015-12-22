@@ -7,28 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef enum{
-    L_EGOOPullRefreshPulling = 0,
-    L_EGOOPullRefreshNormal,
-    L_EGOOPullRefreshLoading,
-} L_EGOPullRefreshState;
-
-typedef enum{
-    EGORefreshHeader = 0,
-    EGORefreshFooter
-} EGORefreshPos;
-
-@protocol L_EGORefreshTableDelegate<NSObject>
-
-- (void)egoRefreshTableDidTriggerRefresh:(EGORefreshPos)aRefreshPos;
-- (BOOL)egoRefreshTableDataSourceIsLoading:(UIView*)view;
-
-@optional
-
-- (NSDate*)egoRefreshTableDataSourceLastUpdated:(UIView*)view;
-
-@end
+#import "EGOViewCommon.h"
 
 @interface RefreshHeaderView : UIView
 {

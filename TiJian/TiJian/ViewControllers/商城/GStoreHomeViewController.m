@@ -500,6 +500,33 @@
             
         }
         
+        
+        
+//        for (int i = 0; i < 5; i ++) {
+//            
+//            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 300/750.0*DEVICE_WIDTH)];
+////            [imageView l_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil];
+//            [views addObject:imageView];
+//            
+//            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, imageView.width, imageView.height)];
+//            label.text = NSStringFromInt(i);
+//            label.font = [UIFont boldSystemFontOfSize:17];
+//            label.textAlignment = NSTextAlignmentCenter;
+//            [imageView addSubview:label];
+//            
+//            if (i == 0) {
+//                imageView.backgroundColor = [UIColor redColor];
+//            }else if (i == 1){
+//                imageView.backgroundColor = [UIColor greenColor];
+//            }else if (i == 2){
+//                imageView.backgroundColor = [UIColor orangeColor];
+//            }else if (i == 3){
+//                imageView.backgroundColor = [UIColor yellowColor];
+//            }else
+//            {
+//                imageView.backgroundColor = [UIColor brownColor];
+//            }
+//        }
 
         _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300/750.0*DEVICE_WIDTH)];
         [_bannerView setContentViews:views];

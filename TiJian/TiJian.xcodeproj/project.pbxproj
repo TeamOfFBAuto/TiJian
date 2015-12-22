@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1301A24E1C292C180041FF8D /* baocun@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1301A24D1C292C180041FF8D /* baocun@2x.png */; };
+		1301A2541C293EF30041FF8D /* LScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1301A2531C293EF30041FF8D /* LScrollView.m */; };
 		13020A6E1C04480D006FC365 /* ProductListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13020A6D1C04480D006FC365 /* ProductListViewController.m */; };
 		13020A711C0454B5006FC365 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13020A701C0454B5006FC365 /* FeedBackViewController.m */; };
 		1303C2C31BE9A8B800700847 /* PhysicalTestResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C2C21BE9A8B800700847 /* PhysicalTestResultController.m */; };
@@ -485,6 +487,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1301A24D1C292C180041FF8D /* baocun@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baocun@2x.png"; sourceTree = "<group>"; };
+		1301A2521C293EF30041FF8D /* LScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LScrollView.h; sourceTree = "<group>"; };
+		1301A2531C293EF30041FF8D /* LScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LScrollView.m; sourceTree = "<group>"; };
 		13020A6C1C04480D006FC365 /* ProductListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductListViewController.h; sourceTree = "<group>"; };
 		13020A6D1C04480D006FC365 /* ProductListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductListViewController.m; sourceTree = "<group>"; };
 		13020A6F1C0454B5006FC365 /* FeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackViewController.h; sourceTree = "<group>"; };
@@ -1545,6 +1550,7 @@
 				1303C2C51BE9ABCA00700847 /* navigationbarBackgroudImage@2x.png */,
 				1303C2C81BE9AEC900700847 /* back_w@2x.png */,
 				1303C2CA1BE9B6EE00700847 /* back@2x.png */,
+				1301A24D1C292C180041FF8D /* baocun@2x.png */,
 				134822D41BEC795200EA2E06 /* default_hema@2x.png */,
 				137780AB1C1188BE00677363 /* hema_heart@2x.png */,
 				130D2E021BFC7332002E301F /* gpin@2x.png */,
@@ -2316,6 +2322,8 @@
 				E31F86E61C14595A00914824 /* LBannerItem.m */,
 				E31F86E71C14595A00914824 /* LBannerView.h */,
 				E31F86E81C14595A00914824 /* LBannerView.m */,
+				1301A2521C293EF30041FF8D /* LScrollView.h */,
+				1301A2531C293EF30041FF8D /* LScrollView.m */,
 			);
 			path = LBannerView;
 			sourceTree = "<group>";
@@ -2770,6 +2778,7 @@
 				E390A94F1C28FB4600C76DEA /* roundgray@2x.png in Resources */,
 				E3D8AE4F1BF6203F003AE2E3 /* youhuiquan_g@2x.png in Resources */,
 				E3D8AE511BF6203F003AE2E3 /* youhuiquan_y@2x.png in Resources */,
+				1301A24E1C292C180041FF8D /* baocun@2x.png in Resources */,
 				1303C35C1BEB0D7100700847 /* personal_youhuiquan_yishiyong@2x.png in Resources */,
 				13F8C5711C0563FB004C3FC7 /* 19_3@2x.png in Resources */,
 				1303C2C91BE9AEC900700847 /* back_w@2x.png in Resources */,
@@ -3058,6 +3067,7 @@
 				13F242341BF5F1D2002C9D81 /* AppointmentCell.m in Sources */,
 				13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */,
 				E3D8AE331BF61CAC003AE2E3 /* ButtonProperty.m in Sources */,
+				1301A2541C293EF30041FF8D /* LScrollView.m in Sources */,
 				E335F9F91BFEFDE700708BF6 /* GuserAddressViewController.m in Sources */,
 				E352F9131C0B83490037E4AE /* Gmap.mm in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,

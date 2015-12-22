@@ -33,7 +33,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    self.rightImage = [UIImage imageNamed:@"baocun"];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
     bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, self.view.height - 44 - 20)];//和图片一样高
     bgScroll.backgroundColor = [UIColor clearColor];
@@ -63,7 +64,7 @@
 
 #pragma mark - 保存图片到本地
 
-- (void)clickToSaveToAlbum
+- (void)rightButtonTap:(UIButton *)sender
 {
     
     ZoomScrollView * scrollView = (ZoomScrollView *)[bgScroll viewWithTag:self.showIndex + 100];

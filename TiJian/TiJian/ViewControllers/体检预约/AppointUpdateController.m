@@ -149,6 +149,7 @@
     PeopleManageController *people = [[PeopleManageController alloc]init];
     people.actionType = PEOPLEACTIONTYPE_SELECT;
     people.noAppointNum = 1;
+    people.gender = [_appointModel.gender intValue];
     [self.navigationController pushViewController:people animated:YES];
     
     __weak typeof(self)weakSelf = self;

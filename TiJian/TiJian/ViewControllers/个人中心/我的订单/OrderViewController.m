@@ -433,11 +433,11 @@
 {
     [self controlSelectedButtonTag:(int)sender.tag];
     
-    __weak typeof(_scroll)weakScroll = _scroll;
-    [UIView animateWithDuration:0.1 animations:^{
-       
-        [weakScroll setContentOffset:CGPointMake(DEVICE_WIDTH * (sender.tag - 100), 0)];
-    }];
+//    __weak typeof(_scroll)weakScroll = _scroll;
+//    [UIView animateWithDuration:0.1 animations:^{
+    
+        [_scroll setContentOffset:CGPointMake(DEVICE_WIDTH * (sender.tag - 100), 0)];
+//    }];
 }
 
 #pragma - mark 视图创建

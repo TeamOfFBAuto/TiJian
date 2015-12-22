@@ -27,7 +27,6 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     [self prepareRefreshTableView];
-    [_table showRefreshHeader:YES];
 }
 
 - (void)didReceiveMemoryWarning {

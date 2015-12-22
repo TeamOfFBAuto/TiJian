@@ -8,13 +8,14 @@
 
 #import "LBannerView.h"
 #import "LBannerItem.h"
+#import "LScrollView.h"
 
-@interface LBannerView ()<UIScrollViewDelegate>
+@interface LBannerView ()<UIScrollViewDelegate,UIGestureRecognizerDelegate>
 {
     int _totalNum;
 }
 
-@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) LScrollView *scrollView;
 @property (nonatomic, strong) UIPageControl *pageControl;
 @property (nonatomic, strong) LBannerItem *leftItem;
 @property (nonatomic, strong) LBannerItem *middleItem;
@@ -28,7 +29,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.scrollView = [[UIScrollView alloc] initWithFrame:frame];
+        self.scrollView = [[LScrollView alloc] initWithFrame:frame];
         self.scrollView.delegate = self;
         self.scrollView.pagingEnabled = YES;
         self.scrollView.showsHorizontalScrollIndicator = NO;
@@ -36,9 +37,32 @@
         self.automicScrolling = YES;
         self.direction = AutomicSrollingDirectionFromLeftToRight;
         self.automicScrollingDuration = 2.f;
+        self.scrollView.bounces = NO;
+        self.scrollView.decelerationRate = 0.1;
         [self addSubview:self.scrollView];
         [self addSubview:self.pageControl];
+        
+        __weak typeof(self)weakSelf = self;
+        [self.scrollView setTouchEventBlock:^(TouchEventState state) {
+           
+            if (state == TouchEventState_began) {
+                DDLOG(@"began");
+                
+                [weakSelf stopTimer];
+                
+            }else if (state == TouchEventState_canceled){
+                DDLOG(@"cancel");
+                [weakSelf resetTimer];
+
+            }else if (state == TouchEventState_ended){
+                DDLOG(@"end");
+                [weakSelf resetTimer];
+
+            }
+        }];
+                
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapGesture:)];
+//        tap.delegate = self;
         [self.scrollView addGestureRecognizer:tap];
     }
     return self;
@@ -200,11 +224,12 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    CGFloat offsetx = scrollView.contentOffset.x;
     //处理向左滑动
     //针对两个情况特殊处理
     if (_totalNum == 2) {
         
-        if (scrollView.contentOffset.x < self.frame.size.width) {
+        if (offsetx < self.frame.size.width) {
             [self.leftItem updateContent];
         }else{
             [self.rightItem updateContent];
@@ -213,16 +238,14 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    
-    [self configItemsWithScrollView:scrollView];
     [self resetTimer];
+    [self configItemsWithScrollView:scrollView];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     
     [self configItemsWithScrollView:scrollView];
 }
-
 
 #pragma mark - item配置
 /**
@@ -234,8 +257,12 @@
 {
     NSInteger index = scrollView.contentOffset.x/CGRectGetWidth(self.frame);
     
+    
+//    CGFloat pageWidth = self.frame.size.width;
+//    NSInteger index = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    
     //页数必须小于总页数
-    if (index >= _totalNum) {
+    if (index > _totalNum) {
         return;
     }
     
@@ -278,6 +305,7 @@
 
 - (void)tapGesture:(UITapGestureRecognizer *)gesture
 {
+    DDLOG_CURRENT_METHOD;
     if (_tapActionBlock) {
         _tapActionBlock(_currentPage);
     }

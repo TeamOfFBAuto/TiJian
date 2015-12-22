@@ -22,6 +22,8 @@
     
     NSInteger _selectProvinceId;//选择或者修改后省id
     NSInteger _selectCityId;//选择或者修改后 城市id
+    
+    int _editedState[5];//编辑状态
 }
 
 @property(nonatomic,strong)UIView *backPickView;//地区选择pickerView后面的背景view
@@ -30,6 +32,9 @@
 
 @property(nonatomic,assign)NSInteger provinceId;//省份对应id
 @property(nonatomic,assign)NSInteger cityId;//市区对应id
+
+@property(nonatomic,assign)    BOOL isEdited;//是否被编辑过
+
 
 @end
 
@@ -52,6 +57,8 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clickToHidderKeyboard)];
     [self.view addGestureRecognizer:tap];
+    
+    _isEdited = NO;//默认未被编辑
     
     NSArray *titles = @[@"收货人:",@"手机号码:",@"所在地区:",@"详细地址:"];
     
@@ -95,7 +102,7 @@
                 _selectProvinceId = [pro_id integerValue];
                 _selectCityId = [city_id integerValue];
                 
-                NSLog(@"\nproId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
+                DDLOG(@"\nproId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
                 
             }else if (i == 3){
                 tf.text = self.addressModel.street;
@@ -141,7 +148,7 @@
     
     //设置默认
     
-    _defaultButton = [[UIButton alloc]initWithframe:CGRectMake(0, top, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"xuanzhong_no"] selectedImage:[UIImage imageNamed:@"xuanzhong"] target:self action:@selector(clickToSelect:)];
+    _defaultButton = [[UIButton alloc]initWithframe:CGRectMake(0, top, 50, 50) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"xuanzhong_no"] selectedImage:[UIImage imageNamed:@"xuanzhong"] target:self action:@selector(clickToSetDefaultAddress:)];
     [self.view addSubview:_defaultButton];
     
     //设置是否默认地址
@@ -158,17 +165,120 @@
     [_saveButton setTitleColor:[UIColor colorWithHexString:@"bcbcbc"] forState:UIControlStateNormal];
     [_saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_saveButton setBackgroundColor:[UIColor colorWithHexString:@"f0f0f0"]];
+    _saveButton.userInteractionEnabled = NO;
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(controlSaveButton) name:UITextFieldTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChanged:) name:UITextFieldTextDidChangeNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(controlSaveButton) name:UITextFieldTextDidBeginEditingNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(controlSaveButton) name:UITextFieldTextDidEndEditingNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChanged:) name:UITextFieldTextDidEndEditingNotification object:nil];
     
     
     
     [self createAreaPickView];
 }
+
+#pragma mark - 监控编辑状态
+
+//get
+
+-(BOOL)isEdited
+{
+    BOOL edited = NO;
+    for (int i = 0; i < 5; i ++) {
+        if (_editedState[i] == 1) {
+            edited = YES;
+        }
+    }
+    return edited;
+}
+
+/**
+ *  监控TextField编辑状态
+ *
+ *  @param notify
+ */
+- (void)textFieldDidChanged:(NSNotification *)notify
+{
+    UITextField *textField = notify.object;
+    if (!textField || ![textField isKindOfClass:[UITextField class]]) {
+        //不是UITextField,则不做处理
+        return;
+    }
+    [self updateEditStateForTextField:textField];
+}
+
+/**
+ *  判断默认地址按钮编辑状态
+ *
+ *  @param sender
+ */
+- (void)updateEditStateForDefaultButton:(UIButton *)sender
+{
+    if (sender == _defaultButton) {
+        
+        BOOL edited = NO;
+        if (sender.selected != [_addressModel.default_address boolValue]) {
+            edited = YES;//修改编辑状态
+        }else
+        {
+            edited = NO;
+        }
+        
+        _editedState[4] = edited ? 1 : 0;
+
+    }
+    
+    [self controlSaveButton];
+}
+
+/**
+ *  判断textField编辑状态
+ *
+ *  @param textField
+ */
+- (void)updateEditStateForTextField:(UITextField *)textField
+{
+    int tag = (int)textField.tag - 100;
+    BOOL edited = NO;
+    switch (tag) {
+        case 0: //姓名
+        {
+            edited = ![textField.text isEqualToString:_addressModel.receiver_username];
+        }
+            break;
+        case 1://手机号
+        {
+            edited = ![textField.text isEqualToString:_addressModel.mobile];
+            
+        }
+            break;
+        case 2: //地区
+        {
+            //地址有变
+            if (self.provinceId != [_addressModel.pro_id integerValue] ||
+                self.cityId != [_addressModel.city_id integerValue]) {
+                
+                edited = YES;
+            }else
+            {
+                edited = NO;
+            }
+        }
+            break;
+        case 3://详细地址
+        {
+            edited = ![textField.text isEqualToString:_addressModel.street];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    _editedState[tag] = edited ? 1 : 0;
+    
+    [self controlSaveButton];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -274,14 +384,17 @@
 -(void)leftButtonTap:(UIButton *)sender
 {
     if ([self allTextFieldIsOK]) {
-        //需要保存
         
-        NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否保存当前编辑信息" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
-        [alert show];
+        if (self.isEdited) {
+            //需要保存
+            DDLOG(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否保存当前编辑信息" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
+            [alert show];
+            
+            return;
+        }
         
-        return;
-    }
+}
     
     [self backAction];
 }
@@ -297,9 +410,15 @@
     return (UITextField *)[self.view viewWithTag:tag];
 }
 
-- (void)clickToSelect:(UIButton *)sender
+/**
+ *  设置默认地址
+ *
+ *  @param sender
+ */
+- (void)clickToSetDefaultAddress:(UIButton *)sender
 {
     sender.selected = !sender.selected;
+    [self updateEditStateForDefaultButton:sender];
 }
 
 /**
@@ -335,7 +454,6 @@
  */
 - (void)clickToSelectArea:(UIButton *)sender
 {
-    
     [self clickToHidderKeyboard];//隐藏键盘
     [self areaShow];
 }
@@ -358,34 +476,21 @@
 }
 
 /**
- *  检查内容只要有一个编辑了
- */
-- (BOOL)oneTextFieldIsOK
-{
-    for (int i = 0; i < 4; i ++) {
-        
-        //只要有一个为空就 NO
-        if ([self textFieldForTag:100 + i].text.length > 0) {
-            
-            return YES;
-        }
-    }
-    return NO;
-}
-
-/**
  *  控制保存按钮显示状态
  */
 - (void)controlSaveButton
 {
-    if ([self allTextFieldIsOK]) {
+    if ([self allTextFieldIsOK] && self.isEdited) {
         
         [_saveButton setBackgroundColor:DEFAULT_TEXTCOLOR];
         _saveButton.selected = YES;
+        _saveButton.userInteractionEnabled = YES;
+
     }else
     {
         [_saveButton setBackgroundColor:[UIColor colorWithHexString:@"f0f0f0"]];
         _saveButton.selected = NO;
+        _saveButton.userInteractionEnabled = NO;
     }
 }
 
@@ -487,8 +592,6 @@
 
 - (void)clickToSure:(UIButton *)sender
 {
-    [self controlSaveButton];
-    
     [self areaHidden];
     
     self.provinceId = [GMAPI cityIdForName:self.provinceName];
@@ -498,8 +601,11 @@
     _selectProvinceId = self.provinceId;
     _selectCityId = self.cityId;
     
-    NSLog(@"在这里  省:%@ id %ld   市:%@ id:%ld",self.provinceName,(long)self.provinceId,self.cityName,self.cityId);
+    DDLOG(@"在这里  省:%@ id %ld   市:%@ id:%ld",self.provinceName,(long)self.provinceId,self.cityName,self.cityId);
     [self textFieldForTag:102].text = [NSString stringWithFormat:@"%@%@",self.provinceName,self.cityName];
+    
+    [self updateEditStateForTextField:[self textFieldForTag:102]];
+
 }
 
 -(void)areaHidden{//地区隐藏
@@ -568,6 +674,8 @@
     }else if (component == 1){
         _isChooseArea = YES;
     }
+    
+    _isEdited = YES;//被编辑过
     
     [pickerView reloadAllComponents];
 }

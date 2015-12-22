@@ -832,7 +832,19 @@
     
     UserInfo *aModel = _table.dataArray[indexPath.row];
     title.text = aModel.appellation;
-    nameLabel.text = aModel.family_user_name;
+    
+    NSString *name = @"";
+    NSString *alia = @"";
+    Gender gender = [aModel.gender intValue];
+    if (gender != Gender_NO && gender != Gender_Other) {
+        
+        alia = [NSString stringWithFormat:@"(%@)",gender == Gender_Boy ? @"男" : @"女" ];
+        name = [NSString stringWithFormat:@"%@%@",aModel.family_user_name,alia];
+    }else
+    {
+        name = aModel.family_user_name;
+    }
+    [nameLabel setAttributedText:[LTools attributedString:name keyword:alia color:[UIColor orangeColor]]];
     
     NSString *uid = aModel.family_uid;
     if ([_selectedArray containsObject:uid]) {
