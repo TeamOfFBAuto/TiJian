@@ -13,5 +13,6 @@
 
 + (UIColor *)randomColor;
 
++ (UIColor *)randomColorWithoutWhiteAndBlack;//随机颜色去除白色和黑色
 
 @end

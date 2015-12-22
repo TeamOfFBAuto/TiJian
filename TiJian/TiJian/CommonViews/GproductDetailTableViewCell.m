@@ -168,9 +168,9 @@
         NSString *attributedText1 = @"适用性别：";
         NSString *attributedText2;
         if ([self.delegate.theProductModel.gender_id intValue] == 1) {//男
-            attributedText2 = @"[仅供男性适用]";
+            attributedText2 = @"[仅供男性使用]";
         }else if ([self.delegate.theProductModel.gender_id intValue] == 2){//女
-            attributedText2 = @"[仅供女性适用]";
+            attributedText2 = @"[仅供女性使用]";
         }else{
             attributedText2 = @"[男女不限]";
         }

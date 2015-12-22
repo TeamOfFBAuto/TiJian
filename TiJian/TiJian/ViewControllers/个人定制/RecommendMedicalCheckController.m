@@ -11,6 +11,7 @@
 #import "GproductDetailViewController.h"
 #import "ProjectModel.h"
 #import "ProductModel.h"
+#import "LSuitableView.h"
 
 @interface RecommendMedicalCheckController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -39,7 +40,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 #pragma - mark 创建视图
+
+- (UILabel *)labelWithFrame:(CGRect)frame
+                       text:(NSString *)text
+{
+    UIColor *textColor = [UIColor randomColorWithoutWhiteAndBlack];
+    UILabel *label = [[UILabel alloc]initWithFrame:frame title:text font:15 align:NSTextAlignmentCenter textColor:textColor];
+    [label setBorderWidth:1.f borderColor:textColor];
+    [label addCornerRadius:3.f];
+    label.backgroundColor = [UIColor whiteColor];
+    return label;
+}
+
 
 - (void)createViewsWithProjects:(NSArray *)projects
 {
@@ -66,43 +80,61 @@
     
     //下面开始体检项目
     CGFloat top = logo.bottom + 30;
-    CGFloat dis = 5.f;//间距
-    CGFloat left = 15.f;
-    CGFloat labelRight = left - dis;
-    CGFloat labelBottom = 0.f;
+    
+    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:items.count];
     
     for (int i = 0; i < items.count; i ++) {
         
         ProjectModel *p_model = items[i];
         NSString *title = p_model.project_name;
-        CGFloat width = [LTools widthForText:title font:15.f];//字本身宽度
-        width += 10*2;//左右各加10
-        
-        if (labelRight + dis + width < DEVICE_WIDTH - 15) { //计算横着能否放下
-            
-            left = labelRight + dis;
-        }else
-        {
-            top = labelBottom + 7;
-            left = 15.f;
-        }
-        
-        UIColor *textColor = [UIColor randomColor];
-        
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(left, top, width, 25) title:title font:15 align:NSTextAlignmentCenter textColor:textColor];
-        [label setBorderWidth:1.f borderColor:textColor];
-        [label addCornerRadius:3.f];
-        label.backgroundColor = [UIColor whiteColor];
-        [head_bg_view addSubview:label];
-        labelBottom = label.bottom;
-        labelRight = label.right;
+        [temp addObject:title];
     }
     
-    head_bg_view.height = labelBottom + 10;
+    LSuitableView *suitableView = [[LSuitableView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, 0) itemsArray:temp];
+    [head_bg_view addSubview:suitableView];
+    
+    head_bg_view.height = suitableView.bottom + 10;
     headview.height = head_bg_view.height + 5 + 5;
     _table.tableHeaderView = headview;
 
 }
+
+//test1
+
+//    //下面开始体检项目
+//    CGFloat top = logo.bottom + 30;
+//    CGFloat dis = 5.f;//间距
+//    CGFloat left = 15.f;
+//    CGFloat labelRight = left - dis;
+//    CGFloat labelBottom = 0.f;
+//
+//    for (int i = 0; i < items.count; i ++) {
+//
+//        ProjectModel *p_model = items[i];
+//        NSString *title = p_model.project_name;
+//        CGFloat width = [LTools widthForText:title font:15.f];//字本身宽度
+//        width += 10*2;//左右各加10
+//
+//        if (labelRight + dis + width < DEVICE_WIDTH - 15) { //计算横着能否放下
+//
+//            left = labelRight + dis;
+//        }else
+//        {
+//            top = labelBottom + 7;
+//            left = 15.f;
+//        }
+//
+//        UIColor *textColor = [UIColor randomColor];
+//
+//        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(left, top, width, 25) title:title font:15 align:NSTextAlignmentCenter textColor:textColor];
+//        [label setBorderWidth:1.f borderColor:textColor];
+//        [label addCornerRadius:3.f];
+//        label.backgroundColor = [UIColor whiteColor];
+//        [head_bg_view addSubview:label];
+//        labelBottom = label.bottom;
+//        labelRight = label.right;
+//    }
+
 
 #pragma - mark 网络请求
 

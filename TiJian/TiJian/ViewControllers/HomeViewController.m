@@ -11,7 +11,6 @@
 #import "GStoreHomeViewController.h"
 #import "RecommendMedicalCheckController.h"
 #import "PhysicalTestResultController.h"
-#import "MedicalOrderController.h"//预约体检
 #import "AppointmentViewController.h"//预约
 #import "ArticleListController.h"//健康资讯列表
 #import "WebviewController.h"
@@ -417,10 +416,6 @@
             [weakSelf loginToAppoint];
         }
     }];
-    
-//    MedicalOrderController *m_order = [[MedicalOrderController alloc]init];
-//    m_order.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:m_order animated:YES];
 }
 
 - (void)loginToAppoint
