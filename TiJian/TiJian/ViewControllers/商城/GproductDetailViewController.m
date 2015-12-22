@@ -184,7 +184,39 @@
     [self prepareProductProjectList];//具体项目
     [self getshopcarNum];//购物车数量
     
+    //浏览量加一
+    [self productLiulanNum];
+    
+    
 }
+
+//商品浏览+1
+
+-(void)productLiulanNum{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic;
+    if ([LoginViewController isLogin]) {
+        dic = @{
+                @"product_id":self.productId,
+                @"authcode":[UserInfo getAuthkey]
+                };
+    }else{
+        dic = @{
+                @"product_id":self.productId,
+                };
+    }
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:StoreProductLiulanNumAdd parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+
 
 //套餐项目列表
 -(void)prepareProductProjectList{

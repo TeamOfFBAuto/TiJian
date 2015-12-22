@@ -42,6 +42,9 @@
 //套餐详情
 #define StoreProductDetail @"/index.php?d=api&c=setmeal&m=setmeal_detail"
 
+//商品浏览量+1
+#define StoreProductLiulanNumAdd @"/index.php?d=api&c=statistic&m=add_product_view"
+
 //套餐下体检项目列表
 #define StoreProdectProjectList @"/index.php?d=api&c=setmeal&m=setmeal_project_list"
 
