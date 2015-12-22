@@ -255,10 +255,34 @@
         _request = [YJYRequstManager shareInstance];
     }
     
+    
+    
+    NSString *theP_id;
+    NSString *theC_id;
+    
+    if (self.userChooseLocationDic) {
+        
+        NSString *a_p = [self.userChooseLocationDic stringValueForKey:@"province_id"];
+        NSString *a_c = [self.userChooseLocationDic stringValueForKey:@"city_id"];
+        if ([LTools isEmpty:a_p] || [LTools isEmpty:a_c]) {
+            theP_id = [GMAPI getCurrentProvinceId];
+            theC_id = [GMAPI getCurrentCityId];
+        }else{
+            theP_id = a_p;
+            theC_id = a_c;
+        }
+        
+    }else{
+        theP_id = [GMAPI getCurrentProvinceId];
+        theC_id = [GMAPI getCurrentCityId];
+    }
+    
+    
+    
     NSDictionary *dic = @{
                           @"brand_id":self.theProductModel.brand_id,
-                          @"province_id":[GMAPI getCurrentProvinceId],
-                          @"city_id":[GMAPI getCurrentCityId],
+                          @"province_id":theP_id,
+                          @"city_id":theC_id,
                           @"page":@"1",
                           @"per_page":@"3"
                           };
@@ -1082,6 +1106,7 @@
 -(void)goToProductDetailVcWithId:(NSString *)productId{
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     cc.productId = productId;
+    cc.userChooseLocationDic = self.userChooseLocationDic;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

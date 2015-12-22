@@ -275,7 +275,8 @@
             self.brandName = @"未知品牌";
         }
         NSDictionary *dic = @{@"brand_id":self.brandId,
-                              @"brand_name":self.brandName};
+                              @"brand_name":self.brandName
+                              };
 //        [self creatFilterBtn];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         self.brand_city_list = @[dic];
@@ -348,6 +349,7 @@
     ProductModel *model = _table.dataArray[indexPath.row];
     cc.productId = model.product_id;
     cc.isVoucherPush = self.isVoucherPush;
+    cc.userChooseLocationDic = self.shaixuanDic;
     if (self.isVoucherPush) {
         cc.VoucherId = self.vouchers_id;
     }

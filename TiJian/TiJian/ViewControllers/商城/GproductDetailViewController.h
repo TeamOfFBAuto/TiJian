@@ -25,6 +25,9 @@
 
 @property(nonatomic,strong)NSString *VoucherId;//代金券id
 
+@property(nonatomic,strong)NSDictionary *userChooseLocationDic;//用户选择筛选的地址
+
+
 -(void)goToCommentVc;
 
 -(void)goToProductDetailVcWithId:(NSString *)productId;
