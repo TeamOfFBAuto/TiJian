@@ -341,15 +341,22 @@
         
         _jifenMiaoshuLabel.text = [NSString stringWithFormat:@"共%ld积分,可用%ld积分,抵%.2f元",(long)maxAbleUseScore,(long)_keyongJifen,_keyongJifen/100.0];
         
-        if ([_useScoreTf.text integerValue]> _keyongJifen) {
-            jifen = _keyongJifen;
-            _useScoreTf.text = [NSString stringWithFormat:@"%ld",(long)_keyongJifen];
-            _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",_keyongJifen/100.0];
+        
+        if ([GMAPI isPureInt:_useScoreTf.text]) {
+            if ([_useScoreTf.text integerValue]> _keyongJifen) {
+                jifen = _keyongJifen;
+                _useScoreTf.text = [NSString stringWithFormat:@"%ld",(long)_keyongJifen];
+                _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",_keyongJifen/100.0];
+            }else{
+                jifen = [_useScoreTf.text integerValue];
+            }
+            
+            _fanal_usedScore = jifen;
         }else{
-            jifen = [_useScoreTf.text integerValue];
+            _fanal_usedScore = -10;
         }
         
-        _fanal_usedScore = jifen;
+        
     }else{
         _fanal_usedScore = 0;
     }
@@ -1205,7 +1212,13 @@
     
     
     
-    if (_isUseScore) {//使用积分
+    if (_isUseScore && _fanal_usedScore) {//使用积分
+        
+        if (_fanal_usedScore == -10) {
+            [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的积分" addToView:self.view];
+            return;
+        }
+        
         NSString *aa = [NSString stringWithFormat:@"%ld",(long)_fanal_usedScore];
         [dic setValue:aa forKey:@"score"];//使用的积分
         [dic setValue:@"1" forKey:@"is_use_score"];//是否使用积分
