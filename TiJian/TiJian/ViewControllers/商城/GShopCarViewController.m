@@ -257,7 +257,7 @@
         [self updateRtabTotolPrice];
         [self isAllChooseAndUpdateState];
         
-        [self.right_button setTitle:@"删除" forState:UIControlStateNormal];
+        [self.right_button setTitle:@"编辑" forState:UIControlStateNormal];
         [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
         self.totolPriceLabel.hidden = NO;
         self.detailPriceLabel.hidden = NO;
@@ -515,7 +515,7 @@
         [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
             
             _deleteState = NO;
-            [bself.right_button setTitle:@"删除" forState:UIControlStateNormal];
+            [bself.right_button setTitle:@"编辑" forState:UIControlStateNormal];
             [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
             bself.totolPriceLabel.hidden = NO;
             bself.detailPriceLabel.hidden = NO;
@@ -585,13 +585,13 @@
                 bself.rightString = @"取消";
             }else{
                 [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
-                bself.rightString = @"删除";
+                bself.rightString = @"编辑";
             }
             
         }
         
         
-        [self.rTab reloadData:dataArray pageSize:G_PER_PAGE];
+        [_rTab reloadData:dataArray pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
         [self updateRtabTotolPrice];
         [self isAllChooseAndUpdateState];
         
@@ -608,10 +608,7 @@
         
         
         
-        if (dataArray.count == 0) {
-            [_rTab reloadData:nil pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
-        }
-        
+
         
         
 
@@ -775,9 +772,6 @@
         cell = [[GshopCarTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-//    for (UIView *view in cell.contentView.subviews) {
-//        [view removeFromSuperview];
-//    }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -804,6 +798,72 @@
 }
 
 
+#pragma mark - 滑动删除
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return YES;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return @"删除";
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (editingStyle ==UITableViewCellEditingStyleDelete)
+        
+    {
+        
+        NSLog(@"%ld",(long)indexPath.section);
+        NSLog(@"%ld", (long)indexPath.row);
+        
+        
+        NSMutableArray *arr = [NSMutableArray arrayWithArray:self.rTab.dataArray[indexPath.section]];
+        ProductModel *model = arr[indexPath.row];
+        [self huadongshanchuWithcartProId:model.cart_pro_id];
+
+            [arr removeObjectAtIndex:indexPath.row];
+            [self.rTab.dataArray replaceObjectAtIndex:indexPath.section withObject:arr];
+        
+        [self.rTab deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if (arr.count == 0) {
+            [self.rTab.dataArray removeObjectAtIndex:indexPath.section];
+            [self.rTab reloadData];
+        }
+        
+        if (self.rTab.dataArray.count == 0) {
+            [self.rTab reloadData:self.rTab.dataArray pageSize:G_PER_PAGE noDataView:[self resultViewWithType:PageResultType_nodata]];
+            _downView.hidden = YES;
+            [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+            self.right_button.hidden = YES;
+        }
+        
+        [self isAllChooseAndUpdateState];
+        [self updateRtabTotolPrice];
+        
+        
+    }
+}
+
+
+
+-(void)huadongshanchuWithcartProId:(NSString *)thePid{
+    
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey],
+                          @"cart_pro_id":thePid
+                          };
+    
+
+    [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"%@",result);
+    } failBlock:^(NSDictionary *result) {
+        NSLog(@"%@",result);
+        
+    }];
+}
 
 
 

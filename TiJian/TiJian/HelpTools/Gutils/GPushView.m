@@ -40,6 +40,10 @@
     self.gender = theGender;
     _tab1TitleDataArray = @[@"城市",@"价格",@"体检品牌"];
     
+    
+    self.userChoosePinpai = @"全部";
+    self.userChoosePrice = @"全部";
+    
     for (int i = 0; i<35; i++) {
         _isopen[i] = 0;
     }
@@ -293,13 +297,16 @@
     for (int i = 0; i<10; i++) {
         _isMark_price[i] = 0;
     }
-    self.userChoosePrice = nil;
+    self.userChoosePrice = @"全部";
     self.userChoosePrice_high = nil;
     self.userChoosePrice_low = nil;
     self.tf_high.text = nil;
     self.tf_low.text = nil;
     [self setDefaultPriceImvHidden];
     [self.tab3 reloadData];
+    
+    [self hiddenTab:self.tab3];
+    
 }
 
 
@@ -522,6 +529,9 @@
 }
 
 -(void)hiddenTab:(UITableView *)theTab{
+    
+    self.navc_rightBtn.hidden = NO;
+    
     [UIView animateWithDuration:0.2 animations:^{
         [theTab setFrame:CGRectMake(self.frame.size.width, 64, self.frame.size.width, self.frame.size.height-64)];
     }];
@@ -707,9 +717,9 @@
         cityName = @"北京市";
     }
     self.userChooseCity = cityName;
-    self.userChoosePinpai = nil;
+    self.userChoosePinpai = @"全部";
     self.userChoosePinpai_id = nil;
-    self.userChoosePrice = nil;
+    self.userChoosePrice = @"全部";
     self.userChoosePrice_high = nil;
     self.userChoosePrice_low = nil;
     self.tf_low.text = nil;
@@ -1062,6 +1072,9 @@
     
     
     if (tableView.tag == 1) {//主筛选页面
+        
+        self.navc_rightBtn.hidden = YES;
+        
         if (self.gender) {
             if (indexPath.row == 1) {//城市
                 [self showTab:self.tab2];
@@ -1087,7 +1100,6 @@
         }
     }else if (tableView.tag == 2){//选择地区
         
-        
         NSArray * cities = _areaData[indexPath.section][@"Cities"];
         NSString *cityStr = cities[indexPath.row][@"city"];
         self.userChooseCity = cityStr;
@@ -1098,6 +1110,8 @@
         [self.tab1 reloadData];
         
     }else if (tableView.tag == 3){//价格
+        
+        
         for (int i = 0; i<10; i++) {
             _isMark_price[i] = 0;
         }
@@ -1138,6 +1152,9 @@
         
         
     }else if (tableView.tag == 4){//体检品牌
+        
+        
+        
         NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
         self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
         self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];

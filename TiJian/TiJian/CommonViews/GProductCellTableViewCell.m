@@ -60,9 +60,7 @@
     [self.contentView addSubview:self.originalPriceLabel];
     
     
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.logoImv.frame)+10, DEVICE_WIDTH, 0.5)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [self.contentView addSubview:line];
+    
     
     
 }

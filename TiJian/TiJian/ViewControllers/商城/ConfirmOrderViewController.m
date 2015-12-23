@@ -80,6 +80,13 @@
     UILabel *_enabledNum_coupon_label;//可用优惠券数量label
     UILabel *_enabledNum_vouchers_label;//可用代金券数量label
     
+    
+    NSString *_user_score;//用户积分
+    
+    CGPoint _orig_tab_contentOffset;
+    
+    
+    
 }
 
 @end
@@ -102,7 +109,7 @@
     self.myTitle = @"确认订单";
     
     _sumPrice_pay = 0;
-
+    _user_score = @"0";
     _keyongJifen = 0;
     _fanal_usedScore = 0;
     
@@ -114,6 +121,8 @@
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
     [self makeDyadicArray];
+    
+    [self getUserScore];
     
     [self prepareNetData];
 }
@@ -335,8 +344,7 @@
         //积分
         CGFloat jifen = 0;
         
-        UserInfo *userInfoModel = [UserInfo userInfoForCache];
-        NSInteger maxAbleUseScore = [userInfoModel.score integerValue];
+        NSInteger maxAbleUseScore = [_user_score integerValue];
         _keyongJifen = ((_price_total - youhuiquan - daijinquan)*100) > maxAbleUseScore ? maxAbleUseScore : ((_price_total - youhuiquan - daijinquan)*100);
         
         _jifenMiaoshuLabel.text = [NSString stringWithFormat:@"共%ld积分,可用%ld积分,抵%.2f元",(long)maxAbleUseScore,(long)_keyongJifen,_keyongJifen/100.0];
@@ -390,7 +398,7 @@
 #pragma mark - 请求网络数据
 
 
-//网路请求
+//网络请求
 -(void)prepareNetData{
     
     _count = 0;
@@ -400,6 +408,31 @@
     
     
 }
+
+
+//获取用户积分
+-(void)getUserScore{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    
+    
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:USER_GETJIFEN parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _user_score = [result stringValueForKey:@"score"];
+        [_tab reloadData];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+
 
 
 //获取用户收货地址
@@ -495,6 +528,8 @@
         if (_enabledNum_coupon_label) {
             _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
         }
+        
+        
   
         
         
@@ -728,7 +763,7 @@
     _enabledNum_coupon_label.layer.cornerRadius = 4;
     _enabledNum_coupon_label.layer.masksToBounds = YES;
     _enabledNum_coupon_label.textAlignment = NSTextAlignmentCenter;
-    _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
+    _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
     [youhuiquanView addSubview:_enabledNum_coupon_label];
     
     
@@ -771,7 +806,7 @@
     _enabledNum_vouchers_label.font = [UIFont systemFontOfSize:11];
     _enabledNum_vouchers_label.textColor = [UIColor whiteColor];
     _enabledNum_vouchers_label.textAlignment = NSTextAlignmentCenter;
-    _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
+    _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
     [daijinquanView addSubview:_enabledNum_vouchers_label];
     
     
@@ -1214,7 +1249,7 @@
     
     if (_isUseScore && _fanal_usedScore) {//使用积分
         
-        if (_fanal_usedScore == -10) {
+        if (_fanal_usedScore == -10 || _fanal_usedScore < 0) {
             [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的积分" addToView:self.view];
             return;
         }
@@ -1431,6 +1466,23 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
+    CGPoint origin = textField.frame.origin;
+    CGPoint point = [textField.superview convertPoint:origin toView:_tab];
+    float navBarHeight = self.navigationController.navigationBar.frame.size.height;
+    CGPoint offset = _tab.contentOffset;
+    // Adjust the below value as you need
+    
+    
+    offset.y = (point.y - navBarHeight - 150);
+    
+    if (iPhone4) {
+        offset.y = (point.y - navBarHeight - 100);
+    }
+    
+    _orig_tab_contentOffset = _tab.contentOffset;
+    
+    [_tab setContentOffset:offset animated:YES];
+    
     
     if (!_shouView) {
         _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
@@ -1439,13 +1491,7 @@
     }
 
     [self.view addSubview:_shouView];
-//    
-//    
-//    CGSize ss = _tab.contentSize;
-//    [_tab setContentSize:CGSizeMake(ss.width, ss.height+200)];
-    
-    CGPoint pp = _tab.contentOffset;
-    [_tab setContentOffset:CGPointMake(0, pp.y +200) animated:YES];
+
     return YES;
 }
 
@@ -1454,8 +1500,7 @@
     
     [_shouView removeFromSuperview];
     
-    CGPoint pp = _tab.contentOffset;
-    [_tab setContentOffset:CGPointMake(0, pp.y - 200) animated:YES];
+    [_tab setContentOffset:_orig_tab_contentOffset animated:YES];
     
     [_liuyantf resignFirstResponder];
     [_useScoreTf resignFirstResponder];
@@ -1464,6 +1509,13 @@
     [self jisuanPrice];
     
 }
+
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    [self hiddenKeyBord];
+}
+
+
 
 
 
@@ -1481,6 +1533,12 @@
             
             
         }else{//新输入
+            
+            if (![GMAPI isPureNum:string]) {
+                return NO;
+            }
+            
+            
             NSString *str = [NSString stringWithFormat:@"%@%@",textField.text,string];
             NSInteger score = [str integerValue];
             

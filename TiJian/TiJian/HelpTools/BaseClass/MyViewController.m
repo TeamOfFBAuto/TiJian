@@ -238,7 +238,8 @@
         
     }else if (theType == MyViewControllerLeftbuttonTypeNull)
     {
-        self.navigationItem.rightBarButtonItems = @[spaceButton];
+//        self.navigationItem.rightBarButtonItems = @[spaceButton];
+        self.navigationItem.rightBarButtonItem = nil;
     }
 }
 
