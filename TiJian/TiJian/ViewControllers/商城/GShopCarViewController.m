@@ -826,7 +826,7 @@
             [arr removeObjectAtIndex:indexPath.row];
             [self.rTab.dataArray replaceObjectAtIndex:indexPath.section withObject:arr];
         
-        [self.rTab deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+        [self.rTab deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationAutomatic];
         
         if (arr.count == 0) {
             [self.rTab.dataArray removeObjectAtIndex:indexPath.section];
