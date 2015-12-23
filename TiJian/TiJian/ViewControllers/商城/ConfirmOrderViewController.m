@@ -1476,7 +1476,7 @@
     offset.y = (point.y - navBarHeight - 150);
     
     if (iPhone4) {
-        offset.y = (point.y - navBarHeight - 100);
+        offset.y = (point.y - navBarHeight - 50);
     }
     
     _orig_tab_contentOffset = _tab.contentOffset;
