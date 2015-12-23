@@ -515,6 +515,7 @@
         [_request requestWithMethod:YJYRequstMethodGet api:ORDER_DEL_CART_PRODUCT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
             
             _deleteState = NO;
+            self.right_button.hidden = YES;
             [bself.right_button setTitle:@"编辑" forState:UIControlStateNormal];
             [_jiesuanBtn setTitle:@"去结算" forState:UIControlStateNormal];
             bself.totolPriceLabel.hidden = NO;
