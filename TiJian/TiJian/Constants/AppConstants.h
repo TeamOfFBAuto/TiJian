@@ -31,8 +31,7 @@
 
 #define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 
-//打印类、方法
-
+//==============================打印类、方法
 #pragma mark - Debug log macro
 //start
 #ifdef DEBUG
@@ -47,7 +46,7 @@
 #define DDLOG_CURRENT_METHOD ;
 
 #endif
-//end
+//==============================end
 
 //适配6 PLUS 放大1.2倍
 #define FitScreen(a) (iPhone6PLUS ? a * 1.2 : a)
@@ -63,6 +62,11 @@
 //int 转 string
 #define NSStringFromFloat(float) [NSString stringWithFormat:@"%f",(float)]
 #define NSStringFromInt(int) [NSString stringWithFormat:@"%d",(int)]
+
+//=====================weak 和 strong
+#pragma mark - weak 和 strong
+#define WeakObj(o) autoreleasepool{} __weak typeof(o) o##Weak = o;
+#define StrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
 
 //错误提示信息 
 

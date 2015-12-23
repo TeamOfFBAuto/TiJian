@@ -58,10 +58,8 @@
         _imageView.backgroundColor = [UIColor clearColor];
         _imageView.clipsToBounds = YES;
         _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//        _imageView.layer.cornerRadius = 6.0f;
-//        _imageView.layer.borderColor = [UIColor clearColor].CGColor;
-//        _imageView.layer.borderWidth = 0.5;
-//        _imageView.contentMode = UIViewContentModeTopLeft;
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;//等比例拉伸填充
+        _imageView.clipsToBounds = YES;
         [self.contentView addSubview:_imageView];
     }
     return _imageView;

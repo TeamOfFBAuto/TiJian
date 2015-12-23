@@ -11,6 +11,7 @@
 #import "MoreReportViewController.h"
 #import "FBPhotoBrowserController.h"
 
+
 @interface ReportDetailController ()<UIWebViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate>
 {
     UIScrollView *_scrollView;
@@ -215,6 +216,9 @@
 - (void)clickToBrowser:(UIButton *)sender
 {
     int index = (int)sender.tag - 200;
+    
+    
+    
     FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
     browser.showIndex = index;
     browser.imagesArray = _imagesArray;

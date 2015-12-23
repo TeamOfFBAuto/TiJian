@@ -133,7 +133,8 @@
         //update by lcw
         if (image) {
             
-            self.contentMode = UIViewContentModeScaleToFill;//等比例拉伸填充
+            self.contentMode = UIViewContentModeScaleAspectFill;//等比例拉伸填充
+            self.clipsToBounds = YES;
         }else
         {
             UILabel *label = [[UILabel alloc]initWithFrame:self.bounds title:@"抱歉,图片加载失败~" font:10 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE];

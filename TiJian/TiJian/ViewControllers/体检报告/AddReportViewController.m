@@ -356,7 +356,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
     cell.imageView.image = DEFAULT_HEADIMAGE;
     if (indexPath.row == self.assetsArray.count) {
         
-        cell.imageView.image = [UIImage imageNamed:@"compose_pic_add"];
+        cell.imageView.image = [UIImage imageNamed:@"report_tianjia"];
         
     }else
     {

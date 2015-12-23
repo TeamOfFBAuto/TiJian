@@ -98,6 +98,7 @@
 		130D2E311BFDF2DC002E301F /* UMSShareListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E241BFDF2DC002E301F /* UMSShareListController.xib */; };
 		130D2E321BFDF2DC002E301F /* UMSocialSDKResourcesNew.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E251BFDF2DC002E301F /* UMSocialSDKResourcesNew.bundle */; };
 		130D2E331BFDF2DC002E301F /* UMSocialLocalizable 20-01-19-799.strings in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E261BFDF2DC002E301F /* UMSocialLocalizable 20-01-19-799.strings */; };
+		1316DF241C2AAB4C00864949 /* report_tianjia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1316DF231C2AAB4C00864949 /* report_tianjia@2x.png */; };
 		131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */; };
 		131A17761BF3309800B12D2F /* CompanyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A17751BF3309800B12D2F /* CompanyCell.m */; };
 		131A17791BF33B7900B12D2F /* dingzhi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131A17771BF33B7900B12D2F /* dingzhi@2x.png */; };
@@ -605,6 +606,7 @@
 		130D2E241BFDF2DC002E301F /* UMSShareListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UMSShareListController.xib; sourceTree = "<group>"; };
 		130D2E251BFDF2DC002E301F /* UMSocialSDKResourcesNew.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UMSocialSDKResourcesNew.bundle; sourceTree = "<group>"; };
 		130D2E271BFDF2DC002E301F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/UMSocialLocalizable 20-01-19-799.strings"; sourceTree = "<group>"; };
+		1316DF231C2AAB4C00864949 /* report_tianjia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_tianjia@2x.png"; sourceTree = "<group>"; };
 		131A176D1BF1D20E00B12D2F /* RightTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightTextFieldCell.h; sourceTree = "<group>"; };
 		131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightTextFieldCell.m; sourceTree = "<group>"; };
 		131A17741BF3309800B12D2F /* CompanyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompanyCell.h; sourceTree = "<group>"; };
@@ -1574,6 +1576,7 @@
 		1362765B1C12D3370077C75D /* 体检报告 */ = {
 			isa = PBXGroup;
 			children = (
+				1316DF231C2AAB4C00864949 /* report_tianjia@2x.png */,
 				1362765C1C12D3370077C75D /* report_paizhao@2x.png */,
 				1362765D1C12D3370077C75D /* report_zhaopian@2x.png */,
 			);
@@ -2852,6 +2855,7 @@
 				E3E2B40C1BFB205F007988C5 /* ConfirmInfoCell.xib in Resources */,
 				1303C35F1BEB0D7100700847 /* personal_yuyue_dianhua@2x.png in Resources */,
 				130D2E2D1BFDF2DC002E301F /* UMShareEditViewController.xib in Resources */,
+				1316DF241C2AAB4C00864949 /* report_tianjia@2x.png in Resources */,
 				139333B71BE0DF3E00B4628B /* 18_3@2x.png in Resources */,
 				13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */,
 				139333CE1BE0DF3E00B4628B /* 24_2@2x.png in Resources */,
