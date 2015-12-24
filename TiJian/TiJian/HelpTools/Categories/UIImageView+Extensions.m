@@ -137,8 +137,14 @@
             self.clipsToBounds = YES;
         }else
         {
-            UILabel *label = [[UILabel alloc]initWithFrame:self.bounds title:@"抱歉,图片加载失败~" font:10 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE];
-            [weakSelf addSubview:label];
+            if (!placeholder) {
+                UILabel *label = [[UILabel alloc]initWithFrame:self.bounds];
+                label.text = @"抱歉,图片加载失败~";
+                label.font = [UIFont systemFontOfSize:10];
+                label.textAlignment = NSTextAlignmentCenter;
+                label.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
+                [weakSelf addSubview:label];
+            }
         }
         
         [indicator stopAnimating];

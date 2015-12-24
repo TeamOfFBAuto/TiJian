@@ -222,7 +222,7 @@ typedef enum {
                              @"order_checkuper_id":_order_checkuper_id ? : @"", //公司订单才有的
                              };
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak typeof(self)weakSelf = self;
 //    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -235,7 +235,7 @@ typedef enum {
         
     } failBlock:^(NSDictionary *result) {
         
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         
     }];
 }

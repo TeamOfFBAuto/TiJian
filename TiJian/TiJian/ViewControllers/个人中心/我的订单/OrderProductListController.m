@@ -117,8 +117,8 @@
     //公司
     if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
         
-        NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
-        [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:aModel.company_info[@"company_id"] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+        NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
+        [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:[NSString stringWithFormat:@"%@",aModel.company_id] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
     }else
     {
         choose.productId = aModel.product_id;

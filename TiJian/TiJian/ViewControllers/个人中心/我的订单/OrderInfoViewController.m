@@ -683,7 +683,7 @@
 - (void)tableHeaderViewWithAddressModel:(OrderModel *)aModel
 {
     NSString *name = aModel.receiver_username;
-    NSString *phone = aModel.receiver_mobile;
+    NSString *phone = [NSString stringWithFormat:@"%@",aModel.receiver_mobile];
     NSString *address = aModel.address;
     
     //是否有收货地址
@@ -781,7 +781,7 @@
     CGFloat width = DEVICE_WIDTH - 30 - 80;
     CGFloat height = [LTools heightForText:note width:width font:14];
     
-    return height + 5 + 16 + 5;
+    return height + 5 + 16 + 5 + 5;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -889,7 +889,7 @@
     label.height = height;
     
     UIView *view = [cell.contentView viewWithTag:102];
-    view.height = label.bottom + 5;
+    view.height = label.bottom + 5 + 5;
     UIView *line = [cell.contentView viewWithTag:104];
     line.top = view.height - 0.5;
     

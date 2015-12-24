@@ -102,9 +102,6 @@
         _table.separatorStyle = UITableViewCellSeparatorStyleNone;
         [_scroll addSubview:_table];
         _table.tag = 200 + i;
-        
-//        [_table reloadData:nil pageSize:10 noDataView:[self noDataView]];
-        
     }
     
     _indicator = [[UIView alloc]initWithFrame:CGRectMake(0, 38, width, 2)];
@@ -114,15 +111,15 @@
     //默认选中第一个
     [self controlSelectedButtonTag:100];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForPaySuccess:) name:NOTIFICATION_PAY_SUCCESS object:nil];//支付成功
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForRecieveConfirm:) name:NOTIFICATION_RECIEVE_CONFIRM object:nil];//确认收货
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCancelOrder:) name:NOTIFICATION_ORDER_CANCEL object:nil];//取消订单
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDelOrder:) name:NOTIFICATION_ORDER_DEL object:nil];//删除订单
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForTuiKuan:) name:NOTIFICATION_TUIKUAN_SUCCESS object:nil];//退款
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCommitOrderSuccess:) name:NOTIFICATION_ORDER_COMMIT object:nil];//提交订单
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForCommentSuccess:) name:NOTIFICATION_COMMENTSUCCESS object:nil];//评论
-
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_PAY_SUCCESS object:nil];//支付成功
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_ORDER_CANCEL object:nil];//取消订单
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_ORDER_DEL object:nil];//删除订单
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_TUIKUAN_SUCCESS object:nil];//退款
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_ORDER_COMMIT object:nil];//提交订单
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_COMMENTSUCCESS object:nil];//评论
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotify:) name:NOTIFICATION_APPOINT_SUCCESS object:nil];//预约成功
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -130,73 +127,60 @@
 }
 
 #pragma - mark 通知处理
+
+
 /**
- *  提交订单成功
+ *  处理通知
  *
  *  @param notify
  */
-- (void)notificationForCommentSuccess:(NSNotification *)notify
+- (void)actionForNotify:(NSNotification *)notify
 {
-    //支付成功 更新
-    [[self refreshTableForIndex:TABLEVIEW_TAG_WanCheng]showRefreshHeader:YES];//待付款
-}
-/**
- *  提交订单成功
- *
- *  @param notify
- */
-- (void)notificationForCommitOrderSuccess:(NSNotification *)notify
-{
-    //支付成功 更新
-    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu]showRefreshHeader:YES];//待付款
-}
-/**
- *  支付成功通知
- *
- *  @param notify
- */
-- (void)notificationForPaySuccess:(NSNotification *)notify
-{
-    //支付成功 更新
+    DDLOG(@"%@ %@",notify.name,notify.userInfo);
+    NSString *notifyName = notify.name;
     
-    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu]showRefreshHeader:YES];//待付款
-    [[self refreshTableForIndex:TABLEVIEW_TAG_NoAppoint]showRefreshHeader:YES];
-}
-
-/**
- *  确认收货通知
- */
-- (void)notificationForRecieveConfirm:(NSNotification *)notify
-{
-//    [[self refreshTableForIndex:TABLEVIEW_TAG_NoComment]showRefreshHeader:YES];//配送
-    [[self refreshTableForIndex:TABLEVIEW_TAG_WanCheng]showRefreshHeader:YES];//完成
-}
-
-/**
- *  取消订单通知 只有待付款可以取消订单
- */
-- (void)notificationForCancelOrder:(NSNotification *)notify
-{
-    [[self refreshTableForIndex:TABLEVIEW_TAG_DaiFu ]showRefreshHeader:YES];//待付款
-}
-
-/**
- *  删除订单通知 完成的可以删除
- */
-- (void)notificationForDelOrder:(NSNotification *)notify
-{
-    [[self refreshTableForIndex:TABLEVIEW_TAG_WanCheng]showRefreshHeader:YES];//待评价
-}
-
-/**
- *  退款通知刷新待付款和退换
- *
- */
-- (void)notificationForTuiKuan:(NSNotification *)notify
-{
+    int indexOne = -1;
+    int indexTwo = -1;
+    if ([notifyName isEqualToString:NOTIFICATION_PAY_SUCCESS]) {//支付成功
+        //支付成功 更新
+        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+        indexTwo = TABLEVIEW_TAG_NoAppoint;//待预约
+        
+    }else if ([notifyName isEqualToString:NOTIFICATION_RECIEVE_CONFIRM]){//确认收货
+        DDLOG(@"确认收货通知");
+    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_CANCEL]){//取消订单
+        //取消订单通知 只有待付款可以取消订单
+        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+        
+    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_DEL]){//删除订单
+        
+        //删除订单通知 完成的可以删除
+        indexOne = TABLEVIEW_TAG_WanCheng;
+        
+    }else if ([notifyName isEqualToString:NOTIFICATION_TUIKUAN_SUCCESS]){//退款成功
+        
+        indexOne = TABLEVIEW_TAG_NoAppoint;//待付款
+        indexTwo = TABLEVIEW_TAG_TuiHuan;//退货列表
+        
+    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_COMMIT]){//提交订单
+        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+        
+    }else if ([notifyName isEqualToString:NOTIFICATION_COMMENTSUCCESS]){//评价晒单
+        
+        indexOne = TABLEVIEW_TAG_WanCheng;//完成
+        
+    }else if ([notifyName isEqualToString:NOTIFICATION_APPOINT_SUCCESS]){//体检预约成功
+        
+        indexOne = TABLEVIEW_TAG_NoAppoint;//待预约
+        indexTwo = TABLEVIEW_TAG_Appointed;//已预约
+    }
     
-    [[self refreshTableForIndex:TABLEVIEW_TAG_NoAppoint]showRefreshHeader:YES];//待付款
-    [[self refreshTableForIndex:TABLEVIEW_TAG_TuiHuan]showRefreshHeader:YES];//退货列表
+    if (indexOne >= 0) {
+        [[self refreshTableForIndex:indexOne]showRefreshHeader:YES];
+    }
+    if (indexTwo >= 0) {
+        [[self refreshTableForIndex:indexTwo]showRefreshHeader:YES];
+    }
 }
 
 #pragma - mark 网络请求

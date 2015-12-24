@@ -269,9 +269,16 @@
     NSDictionary *failDic = @{Erro_Info: errInfo};
     failBlock(failDic);
     
+    [self removeOperation:operation];
+    failBlock = nil;
+    
     [self showErroInfo:errInfo];
 }
 
+- (void)removeBlock
+{
+    
+}
 
 /**
  *  显示错误提示
@@ -280,7 +287,7 @@
  */
 - (void)showErroInfo:(NSString *)errInfo
 {
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//    [MBProgressHUD hideHUDForView:[UIApplication sharedApplication].keyWindow animated:YES];
     [LTools showMBProgressWithText:errInfo addToView:[UIApplication sharedApplication].keyWindow];
 }
 

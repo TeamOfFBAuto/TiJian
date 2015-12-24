@@ -216,7 +216,7 @@
         [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
         
         if (voucherId.length > 0) {
-            [temp_dic setObject:voucherId forKey:@"vouchers_id"];//加上代金卷id
+            [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金卷id
             dic = temp_dic;
         }else
         {
@@ -228,7 +228,7 @@
                   @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
                   @"province_id":[GMAPI getCurrentProvinceId],
                   @"city_id":[GMAPI getCurrentCityId],
-                  @"vouchers_id":self.vouchers_id ? self.vouchers_id : @"", //加上代金卷id
+                  @"uc_id":self.vouchers_id ? self.vouchers_id : @"", //加上代金卷id
                   @"page":NSStringFromInt(_table.pageNum),
                   @"per_page":NSStringFromInt(PAGESIZE_MID)
                   };

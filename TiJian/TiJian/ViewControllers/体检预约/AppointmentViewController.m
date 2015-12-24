@@ -412,7 +412,7 @@
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.isVoucherPush = YES;
     cc.className = @"使用代金卷";
-    cc.vouchers_id = aModel.coupon_id;//代金卷
+    cc.vouchers_id = aModel.uc_id;//代金卷
     cc.brandId = aModel.brand_id;
     cc.brandName = aModel.brand_name;
     [self.navigationController pushViewController:cc animated:YES];

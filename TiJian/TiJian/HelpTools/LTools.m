@@ -936,7 +936,7 @@
 //    hud.color = DEFAULT_TEXTCOLOR;
 //    hud.labelFont = [UIFont systemFontOfSize:12];
     [hud setCornerRadius:3.f];
-    [hud hide:YES afterDelay:1.5];
+    [hud hide:YES afterDelay:3];
 }
 
 + (MBProgressHUD *)MBProgressWithText:(NSString *)text addToView:(UIView *)aView
