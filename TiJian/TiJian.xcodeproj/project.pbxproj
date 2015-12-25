@@ -3357,7 +3357,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "48657750-6dd5-425d-9c9c-f3ea3931d344";
+				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Debug;
@@ -3391,7 +3391,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "48657750-6dd5-425d-9c9c-f3ea3931d344";
+				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Release;

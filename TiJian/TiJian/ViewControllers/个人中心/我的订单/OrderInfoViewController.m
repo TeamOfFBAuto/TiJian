@@ -512,7 +512,7 @@
 //    score_offset_money;// 积分优惠金额
 //    express_fee; //运费
     
-//    NSArray *titles = @[@"商品金额",@"运费",@"优惠劵",@"代金卷",@"积分"];
+//    NSArray *titles = @[@"商品金额",@"运费",@"优惠劵",@"代金券",@"积分"];
     
     //存放所有标题
     NSMutableArray *titles = [NSMutableArray arrayWithObjects:@"商品金额",@"运费", nil];
@@ -533,10 +533,10 @@
         [titles addObject:@"优惠劵"];
         [values addObject:coupeMoney];
     }
-    //代金卷
+    //代金券
     if ([_orderModel.vouchers_offset_money floatValue] > 0) {
         NSString *coupeMoney = [NSString stringWithFormat:@"-  ￥%.2f",[_orderModel.vouchers_offset_money floatValue]];
-        [titles addObject:@"代金卷"];
+        [titles addObject:@"代金券"];
         [values addObject:coupeMoney];
     }
     

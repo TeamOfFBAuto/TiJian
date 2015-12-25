@@ -413,7 +413,7 @@
     cc.isVoucherPush = YES;
 
     cc.className = @"使用代金券";
-    cc.vouchers_id = aModel.coupon_id;//代金卷
+    cc.vouchers_id = aModel.coupon_id;//代金券
     cc.uc_id = aModel.uc_id;
     cc.brandId = aModel.brand_id;
     cc.brandName = aModel.brand_name;
