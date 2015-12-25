@@ -206,7 +206,7 @@
         [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
         
         if (voucherId.length > 0) {
-            [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金卷id
+            [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金券id
             dic = temp_dic;
         }else
         {
@@ -218,7 +218,7 @@
                   @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
                   @"province_id":[GMAPI getCurrentProvinceId],
                   @"city_id":[GMAPI getCurrentCityId],
-                  @"uc_id":self.uc_id ? self.uc_id : @"", //加上代金卷id
+                  @"uc_id":self.uc_id ? self.uc_id : @"", //加上代金券id
                   @"page":NSStringFromInt(_table.pageNum),
                   @"per_page":NSStringFromInt(PAGESIZE_MID)
                   };
@@ -257,7 +257,7 @@
 //根据城市查询品牌列表
 -(void)prepareBrandListWithLocation{
     
-    //代金卷购买,并且非通用
+    //代金券购买,并且非通用
     if (self.isVoucherPush && [self.brandId intValue] > 0) {
         //过滤掉其他品牌
         if ([LTools isEmpty:self.brandName]) {

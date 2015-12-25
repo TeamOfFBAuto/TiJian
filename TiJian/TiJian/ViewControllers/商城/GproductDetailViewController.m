@@ -801,7 +801,7 @@
         
         [LoginViewController isLogin:self loginBlock:^(BOOL success) {
             if (success) {
-                //代金卷过来 直接去确认订单
+                //代金券过来 直接去确认订单
                 if (self.isVoucherPush) {
                     
                     [self pushToConfirmOrder];

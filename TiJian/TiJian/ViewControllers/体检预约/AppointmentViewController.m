@@ -404,15 +404,16 @@
 }
 
 /**
- *  使用代金卷购买
+ *  使用代金券购买
  */
 - (void)clickToBugUseVoucher:(PropertyButton *)sender
 {
     ProductModel *aModel = sender.aModel;
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.isVoucherPush = YES;
-    cc.className = @"使用代金卷";
-    cc.vouchers_id = aModel.coupon_id;//代金卷
+
+    cc.className = @"使用代金券";
+    cc.vouchers_id = aModel.coupon_id;//代金券
     cc.uc_id = aModel.uc_id;
     cc.brandId = aModel.brand_id;
     cc.brandName = aModel.brand_name;
@@ -451,7 +452,7 @@
     if (index == 0) {
         
         ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
-        if ([aModel.type intValue] == 2) { //代金卷
+        if ([aModel.type intValue] == 2) { //代金券
             
             return;
         }
@@ -575,7 +576,7 @@
         
         AppointmentCell *cell;
         ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
-        if ([aModel.type intValue] == 2) { //代金卷
+        if ([aModel.type intValue] == 2) { //代金券
             
             static NSString *identifier = @"AppointmentCell2";
             cell = [tableView dequeueReusableCellWithIdentifier:identifier];

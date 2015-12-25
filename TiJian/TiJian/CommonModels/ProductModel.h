@@ -59,8 +59,8 @@
 @property(nonatomic,strong)NSString *order_checkuper_id;//绑定的人
 @property(nonatomic,strong)NSDictionary *company_info;//"company_id": "1",company_name": "阿里集团"
 @property(nonatomic,strong)NSString *coupon_id;
-@property(nonatomic,strong)NSString *uc_id;//代金卷coupon_id升级-----后台用于获取绑定用户性别
-@property(nonatomic,strong)NSString *vouchers_price;//代金卷金额
+@property(nonatomic,strong)NSString *uc_id;//代金券coupon_id升级-----后台用于获取绑定用户性别
+@property(nonatomic,strong)NSString *vouchers_price;//代金券金额
 //@property(nonatomic,strong)NSString *description;
 @property(nonatomic,strong)NSString *deadline;
 @property(nonatomic,strong)NSString *product_total_num;
