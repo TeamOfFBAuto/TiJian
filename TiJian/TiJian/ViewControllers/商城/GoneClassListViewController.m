@@ -23,16 +23,9 @@
     AFHTTPRequestOperation *_request_BrandListWithLocation;
     
     NSMutableArray *_productOneClassArray;
-    
     int _count;//网络请求个数
-    
-    
     UIView *_backBlackView;//筛选界面下面的黑色透明view
-    
-    
     UIButton *_filterButton;//筛选按钮
-    
-    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;
@@ -88,10 +81,7 @@
     _table.dataSource = self;
     [self.view addSubview:_table];
     [_table showRefreshHeader:YES];
-    
 }
-
-
 
 //创建侧滑栏
 -(void)creatRightTranslucentSideBar{
@@ -210,7 +200,7 @@
     NSDictionary *dic;
     
     if (theDic) {
-        NSString *voucherId = self.vouchers_id ? self.vouchers_id : @"";
+        NSString *voucherId = self.uc_id ? self.uc_id : @"";
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
         [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
         [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
@@ -228,7 +218,7 @@
                   @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
                   @"province_id":[GMAPI getCurrentProvinceId],
                   @"city_id":[GMAPI getCurrentCityId],
-                  @"uc_id":self.vouchers_id ? self.vouchers_id : @"", //加上代金卷id
+                  @"uc_id":self.uc_id ? self.uc_id : @"", //加上代金卷id
                   @"page":NSStringFromInt(_table.pageNum),
                   @"per_page":NSStringFromInt(PAGESIZE_MID)
                   };
