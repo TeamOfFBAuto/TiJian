@@ -36,6 +36,7 @@
 @property(nonatomic,retain)NSString *id_card;
 @property(nonatomic,retain)NSString *mobile;
 @property(nonatomic,retain)NSString *setmeal_name;//套餐内容或者名称
+@property(nonatomic,retain)NSString *setmeal_gender;//套餐对应的性别
 @property(nonatomic,retain)NSString *product_id;//套餐对应id
 @property(nonatomic,retain)NSString *cover_pic;//套餐图
 

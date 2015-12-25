@@ -79,11 +79,11 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
     [self.topButton addTarget:self action:@selector(clickToTop:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.topButton];
     
-    self.topButton.hidden = YES;
+//    self.topButton.hidden = YES;
     
     self.scrollView = scroll;
     
-    [scroll addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
+//    [scroll addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

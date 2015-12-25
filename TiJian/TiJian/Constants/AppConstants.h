@@ -68,7 +68,7 @@
 
 //=====================weak 和 strong
 #pragma mark - weak 和 strong
-#define WeakObj(o) autoreleasepool{} __weak typeof(o) o##Weak = o;
+#define WeakObj(o) autoreleasepool{} __weak typeof(o) Weak##o = o;
 #define StrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
 
 //错误提示信息 
