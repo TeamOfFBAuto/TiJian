@@ -29,6 +29,9 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (UINavigationController *)rootNavigationController;
 
+#pragma mark - 判断是否是企业版本
+
++ (BOOL)isEnterprise;
 
 #pragma - mark MD5 加密
 

@@ -50,6 +50,21 @@
     return (UINavigationController *)[LTools appDelegate].window.rootViewController;
 }
 
+#pragma mark - 判断是否是企业版本
+
++ (BOOL)isEnterprise
+{
+    if ([AppBunleIdentifier isEqualToString:@"com.medical.hema"]) {
+        
+        return NO;
+        
+    }else if ([AppBunleIdentifier isEqualToString:@"com.medical.hemaEnterprise"]){
+        return YES;
+    }
+    
+    return NO;
+}
+
 #pragma - mark MD5 加密
 
 /**

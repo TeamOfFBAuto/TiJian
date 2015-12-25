@@ -178,16 +178,20 @@
     if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
     {
         //设置定位权限 仅ios8有意义
-        [_locationManager requestWhenInUseAuthorization];// 前台定位
-        
-        //  [locationManager requestAlwaysAuthorization];// 前后台同时定位
+        [_locationManager requestWhenInUseAuthorization];// 前台定位        
     }
     [_locationManager startUpdatingLocation];
     
     // 要使用百度地图，请先启动BaiduMapManager
     _mapManager = [[BMKMapManager alloc]init];
-    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
-    BOOL ret = [_mapManager start:BAIDUMAP_APPKEY  generalDelegate:self];
+
+    
+    NSString *BD_Appkey = BAIDUMAP_APPKEY;
+    if ([LTools isEnterprise]) {
+        BD_Appkey = BAIDUMAP_APPKEY_Enterprise;
+    }
+    // 如果要关注网络及授权验证事件，请设定  generalDelegate参数
+    BOOL ret = [_mapManager start:BD_Appkey  generalDelegate:self];
     if (!ret) {
         DDLOG(@"manager start failed!");
     }

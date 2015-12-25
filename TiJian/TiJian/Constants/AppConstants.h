@@ -17,6 +17,9 @@
 ///屏幕高度
 #define DEVICE_HEIGHT [UIScreen mainScreen].bounds.size.height
 
+//BunleIdentifier
+#define AppBunleIdentifier [[NSBundle mainBundle] bundleIdentifier]
+
 //系统9.0之后
 #define IOS9_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"9.0"] != NSOrderedAscending )
 
@@ -127,6 +130,10 @@
 
 //百度地图
 #define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
+
+//百度地图 企业版
+#define BAIDUMAP_APPKEY_Enterprise @"s0BroqlD9hCgwm67lOwrzy3K" //com.medical.hemaEnterprise
+
 
 //融云
 //1、开发环境
