@@ -1217,8 +1217,9 @@
         
         if (isTrue) {
             [dic setValue:@"1" forKey:@"is_appoint"];
-            [dic setValue:self.voucherId forKey:@"appoint_vouchers_id"];
-            [dic setValue:[UserInfo getUserId] forKey:@"company_user_id"];
+            [dic setValue:self.voucherId ? : @"" forKey:@"appoint_vouchers_id"];
+            [dic setValue:self.uc_id ? : @"" forKey:@"uc_id"];
+            
         }
         
         
