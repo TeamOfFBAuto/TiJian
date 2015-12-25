@@ -90,7 +90,6 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
 {
     if ([keyPath isEqualToString:@"contentOffset"]) {
         
-//        NSLog(@"keyPath %@",change);
         
         UIScrollView *scroll = object;
 

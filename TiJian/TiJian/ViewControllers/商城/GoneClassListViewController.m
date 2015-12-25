@@ -277,13 +277,13 @@
         _request = [YJYRequstManager shareInstance];
     }
     
-    NSDictionary *dic = @{
-                          @"province_id":[GMAPI getCurrentProvinceId],
-                          @"city_id":[GMAPI getCurrentCityId]
-                          };
+//    NSDictionary *dic = @{
+//                          @"province_id":[GMAPI getCurrentProvinceId],
+//                          @"city_id":[GMAPI getCurrentCityId]
+//                          };
     
 //    __weak typeof(self)weakSelf = self;
-    _request_BrandListWithLocation = [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_BrandListWithLocation = [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         self.brand_city_list = [NSArray arrayWithArray:arr];
@@ -341,6 +341,7 @@
     cc.userChooseLocationDic = self.shaixuanDic;
     if (self.isVoucherPush) {
         cc.VoucherId = self.vouchers_id;
+        cc.uc_id = self.uc_id;
     }
     [self.navigationController pushViewController:cc animated:YES];
 }

@@ -84,6 +84,8 @@
     [self creatTableView];
     
     [self addScroll:_table topButtonPoint:CGPointMake(100, 100)];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -423,6 +425,11 @@
         
         [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
         
+        
+//        //添加滑动到顶部按钮
+//        [self addScroll:_table topButtonPoint:CGPointMake(DEVICE_WIDTH - 40 - 10, DEVICE_HEIGHT - 10 - 40 - 49 - 64)];
+
+        
     }
     
 }
@@ -465,6 +472,7 @@
     
     
     [_table showRefreshHeader:YES];
+    
     
 }
 

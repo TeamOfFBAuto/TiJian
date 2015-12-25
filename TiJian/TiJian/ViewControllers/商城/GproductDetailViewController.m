@@ -819,8 +819,10 @@
 - (void)pushToConfirmOrder
 {
     ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+    cc.isVoucherPush = self.isVoucherPush;
     cc.lastViewController = self;
     cc.voucherId = self.VoucherId;
+    cc.uc_id = self.uc_id;
 //    aModel.current_price\product_num、brand_name、cover_pic
     self.theProductModel.product_num = @"1";
     self.theProductModel.current_price = _theProductModel.setmeal_price;
