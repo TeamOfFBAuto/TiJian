@@ -73,7 +73,7 @@
             [view addSubview:imageView];
 //            [imageView setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
             
-            //================代金卷相关
+            //================代金券相关
             
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 20, 107, 16) title:@"1000元" font:15 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR];
             [imageView addSubview:priceLabel];
@@ -163,7 +163,7 @@
 
 -(void)setCellWithModel:(ProductModel *)aModel
 {
-    if ([aModel.type intValue] == 2) { //代金卷
+    if ([aModel.type intValue] == 2) { //代金券
         self.priceLabel.text = [NSString stringWithFormat:@"%d元",[aModel.vouchers_price intValue]];
         self.typeLabel.text = [aModel.brand_id intValue] > 0 ? aModel.brand_name : @"全场通用";
         self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",[LTools timeString:aModel.add_time withFormat:@"YYYY.MM.dd"],[LTools timeString:aModel.deadline withFormat:@"YYYY.MM.dd"]];

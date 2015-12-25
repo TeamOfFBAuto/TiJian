@@ -12,7 +12,7 @@
 
 typedef enum {
     COMPANYPRETYPE_TAOCAN = 0,//默认套餐形式
-    COMPANYPRETYPE_MONEY = 1 //代金卷形式
+    COMPANYPRETYPE_MONEY = 1 //代金券形式
 }COMPANYPRETYPE; //公司预约形式
 
 @interface CompanyCell : UITableViewCell

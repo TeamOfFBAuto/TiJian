@@ -202,7 +202,8 @@
     [self.view addSubview:_footer];
     
     UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(50, 14, DEVICE_WIDTH - 100, 40) buttonType:UIButtonTypeCustom normalTitle:@"添加新地址" selectedTitle:nil target:self action:@selector(clickToAddNewAddress:)];
-    btn.backgroundColor = DEFAULT_TEXTCOLOR;
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
+    btn.backgroundColor = RGBCOLOR(237, 108, 22);
     [btn addCornerRadius:3.f];
     [_footer addSubview:btn];
 }
