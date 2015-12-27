@@ -21,6 +21,7 @@
 #define StrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
 
 #import "UIImageView+Extensions.h"
+#import "LPhotoModel.h"
 
 //==============================打印类、方法
 #pragma mark - Debug log macro

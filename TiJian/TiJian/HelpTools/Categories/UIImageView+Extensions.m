@@ -22,12 +22,6 @@
     [self addSubview:personalButton];
 }
 
-- (void)addCornerRadius:(CGFloat)radius
-{
-    self.layer.cornerRadius = radius;
-    self.clipsToBounds = YES;
-}
-
 - (void)addRoundCorner
 {
     [self addCornerRadius:self.width/2.f];

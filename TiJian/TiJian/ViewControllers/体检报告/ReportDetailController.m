@@ -10,7 +10,7 @@
 #import "UIWebView+AFNetworking.h"
 #import "MoreReportViewController.h"
 #import "FBPhotoBrowserController.h"
-
+#import "LPhotoBrowser.h"
 
 @interface ReportDetailController ()<UIWebViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate>
 {
@@ -94,7 +94,8 @@
         NSString *url = img[i][@"img"];
         [imageView l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:nil];
         [_scrollView addSubview:imageView];
-        [imageView addTaget:self action:@selector(clickToBrowser:) tag:200 + i];
+        
+        [imageView addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
         
         [imageView setBorderWidth:0.5 borderColor:[[UIColor blackColor] colorWithAlphaComponent:0.5]];
         
@@ -213,16 +214,47 @@
     [sheet showInView:self.view];
 }
 
-- (void)clickToBrowser:(UIButton *)sender
+/**
+ *  手势
+ *
+ *  @param sender 手势
+ */
+- (void)tapToBrowser:(UITapGestureRecognizer *)sender
 {
-    int index = (int)sender.tag - 200;
+    int index = (int)sender.view.tag - 200;
+//    
+//    FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
+//    browser.showIndex = index;
+//    browser.imagesArray = _imagesArray;
+//    [self.navigationController pushViewController:browser animated:YES];
     
+//    _scrollView
     
+    NSArray *img = _userInfo.img;
     
-    FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
-    browser.showIndex = index;
-    browser.imagesArray = _imagesArray;
-    [self.navigationController pushViewController:browser animated:YES];
+    int count = (int)[img count];
+    
+    NSInteger initPage = index;
+    
+     @WeakObj(_scrollView);
+    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
+        
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
+        
+        for (int i = 0; i < count; i ++) {
+            
+            UIImageView *imageView = [Weak_scrollView viewWithTag:200 + i];
+            LPhotoModel *photo = [[LPhotoModel alloc]init];
+            photo.imageUrl = img[i][@"img"];
+            imageView = imageView;
+            photo.thumbImage = imageView.image;
+            photo.sourceImageView = imageView;
+            
+            [temp addObject:photo];
+        }
+        
+        return temp;
+    }];
 }
 
 - (void)clickToMore

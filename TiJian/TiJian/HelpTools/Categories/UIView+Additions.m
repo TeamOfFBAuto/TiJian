@@ -20,6 +20,14 @@
     [self addSubview:personalButton];
 }
 
+- (void)addTapGestureTaget:(id)target action:(SEL)selector imageViewTag:(int)imageViewTag
+{
+    self.userInteractionEnabled = YES;
+    self.tag = imageViewTag;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:target action:selector];
+    [self addGestureRecognizer:tap];
+}
+
 - (void)addCornerRadius:(CGFloat)radius
 {
     self.layer.cornerRadius = radius;
