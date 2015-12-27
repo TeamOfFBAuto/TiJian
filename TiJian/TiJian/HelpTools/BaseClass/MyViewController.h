@@ -61,6 +61,13 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 - (void)setNavigationStyle:(NAVIGATIONSTYLE)style
                      title:(NSString *)title;
 
+/**
+ *  控制置顶按钮,需要时在scrollDelegate里面调用
+ *
+ *  @param scrollView
+ */
+- (void)controlTopButtonWithScrollView:(UIScrollView *)scrollView;
+
 -(void)leftButtonTap:(UIButton *)sender;
 
 -(void)rightButtonTap:(UIButton *)sender;

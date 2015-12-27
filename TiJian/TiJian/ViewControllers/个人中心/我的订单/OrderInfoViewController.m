@@ -422,11 +422,18 @@
         }else if (status == 2){ //已付款就是待预约
             //待预约
             text1 = @"前去预约";
-            text2 = @"申请退款";
+            //1的时候可以退款
+            if ([_orderModel.enable_refund intValue] == 1) {
+                text2 = @"申请退款";
+            }
             
         }else if (status == 3){
             //已预约
-            text1 = @"申请退款";
+            text1 = @"再次购买";
+            //1的时候可以退款
+            if ([_orderModel.enable_refund intValue] == 1) {
+                text2 = @"申请退款";
+            }
         }
         else if (status == 4){
             //已完成

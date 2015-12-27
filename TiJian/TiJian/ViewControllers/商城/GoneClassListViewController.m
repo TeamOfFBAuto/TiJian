@@ -328,7 +328,7 @@
 
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    
+    [self controlTopButtonWithScrollView:scrollView];
 }
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{

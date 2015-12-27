@@ -55,6 +55,8 @@
 
 @property(nonatomic,retain)NSDictionary *newer_coupons;//首单减免
 
+@property(nonatomic,retain)NSString *enable_refund;//是否可以退款 等于1 就可以退款 0 不可以退款
+
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 
 @end

@@ -82,10 +82,6 @@
     self.rightImage = [UIImage imageNamed:@"storehome_gouwuche.png"];
     
     [self creatTableView];
-    
-    [self addScroll:_table topButtonPoint:CGPointMake(100, 100)];
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -589,6 +585,7 @@
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
     
+    [self controlTopButtonWithScrollView:scrollView];
 }
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{

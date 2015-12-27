@@ -19,6 +19,8 @@
 }
 //右上角按钮
 @property(nonatomic,strong)UILabel * navTitleLabel;//导航栏label
+@property(nonatomic,strong)UIButton *topButton;//置顶按钮
+@property(nonatomic,retain)UIScrollView *scrollView;
 
 @end
 
@@ -88,6 +90,48 @@
 
 
 #pragma mark - 视图个性化method
+
+-(UIButton *)topButton
+{
+    if (!_topButton) {
+        self.topButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.topButton.frame =CGRectMake(DEVICE_WIDTH - 20 - 40, DEVICE_HEIGHT - 50 - 40 - 64, 40, 40);
+        [self.topButton setImage:[UIImage imageNamed:@"home_button_top"] forState:UIControlStateNormal];
+        [self.view addSubview:self.topButton];
+        [self.topButton addTarget:self action:@selector(clickToTop:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view bringSubviewToFront:_topButton];
+    }
+    return _topButton;
+}
+
+/**
+ *  控制置顶按钮,需要时在scrollDelegate里面调用
+ *
+ *  @param scrollView
+ */
+- (void)controlTopButtonWithScrollView:(UIScrollView *)scrollView
+{
+    self.scrollView = scrollView;
+    
+    UIScrollView *scroll = scrollView;
+    
+    if ([scroll isKindOfClass:[UIScrollView class]] && scroll.contentOffset.y > DEVICE_HEIGHT) {
+        
+        self.topButton.hidden = NO;
+    }else
+    {
+        self.topButton.hidden = YES;
+    }
+}
+/**
+ *  置顶
+ *
+ *  @param button
+ */
+- (void)clickToTop:(UIButton *)button
+{
+    [self.scrollView setContentOffset:CGPointZero animated:YES];
+}
 
 - (void)setNavigationStyle:(NAVIGATIONSTYLE)style
                      title:(NSString *)title

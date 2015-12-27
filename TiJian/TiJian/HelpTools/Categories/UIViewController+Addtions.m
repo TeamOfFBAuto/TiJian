@@ -71,7 +71,7 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
  *  @param scroll 需要滑动的UIScrollView
  *  @param aFrame 按钮位置
  */
-- (void)addScroll:(UIScrollView *)scroll topButtonPoint:(CGPoint)point
+- (void)addScroll:(UIScrollView *)scroll topButtonPoint:(CGPoint)point 
 {
     self.topButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.topButton.frame =CGRectMake(point.x, point.y, 40, 40);
@@ -85,6 +85,9 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
     
 //    [scroll addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
 }
+
+//- (void)controlTopButtonWithSroll
+
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
