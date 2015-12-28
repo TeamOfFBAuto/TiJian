@@ -22,12 +22,6 @@
     [self addSubview:personalButton];
 }
 
-- (void)addCornerRadius:(CGFloat)radius
-{
-    self.layer.cornerRadius = radius;
-    self.clipsToBounds = YES;
-}
-
 - (void)addRoundCorner
 {
     [self addCornerRadius:self.width/2.f];
@@ -117,9 +111,6 @@
         indicator.center = CGPointMake(self.width/2.f, self.height/2.f);
         [indicator startAnimating];
 //        indicator.backgroundColor = [UIColor redColor];
-    }else
-    {
-        self.contentMode =  UIViewContentModeCenter;
     }
     
     __weak typeof(self)weakSelf = self;
@@ -133,7 +124,7 @@
         //update by lcw
         if (image) {
             
-            self.contentMode = UIViewContentModeScaleAspectFill;//等比例拉伸填充
+            self.contentMode = UIViewContentModeScaleToFill;//等比例拉伸填充
             self.clipsToBounds = YES;
         }else
         {

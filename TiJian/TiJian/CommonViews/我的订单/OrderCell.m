@@ -70,14 +70,13 @@
     //好多商品
     }else if (productNum > 1){
         
-        
         [self.iconImageView sd_setImageWithURL:nil];
         self.titleLabel.text = @"";
         self.numLabel.text = @"";
         self.priceLabel.text = @"";
         
         if (!self.contentScroll) {
-            self.contentScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(10, 14, DEVICE_WIDTH - 20, 60)];
+            self.contentScroll = [[LScrollView alloc]initWithFrame:CGRectMake(10, 14, DEVICE_WIDTH - 20, 60)];
             _contentScroll.contentSize = CGSizeMake(productNum * (80 + 5), 50);
             [self.contentView addSubview:_contentScroll];
             
@@ -88,6 +87,7 @@
                 NSString *imageUrl = product.cover_pic;
                 UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((80 + 5) * i, 0, 80, 50)];
                 [aImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+                aImageView.userInteractionEnabled = NO;
                 [_contentScroll addSubview:aImageView];
             }
         }

@@ -10,6 +10,7 @@
 #import "FBPhotoBrowserController.h"
 #import "PhotoCell.h"
 #import "PhotoBrowserView.h"
+#import "LPhotoBrowser.h"
 
 @interface MoreReportViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
@@ -65,10 +66,38 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%ld",(long)[indexPath row]);
-    FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
-    browser.showIndex = (int)indexPath.row;
-    browser.imagesArray = self.imageUrlArray;
-    [self.navigationController pushViewController:browser animated:YES];
+    int index = (int)indexPath.row;
+    //
+    //    FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
+    //    browser.showIndex = index;
+    //    browser.imagesArray = _imagesArray;
+    //    [self.navigationController pushViewController:browser animated:YES];
+    
+    NSArray *img = self.imageUrlArray;
+    
+    int count = (int)[img count];
+    
+    NSInteger initPage = index;
+    
+    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
+        
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
+        
+        for (int i = 0; i < count; i ++) {
+            
+            NSIndexPath *indexPathT = [NSIndexPath indexPathForRow:i inSection:0];
+            UIImageView *imageView = ((PhotoCell *)[collectionView cellForItemAtIndexPath:indexPathT]).imageView;
+            LPhotoModel *photo = [[LPhotoModel alloc]init];
+            photo.imageUrl = img[i];
+            imageView = imageView;
+            photo.thumbImage = imageView.image;
+            photo.sourceImageView = imageView;
+            
+            [temp addObject:photo];
+        }
+        
+        return temp;
+    }];
 }
 
 - (UICollectionView *)collectionView{

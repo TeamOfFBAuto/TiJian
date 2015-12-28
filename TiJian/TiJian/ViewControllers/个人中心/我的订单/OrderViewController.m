@@ -503,6 +503,19 @@
     OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
     [cell setCellWithModel:aModel];
     
+    cell.indexPath = indexPath;
+    if (cell.contentScroll) {
+        @WeakObj(self);
+        @WeakObj(cell);
+        [cell.contentScroll setTouchEventBlock:^(TouchEventState state) {
+            
+            if (state == TouchEventState_ended) {
+                
+                [Weakself didSelectRowAtIndexPath:Weakcell.indexPath tableView:(RefreshTableView *)tableView];
+            }
+        }];
+    }
+    
     cell.commentButton.aModel = aModel;
     cell.actionButton.aModel = aModel;
     
@@ -582,11 +595,9 @@
     
         
     int page = floor((scrollView.contentOffset.x - DEVICE_WIDTH / 2) / DEVICE_WIDTH) + 1;//只要大于半页就算下一页
-    
-    
     //选中状态
     [self controlSelectedButtonTag:page + 100];
-    
+
 }
 
 

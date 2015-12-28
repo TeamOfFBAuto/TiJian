@@ -149,7 +149,7 @@
     PeopleManageController *people = [[PeopleManageController alloc]init];
     people.actionType = PEOPLEACTIONTYPE_SELECT;
     people.noAppointNum = 1;
-    people.gender = [_appointModel.gender intValue];
+    people.gender = [_appointModel.setmeal_gender intValue];
     [self.navigationController pushViewController:people animated:YES];
     
     __weak typeof(self)weakSelf = self;
@@ -300,15 +300,20 @@
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, brandView.height - 0.5, DEVICE_WIDTH, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
     [brandView addSubview:line];
+
     
-    if (section != 2 && [_appointModel.company_id intValue] == 0) {
+    //公司
+    if ([_appointModel.company_id intValue] > 0 && section == 0) {
+        
+        
+    }else
+    {
         //箭头
         UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(view.width - 6 - 20, (50-12)/2.f, 6, 12)];
         arrow.image = [UIImage imageNamed:@"jiantou"];
         [brandView addSubview:arrow];
-        
+
     }
-    
     
     return view;
 }

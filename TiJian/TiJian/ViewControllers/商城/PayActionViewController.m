@@ -215,7 +215,7 @@
     NSString *orderSpec = orderDes;
     NSString *signedString = signString;//签名信息
     //应用注册scheme,在AlixPayDemo-Info.plist定义URL types
-    NSString *appScheme = @"com.medical.hema";
+    NSString *appScheme = AppBunleIdentifier;
     
     //将签名成功字符串格式化为订单字符串,请严格按照该格式
     NSString *orderString = nil;

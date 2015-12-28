@@ -205,8 +205,8 @@
         
         if (self.tableFooterView != self.resultView) {
             [self.tableFooterView removeFromSuperview];
-            self.tableFooterView = self.resultView;
             [self.resultView addSubview:noDataView];
+            self.tableFooterView = self.resultView;
             noDataView.center = CGPointMake(_resultView.width/2.f, _resultView.height / 3.f);
         }
     }
