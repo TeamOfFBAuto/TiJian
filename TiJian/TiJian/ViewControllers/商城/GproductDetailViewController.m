@@ -184,7 +184,7 @@
     [self prepareProductProjectList];//具体项目
     [self getshopcarNum];//购物车数量
     
-    //浏览量加一
+    //浏览量加1
     [self productLiulanNum];
     
     
@@ -633,7 +633,7 @@
     [_addShopCarBtn setFrame:CGRectMake(_downView.frame.size.width-theW, 0, theW, 50)];
     _addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
     [_addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
-    if (self.isVoucherPush) {
+    if (self.VoucherId) {
         [_addShopCarBtn setTitle:@"立即购买" forState:UIControlStateNormal];
     }
     [_addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -802,7 +802,7 @@
         [LoginViewController isLogin:self loginBlock:^(BOOL success) {
             if (success) {
                 //代金券过来 直接去确认订单
-                if (self.isVoucherPush) {
+                if (self.VoucherId) {
                     
                     [self pushToConfirmOrder];
                     
@@ -819,10 +819,8 @@
 - (void)pushToConfirmOrder
 {
     ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
-    cc.isVoucherPush = self.isVoucherPush;
     cc.lastViewController = self;
     cc.voucherId = self.VoucherId;
-    cc.uc_id = self.uc_id;
 //    aModel.current_price\product_num、brand_name、cover_pic
     self.theProductModel.product_num = @"1";
     self.theProductModel.current_price = _theProductModel.setmeal_price;

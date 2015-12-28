@@ -33,6 +33,7 @@
     
     self.myTitle = @"我的积分";
     
+    self.view.backgroundColor = [UIColor whiteColor];
     
     [self creatTab];
     
@@ -56,9 +57,15 @@
     
     _rtab.tableHeaderView = [self creatTabHeaderView];
     
+    
+    
+    
     [self.view addSubview:_rtab];
     
     [_rtab showRefreshHeader:YES];
+    
+    
+    
 }
 
 -(UIView *)creatTabHeaderView{
@@ -209,6 +216,8 @@
     
     [cell loadDataWithDic:dic];
     
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
 }

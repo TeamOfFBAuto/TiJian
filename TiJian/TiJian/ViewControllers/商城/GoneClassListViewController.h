@@ -26,7 +26,6 @@
 @property(nonatomic,assign)BOOL haveChooseGender;//yes 可以选择性别  no 限定性别
 
 //代金券购买套餐
-@property(nonatomic,assign)BOOL isVoucherPush;//from 公司代金券前去购买
 @property(nonatomic,strong)NSString *vouchers_id;//代金券id
 @property(nonatomic,strong)NSString *uc_id;//代金券绑定了个人信息
 @property(nonatomic,strong)NSString *brandId;//品牌id

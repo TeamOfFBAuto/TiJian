@@ -3338,7 +3338,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3359,9 +3359,8 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "86ea1834-d15d-475b-a314-1abc7a4216dd";
 				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
@@ -3373,7 +3372,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3394,9 +3393,8 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "86ea1834-d15d-475b-a314-1abc7a4216dd";
 				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};

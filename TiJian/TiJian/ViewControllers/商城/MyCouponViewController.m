@@ -420,7 +420,8 @@
         url = ORDER_GETDAIJIQUANLIST;
         dic = @{
                 @"authcode":[UserInfo getAuthkey],
-                @"brand_ids":self.brand_ids
+                @"brand_ids":self.brand_ids,
+                @"product_num":[NSString stringWithFormat:@"%lu",(unsigned long)self.delegate.dataArray.count]
                 };
     }
     

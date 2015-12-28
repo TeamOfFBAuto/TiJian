@@ -21,9 +21,9 @@
 @property(nonatomic,strong)ProductModel *theProductModel;//产品model
 @property(nonatomic,strong)UIImage *gouwucheProductImage;//动画image
 
-@property(nonatomic,assign)BOOL isVoucherPush;//是否是代金券过来
+//@property(nonatomic,assign)BOOL isVoucherPush;//是否是代金券过来
 
-@property(nonatomic,strong)NSString *uc_id;//代金卷和用户信息绑定
+//@property(nonatomic,strong)NSString *uc_id;//代金卷和用户信息绑定
 
 @property(nonatomic,strong)NSString *VoucherId;//代金券id
 

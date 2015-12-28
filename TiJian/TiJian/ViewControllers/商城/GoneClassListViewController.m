@@ -258,7 +258,7 @@
 -(void)prepareBrandListWithLocation{
     
     //代金券购买,并且非通用
-    if (self.isVoucherPush && [self.brandId intValue] > 0) {
+    if (self.vouchers_id && [self.brandId intValue] > 0) {
         //过滤掉其他品牌
         if ([LTools isEmpty:self.brandName]) {
             self.brandName = @"未知品牌";
@@ -337,12 +337,8 @@
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *model = _table.dataArray[indexPath.row];
     cc.productId = model.product_id;
-    cc.isVoucherPush = self.isVoucherPush;
     cc.userChooseLocationDic = self.shaixuanDic;
-    if (self.isVoucherPush) {
-        cc.VoucherId = self.vouchers_id;
-        cc.uc_id = self.uc_id;
-    }
+    cc.VoucherId = self.vouchers_id;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

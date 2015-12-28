@@ -204,7 +204,7 @@
     ProductModel *aModel = _dataArray[indexPath.row];
     cc.productId = aModel.product_id;
     if ([self.vouchers_id intValue] > 0) {
-        cc.isVoucherPush = YES;
+//        cc.isVoucherPush = YES;
         cc.VoucherId = self.vouchers_id;
     }
     [self.navigationController pushViewController:cc animated:YES];

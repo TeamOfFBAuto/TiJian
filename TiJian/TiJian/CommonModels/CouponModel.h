@@ -35,7 +35,7 @@
 @property(nonatomic,assign)BOOL isUsed;//是否被选中使用
 
 //我的钱包
-@property(nonatomic,strong)NSString *uc_id;//用不到
+@property(nonatomic,strong)NSString *uc_id;//提交订单时需要传的id
 @property(nonatomic,strong)NSString *uid;
 @property(nonatomic,strong)NSString *receive_time;//领取时间
 @property(nonatomic,strong)NSString *use_time;//使用时间

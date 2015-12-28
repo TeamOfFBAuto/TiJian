@@ -410,8 +410,6 @@
 {
     ProductModel *aModel = sender.aModel;
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-    cc.isVoucherPush = YES;
-
     cc.className = @"使用代金券";
     cc.vouchers_id = aModel.coupon_id;//代金券
     cc.uc_id = aModel.uc_id;

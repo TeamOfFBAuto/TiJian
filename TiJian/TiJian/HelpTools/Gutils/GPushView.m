@@ -31,6 +31,8 @@
     
     UILabel *_locationCityLabel;//定位城市label
     
+    CGPoint _orig_tab_contentOffset;
+    UIView *_shouView;//用于收键盘的点击view
     
 }
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender{
@@ -64,7 +66,7 @@
     
     
     //价格筛选
-    _priceArray = @[@"0—300",@"300—500",@"500—800",@"800—1000",@"1000—1500",@"1500—2000",@"2000以上"];
+    _priceArray = @[@"0 - 300",@"300 - 500",@"500 - 800",@"800 - 1000",@"1000 - 1500",@"1500 - 2000",@"2000以上"];
     
     
     //创建视图
@@ -1131,7 +1133,7 @@
             self.userChoosePrice_low = @"2000";
             self.userChoosePrice_high = nil;
         }else{
-            NSArray *paa = [self.userChoosePrice componentsSeparatedByString:@"—"];
+            NSArray *paa = [self.userChoosePrice componentsSeparatedByString:@" - "];
             self.userChoosePrice_low = paa[0];
             self.userChoosePrice_high = paa[1];
         }
@@ -1182,22 +1184,62 @@
 
 #pragma mark - UITextFieldDelegate
 
+//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+//    
+//    if (DEVICE_HEIGHT>480) {
+//        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+//        [self.tab3 setContentOffset:CGPointMake(0, 65) animated:YES];
+//    }else{
+//        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
+//        [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+//    }
+//    return YES;
+//}
+
+
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
-    if (DEVICE_HEIGHT>480) {
-        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
-        [self.tab3 setContentOffset:CGPointMake(0, 65) animated:YES];
-    }else{
-        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
-        [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+    CGPoint origin = textField.frame.origin;
+    CGPoint point = [textField.superview convertPoint:origin toView:self.tab3];
+    float navBarHeight = self.navigationView.frame.size.height;
+    CGPoint offset = self.tab3.contentOffset;
+    // Adjust the below value as you need
+    
+    
+    offset.y = (point.y - navBarHeight - 150);
+    
+    if (iPhone4) {
+        offset.y = (point.y - navBarHeight - 50);
     }
     
+    _orig_tab_contentOffset = self.tab3.contentOffset;
+    
+    [self.tab3 setContentOffset:offset animated:YES];
     
     
+//    if (!_shouView) {
+//        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+//        [_shouView addGestureRecognizer:tap];
+//    }
+//    
+//    [self addSubview:_shouView];
     
     return YES;
 }
 
+-(void)hiddenKeyBord{
+    
+//    [_shouView removeFromSuperview];
+//    
+//    [self.tab3 setContentOffset:_orig_tab_contentOffset animated:YES];
+//    
+//    [self.tf_low resignFirstResponder];
+//    [self.tf_high resignFirstResponder];
+    
+    
+    
+}
 
 
 

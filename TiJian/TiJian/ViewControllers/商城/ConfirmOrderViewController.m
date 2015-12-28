@@ -566,7 +566,8 @@
     NSString* url = ORDER_GETDAIJIQUANLIST;
     NSDictionary* parame = @{
             @"authcode":[UserInfo getAuthkey],
-            @"brand_ids":brand_ids_str
+            @"brand_ids":brand_ids_str,
+            @"product_num":[NSString stringWithFormat:@"%lu",(unsigned long)self.dataArray.count]
             };
     
     if (!_request) {
@@ -595,7 +596,7 @@
         
         for (NSDictionary *dic in enableDic_common_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (self.voucherId == model.coupon_id) {
+            if ([self.voucherId integerValue] == [model.coupon_id integerValue]) {
                 NSArray *aarr = @[model];
                 self.userSelectDaijinquanArray = aarr;
             }
@@ -603,7 +604,7 @@
         
         for (NSDictionary *dic in enableDic_uncommon_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (self.voucherId == model.coupon_id) {
+            if ([self.voucherId integerValue] == [model.coupon_id integerValue]) {
                 NSArray *aarr = @[model];
                 self.userSelectDaijinquanArray = aarr;
             }
@@ -1204,26 +1205,24 @@
     
     
     //是否从预约跳转过来
-    if (self.isVoucherPush) {
-        
-        BOOL isTrue = NO;//是否选择了这张代金券
-        
-        for (CouponModel *model in self.userSelectDaijinquanArray) {
-            if ([model.coupon_id intValue] == [self.voucherId intValue]) {
-                isTrue = YES;
-                continue;
-            }
-        }
-        
-        if (isTrue) {
-            [dic setValue:@"1" forKey:@"is_appoint"];
-            [dic setValue:self.voucherId ? : @"" forKey:@"appoint_vouchers_id"];
-            [dic setValue:self.uc_id ? : @"" forKey:@"uc_id"];
-            
-        }
-        
-        
-    }
+//    if (self.isVoucherPush) {
+    
+//        BOOL isTrue = NO;//是否选择了这张代金券
+//        
+//        for (CouponModel *model in self.userSelectDaijinquanArray) {
+//            if ([model.coupon_id intValue] == [self.voucherId intValue]) {
+//                isTrue = YES;
+//                continue;
+//            }
+//        }
+//        
+//        if (isTrue) {
+//            [dic setValue:@"1" forKey:@"is_appoint"];
+//            [dic setValue:self.voucherId ? : @"" forKey:@"appoint_vouchers_id"];
+//            [dic setValue:self.uc_id ? : @"" forKey:@"uc_id"];
+//            
+//        }
+//    }
     
     if (self.userSelectYouhuiquanArray.count>0) {//使用优惠券
         
@@ -1240,10 +1239,10 @@
     if (self.userSelectDaijinquanArray.count>0) {//使用代金券
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
         for (CouponModel *model in self.userSelectDaijinquanArray) {
-            [arr addObject:model.coupon_id];
+            [arr addObject:model.uc_id];
         }
         NSString *vouchers_id = [arr componentsJoinedByString:@","];
-        [dic setValue:vouchers_id forKey:@"vouchers_id"];
+        [dic setValue:vouchers_id forKey:@"vouchers_uc_ids"];
     }
     
     
