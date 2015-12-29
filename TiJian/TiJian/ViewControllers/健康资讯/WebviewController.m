@@ -25,7 +25,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.myTitle = @"健康资讯";
+    self.myTitle = self.navigationTitle ? :  @"健康资讯";
     
     if (self.moreInfo) {
         self.rightImageName = @"article_more";

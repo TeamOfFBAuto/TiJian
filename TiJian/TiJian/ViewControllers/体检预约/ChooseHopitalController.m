@@ -588,6 +588,9 @@ typedef enum {
 {
     
     HospitalModel *h_model = _dataArray[indexPath.row];
+    if ([h_model.appoint_percent intValue] == 100){
+        return;
+    }
     _selectHospitalId = [h_model.exam_center_id intValue];
     _selectCenterName = h_model.center_name;
     [tableView reloadData];
@@ -622,7 +625,6 @@ typedef enum {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    
     static NSString *identifier = @"PreViewCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
@@ -663,10 +665,20 @@ typedef enum {
         
         NSString *numString = [NSString stringWithFormat:@"%d%%",[h_model.appoint_percent intValue]];
         NSString *d_text = [NSString stringWithFormat:@"已预约%@",numString];
-        [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
+
+        if ([h_model.appoint_percent intValue] == 100) {
+            
+            cell.backgroundColor = [UIColor colorWithHexString:@"fafafa"];
+            label.text = d_text;
+        }else
+        {
+            cell.backgroundColor = [UIColor whiteColor];
+            [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
+        }
+        
     }
     
-    if ([h_model.exam_center_id intValue] == _selectHospitalId) {
+    if ([h_model.exam_center_id intValue] == _selectHospitalId && [h_model.appoint_percent intValue] != 100) {
         
         label.left = DEVICE_WIDTH - 100 - 10 - 35;
         icon.hidden = NO;
@@ -709,6 +721,10 @@ typedef enum {
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     HospitalModel *h_model = _dataArray[indexPath.row];
+
+    if ([h_model.appoint_percent intValue] == 100){
+        return;
+    }
     _selectHospitalId = [h_model.exam_center_id intValue];
     _selectCenterName = h_model.center_name;
     [tableView reloadData];

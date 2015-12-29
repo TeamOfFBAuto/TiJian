@@ -14,5 +14,6 @@
 
 @property(nonatomic,retain)NSString *webUrl;
 @property(nonatomic,assign)BOOL moreInfo;//是否显示更多
+@property(nonatomic,retain)NSString *navigationTitle;//标题
 
 @end
