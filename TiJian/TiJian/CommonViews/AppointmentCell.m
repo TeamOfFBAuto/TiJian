@@ -166,7 +166,7 @@
     if ([aModel.type intValue] == 2) { //代金券
         self.priceLabel.text = [NSString stringWithFormat:@"%d元",[aModel.vouchers_price intValue]];
         self.typeLabel.text = [aModel.brand_id intValue] > 0 ? aModel.brand_name : @"全场通用";
-        self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",[LTools timeString:aModel.add_time withFormat:@"YYYY.MM.dd"],[LTools timeString:aModel.deadline withFormat:@"YYYY.MM.dd"]];
+        self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",[LTools timeString:aModel.add_time withFormat:@"yyyy.MM.dd"],[LTools timeString:aModel.deadline withFormat:@"yyyy.MM.dd"]];
         return;
     }
     

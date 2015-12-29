@@ -138,7 +138,7 @@
             
         }else if (i == 4){
             
-            content = [LTools timeString:_detailModel.appointment_exam_time withFormat:@"YYYY.MM.dd"];
+            content = [LTools timeString:_detailModel.appointment_exam_time withFormat:@"yyyy.MM.dd"];
             
         }else if (i == 5){
             content = self.detailModel.center_name;

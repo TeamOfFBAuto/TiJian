@@ -990,6 +990,9 @@
         
         
     }else{
+        
+        _selectAddressId = theModel.address_id;
+
         //上分割线
         UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 2.5)];
         [imv setImage:[UIImage imageNamed:@"shoppingcart_dd_top_line.png"]];

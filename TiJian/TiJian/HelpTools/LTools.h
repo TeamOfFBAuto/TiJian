@@ -230,7 +230,7 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  *  时间戳转化为格式时间
  *
  *  @param placetime 时间线
- *  @param format    时间格式 @"YYYY-MM-dd HH:mm:ss"
+ *  @param format    时间格式 @"yyyy-MM-dd HH:mm:ss"
  *
  *  @return 返回时间字符串
  */

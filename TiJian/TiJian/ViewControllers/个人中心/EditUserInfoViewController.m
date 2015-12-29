@@ -177,7 +177,6 @@
         }else if (type == UPDATEINFOTYPE_BIRTHDAY){
             
             [UserInfo updateUserBirthday:param];
-//            _userInfo.birthday = [LTools timeDatelineWithString:param format:@"YYYY-MM-dd"];
             _userInfo.birthday = [NSString stringWithFormat:@"%@",param];
 
             
@@ -464,7 +463,7 @@
     }else if (indexPath.row == 4){
         
 //        detail = [_userInfo.birthday intValue] > 0 ? [LTools timeString:_userInfo.birthday withFormat:@"YYYY.MM.dd"] : @"未填写";
-        detail = _userInfo.birthday;
+        detail = [NSString stringWithFormat:@"%@",_userInfo.birthday];
     }else if (indexPath.row == 5){
         
         if ([LTools isValidateIDCard:_userInfo.id_card]) {
