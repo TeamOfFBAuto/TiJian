@@ -650,7 +650,7 @@
     //未过期
     if (index == 1) {
         
-        timeLabel.text = [LTools timeString:aModel.appointment_exam_time withFormat:@"YYYY.MM.dd"];
+        timeLabel.text = [LTools timeString:aModel.appointment_exam_time withFormat:@"yyyy.MM.dd"];
 
     }
     //已过期

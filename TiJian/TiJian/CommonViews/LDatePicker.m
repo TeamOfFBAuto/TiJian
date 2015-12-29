@@ -113,7 +113,7 @@
     
     [outputFormatter setLocale:[NSLocale currentLocale]];
     
-    [outputFormatter setDateFormat:@"YYYY-MM-dd"];
+    [outputFormatter setDateFormat:@"yyyy-MM-dd"];
     
     NSString *dateStr = [outputFormatter stringFromDate:date];
     

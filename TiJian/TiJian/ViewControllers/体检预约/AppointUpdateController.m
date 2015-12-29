@@ -87,14 +87,14 @@
         params = @{@"authcode":authcode,
                    @"appoint_id":_appointModel.appoint_id,
                    @"exam_center_id":_appointModel.exam_center_id,
-                   @"date":[LTools timeString:_appointModel.appointment_exam_time withFormat:@"YYYY-MM-dd"],
+                   @"date":[LTools timeString:_appointModel.appointment_exam_time withFormat:@"yyyy-MM-dd"],
                    @"myself":@"1"};
     }else
     {
         params = @{@"authcode":authcode,
                    @"appoint_id":_appointModel.appoint_id,
                    @"exam_center_id":_appointModel.exam_center_id,
-                   @"date":[LTools timeString:_appointModel.appointment_exam_time withFormat:@"YYYY-MM-dd"],
+                   @"date":[LTools timeString:_appointModel.appointment_exam_time withFormat:@"yyyy-MM-dd"],
                    @"family_uid":_updateFamilyUid ? _updateFamilyUid : @""};
     }
     
@@ -203,7 +203,7 @@
     
     _appointModel.center_name = centerName;
     _appointModel.exam_center_id = centerId;
-    NSString *time = [LTools timeDatelineWithString:date format:@"YYYY-MM-dd"];
+    NSString *time = [LTools timeDatelineWithString:date format:@"yyyy-MM-dd"];
     _appointModel.appointment_exam_time = time;
     [_table reloadData];
 }
@@ -416,7 +416,7 @@
         NSString *detail = @"";
         if (indexPath.row == 0) {
             
-            detail = [LTools timeString:_appointModel.appointment_exam_time withFormat:@"YYYY.MM.dd"];
+            detail = [LTools timeString:_appointModel.appointment_exam_time withFormat:@"yyyy.MM.dd"];
         }else if (indexPath.row == 1){
             
             detail = _appointModel.center_name;

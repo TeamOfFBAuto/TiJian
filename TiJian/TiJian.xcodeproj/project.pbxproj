@@ -112,6 +112,7 @@
 		131C11921BF04BF100629938 /* user_zhuce@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131C118D1BF04BF100629938 /* user_zhuce@2x.png */; };
 		131C11941BF04EF000629938 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 131C11931BF04EF000629938 /* LoginViewController.xib */; };
 		131C11961BF073BE00629938 /* user_xuxian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131C11951BF073BE00629938 /* user_xuxian@2x.png */; };
+		1320F27D1C32325E008E5B05 /* ChooseHopitalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */; };
 		13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 13217C9B1BDF1E9D00020C40 /* PropertyButton.m */; };
 		1322B6A71C1965E500596DAE /* CoupeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322B6A61C1965E500596DAE /* CoupeView.m */; };
 		1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B69E1BD7499900FB47A9 /* RootViewController.m */; };
@@ -287,7 +288,6 @@
 		13F1F4051BBA9EC800885D31 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4041BBA9EC800885D31 /* UIView+Frame.m */; };
 		13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F1F4071BBA9F6B00885D31 /* RefreshTableView.m */; };
 		13F241E31BF444D3002C9D81 /* HospitalModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F241E21BF444D3002C9D81 /* HospitalModel.m */; };
-		13F241E61BF4769D002C9D81 /* ChooseHopitalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F241E51BF4769D002C9D81 /* ChooseHopitalController.m */; };
 		13F242191BF4925A002C9D81 /* yuyue_jiantou_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13F242171BF4925A002C9D81 /* yuyue_jiantou_down@2x.png */; };
 		13F2421A1BF4925A002C9D81 /* yuyue_jiantou_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13F242181BF4925A002C9D81 /* yuyue_jiantou_up@2x.png */; };
 		13F2421D1BF5C0E8002C9D81 /* ArticleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F2421C1BF5C0E8002C9D81 /* ArticleModel.m */; };
@@ -630,6 +630,8 @@
 		131C118D1BF04BF100629938 /* user_zhuce@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_zhuce@2x.png"; sourceTree = "<group>"; };
 		131C11931BF04EF000629938 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		131C11951BF073BE00629938 /* user_xuxian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_xuxian@2x.png"; sourceTree = "<group>"; };
+		1320F27B1C32325E008E5B05 /* ChooseHopitalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseHopitalController.h; sourceTree = "<group>"; };
+		1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseHopitalController.m; sourceTree = "<group>"; };
 		13217C9A1BDF1E9D00020C40 /* PropertyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyButton.h; sourceTree = "<group>"; };
 		13217C9B1BDF1E9D00020C40 /* PropertyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyButton.m; sourceTree = "<group>"; };
 		1322B6A51C1965E500596DAE /* CoupeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoupeView.h; sourceTree = "<group>"; };
@@ -943,8 +945,6 @@
 		13F1F4071BBA9F6B00885D31 /* RefreshTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshTableView.m; sourceTree = "<group>"; };
 		13F241E11BF444D3002C9D81 /* HospitalModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HospitalModel.h; sourceTree = "<group>"; };
 		13F241E21BF444D3002C9D81 /* HospitalModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HospitalModel.m; sourceTree = "<group>"; };
-		13F241E41BF4769D002C9D81 /* ChooseHopitalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseHopitalController.h; sourceTree = "<group>"; };
-		13F241E51BF4769D002C9D81 /* ChooseHopitalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseHopitalController.m; sourceTree = "<group>"; };
 		13F242171BF4925A002C9D81 /* yuyue_jiantou_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_jiantou_down@2x.png"; sourceTree = "<group>"; };
 		13F242181BF4925A002C9D81 /* yuyue_jiantou_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_jiantou_up@2x.png"; sourceTree = "<group>"; };
 		13F2421B1BF5C0E8002C9D81 /* ArticleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleModel.h; sourceTree = "<group>"; };
@@ -1461,8 +1461,8 @@
 			children = (
 				13F2422F1BF5E17D002C9D81 /* AppointmentViewController.h */,
 				13F242301BF5E17D002C9D81 /* AppointmentViewController.m */,
-				13F241E41BF4769D002C9D81 /* ChooseHopitalController.h */,
-				13F241E51BF4769D002C9D81 /* ChooseHopitalController.m */,
+				1320F27B1C32325E008E5B05 /* ChooseHopitalController.h */,
+				1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */,
 				13FCD69F1BFAD6BD005AE05B /* AppointDetailController.h */,
 				13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */,
 				13FCD6A61BFB316C005AE05B /* AppointUpdateController.h */,
@@ -3075,7 +3075,6 @@
 				13F1F3F71BBA9C2500885D31 /* LNavigationController.m in Sources */,
 				E3D8AE2A1BF6054B003AE2E3 /* GcommentViewController.m in Sources */,
 				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,
-				13F241E61BF4769D002C9D81 /* ChooseHopitalController.m in Sources */,
 				13F242211BF5C4B4002C9D81 /* WebviewController.m in Sources */,
 				1362768A1C1328130077C75D /* FBPhotoBrowserController.m in Sources */,
 				13F8C5B41C05AA7E004C3FC7 /* JKUtil.m in Sources */,
@@ -3224,6 +3223,7 @@
 				13F8C57A1C058611004C3FC7 /* OrderCell.m in Sources */,
 				13F1F2671BBA78ED00885D31 /* main.m in Sources */,
 				E3E2B3F61BFAFFE3007988C5 /* DataBase.m in Sources */,
+				1320F27D1C32325E008E5B05 /* ChooseHopitalController.m in Sources */,
 				13F8C5B51C05AA7E004C3FC7 /* PhotoAlbumManager.m in Sources */,
 				13E6173F1C1584E700E370E5 /* UIImageView+ProgressView.m in Sources */,
 				E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */,
@@ -3414,6 +3414,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
+				PROVISIONING_PROFILE = "86ea1834-d15d-475b-a314-1abc7a4216dd";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Debug;
@@ -3448,6 +3449,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
+				PROVISIONING_PROFILE = "86ea1834-d15d-475b-a314-1abc7a4216dd";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Release;

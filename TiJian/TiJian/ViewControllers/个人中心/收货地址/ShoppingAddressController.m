@@ -62,8 +62,7 @@
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - 64)];
     _table.refreshDelegate = self;
     _table.dataSource = self;
-    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.view addSubview:_table];
+    _table.separatorStyle = self.isSelectAddress ? UITableViewCellSeparatorStyleSingleLine : UITableViewCellSeparatorStyleNone;    [self.view addSubview:_table];
     [_table showRefreshHeader:YES];
     
     __weak typeof(self)weakSelf = self;
@@ -387,12 +386,12 @@
             
             cell.selectImage.hidden = NO;
             cell.infoView.left = cell.selectImage.right;
-
+            cell.infoView.width = DEVICE_WIDTH - 35.f * 2;
         }else
         {
             cell.selectImage.hidden = YES;
             cell.infoView.left = 0;
-
+            cell.infoView.width = DEVICE_WIDTH - 35.f;
         }
         
         [cell.editBtn addTaget:self action:@selector(clickToEditAddress:) tag:(int)(kPadding_Edit + indexPath.row)];

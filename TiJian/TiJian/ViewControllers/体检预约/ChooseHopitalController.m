@@ -17,10 +17,10 @@ typedef enum {
     STATETYPE_CLOSE //关闭
 }STATETYPE; //日历类型
 
-@interface ChooseHopitalController ()<UITableViewDataSource,RefreshDelegate>
+@interface ChooseHopitalController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UIView *_calendar_bgView;
-    RefreshTableView *_table;
+    UITableView *_table;
     
     int _selectHospitalId;//选中得分院di
     NSString *_selectDate;//选中的时间
@@ -35,6 +35,8 @@ typedef enum {
     BOOL _isJustSelect;//是否仅为选择时间和分院
     
     CGFloat _lastOffsetY;
+    
+    NSArray *_dataArray;//数据源
 }
 
 @property (strong, nonatomic) NSCalendar *currentCalendar;
@@ -57,17 +59,18 @@ typedef enum {
     
     _currentCalendar = [NSCalendar currentCalendar];
 
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _closeButton.bottom) style:UITableViewStylePlain];
-    _table.refreshDelegate = self;
+    //日历
+    [self.view addSubview:self.calendarView];
+    
+    //列表
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, self.calendarView.bottom, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _calendarView.bottom) style:UITableViewStylePlain];
+    _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
     _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _table.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
-    _table.tableHeaderView = self.calendarView;
-    
-    
-    NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"YYYY-MM-dd"];
+    NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"yyyy-MM-dd"];
     [self networkForCenter:selectDate];
 }
 
@@ -132,7 +135,7 @@ typedef enum {
         return _calendarView;
     }
     
-    self.calendarView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_HEIGHT, 300 + 27)];
+    self.calendarView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_HEIGHT, 108 + 27)];
     _calendarView.backgroundColor = [UIColor whiteColor];
     
     [self.calendarView addSubview:self.calendar];
@@ -158,6 +161,11 @@ typedef enum {
     _closeImage.contentMode = UIViewContentModeCenter;
     [_closeButton addSubview:_closeImage];
     
+    //line
+    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, _closeButton.height - 0.5, _closeButton.width, 0.5)];
+    line.backgroundColor = [UIColor whiteColor];
+    [_closeButton addSubview:line];
+    
     return _closeButton;
 }
 
@@ -181,15 +189,6 @@ typedef enum {
     apprearance.headerTitleColor = [UIColor colorWithHexString:@"323232"];
     apprearance.weekdayTextColor = [UIColor colorWithHexString:@"999999"];
     return _calendar;
-}
-
-- (void)updateCalendarState
-{
-    [UIView animateWithDuration:0.3 animations:^{
-        self.calendarView.height = self.closeButton.bottom;
-        _table.tableHeaderView = self.calendarView;
-
-    }];
 }
 
 #pragma mark - 网络请求
@@ -254,18 +253,18 @@ typedef enum {
                    @"province_id":[GMAPI getCurrentProvinceId],
                    @"city_id":[GMAPI getCurrentCityId],
                    @"date":date,
-                   @"page":NSStringFromInt(_table.pageNum),
-                   @"per_page":@"50",
                    @"exam_center_id":_exam_center_id};
+        
+        //不写分页,后台默认返回全部
+        //@"page":NSStringFromInt(1),
+        //@"per_page":@"50",
         
     }else
     {
         params = @{@"product_id":self.productId,
                    @"province_id":[GMAPI getCurrentProvinceId],
                    @"city_id":[GMAPI getCurrentCityId],
-                   @"date":date,
-                   @"page":NSStringFromInt(_table.pageNum),
-                   @"per_page":@"50"};
+                   @"date":date};
     }
     
     NSString *api = GET_CENTER_PERCENT;
@@ -294,8 +293,6 @@ typedef enum {
 {
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-//    AppointResultController *result = [[AppointResultController alloc]init];
-//    [self.navigationController pushViewController:result animated:YES];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -361,8 +358,17 @@ typedef enum {
 - (void)parseDataWithResult:(NSDictionary *)result
 {
     NSArray *temp = [HospitalModel modelsFromArray:result[@"center_list"]];
+    _dataArray = [NSArray arrayWithArray:temp];
+    UIView *view = [self resultViewWithType:PageResultType_nodata];
+    if (temp.count == 0) {
+        [_table addSubview:view];
+        view.center = CGPointMake(_table.width/2.f, _table.height/2.f);
+    }else
+    {
+        [view removeFromSuperview];
+    }
     
-    [_table reloadData:temp pageSize:50 noDataView:[self resultViewWithType:PageResultType_nodata]];
+    [_table reloadData];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
 }
@@ -383,6 +389,8 @@ typedef enum {
 
     [_calendar setScope:selectedScope animated:YES];
     
+    NSDate *currentDate = [NSDate fs_dateFromString:_selectDate format:@"yyyy-MM-dd"];
+    [_calendar setCurrentPage:currentDate animated:YES];
 }
 
 -(void)rightButtonTap:(UIButton *)sender
@@ -452,17 +460,32 @@ typedef enum {
 {
     CGSize size = [calendar sizeThatFits:calendar.frame.size];
     
-
     _calendar.height = size.height;
     _closeButton.top = _calendar.bottom;
     
-//    _table.top = _closeButton.bottom;
-//    _table.height = DEVICE_HEIGHT - 64 - _closeButton.bottom;
-    
-    [self updateCalendarState];
+     @WeakObj(self);
+     @WeakObj(_table);
+    [UIView animateWithDuration:0.3 animations:^{
+        Weakself.calendarView.height = Weakself.closeButton.height + size.height;
+        Weak_table.height = DEVICE_HEIGHT - 64 - Weakself.calendarView.height;
+        Weak_table.top = _calendarView.bottom;
+        [Weakself updateResultView];
+    }];
     
     NSLog(@"size %f",size.height);
 }
+
+/**
+ *  更新结果页frame
+ */
+- (void)updateResultView
+{
+    UIView *view = [self resultViewWithType:PageResultType_nodata];
+    if (view) {
+        view.center = CGPointMake(_table.width/2.f, _table.height/2.f);
+    }
+}
+
 
 - (void)calendarCurrentPageDidChange:(FSCalendar *)calendar
 {
@@ -483,12 +506,12 @@ typedef enum {
 }
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date
 {
-    NSString *selectDate = [LTools timeDate:date withFormat:@"YYYY-MM-dd"];
+    NSString *selectDate = [LTools timeDate:date withFormat:@"yyyy-MM-dd"];
     NSLog(@"did select date %@",selectDate);
     
     _selectDate = selectDate;//important
     
-    [_table refreshNewData];
+    [self networkForCenter:selectDate];
 }
 
 #pragma mark - FSCalendarDataSource
@@ -504,6 +527,56 @@ typedef enum {
 }
 //- (NSDate *)maximumDateForCalendar:(FSCalendar *)calendar;
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    NSLog(@"offsety %f",offsetY);
+    
+    if (offsetY < -40) {
+        if (!self.closeButton.selected) {
+            [self clickToCloseClendar:_closeButton];
+        }
+    }else if (offsetY > 10){
+        if (self.closeButton.selected) {
+            [self clickToCloseClendar:_closeButton];
+        }
+    }
+
+//    if (_lastOffsetY > offsetY) {
+//        
+//        if (self.closeButton.selected) {
+//            
+//            [self clickToCloseClendar:self.closeButton];
+//            
+//        }
+//    }
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+
+    
+//    if (_lastOffsetY > offsetY) {
+//        
+//        if (self.closeButton.selected) {
+//            
+//            [self clickToCloseClendar:self.closeButton];
+//            
+//        }
+//    }else
+//    {
+//        if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.size.height - 40))
+//        {
+//            if (!self.closeButton.selected) {
+//                
+//                [self clickToCloseClendar:self.closeButton];
+//                
+//            }
+//        }
+//    }
+//    _lastOffsetY = offsetY;
+}
 
 #pragma - mark UITableViewDelegate
 
@@ -514,11 +587,9 @@ typedef enum {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    HospitalModel *h_model = _table.dataArray[indexPath.row];
-    
+    HospitalModel *h_model = _dataArray[indexPath.row];
     _selectHospitalId = [h_model.exam_center_id intValue];
     _selectCenterName = h_model.center_name;
-    
     [tableView reloadData];
 }
 
@@ -546,7 +617,7 @@ typedef enum {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
-    return _table.dataArray.count;
+    return _dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -582,7 +653,7 @@ typedef enum {
     UILabel *label = [cell.contentView viewWithTag:100];
     UIImageView *icon = [cell.contentView viewWithTag:101];
 
-    HospitalModel *h_model = _table.dataArray[indexPath.row];
+    HospitalModel *h_model = _dataArray[indexPath.row];
     
     if (h_model) {
         NSString *brand = h_model.brand_name;
@@ -594,8 +665,6 @@ typedef enum {
         NSString *d_text = [NSString stringWithFormat:@"已预约%@",numString];
         [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
     }
-    
-    
     
     if ([h_model.exam_center_id intValue] == _selectHospitalId) {
         
@@ -639,7 +708,7 @@ typedef enum {
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    HospitalModel *h_model = _table.dataArray[indexPath.row];
+    HospitalModel *h_model = _dataArray[indexPath.row];
     _selectHospitalId = [h_model.exam_center_id intValue];
     _selectCenterName = h_model.center_name;
     [tableView reloadData];
