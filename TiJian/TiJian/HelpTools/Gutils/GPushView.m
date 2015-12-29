@@ -31,7 +31,8 @@
     
     UILabel *_locationCityLabel;//定位城市label
     
-    CGPoint _orig_tab_contentOffset;
+    CGSize _orig_tab_contentOffset;//原来的可偏移
+    CGPoint _now_tab_contentOffset;//现在的偏移量
     UIView *_shouView;//用于收键盘的点击view
     
 }
@@ -58,6 +59,8 @@
     for (int i = 0; i<200; i++) {
         _isMark_brand[i] = 0;
     }
+    
+    _orig_tab_contentOffset = CGSizeMake(0, 0);
     
     
     //地区数据
@@ -394,8 +397,14 @@
         
         //价格选择
         if (self.userChoosePrice) {
-            [dic setValue:self.userChoosePrice_low forKey:@"low_price"];
-            if (self.userChoosePrice_high) {
+            
+            if (![LTools isEmpty:self.userChoosePrice_low]) {
+                [dic setValue:self.userChoosePrice_low forKey:@"low_price"];
+            }
+            
+            
+            
+            if (![LTools isEmpty:@"self.userChoosePrice_high"]) {
                 [dic setValue:self.userChoosePrice_high forKey:@"high_price"];
             }
         }
@@ -488,9 +497,22 @@
 //选择价格tab 填写价格之后点击确认按钮
 -(void)priceQuerenBtnClicked{
     
-    if ([GMAPI isPureNum:self.tf_low.text] && [GMAPI isPureNum:self.tf_high.text]) {
+    NSString *str_low = self.tf_low.text;
+    NSString *str_high = self.tf_high.text;
+    
+    if ([str_low floatValue]>0) {//有最低价
         
-        if ([self.tf_low.text floatValue] <= [self.tf_high.text floatValue]) {
+    }
+    
+    if ([str_high floatValue]>0) {//有最高价
+        
+    }
+    
+    
+    if ([str_low floatValue]>0 && [str_high floatValue]>0) {//最高价 最低价都有
+        if ([str_high floatValue]<[str_low floatValue]) {
+            [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的价格区间" addToView:self];
+        }else{
             for (int i = 0; i<10; i++) {
                 _isMark_price[i] = 0;
             }
@@ -510,10 +532,63 @@
             
             [self.tab1 reloadData];
         }
+    }else if ([str_low floatValue]>0){//有最低价
+        for (int i = 0; i<10; i++) {
+            _isMark_price[i] = 0;
+        }
         
-    }else{
-        [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的价格区间" addToView:self];
+        [self.tf_high resignFirstResponder];
+        [self.tf_low resignFirstResponder];
+        
+        _defaultPriceImv.hidden = YES;
+        
+        self.userChoosePrice = [NSString stringWithFormat:@"%@以上",self.tf_low.text];
+        self.userChoosePrice_low = self.tf_low.text;
+        self.userChoosePrice_high = self.tf_high.text;
+        
+        [self.tab3 reloadData];
+        [self hiddenTab:self.tab3];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        
+        [self.tab1 reloadData];
+        
+        
+        
+    }else if ([str_high floatValue]>0){//有最高价
+        for (int i = 0; i<10; i++) {
+            _isMark_price[i] = 0;
+        }
+        
+        [self.tf_high resignFirstResponder];
+        [self.tf_low resignFirstResponder];
+        
+        _defaultPriceImv.hidden = YES;
+        
+        self.userChoosePrice = [NSString stringWithFormat:@"%@以下",self.tf_high.text];
+        self.userChoosePrice_low = self.tf_low.text;
+        self.userChoosePrice_high = self.tf_high.text;
+        
+        [self.tab3 reloadData];
+        [self hiddenTab:self.tab3];
+        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+        
+        [self.tab1 reloadData];
     }
+    
+    
+    
+    
+    
+    
+//    if ([GMAPI isPureNum:self.tf_low.text] && [GMAPI isPureNum:self.tf_high.text]) {
+//        
+//        if ([self.tf_low.text floatValue] <= [self.tf_high.text floatValue]) {
+//            
+//        }
+//        
+//    }else{
+//        [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的价格区间" addToView:self];
+//    }
 
     
     
@@ -658,6 +733,7 @@
         self.tf_low.textAlignment = NSTextAlignmentCenter;
         self.tf_low.font = [UIFont systemFontOfSize:13];
         self.tf_low.delegate = self;
+        self.tf_low.keyboardType = UIKeyboardTypeNumberPad;
         [tf_low_backView addSubview:self.tf_low];
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tf_low_backView.frame)+5, 24, 10, 1)];
@@ -678,6 +754,7 @@
         self.tf_high.textAlignment = NSTextAlignmentCenter;
         self.tf_high.font = [UIFont systemFontOfSize:13];
         self.tf_high.delegate = self;
+        self.tf_high.keyboardType = UIKeyboardTypeNumberPad;
         [tf_high_backView addSubview:self.tf_high];
         
         
@@ -1184,49 +1261,85 @@
 
 #pragma mark - UITextFieldDelegate
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    
+    if (DEVICE_HEIGHT>480) {
+        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+90)];
+        [self.tab3 setContentOffset:CGPointMake(0, 90) animated:YES];
+    }else{
+        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
+        [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+    }
+    return YES;
+}
+
+
 //- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
 //    
-//    if (DEVICE_HEIGHT>480) {
-//        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
-//        [self.tab3 setContentOffset:CGPointMake(0, 65) animated:YES];
-//    }else{
-//        [self.tab3 setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height+200)];
-//        [self.tab3 setContentOffset:CGPointMake(0, 240) animated:YES];
+//    CGPoint origin = textField.frame.origin;
+//    CGPoint point = [textField.superview convertPoint:origin toView:self.tab3];
+//    float navBarHeight = self.navigationView.frame.size.height;
+//    CGPoint offset = self.tab3.contentOffset;
+//    // Adjust the below value as you need
+//    
+//    
+//    offset.y = (point.y - navBarHeight - 150);
+//    
+//    if (iPhone4) {
+//        offset.y = (point.y - navBarHeight - 50);
 //    }
+//    
+//    _now_tab_contentOffset = offset;
+//    
+//    
+//    if (_orig_tab_contentOffset.height == 0) {
+//        _orig_tab_contentOffset = self.tab3.contentSize;
+//    }
+//    
+//    
+//
+//    CGSize sss = _orig_tab_contentOffset;
+//    
+//    
+//    
+//    sss.height = _orig_tab_contentOffset.height + offset.y;
+//    self.tab3.contentSize = sss;
+//    
+//    [self.tab3 setContentOffset:offset animated:YES];
+//    
+//    
+////    if (!_shouView) {
+////        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+////        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+////        [_shouView addGestureRecognizer:tap];
+////    }
+////    
+////    [self addSubview:_shouView];
+//    
 //    return YES;
 //}
 
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     
-    CGPoint origin = textField.frame.origin;
-    CGPoint point = [textField.superview convertPoint:origin toView:self.tab3];
-    float navBarHeight = self.navigationView.frame.size.height;
-    CGPoint offset = self.tab3.contentOffset;
-    // Adjust the below value as you need
-    
-    
-    offset.y = (point.y - navBarHeight - 150);
-    
-    if (iPhone4) {
-        offset.y = (point.y - navBarHeight - 50);
-    }
-    
-    _orig_tab_contentOffset = self.tab3.contentOffset;
-    
-    [self.tab3 setContentOffset:offset animated:YES];
-    
-    
-//    if (!_shouView) {
-//        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
-//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
-//        [_shouView addGestureRecognizer:tap];
-//    }
-//    
-//    [self addSubview:_shouView];
+        if (string.length == 0) {//删除
+            
+        }else{//新输入
+            
+            if (![GMAPI isPureNum:string]) {
+                return NO;
+            }
+            
+            
+        }
+        
     
     return YES;
 }
+
+
+
+
 
 -(void)hiddenKeyBord{
     
@@ -1236,9 +1349,7 @@
 //    
 //    [self.tf_low resignFirstResponder];
 //    [self.tf_high resignFirstResponder];
-    
-    
-    
+
 }
 
 
