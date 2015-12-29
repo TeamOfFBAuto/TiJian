@@ -25,6 +25,8 @@
     UIImageView *_headImageView;//头像
     
     UILabel *_nameLabel;
+    UILabel *_sexLabel;
+    UIImageView *_sexImage;
     UIView *_headview;//table headview
 }
 
@@ -38,10 +40,14 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [_loginView removeFromSuperview];
-    _loginView = nil;
-    [self updateLoginState:[LoginViewController isLogin]];
+
+//    //同步网络数据
+//    if ([LoginManager isLogin]) {
+//        [self netWorkForList];
+//    }
+    if ([LoginManager isLogin]) {
+        [self updateUserInfo];
+    }
 }
 
 - (void)viewDidLoad {
@@ -67,6 +73,11 @@
     
     UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5.f)];
     _table.tableFooterView = footer;
+    
+    //同步网络数据
+    if ([LoginManager isLogin]) {
+        [self netWorkForList];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -87,6 +98,70 @@
 }
 
 #pragma - mark 网络请求
+
+- (void)netWorkForList
+{
+    NSString *authkey = [UserInfo getAuthkey];
+    NSDictionary *params = @{@"authcode":authkey};;
+    NSString *api = GET_USERINFO_WITHID;
+    
+     @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        [MBProgressHUD hideAllHUDsForView:Weakself.view animated:YES];
+        
+        NSDictionary *user_info = result[@"user_info"];
+        
+        [Weakself updateUserInfoWithResult:user_info];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        
+    }];
+}
+
+- (void)updateUserInfoWithResult:(NSDictionary *)result
+{
+    UserInfo *userInfo = [[UserInfo alloc]initWithDictionary:result];
+    
+    [userInfo cacheUserInfo];//存储
+
+    [self updateUserInfo];
+    
+}
+
+- (void)updateUserInfo
+{
+    UserInfo *userInfo = [UserInfo userInfoForCache];
+    //设置头像
+    BOOL updateState = [LTools boolForKey:USER_UPDATEHEADIMAGE_STATE];
+    if (!updateState) { //不需要上传,则正常显示url
+        
+        UIImage *image = _headImageView.image ? : DEFAULT_HEADIMAGE;
+        [_headImageView sd_setImageWithURL:[NSURL URLWithString:userInfo.avatar] placeholderImage:image options:SDWebImageRefreshCached];
+    
+    }else
+    {
+        UIImage *image = [[SDImageCache sharedImageCache]imageFromDiskCacheForKey:USER_NEWHEADIMAGE];
+        if (image) {
+            _headImageView.image = image;
+        }else
+        {
+            _headImageView.image = DEFAULT_HEADIMAGE;
+        }
+    }
+    
+    NSString *name = [NSString stringWithFormat:@"用户名:%@",userInfo.user_name];
+    _nameLabel.text = name;
+    
+    int sex = [userInfo.gender intValue];
+    _sexImage.image = sex == 1 ? [UIImage imageNamed:@"sex_nan"] : [UIImage imageNamed:@"sex_nv"];
+    
+    NSString *sexString = (sex == 1) ? @"男" : @"女";
+    _sexLabel.text = sexString;
+    
+}
 
 #pragma - mark 创建视图
 /**
@@ -172,15 +247,16 @@
     [_loginView addSubview:sexLabel];
     
     int sex = [_userInfo.gender intValue];
-    
     UIImageView *sexImage = [[UIImageView alloc]initWithFrame:CGRectMake(sexLabel.right + 5, sexLabel.top + 1, 12, 12)];
     sexImage.image = sex == 1 ? [UIImage imageNamed:@"sex_nan"] : [UIImage imageNamed:@"sex_nv"];
     [_loginView addSubview:sexImage];
+    _sexImage = sexImage;
     
     NSString *sexString = (sex == 1) ? @"男" : @"女";
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(sexImage.right + 6, sexLabel.top, 15, 15) title:sexString font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [_loginView addSubview:label];
-    
+    _sexLabel = label;
+
 //    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 23, (80-23)/2.f, 23, 23)];
 //    editImage.image = [UIImage imageNamed:@"bianji"];
 //    [_loginView addSubview:editImage];
@@ -239,16 +315,7 @@
 
 - (void)clickToEditUserInfo
 {
-    __weak typeof(self)weakSelf = self;
-    if ([LoginViewController isLogin:self loginBlock:^(BOOL success) {
-        
-        if (success) {
-            
-            //登录成功更新界面
-            [weakSelf updateLoginState:YES];
-        }
-    }])
-    {
+    if ([LoginManager isLogin:self]) {
         //已登录
         NSLog(@"编辑个人信息");
         EditUserInfoViewController *edit = [[EditUserInfoViewController alloc]init];
