@@ -261,12 +261,11 @@
     if (self.vouchers_id && [self.brandId intValue] > 0) {
         //过滤掉其他品牌
         if ([LTools isEmpty:self.brandName]) {
-            self.brandName = @"未知品牌";
+            self.brandName = @"其他品牌";
         }
         NSDictionary *dic = @{@"brand_id":self.brandId,
                               @"brand_name":self.brandName
                               };
-//        [self creatFilterBtn];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         self.brand_city_list = @[dic];
         
@@ -276,12 +275,6 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    
-//    NSDictionary *dic = @{
-//                          @"province_id":[GMAPI getCurrentProvinceId],
-//                          @"city_id":[GMAPI getCurrentCityId]
-//                          };
-    
 //    __weak typeof(self)weakSelf = self;
     _request_BrandListWithLocation = [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         

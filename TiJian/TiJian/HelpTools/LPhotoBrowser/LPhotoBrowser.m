@@ -28,6 +28,8 @@
 
 @property (nonatomic,strong)UIButton *closeButton;
 
+@property (nonatomic,strong)UIView *backgroudView;//背景view
+
 @end
 
 @implementation LPhotoBrowser
@@ -39,9 +41,12 @@
     //去除自动处理
     self.automaticallyAdjustsScrollViewInsets = NO;
     
+    [self.view addSubview:self.backgroudView];
+
     //每页数据准备
     self.browserView = [[LPhotoBrowserView alloc]initWithFrame:self.view.bounds withImagesArr:self.photoModels initPage:(int)self.initIndex];
     [self.view addSubview:_browserView];
+    
     
     //长按手势
     UILongPressGestureRecognizer *press = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
@@ -152,6 +157,22 @@
 
 #pragma mark - getter
 
+/**
+ *  背景
+ *
+ *  @return
+ */
+-(UIView *)backgroudView
+{
+    if (!_backgroudView) {
+        _backgroudView = [[UIView alloc]initWithFrame:self.view.bounds];
+        _backgroudView.backgroundColor = [UIColor blackColor];
+        [self.view addSubview:_backgroudView];
+        _backgroudView.alpha = 0.f;
+    }
+    return _backgroudView;
+}
+
 -(UIButton *)closeButton
 {
     if (_closeButton) {
@@ -212,6 +233,8 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    self.backgroudView.backgroundColor = [UIColor clearColor];
+    
     LPhotoModel *photoModel = self.photoModels[self.page];
     
     CGRect sourceF = photoModel.sourceFrame;
@@ -253,7 +276,6 @@
 {
     if (show) {
         
-        
         //拿到window
         UIWindow *window = _handleVC.view.window;
         if(window == nil){
@@ -265,11 +287,16 @@
         [window addSubview:self.view];
         //添加子控制器
         [_handleVC addChildViewController:self];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.view.backgroundColor = [UIColor blackColor];
-            //显示状态栏
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-        });
+        
+        //显示状态栏
+         @WeakObj(self);
+        [UIView animateWithDuration:0.5 animations:^{
+            Weakself.backgroudView.alpha = 1.f;
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+        } completion:^(BOOL finished) {
+            
+        }];
+        
     }else
     {
         _handleVC = nil;
@@ -281,10 +308,5 @@
         [self removeFromParentViewController];
     }
 }
-
-//- (BOOL)prefersStatusBarHidden
-//{
-//    return YES;
-//}
 
 @end

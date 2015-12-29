@@ -129,7 +129,7 @@
     
     if (_isUpdated) {
         
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定重新预约？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"确定修改预约?" message:@"修改后原预约将取消" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];
     }else
     {

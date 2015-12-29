@@ -470,6 +470,7 @@
      */
     LPhotoView *zoom_last = [self configItemWithIndex:_pageIndex - 1];
     LPhotoView *zoom_next = [self configItemWithIndex:_pageIndex + 1];
+    
     if (zoom_last) {
         [zoom_last resetImageFrameWithImage];
     }
