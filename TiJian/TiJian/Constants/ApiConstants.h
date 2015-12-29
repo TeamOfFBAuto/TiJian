@@ -14,6 +14,21 @@
 //#define SERVER_URL @"http://123.57.51.27:85" //域名地址 正式
 #define SERVER_URL @"http://123.57.56.167:85" //域名地址 测试
 
+//体检须知
+#define URL_TIJIANXUZHI @"/data/checkup_notice.html"
+
+//优惠券说明
+#define URL_YOUHUIQUANSHUOMING @"/data/coupon_notice.html"
+
+//代金券说明
+#define URL_DAIJINQUANSHUOMING @"/data/voucher_notice.html"
+
+//积分说明
+#define URL_JIFENSHUOMING @"/data/score_rules.html"
+
+//隐私说明
+#define URL_YINSISHUOMING @"/data/privacy.html"
+
 
 //商城首页轮播图
 #define StoreCycleAdv @"/index.php?d=api&c=adver&m=adver_list"

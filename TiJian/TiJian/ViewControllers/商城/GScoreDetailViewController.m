@@ -8,6 +8,7 @@
 
 #import "GScoreDetailViewController.h"
 #import "GUserScoreDetailTableViewCell.h"
+#import "GwebViewController.h"
 
 @interface GScoreDetailViewController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -72,14 +73,16 @@
     UIView *tabHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 150)];
     tabHeaderView.backgroundColor = [UIColor whiteColor];
     
-    UILabel *jifenGuizeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 12 - 80, 0, 80, 30)];
+    UILabel *jifenGuizeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 12 - 45, 0, 45, 30)];
     [jifenGuizeLabel addTaget:self action:@selector(jifenGuizeLabelClicked) tag:0];
     jifenGuizeLabel.font = [UIFont systemFontOfSize:11];
     jifenGuizeLabel.textAlignment = NSTextAlignmentRight;
     jifenGuizeLabel.textColor = [UIColor grayColor];
     jifenGuizeLabel.text = @"积分规则";
     [tabHeaderView addSubview:jifenGuizeLabel];
-    
+    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(jifenGuizeLabel.frame.origin.x-10, jifenGuizeLabel.frame.size.height*0.5-5, 10, 10)];
+    [imv setImage:[UIImage imageNamed:@"yuyue_wenhao.png"]];
+    [tabHeaderView addSubview:imv];
     
     UIView *yuanView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
     yuanView.layer.cornerRadius = 50;
@@ -154,8 +157,15 @@
 #pragma mark - 点击方法
 -(void)jifenGuizeLabelClicked{
     NSLog(@"%s",__FUNCTION__);
-    UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"正在建设中" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [al show];
+    
+    GwebViewController *ccc = [[GwebViewController alloc]init];
+    
+    ccc.urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_JIFENSHUOMING];
+    ccc.targetTitle = @"积分使用规则";
+    ccc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:ccc animated:YES];
+    
+    
 }
 
 

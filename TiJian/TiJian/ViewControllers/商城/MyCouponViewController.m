@@ -9,6 +9,7 @@
 #import "MyCouponViewController.h"
 #import "MyCouponTableViewCell.h"
 #import "ConfirmOrderViewController.h"
+#import "GwebViewController.h"
 
 @interface MyCouponViewController ()<UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
 {
@@ -25,6 +26,10 @@
     
     UIButton *_use_btn;
     
+    NSString *_theUrl;//使用说明url
+    NSString *_targetTitle;//web页面的标题
+    
+    
 }
 @end
 
@@ -37,18 +42,31 @@
     
     
     if (self.type == GCouponType_youhuiquan) {//优惠券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
         self.myTitle = @"我的优惠券";
+        _theUrl = URL_YOUHUIQUANSHUOMING;
+        _targetTitle = @"优惠券使用规则";
     }else if (self.type == GCouponType_daijinquan){//代金券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
         self.myTitle = @"我的代金券";
+        _theUrl = URL_DAIJINQUANSHUOMING;
+        _targetTitle = @"代金券使用规则";
     }else if (self.type == GCouponType_use_youhuiquan){//使用优惠券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
         self.myTitle = @"使用优惠券";
+        _theUrl = URL_YOUHUIQUANSHUOMING;
+        _targetTitle = @"优惠券使用规则";
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
-        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+        [self setMyViewControllerLeftButtonType:0 WithRightButtonType:MyViewControllerRightbuttonTypeText];
         self.myTitle = @"使用代金券";
+        _theUrl = URL_DAIJINQUANSHUOMING;
+        _targetTitle = @"代金券使用规则";
     }
+    
+    
+    self.rightString = @"使用说明";
+    
+    
     
     self.view.backgroundColor = RGBCOLOR(245, 245, 245);
     
@@ -61,6 +79,10 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+
+
 
 
 
@@ -107,7 +129,12 @@
 #pragma mark - 重载方法
 -(void)rightButtonTap:(UIButton *)sender{
     
+    GwebViewController *ccc = [[GwebViewController alloc]init];
     
+    ccc.urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,_theUrl];
+    ccc.targetTitle = _targetTitle;
+    ccc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:ccc animated:YES];
     
     
 }
@@ -768,6 +795,10 @@
 }
 
 #pragma mark - 点击处理
+
+
+
+
 
 /**
  *  获取button 根据tag
