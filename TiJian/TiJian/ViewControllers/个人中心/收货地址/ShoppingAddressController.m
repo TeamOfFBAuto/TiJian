@@ -98,6 +98,8 @@
 
 #pragma mark - 网络请求
 
+
+#pragma mark - 设为默认地址的网络请求
 - (void)updateDefaultAddress:(UIButton *)sender
 {
 //    __weak typeof(_table)weakTable = _table;
@@ -285,6 +287,8 @@
  *
  *  @param sender
  */
+
+#pragma mark - 设为默认地址按钮点击
 - (void)clickToSelectAddress:(UIButton *)sender
 {
     sender.selected = !sender.selected;
@@ -401,7 +405,11 @@
     
     static NSString *identify = @"AddressCell";
     AddressCell *cell = (AddressCell *)[LTools cellForIdentify:identify cellName:identify forTable:tableView];
-    [cell.addressButton addTarget:self action:@selector(clickToSelectAddress:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (_table.dataArray.count>1) {
+        [cell.addressButton addTarget:self action:@selector(clickToSelectAddress:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -413,7 +421,12 @@
     }
     
     cell.addressButton.tag = kPadding_Default + indexPath.row;
-    [cell.addressButton addTarget:self action:@selector(updateDefaultAddress:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    if (_table.dataArray.count>1) {
+        [cell.addressButton addTarget:self action:@selector(updateDefaultAddress:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     cell.deleteButton.tag = kPadding_Delete + indexPath.row;
     [cell.deleteButton addTarget:self action:@selector(clickToDeleteAddress:) forControlEvents:UIControlEventTouchUpInside];
     

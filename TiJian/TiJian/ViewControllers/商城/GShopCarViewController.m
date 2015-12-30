@@ -11,6 +11,7 @@
 #import "ProductModel.h"
 #import "GproductDetailViewController.h"
 #import "ConfirmOrderViewController.h"
+#import "GStoreHomeViewController.h"
 
 @interface GShopCarViewController ()<UITableViewDataSource,RefreshDelegate,UIActionSheetDelegate>
 {
@@ -875,22 +876,43 @@
 -(ResultView *)resultViewWithType:(PageResultType)type
 {
     NSString *content;
+    NSString *btnTitle;
     if (type == PageResultType_nodata){
         
-        content = @"购物车还是空的";
+        content = @"快去挑几件喜欢的宝贝吧";
+        btnTitle = @"去逛逛";
         
     }
     
 
     ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"gouwuche-kong.png"]
-                                                    title:@"温馨提示"
+                                                    title:@"购物车还是空的"
                                                   content:content];
+    
+    
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 200, 36);
+    [btn addCornerRadius:5.f];
+    btn.backgroundColor = DEFAULT_TEXTCOLOR;
+    [btn setTitle:btnTitle forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [btn addTarget:self action:@selector(quguangguangBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [result setBottomView:btn];
+    
     
     
     
     return result;
 }
 
+
+-(void)quguangguangBtnClicked{
+    NSLog(@"%s",__FUNCTION__);
+    GStoreHomeViewController *cc = [[GStoreHomeViewController alloc]init];
+    [self.navigationController pushViewController:cc animated:YES];
+}
 
 
 @end

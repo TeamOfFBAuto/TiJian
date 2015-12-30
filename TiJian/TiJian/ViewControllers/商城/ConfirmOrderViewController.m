@@ -383,7 +383,13 @@
     UILabel *l4 = [_theNewbilityView viewWithTag:14];//积分
     
     l0.text = [NSString stringWithFormat:@"￥ %.2f",_price_total];
-    l1.text = [NSString stringWithFormat:@"+ %.2f",yunfei];
+    if (yunfei == 0) {
+        l1.text = @"免运费";
+    }else{
+        l1.text = [NSString stringWithFormat:@"+ %.2f",yunfei];
+    }
+    
+    
     l2.text = [NSString stringWithFormat:@"- %.2f",youhuiquan];
     l3.text = [NSString stringWithFormat:@"- %.2f",daijinquan];
     l4.text = [NSString stringWithFormat:@"- %.2f",_fanal_usedScore/100.0];
