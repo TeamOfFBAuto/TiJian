@@ -359,7 +359,7 @@
             
         }else{//非通用
             for (CouponModel *oneModel in arr) {
-                if (oneModel.brand_id == model.brand_id) {
+                if ([oneModel.brand_id integerValue] == [model.brand_id integerValue]) {
                     oneModel.isUsed = NO;
                 }
             }
@@ -391,15 +391,6 @@
             }
         }
         self.userChooseDaijinquanArray = arr1;
-        
-        
-        
-        
-//        if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
-//            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
-//        }else{
-//            _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
-//        }
         
         
         _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);

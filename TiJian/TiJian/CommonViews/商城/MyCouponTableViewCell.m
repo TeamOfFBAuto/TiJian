@@ -114,13 +114,13 @@
             [self.contentView addSubview:self.daijiquanImv];
             
             self.daijinquan_priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 0, self.daijiquanImv.frame.size.width*210/540.0-5, self.daijiquanImv.frame.size.height*0.5)];
-            self.daijinquan_priceLabel.font = [UIFont systemFontOfSize:12];
+            self.daijinquan_priceLabel.font = [UIFont systemFontOfSize:9];
             self.daijinquan_priceLabel.textAlignment = NSTextAlignmentRight;
             self.daijinquan_priceLabel.textColor = RGBCOLOR(91, 146, 199);
             [self.daijiquanImv addSubview:self.daijinquan_priceLabel];
             
             self.miaoshuLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(self.daijinquan_priceLabel.frame), self.daijinquan_priceLabel.frame.size.width, self.daijinquan_priceLabel.frame.size.height)];
-            self.miaoshuLabel.font = [UIFont systemFontOfSize:11];
+            self.miaoshuLabel.font = [UIFont systemFontOfSize:9];
             self.miaoshuLabel.text = @"超额补差价";
             self.miaoshuLabel.textAlignment = NSTextAlignmentRight;
             self.miaoshuLabel.textColor = RGBCOLOR(134, 135, 136);
@@ -129,13 +129,14 @@
             
             self.daijinquan_brandNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.daijinquan_priceLabel.right, self.daijinquan_priceLabel.frame.origin.y, self.daijiquanImv.frame.size.width - self.daijinquan_priceLabel.frame.size.width, self.daijiquanImv.frame.size.height*0.5)];
             self.daijinquan_brandNameLabel.textAlignment = NSTextAlignmentCenter;
-            self.daijinquan_brandNameLabel.font = [UIFont systemFontOfSize:12];
+            self.daijinquan_brandNameLabel.font = [UIFont systemFontOfSize:9];
             self.daijinquan_brandNameLabel.textColor = RGBCOLOR(91, 146, 199);
             [self.daijiquanImv addSubview:self.daijinquan_brandNameLabel];
             
-            self.daijinquan_timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.daijinquan_brandNameLabel.frame.origin.x, CGRectGetMaxY(self.daijinquan_brandNameLabel.frame), self.daijinquan_brandNameLabel.frame.size.width, self.daijinquan_brandNameLabel.frame.size.height)];
+            self.daijinquan_timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.daijinquan_brandNameLabel.frame.origin.x, CGRectGetMaxY(self.daijinquan_brandNameLabel.frame), self.daijinquan_brandNameLabel.frame.size.width-10, self.daijinquan_brandNameLabel.frame.size.height)];
+            self.daijinquan_timeLabel.numberOfLines = 2;
             self.daijinquan_timeLabel.textAlignment = NSTextAlignmentCenter;
-            self.daijinquan_timeLabel.font = [UIFont systemFontOfSize:11];
+            self.daijinquan_timeLabel.font = [UIFont systemFontOfSize:9];
             self.daijinquan_timeLabel.textColor = RGBCOLOR(91, 146, 199);
             [self.daijiquanImv addSubview:self.daijinquan_timeLabel];
             
@@ -170,7 +171,7 @@
     if (theType == GCouponType_use_youhuiquan) {
         for (CouponModel *model in self.delegate.userChooseYouhuiquanArray) {
             NSLog(@"%@",model.coupon_id);
-            if (model.coupon_id == theModel.coupon_id) {
+            if ([model.coupon_id integerValue] == [theModel.coupon_id integerValue]) {
                 theModel.isUsed = YES;
                 self.chooseBtn.selected = YES;
             }
@@ -178,7 +179,7 @@
     }else if (theType == GCouponType_use_daijinquan){
         for (CouponModel *model in self.delegate.userChooseDaijinquanArray) {
             NSLog(@"%@",model.coupon_id);
-            if (model.coupon_id == theModel.coupon_id) {
+            if ([model.coupon_id integerValue] == [theModel.coupon_id integerValue]) {
                 theModel.isUsed = YES;
                 self.chooseBtn.selected = YES;
             }
@@ -250,8 +251,8 @@
         self.daijinquan_priceLabel.text = [NSString stringWithFormat:@"%@元",theModel.vouchers_price];
         self.daijinquan_brandNameLabel.text = theModel.brand_name;
         NSString *start_time = [GMAPI timechangeYMD:theModel.use_start_time];
-        NSString *end_time = [GMAPI timechangeMD:theModel.use_end_time];
-        self.daijinquan_timeLabel.text = [NSString stringWithFormat:@"%@-%@",start_time,end_time];
+        NSString *end_time = [GMAPI timechangeYMD:theModel.use_end_time];
+        self.daijinquan_timeLabel.text = [NSString stringWithFormat:@"%@至%@",start_time,end_time];
         
         
         if (theModel.enable_use == 0){//不可用
