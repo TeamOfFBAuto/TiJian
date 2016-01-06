@@ -341,16 +341,18 @@
  */
 - (void)pushToPersonalCustom
 {
-    __weak typeof(self)weakSelf = self;
-    [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-       
-        if (success) {
-            [weakSelf pushToPhysicaResult];
-        }else
-        {
-            NSLog(@"没登陆成功");
-        }
-    }];
+//    __weak typeof(self)weakSelf = self;
+//    [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+//       
+//        if (success) {
+//            [weakSelf pushToPhysicaResult];
+//        }else
+//        {
+//            NSLog(@"没登陆成功");
+//        }
+//    }];
+    
+    [self pushToPhysicaResult];//个性化定制不需要登录,登录之后选择是否同步
 }
 
 /**
@@ -395,7 +397,7 @@
     [self.navigationController pushViewController:web animated:YES];
 }
 /**
- *  监控资讯列表
+ *  资讯列表
  */
 - (void)pushToHealthNewsList
 {

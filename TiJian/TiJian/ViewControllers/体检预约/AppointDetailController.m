@@ -65,7 +65,7 @@
     //体检需知
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setImage:[UIImage imageNamed:@"yuyue_wenhao"] forState:UIControlStateNormal];
-    [btn setTitle:@" 体检需知" forState:UIControlStateNormal];
+    [btn setTitle:@" 体检须知" forState:UIControlStateNormal];
     [btn setTitleColor:DEFAULT_TEXTCOLOR_TITLE_SUB forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont systemFontOfSize:12];
     btn.frame = CGRectMake(DEVICE_WIDTH - 65 - 15, 20, 65, 13);
@@ -97,11 +97,19 @@
         self.rightImage = [UIImage imageNamed:@"personal_yuyue_xiugai"];
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     }
-    
-    UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 82, 20) title:title1 font:12 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
-    [btn2 addSubview:label1];
-    UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(0, label1.bottom, 82, 20) title:title2 font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
-    [btn2 addSubview:label2];
+    if ([_detailModel.days intValue] > 0) {
+        
+        UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, 82, 20) title:title1 font:12 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+        [btn2 addSubview:label1];
+        UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(0, label1.bottom, 82, 20) title:title2 font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+        [btn2 addSubview:label2];
+    }else
+    {
+        UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, 82, 20) title:title1 font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor]];
+        label1.font = [UIFont boldSystemFontOfSize:14.f];
+        [btn2 addSubview:label1];
+        label1.text = @"今日体检";
+    }
     
     //体检信息
     CGFloat left = 20.f;

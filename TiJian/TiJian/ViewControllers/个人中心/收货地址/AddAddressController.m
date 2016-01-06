@@ -102,7 +102,7 @@
                 _selectProvinceId = [pro_id integerValue];
                 _selectCityId = [city_id integerValue];
                 
-                DDLOG(@"\nproId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
+                DDLOG(@"\nproId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,(long)self.cityId,self.cityName);
                 
             }else if (i == 3){
                 tf.text = self.addressModel.street;
@@ -315,7 +315,7 @@
     NSDictionary *params;
     NSString *api;
     
-    NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
+    NSLog(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,(long)self.cityId,self.cityName);
     
     //编辑
     if (self.isEditAddress) {
@@ -365,7 +365,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
-    NSLog(@"alertView proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
+    NSLog(@"alertView proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,(long)self.cityId,self.cityName);
     
     if (buttonIndex == 1) {
         
@@ -387,7 +387,7 @@
         
         if (self.isEdited) {
             //需要保存
-            DDLOG(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,self.cityId,self.cityName);
+            DDLOG(@"proId:%ld proName:%@\n cityId:%ld cityName:%@",(long)self.provinceId,self.provinceName,(long)self.cityId,self.cityName);
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否保存当前编辑信息" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
             [alert show];
             
@@ -601,7 +601,7 @@
     _selectProvinceId = self.provinceId;
     _selectCityId = self.cityId;
     
-    DDLOG(@"在这里  省:%@ id %ld   市:%@ id:%ld",self.provinceName,(long)self.provinceId,self.cityName,self.cityId);
+    DDLOG(@"在这里  省:%@ id %ld   市:%@ id:%ld",self.provinceName,(long)self.provinceId,self.cityName,(long)self.cityId);
     [self textFieldForTag:102].text = [NSString stringWithFormat:@"%@%@",self.provinceName,self.cityName];
     
     [self updateEditStateForTextField:[self textFieldForTag:102]];

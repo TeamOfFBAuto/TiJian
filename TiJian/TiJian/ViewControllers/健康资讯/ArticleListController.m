@@ -51,7 +51,8 @@
 {
     
     NSDictionary *params = @{@"page":NSStringFromInt(_table.pageNum),
-                             @"per_page":@"10"};;
+                             @"per_page":@"10",
+                             @"category_id":self.category_id ? : @""};;
     NSString *api = HEALTH_ACTICAL_LIST;
     
     __weak typeof(self)weakSelf = self;

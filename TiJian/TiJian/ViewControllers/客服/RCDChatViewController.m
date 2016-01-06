@@ -58,7 +58,7 @@
     UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     spaceButton1.width = IOS7_OR_LATER ? -10 : 5;
     
-    UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
+    UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(10,8,40,44)];
     [button_back addTarget:self action:@selector(leftBarButtonItemPressed:) forControlEvents:UIControlEventTouchUpInside];
     [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
     [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
@@ -109,7 +109,7 @@
     [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
         DDLOG(@"messageid %ld",messageId);
     } error:^(RCErrorCode nErrorCode, long messageId) {
-        DDLOG(@"nErrorCode %ld",nErrorCode);
+        DDLOG(@"nErrorCode %ld",(long)nErrorCode);
     }];
 }
 
@@ -148,9 +148,9 @@
         DDLOG(@"messageid %ld",messageId);
         
     } error:^(RCErrorCode nErrorCode, long messageId) {
-        DDLOG(@"nErrorCode %ld",nErrorCode);
+        DDLOG(@"nErrorCode %ld",(long)nErrorCode);
         
-    }];
+    }];    
 }
 
 #pragma - mark 自定义消息重写方法

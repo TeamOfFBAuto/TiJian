@@ -12,4 +12,6 @@
 
 @interface ArticleListController : MyViewController
 
+@property(nonatomic,retain)NSString *category_id;//分类id 1 健康资讯 2 体检常识
+
 @end

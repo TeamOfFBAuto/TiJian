@@ -13,11 +13,12 @@
 #import "ProductModel.h"
 #import "LSuitableView.h"
 
-@interface RecommendMedicalCheckController ()<UITableViewDataSource,UITableViewDelegate>
+@interface RecommendMedicalCheckController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 {
     UITableView *_table;
     NSArray *_dataArray;
     NSArray *_projectsArray;//推荐项目
+    NSString *_result_id;//个性化定制结果id
 }
 
 @end
@@ -137,6 +138,30 @@
 
 
 #pragma - mark 网络请求
+/**
+ *  同步个性化定制结果
+ */
+- (void)updateCustomization
+{
+    NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
+                             @"result_id":_result_id};
+    NSString *api = UPDATE_CUSTOMIZATION_RESULT;
+    
+    __weak typeof(self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+        [LTools showMBProgressWithText:@"保存成功" addToView:weakSelf.view];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+    }];
+}
 
 /**
  *  获取个性定制结果
@@ -187,8 +212,31 @@
     [self createViewsWithProjects:_projectsArray];
     [_table reloadData];
     
+    NSString *result_id = data[@"result_id"];//未登录时个性化结果保存id
+    _result_id = [NSString stringWithFormat:@"%@",result_id];
+    
+    if (![LoginManager isLogin] && _result_id) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否登录保存个性化定制结果？" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
+        [alert show];
+    }
+    
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        
+         @WeakObj(self);
+        [LoginManager isLogin:self loginBlock:^(BOOL success) {
+           
+            if (success) {
+                
+                [Weakself updateCustomization];
+            }
+            
+        }];
+    }
+}
 
 #pragma - mark UITableViewDelegate
 

@@ -81,11 +81,19 @@
 //下单时，可以使用的代金券列表
 #define ORDER_GETDAIJIQUANLIST @"/index.php?d=api&c=order&m=use_vouchers_list"
 
+
+/**********************个性化定制相关结果********************************/
+
+#pragma mark - 个性化定制相关结果
+
 //获取个性定制结果POST
 #define GET_CUSTOMIZAITION_RESULT @"/index.php?d=api&c=customization&m=get_customization_result"
 
 //2、获取最近的个性化测试结果
 #define GET_LATEST_CUSTOMIZATION_RESULT @"/index.php?d=api&c=customization&m=get_latest_customization_result"
+
+//3、保存个性化测试结果 result_id 结果id
+#define UPDATE_CUSTOMIZATION_RESULT @"/index.php?d=api&c=customization&m=update_customization_result"
 
 //添加商品评论
 #define ADD_PRODUCT_PINGLUN @"/index.php?d=api&c=products&m=add_comment"
@@ -294,7 +302,7 @@
 //=======================================================
 
 #pragma - mark 健康资讯相关接口
-
+//    category_id 分类id  选填 1、健康资讯 2、体检常识
 //1. 资讯列表 (GET get方式 page 当前页 per_page 每页显示数目)
 #define HEALTH_ACTICAL_LIST @"/index.php?d=api&c=article&m=article_list"
 

@@ -11,6 +11,16 @@
 @implementation UILabel (Additions)
 
 - (UILabel *)initWithFrame:(CGRect)aFrame
+                      font:(CGFloat)size
+                     align:(NSTextAlignment)align
+                 textColor:(UIColor *)textColor
+                     title:(NSString *)title
+
+{
+    return [self initWithFrame:aFrame title:title font:size align:align textColor:textColor];
+}
+
+- (UILabel *)initWithFrame:(CGRect)aFrame
                         title:(NSString *)title
                          font:(CGFloat)size
                         align:(NSTextAlignment)align

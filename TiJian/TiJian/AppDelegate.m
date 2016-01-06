@@ -538,7 +538,8 @@
     //客服就不需要了
     if ([userId isEqualToString:SERVICE_ID]) {
         
-        return;
+        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"河马客服" portrait:@""];
+        return completion(userInfo);        
     }
     
     if ([userId isEqualToString:[UserInfo userInfoForCache].uid]) {
@@ -663,7 +664,7 @@
             DDLOG(@"登录成功融云 userId %@",userId);
             [weakSelf stopRongTimer];//停止计时
         } error:^(RCConnectErrorCode status) {
-            DDLOG(@"RCConnectErrorCode %ld",status);
+            DDLOG(@"RCConnectErrorCode %ld",(long)status);
         } tokenIncorrect:^{
             DDLOG(@"token不对");
             

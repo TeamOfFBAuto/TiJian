@@ -303,7 +303,8 @@
 
     
     //公司
-    if ([_appointModel.company_id intValue] > 0 && section == 0) {
+    if (([_appointModel.company_id intValue] > 0 && section == 0)
+        || section == 2) {
         
         
     }else

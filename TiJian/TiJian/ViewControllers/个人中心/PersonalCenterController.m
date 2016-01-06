@@ -15,6 +15,8 @@
 #import "ProductListViewController.h"
 #import "OrderViewController.h"
 #import "MyWalletViewController.h"//我的钱包
+#import "MessageCenterController.h"//消息中心
+#import "MessageViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
@@ -356,6 +358,14 @@
 -(void)rightButtonTap:(UIButton *)sender
 {
     NSLog(@"消息中心");
+    MessageCenterController *message = [[MessageCenterController alloc]init];
+    message.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:message animated:YES];
+    
+    
+//    MessageViewController *message = [[MessageViewController alloc]init];
+//    message.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:message animated:YES];
 }
 
 #pragma mark UIACtionSheet delegate

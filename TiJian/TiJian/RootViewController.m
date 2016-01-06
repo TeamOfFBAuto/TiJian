@@ -10,6 +10,7 @@
 #import "HomeViewController.h"
 #import "PersonalCenterController.h"
 #import "MedicalReportController.h"//体检报告
+#import "NewMedicalReportController.h"//新版体检报告
 
 @interface RootViewController ()<UITabBarControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
@@ -41,7 +42,7 @@
 - (void)prepareItems
 {
     
-    NSArray *classNames = @[@"HomeViewController",@"MedicalReportController",@"PersonalCenterController"];
+    NSArray *classNames = @[@"HomeViewController",@"NewMedicalReportController",@"PersonalCenterController"];
     NSArray *item_names = @[@"首页",@"体检报告",@"个人中心"];
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:classNames.count];
     for (int i = 0; i < classNames.count;i ++) {

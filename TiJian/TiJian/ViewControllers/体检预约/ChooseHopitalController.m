@@ -67,7 +67,7 @@ typedef enum {
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
-    _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+//    _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _table.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"yyyy-MM-dd"];
@@ -273,7 +273,7 @@ typedef enum {
 //    __weak typeof(_table)weakTable = _table;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"success result %@",result);
+        DDLOG(@"success result %@",result);
         [weakSelf parseDataWithResult:result];
         
     } failBlock:^(NSDictionary *result) {
@@ -471,8 +471,6 @@ typedef enum {
         Weak_table.top = _calendarView.bottom;
         [Weakself updateResultView];
     }];
-    
-    NSLog(@"size %f",size.height);
 }
 
 /**
@@ -554,7 +552,7 @@ typedef enum {
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    CGFloat offsetY = scrollView.contentOffset.y;
+//    CGFloat offsetY = scrollView.contentOffset.y;
 
     
 //    if (_lastOffsetY > offsetY) {
@@ -644,6 +642,11 @@ typedef enum {
         icon.contentMode = UIViewContentModeCenter;
         [cell.contentView addSubview:icon];
         icon.tag = 101;
+        
+        //line
+        UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 50 - 0.5, DEVICE_WIDTH, 0.5)];
+        line.backgroundColor = DEFAULT_LINECOLOR;
+        [cell.contentView addSubview:line];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:13];

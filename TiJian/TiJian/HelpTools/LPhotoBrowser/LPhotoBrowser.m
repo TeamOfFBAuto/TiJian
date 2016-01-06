@@ -56,7 +56,7 @@
      @WeakObj(self);
     [_browserView setSingleTapBlock:^(NSInteger tapIndex) {
        
-        NSLog(@"单击 %ld",tapIndex);
+        NSLog(@"单击 %d",(int)tapIndex);
         [Weakself dismiss];
         
     }];
@@ -64,7 +64,7 @@
 
 - (void)longPress:(UILongPressGestureRecognizer *)gesture
 {
-    NSLog(@"longPress %ld",gesture.state);
+    NSLog(@"longPress %d",(int)gesture.state);
     
     if (gesture.state == UIGestureRecognizerStateBegan) {
         

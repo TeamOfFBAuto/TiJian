@@ -124,7 +124,7 @@
         //第一个显示的先不加载完了数据
         if (!photo.firstShow) {
             
-            DDLOG(@"不是第一个显示 %ld",index);
+            DDLOG(@"不是第一个显示 %ld",(long)index);
 
             //默认显示  photo.thumbImage,下载失败显示imageFail
             @WeakObj(zoom);
@@ -159,7 +159,7 @@
             
         }else
         {
-            DDLOG(@"是第一个显示 %ld",index);
+            DDLOG(@"是第一个显示 %ld",(long)index);
             zoom.imageView.image = photo.thumbImage;
             [zoom resetImageFrameAfterImageLoaded];
 
@@ -335,7 +335,7 @@
         return nil;
     }
     
-    NSString *key = [NSString stringWithFormat:@"scroll%ld",pageIndex];
+    NSString *key = [NSString stringWithFormat:@"scroll%d",(int)pageIndex];
     LPhotoView *view = self.viewsDictionary[key];
     if (view && [view isKindOfClass:[LPhotoView class]]) {
         
@@ -460,7 +460,7 @@
         _changePageBlock(_sumPage,_pageIndex);
     }
     
-    _numLabel.text = [NSString stringWithFormat:@"%ld / %ld",_pageIndex + 1,_sumPage];
+    _numLabel.text = [NSString stringWithFormat:@"%d / %d",(int)_pageIndex + 1,(int)_sumPage];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
