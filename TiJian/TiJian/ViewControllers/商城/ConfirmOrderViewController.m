@@ -560,8 +560,10 @@
     
     NSArray *brand_ids_Array = [NSMutableArray arrayWithCapacity:1];
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    int p_nums = 0;
     for (ProductModel *model in self.dataArray) {
         [dic setValue:@"1" forKey:model.brand_id];
+        p_nums += [model.product_num intValue];
     }
     
     brand_ids_Array = [dic allKeys];
@@ -570,11 +572,25 @@
     
     
     NSString* url = ORDER_GETDAIJIQUANLIST;
-    NSDictionary* parame = @{
-            @"authcode":[UserInfo getAuthkey],
-            @"brand_ids":brand_ids_str,
-            @"product_num":[NSString stringWithFormat:@"%lu",(unsigned long)self.dataArray.count]
-            };
+    
+    
+    
+    
+    NSMutableDictionary* parame = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                  @"authcode":[UserInfo getAuthkey],
+                                                                                  @"brand_ids":brand_ids_str,
+                                                                                  @"product_num":[NSString stringWithFormat:@"%d",p_nums]
+                                                                                  }];
+    
+    
+    if (p_nums == 1) {
+        for (ProductModel *model in self.dataArray) {
+            [parame setValue:model.product_id forKey:@"product_id"];
+        }
+    }
+    
+    
+    
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];

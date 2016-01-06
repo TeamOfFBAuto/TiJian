@@ -352,6 +352,10 @@
 		13FFBFCE1C0D504B0077DD29 /* SimpleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCB1C0D504B0077DD29 /* SimpleMessage.m */; };
 		13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
+		E30FE3961C3CCCE9001CF9BA /* UINavigationBar+Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE38F1C3CCCE9001CF9BA /* UINavigationBar+Appearance.m */; };
+		E30FE3971C3CCCE9001CF9BA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */; };
+		E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */; };
+		E30FE3991C3CCCE9001CF9BA /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */; };
 		E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A311C05926400CB995D /* GcustomNavcView.m */; };
 		E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86E21C14526F00914824 /* yishoucang@2x.png */; };
 		E31F86E91C14595A00914824 /* LBannerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E31F86E61C14595A00914824 /* LBannerItem.m */; };
@@ -365,6 +369,7 @@
 		E31F86FF1C1518DE00914824 /* daijinquan_bukeyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86FE1C1518DE00914824 /* daijinquan_bukeyong@2x.png */; };
 		E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */; };
 		E31FC6951BDF50AB0057D3BE /* (null) in Sources */ = {isa = PBXBuildFile; };
+		E32262541C3B998F00DAA924 /* search_fangdajing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E32262531C3B998F00DAA924 /* search_fangdajing@2x.png */; };
 		E329A8B81C00AD440017A5D3 /* personalxiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */; };
 		E329A8BD1C0301810017A5D3 /* personal_jiaren_shanchu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8BC1C0301810017A5D3 /* personal_jiaren_shanchu@2x.png */; };
 		E329A8BF1C0308DF0017A5D3 /* shoppingcart_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E329A8BE1C0308DF0017A5D3 /* shoppingcart_selected@2x.png */; };
@@ -1065,6 +1070,16 @@
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E30FE38C1C3CCCE9001CF9BA /* DLConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLConst.h; sourceTree = "<group>"; };
+		E30FE38D1C3CCCE9001CF9BA /* DLNavigationEffectKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNavigationEffectKit.h; sourceTree = "<group>"; };
+		E30FE38E1C3CCCE9001CF9BA /* UINavigationBar+Appearance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+Appearance.h"; sourceTree = "<group>"; };
+		E30FE38F1C3CCCE9001CF9BA /* UINavigationBar+Appearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+Appearance.m"; sourceTree = "<group>"; };
+		E30FE3901C3CCCE9001CF9BA /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
+		E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
+		E30FE3921C3CCCE9001CF9BA /* UIViewController+load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+load.h"; sourceTree = "<group>"; };
+		E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+load.m"; sourceTree = "<group>"; };
+		E30FE3941C3CCCE9001CF9BA /* UIViewController+NavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NavigationBar.h"; sourceTree = "<group>"; };
+		E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NavigationBar.m"; sourceTree = "<group>"; };
 		E31E1A301C05926400CB995D /* GcustomNavcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcustomNavcView.h; sourceTree = "<group>"; };
 		E31E1A311C05926400CB995D /* GcustomNavcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcustomNavcView.m; sourceTree = "<group>"; };
 		E31F86E21C14526F00914824 /* yishoucang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yishoucang@2x.png"; sourceTree = "<group>"; };
@@ -1081,6 +1096,7 @@
 		E31F86FE1C1518DE00914824 /* daijinquan_bukeyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daijinquan_bukeyong@2x.png"; sourceTree = "<group>"; };
 		E31FC68C1BDF24D60057D3BE /* GStoreHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStoreHomeViewController.h; sourceTree = "<group>"; };
 		E31FC68D1BDF24D60057D3BE /* GStoreHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GStoreHomeViewController.m; sourceTree = "<group>"; };
+		E32262531C3B998F00DAA924 /* search_fangdajing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_fangdajing@2x.png"; sourceTree = "<group>"; };
 		E329A8B71C00AD440017A5D3 /* personalxiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personalxiugai@2x.png"; sourceTree = "<group>"; };
 		E329A8BC1C0301810017A5D3 /* personal_jiaren_shanchu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_jiaren_shanchu@2x.png"; sourceTree = "<group>"; };
 		E329A8BE1C0308DF0017A5D3 /* shoppingcart_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_selected@2x.png"; sourceTree = "<group>"; };
@@ -1957,6 +1973,7 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				E30FE38B1C3CCCE9001CF9BA /* DLNavigationEffectKit */,
 				13F9D10E1C2FB06800993738 /* LPhotoBrowser */,
 				13D119A51C28038A0042EB6D /* LSuitableView */,
 				13F1F2A11BBA9A4B00885D31 /* Categories */,
@@ -2418,6 +2435,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E30FE38B1C3CCCE9001CF9BA /* DLNavigationEffectKit */ = {
+			isa = PBXGroup;
+			children = (
+				E30FE38C1C3CCCE9001CF9BA /* DLConst.h */,
+				E30FE38D1C3CCCE9001CF9BA /* DLNavigationEffectKit.h */,
+				E30FE38E1C3CCCE9001CF9BA /* UINavigationBar+Appearance.h */,
+				E30FE38F1C3CCCE9001CF9BA /* UINavigationBar+Appearance.m */,
+				E30FE3901C3CCCE9001CF9BA /* UIView+Utils.h */,
+				E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */,
+				E30FE3921C3CCCE9001CF9BA /* UIViewController+load.h */,
+				E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */,
+				E30FE3941C3CCCE9001CF9BA /* UIViewController+NavigationBar.h */,
+				E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */,
+			);
+			path = DLNavigationEffectKit;
+			sourceTree = "<group>";
+		};
 		E31F86E41C14595A00914824 /* LBannerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2597,6 +2631,7 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E32262531C3B998F00DAA924 /* search_fangdajing@2x.png */,
 				E390A94A1C28FA6B00C76DEA /* storehome_gouwuche@2x.png */,
 				E359F7001C27C4DA005CB719 /* shaixuan@2x.png */,
 				E3A679C21C16DEAC00309ECD /* nan_saixuan@2x.png */,
@@ -2918,6 +2953,7 @@
 				1303C3661BEB0D7100700847 /* homepage_4@2x.png in Resources */,
 				E31F86F51C147E8B00914824 /* jiantou_up@2x.png in Resources */,
 				1303C3651BEB0D7100700847 /* homepage_3@2x.png in Resources */,
+				E32262541C3B998F00DAA924 /* search_fangdajing@2x.png in Resources */,
 				E359F7031C27F8D1005CB719 /* gouwuche-kong@2x.png in Resources */,
 				E335F9F31BFEF36000708BF6 /* qrdd_jiantou_big@2x.png in Resources */,
 				13F1F2721BBA78ED00885D31 /* Assets.xcassets in Resources */,
@@ -3172,6 +3208,7 @@
 				13F2421D1BF5C0E8002C9D81 /* ArticleModel.m in Sources */,
 				13020A6E1C04480D006FC365 /* ProductListViewController.m in Sources */,
 				13C97F311BF9B54700C66691 /* AppointModel.m in Sources */,
+				E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */,
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
 				13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */,
 				1303C2E11BE9FB2400700847 /* NSArray+Additons.m in Sources */,
@@ -3195,6 +3232,7 @@
 				131A17761BF3309800B12D2F /* CompanyCell.m in Sources */,
 				E3E2B4061BFB203B007988C5 /* ProductBuyCell.m in Sources */,
 				E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */,
+				E30FE3961C3CCCE9001CF9BA /* UINavigationBar+Appearance.m in Sources */,
 				13E617421C15852000E370E5 /* MIddleTools.m in Sources */,
 				13F1F39C1BBA9A4B00885D31 /* UIImageView+Extensions.m in Sources */,
 				13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */,
@@ -3248,6 +3286,8 @@
 				E31F86E91C14595A00914824 /* LBannerItem.m in Sources */,
 				134822DB1BEC80E700EA2E06 /* AboutUsController.m in Sources */,
 				E3D8AE2D1BF60C4B003AE2E3 /* GcommentTableViewCell.m in Sources */,
+				E30FE3971C3CCCE9001CF9BA /* UIView+Utils.m in Sources */,
+				E30FE3991C3CCCE9001CF9BA /* UIViewController+NavigationBar.m in Sources */,
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,
 				13F1F39F1BBA9A4B00885D31 /* UIViewController+Addtions.m in Sources */,
 				13F1F3FE1BBA9C5E00885D31 /* UIColor+ConvertColor.m in Sources */,
