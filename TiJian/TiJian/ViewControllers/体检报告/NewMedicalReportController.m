@@ -288,11 +288,6 @@
         NSLog(@"success result %@",result);
         
         NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
-//        NSMutableArray *mu_arr = [NSMutableArray arrayWithArray:temp];
-//        [mu_arr addObjectsFromArray:temp];
-//        [mu_arr addObjectsFromArray:temp];
-//        [mu_arr addObjectsFromArray:temp];
-//        temp = mu_arr;
         if (temp.count > 3) {
             _moreArticle = YES;//有更多常识
             NSMutableArray *mu_arr = [NSMutableArray arrayWithArray:temp];

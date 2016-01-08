@@ -18,6 +18,9 @@
 @implementation MessageViewController
 
 - (void)viewDidLoad {
+    
+    [self setConversationPortraitSize:CGSizeMake(35, 30)];
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
@@ -29,11 +32,18 @@
     
     //设置要显示的会话类型
     [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),@(ConversationType_APPSERVICE),@(ConversationType_CUSTOMERSERVICE)]];
-    
+     
     //自定义空会话的背景View。当会话列表为空时，将显示该View
-    //UIView *blankView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    //blankView.backgroundColor=[UIColor redColor];
-    //self.emptyConversationView=blankView;
+    UIView *blankView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    blankView.backgroundColor=[UIColor whiteColor];
+    
+    ResultView *view = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"暂时没有会话" content:nil];
+    [blankView addSubview:view];
+    view.centerY = blankView.height / 3.f;
+    view.backgroundColor = [UIColor whiteColor];
+    
+    self.emptyConversationView = blankView;
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -71,7 +81,9 @@
     if (_isClick) {
         _isClick = NO;
         
-        if (conversationModelType == RC_CONVERSATION_MODEL_TYPE_NORMAL) {
+        if (conversationModelType == RC_CONVERSATION_MODEL_TYPE_NORMAL ||
+            conversationModelType == RC_CONVERSATION_MODEL_TYPE_PUBLIC_SERVICE) {
+            
             RCDChatViewController *_conversationVC = [[RCDChatViewController alloc]init];
             _conversationVC.conversationType = model.conversationType;
             _conversationVC.targetId = model.targetId;
@@ -89,6 +101,45 @@
         }
     }
     
+}
+
+/**
+ *  重写方法，可以实现开发者自己添加数据model后，返回对应的显示的cell
+ *
+ *  @param tableView 表格
+ *  @param indexPath 索引
+ *
+ *  @return RCConversationBaseTableCell
+ */
+- (RCConversationBaseCell *)rcConversationListTableView:(UITableView *)tableView
+                                  cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    
+//    13\11
+    static NSString *identify = @"RCConversationBaseCell";
+    RCConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
+    if (!cell) {
+        cell = [[RCConversationCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+    }
+    cell.conversationTitle.font = [UIFont systemFontOfSize:13];
+    cell.messageContentLabel.font = [UIFont systemFontOfSize:11];
+//    cell.textLabel
+    return cell;
+}
+
+#pragma mark override
+/**
+ *  重写方法，可以实现开发者自己添加数据model后，返回对应的显示的cell的高度
+ *
+ *  @param tableView 表格
+ *  @param indexPath 索引
+ *
+ *  @return 高度
+ */
+- (CGFloat)rcConversationListTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 160.f;
 }
 
 @end

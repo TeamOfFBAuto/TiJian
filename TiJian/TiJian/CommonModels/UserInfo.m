@@ -148,6 +148,15 @@
     return @"";
 }
 
++ (NSString *)getDeviceToken
+{
+    NSString *value = [LTools objectForKey:USER_DEVICE_TOKEN];
+    if (value) {
+        return value;
+    }
+    return @"";
+}
+
 + (NSString *)getUserId
 {
     UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];

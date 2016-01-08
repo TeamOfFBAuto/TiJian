@@ -145,6 +145,25 @@
 //关于我们
 #define ABOUT_US_URL @"http://www.baidu.com"
 
+/******************消息中心相关接口*******************/
+
+#pragma mark - 消息中心相关
+
+//11、获取我的消息列表 参数：authcode get方式\page 页数\per_page 第几页
+//sort: 包含以下两种值，默认notice
+//notice: 包含type=2, 4, 5, 6
+//ac：包含type=3
+#define GET_MY_MSG @"/index.php?d=api&c=msg&m=get_my_msg"
+
+//12、获取消息详情 get方式\参数：authcode\msg_id
+#define GET_MSG_INFO @"/index.php?d=api&c=msg&m=get_msg_info"
+
+//13、获取未读/已读消息数量
+#define GET_MSG_NUM @"/index.php?d=api&c=msg&m=msg_num"
+
+//14、删除消息 GET 参数：authcode\msg_ids 多个id用英文逗号隔开
+#define DEL_MY_MSG @"/index.php?d=api&c=msg&m=del_my_msg"
+
 /******************商品相关接口*******************/
 
 #pragma mark - 商品相关

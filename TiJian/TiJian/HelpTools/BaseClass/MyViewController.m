@@ -12,7 +12,6 @@
 {
     UISwipeGestureRecognizer * swipe;
     UIButton *_backButton;//返回按钮
-    UIBarButtonItem * spaceButton;
     
     MyViewControllerLeftbuttonType leftType;
     MyViewControllerRightbuttonType myRightType;
@@ -21,6 +20,9 @@
 @property(nonatomic,strong)UILabel * navTitleLabel;//导航栏label
 @property(nonatomic,strong)UIButton *topButton;//置顶按钮
 @property(nonatomic,retain)UIScrollView *scrollView;
+@property(nonatomic,retain)UIButton *leftButton;
+@property(nonatomic,retain)UIBarButtonItem *rightButtonItem;//右
+@property(nonatomic,retain)UIBarButtonItem *leftButtonItem;//左
 
 @end
 
@@ -78,8 +80,7 @@
     }
     
     self.view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
-        
-    spaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    
     _navTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
     _navTitleLabel.textAlignment = NSTextAlignmentCenter;
     _navTitleLabel.text = _myTitle;
@@ -141,13 +142,13 @@
         if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
         {
             [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
-            [_backButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
+            [self.leftButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
             _navTitleLabel.textColor = [UIColor whiteColor];//白色字体
         }
     }else if (style == NAVIGATIONSTYLE_WHITE){
         
         [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics: UIBarMetricsDefault];
-        [_backButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
+        [self.leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
         _navTitleLabel.textColor = DEFAULT_TEXTCOLOR;
         
     }else if (style == NAVIGATIONSTYLE_CUSTOM){
@@ -195,66 +196,28 @@
     
     if (theType == MyViewControllerLeftbuttonTypeBack)
     {
-        UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-        
-        UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
-        [button_back addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-        [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
-        [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-        UIBarButtonItem *back_item=[[UIBarButtonItem alloc]initWithCustomView:button_back];
-        self.navigationItem.leftBarButtonItems=@[spaceButton1,back_item];
-        
-        _backButton = button_back;
+        self.navigationItem.leftBarButtonItem = self.leftButtonItem;
         
     }else if(theType == MyViewControllerLeftbuttonTypeOther)
     {
-        UIImage * leftImage = [UIImage imageNamed:_leftImageName];
-        UIButton * leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [leftButton addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-        [leftButton setImage:[UIImage imageNamed:self.leftImageName] forState:UIControlStateNormal];
-        leftButton.frame = CGRectMake(0,0,leftImage.size.width,leftImage.size.height);
-        UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-        self.navigationItem.leftBarButtonItems = @[spaceButton,leftBarButton];
+        [self.leftButton setImage:[UIImage imageNamed:self.leftImageName] forState:UIControlStateNormal];
+        self.navigationItem.leftBarButtonItems = @[self.leftButtonItem];
         
     }else if (theType == MyViewControllerLeftbuttonTypeText)
     {
-        UIButton * left_button = [UIButton buttonWithType:UIButtonTypeCustom];
-        left_button.frame = CGRectMake(0,0,30,44);
-        left_button.titleLabel.textAlignment = NSTextAlignmentRight;
-        [left_button setTitle:_leftString forState:UIControlStateNormal];
-        left_button.titleLabel.font = [UIFont systemFontOfSize:15];
-        [left_button setTitleColor:RGBCOLOR(91,138,59) forState:UIControlStateNormal];
-        [left_button addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+        [self.leftButton setTitle:self.leftString forState:UIControlStateNormal];
+        self.navigationItem.leftBarButtonItems = @[self.leftButtonItem];
         
-        self.navigationItem.leftBarButtonItems = @[spaceButton,[[UIBarButtonItem alloc] initWithCustomView:left_button]];
     }else if (theType == MyViewControllerLeftbuttonTypeNull)
     {
         self.navigationItem.leftBarButtonItems = nil;
-        
-    }else
-    {
-        
     }
     
     
     if(rightType == MyViewControllerRightbuttonTypeText)
     {
-        _right_button = [UIButton buttonWithType:UIButtonTypeCustom];
-        
-        _right_button.frame = CGRectMake(0,0,60,44);
-        
-        _right_button.titleLabel.textAlignment = NSTextAlignmentRight;
-        
-        [_right_button setTitle:_rightString forState:UIControlStateNormal];
-        
-        [_right_button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-        _right_button.titleLabel.font = [UIFont systemFontOfSize:15];
-        
-        [_right_button setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
-                
-        [_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.navigationItem.rightBarButtonItems = @[spaceButton,[[UIBarButtonItem alloc] initWithCustomView:_right_button]];
+        [self.right_button setTitle:self.rightString forState:UIControlStateNormal];
+        self.navigationItem.rightBarButtonItems = @[self.rightButtonItem];
         
     }else if(rightType == MyViewControllerRightbuttonTypeOther)
     {
@@ -268,21 +231,12 @@
             rightImage = self.rightImage;
         }
         
-        _right_button = [UIButton buttonWithType:UIButtonTypeCustom];
-        
-        [_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [_right_button setImage:rightImage forState:UIControlStateNormal];
-        
-        _right_button.frame = CGRectMake(0,0,rightImage.size.width,rightImage.size.height);
-        
-        UIBarButtonItem * rightBarButton = [[UIBarButtonItem alloc] initWithCustomView:_right_button];
-        
-        self.navigationItem.rightBarButtonItems = @[spaceButton,rightBarButton];;
+        [self.right_button setImage:rightImage forState:UIControlStateNormal];
+        self.right_button.frame = CGRectMake(0, 0, rightImage.size.width, rightImage.size.height);
+        self.navigationItem.rightBarButtonItems = @[self.rightButtonItem];
         
     }else if (theType == MyViewControllerLeftbuttonTypeNull)
     {
-//        self.navigationItem.rightBarButtonItems = @[spaceButton];
         self.navigationItem.rightBarButtonItem = nil;
     }
 }
@@ -319,6 +273,53 @@
 {
     _leftImageName = leftImageName;
     [self setMyViewControllerLeftButtonType:leftType WithRightButtonType:myRightType];
+}
+
+#pragma mark - 视图创建
+
+-(UIBarButtonItem *)rightButtonItem
+{
+    if (!_rightButtonItem) {
+        
+        _rightButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.right_button];
+    }
+    return _rightButtonItem;
+}
+
+-(UIBarButtonItem *)leftButtonItem
+{
+    if (!_leftButtonItem) {
+        _leftButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.leftButton];
+    }
+    return _leftButtonItem;
+}
+
+-(UIButton *)right_button
+{
+    if (!_right_button) {
+        _right_button = [UIButton buttonWithType:UIButtonTypeCustom];
+        _right_button.frame = CGRectMake(0,0,60,44);
+        _right_button.titleLabel.textAlignment = NSTextAlignmentRight;
+        [_right_button setTitle:_rightString forState:UIControlStateNormal];
+        [_right_button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        _right_button.titleLabel.font = [UIFont systemFontOfSize:15];
+        [_right_button setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+        [_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _right_button;
+}
+
+-(UIButton *)leftButton
+{
+    if (!_leftButton) {
+        
+        UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
+        [button_back addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+        [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
+        [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        _leftButton = button_back;
+    }
+    return _leftButton;
 }
 
 #pragma mark - 事件处理method

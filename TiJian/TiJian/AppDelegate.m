@@ -14,9 +14,16 @@
 #import "SimpleMessage.h"
 #import "UMSocial.h"
 #import "MobClick.h"
+#import "APService.h"//极光
+#import "ReportDetailController.h"//报告详情
+#import "OrderInfoViewController.h"//订单详情
+#import "WebviewController.h"//web
+#import "AppointDetailController.h"//预约
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
+#define kAlertViewTag_active 102 //正在前台 推送消息
+
 
 @interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate,GgetllocationDelegate,RCIMReceiveMessageDelegate,RCIMUserInfoDataSource,RCIMConnectionStatusDelegate>
 {
@@ -27,6 +34,7 @@
     
     int _getRongTokenTime;//获取融云token次数
     NSTimer *_getRongTokenTimer;//获取融云token计时器
+    NSDictionary *_remoteMessageDic;//远程推送消息
 }
 
 @end
@@ -39,13 +47,13 @@
     
     [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     
+    //友盟统计
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
-//    [MobClick setCrashReportEnabled:YES];
     [MobClick setLogEnabled:YES];
     
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startRongCloud) name:NOTIFICATION_LOGIN object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
     
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
@@ -58,14 +66,52 @@
     //百度地图
     [self startBaiduService];
     
-    //注册远程通知
-    [self startRemoteNotificationWithAppilication:application];
-    
     //初始化融云SDK。
     [self startRongCloud];
     
     //检查版本
     [self checkVersion];
+    
+    //JPush Required
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        //可以添加自定义categories
+        [APService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                       UIUserNotificationTypeSound |
+                                                       UIUserNotificationTypeAlert)
+                                           categories:nil];
+    } else {
+        //categories 必须为nil
+        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                       UIRemoteNotificationTypeSound |
+                                                       UIRemoteNotificationTypeAlert)
+                                           categories:nil];
+    }
+    
+    // Required
+    [APService setupWithOption:launchOptions];
+    
+    //UIApplicationLaunchOptionsRemoteNotificationKey,判断是通过推送消息启动的
+    
+    NSDictionary *userInfo = [launchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
+    if (userInfo)
+    {
+        DDLOG(@"didFinishLaunch : userInfo %@",userInfo);
+        [self pushToMessageDetailWithResult:userInfo];
+    }
+    
+    /**
+     * 统计推送打开率1 融云
+     */
+    [[RCIMClient sharedRCIMClient] recordLaunchOptionsEvent:launchOptions];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidSetupNotification:) name:kJPFNetworkDidSetupNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidCloseNotification:) name:kJPFNetworkDidCloseNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidRegisterNotification:) name:kJPFNetworkDidRegisterNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidLoginNotification:) name:kJPFNetworkDidLoginNotification object:nil];
+    //非APNS消息
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidReceiveMessageNotification:) name:kJPFNetworkDidReceiveMessageNotification object:nil];
+    //错误提示
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForErrorNotification:) name:kJPFServiceErrorNotification object:nil];
     
     return YES;
 }
@@ -80,6 +126,8 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     
+    //获取未读消息num
+    [self netWorkForMsgNum];
 }
 
 //app每次启动或者变活跃
@@ -87,6 +135,9 @@
     
     //上传头像
     [self uploadHeadImage];
+    
+    //获取未读消息num
+    [self netWorkForMsgNum];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -113,24 +164,50 @@
                         stringByReplacingOccurrencesOfString:@">"withString:@""]
                         stringByReplacingOccurrencesOfString:@" "withString:@""];
     
+    //融云
     [[RCIMClient sharedRCIMClient] setDeviceToken:token];
+    
+    //JPush Required
+    [APService registerDeviceToken:deviceToken];
+    
+    //本地记录
+    [LTools setObject:token forKey:USER_DEVICE_TOKEN];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    DDLOG(@"hahah2");
+
+    //JPush Required
+    [APService handleRemoteNotification:userInfo];//
+    
     [LTools updateTabbarUnreadMessageNumber];
     
     DDLOG(@"JPush2 remote %@",userInfo);
+    
+    /**
+     * 统计推送打开率2
+     */
+    [[RCIMClient sharedRCIMClient] recordRemoteNotificationEvent:userInfo];
     
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateInactive){
         DDLOG(@"UIApplicationStateInactive %@",userInfo);
         //程序在后台运行 点击消息进入走此处,做相应处理
+        [self pushToMessageDetailWithResult:userInfo];
     }
     if (state == UIApplicationStateActive) {
         DDLOG(@"UIApplicationStateActive %@",userInfo);
         //程序就在前台
-
+        _remoteMessageDic = userInfo;
+        
+        NSDictionary *aps = userInfo[@"aps"];
+        NSString *alertMessage = aps[@"alert"];//消息内容
+        
+        //提示之后再查看
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"消息通知" message:alertMessage delegate:self cancelButtonTitle:@"忽略" otherButtonTitles:@"查看", nil];
+        alertView.tag = kAlertViewTag_active;
+        [alertView show];
     }
     if (state == UIApplicationStateBackground)
     {
@@ -141,13 +218,46 @@
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
-    DDLOG(@"%@",notification.userInfo);
+    DDLOG(@"本地通知%@",notification.userInfo);
     //在此获取rongcloud本地通知消息
+    /**
+     * 统计推送打开率3
+     */
+    [[RCIMClient sharedRCIMClient] recordLocalNotificationEvent:notification];
+    
+    [self application:application didReceiveRemoteNotification:notification.userInfo];
+
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    //JPush
+    // IOS 7 Support Required
+//    [APService handleRemoteNotification:userInfo];
+    DDLOG(@"hahah1");
+    [self application:application didReceiveRemoteNotification:userInfo];
+
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+
+
+#pragma mark - 通知处理
+
+- (void)actionForNotification:(NSNotification *)notification
+{
+    //登录通知
+    if ([notification.name isEqualToString:NOTIFICATION_LOGIN]) {
+        [self startRongCloud];//启动融云
+        [self netWorkForMsgNum];//获取未读消息条数
+    }else if ([notification.name isEqualToString:NOTIFICATION_UPDATEHEADIMAGE]){
+        [self uploadHeadImage];//上传头像
+    }
 }
 
 #pragma  mark
 
-#pragma - mark 注册通知
+#pragma - mark 注册远程通知
 
 - (void)startRemoteNotificationWithAppilication:(UIApplication *)application
 {
@@ -167,32 +277,6 @@
         UIRemoteNotificationTypeAlert |
         UIRemoteNotificationTypeSound;
         [application registerForRemoteNotificationTypes:myTypes];
-    }
-}
-#pragma - mark  百度地图
-
-- (void)startBaiduService
-{
-    //使用百度地图相关
-    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
-    {
-        //设置定位权限 仅ios8有意义
-        [_locationManager requestWhenInUseAuthorization];// 前台定位        
-    }
-    [_locationManager startUpdatingLocation];
-    
-    // 要使用百度地图，请先启动BaiduMapManager
-    _mapManager = [[BMKMapManager alloc]init];
-
-    
-    NSString *BD_Appkey = BAIDUMAP_APPKEY;
-    if ([LTools isEnterprise]) {
-        BD_Appkey = BAIDUMAP_APPKEY_Enterprise;
-    }
-    // 如果要关注网络及授权验证事件，请设定  generalDelegate参数
-    BOOL ret = [_mapManager start:BD_Appkey  generalDelegate:self];
-    if (!ret) {
-        DDLOG(@"manager start failed!");
     }
 }
 
@@ -218,7 +302,6 @@
     if (![LTools boolForKey:USER_UPDATEHEADIMAGE_STATE]) {
         
         DDLOG(@"不需要更新头像");
-        
         return;
     }else
     {
@@ -264,28 +347,9 @@
     }];
 }
 
-#pragma mark - BMKGeneralDelegate <NSObject>
+#pragma mark - 支付相关
 
-/**
- *返回网络错误
- *@param iError 错误号
- */
-- (void)onGetNetworkState:(int)iError
-{
-    
-}
-
-/**
- *返回授权验证错误
- *@param iError 错误号 : 为0时验证通过，具体参加BMKPermissionCheckResultCode
- */
-- (void)onGetPermissionState:(int)iError
-{
-    
-}
-
-
-#pragma mark - 支付宝支付回调
+#pragma - mark 支付宝支付回调
 
 /**
  这里处理新浪微博SSO授权之后跳转回来，和微信分享完成之后跳转回来
@@ -378,10 +442,36 @@
     }
 }
 
+#pragma mark - 百度地图启动、获取坐标
 
+#pragma - mark  百度地图
 
+- (void)startBaiduService
+{
+    //使用百度地图相关
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] > 8.0)
+    {
+        //设置定位权限 仅ios8有意义
+        [_locationManager requestWhenInUseAuthorization];// 前台定位
+    }
+    [_locationManager startUpdatingLocation];
+    
+    // 要使用百度地图，请先启动BaiduMapManager
+    _mapManager = [[BMKMapManager alloc]init];
+    
+    
+    NSString *BD_Appkey = BAIDUMAP_APPKEY;
+    if ([LTools isEnterprise]) {
+        BD_Appkey = BAIDUMAP_APPKEY_Enterprise;
+    }
+    // 如果要关注网络及授权验证事件，请设定  generalDelegate参数
+    BOOL ret = [_mapManager start:BD_Appkey  generalDelegate:self];
+    if (!ret) {
+        DDLOG(@"manager start failed!");
+    }
+}
 
-#pragma mark - 获取坐标
+#pragma - mark 获取坐标
 
 - (void)startDingweiWithBlock:(LocationBlock)location
 {
@@ -418,6 +508,28 @@
         _locationBlock(dic);
     }
 }
+
+
+#pragma - mark BMKGeneralDelegate <NSObject>
+
+/**
+ *返回网络错误
+ *@param iError 错误号
+ */
+- (void)onGetNetworkState:(int)iError
+{
+    
+}
+
+/**
+ *返回授权验证错误
+ *@param iError 错误号 : 为0时验证通过，具体参加BMKPermissionCheckResultCode
+ */
+- (void)onGetPermissionState:(int)iError
+{
+    
+}
+
 
 #pragma mark - RongCloud
 
@@ -497,6 +609,14 @@
             
             [self startLoginRongTimer];
         }
+    }else if (alertView.tag == kAlertViewTag_active) {
+        
+        if (buttonIndex == 1) {
+            //查看消息
+            NSDictionary *userInfo = _remoteMessageDic;
+            //直接查看
+            [self pushToMessageDetailWithResult:userInfo];
+        }
     }
 }
 
@@ -535,12 +655,19 @@
                    completion:(void (^)(RCUserInfo *userInfo))completion
 {
     DDLOG(@"getUserInfoWithUserId %@",userId);
-    //客服就不需要了
-    if ([userId isEqualToString:SERVICE_ID]) {
+    
+    if ([userId isEqualToString:SERVICE_ID_2]) {
         
-        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"河马客服" portrait:@""];
+        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"河马医生" portrait:@""];
         return completion(userInfo);        
     }
+    
+    if ([userId isEqualToString:SERVICE_ID]) {
+        
+        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"河马医生" portrait:@""];
+        return completion(userInfo);
+    }
+
     
     if ([userId isEqualToString:[UserInfo userInfoForCache].uid]) {
         
@@ -551,51 +678,6 @@
             return completion(userInfo);
         }
     }
-    
-    
-    
-//    NSString *userName = [LTools rongCloudUserNameWithUid:userId];
-//    NSString *userIcon = [LTools rongCloudUserIconWithUid:userId];
-//    
-//    DDLOG(@"userId %@ userIcon %@",userId,userIcon);
-//    
-//    DDLOG(@"----->|%@|",userName);
-//    
-//    //没有保存用户名 或者 更新时间超过一个小时
-//    if ([LTools isEmpty:userName] || [LTools isEmpty:userIcon]  || [LTools rongCloudNeedRefreshUserId:userId]) {
-//        
-//        NSDictionary *params = @{@"uid":userId};
-//        [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:GET_USERINFO_ONLY_USERID parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//            
-//            NSDictionary *dic = result[@"user_info"];
-//            if ([dic isKindOfClass:[NSDictionary class]]) {
-//                
-//                NSString *name = dic[@"user_name"];
-//                NSString *icon = dic[@"avatar"];
-//                
-//                //不为空
-//                if (![LTools isEmpty:name]) {
-//                    
-//                    [LTools cacheRongCloudUserName:name forUserId:userId];
-//                }
-//                
-//                [LTools cacheRongCloudUserIcon:icon forUserId:userId];
-//                
-//                RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:name portrait:icon];
-//                
-//                return completion(userInfo);
-//            }
-//            
-//        } failBlock:^(NSDictionary *result) {
-//            
-//        }];
-//    }
-//    
-//    DDLOG(@"userId %@ %@",userId,userName);
-//    
-//    RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:userName portrait:userIcon];
-//    
-//    return completion(userInfo);
 }
 
 
@@ -689,5 +771,184 @@
     [_getRongTokenTimer invalidate];
     _getRongTokenTimer = nil;
 }
+
+
+#pragma mark - 极光推送
+
+//建立连接
+- (void)notificationForDidSetupNotification:(NSNotification *)notify
+{
+    DDLOG(@"建立连接 JPush %@ %@",notify.userInfo,notify.object);
+}
+
+//关闭连接
+- (void)notificationForDidCloseNotification:(NSNotification *)notify
+{
+    DDLOG(@"关闭连接 JPush %@ %@",notify.userInfo,notify.object);
+}
+
+//注册成功
+- (void)notificationForDidRegisterNotification:(NSNotification *)notify
+{
+    DDLOG(@"注册成功 JPush %@ %@",notify.userInfo,notify.object);
+}
+
+//登录成功
+- (void)notificationForDidLoginNotification:(NSNotification *)notify
+{
+    DDLOG(@"登录成功 JPush %@ %@",notify.userInfo,notify.object);
+    [self uploadJPushRegisterId];
+}
+
+//收到消息(非APNS)
+- (void)notificationForDidReceiveMessageNotification:(NSNotification *)notify
+{
+    DDLOG(@"收到消息(非APNS) JPush %@ %@",notify.userInfo,notify.object);
+}
+
+//错误提示
+- (void)notificationForErrorNotification:(NSNotification *)notify
+{
+    DDLOG(@"错误提示 JPush %@ %@",notify.userInfo,notify.object);
+}
+
+/**
+ *  上传JPush registerId
+ */
+- (void)uploadJPushRegisterId
+{
+    NSString *authkey = [UserInfo getAuthkey];
+    if (authkey.length == 0) {
+        return;
+    }
+    NSString *registration_id = [APService registrationID];
+    if (!registration_id || registration_id.length == 0) {
+        registration_id = @"JPush";
+    }
+    
+    NSDictionary *params = @{@"authcode":authkey,
+                             @"registration_id":registration_id};
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_UPDATE_USEINFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        DDLOG(@"更新register_id%@",result);
+    } failBlock:^(NSDictionary *result) {
+        DDLOG(@"失败register_id%@",result);
+    }];
+}
+
+#pragma mark - 获取未读消息number
+
+- (void)netWorkForMsgNum
+{
+    if (![LoginManager isLogin]) {
+        return;
+    }
+    NSDictionary *params = @{@"authcode":[UserInfo getAuthkey]};
+    NSString *api = GET_MSG_NUM;
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        
+        int count = [[result objectForKey:@"count"]intValue];
+        
+        [LTools setObject:[NSNumber numberWithInt:count] forKey:USER_MSG_NUM];//未读消息个数
+        
+        [LTools updateTabbarUnreadMessageNumber];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+    }];
+}
+
+/**
+ *  处理活动推送和抢购推送
+ *
+ *  @param type     判断消息类型
+ *  @param detailId 消息id
+ */
+- (void)pushToMessageDetailWithResult:(NSDictionary *)userInfo
+{
+    //非融云
+    DDLOG(@"push %@",userInfo);
+    UITabBarController *root = (UITabBarController *)self.window.rootViewController;
+    int selectIndex = (int)root.selectedIndex;
+    UINavigationController *unVc = [root.viewControllers objectAtIndex:selectIndex];
+    DDLOG(@"unVc %@",unVc.viewControllers);
+    int viewsCount = (int)unVc.viewControllers.count;
+    
+    /**
+     * 获取融云融云推送消息
+     */
+    
+    NSDictionary *rc = userInfo[@"rc"];//融云的信息
+    if ([rc isKindOfClass:[NSDictionary class]]) {
+        
+        NSString *userId = rc[@"fId"];
+        if (userId) {
+            
+            NSLog(@"该远程推送来自融云的推送服务");
+            
+            BOOL hidden;
+            if (viewsCount == 1) {
+                hidden = YES;
+            }
+            [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:unVc model:nil hiddenBottom:hidden];
+            return;
+        }
+
+    }
+
+//    NSDictionary *aps = userInfo[@"aps"];//包含 alert和sound
+//    NSString *alertMessage = aps[@"alert"];//消息内容
+    //直接查看
+    NSString *msg_type = userInfo[@"type"];
+    NSString *theme_id = userInfo[@"theme_id"];//对应活动、报告、订单等id
+    NSString *msg_id = userInfo[@"msg_id"];//信息id
+    NSString *url = userInfo[@"url"];//活动url
+
+    MsgType type = [msg_type intValue];
+    
+    UIViewController *targetViewController;
+    if (type == MsgType_PEReportReadFinish) //报告解读完成
+    {
+        //报告详情页
+        ReportDetailController *detail = [[ReportDetailController alloc]init];
+        detail.msg_id = msg_id;
+        detail.reportId = theme_id;
+        targetViewController = detail;
+        
+    }else if (type == MsgType_OrderRefundState){ //订单申请退款
+        
+        OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
+        orderInfo.order_id = theme_id;
+        orderInfo.msg_id = msg_id;
+        targetViewController = orderInfo;
+        
+    }else if (type == MsgType_PEAlert){ //体检提醒
+        
+        AppointDetailController *detail = [[AppointDetailController alloc]init];
+        detail.appoint_id = theme_id;
+        detail.msg_id = msg_id;
+        targetViewController = detail;
+        
+    }else if (type == MsgType_Activity){ //活动
+        
+        WebviewController *web = [[WebviewController alloc]init];
+        web.webUrl = url;
+        web.navigationTitle = @"活动详情";
+        targetViewController = web;
+        
+    }else if (type == MsgType_PEProgress){ //体检报告进度
+        
+        DDLOG(@"体检进度报告");
+        
+    }
+    
+    if (viewsCount == 1) {
+        targetViewController.hidesBottomBarWhenPushed = YES;
+    }
+    [unVc pushViewController:targetViewController animated:YES];
+}
+
 
 @end

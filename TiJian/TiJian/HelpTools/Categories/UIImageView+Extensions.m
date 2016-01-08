@@ -113,6 +113,9 @@
 //        indicator.backgroundColor = [UIColor redColor];
     }
     
+    self.contentMode = UIViewContentModeScaleAspectFit;//等比例填充
+    self.clipsToBounds = YES;
+
     __weak typeof(self)weakSelf = self;
     [self sd_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         

@@ -99,7 +99,7 @@
 #define USERINFO_MODEL @"USERINFO_MODEL" //存储在本地用户model
 
 #define USERLocation @"locationInfo"
-
+#define USER_MSG_NUM @"msgNum" //通知消息个数
 
 #define USERCOMMONLYUSEDADDRESS @"USERCOMMONLYUSEDADDRESS"//用户常用地址
 
@@ -139,9 +139,12 @@
 //1、开发环境
 #define RONGCLOUD_IM_APPKEY    @"p5tvi9dst1qn4" //融云账号 18600912932
 #define RONGCLOUD_IM_APPSECRET @"qCqG93VU6WBz"
-//融云客服id
+
+//融云客服 1.0
 #define SERVICE_ID @"KEFU1448965696367"
 
+//融云客服 2.0
+#define SERVICE_ID_2 @"KEFU144894028332333"
 
 //==========================待注册
 

@@ -13,5 +13,6 @@
 @interface AppointDetailController : MyViewController
 
 @property(nonatomic,retain)NSString *appoint_id;
+@property(nonatomic,retain)NSString *msg_id;//消息id
 
 @end

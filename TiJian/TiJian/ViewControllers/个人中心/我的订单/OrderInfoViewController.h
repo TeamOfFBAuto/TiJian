@@ -13,5 +13,6 @@
 @interface OrderInfoViewController : MyViewController
 
 @property (nonatomic,retain)NSString *order_id;
+@property(nonatomic,retain)NSString *msg_id;//消息id
 
 @end

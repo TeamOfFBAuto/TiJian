@@ -153,7 +153,13 @@
         return;
     }
     NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
-                             @"report_id":self.reportId};;
+                             @"report_id":self.reportId};
+    
+    //更新消息未读状态
+    if (self.msg_id) {
+        
+        params = [params addObject:@{@"msg_id":self.msg_id}];
+    }
     NSString *api = REPORT_DETAIL;
     
     __weak typeof(self)weakSelf = self;
@@ -164,8 +170,10 @@
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         UserInfo *report = [[UserInfo alloc]initWithDictionary:result[@"info"]];
-        
         [weakSelf setViewWithModel:report];
+        if (weakSelf.msg_id && weakSelf.updateParamsBlock) {
+            weakSelf.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});
+        }
         
     } failBlock:^(NSDictionary *result) {
         

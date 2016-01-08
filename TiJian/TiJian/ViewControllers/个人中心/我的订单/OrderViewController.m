@@ -26,11 +26,12 @@
 //no_pay待付款，no_appointment待预约，no_comment待评价，complete已完成
 
 //获取对应tableView
-#define TABLEVIEW_TAG_DaiFu 0 //待付款
-#define TABLEVIEW_TAG_NoAppoint 1 //待预约
-#define TABLEVIEW_TAG_Appointed 2 //已预约
-#define TABLEVIEW_TAG_WanCheng 3 //完成
-#define TABLEVIEW_TAG_TuiHuan 4 //退换
+#define TABLEVIEW_TAG_All 0 //全部
+#define TABLEVIEW_TAG_DaiFu 1 //待付款
+#define TABLEVIEW_TAG_NoAppoint 2 //待预约
+#define TABLEVIEW_TAG_Appointed 3 //已预约
+#define TABLEVIEW_TAG_WanCheng 4 //完成
+#define TABLEVIEW_TAG_TuiHuan 5 //退换
 
 @interface CustomeAlertView : UIAlertView
 
@@ -68,7 +69,7 @@
     self.myTitle = @"我的订单";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    NSArray *titles = @[@"待付款",@"待预约",@"已预约",@"已完成",@"退换"];
+    NSArray *titles = @[@"全部",@"待付款",@"待预约",@"已预约",@"已完成",@"退换"];
     int count = (int)titles.count;
     CGFloat width = DEVICE_WIDTH / count;
     _buttonNum = count;
@@ -181,6 +182,8 @@
     if (indexTwo >= 0) {
         [[self refreshTableForIndex:indexTwo]showRefreshHeader:YES];
     }
+    
+    [[self refreshTableForIndex:TABLEVIEW_TAG_All]showRefreshHeader:YES];//全部
 }
 
 #pragma - mark 网络请求
@@ -198,6 +201,9 @@
     }
     NSString *status = nil;
     switch (orderType) {
+        case ORDERTYPE_All:
+            status = @"all";
+            break;
         case ORDERTYPE_DaiFu:
             status = @"no_pay";
             break;
@@ -538,6 +544,44 @@
 
     int tableViewTag = (int)tableView.tag;
     switch (tableViewTag) {
+            
+        case TABLEVIEW_TAG_All + 200:
+        {
+            int status = [aModel.status intValue];
+            NSString *text1 = nil;
+            ORDERACTIONTYPE type;
+            if (status == 1) {
+                //待支付
+                text1 = @"去支付";
+                type = ORDERACTIONTYPE_Pay;
+            }else if (status == 2){ //已付款就是待预约
+                //待预约
+                text1 = @"前去预约";
+                type = ORDERACTIONTYPE_Appoint;
+
+            }else if (status == 3){
+                //已预约
+                text1 = @"再次购买";
+                type = ORDERACTIONTYPE_BuyAgain;
+            }
+            else if (status == 4){
+                //已完成
+                text1 = @"再次购买";
+                type = ORDERACTIONTYPE_BuyAgain;
+                
+                //代表已评价
+                if ([aModel.is_comment intValue] == 0) {
+                    cell.actionButton.hidden = NO;
+                }else
+                {
+                    cell.actionButton.hidden = YES;
+                }
+            }
+            
+            [cell.commentButton setTitle:text1 forState:UIControlStateNormal];
+            cell.commentButton.actionType = type;
+        }
+            break;
         case TABLEVIEW_TAG_DaiFu + 200:
         {
             [cell.commentButton setTitle:@"去支付" forState:UIControlStateNormal];

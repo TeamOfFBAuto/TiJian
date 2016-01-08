@@ -103,6 +103,7 @@
 #pragma mark - 用户信息获取
 
 + (NSString *)getAuthkey;
++ (NSString *)getDeviceToken;
 + (NSString *)getUserId;
 + (BOOL)getCustomState;//是否定制化过
 

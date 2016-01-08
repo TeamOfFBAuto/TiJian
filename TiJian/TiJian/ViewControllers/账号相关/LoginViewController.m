@@ -12,7 +12,7 @@
 #import "UserInfo.h"
 //#import "WXApi.h"
 #import "LTools.h"
-//#import "APService.h"//JPush推送
+#import "APService.h"//JPush推送
 
 @interface LoginViewController ()
 
@@ -332,18 +332,12 @@
     
     __weak typeof(self)weakSelf = self;
     
-    NSString *token = [UserInfo getAuthkey];
+    NSString *token = [UserInfo getDeviceToken];
     
     if (token.length == 0) {
-        token = @"noToken";
+        token = @"noToken,may close remote push";
     }
     
-//    NSString *registration_id = [APService registrationID];
-//    if (!registration_id || registration_id.length == 0) {
-//        registration_id = @"JPush";
-//    }
-    
-    NSString *registration_id = @"";
     NSDictionary *params;
     if ([type isEqualToString:@"normal"]) {
         params = @{
@@ -351,14 +345,13 @@
                    @"mobile":mobile,
                    @"password":password,
                    @"devicetoken":token,
-                   @"login_source":@"iOS",
-                   @"registration_id":registration_id
+                   @"login_source":@"iOS"
                    };
     }else{
         
         thirdId = thirdId ? : @"";
         nickName = nickName ? : @"";
-        thirdphoto = thirdphoto ? : thirdphoto;
+        thirdphoto = thirdphoto ? : @"";
         
         params = @{
                    @"type":type,
@@ -367,22 +360,27 @@
                    @"third_photo":thirdphoto,
                    @"gender":[NSString stringWithFormat:@"%d",gender],
                    @"devicetoken":token,
-                   @"login_source":@"iOS",
-                   @"registration_id":registration_id
+                   @"login_source":@"iOS"
                    };
     }
     
+    NSMutableDictionary *Mut_params = [NSMutableDictionary dictionaryWithDictionary:params];
+    
+    //JPush registerid
+    NSString *registration_id = [APService registrationID];
+    if (registration_id && registration_id.length > 0) {
+        
+        [Mut_params setObject:registration_id forKey:@"registration_id"];
+    }
     
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_LOGIN_ACTION parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_LOGIN_ACTION parameters:Mut_params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         NSLog(@"%@",result);
-        
         
         UserInfo *user = [[UserInfo alloc]initWithDictionary:result];
         /**

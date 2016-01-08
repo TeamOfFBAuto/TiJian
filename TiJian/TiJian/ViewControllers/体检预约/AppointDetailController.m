@@ -225,6 +225,13 @@
     NSString *authkey = [UserInfo getAuthkey];
     NSDictionary *params = @{@"authcode":authkey,
                              @"appoint_id":self.appoint_id};
+    
+    //更新消息未读状态
+    if (self.msg_id) {
+        
+        params = [params addObject:@{@"msg_id":self.msg_id}];
+    }
+    
     NSString *api = GET_APPOINT_DETAIL;
     
     __weak typeof(self)weakSelf = self;
@@ -234,6 +241,9 @@
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         [weakSelf parseDateWithResult:result];
+        if (weakSelf.msg_id && weakSelf.updateParamsBlock) {
+            weakSelf.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});
+        }
         
     } failBlock:^(NSDictionary *result) {
         

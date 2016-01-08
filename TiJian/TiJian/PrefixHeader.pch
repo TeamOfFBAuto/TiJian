@@ -28,6 +28,7 @@
 #import "RefreshTableView.h"
 #import "MBProgressHUD.h"
 #import "LTools.h"//工具类
+#import "MiddleTools.h"
 
 #import "Masonry.h"//自动布局类
 

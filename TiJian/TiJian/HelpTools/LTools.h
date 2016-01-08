@@ -63,9 +63,17 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 - (void)versionForAppid:(NSString *)appid Block:(void(^)(BOOL isNewVersion,NSString *updateUrl,NSString *updateContent))version;//是否有新版本、新版本更新下地址
 
+
 #pragma mark - NSUserDefault缓存
 
 #pragma mark 缓存融云用户数据
+
+/**
+ *  获取融云未读消息num
+ *
+ *  @return
+ */
++ (int)rongCloudUnreadNum;
 
 /**
  *  更新未读消息显示
@@ -252,6 +260,12 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  *  获取当前时间戳
  */
 +(NSString *)timechangeToDateline;
+
+/**
+ *  NSDate对应的时间戳
+ *  @return
+ */
++(NSString *)timeDatelineWithDate:(NSDate *)date;
 
 /**
  *  时间转化为对应的时间戳

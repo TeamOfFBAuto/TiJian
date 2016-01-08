@@ -215,34 +215,56 @@
 #pragma mark 缓存融云用户数据
 
 /**
+ *  获取融云未读消息num
+ *
+ *  @return
+ */
++ (int)rongCloudUnreadNum
+{
+    int unreadMsgCount = [[RCIMClient sharedRCIMClient]getUnreadCount: @[@(ConversationType_CUSTOMERSERVICE),@(ConversationType_APPSERVICE)]];
+    return unreadMsgCount;
+}
+
+/**
  *  更新未读消息显示
  *
  *  @param number 未读数
  */
 + (void)updateTabbarUnreadMessageNumber
 {
-    int unreadMsgCount = [[RCIMClient sharedRCIMClient]getUnreadCount: @[@(ConversationType_CUSTOMERSERVICE)]];
+    int unreadMsgCount = [[RCIMClient sharedRCIMClient]getUnreadCount: @[@(ConversationType_CUSTOMERSERVICE),@(ConversationType_APPSERVICE)]];
     
     NSString *number_str = nil;
+    
+    //未登陆
+    if (![LoginManager isLogin]) {
+        unreadMsgCount = 0;
+    }
     
     if (unreadMsgCount > 0) {
         number_str = [NSString stringWithFormat:@"%d",unreadMsgCount];
     }
+    //通知消息
+    int msgNum = [[LTools objectForKey:USER_MSG_NUM]intValue];
     
-    [UIApplication sharedApplication].applicationIconBadgeNumber = [number_str intValue];
+    int sum = msgNum + [number_str intValue];
     
-    NSLog(@"--%d %d",[[RCIMClient sharedRCIMClient]getTotalUnreadCount],unreadMsgCount);
+    DDLOG(@"未读消息--客服:%d 通知:%d",unreadMsgCount,msgNum);
     
-//    UITabBarController *root = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-//    
-//    if ([root isKindOfClass:[UITabBarController class]]) {
-//        UINavigationController *unvc = [root.viewControllers objectAtIndex:2];
-//        
-//        unvc.tabBarItem.badgeValue = number_str;
-//        
-//        [UIApplication sharedApplication].applicationIconBadgeNumber = [number_str intValue];
-//    }
-
+    UITabBarController *root = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    if ([root isKindOfClass:[UITabBarController class]]) {
+        UINavigationController *unvc = [root.viewControllers objectAtIndex:2];
+        
+        if (sum <= 0) {
+            unvc.tabBarItem.badgeValue = nil;
+        }else
+        {
+            unvc.tabBarItem.badgeValue = NSStringFromInt(sum);
+        }
+        
+        [UIApplication sharedApplication].applicationIconBadgeNumber = sum;
+    }
 }
 
 + (void)cacheRongCloudUserName:(NSString *)userName forUserId:(NSString *)userId
@@ -722,6 +744,15 @@
 }
 
 /**
+ *  NSDate对应的时间戳
+ *  @return
+ */
++(NSString *)timeDatelineWithDate:(NSDate *)date
+{
+    return [NSString stringWithFormat:@"%ld", (long)[date timeIntervalSince1970]];
+}
+
+/**
  *  时间转化为对应的时间戳
  *
  *  @param string 时间
@@ -741,7 +772,6 @@
     
     return [NSString stringWithFormat:@"%ld", (long)[date timeIntervalSince1970]];
 }
-
 
 /**
  *  显示间隔时间 一天内显示时分、几天前、几周前、大于一周 显示具体日期
@@ -772,6 +802,9 @@
         NSDate *date = [NSDate dateWithTimeIntervalSince1970: [myTime integerValue]];
         
         timestamp = [dateFormatter stringFromDate:date];
+    }else if (distance < 60 * 60 * 24 * 2) {
+        
+        timestamp = [NSString stringWithFormat:@"昨天"];
         
     }
     else if (distance < 60 * 60 * 24 * 7) {
@@ -789,7 +822,6 @@
             [dateFormatter setDateFormat:format];
         }
         NSDate *date = [NSDate dateWithTimeIntervalSince1970: [myTime integerValue]];
-        
         timestamp = [dateFormatter stringFromDate:date];
     }
     

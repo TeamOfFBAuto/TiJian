@@ -6,7 +6,7 @@
 //
 
 #import "ActivityCell.h"
-#import "ActivityModel.h"
+#import "MessageModel.h"
 
 @interface ActivityCell()
 
@@ -112,20 +112,19 @@
     return height;
 }
 
--(void)setCellWithModel:(ActivityModel *)aModel
+-(void)setCellWithModel:(MessageModel *)aModel
 {
-    self.timeLabel.text = @"2015-12-12 09:30";
-//    @property (nonatomic,retain)UIView *bgView;//背景view
     
-//    @property (nonatomic,retain)UIImageView *coverImageView;//活动封面
-//    @property (nonatomic,retain)UILabel *titleLabel;//活动标题
-    self.titleLabel.text = @"这是活动的标题部分";
-//    @property (nonatomic,retain)UILabel *contentLabel;//活动摘要
-    NSString *content = @"这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分";
+    self.timeLabel.text = [LTools showIntervalTimeWithTimestamp:aModel.send_time withFormat:@"yyyy年MM月dd日"];
+
+    self.titleLabel.text = aModel.title;
+    NSString *content = aModel.content;
     self.contentLabel.text = content;
     CGFloat width = DEVICE_WIDTH - 20 - 20;
     CGFloat height_content = [LTools heightForText:content width:width font:13.f];
     self.contentLabel.height = height_content;
+    
+    [self.coverImageView l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
     
     self.toolView.top = _contentLabel.bottom + 11;
     

@@ -9,9 +9,17 @@
 #import "MessageCenterController.h"
 #import "MessageViewController.h"
 #import "ActivityCell.h"
+#import "MessageModel.h"
+#import "ReportDetailController.h"//体检报告
+#import "OrderInfoViewController.h"//订单详情
+#import "AppointDetailController.h"//预约详情
+#import "NSDate+FSExtension.h"
+#import "WebviewController.h"
 
 #define TableView_tag_Notification 200 //通知
 #define TableView_tag_Activity 202 //活动
+
+#define Tag_redpoint 400 //红点
 
 @interface MessageCenterController ()<RefreshDelegate,UITableViewDataSource,UIScrollViewDelegate>
 {
@@ -71,6 +79,34 @@
         [btn setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
         btn.selected = YES;
         
+        if (i != 0) {
+            
+            //红点
+            CGFloat width = 6.f;
+            UIView *point = [[UIView alloc]initWithFrame:CGRectMake(btn.width/2.f + 15, 5, width, width)];
+            [btn addSubview:point];
+            point.backgroundColor = [UIColor colorWithHexString:@"ec2120"];
+            [point setBorderWidth:0.5f borderColor:[UIColor whiteColor]];
+            [point addRoundCorner];
+            point.tag = Tag_redpoint + i;
+            
+            int num = 0;
+            if (i == 0) {
+                num = [[LTools objectForKey:USER_MSG_NUM]intValue];
+            }else if (i == 1){
+                
+                num = [LTools rongCloudUnreadNum];
+                
+            }
+            if (num > 0) {
+                point.hidden = NO;
+            }else
+            {
+                point.hidden = YES;
+            }
+        }
+        
+        
         if (i == 1) {
             MessageViewController *chatService = [[MessageViewController alloc] init];
             chatService.view.frame = CGRectMake(DEVICE_WIDTH * i, 0, DEVICE_WIDTH,_scroll.height);
@@ -114,57 +150,41 @@
 #pragma - mark 网络请求
 
 /**
- *  获取订单列表
+ *  获取通知列表
  *
- *  @param orderType 不同的订单状态
+ *  @param
  */
-- (void)getOrderListWithStatus:(ORDERTYPE)orderType
+- (void)getListWithIndex:(int)index
 {
     NSString *authey = [UserInfo getAuthkey];
     if (authey.length == 0) {
         return;
     }
-    NSString *status = nil;
-    switch (orderType) {
-        case ORDERTYPE_DaiFu:
-            status = @"no_pay";
-            break;
-        case ORDERTYPE_NoAppoint:
-            status = @"no_appointment";
-            break;
-        case ORDERTYPE_Appointed:
-            status = @"appointment";
-            break;
-        case ORDERTYPE_WanCheng:
-            status = @"complete";
-            break;
-        case ORDERTYPE_TuiHuan:
-            status = @"refund";
-            break;
-        default:
-            break;
+    
+    __weak typeof(RefreshTableView)*weakTable = [self refreshTableForIndex:index];
+    NSString *api = GET_MY_MSG;
+    NSString *sort;
+    if (index == 0) {
+        sort = @"notice";//notice: 包含type=2, 4, 5, 6
+    }else if (index == 2){
+        //活动
+        sort = @"ac";
     }
-    __weak typeof(RefreshTableView)*weakTable = [self refreshTableForIndex:orderType - 1];
-    NSString *api = ORDER_GET_MY_ORDERS;
+    
     NSDictionary *params = @{@"authcode":authey,
-                             @"status":status,
                              @"per_page":[NSNumber numberWithInt:10],
-                             @"page":[NSNumber numberWithInt:weakTable.pageNum]};
+                             @"page":[NSNumber numberWithInt:weakTable.pageNum],
+                             @"sort":sort};
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *list = result[@"list"];
-        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:list.count];
-        for (NSDictionary *aDic in list) {
-            
-//            OrderModel *aModel = [[OrderModel alloc]initWithDictionary:aDic];
-//            [temp addObject:aModel];
-        }
+        NSArray *temp = [MessageModel modelsFromArray:list];
         
-//        [weakTable reloadData:temp pageSize:10 noDataView:[self noDataView]];
+       [weakTable reloadData:temp pageSize:10 noDataView:[self noDataView]];
         
     } failBlock:^(NSDictionary *result) {
-//        [weakTable reloadData:nil pageSize:10 noDataView:[self noDataView]];
+        [weakTable reloadData:nil pageSize:10 noDataView:[self noDataView]];
         
     }];
     
@@ -215,6 +235,20 @@
 }
 
 #pragma - mark 事件处理
+/**
+ *  更新未读通知
+ */
+- (void)updateMsgNum
+{
+    int num = [[LTools objectForKey:USER_MSG_NUM]intValue];
+    num --;
+    
+    if (num <= 0) {
+        num = 0;
+    }
+    [LTools setObject:[NSNumber numberWithInt:num] forKey:USER_MSG_NUM];
+    [LTools updateTabbarUnreadMessageNumber];
+}
 
 /**
  *  去支付 确认收货 评价 再次购买
@@ -256,6 +290,7 @@
         
         if (btn.selected) {
             btn.backgroundColor = DEFAULT_TEXTCOLOR;
+            [btn viewWithTag:Tag_redpoint + i].hidden = YES;//隐藏红点
         }else
         {
             btn.backgroundColor = [UIColor whiteColor];
@@ -268,11 +303,11 @@
         weakIndicator.left = DEVICE_WIDTH / _buttonNum * (tag - 100);
     }];
     
-//    int index = tag - 100;
-//    if (![self refreshTableForIndex:index].isHaveLoaded) {
-//        NSLog(@"请求数据 %d",index);
-//        [[self refreshTableForIndex:index] showRefreshHeader:YES];
-//    }
+    int index = tag - 100;
+    if (![self refreshTableForIndex:index].isHaveLoaded) {
+        NSLog(@"请求数据 %d",index);
+        [[self refreshTableForIndex:index] showRefreshHeader:YES];
+    }
 }
 
 /**
@@ -283,9 +318,6 @@
 - (void)clickToSelect:(UIButton *)sender
 {
     [self controlSelectedButtonTag:(int)sender.tag];
-    
-    //    __weak typeof(_scroll)weakScroll = _scroll;
-    //    [UIView animateWithDuration:0.1 animations:^{
     
     [_scroll setContentOffset:CGPointMake(DEVICE_WIDTH * (sender.tag - 100), 0)];
     //    }];
@@ -313,33 +345,92 @@
 
 - (void)loadNewDataForTableView:(UITableView *)tableView
 {
-    int tableTag = (int)tableView.tag - 200 + 1;
-    
-    [self getOrderListWithStatus:tableTag];
+    int index = (int)tableView.tag - 200;
+    [self getListWithIndex:index];
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView
 {
-    int tableTag = (int)tableView.tag - 200 + 1;
-    
-    [self getOrderListWithStatus:tableTag];
+    int index = (int)tableView.tag - 200;
+    [self getListWithIndex:index];
 }
 
 //新加
-- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView
 {
-//    OrderModel *aModel = [((RefreshTableView *)tableView).dataArray objectAtIndex:indexPath.row];
-//    
-//    OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
-//    orderInfo.order_id = aModel.order_id;
-//    orderInfo.lastViewController = self;
-//    [self.navigationController pushViewController:orderInfo animated:YES];
+    //消息通知
+    if (tableView.tag == TableView_tag_Notification) {
+        MessageModel *msg = tableView.dataArray[indexPath.row];
+        MsgType type = [msg.type intValue];
+        
+         @WeakObj(self);
+         @WeakObj(tableView);
+         @WeakObj(msg);
+        if (type == MsgType_PEReportReadFinish) //报告解读完成
+        {
+            //报告详情页
+            ReportDetailController *detail = [[ReportDetailController alloc]init];
+            detail.reportId = msg.theme_id;
+            if ([msg.is_read intValue] == 1) { //未读的时候才传
+                detail.msg_id = msg.msg_id;
+                detail.updateParamsBlock = ^(NSDictionary *params){
+                    Weakmsg.is_read = @"2";
+                    [WeaktableView reloadData];
+                    [Weakself updateMsgNum];
+                };
+            }
+            [self.navigationController pushViewController:detail animated:YES];
+        }else if (type == MsgType_OrderRefundState){ //订单申请退款
+            
+            OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
+            orderInfo.order_id = msg.theme_id;
+            orderInfo.lastViewController = self;
+            if ([msg.is_read intValue] == 1) { //未读的时候才传
+                orderInfo.msg_id = msg.msg_id;
+                orderInfo.updateParamsBlock = ^(NSDictionary *params){
+                    Weakmsg.is_read = @"2";
+                    [WeaktableView reloadData];
+                    [Weakself updateMsgNum];
+                };
+            }
+            [self.navigationController pushViewController:orderInfo animated:YES];
+            
+        }else if (type == MsgType_PEAlert){ //体检提醒
+            
+            AppointDetailController *detail = [[AppointDetailController alloc]init];
+            detail.appoint_id = msg.theme_id;
+            if ([msg.is_read intValue] == 1) { //未读的时候才传
+                detail.msg_id = msg.msg_id;
+                detail.updateParamsBlock = ^(NSDictionary *params){
+                    Weakmsg.is_read = @"2";
+                    [WeaktableView reloadData];
+                    [Weakself updateMsgNum];
+                };
+            }
+            [self.navigationController pushViewController:detail animated:YES];
+        }
+    }
+    //活动详情
+    else if (tableView.tag == TableView_tag_Activity){
+        MessageModel *aModel = tableView.dataArray[indexPath.row];
+        WebviewController *web = [[WebviewController alloc]init];
+        web.webUrl = aModel.url;
+        web.navigationTitle = @"活动详情";
+        [self.navigationController pushViewController:web animated:YES];
+    }
 }
-- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+
+- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView
 {
     if (tableView.tag == TableView_tag_Notification) {
         return 60.f;
     }else if (tableView.tag == TableView_tag_Activity){
-        return [ActivityCell heightForCellWithImage:YES content:@"这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分这是活动的标摘要部分"];
+        
+        MessageModel *aModel = tableView.dataArray[indexPath.row];
+        BOOL image;
+        if (aModel.pic && [aModel.pic hasPrefix:@"http"]) {
+            image = YES;
+        }
+        return [ActivityCell heightForCellWithImage:image content:aModel.content];
     }
     return 60.f;
 }
@@ -349,15 +440,24 @@
     
 }
 
+-(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
+{
+    return 10.f;
+}
+-(UIView *)viewForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
+{
+    return [UIView new];
+}
+
 #pragma - mark UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     RefreshTableView *refreshTable = (RefreshTableView *)tableView;
-    return refreshTable.dataArray.count + 3;
+    return refreshTable.dataArray.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(RefreshTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //通知
     if (tableView.tag == TableView_tag_Notification) {
@@ -374,8 +474,16 @@
             [cell.contentView addSubview:iconView];
             iconView.tag = 300;
             
+            UIView *point = [[UIView alloc]initWithFrame:CGRectMake(iconView.width - 3, -3, 6, 6)];
+            [iconView addSubview:point];
+            point.backgroundColor = [UIColor colorWithHexString:@"ec2120"];
+            [point setBorderWidth:1.f borderColor:[UIColor whiteColor]];
+            [point addRoundCorner];
+            point.tag = 304;
+            
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(iconView.right + 10, 13, DEVICE_WIDTH - iconView.right - 10 - 90, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
             [cell.contentView addSubview:titleLabel];
+            titleLabel.font = [UIFont boldSystemFontOfSize:13];
             titleLabel.tag = 301;
             
             UILabel *subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(iconView.right + 10, titleLabel.bottom + 6, DEVICE_WIDTH - iconView.right - 10 - 10, 13) title:nil font:11 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
@@ -394,10 +502,25 @@
         UILabel *titleLabel = [cell.contentView viewWithTag:301];
         UILabel *subTitleLabel = [cell.contentView viewWithTag:302];
         UILabel *timeLabel = [cell.contentView viewWithTag:303];
+        UIView *point = [cell.contentView viewWithTag:304];
 
-        titleLabel.text = @"听ask卡三季度可垃圾是看得见阿克苏来得及克拉撒娇的卡老实交代克拉斯加抵抗力";
-        subTitleLabel.text = @"听ask卡三季度可垃圾是看得见阿克苏来得及克拉撒娇的卡老实交代克拉斯加抵抗力";
-        timeLabel.text = @"12-30";
+        MessageModel *msg = [tableView.dataArray objectAtIndex:indexPath.row];
+        titleLabel.text = msg.title;
+        subTitleLabel.text = msg.content;
+        timeLabel.text = [LTools showIntervalTimeWithTimestamp:msg.send_time withFormat:@"yyyy-MM-dd"];
+        
+        point.hidden = [msg.is_read intValue] == 1 ? NO : YES;
+        
+        MsgType type = [msg.type intValue];
+        if (type == MsgType_PEReportReadFinish || //报告解读完成
+            type == MsgType_PEProgress) {  //体检报告进度
+            
+            iconView.image = [UIImage imageNamed:@"message_baogao"];
+        }else if (type == MsgType_OrderRefundState){
+            iconView.image = [UIImage imageNamed:@"message_tuikuan"];
+        }else if (type == MsgType_PEAlert){
+            iconView.image = [UIImage imageNamed:@"message_yuyue"];
+        }
         
         return cell;
     }
@@ -410,7 +533,9 @@
             cell = [[ActivityCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [cell setCellWithModel:nil];
+        MessageModel *aModel = [tableView.dataArray objectAtIndex:indexPath.row];
+        
+        [cell setCellWithModel:aModel];
         
         return cell;
     }

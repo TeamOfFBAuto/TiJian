@@ -56,7 +56,6 @@
     [super viewDidLoad];
 
     UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceButton1.width = IOS7_OR_LATER ? -10 : 5;
     
     UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(10,8,40,44)];
     [button_back addTarget:self action:@selector(leftBarButtonItemPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -104,13 +103,8 @@
     
     NSString *orderInfo = [NSString stringWithFormat:@"orderId=%@",orderId];
     NSString *title = [NSString stringWithFormat:@"订单编号:%@",orderNum];
-    RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:orderInfo];
     
-    [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
-        DDLOG(@"messageid %ld",messageId);
-    } error:^(RCErrorCode nErrorCode, long messageId) {
-        DDLOG(@"nErrorCode %ld",(long)nErrorCode);
-    }];
+    [self sendMessageTitle:title digest:digest imageUrl:imageUrl extra:orderInfo];
 }
 
 /**
@@ -143,6 +137,26 @@
     
     NSString *title = [NSString stringWithFormat:@"我在看:[%@]",productName];
     
+    [self sendMessageTitle:title digest:digest imageUrl:imageUrl extra:extra];
+}
+
+- (void)sendMessageTitle:(NSString *)title
+                    digest:(NSString *)digest
+                  imageUrl:(NSString *)imageUrl
+                     extra:(NSString *)extra
+{
+    //2.0
+    
+//    RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
+//    [[RCIM sharedRCIM]sendMessage:ConversationType_APPSERVICE targetId:SERVICE_ID_2 content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
+//        DDLOG(@"messageid %ld",messageId);
+//        
+//    } error:^(RCErrorCode nErrorCode, long messageId) {
+//        DDLOG(@"nErrorCode %ld",(long)nErrorCode);
+//        
+//    }];
+    
+    //1.0
     RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
     [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
         DDLOG(@"messageid %ld",messageId);
@@ -150,8 +164,9 @@
     } error:^(RCErrorCode nErrorCode, long messageId) {
         DDLOG(@"nErrorCode %ld",(long)nErrorCode);
         
-    }];    
+    }];
 }
+
 
 #pragma - mark 自定义消息重写方法
 

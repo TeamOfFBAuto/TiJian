@@ -119,12 +119,21 @@
                              @"detail":[NSNumber numberWithInt:1]
                              };
     
-//    __weak typeof(_table)weakTable = _table;
+    //更新消息未读状态
+    if (self.msg_id) {
+        
+        params = [params addObject:@{@"msg_id":self.msg_id}];
+    }
+    
     __weak typeof(self)weakSelf = self;
     
     [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_INFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"获取订单详情%@ %@",result[RESULT_INFO],result);
         [weakSelf parseDataWithResult:result];
+        
+        if (weakSelf.msg_id && weakSelf.updateParamsBlock) {
+            weakSelf.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});
+        }
         
     } failBlock:^(NSDictionary *result) {
         NSLog(@"获取订单详情 失败 %@",result);
@@ -338,23 +347,7 @@
  */
 - (void)clickToChat:(UIButton *)sender
 {
-    
-    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
-    chatService.userName = @"客服";
-    chatService.targetId = SERVICE_ID;
-    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
-    chatService.title = chatService.userName;
-    [chatService setOrderMessageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
-    [self.navigationController pushViewController:chatService animated:YES];
-    
-    
-//    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
-//    chatService.userName = @"客服";
-//    chatService.targetId = SERVICE_ID;
-//    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
-//    chatService.title = chatService.userName;
-//    [chatService setOrderMessageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
-//    [self.navigationController pushViewController:chatService animated:YES];
+    [MiddleTools pushToChatWithSourceType:SourceType_Order fromViewController:self model:_orderModel];
 }
 
 /**

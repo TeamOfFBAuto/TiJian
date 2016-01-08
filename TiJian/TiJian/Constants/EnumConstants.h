@@ -61,7 +61,8 @@ typedef enum{
 }SecurityCode_Type;
 
 typedef enum{
-    ORDERTYPE_DaiFu = 1, //待付款
+    ORDERTYPE_All = 1,//全部
+    ORDERTYPE_DaiFu , //待付款
     ORDERTYPE_NoAppoint,//待预约
     ORDERTYPE_Appointed,//已预约
     ORDERTYPE_WanCheng, //完成
@@ -101,5 +102,38 @@ typedef enum {
     PageResultType_nodata = 2,//数据为空
     PageResultType_requestFail = 3 //请求异常
 }PageResultType;//页面结果类型
+
+//消息通知类型
+//PhysicalExamination (PE)
+typedef enum{
+    /**
+     *  客服消息 1
+     */
+    MsgType_Service = 1 ,//客服消息
+    /**
+     *  体检提醒消息 2
+     */
+    MsgType_PEAlert = 2,//2、体检提醒消息（提前一天通知） theme_id: 预约详情id
+    /**
+     *  活动消息 3
+     */
+    MsgType_Activity = 3,//3、活动消息
+    /**
+     *  体检报告进度 4
+     */
+    MsgType_PEProgress = 4, //4、体检报告进度
+    /**
+     *  体检报告解读完成消息 5
+     */
+    MsgType_PEReportReadFinish = 5,//5、体检报告报告解读完成消息   theme_id: 体检报告id
+    /**
+     *  订单退款状态 6
+     */
+    MsgType_OrderRefundState = 6 //6、订单的退款状态    theme_id: 订单id
+
+}MsgType;
+//pic: 封面图(可能为空)
+
+
 
 #endif

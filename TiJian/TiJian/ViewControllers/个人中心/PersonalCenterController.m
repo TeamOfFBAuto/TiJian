@@ -34,6 +34,7 @@
 
 @property(nonatomic,retain)UIView *loginView;
 @property(nonatomic,retain)UIView *unloginView;
+@property (nonatomic,retain)UIView *redPoint;//未读消息
 
 @end
 
@@ -43,13 +44,12 @@
 {
     [super viewWillAppear:animated];
 
-//    //同步网络数据
-//    if ([LoginManager isLogin]) {
-//        [self netWorkForList];
-//    }
     if ([LoginManager isLogin]) {
         [self updateUserInfo];
     }
+    
+    [LTools updateTabbarUnreadMessageNumber];
+    
 }
 
 - (void)viewDidLoad {
@@ -59,7 +59,7 @@
     self.myTitle = @"个人中心";
     self.rightImageName = @"personal_message";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
-    
+
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLogoutNotify:) name:NOTIFICATION_LOGOUT object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLoginNotify:) name:NOTIFICATION_LOGIN object:nil];
     
@@ -80,6 +80,49 @@
     if ([LoginManager isLogin]) {
         [self netWorkForList];
     }
+    
+    //监控未读消息num
+    
+    UITabBarController *root = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    if ([root isKindOfClass:[UITabBarController class]]) {
+        
+        UINavigationController *unvc = [root.viewControllers objectAtIndex:2];
+        [unvc.tabBarItem addObserver:self forKeyPath:@"badgeValue" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+        
+    }
+}
+
+/**
+ *  控制右上角红点
+ */
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    NSLog(@"observeValueForKeyPath %@",change);
+    
+    if ([keyPath isEqualToString:@"badgeValue"]) {
+        
+        id new = [change objectForKey:@"new"];
+        
+        int newNum = 0.f;
+        if ([new isKindOfClass:[NSNull class]]) {
+            
+            newNum = 0;
+        }else
+        {
+            newNum = [new intValue];
+        }
+        
+        if (newNum > 0) {
+            
+            self.redPoint.hidden = NO;
+        }else
+        {
+            self.redPoint.hidden = YES;
+        }
+        
+        NSLog(@"mine未读消息 %d",newNum);
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -92,6 +135,7 @@
 - (void)notificationForLogoutNotify:(NSNotification *)notify
 {
     [self updateLoginState:NO];
+    [LTools updateTabbarUnreadMessageNumber];
 }
 
 - (void)notificationForLoginNotify:(NSNotification *)notify
@@ -166,6 +210,27 @@
 }
 
 #pragma - mark 创建视图
+
+/**
+ *  未读消息红点
+ *
+ *  @return
+ */
+-(UIView *)redPoint
+{
+    if (!_redPoint) {
+        
+        CGFloat width = 10.f;
+        UIView *point = [[UIView alloc]initWithFrame:CGRectMake(self.right_button.width - width/2.f, -width/2.f, width, width)];
+        [self.right_button addSubview:point];
+        _redPoint = point;
+        point.backgroundColor = [UIColor colorWithHexString:@"ec2120"];
+        [point setBorderWidth:1.5f borderColor:[UIColor whiteColor]];
+        [point addRoundCorner];
+    }
+    return _redPoint;
+}
+
 /**
  *  创建tableView headView
  */
@@ -258,11 +323,6 @@
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(sexImage.right + 6, sexLabel.top, 15, 15) title:sexString font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [_loginView addSubview:label];
     _sexLabel = label;
-
-//    UIImageView *editImage = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 23, (80-23)/2.f, 23, 23)];
-//    editImage.image = [UIImage imageNamed:@"bianji"];
-//    [_loginView addSubview:editImage];
-//    [_loginView addTaget:self action:@selector(clickToEditUserInfo) tag:0];
     
     //箭头
     UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(_loginView.width - 15 - 3.5, 0, 5.5, 11)];
@@ -272,14 +332,11 @@
     label = [[UILabel alloc]initWithFrame:CGRectMake(_loginView.width - arrow.width - 100 - 20, _loginView.height - 20 - 12 + 2, 100, 30) title:@"账户管理、收货地址" font:11 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
     [_loginView addSubview:label];
     label.font = [UIFont boldSystemFontOfSize:11];
-//    [label addTaget:self action:@selector(clickToEditUserInfo) tag:0];
-//    label.backgroundColor = [UIColor orangeColor];
     arrow.centerY = label.centerY;
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = _loginView.bounds;
     [btn addTarget:self action:@selector(clickToEditUserInfo) forControlEvents:UIControlEventTouchUpInside];
-//    btn.backgroundColor = [UIColor orangeColor];
     [_loginView addSubview:btn];
     
     return _loginView;
@@ -330,7 +387,7 @@
 {
     NSLog(@"修改个人头像");
     
-    if (![LoginViewController isLogin]) {
+    if (![LoginViewController isLogin:self]) {
         NSLog(@"未登录修改毛线");
         return;
     }
@@ -357,15 +414,12 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
-    NSLog(@"消息中心");
-    MessageCenterController *message = [[MessageCenterController alloc]init];
-    message.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:message animated:YES];
-    
-    
-//    MessageViewController *message = [[MessageViewController alloc]init];
-//    message.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:message animated:YES];
+    if ([LoginManager isLogin:self]) {
+        NSLog(@"消息中心");
+        MessageCenterController *message = [[MessageCenterController alloc]init];
+        message.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:message animated:YES];
+    }
 }
 
 #pragma mark UIACtionSheet delegate
@@ -419,6 +473,8 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    self.redPoint.hidden = YES;
+    
     if (![LoginViewController isLogin:self]) {
         return;
     }
