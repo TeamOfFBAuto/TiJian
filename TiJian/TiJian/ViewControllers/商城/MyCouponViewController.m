@@ -10,7 +10,7 @@
 #import "MyCouponTableViewCell.h"
 #import "ConfirmOrderViewController.h"
 #import "GwebViewController.h"
-
+#import "ProductModel.h"
 @interface MyCouponViewController ()<UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     int _buttonNum;//button个数
@@ -436,12 +436,37 @@
                 };
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
         url = ORDER_GETDAIJIQUANLIST;
+        
+        int p_nums = 0;
+        for (ProductModel *model in self.delegate.dataArray) {
+            p_nums += [model.product_num intValue];
+        }
+        
+        
         dic = @{
                 @"authcode":[UserInfo getAuthkey],
                 @"brand_ids":self.brand_ids,
-                @"product_num":[NSString stringWithFormat:@"%lu",(unsigned long)self.delegate.dataArray.count]
+                @"product_num":[NSString stringWithFormat:@"%d",p_nums]
                 };
+        
+        
+        if (p_nums == 1) {
+            for (ProductModel *model in self.delegate.dataArray) {
+                dic = @{
+                        @"authcode":[UserInfo getAuthkey],
+                        @"brand_ids":self.brand_ids,
+                        @"product_num":[NSString stringWithFormat:@"%d",p_nums],
+                        @"product_id":model.product_id
+                        };
+            }
+            
+        }
+        
+        
+        
     }
+    
+    
     
     
     if (!_requst) {

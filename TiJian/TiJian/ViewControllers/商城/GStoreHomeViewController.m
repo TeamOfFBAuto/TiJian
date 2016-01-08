@@ -23,8 +23,9 @@
 
 #import "GShopCarViewController.h"
 
+#import "DLNavigationEffectKit.h"
 
-@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource>
+@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
 {
     
     LBannerView *_bannerView;//轮播图
@@ -42,6 +43,12 @@
     NSDictionary *_StoreCycleAdvDic;//轮播图dic
     NSDictionary *_StoreProductClassDic;
     NSMutableArray *_StoreProductListArray;
+    
+    
+    UIView *_mySearchView;//点击搜索盖上的搜索浮层
+    
+    UITextField *_searchTf;//搜索栏输入框
+    UIView *_searchView;//输入框下层view
     
     
 }
@@ -67,27 +74,100 @@
     [self removeObserver:self forKeyPath:@"_count"];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self hiddenNavigationBar:YES animated:animated];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self hiddenNavigationBar:NO animated:animated];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.myTitle = @"体检商城";
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    
 
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
-    self.rightImage = [UIImage imageNamed:@"storehome_gouwuche.png"];
-    
+    [self setupNavigation];
     [self creatTableView];
+    [self creatMysearchView];
+    [self creatDownBtnView];
+ 
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - UITextField
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSLog(@"%s",__FUNCTION__);
+    _mySearchView.hidden = NO;
+    
+    [_searchView setWidth:DEVICE_WIDTH - 50];
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        alphaView.alpha = 1;
+    }
+    
+}
+
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    
+    [_searchView setWidth:DEVICE_WIDTH - 100];
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        if (_table.contentOffset.y > 64) {
+            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
+            alpha = MIN(alpha, 1);
+            alphaView.alpha = alpha;
+        }else{
+            alphaView.alpha = 0;
+        }
+    }
+}
+
+-(void)searchTfShou{
+    [_searchTf resignFirstResponder];
+    _mySearchView.hidden = YES;
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        if (_table.contentOffset.y > 64) {
+            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
+            alpha = MIN(alpha, 1);
+            alphaView.alpha = alpha;
+        }else{
+            alphaView.alpha = 0;
+        }
+    }
+}
+
+
+
+
+#pragma mark - 返回上个界面
+-(void)gogoback{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
 
 
 #pragma mark - 缓存
@@ -456,11 +536,116 @@
 
 #pragma mark - 视图创建
 
+//创建自定义navigation
+- (void)setupNavigation{
+    
+    [self resetShowCustomNavigationBar:YES];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"back" style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
+    self.currentNavigationItem.leftBarButtonItem = leftItem;
+    
+    
+    _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 100, 30)];
+    _searchView.backgroundColor = [UIColor whiteColor];
+    _searchView.layer.cornerRadius = 5;
+    _searchView.layer.borderColor = [RGBCOLOR(192, 193, 194)CGColor];
+    _searchView.layer.borderWidth = 0.5;
+    
+    
+    UIImageView *fdjImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 8, 13, 13)];
+    [fdjImv setImage:[UIImage imageNamed:@"search_fangdajing.png"]];
+    [_searchView addSubview:fdjImv];
+    
+    _searchTf = [[UITextField alloc]initWithFrame:CGRectMake(30, 0, _searchView.frame.size.width - 30, 30)];
+    _searchTf.font = [UIFont systemFontOfSize:13];
+    _searchTf.backgroundColor = [UIColor whiteColor];
+    _searchTf.layer.cornerRadius = 5;
+    _searchTf.placeholder = @"输入您要找的商品";
+    _searchTf.delegate = self;
+    [_searchView addSubview:_searchTf];
+    
+    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
+    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithTitle:@"btn" style:UIBarButtonItemStylePlain target:self action:@selector(searchTfShou)];
+    self.currentNavigationItem.rightBarButtonItems = @[rightItem2,rightItem1];
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [[UIView alloc] initWithFrame:effectView.bounds];
+        [effectView addSubview:alphaView];
+        alphaView.backgroundColor = [UIColor whiteColor];
+        alphaView.tag = 10000;
+    }
+}
+
+
+//创建搜索界面
+-(void)creatMysearchView{
+    
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView.backgroundColor = [UIColor whiteColor];
+    _mySearchView.hidden = YES;
+    [self.view addSubview:_mySearchView];
+    
+    
+    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
+    upLine.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_mySearchView addSubview:upLine];
+    
+    UIScrollView *hotSearchScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(upLine.frame), DEVICE_WIDTH, 50)];
+    hotSearchScrollView.backgroundColor = [UIColor whiteColor];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(13, 12, 50, 27)];
+    titleLabel.text = @"热搜";
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.font = [UIFont systemFontOfSize:15];
+    [hotSearchScrollView addSubview:titleLabel];
+    [hotSearchScrollView addSubview:titleLabel];
+    
+    CGFloat s_width = 0;
+    for (int i = 0; i<10; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.backgroundColor = RGBCOLOR(239, 240, 241);
+        [btn setFrame:CGRectMake(s_width + 75, 12, 70, 27)];
+        s_width += 75;
+        btn.layer.cornerRadius = 5;
+        btn.layer.borderWidth = 0.5;
+        btn.layer.borderColor = [RGBCOLOR(229, 230, 231)CGColor];
+        [btn setTitle:[NSString stringWithFormat:@"%d",i] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [hotSearchScrollView addSubview:btn];
+        btn.tag = 1000+i;
+        [btn addTarget:self action:@selector(hotSearchBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    [hotSearchScrollView setContentSize:CGSizeMake(s_width, 50)];
+    
+    
+    [_mySearchView addSubview:hotSearchScrollView];
+    
+    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(hotSearchScrollView.frame), DEVICE_WIDTH, 5)];
+    downLine.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_mySearchView addSubview:downLine];
+    
+    
+}
+
+
+//创建下层四个按钮view
+-(void)creatDownBtnView{
+    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50, DEVICE_WIDTH, 50)];
+    downView.backgroundColor = RGBCOLOR(38, 51, 62);
+    [self.view addSubview:downView];
+}
+
+
+
+
+
 //创建tabelview
 -(void)creatTableView{
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
+    _table.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_table];
     
     
@@ -472,7 +657,7 @@
     
 }
 
-
+//创建循环滚动广告图
 -(void)creatUpCycleScrollView{
     
     
@@ -504,7 +689,7 @@
             
         }
 
-        _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 300/750.0*DEVICE_WIDTH)];
+        _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 468/750.0*DEVICE_WIDTH)];
         [_bannerView setContentViews:views];
         [_bannerView showPageControl];
         [_bannerView setBackgroundColor:DEFAULT_VIEW_BACKGROUNDCOLOR];
@@ -563,6 +748,11 @@
 }
 
 
+-(void)hotSearchBtnClicked:(UIButton *)sender{
+    NSLog(@"%d",(int)sender.tag);
+}
+
+
 
 
 #pragma - mark RefreshDelegate
@@ -584,6 +774,31 @@
 
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        
+        if (_searchTf.isFirstResponder) {
+            alphaView.alpha = 1;
+        }else{
+            if (scrollView.contentOffset.y > 64) {
+                CGFloat alpha = (scrollView.contentOffset.y -64)/200.0f;
+                alpha = MIN(alpha, 1);
+                alphaView.alpha = alpha;
+            }else{
+                alphaView.alpha = 0;
+            }
+        }
+    
+        
+    }
+    
+    
+    
+    
+    
     
     [self controlTopButtonWithScrollView:scrollView];
 }
