@@ -31,6 +31,7 @@
     int _currentPage;//当前页面
 }
 @property(nonatomic,retain)UIScrollView *scroll;
+@property(nonatomic,retain)UIView *allNoDataView;//全部没有数据view
 @property(nonatomic,retain)UIView *noAppointView;//待预约view
 @property(nonatomic,retain)UIView *appointedView;//已预约view
 @property(nonatomic,retain)UIView *appointedOverView;//已预约过期view
@@ -88,6 +89,14 @@
 
 #pragma mark - 视图创建
 
+-(UIView *)allNoDataView
+{
+    if (!_allNoDataView) {
+        _allNoDataView = [self noDataView];
+    }
+    return _allNoDataView;
+}
+
 /**
  *  待预约为空时
  *
@@ -95,17 +104,19 @@
  */
 - (UIView *)noAppointView
 {
-    if (_noAppointView) {
+    if (!_noAppointView) {
         
-        return _noAppointView;
+        _noAppointView = [self noDataView];
     }
-    
+    return _noAppointView;
+}
+
+- (UIView *)noDataView
+{
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     CGFloat width = FitScreen(96);
     width = iPhone4 ? width * 0.8 : width;
-    
-    _noAppointView = view;
     
     UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(38, 55, width, width)];
     icon.image = [UIImage imageNamed:@"hema"];
@@ -319,13 +330,13 @@
             
             //没有待预约
             
-            UIView *view = self.noAppointView;
+            UIView *view = self.allNoDataView;
             [[self tableViewWithIndex:index] addSubview:view];
             
         }else
         {
-            [self.noAppointView removeFromSuperview];
-            self.noAppointView = nil;
+            [self.allNoDataView removeFromSuperview];
+            self.allNoDataView = nil;
         }
         
         [[self tableViewWithIndex:index] finishReloadingData];
@@ -334,6 +345,8 @@
     //待预约
     if (index == 1) {
         
+       setmeal_list = result[@"setmeal_list"];
+
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
             
             [[self tableViewWithIndex:index]finishReloadingData];
