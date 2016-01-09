@@ -19,11 +19,11 @@
 #import "OrderInfoViewController.h"//订单详情
 #import "WebviewController.h"//web
 #import "AppointDetailController.h"//预约
+#import "LogView.h"
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
 #define kAlertViewTag_active 102 //正在前台 推送消息
-
 
 @interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate,GgetllocationDelegate,RCIMReceiveMessageDelegate,RCIMUserInfoDataSource,RCIMConnectionStatusDelegate>
 {
@@ -41,7 +41,6 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
@@ -57,6 +56,8 @@
     
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
+    
+//    [root.view addSubview:[LogView logInstance]];//加日志
     
     //微信支付
     NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
@@ -96,7 +97,9 @@
     if (userInfo)
     {
         DDLOG(@"didFinishLaunch : userInfo %@",userInfo);
-        [self pushToMessageDetailWithResult:userInfo];
+//        [self pushToMessageDetailWithResult:userInfo ignoreRongcloud:YES];
+        
+//        [[LogView logInstance]addLog:@"didFinishLaunch"];
     }
     
     /**
@@ -113,6 +116,8 @@
     //错误提示
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForErrorNotification:) name:kJPFServiceErrorNotification object:nil];
     
+    //
+    
     return YES;
 }
 
@@ -121,6 +126,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    DDLOG_CURRENT_METHOD;
     [LTools updateTabbarUnreadMessageNumber];
 }
 
@@ -174,16 +180,61 @@
     [LTools setObject:token forKey:USER_DEVICE_TOKEN];
 }
 
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    DDLOG(@"本地通知%@",notification.userInfo);
+    //在此获取rongcloud本地通知消息
+    /**
+     * 统计推送打开率3
+     */
+    [[RCIMClient sharedRCIMClient] recordLocalNotificationEvent:notification];
+    
+//    [[LogView logInstance]addLog:@"LocalNotification"];
+    
+    UIApplicationState state = [application applicationState];
+    if (state == UIApplicationStateInactive){
+        //程序在后台运行 点击消息进入走此处,做相应处理
+        [self pushToMessageDetailWithResult:notification.userInfo ignoreRongcloud:NO];
+    }
+
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     DDLOG(@"hahah2");
+    DDLOG_CURRENT_METHOD;
+    
+    [self actionForApplication:application notificationUserInfo:userInfo];
+    
+//    [[LogView logInstance]addLog:@"RemoteNotification_short"];
+    
+}
 
-    //JPush Required
-    [APService handleRemoteNotification:userInfo];//
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
+//    [[LogView logInstance]addLog:@"RemoteNotification_long"];
+
+    [self actionForApplication:application notificationUserInfo:userInfo];
+    
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+/**
+ *  处理远程通知消息
+ *
+ *  @param application 用于判断程序状态
+ *  @param userInfo    通知内容
+ */
+- (void)actionForApplication:(UIApplication *)application
+        notificationUserInfo:(NSDictionary *)userInfo
+{
+    //JPush
+    // IOS 7 Support Required
+    [APService handleRemoteNotification:userInfo];
+    
+    // update unread number
     [LTools updateTabbarUnreadMessageNumber];
-    
-    DDLOG(@"JPush2 remote %@",userInfo);
     
     /**
      * 统计推送打开率2
@@ -192,12 +243,12 @@
     
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateInactive){
-        DDLOG(@"UIApplicationStateInactive %@",userInfo);
+        
         //程序在后台运行 点击消息进入走此处,做相应处理
-        [self pushToMessageDetailWithResult:userInfo];
+        [self pushToMessageDetailWithResult:userInfo ignoreRongcloud:NO];
     }
     if (state == UIApplicationStateActive) {
-        DDLOG(@"UIApplicationStateActive %@",userInfo);
+        
         //程序就在前台
         _remoteMessageDic = userInfo;
         
@@ -213,33 +264,7 @@
     {
         DDLOG(@"UIApplicationStateBackground %@",userInfo);
     }
-    
 }
-
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
-{
-    DDLOG(@"本地通知%@",notification.userInfo);
-    //在此获取rongcloud本地通知消息
-    /**
-     * 统计推送打开率3
-     */
-    [[RCIMClient sharedRCIMClient] recordLocalNotificationEvent:notification];
-    
-    [self application:application didReceiveRemoteNotification:notification.userInfo];
-
-}
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    
-    //JPush
-    // IOS 7 Support Required
-//    [APService handleRemoteNotification:userInfo];
-    DDLOG(@"hahah1");
-    [self application:application didReceiveRemoteNotification:userInfo];
-
-    completionHandler(UIBackgroundFetchResultNewData);
-}
-
 
 
 #pragma mark - 通知处理
@@ -615,7 +640,7 @@
             //查看消息
             NSDictionary *userInfo = _remoteMessageDic;
             //直接查看
-            [self pushToMessageDetailWithResult:userInfo];
+            [self pushToMessageDetailWithResult:userInfo ignoreRongcloud:YES];
         }
     }
 }
@@ -636,7 +661,7 @@
     if (0 == left) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
-            
+            DDLOG_CURRENT_METHOD;
             [LTools updateTabbarUnreadMessageNumber];
             
         });
@@ -851,7 +876,7 @@
         int count = [[result objectForKey:@"count"]intValue];
         
         [LTools setObject:[NSNumber numberWithInt:count] forKey:USER_MSG_NUM];//未读消息个数
-        
+        DDLOG_CURRENT_METHOD;
         [LTools updateTabbarUnreadMessageNumber];
         
     } failBlock:^(NSDictionary *result) {
@@ -866,14 +891,20 @@
  *  @param type     判断消息类型
  *  @param detailId 消息id
  */
+
+/**
+ *  处理推送消息
+ *
+ *  @param userInfo 通知消息
+ *  @param ignoreRongcloud 是否忽略融云消息
+ */
 - (void)pushToMessageDetailWithResult:(NSDictionary *)userInfo
+                             ignoreRongcloud:(BOOL)ignoreRongcloud
 {
     //非融云
-    DDLOG(@"push %@",userInfo);
     UITabBarController *root = (UITabBarController *)self.window.rootViewController;
     int selectIndex = (int)root.selectedIndex;
     UINavigationController *unVc = [root.viewControllers objectAtIndex:selectIndex];
-    DDLOG(@"unVc %@",unVc.viewControllers);
     int viewsCount = (int)unVc.viewControllers.count;
     
     /**
@@ -881,7 +912,7 @@
      */
     
     NSDictionary *rc = userInfo[@"rc"];//融云的信息
-    if ([rc isKindOfClass:[NSDictionary class]]) {
+    if (!ignoreRongcloud && [rc isKindOfClass:[NSDictionary class]]) {
         
         NSString *userId = rc[@"fId"];
         if (userId) {

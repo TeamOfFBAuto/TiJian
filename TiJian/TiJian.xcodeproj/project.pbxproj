@@ -257,6 +257,7 @@
 		13B07A211C071A4200742AF7 /* order_chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A1F1C071A4200742AF7 /* order_chat@2x.png */; };
 		13B07A221C071A4200742AF7 /* order_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A201C071A4200742AF7 /* order_phone@2x.png */; };
 		13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */; };
+		13C867C21C40FC25002DF5CA /* LogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C867C11C40FC25002DF5CA /* LogView.m */; };
 		13C97F2E1BF98A5200C66691 /* yuyue_daijinquan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */; };
 		13C97F311BF9B54700C66691 /* AppointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C97F301BF9B54700C66691 /* AppointModel.m */; };
 		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; };
@@ -832,6 +833,8 @@
 		13B07A1F1C071A4200742AF7 /* order_chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_chat@2x.png"; sourceTree = "<group>"; };
 		13B07A201C071A4200742AF7 /* order_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_phone@2x.png"; sourceTree = "<group>"; };
 		13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh_arrow_down@2x.png"; sourceTree = "<group>"; };
+		13C867C01C40FC25002DF5CA /* LogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogView.h; sourceTree = "<group>"; };
+		13C867C11C40FC25002DF5CA /* LogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogView.m; sourceTree = "<group>"; };
 		13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_daijinquan@2x.png"; sourceTree = "<group>"; };
 		13C97F2F1BF9B54700C66691 /* AppointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointModel.h; sourceTree = "<group>"; };
 		13C97F301BF9B54700C66691 /* AppointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointModel.m; sourceTree = "<group>"; };
@@ -2031,6 +2034,8 @@
 				13F1F2F61BBA9A4B00885D31 /* LTools.m */,
 				13E617401C15852000E370E5 /* MiddleTools.h */,
 				13E617411C15852000E370E5 /* MiddleTools.m */,
+				13C867C01C40FC25002DF5CA /* LogView.h */,
+				13C867C11C40FC25002DF5CA /* LogView.m */,
 			);
 			path = HelpTools;
 			sourceTree = "<group>";
@@ -3340,6 +3345,7 @@
 				1303C2DB1BE9F42D00700847 /* ProjectModel.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
+				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
 				131A177D1BF341E900B12D2F /* PreViewCell.m in Sources */,
 				E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */,
 				1393328C1BE0B31A00B4628B /* DBManager.m in Sources */,

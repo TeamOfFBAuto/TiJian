@@ -291,6 +291,7 @@
             [self.refreshFooterView stopLoadingMoreStyle:RefreshLoadingMoreStyleNoMoreAndHidden];
             [self.refreshFooterView removeFromSuperview];
             _refreshFooterView = nil;
+            self.tableFooterView = nil;
         }
     }
     //设置数据个数

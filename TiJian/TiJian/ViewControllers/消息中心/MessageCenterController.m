@@ -474,7 +474,8 @@
             [cell.contentView addSubview:iconView];
             iconView.tag = 300;
             
-            UIView *point = [[UIView alloc]initWithFrame:CGRectMake(iconView.width - 3, -3, 6, 6)];
+            CGFloat width = 8.f;
+            UIView *point = [[UIView alloc]initWithFrame:CGRectMake(iconView.width - width/2.f, -width/2.f, 8, 8)];
             [iconView addSubview:point];
             point.backgroundColor = [UIColor colorWithHexString:@"ec2120"];
             [point setBorderWidth:1.f borderColor:[UIColor whiteColor]];

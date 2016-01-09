@@ -26,6 +26,8 @@
     RefreshTableView *_table;
     NSArray *_company;
     NSArray *_personal;
+    NSArray *_expired;//已过期
+    NSArray *_no_expired;//未过期
     int _currentPage;//当前页面
 }
 @property(nonatomic,retain)UIScrollView *scroll;
@@ -67,9 +69,9 @@
 - (void)notificationForAppointSuccess
 {
     //刷新预约情况
-    [[self tableViewWithIndex:0]showRefreshHeader:YES];//待预约
+    [[self tableViewWithIndex:0]showRefreshHeader:YES];//全部
     [[self tableViewWithIndex:1]showRefreshHeader:YES];//已预约
-    
+    [[self tableViewWithIndex:2]showRefreshHeader:YES];//已预约
 }
 
 /**
@@ -79,8 +81,9 @@
 {
     //刷新预约情况
     [[self tableViewWithIndex:2]showRefreshHeader:YES];//已过期
-    [[self tableViewWithIndex:1]showRefreshHeader:YES];//已预约
-    
+    [[self tableViewWithIndex:3]showRefreshHeader:YES];//已预约
+    [[self tableViewWithIndex:0]showRefreshHeader:YES];//全部
+
 }
 
 #pragma mark - 视图创建
@@ -197,19 +200,21 @@
 
 - (void)prepareView
 {
+    NSArray *arr = @[@"全部",@"未预约",@"已预约",@"已过期"];
+    int sum = (int)arr.count;
+    
     self.scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 45, DEVICE_WIDTH, DEVICE_HEIGHT - 45 - 64)];
     _scroll.pagingEnabled = YES;
     _scroll.delegate = self;
     [self.view addSubview:_scroll];
     _scroll.showsHorizontalScrollIndicator = NO;
-    _scroll.contentSize = CGSizeMake(DEVICE_WIDTH * 3, _scroll.height);
+    _scroll.contentSize = CGSizeMake(DEVICE_WIDTH * sum, _scroll.height);
     
     //scrollView 和 系统手势冲突问题
     [_scroll.panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
     
-    NSArray *arr = @[@"未预约",@"已预约",@"已过期"];
-    CGFloat width = DEVICE_WIDTH / 3.f;
-    for (int i = 0; i < arr.count; i ++) {
+    CGFloat width = DEVICE_WIDTH / sum;
+    for (int i = 0; i < sum; i ++) {
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(width * i, 0, width, 45);
@@ -245,11 +250,17 @@
     //待预约
     if (table == [self tableViewWithIndex:0]) {
         
+        api = GET_ALL_APPOINTS;
+        params = @{@"authcode":authkey};
+    }
+    //待预约
+    else if (table == [self tableViewWithIndex:1]) {
+        
         api = GET_NO_APPOINTS;
         params = @{@"authcode":authkey};
     }
     //已预约
-    else if (table == [self tableViewWithIndex:1])
+    else if (table == [self tableViewWithIndex:2])
     {
         api = GET_APPOINT;
         params = @{@"authcode":authkey,
@@ -258,7 +269,7 @@
                    @"per_page":NSStringFromInt(PAGESIZE_MID)};
     }
     //已过期
-    else if ([self tableViewWithIndex:2])
+    else if ([self tableViewWithIndex:3])
     {
         api = GET_APPOINT;
         params = @{@"authcode":authkey,
@@ -285,14 +296,47 @@
 - (void)parseDataWithResult:(NSDictionary *)result
                   withIndex:(int)index
 {
-    NSDictionary *setmeal_list = result[@"setmeal_list"];
+    NSDictionary *setmeal_list = result[@"appoint_list"];
 
-    //待预约
+    //全部
     if (index == 0) {
         
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
             
-            [[self tableViewWithIndex:0]finishReloadingData];
+            [[self tableViewWithIndex:index]finishReloadingData];
+            return;
+        }
+        
+        _company = [ProductModel modelsFromArray:setmeal_list[@"company"]];
+        _personal = [ProductModel modelsFromArray:setmeal_list[@"personal"]];
+        _no_expired = [AppointModel modelsFromArray:setmeal_list[@"no_expired"]];
+        _expired = [AppointModel modelsFromArray:setmeal_list[@"expired"]];
+        
+        if (_company.count == 0 &&
+            _personal.count == 0 &&
+            _no_expired.count == 0 &&
+            _expired.count == 0) {
+            
+            //没有待预约
+            
+            UIView *view = self.noAppointView;
+            [[self tableViewWithIndex:index] addSubview:view];
+            
+        }else
+        {
+            [self.noAppointView removeFromSuperview];
+            self.noAppointView = nil;
+        }
+        
+        [[self tableViewWithIndex:index] finishReloadingData];
+        
+    }
+    //待预约
+    if (index == 1) {
+        
+        if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
+            
+            [[self tableViewWithIndex:index]finishReloadingData];
             return;
         }
         
@@ -305,7 +349,7 @@
             //没有待预约
             
             UIView *view = self.noAppointView;
-            [[self tableViewWithIndex:0] addSubview:view];
+            [[self tableViewWithIndex:index] addSubview:view];
             
         }else
         {
@@ -313,32 +357,32 @@
             self.noAppointView = nil;
         }
         
-        [[self tableViewWithIndex:0] finishReloadingData];
+        [[self tableViewWithIndex:index] finishReloadingData];
         
-        
-    }else if (index == 1){
-        
-        NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
-        if (temp.count == 0) {
-            [[self tableViewWithIndex:1]addSubview:self.appointedView];
-        }else
-        {
-            [self.appointedView removeFromSuperview];
-            self.appointedView = nil;
-        }
-        [[self tableViewWithIndex:1] reloadData:temp pageSize:PAGESIZE_MID];
         
     }else if (index == 2){
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
         if (temp.count == 0) {
-            [[self tableViewWithIndex:2]addSubview:self.appointedOverView];
+            [[self tableViewWithIndex:index]addSubview:self.appointedView];
+        }else
+        {
+            [self.appointedView removeFromSuperview];
+            self.appointedView = nil;
+        }
+        [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
+        
+    }else if (index == 3){
+        
+        NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
+        if (temp.count == 0) {
+            [[self tableViewWithIndex:index]addSubview:self.appointedOverView];
         }else
         {
             [self.appointedOverView removeFromSuperview];
             self.appointedOverView = nil;
         }
-        [[self tableViewWithIndex:2] reloadData:temp pageSize:PAGESIZE_MID];
+        [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
 
     }
 }
@@ -361,7 +405,7 @@
     }
     
     NSLog(@"%s",__FUNCTION__);
-    for (int i = 0; i < 3; i ++) {
+    for (int i = 0; i < 4; i ++) {
         [self buttonWithIndex:i].selected = (index == i);
     }
     
@@ -426,8 +470,6 @@
     if (scrollView == _scroll) {
         
         int page = floor((scrollView.contentOffset.x - DEVICE_WIDTH / 2) / DEVICE_WIDTH) + 1;//只要大于半页就算下一页
-//        NSLog(@"page %d",page);
-        
         [self updateButtonStateWithSelectedIndex:page];
         
     }
@@ -447,32 +489,57 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    if (index == 0 || index == 1) {
         
-        ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
-        if ([aModel.type intValue] == 2) { //代金券
-            
+        ProductModel *aModel;
+        if (indexPath.section == 0) {
+            aModel = _company[indexPath.row];
+        }else if (indexPath.section == 1){
+            aModel = _personal[indexPath.row];
+        }else if (indexPath.section == 2){
+            aModel = _no_expired[indexPath.row];
+        }else if (indexPath.section == 3){
+            aModel = _expired[indexPath.row];
+        }
+        
+        if ([aModel isKindOfClass:[ProductModel class]] &&
+            [aModel.type intValue] == 2) { //代金券
             return;
         }
         
-        ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-        
-        choose.gender = [aModel.gender intValue];
-        //公司
-        if ([aModel.type intValue] == 1) {
+        if (indexPath.section == 0 ||
+            indexPath.section == 1) {
             
-            NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
-            [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:aModel.company_info[@"company_id"] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+            ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+            choose.gender = [aModel.gender intValue];
+            //公司
+            if ([aModel.type intValue] == 1) {
+                
+                NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
+                [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:aModel.company_info[@"company_id"] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+            }else
+            {
+                choose.productId = aModel.product_id;
+                choose.order_id = aModel.order_id;
+                choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
+                
+                choose.lastViewController = self;//需要选择体检人的时候需要传
+            }
+            
+            [self.navigationController pushViewController:choose animated:YES];
         }else
         {
-            choose.productId = aModel.product_id;
-            choose.order_id = aModel.order_id;
-            choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
-            
-            choose.lastViewController = self;//需要选择体检人的时候需要传
+            AppointModel *aModel;
+            if (indexPath.section == 2){
+                aModel = _no_expired[indexPath.row];
+            }else if (indexPath.section == 3){
+                aModel = _expired[indexPath.row];
+            }
+            AppointDetailController *detail = [[AppointDetailController alloc]init];
+            detail.appoint_id = aModel.appoint_id;
+            [self.navigationController pushViewController:detail animated:YES];
         }
         
-        [self.navigationController pushViewController:choose animated:YES];
     }else
     {
         AppointModel *aModel = tableView.dataArray[indexPath.row];
@@ -481,10 +548,18 @@
         [self.navigationController pushViewController:detail animated:YES];
     }
 }
+
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    if (index == 0 || index == 1) {
+        
+        if (indexPath.section == 2 ||
+            indexPath.section == 3)
+        {
+            return 60.f;
+        }
+        
         ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
         return [AppointmentCell heightForCellWithType:[aModel.type intValue]];
     }
@@ -495,11 +570,20 @@
 - (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    if (index == 0 || index == 1) {
         
         UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40.f)];
         head.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         NSString *title = section == 0 ? @"公司购买套餐" : @"个人购买套餐";
+        if (section == 0) {
+            title = @"公司购买套餐";
+        }else if (section == 1){
+            title = @"个人购买套餐";
+        }else if (section == 2){
+            title = @"已预约";
+        }else if (section == 3){
+            title = @"已过期";
+        }
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 120, 40) title:title font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"989898"]];
         [head addSubview:label];
         return head;
@@ -509,7 +593,7 @@
 - (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    if (index == 0 || index == 1) {
         
         if (section == 0) {
             
@@ -523,6 +607,19 @@
             }
         }
         
+        if (section == 2) {
+            if (_no_expired.count == 0) {
+                return 0.f;
+            }
+        }
+        
+        if (section == 3) {
+            if (_expired.count == 0) {
+                return 0.f;
+            }
+        }
+        
+        
         return 40.f;
     }
     return 0.f;
@@ -531,7 +628,7 @@
 -(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0)
+    if (index == 0 || index == 1)
     {
         return 5.f;
     }
@@ -540,7 +637,7 @@
 -(UIView *)viewForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    if (index == 0 || index) {
         
         UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40.f)];
         head.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
@@ -556,12 +653,16 @@
 - (NSInteger)tableView:(RefreshTableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    if (index == 0 || index == 1) {
         
         if (section == 0) {
             return _company.count;
         }else if (section == 1){
             return _personal.count;
+        }else if (section == 2){
+            return _no_expired.count;
+        }else if (section == 3){
+            return _expired.count;
         }
     }
     return tableView.dataArray.count;
@@ -570,7 +671,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     int index = (int)tableView.tag - kTagTableView;
-    if (index == 0) {
+    
+    if (index == 1 || (index == 0 && (indexPath.section == 0 || indexPath.section == 1)) ){
         
         AppointmentCell *cell;
         ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
@@ -640,21 +742,32 @@
     UILabel *centerLabel = [cell.contentView viewWithTag:101];
     UILabel *timeLabel = [cell.contentView viewWithTag:102];
     RefreshTableView *table = (RefreshTableView *)tableView;
-    AppointModel *aModel = table.dataArray[indexPath.row];
+    AppointModel *aModel;
     
+    if (index == 0) {
+        //全部里面 未过期、已过期
+        if (indexPath.section == 2) {
+            aModel = _no_expired[indexPath.row];
+        }else if (indexPath.section == 3){
+            aModel = _expired[indexPath.row];
+        }
+    }else
+    {
+        aModel = table.dataArray[indexPath.row];
+    }
     NSString *name = aModel.user_name;
     NSString *text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,aModel.user_name];
     [nameLabel setAttributedText:[LTools attributedString:text keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
     centerLabel.text = aModel.center_name;
     
     //未过期
-    if (index == 1) {
+    if (index == 2 || (index == 0 && indexPath.section == 2)) {
         
         timeLabel.text = [LTools timeString:aModel.appointment_exam_time withFormat:@"yyyy.MM.dd"];
 
     }
     //已过期
-    else if (index == 2){
+    else if (index == 3 || (index == 0 && indexPath.section == 3)){
         
         NSString *days = NSStringFromInt([aModel.days intValue]);
         NSString *text = [NSString stringWithFormat:@"过期%@天",days];
@@ -668,6 +781,8 @@
 {
     int index = (int)tableView.tag - kTagTableView;
     if (index == 0) {
+        return 4;
+    }else if (index == 1){
         return 2;
     }
     return 1;

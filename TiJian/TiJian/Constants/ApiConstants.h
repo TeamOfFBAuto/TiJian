@@ -357,6 +357,13 @@
 //post、authcode、appoint_id 预约id、exam_center_id 预约体检分院id、date 预约日期
 #define UPDATE_APPOINT @"/index.php?d=api&c=appoint&m=update_appoint"
 
+//8、获取全部预约列表
+//1.如果含有order_id=0的字段，则是公司代金券，详见未预约列表接口
+//2.其它情况
+//appoint_status：预约状态  1：未预约  2：已预约未过期  3：已预约已过期
+#define GET_ALL_APPOINTS @"/index.php?d=api&c=appoint&m=get_all_appoints"
+
+
 
 //=======================================================
 
