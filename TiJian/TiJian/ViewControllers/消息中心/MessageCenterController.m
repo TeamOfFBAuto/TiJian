@@ -79,6 +79,7 @@
         [btn setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
         btn.selected = YES;
         
+        //第一个不显示红点
         if (i != 0) {
             
             //红点
@@ -129,6 +130,9 @@
     
     //默认选中第一个
     [self controlSelectedButtonTag:100];
+    
+    //活动未读数量
+    [self getUnreadActivityNum];
     
 }
 
@@ -188,6 +192,61 @@
         
     }];
     
+}
+
+/**
+ *  获取未读活动数量
+ *
+ *  @param
+ */
+- (void)getUnreadActivityNum
+{
+    NSString *authey = [UserInfo getAuthkey];
+    if (authey.length == 0) {
+        return;
+    }
+    
+    NSString *api = GET_MSG_NUM;
+    NSString *sort = @"ac"; //活动
+    
+    NSDictionary *params = @{@"authcode":authey,
+                             @"sort":sort};
+     @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        int num = [result[@"count"]intValue];
+        [Weakself buttonForTag:Tag_redpoint + 2].hidden = num > 0 ? NO : YES;
+
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+/**
+ *  更新活动未读状态
+ *
+ *  @param
+ */
+- (void)updateActivityStatusWithMsgId:(NSString *)msgId
+{
+    NSString *authey = [UserInfo getAuthkey];
+    if (authey.length == 0) {
+        return;
+    }
+    NSString *api = UPDATE_MSG_STATUE;
+
+    NSDictionary *params = @{@"authcode":authey,
+                             @"msg_id":msgId};
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        DDLOG(@"update success");
+        [Weakself updateMsgNum];
+
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
 }
 
 /**
@@ -415,6 +474,13 @@
         WebviewController *web = [[WebviewController alloc]init];
         web.webUrl = aModel.url;
         web.navigationTitle = @"活动详情";
+         @WeakObj(self);
+        web.updateParamsBlock = ^(NSDictionary *params){
+            //更新未读状态
+            if ([params[@"result"]boolValue]) {
+                [Weakself updateActivityStatusWithMsgId:aModel.msg_id];
+            }
+        };
         [self.navigationController pushViewController:web animated:YES];
     }
 }
@@ -442,7 +508,7 @@
 
 -(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
 {
-    return 10.f;
+    return 5.f;
 }
 -(UIView *)viewForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
 {

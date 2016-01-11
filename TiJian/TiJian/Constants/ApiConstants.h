@@ -158,11 +158,14 @@
 //12、获取消息详情 get方式\参数：authcode\msg_id
 #define GET_MSG_INFO @"/index.php?d=api&c=msg&m=get_msg_info"
 
-//13、获取未读/已读消息数量
+//13、获取未读/已读消息数量 sort:默认notice(通知): 包含type=2, 4, 5, 6 ac(活动)：包含type=3
 #define GET_MSG_NUM @"/index.php?d=api&c=msg&m=msg_num"
 
 //14、删除消息 GET 参数：authcode\msg_ids 多个id用英文逗号隔开
 #define DEL_MY_MSG @"/index.php?d=api&c=msg&m=del_my_msg"
+
+//11-4、更新消息状态(未读变已读) get 参数：authcode\msg_id: 消息id, 整形
+#define UPDATE_MSG_STATUE @"/index.php?d=api&c=msg&m=update_status"
 
 /******************商品相关接口*******************/
 

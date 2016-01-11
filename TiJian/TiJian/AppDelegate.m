@@ -241,6 +241,7 @@
      */
     [[RCIMClient sharedRCIMClient] recordRemoteNotificationEvent:userInfo];
     
+    
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateInactive){
         
@@ -942,6 +943,10 @@
     UIViewController *targetViewController;
     if (type == MsgType_PEReportReadFinish) //报告解读完成
     {
+        if (![LoginManager isLogin]) {
+            
+            return;
+        }
         //报告详情页
         ReportDetailController *detail = [[ReportDetailController alloc]init];
         detail.msg_id = msg_id;
@@ -950,6 +955,10 @@
         
     }else if (type == MsgType_OrderRefundState){ //订单申请退款
         
+        if (![LoginManager isLogin]) {
+            
+            return;
+        }
         OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
         orderInfo.order_id = theme_id;
         orderInfo.msg_id = msg_id;
@@ -957,6 +966,10 @@
         
     }else if (type == MsgType_PEAlert){ //体检提醒
         
+        if (![LoginManager isLogin]) {
+            
+            return;
+        }
         AppointDetailController *detail = [[AppointDetailController alloc]init];
         detail.appoint_id = theme_id;
         detail.msg_id = msg_id;

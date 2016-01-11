@@ -108,6 +108,10 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
 //    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    if (self.updateParamsBlock) {
+        self.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});//加载完成
+    }
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
 {

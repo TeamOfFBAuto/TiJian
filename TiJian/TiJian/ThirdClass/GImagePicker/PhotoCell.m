@@ -36,7 +36,7 @@
 }
 
 - (void)setAsset:(JKAssets *)asset{
-    if (_asset != asset) {
+    if (asset) {
         _asset = asset;
         
         ALAssetsLibrary   *lib = [[ALAssetsLibrary alloc] init];
@@ -44,9 +44,12 @@
             if (asset) {
                 
                 self.imageView.image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
-            }
-        } failureBlock:^(NSError *error) {
 
+            }
+            
+        } failureBlock:^(NSError *error) {
+            
+            NSLog(@"error %@",error);
         }];
     }
 

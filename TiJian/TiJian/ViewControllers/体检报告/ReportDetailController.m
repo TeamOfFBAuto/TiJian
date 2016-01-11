@@ -230,14 +230,7 @@
 - (void)tapToBrowser:(UITapGestureRecognizer *)sender
 {
     int index = (int)sender.view.tag - 200;
-//    
-//    FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
-//    browser.showIndex = index;
-//    browser.imagesArray = _imagesArray;
-//    [self.navigationController pushViewController:browser animated:YES];
-    
-//    _scrollView
-    
+
     NSArray *img = _userInfo.img;
     
     int count = (int)[img count];

@@ -125,8 +125,14 @@
     _isZoomed = NO;
     [self setZoomScale:self.minimumZoomScale animated:YES];
     
+    UIImage *image = self.imageView.image;
+    
+    if (!image) { //如果image为空
+        return;
+    }
+    
     //跳转imageView和image同等大小
-    CGSize imageSize = self.imageView.image.size;
+    CGSize imageSize = image.size;
     
     //最大宽度
     CGFloat maxWidth = self.frame.size.width;
