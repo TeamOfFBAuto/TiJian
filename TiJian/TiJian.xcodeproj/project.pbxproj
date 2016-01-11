@@ -366,6 +366,7 @@
 		E30FE3971C3CCCE9001CF9BA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */; };
 		E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */; };
 		E30FE3991C3CCCE9001CF9BA /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */; };
+		E30FE39C1C3E56DF001CF9BA /* GSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE39B1C3E56DF001CF9BA /* GSearchView.m */; };
 		E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A311C05926400CB995D /* GcustomNavcView.m */; };
 		E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86E21C14526F00914824 /* yishoucang@2x.png */; };
 		E31F86E91C14595A00914824 /* LBannerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E31F86E61C14595A00914824 /* LBannerItem.m */; };
@@ -447,6 +448,7 @@
 		E3B720991BF3268B007F7FFE /* shuliang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B720981BF3268B007F7FFE /* shuliang@2x.png */; };
 		E3B7209C1BF32887007F7FFE /* shuliang-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */; };
 		E3B7209D1BF32887007F7FFE /* shuliang+@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */; };
+		E3CC5CB71C43BE8000BA517D /* GFapiaoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CC5CB61C43BE8000BA517D /* GFapiaoViewController.m */; };
 		E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D0850B1BF0A48500279DFC /* GshopCarTableViewCell.m */; };
 		E3D8AE081BF49175003AE2E3 /* gexingdingzhi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE071BF49175003AE2E3 /* gexingdingzhi@2x.png */; };
 		E3D8AE0A1BF49519003AE2E3 /* tijianxiangmu1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE091BF49519003AE2E3 /* tijianxiangmu1@2x.png */; };
@@ -1104,6 +1106,8 @@
 		E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+load.m"; sourceTree = "<group>"; };
 		E30FE3941C3CCCE9001CF9BA /* UIViewController+NavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NavigationBar.h"; sourceTree = "<group>"; };
 		E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NavigationBar.m"; sourceTree = "<group>"; };
+		E30FE39A1C3E56DF001CF9BA /* GSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSearchView.h; sourceTree = "<group>"; };
+		E30FE39B1C3E56DF001CF9BA /* GSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSearchView.m; sourceTree = "<group>"; };
 		E31E1A301C05926400CB995D /* GcustomNavcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcustomNavcView.h; sourceTree = "<group>"; };
 		E31E1A311C05926400CB995D /* GcustomNavcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcustomNavcView.m; sourceTree = "<group>"; };
 		E31F86E21C14526F00914824 /* yishoucang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yishoucang@2x.png"; sourceTree = "<group>"; };
@@ -1207,6 +1211,8 @@
 		E3B720981BF3268B007F7FFE /* shuliang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang@2x.png"; sourceTree = "<group>"; };
 		E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang-@2x.png"; sourceTree = "<group>"; };
 		E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang+@2x.png"; sourceTree = "<group>"; };
+		E3CC5CB51C43BE8000BA517D /* GFapiaoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFapiaoViewController.h; sourceTree = "<group>"; };
+		E3CC5CB61C43BE8000BA517D /* GFapiaoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFapiaoViewController.m; sourceTree = "<group>"; };
 		E3D0850A1BF0A48500279DFC /* GshopCarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GshopCarTableViewCell.h; path = ../GshopCarTableViewCell.h; sourceTree = "<group>"; };
 		E3D0850B1BF0A48500279DFC /* GshopCarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GshopCarTableViewCell.m; path = ../GshopCarTableViewCell.m; sourceTree = "<group>"; };
 		E3D8AE071BF49175003AE2E3 /* gexingdingzhi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gexingdingzhi@2x.png"; sourceTree = "<group>"; };
@@ -2547,6 +2553,8 @@
 				E329A8C11C040C530017A5D3 /* GManageAddressViewController.m */,
 				E38551001C0AC8A500CE23E7 /* MyCouponViewController.h */,
 				E38551011C0AC8A500CE23E7 /* MyCouponViewController.m */,
+				E3CC5CB51C43BE8000BA517D /* GFapiaoViewController.h */,
+				E3CC5CB61C43BE8000BA517D /* GFapiaoViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2675,6 +2683,8 @@
 				E3EE361D1BEA13320089A89C /* GPushView.m */,
 				E39F1E0A1C0D013B00E9B41F /* Gbtn.h */,
 				E39F1E0B1C0D013B00E9B41F /* Gbtn.m */,
+				E30FE39A1C3E56DF001CF9BA /* GSearchView.h */,
+				E30FE39B1C3E56DF001CF9BA /* GSearchView.m */,
 			);
 			path = Gutils;
 			sourceTree = "<group>";
@@ -3238,6 +3248,7 @@
 				E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */,
 				13F8C5B31C05AA7E004C3FC7 /* JKPromptView.m in Sources */,
 				1303C3071BEA14EB00700847 /* LoginViewController.m in Sources */,
+				E3CC5CB71C43BE8000BA517D /* GFapiaoViewController.m in Sources */,
 				130D2E011BFC7229002E301F /* MapViewController.m in Sources */,
 				E31FC68E1BDF24D60057D3BE /* GStoreHomeViewController.m in Sources */,
 				13F242311BF5E17D002C9D81 /* AppointmentViewController.m in Sources */,
@@ -3284,6 +3295,7 @@
 				137780B21C119CF800677363 /* AddReportViewController.m in Sources */,
 				136276621C12F37D0077C75D /* ReportDetailController.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
+				E30FE39C1C3E56DF001CF9BA /* GSearchView.m in Sources */,
 				13F9D1291C2FB06800993738 /* LPhotoBrowser.m in Sources */,
 				13F8C5AD1C05AA7E004C3FC7 /* JKAssetsGroupsView.m in Sources */,
 				E3E2B3FF1BFB1F19007988C5 /* PayResultViewController.m in Sources */,

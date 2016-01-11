@@ -25,6 +25,13 @@
 
 #import "DLNavigationEffectKit.h"
 
+#import "GSearchView.h"
+
+#import "RCDChatViewController.h"
+
+
+#import "ProductListViewController.h"
+
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
 {
     
@@ -38,6 +45,7 @@
     
     RefreshTableView *_table;
     
+    
     int _count;//网络请求个数
     
     NSDictionary *_StoreCycleAdvDic;//轮播图dic
@@ -47,8 +55,12 @@
     
     UIView *_mySearchView;//点击搜索盖上的搜索浮层
     
-    UITextField *_searchTf;//搜索栏输入框
+    
     UIView *_searchView;//输入框下层view
+    
+    UIView *_downView;//底部工具栏
+    
+    UILabel *_shopCarNumLabel;//购物车数量label
     
     
 }
@@ -98,8 +110,9 @@
     
     [self setupNavigation];
     [self creatTableView];
-    [self creatMysearchView];
     [self creatDownBtnView];
+    [self creatMysearchView];
+    
  
     
 }
@@ -128,7 +141,7 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     
-    [_searchView setWidth:DEVICE_WIDTH - 100];
+//    [_searchView setWidth:DEVICE_WIDTH - 100];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -143,7 +156,10 @@
     }
 }
 
--(void)searchTfShou{
+-(void)myNavcRightBtnClicked{
+    
+    [_searchView setWidth:DEVICE_WIDTH - 100];
+    
     [_searchTf resignFirstResponder];
     _mySearchView.hidden = YES;
     UIView *effectView = self.currentNavigationBar.effectContainerView;
@@ -183,7 +199,6 @@
     
     if (storeProductListDic && _StoreProductClassDic && _StoreCycleAdvDic) {
         
-        
         //精品推荐数据
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *arr = [storeProductListDic arrayValueForKey:@"data"];
@@ -192,92 +207,9 @@
             [_StoreProductListArray addObject:model];
         }
         
+        [self creatRefreshHeader];
         
-        
-        //数据数组
-        NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
-        
-        //共几行
-        int hang = (int)classData.count/2;
-        if (hang<classData.count/2.0) {
-            hang+=1;
-        };
-        //每行几列
-        int lie = 2;
-        
-        //refresh头部
-        self.theTopView = [[UIView alloc]initWithFrame:CGRectMake(0,
-                                                                  0,
-                                                                  DEVICE_WIDTH,
-                                                                  [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/300]//轮播图高度
-                                                                  +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
-                                                                  +5
-                                                                  +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
-                                                                  +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
-                                                                  )];
-        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
-        _table.tableHeaderView = self.theTopView;
-        
-        //设置轮播图
-        [self creatUpCycleScrollView];
-        
-        //设置版块
-        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
-        bankuaiView.backgroundColor = [UIColor whiteColor];
-        [self.theTopView addSubview:bankuaiView];
-        
-        //宽
-        CGFloat kk = DEVICE_WIDTH*0.5;
-        //高
-        CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
-        
-        for (int i = 0; i<classData.count; i++) {
-            NSDictionary *dic = classData[i];
-            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*hh, kk, hh)];
-            [bankuaiView addSubview:view];
-            view.backgroundColor = RGBCOLOR_ONE;
-            
-            //图片
-            UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
-            [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-            [view addSubview:imv];
-            //标题
-            //            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, imv.frame.size.width, imv.frame.size.height * 0.25)];
-            //            titleLabel.text = [dic stringValueForKey:@"name"];
-            //            titleLabel.textColor = [UIColor blackColor];
-            //            titleLabel.font = [UIFont systemFontOfSize:15];
-            //            [imv addSubview:titleLabel];
-            
-            
-            int imvTag = i+10;
-            [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
-        }
-        
-        UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
-                                                                               CGRectGetMaxY(bankuaiView.frame)+5,
-                                                                               DEVICE_WIDTH,
-                                                                               [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
-                                                                               )];
-        [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
-        [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
-        [self.theTopView addSubview:dingzhiImv];
-        
-        //设置精品推荐
-        UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
-                                                                         CGRectGetMaxY(dingzhiImv.frame),
-                                                                         DEVICE_WIDTH,
-                                                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-        jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.theTopView addSubview:jingpintuijian];
-        UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
-        ttl.font = [UIFont systemFontOfSize:15];
-        [jingpintuijian addSubview:ttl];
-        ttl.text = @"精品推荐";
-        ttl.textColor = [UIColor blackColor];
-        
-        [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
     }
-    
 }
 
 #pragma mark - 请求网络数据
@@ -400,117 +332,15 @@
     NSNumber *num = [change objectForKey:@"new"];
     
     if ([num intValue] == 3) {
-        //数据数组
-        NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
         
-        //共几行
-        int hang = (int)classData.count/2;
-        if (hang<classData.count/2.0) {
-            hang+=1;
-        };
-        //每行几列
-        int lie = 2;
-        
-        //refresh头部
-        self.theTopView = [[UIView alloc]initWithFrame:CGRectMake(0,
-                                                               0,
-                                                               DEVICE_WIDTH,
-                                                               [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/300]//轮播图高度
-                                                               +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
-                                                               +5
-                                                               +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
-                                                               +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
-                                                               )];
-        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
-        _table.tableHeaderView = self.theTopView;
-        
-        
-        
-        //设置轮播图
-        [self creatUpCycleScrollView];
-        
-        //设置版块
-        UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
-        bankuaiView.backgroundColor = [UIColor whiteColor];
-        [self.theTopView addSubview:bankuaiView];
-        
-        
-        
-        //宽
-        CGFloat kk = DEVICE_WIDTH*0.5;
-        //高
-        CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
-        
-        
-        for (int i = 0; i<classData.count; i++) {
-            
-            NSDictionary *dic = classData[i];
-            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*hh, kk, hh)];
-            [bankuaiView addSubview:view];
-            view.backgroundColor = RGBCOLOR_ONE;
-            
-            
-            //图片
-            UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
-            [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-            [view addSubview:imv];
-            //标题
-//            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, imv.frame.size.width, imv.frame.size.height * 0.25)];
-//            titleLabel.text = [dic stringValueForKey:@"name"];
-//            titleLabel.textColor = [UIColor blackColor];
-//            titleLabel.font = [UIFont systemFontOfSize:15];
-//            [imv addSubview:titleLabel];
-            
-            
-            int imvTag = i+10;
-            
-            [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
-            
-            
-        }
-        
-        UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
-                                                                               CGRectGetMaxY(bankuaiView.frame)+5,
-                                                                               DEVICE_WIDTH,
-                                                                               [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
-                                                                               )];
-        [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
-        
-        [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
-        
-        [self.theTopView addSubview:dingzhiImv];
-        
-        
-        
-        
-        //设置精品推荐
-        
-        UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
-                                                                         CGRectGetMaxY(dingzhiImv.frame),
-                                                                         DEVICE_WIDTH,
-                                                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-        jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.theTopView addSubview:jingpintuijian];
-        UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
-        ttl.font = [UIFont systemFontOfSize:15];
-        [jingpintuijian addSubview:ttl];
-        ttl.text = @"精品推荐";
-        ttl.textColor = [UIColor blackColor];
-        
-        
-        
-        [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
-        
-        
-//        //添加滑动到顶部按钮
-//        [self addScroll:_table topButtonPoint:CGPointMake(DEVICE_WIDTH - 40 - 10, DEVICE_HEIGHT - 10 - 40 - 49 - 64)];
+        [self creatRefreshHeader];
 
         
     }
     
 }
 
-
+//分类图片点击
 -(void)classImvClicked:(UIImageView*)sender{
     NSLog(@"%s",__FUNCTION__);
     NSLog(@"%ld",(long)sender.tag);
@@ -536,6 +366,113 @@
 
 #pragma mark - 视图创建
 
+
+//创建refresh头部
+-(void)creatRefreshHeader{
+    //数据数组
+    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
+    
+    //共几行
+    int hang = (int)classData.count/2;
+    if (hang<classData.count/2.0) {
+        hang+=1;
+    };
+    //每行几列
+    int lie = 2;
+    
+    
+    if (!self.theTopView) {
+        self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
+        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
+        _table.tableHeaderView = self.theTopView;
+    }
+    
+    //refresh头部
+    [self.theTopView setFrame:CGRectMake(0,
+                                          0,
+                                          DEVICE_WIDTH,
+                                          [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
+                                          +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
+                                          +5
+                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
+                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
+                                          )];
+    
+    
+    
+    
+    //设置轮播图
+    [self creatUpCycleScrollView];
+    
+    //设置版块
+    UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
+    bankuaiView.backgroundColor = [UIColor whiteColor];
+    [self.theTopView addSubview:bankuaiView];
+    
+    
+    
+    //宽
+    CGFloat kk = DEVICE_WIDTH*0.5;
+    //高
+    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+    
+    
+    for (int i = 0; i<classData.count; i++) {
+        
+        NSDictionary *dic = classData[i];
+        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*hh, kk, hh)];
+        [bankuaiView addSubview:view];
+        view.backgroundColor = RGBCOLOR_ONE;
+        
+        
+        //图片
+        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
+        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+        [view addSubview:imv];
+        
+        int imvTag = i+10;
+        
+        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
+        
+        
+    }
+    
+    UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
+                                                                           CGRectGetMaxY(bankuaiView.frame)+5,
+                                                                           DEVICE_WIDTH,
+                                                                           [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
+                                                                           )];
+    [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
+    
+    [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
+    
+    [self.theTopView addSubview:dingzhiImv];
+    
+    
+    
+    
+    //设置精品推荐
+    
+    UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
+                                                                     CGRectGetMaxY(dingzhiImv.frame),
+                                                                     DEVICE_WIDTH,
+                                                                     [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
+    jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
+    [self.theTopView addSubview:jingpintuijian];
+    UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
+    ttl.font = [UIFont systemFontOfSize:15];
+    [jingpintuijian addSubview:ttl];
+    ttl.text = @"精品推荐";
+    ttl.textColor = [UIColor blackColor];
+    
+    
+    
+    [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
+}
+
+
+
+
 //创建自定义navigation
 - (void)setupNavigation{
     
@@ -555,16 +492,16 @@
     [fdjImv setImage:[UIImage imageNamed:@"search_fangdajing.png"]];
     [_searchView addSubview:fdjImv];
     
-    _searchTf = [[UITextField alloc]initWithFrame:CGRectMake(30, 0, _searchView.frame.size.width - 30, 30)];
-    _searchTf.font = [UIFont systemFontOfSize:13];
-    _searchTf.backgroundColor = [UIColor whiteColor];
-    _searchTf.layer.cornerRadius = 5;
-    _searchTf.placeholder = @"输入您要找的商品";
-    _searchTf.delegate = self;
-    [_searchView addSubview:_searchTf];
+    self.searchTf = [[UITextField alloc]initWithFrame:CGRectMake(30, 0, _searchView.frame.size.width - 30, 30)];
+    self.searchTf.font = [UIFont systemFontOfSize:13];
+    self.searchTf.backgroundColor = [UIColor whiteColor];
+    self.searchTf.layer.cornerRadius = 5;
+    self.searchTf.placeholder = @"输入您要找的商品";
+    self.searchTf.delegate = self;
+    [_searchView addSubview:self.searchTf];
     
     UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
-    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithTitle:@"btn" style:UIBarButtonItemStylePlain target:self action:@selector(searchTfShou)];
+    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithTitle:@"btn" style:UIBarButtonItemStylePlain target:self action:@selector(myNavcRightBtnClicked)];
     self.currentNavigationItem.rightBarButtonItems = @[rightItem2,rightItem1];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
@@ -586,44 +523,10 @@
     [self.view addSubview:_mySearchView];
     
     
-    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
-    upLine.backgroundColor = RGBCOLOR(244, 245, 246);
-    [_mySearchView addSubview:upLine];
+    GSearchView *aa = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
+    aa.d1 = self;
+    [_mySearchView addSubview:aa];
     
-    UIScrollView *hotSearchScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(upLine.frame), DEVICE_WIDTH, 50)];
-    hotSearchScrollView.backgroundColor = [UIColor whiteColor];
-    
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(13, 12, 50, 27)];
-    titleLabel.text = @"热搜";
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.font = [UIFont systemFontOfSize:15];
-    [hotSearchScrollView addSubview:titleLabel];
-    [hotSearchScrollView addSubview:titleLabel];
-    
-    CGFloat s_width = 0;
-    for (int i = 0; i<10; i++) {
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.backgroundColor = RGBCOLOR(239, 240, 241);
-        [btn setFrame:CGRectMake(s_width + 75, 12, 70, 27)];
-        s_width += 75;
-        btn.layer.cornerRadius = 5;
-        btn.layer.borderWidth = 0.5;
-        btn.layer.borderColor = [RGBCOLOR(229, 230, 231)CGColor];
-        [btn setTitle:[NSString stringWithFormat:@"%d",i] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [hotSearchScrollView addSubview:btn];
-        btn.tag = 1000+i;
-        [btn addTarget:self action:@selector(hotSearchBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    [hotSearchScrollView setContentSize:CGSizeMake(s_width, 50)];
-    
-    
-    [_mySearchView addSubview:hotSearchScrollView];
-    
-    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(hotSearchScrollView.frame), DEVICE_WIDTH, 5)];
-    downLine.backgroundColor = RGBCOLOR(244, 245, 246);
-    [_mySearchView addSubview:downLine];
     
     
 }
@@ -631,9 +534,66 @@
 
 //创建下层四个按钮view
 -(void)creatDownBtnView{
-    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50, DEVICE_WIDTH, 50)];
-    downView.backgroundColor = RGBCOLOR(38, 51, 62);
-    [self.view addSubview:downView];
+    
+    
+    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50, DEVICE_WIDTH, 50)];
+    _downView.backgroundColor = RGBCOLOR(38, 51, 62);
+    
+    
+    CGFloat tw = _downView.frame.size.width/4;
+    NSArray *titleArray = @[@"客服",@"收藏",@"筛选",@"购物车"];
+    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"pinpaidian_pd.png",@"gouwuche_pd.png"];
+    for (int i = 0; i<4; i++) {
+        UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
+        [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
+        [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
+        if (i == 1) {
+            [oneBtn setImage:[UIImage imageNamed:@"shoucang_pd.png"] forState:UIControlStateNormal];
+            [oneBtn setImage:[UIImage imageNamed:@"yishoucang.png"] forState:UIControlStateSelected];
+            
+            
+        }
+        if (i<3) {
+            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
+        }else{
+            if (DEVICE_WIDTH<375) {//4s 5s
+                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
+            }else{
+                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+            }
+            
+        }
+        
+        [oneBtn setTitleEdgeInsets:UIEdgeInsetsMake(25, -20, 0, 0)];
+        oneBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+        oneBtn.tag = 100+i;
+        [oneBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [_downView addSubview:oneBtn];
+        
+        if (i == 3) {
+            _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+            _shopCarNumLabel.textColor = [UIColor whiteColor];
+            _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
+            _shopCarNumLabel.layer.cornerRadius = 7;
+            _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
+            _shopCarNumLabel.layer.borderWidth = 0.5f;
+            _shopCarNumLabel.layer.masksToBounds = YES;
+            _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
+            _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
+            
+            [oneBtn addSubview:_shopCarNumLabel];
+            
+            
+        }
+        
+    }
+    [self.view addSubview:_downView];
+    
+    
+    
 }
 
 
@@ -647,7 +607,6 @@
     _table.dataSource = self;
     _table.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_table];
-    
     
     [self loadCache];
     
@@ -683,7 +642,7 @@
         NSMutableArray *views = [NSMutableArray arrayWithCapacity:urls.count];
         for (int i = 0; i < urls.count; i ++) {
             
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 300/750.0*DEVICE_WIDTH)];
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 468/750.0*DEVICE_WIDTH)];
             [imageView l_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil];
             [views addObject:imageView];
             
@@ -725,6 +684,15 @@
         [_bannerView setAutomicScrollingDuration:3];
         
         [self.theTopView addSubview:_bannerView];
+    }else{
+        
+        [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
+        
+        
+        CGFloat height = self.theTopView.frame.size.height;
+        height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
+        [self.theTopView setHeight:height];
+        
     }
 }
 
@@ -752,6 +720,61 @@
     NSLog(@"%d",(int)sender.tag);
 }
 
+
+-(void)downBtnClicked:(UIButton *)sender{
+    
+    if (sender.tag == 100) {//客服
+        
+        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+            if (success) {//登录成功
+                
+                [self clickToChat];
+                
+            }else{
+                
+            }
+        }];
+        
+    }else if (sender.tag == 101){//收藏
+        ProductListViewController *cc = [[ProductListViewController alloc]init];
+        [self.navigationController pushViewController:cc animated:YES];
+        
+        
+    }else if (sender.tag == 102){//品牌店
+        
+        
+    }else if (sender.tag == 103){//购物车
+        
+        if ([LoginViewController isLogin]) {//已登录
+            GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }else{
+             [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+                 if (success) {
+                     GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+                     [self.navigationController pushViewController:cc animated:YES];
+                 }
+             }];
+                
+            
+        }
+        
+    }else if (sender.tag == 104){//加入购物车
+        
+    }
+}
+
+
+- (void)clickToChat
+{
+    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
+    chatService.userName = @"客服";
+    chatService.targetId = SERVICE_ID;
+    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
+    chatService.title = chatService.userName;
+//    [chatService setProductMessageWithProductModel:_theProductModel];
+    [self.navigationController pushViewController:chatService animated:YES];
+}
 
 
 
@@ -795,13 +818,19 @@
         
     }
     
-    
-    
-    
-    
-    
     [self controlTopButtonWithScrollView:scrollView];
 }
+
+-(void)setEffectViewAlpha:(CGFloat)theAlpha{
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        alphaView.alpha = theAlpha;
+    }
+}
+
+
+
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);

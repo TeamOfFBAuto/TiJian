@@ -12,4 +12,9 @@
 
 @interface GStoreHomeViewController : MyViewController
 
+@property(nonatomic,strong)UITextField *searchTf;//搜索栏输入框;
+
+
+-(void)setEffectViewAlpha:(CGFloat)theAlpha;
+
 @end
