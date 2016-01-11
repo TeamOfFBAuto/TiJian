@@ -16,7 +16,8 @@
 #import "WebviewController.h"
 #import "ArticleModel.h"
 #import "LocationChooseViewController.h"//定位地区选择vc
-
+#import "ActivityView.h"//活动view
+#import "MessageModel.h"
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
@@ -25,12 +26,17 @@
 
 
 @interface HomeViewController ()
+{
+    NSArray *_activityArray;//活动列表
+}
 
 @property(nonatomic,retain)UIView *healthView;//背景view
 @property(nonatomic,retain)UIImageView *icon_health;//健康咨询图标
 @property(nonatomic,retain)UILabel *title_health;//健康咨询标题
 @property(nonatomic,retain)UILabel *subTitle_health;//监控咨询摘要
 @property(nonatomic,retain)ArticleModel *articleModel;
+@property(nonatomic,retain)UIView *redPoint;//未读活动红点
+@property(nonatomic,retain)ActivityView *activityView;//活动view
 
 @end
 
@@ -51,6 +57,8 @@
     
     self.rightImage = [UIImage imageNamed:@"homepage_message"];
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+    //默认活动按钮不显示,有活动再打开
+    self.right_button.hidden = YES;
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     
@@ -122,6 +130,9 @@
     
     //获取健康咨询
     [self getHealthArticlelist];
+    
+    //未读活动
+    [self getUnreadActivityNum];
     
     //定位相关
     [self creatNavcLeftLabel];
@@ -275,9 +286,123 @@
 #pragma mark - 定位相关 gm - end
 
 
+#pragma mark - 视图创建
 
+/**
+ *  活动视图getter
+ *
+ *  @return
+ */
+-(ActivityView *)activityView
+{
+    if (!_activityView) {
+        _activityView = [[ActivityView alloc]initWithActivityArray:_activityArray actionBlock:^(ActionStyle style,NSInteger index) {
+            
+            if (style == ActionStyle_Select) {
+                
+                MessageModel *aModel = _activityArray[index];
+                WebviewController *web = [[WebviewController alloc]init];
+                web.webUrl = aModel.url;
+                web.navigationTitle = @"活动详情";
+                web.hidesBottomBarWhenPushed = YES;
+                @WeakObj(self);
+                web.updateParamsBlock = ^(NSDictionary *params){
+                    //更新未读状态
+                    if ([params[@"result"]boolValue]) {
+//                        [Weakself updateActivityStatusWithMsgId:aModel.msg_id];
+                    }
+                };
+                [self.navigationController pushViewController:web animated:YES];
+            }
+        }];
+    }
+    return _activityView;
+}
+
+/**
+ *  未读消息红点
+ *
+ *  @return
+ */
+-(UIView *)redPoint
+{
+    if (!_redPoint) {
+        
+        CGFloat width = 10.f;
+        UIView *point = [[UIView alloc]initWithFrame:CGRectMake(self.right_button.width - width/2.f, -width/2.f, width, width)];
+        [self.right_button addSubview:point];
+        _redPoint = point;
+        point.backgroundColor = [UIColor colorWithHexString:@"ec2120"];
+        [point setBorderWidth:1.5f borderColor:[UIColor whiteColor]];
+        [point addRoundCorner];
+    }
+    return _redPoint;
+}
 
 #pragma - mark 网络请求
+
+/**
+ *  获取活动列表
+ *
+ *  @param
+ */
+- (void)getActivity
+{
+    NSString *authey = [UserInfo getAuthkey];
+    if (authey.length == 0) {
+        return;
+    }
+    
+    NSString *api = GET_MY_MSG;
+    NSString *sort = @"ac";//活动
+    
+    NSDictionary *params = @{@"authcode":authey,
+                             @"per_page":[NSNumber numberWithInt:20],
+                             @"page":[NSNumber numberWithInt:1],
+                             @"sort":sort};
+    
+     @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *list = result[@"list"];
+        NSArray *temp = [MessageModel modelsFromArray:list];
+        _activityArray = [NSArray arrayWithArray:temp];
+        [Weakself.activityView show];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+/**
+ *  获取未读活动数量
+ *
+ *  @param
+ */
+- (void)getUnreadActivityNum
+{
+    NSString *authey = [UserInfo getAuthkey];
+    if (authey.length == 0) {
+        return;
+    }
+    
+    NSString *api = GET_MSG_NUM;
+    NSString *sort = @"ac"; //活动
+    
+    NSDictionary *params = @{@"authcode":authey,
+                             @"sort":sort};
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        int num = [result[@"count"]intValue];
+        Weakself.right_button.hidden = NO;//打开活动按钮
+        Weakself.redPoint.hidden = num ? NO : YES;
+//        [Weakself getActivity];//获取活动列表
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
 
 /**
  *  获取咨询文章
@@ -315,7 +440,15 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
-    [LTools showMBProgressWithText:@"暂无活动,敬请期待！" addToView:self.view];
+    self.redPoint.hidden = YES;
+    if (_activityArray.count) {
+        
+        [self.activityView show];
+        
+    }else
+    {
+        [self getActivity];//为空时请求活动
+    }
 }
 
 - (void)clickToPush:(UIButton *)sender

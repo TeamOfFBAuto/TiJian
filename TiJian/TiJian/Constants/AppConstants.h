@@ -82,6 +82,8 @@
 #define MIAOSHAO_END_TEXT @"秒杀已结束"
 #define MIAOSHAO_PRE_TEXT @"秒杀结束倒计时:"
 
+#define Alert_ServerErroInfo @"后台小哥开小差了,请稍后再试!"//服务端报错提醒
+
 
 //分页网络请求
 #define G_PER_PAGE 20

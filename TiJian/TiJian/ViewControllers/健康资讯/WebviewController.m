@@ -10,7 +10,7 @@
 #import "UIWebView+AFNetworking.h"
 #import "ArticleListController.h"
 
-@interface WebviewController ()<UIWebViewDelegate>
+@interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate>
 {
     UIView *_progressview;
 }
@@ -56,10 +56,18 @@
         
     } failure:^(NSError *error) {
         NSLog(@"erro %@",error);
-        [LTools alertText:@"页面访问出现错误" viewController:self];
-        [self leftButtonTap:nil];
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:Alert_ServerErroInfo delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alert show];
     }];
     
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [self leftButtonTap:nil];
+    }
 }
 
 - (void)test:(CGFloat)x
