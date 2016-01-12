@@ -29,18 +29,18 @@
     //设置tableView样式
     self.conversationListTableView.separatorColor = [UIColor colorWithHexString:@"dfdfdf"];
     self.conversationListTableView.tableFooterView = [UIView new];
-    
+    self.conversationListTableView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     //设置要显示的会话类型
     [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),@(ConversationType_APPSERVICE),@(ConversationType_CUSTOMERSERVICE)]];
      
     //自定义空会话的背景View。当会话列表为空时，将显示该View
-    UIView *blankView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    blankView.backgroundColor=[UIColor whiteColor];
+    UIView *blankView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, DEVICE_HEIGHT - 64 - 50)];
+    blankView.backgroundColor=DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     ResultView *view = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"暂时没有会话" content:nil];
     [blankView addSubview:view];
     view.centerY = blankView.height / 3.f;
-    view.backgroundColor = [UIColor whiteColor];
+    view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     self.emptyConversationView = blankView;
     

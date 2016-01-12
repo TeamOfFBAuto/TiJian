@@ -43,13 +43,13 @@
     RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
     chatService.userName = @"河马客服";
     
-    //1.0
-    chatService.targetId = SERVICE_ID;
-    chatService.conversationType = ConversationType_CUSTOMERSERVICE;//客服1.0
+//    //1.0
+//    chatService.targetId = SERVICE_ID;
+//    chatService.conversationType = ConversationType_CUSTOMERSERVICE;//客服1.0
     
     //2.0
-//    chatService.targetId = SERVICE_ID_2;
-//    chatService.conversationType = ConversationType_APPSERVICE;//客服2.0
+    chatService.targetId = SERVICE_ID_2;
+    chatService.conversationType = ConversationType_APPSERVICE;//客服2.0
     
     chatService.title = chatService.userName;
     

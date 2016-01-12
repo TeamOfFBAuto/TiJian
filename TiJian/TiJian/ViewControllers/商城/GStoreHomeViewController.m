@@ -767,13 +767,7 @@
 
 - (void)clickToChat
 {
-    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
-    chatService.userName = @"客服";
-    chatService.targetId = SERVICE_ID;
-    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
-    chatService.title = chatService.userName;
-//    [chatService setProductMessageWithProductModel:_theProductModel];
-    [self.navigationController pushViewController:chatService animated:YES];
+    [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:self model:nil];
 }
 
 

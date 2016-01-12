@@ -256,42 +256,12 @@
  */
 - (UIView *)noDataView
 {
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 135)];
-    view.backgroundColor = [UIColor clearColor];
-    //图标
     
-    UIImageView *imageV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 73, 80)];
-    imageV.image = [UIImage imageNamed:@"hema_heart"];
-    [view addSubview:imageV];
-    imageV.centerX = view.width/2.f;
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"暂无通知消息" content:nil];
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, imageV.bottom + 20, DEVICE_WIDTH, 30) title:@"暂无数据" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"646464"]];
-    [view addSubview:label];
-    
-    return view;
+    return result;
 }
 
-/**
- *  没有数据自定义view
- *
- *  @return
- */
-- (UIView *)erroView
-{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 135)];
-    view.backgroundColor = [UIColor clearColor];
-    //图标
-    
-    UIImageView *imageV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 73, 80)];
-    imageV.image = [UIImage imageNamed:@"my_indent_no"];
-    [view addSubview:imageV];
-    imageV.centerX = view.width/2.f;
-    
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, imageV.bottom + 20, DEVICE_WIDTH, 30) title:@"暂无数据" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"646464"]];
-    [view addSubview:label];
-    
-    return view;
-}
 
 #pragma - mark 事件处理
 /**

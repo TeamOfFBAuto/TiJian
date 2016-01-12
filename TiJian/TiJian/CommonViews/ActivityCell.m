@@ -130,8 +130,10 @@
     //未读
     if ([aModel.is_read intValue] == 1) {
         self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+        self.contentLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
     }else if ([aModel.is_read intValue] == 2){
-        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
+        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
+        self.contentLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
     }
     
     //调整背景高度
