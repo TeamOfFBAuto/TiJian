@@ -93,6 +93,14 @@
     
     NSArray *_kuaidiDataArray;//快递方式pickerview数据源
     
+    UILabel *_kuaidiChooseLabel;//用户选择的快递方式
+    UILabel *_fapiaoChooseLabel;//用户选择的发票信息
+    
+    
+    NSString *_userChooseKuaidiStr;//用户选择的快递方式
+    
+    
+    
 }
 
 @property(nonatomic,strong)UIView *backPickView;//快递方式选择pickerView后面的背景view
@@ -412,6 +420,20 @@
     
 }
 
+
+-(void)setUserSelectFapiaoWithStr:(NSString *)str{
+    
+    
+    _fapiaoChooseLabel.text = str;
+    
+    
+    
+}
+
+
+
+
+
 #pragma mark - 请求网络数据
 
 
@@ -685,70 +707,68 @@
     
 }
 
-#pragma mark - 地区选择相关
+#pragma mark - 快递方式选择相关
 
 -(void)createAreaPickView{
-    //地区pickview
-    _pickeView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, 216)];
-    _pickeView.delegate = self;
-    _pickeView.dataSource = self;
-//    _isChooseArea = NO;
     
-    
-    NSLog(@"%@",NSStringFromCGRect(_pickeView.frame));
-    
-    //取消按钮
-    UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    quxiaoBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [quxiaoBtn setTitle:@"取消" forState:UIControlStateNormal];
-    [quxiaoBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    quxiaoBtn.frame = CGRectMake(10, 5, 60, 30);
-    [quxiaoBtn addTarget:self action:@selector(clickToCancel:) forControlEvents:UIControlEventTouchUpInside];
-    [quxiaoBtn setBorderWidth:1 borderColor:DEFAULT_TEXTCOLOR];
-    [quxiaoBtn addCornerRadius:3.f];
-    
-    //确定按钮
-    UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    quedingBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
-    [quedingBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    quedingBtn.frame = CGRectMake(DEVICE_WIDTH - 70, 5, 60, 30);
-    [quedingBtn setBorderWidth:1 borderColor:DEFAULT_TEXTCOLOR];
-    [quedingBtn addCornerRadius:3.f];
-    
-    [quedingBtn addTarget:self action:@selector(clickToSure:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //地区选择
-    self.backPickView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 310)];
-    self.backPickView .backgroundColor = [UIColor whiteColor];
-    
-    //上线
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [self.backPickView addSubview:line];
-    
-    //下线
-    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, 0.5f)];
-    line2.backgroundColor = DEFAULT_LINECOLOR;
-    [self.backPickView addSubview:line2];
-    
-    [self.backPickView addSubview:quedingBtn];
-    [self.backPickView addSubview:quxiaoBtn];
-    [self.backPickView addSubview:_pickeView];
-    
+    //快递方式选择
+    if (!self.backPickView) {
+        self.backPickView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 266)];
+        self.backPickView .backgroundColor = RGBCOLOR(38, 51, 62);
+    }
     
     _kuaidiDataArray = @[@"电子体检码",@"快递体检凭证"];
     
-    [self.view addSubview:self.backPickView];
+    //快递方式pickview
+    if (!_pickeView) {
+        _pickeView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, 216)];
+        _pickeView.delegate = self;
+        _pickeView.dataSource = self;
+        _pickeView.backgroundColor = [UIColor whiteColor];
+        [self.backPickView addSubview:_pickeView];
+        
+        
+        //取消按钮
+        UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        quxiaoBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [quxiaoBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [quxiaoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        quxiaoBtn.frame = CGRectMake(0, 0, 70, 50);
+        [quxiaoBtn addTarget:self action:@selector(clickToCancel:) forControlEvents:UIControlEventTouchUpInside];
+        [self.backPickView addSubview:quxiaoBtn];
+        
+        //确定按钮
+        UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        quedingBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
+        [quedingBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        quedingBtn.frame = CGRectMake(DEVICE_WIDTH - 70, 0, 70, 50);
+        [quedingBtn addTarget:self action:@selector(clickToSure:) forControlEvents:UIControlEventTouchUpInside];
+        [self.backPickView addSubview:quedingBtn];
+        
+        
+        //title
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH*0.5-70, 0, 140, 50)];
+        titleLabel.font = [UIFont systemFontOfSize:15];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.text = @"快递方式";
+        titleLabel.textColor = [UIColor whiteColor];
+        [self.backPickView addSubview:titleLabel];
+        
+        
+    }
+
+    
 }
 
 
 //地区出现
 -(void)areaShow{
+    
     NSLog(@"_backPickView");
     __weak typeof (self)bself = self;
     [UIView animateWithDuration:0.3 animations:^{
-        bself.backPickView.frame = CGRectMake(0,DEVICE_HEIGHT-310, DEVICE_WIDTH, 310);
+        bself.backPickView.frame = CGRectMake(0,DEVICE_HEIGHT - 266 - 40, DEVICE_WIDTH, 266);
     }];
 }
 
@@ -759,17 +779,22 @@
 
 - (void)clickToSure:(UIButton *)sender
 {
-//    [self controlSaveButton];
-    
+    _kuaidiChooseLabel.textColor = [UIColor blackColor];
+    _kuaidiChooseLabel.text = _userChooseKuaidiStr;
     [self areaHidden];
 
 }
 
--(void)areaHidden{//地区隐藏
+-(void)areaHidden{//快递选择隐藏
     __weak typeof (self)bself = self;
+    
     [UIView animateWithDuration:0.3 animations:^{
-        bself.backPickView.frame = CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 310);
+        bself.backPickView.frame = CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 266);
+    } completion:^(BOOL finished) {
+        [bself.backPickView removeFromSuperview];
+        [_shouView removeFromSuperview];
     }];
+    
     
 }
 
@@ -792,6 +817,8 @@
     
     if (component == 0) {
         NSString *str = _kuaidiDataArray[row];
+        
+        _userChooseKuaidiStr = str;
         return str;
     } 
     return 0;
@@ -895,22 +922,25 @@
     
     
     //发票信息
-    UIView *fapiaoView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line3.frame), DEVICE_WIDTH, 60)];
+    UIView *fapiaoView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line3.frame), DEVICE_WIDTH, 50)];
     [fapiaoView addTaget:self action:@selector(fapiaoViewClicked) tag:0];
     [_tabFooterView addSubview:fapiaoView];
     
-    UIImageView *jiantou_fapiao = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 22, 8, 16)];
-    [jiantou_fapiao setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
-    [fapiaoView addSubview:jiantou_fapiao];
-    
-    
-    
-    UILabel *fapiao_tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 60)];
+    UILabel *fapiao_tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50)];
     fapiao_tLabel.font = [UIFont systemFontOfSize:14];
     fapiao_tLabel.text = @"发票信息";
     fapiao_tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [fapiaoView addSubview:fapiao_tLabel];
     
+    UIImageView *jiantou_fapiao = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 17, 8, 16)];
+    [jiantou_fapiao setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+    [fapiaoView addSubview:jiantou_fapiao];
+    
+    _fapiaoChooseLabel = [[UILabel alloc]initWithFrame:CGRectMake(fapiaoView.frame.size.width*0.5, 0, fapiaoView.frame.size.width * 0.5 - 25 , fapiaoView.frame.size.height)];
+    _fapiaoChooseLabel.font = [UIFont systemFontOfSize:13];
+    _fapiaoChooseLabel.textAlignment = NSTextAlignmentRight;
+    _fapiaoChooseLabel.numberOfLines = 2;
+    [fapiaoView addSubview:_fapiaoChooseLabel];
     
     //分割线
     UIView *fapiaoFenLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fapiaoView.frame), DEVICE_WIDTH, 5)];
@@ -923,16 +953,26 @@
     [_tabFooterView addSubview:kuaidiView];
     [kuaidiView addTaget:self action:@selector(kuaidiViewClicked) tag:0];
     
-    UIImageView *jiantou_kuaidi = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
-    [jiantou_kuaidi setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
-    [kuaidiView addSubview:jiantou_kuaidi];
-    
-    
     UILabel *kuaidi_tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 44)];
     kuaidi_tLabel.font = [UIFont systemFontOfSize:14];
     kuaidi_tLabel.text = @"快递方式";
     kuaidi_tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [kuaidiView addSubview:kuaidi_tLabel];
+    
+    _kuaidiChooseLabel = [[UILabel alloc]initWithFrame:CGRectMake(kuaidiView.frame.size.width*0.5, 0, kuaidiView.frame.size.width*0.5 - 25, kuaidiView.frame.size.height)];
+    _kuaidiChooseLabel.textAlignment = NSTextAlignmentRight;
+    _kuaidiChooseLabel.textColor = RGBCOLOR(238, 109, 24);
+    _kuaidiChooseLabel.font = [UIFont systemFontOfSize:13];
+    _kuaidiChooseLabel.text = @"必选";
+    [kuaidiView addSubview:_kuaidiChooseLabel];
+    
+    
+    UIImageView *jiantou_kuaidi = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
+    [jiantou_kuaidi setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+    [kuaidiView addSubview:jiantou_kuaidi];
+    
+    
+    
     
     
     
@@ -1299,6 +1339,18 @@
 
 //快递方式
 -(void)kuaidiViewClicked{
+    
+    if (!_shouView) {
+        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+        [_shouView addGestureRecognizer:tap];
+    }
+    
+    [self.view addSubview:_shouView];
+    
+    [self createAreaPickView];
+    [self.view addSubview:self.backPickView];
+    
     [self areaShow];
 }
 
@@ -1306,6 +1358,7 @@
 //发票
 -(void)fapiaoViewClicked{
     GFapiaoViewController *cc = [[GFapiaoViewController alloc]init];
+    cc.delegate = self;
     [self.navigationController pushViewController:cc animated:YES];
 }
 
@@ -1425,25 +1478,6 @@
     }
     
     
-    //是否从预约跳转过来
-//    if (self.isVoucherPush) {
-    
-//        BOOL isTrue = NO;//是否选择了这张代金券
-//        
-//        for (CouponModel *model in self.userSelectDaijinquanArray) {
-//            if ([model.coupon_id intValue] == [self.voucherId intValue]) {
-//                isTrue = YES;
-//                continue;
-//            }
-//        }
-//        
-//        if (isTrue) {
-//            [dic setValue:@"1" forKey:@"is_appoint"];
-//            [dic setValue:self.voucherId ? : @"" forKey:@"appoint_vouchers_id"];
-//            [dic setValue:self.uc_id ? : @"" forKey:@"uc_id"];
-//            
-//        }
-//    }
     
     if (self.userSelectYouhuiquanArray.count>0) {//使用优惠券
         
@@ -1480,8 +1514,21 @@
         [dic setValue:@"1" forKey:@"is_use_score"];//是否使用积分
     }
     
-    __weak typeof(self)weakSelf = self;
     
+    if (_userChooseKuaidiStr.length>0) {//快递凭证
+        if ([_userChooseKuaidiStr isEqualToString:@"电子体检码"]) {
+            [dic setValue:@"0" forKey:@"require_post"];
+        }else if ([_userChooseKuaidiStr isEqualToString:@"快递体检凭证"]){
+            [dic setValue:@"1" forKey:@"require_post"];
+        }
+    }
+    
+    if (_fapiaoChooseLabel.text.length>0 ) {
+        [dic setValue:_fapiaoChooseLabel.text forKey:@"invoice_title"];
+    }
+    
+    
+    __weak typeof(self)weakSelf = self;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _request_confirmOrder = [_request requestWithMethod:YJYRequstMethodPost api:ORDER_SUBMIT parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -1709,6 +1756,7 @@
         _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
         [_shouView addGestureRecognizer:tap];
+        
     }
 
     [self.view addSubview:_shouView];
@@ -1720,6 +1768,8 @@
 -(void)hiddenKeyBord{
     
     [_shouView removeFromSuperview];
+    
+    [self areaHidden];
     
     [_tab setContentOffset:_orig_tab_contentOffset animated:YES];
     

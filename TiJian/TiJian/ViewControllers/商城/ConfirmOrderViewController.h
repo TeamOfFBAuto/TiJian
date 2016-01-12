@@ -29,4 +29,9 @@
 
 -(void)jisuanPrice;
 
+//设置发票信息
+-(void)setUserSelectFapiaoWithStr:(NSString *)str;
+
+
+
 @end

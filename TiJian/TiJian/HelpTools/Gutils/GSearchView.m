@@ -16,7 +16,11 @@
 -(id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.backgroundColor = RGBCOLOR(244, 245, 246);
+        
         self.tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) style:UITableViewStylePlain];
+        self.tab.backgroundColor = RGBCOLOR(244, 245, 246);
         self.tab.delegate = self;
         self.tab.dataSource = self;
         [self addSubview:self.tab];
@@ -26,10 +30,18 @@
 }
 
 
+
+#pragma mark - 点击逻辑
 //热搜按钮点击
 -(void)hotSearchBtnClicked:(UIButton *)sender{
     
 }
+
+-(void)qingkongBtnClicked{
+    NSLog(@"%s",__FUNCTION__);
+}
+
+
 
 
 #pragma mark - UITableViewDelegate && UITableViewDataSource
@@ -50,13 +62,28 @@
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    CGFloat height = 50;
+    CGFloat height = 60;
     return height;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
-    view.backgroundColor = [UIColor orangeColor];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 60)];
+    view.backgroundColor = RGBCOLOR(244, 245, 246);
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    btn.layer.borderColor = [RGBCOLOR(238, 239, 240)CGColor];
+    btn.layer.borderWidth = 0.5;
+    btn.layer.cornerRadius = 4;
+    btn.layer.masksToBounds = YES;
+    [btn setFrame:CGRectMake(60, 30, DEVICE_WIDTH - 120, 30)];
+    [btn setTitle:@"清空历史搜索" forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont systemFontOfSize:12];
+    btn.backgroundColor = [UIColor whiteColor];
+    [btn addTarget:self action:@selector(qingkongBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:btn];
+    
+    
     return view;
 }
 

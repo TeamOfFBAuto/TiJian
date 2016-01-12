@@ -3577,7 +3577,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3601,7 +3601,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
+				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -3612,7 +3612,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3636,7 +3636,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
+				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;
@@ -3648,7 +3648,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				INFOPLIST_FILE = TiJianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TiJian.app/TiJian";
@@ -3662,7 +3662,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
 				INFOPLIST_FILE = TiJianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TiJian.app/TiJian";
@@ -3672,12 +3672,12 @@
 		13F1F2961BBA78EE00885D31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
 				INFOPLIST_FILE = TiJianUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
+				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
 				TEST_TARGET_NAME = TiJian;
 				USES_XCTRUNNER = YES;
 			};
@@ -3686,12 +3686,13 @@
 		13F1F2971BBA78EE00885D31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
 				INFOPLIST_FILE = TiJianUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "77652303-c8a0-411e-932c-31a7b0356144";
+				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
 				TEST_TARGET_NAME = TiJian;
 				USES_XCTRUNNER = YES;
 			};
