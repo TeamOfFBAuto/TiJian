@@ -167,6 +167,14 @@
 //11-4、更新消息状态(未读变已读) get 参数：authcode\msg_id: 消息id, 整形
 #define UPDATE_MSG_STATUE @"/index.php?d=api&c=msg&m=update_status"
 
+/******************首页活动相关接口*******************/
+
+//1、活动列表
+#define Get_Activity_list @"/index.php?d=api&c=activity&m=activity_list"
+
+//2、获取是否有最新活动
+#define Get_Show_activity @"/index.php?d=api&c=activity&m=show_activity"
+
 /******************商品相关接口*******************/
 
 #pragma mark - 商品相关

@@ -57,7 +57,6 @@
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
     
-//    [root.view addSubview:[LogView logInstance]];//加日志
     
     //微信支付
     NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];

@@ -32,4 +32,15 @@
 - (NSData *)dataWithCompressMaxSize:(NSInteger)maxSize
                         compression:(CGFloat)compression;
 
+/**
+ *  按照给定大小等比例压缩图片
+ *
+ *  @param sourceImage 目标image
+ *  @param size 指定显示大小
+ *
+ *  @return 新的image
+ */
+
+-(UIImage *)imageCompressForTargetSize:(CGSize)size;
+
 @end

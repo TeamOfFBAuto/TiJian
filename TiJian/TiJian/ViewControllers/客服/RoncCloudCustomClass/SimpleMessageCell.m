@@ -83,6 +83,7 @@
     [self setAutoLayout];
 }
 - (void)setAutoLayout {
+    
     RCTextMessage *_textMessage = (RCTextMessage *)self.model.content;
     if (_textMessage) {
         self.textLabel.text = _textMessage.content;

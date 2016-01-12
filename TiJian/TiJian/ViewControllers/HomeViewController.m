@@ -17,7 +17,7 @@
 #import "ArticleModel.h"
 #import "LocationChooseViewController.h"//定位地区选择vc
 #import "ActivityView.h"//活动view
-#import "MessageModel.h"
+#import "ActivityModel.h"
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
@@ -28,6 +28,7 @@
 @interface HomeViewController ()
 {
     NSArray *_activityArray;//活动列表
+    int _unreadActivityNum;//未读活动总数
 }
 
 @property(nonatomic,retain)UIView *healthView;//背景view
@@ -59,6 +60,11 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     //默认活动按钮不显示,有活动再打开
     self.right_button.hidden = YES;
+    
+    //登录通知更新活动状态
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
+    //退出登录
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGOUT object:nil];
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     
@@ -132,7 +138,7 @@
     [self getHealthArticlelist];
     
     //未读活动
-    [self getUnreadActivityNum];
+//    [self getUnreadActivityNum];
     
     //定位相关
     [self creatNavcLeftLabel];
@@ -145,11 +151,25 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - 通知处理
+
+- (void)actionForNotification:(NSNotification *)notification
+{
+    //登录通知
+    if ([notification.name isEqualToString:NOTIFICATION_LOGIN] ||
+        [notification.name isEqualToString:NOTIFICATION_LOGOUT]) {
+        
+        _activityArray = nil;
+        [self getUnreadActivityNum];//更新活动未读状态
+    }
+}
+
 
 #pragma mark - 定位相关 gm - start
 
 //获取本地存储的位置信息
--(void)getLocalLocation{
+-(void)getLocalLocation
+{
     if ([GMAPI cacheForKey:USERLocation]) {
         NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
         NSString *str;
@@ -163,6 +183,9 @@
             
         }
         self.leftLabel.text = str;
+        
+
+        [self getUnreadActivityNum];//获取未读消息
         
     }else{
         
@@ -198,6 +221,9 @@
 
 - (void)theLocationDictionary:(NSDictionary *)dic{
     
+    //定位完再请求活动
+    [self getUnreadActivityNum];
+    
     NSLog(@"%@",dic);
     _locationDic = dic;
     NSLog(@"%@",_locationDic);
@@ -216,7 +242,6 @@
         procinceId =[GMAPI cityIdForName:[dic stringValueForKey:@"province"]];
         cityId = [GMAPI cityIdForName:[dic stringValueForKey:@"city"]];
     }
-    
     
     
     if ([LTools isEmpty:theString]) {
@@ -295,12 +320,12 @@
  */
 -(ActivityView *)activityView
 {
-    if (!_activityView) {
+    if (!_activityView && _activityArray.count) {
         _activityView = [[ActivityView alloc]initWithActivityArray:_activityArray actionBlock:^(ActionStyle style,NSInteger index) {
             
             if (style == ActionStyle_Select) {
                 
-                MessageModel *aModel = _activityArray[index];
+                ActivityModel *aModel = _activityArray[index];
                 WebviewController *web = [[WebviewController alloc]init];
                 web.webUrl = aModel.url;
                 web.navigationTitle = @"活动详情";
@@ -309,7 +334,8 @@
                 web.updateParamsBlock = ^(NSDictionary *params){
                     //更新未读状态
                     if ([params[@"result"]boolValue]) {
-//                        [Weakself updateActivityStatusWithMsgId:aModel.msg_id];
+                        
+                        [Weakself getUnreadActivityNum];
                     }
                 };
                 [self.navigationController pushViewController:web animated:YES];
@@ -348,26 +374,24 @@
  */
 - (void)getActivity
 {
+    NSString *api = Get_Activity_list;
+    
+    NSDictionary *params = nil;
     NSString *authey = [UserInfo getAuthkey];
-    if (authey.length == 0) {
-        return;
+    if (authey.length > 0) {
+        params = @{@"authcode":authey};
     }
-    
-    NSString *api = GET_MY_MSG;
-    NSString *sort = @"ac";//活动
-    
-    NSDictionary *params = @{@"authcode":authey,
-                             @"per_page":[NSNumber numberWithInt:20],
-                             @"page":[NSNumber numberWithInt:1],
-                             @"sort":sort};
     
      @WeakObj(self);
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSArray *list = result[@"list"];
-        NSArray *temp = [MessageModel modelsFromArray:list];
+        NSArray *list = result[@"activity"];
+        NSArray *temp = [ActivityModel modelsFromArray:list];
         _activityArray = [NSArray arrayWithArray:temp];
-        [Weakself.activityView show];
+        if (_activityArray.count) {
+            
+            [Weakself.activityView show];
+        }
         
     } failBlock:^(NSDictionary *result) {
         
@@ -381,23 +405,35 @@
  */
 - (void)getUnreadActivityNum
 {
+    
+    NSString *api = Get_Show_activity;
+    
+    NSDictionary *params = nil;
     NSString *authey = [UserInfo getAuthkey];
-    if (authey.length == 0) {
-        return;
+    if (authey.length > 0) {
+        params = @{@"authcode":authey};
     }
     
-    NSString *api = GET_MSG_NUM;
-    NSString *sort = @"ac"; //活动
-    
-    NSDictionary *params = @{@"authcode":authey,
-                             @"sort":sort};
     @WeakObj(self);
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        int num = [result[@"count"]intValue];
-        Weakself.right_button.hidden = NO;//打开活动按钮
-        Weakself.redPoint.hidden = num ? NO : YES;
-//        [Weakself getActivity];//获取活动列表
+        int num = [result[@"num"]intValue];
+        _unreadActivityNum = num;
+        Weakself.right_button.hidden =  NO;//打开活动按钮
+        Weakself.redPoint.hidden = num > 0 ? NO : YES;
+        
+        //存储最新的msgId,用于判断是否需要自动弹出
+        
+        //上次的
+        NSInteger lastActivityId = [[LTools objectForKey:USER_READED_NEWESTMSGID]integerValue];
+        NSString *latest_activity_id = result[@"latest_activity_id"];
+        //说明有比上次更新的活动
+        if ([latest_activity_id integerValue] > lastActivityId) {
+            
+            [LTools setObject:latest_activity_id forKey:USER_READED_NEWESTMSGID];
+
+            [Weakself getActivity];
+        }
         
     } failBlock:^(NSDictionary *result) {
         
@@ -440,7 +476,6 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
-    self.redPoint.hidden = YES;
     if (_activityArray.count) {
         
         [self.activityView show];

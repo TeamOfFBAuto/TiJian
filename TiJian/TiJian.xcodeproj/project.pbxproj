@@ -123,11 +123,13 @@
 		1320F27D1C32325E008E5B05 /* ChooseHopitalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */; };
 		13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 13217C9B1BDF1E9D00020C40 /* PropertyButton.m */; };
 		1322B6A71C1965E500596DAE /* CoupeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322B6A61C1965E500596DAE /* CoupeView.m */; };
+		1322E05F1C44D6BB008A3222 /* homepage_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1322E05E1C44D6BB008A3222 /* homepage_3@2x.png */; };
+		1322E0621C44DE12008A3222 /* CustomProductMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322E0611C44DE12008A3222 /* CustomProductMsgCell.m */; };
+		1322E0651C44F991008A3222 /* CustomOrderMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322E0641C44F991008A3222 /* CustomOrderMsgCell.m */; };
 		1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B69E1BD7499900FB47A9 /* RootViewController.m */; };
 		1324B6A31BD7671E00FB47A9 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A21BD7671E00FB47A9 /* HomeViewController.m */; };
 		1324B6A71BD76B6A00FB47A9 /* PersonalCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */; };
 		1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */; };
-		133FB5CA1C4386A5002A2DDE /* homepage_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 133FB5C91C4386A5002A2DDE /* homepage_3@2x.png */; };
 		133FB5CD1C43AB09002A2DDE /* ActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133FB5CC1C43AB09002A2DDE /* ActivityView.m */; };
 		133FB5CF1C43AD3C002A2DDE /* homepage_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 133FB5CE1C43AD3C002A2DDE /* homepage_close@2x.png */; };
 		13426BAF1BE7482B00979279 /* hema.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 13426BAE1BE7482B00979279 /* hema.sqlite */; };
@@ -673,6 +675,11 @@
 		13217C9B1BDF1E9D00020C40 /* PropertyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyButton.m; sourceTree = "<group>"; };
 		1322B6A51C1965E500596DAE /* CoupeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoupeView.h; sourceTree = "<group>"; };
 		1322B6A61C1965E500596DAE /* CoupeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoupeView.m; sourceTree = "<group>"; };
+		1322E05E1C44D6BB008A3222 /* homepage_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_3@2x.png"; sourceTree = "<group>"; };
+		1322E0601C44DE12008A3222 /* CustomProductMsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomProductMsgCell.h; sourceTree = "<group>"; };
+		1322E0611C44DE12008A3222 /* CustomProductMsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomProductMsgCell.m; sourceTree = "<group>"; };
+		1322E0631C44F991008A3222 /* CustomOrderMsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomOrderMsgCell.h; sourceTree = "<group>"; };
+		1322E0641C44F991008A3222 /* CustomOrderMsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomOrderMsgCell.m; sourceTree = "<group>"; };
 		1324B69D1BD7499900FB47A9 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		1324B69E1BD7499900FB47A9 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		1324B6A11BD7671E00FB47A9 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
@@ -681,7 +688,6 @@
 		1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCustomViewController.m; sourceTree = "<group>"; };
 		1324B6A91BD76DEF00FB47A9 /* LQuestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQuestionView.h; sourceTree = "<group>"; };
 		1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQuestionView.m; sourceTree = "<group>"; };
-		133FB5C91C4386A5002A2DDE /* homepage_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_3@2x.png"; sourceTree = "<group>"; };
 		133FB5CB1C43AB09002A2DDE /* ActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityView.h; sourceTree = "<group>"; };
 		133FB5CC1C43AB09002A2DDE /* ActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityView.m; sourceTree = "<group>"; };
 		133FB5CE1C43AD3C002A2DDE /* homepage_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_close@2x.png"; sourceTree = "<group>"; };
@@ -1413,11 +1419,11 @@
 		1303C32D1BEB0D7100700847 /* 首页 */ = {
 			isa = PBXGroup;
 			children = (
+				1322E05E1C44D6BB008A3222 /* homepage_3@2x.png */,
 				133FB5CE1C43AD3C002A2DDE /* homepage_close@2x.png */,
 				13F242221BF5CBE7002C9D81 /* article_more@2x.png */,
 				1303C32E1BEB0D7100700847 /* homepage_1@2x.png */,
 				1303C32F1BEB0D7100700847 /* homepage_2@2x.png */,
-				133FB5C91C4386A5002A2DDE /* homepage_3@2x.png */,
 				1303C3311BEB0D7100700847 /* homepage_4@2x.png */,
 				1303C3321BEB0D7100700847 /* homepage_b@2x.png */,
 				1303C3331BEB0D7100700847 /* homepage_g@2x.png */,
@@ -2457,6 +2463,10 @@
 				13FFBFCB1C0D504B0077DD29 /* SimpleMessage.m */,
 				13FFBFCC1C0D504B0077DD29 /* SimpleMessageCell.h */,
 				13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */,
+				1322E0601C44DE12008A3222 /* CustomProductMsgCell.h */,
+				1322E0611C44DE12008A3222 /* CustomProductMsgCell.m */,
+				1322E0631C44F991008A3222 /* CustomOrderMsgCell.h */,
+				1322E0641C44F991008A3222 /* CustomOrderMsgCell.m */,
 			);
 			path = RoncCloudCustomClass;
 			sourceTree = "<group>";
@@ -2972,7 +2982,6 @@
 				1303C2C61BE9ABCA00700847 /* navigationbarBackgroudImage_iOS6@2x.png in Resources */,
 				139333B21BE0DF3E00B4628B /* 17_1@2x.png in Resources */,
 				13F9D10D1C2FAD1300993738 /* home_button_top@2x.png in Resources */,
-				133FB5CA1C4386A5002A2DDE /* homepage_3@2x.png in Resources */,
 				139333B01BE0DF3E00B4628B /* 16_3@2x.png in Resources */,
 				139333E71BE0DF3E00B4628B /* 3_m_1_bg@2x.png in Resources */,
 				130D2E301BFDF2DC002E301F /* UMSnsAccountViewController.xib in Resources */,
@@ -3082,6 +3091,7 @@
 				130D2E031BFC7332002E301F /* gpin@2x.png in Resources */,
 				139333EF1BE0DF3E00B4628B /* 6_1@2x.png in Resources */,
 				139333FA1BE0DF3E00B4628B /* right@2x.png in Resources */,
+				1322E05F1C44D6BB008A3222 /* homepage_3@2x.png in Resources */,
 				139333D21BE0DF3E00B4628B /* 26_2@2x.png in Resources */,
 				1303C34B1BEB0D7100700847 /* personal_jiaren_jiantou_t@2x.png in Resources */,
 				139333D51BE0DF3E00B4628B /* 26_5@2x.png in Resources */,
@@ -3276,6 +3286,7 @@
 				13F2421D1BF5C0E8002C9D81 /* ArticleModel.m in Sources */,
 				13020A6E1C04480D006FC365 /* ProductListViewController.m in Sources */,
 				13C97F311BF9B54700C66691 /* AppointModel.m in Sources */,
+				1322E0621C44DE12008A3222 /* CustomProductMsgCell.m in Sources */,
 				E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */,
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
 				13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */,
@@ -3330,6 +3341,7 @@
 				13FFBFC81C0D4FEA0077DD29 /* RCDChatViewController.m in Sources */,
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
 				13F8C5AF1C05AA7E004C3FC7 /* JKAssetsViewCell.m in Sources */,
+				1322E0651C44F991008A3222 /* CustomOrderMsgCell.m in Sources */,
 				130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */,
 				13F9D12B1C2FB06800993738 /* LPhotoModel.m in Sources */,
 				1385D38F1C3B74CB006DE304 /* MessageCenterController.m in Sources */,

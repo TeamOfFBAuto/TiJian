@@ -127,6 +127,12 @@
     [self.coverImageView l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
     
     self.toolView.top = _contentLabel.bottom + 11;
+    //未读
+    if ([aModel.is_read intValue] == 1) {
+        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+    }else if ([aModel.is_read intValue] == 2){
+        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
+    }
     
     //调整背景高度
     _bgView.height = _toolView.bottom;

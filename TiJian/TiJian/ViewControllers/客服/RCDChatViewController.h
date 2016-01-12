@@ -15,6 +15,8 @@
  */
 @property (strong,nonatomic) RCConversationModel *conversation;
 
+@property(nonatomic,retain)id msg_model;//productModel 或者 orderModel
+
 /**
  *  发送订单信息
  *

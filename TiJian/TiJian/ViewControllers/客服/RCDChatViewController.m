@@ -16,12 +16,23 @@
 #import "OrderInfoViewController.h"
 
 #import "ProductModel.h"
+#import "OrderModel.h"
+#import "CustomProductMsgCell.h"//自定义套餐cell
+#import "CustomOrderMsgCell.h"//自定义订单cell
+
+typedef NS_ENUM(NSInteger,CustomMsgType) {
+    CustomMsgTypeProduct = 0,//单品
+    CustomMsgTypeOrder //订单
+};
 
 @interface RCDChatViewController ()
 {
     NSString *_orderId;
     NSString *_orderNum;
     ProductModel *_p_model;
+    RCMessageModel *_temp_msg;//临时model
+    CustomMsgType _msgType;//自定义消息类型
+    NSString *_phoneNumber;//电话号码
 }
 
 @end
@@ -72,11 +83,96 @@
     _myTitleLabel.font = [UIFont systemFontOfSize:17];
     self.navigationItem.titleView = _myTitleLabel;
     
-    //会话页面注册 UI
-    [self registerClass:SimpleMessageCell.class forCellWithReuseIdentifier:@"SimpleMessageCell"];
-    
+    if (_msgType == CustomMsgTypeProduct) {
+        //会话页面注册 UI
+        [self registerClass:CustomProductMsgCell.class forCellWithReuseIdentifier:@"CustomProductMsgCell"];
+    }else if (_msgType == CustomMsgTypeOrder){
+        
+        [self registerClass:CustomOrderMsgCell.class forCellWithReuseIdentifier:@"CustomOrderMsgCell"];
+    }
 }
 
+
+#pragma mark - 单品、订单链接消息处理
+
+-(void)setMsg_model:(id)msg_model
+{
+    _msg_model = msg_model;
+    
+    //发送消息model
+    if (self.msg_model) {
+        
+        if ([self.msg_model isKindOfClass:[ProductModel class]])
+        {
+            _msgType = CustomMsgTypeProduct;
+            
+            
+        }else if ([self.msg_model isKindOfClass:[OrderModel class]])
+        {
+            _msgType = CustomMsgTypeOrder;
+        }
+        
+        //插入自定义cell
+        [self addCustomMessage];
+        
+    }
+}
+
+/**
+ *  添加自定义消息
+ */
+- (void)addCustomMessage
+{
+    RCMessageModel *aModel = [[RCMessageModel alloc]init];
+    _temp_msg = aModel;
+    [self.conversationDataRepository addObject:aModel];
+    [self.conversationMessageCollectionView reloadData];
+}
+
+/**
+ *  移除自定义cell
+ */
+- (void)removeCustomMessage
+{
+    [self.conversationDataRepository removeObject:_temp_msg];
+    [self.conversationMessageCollectionView reloadData];
+}
+
+/**
+ *  点击发送详情链接
+ */
+- (void)clickToSendMessage
+{
+    NSLog(@"发送消息");
+    
+    //发送单品图文消息
+    if (_msgType == CustomMsgTypeProduct) {
+        
+        NSString *extra = [NSString stringWithFormat:@"productId=%@",((ProductModel *)_msg_model).product_id];
+        NSString *content = @"http://www.baidu.com";//单品链接
+        
+        RCTextMessage *msg = [RCTextMessage messageWithContent:content];
+        msg.extra = extra;
+        [self sendMessage:msg pushContent:@"套餐详情"];
+
+        
+    }else if (_msgType == CustomMsgTypeOrder){
+        
+        NSString *extra = [NSString stringWithFormat:@"orderId=%@",((OrderModel *)_msg_model).order_id];
+        NSString *content = @"http://www.baidu.com";//订单详情链接
+        
+        RCTextMessage *msg = [RCTextMessage messageWithContent:content];
+        msg.extra = extra;
+        
+        [self sendMessage:msg pushContent:@"订单详情"];
+    }
+    
+    //移除自定义cell
+    [self removeCustomMessage];
+}
+
+
+#pragma mark -
 
 /**
  *  发送订单信息
@@ -118,7 +214,9 @@
     
     //发送单品图文消息
     if (_p_model) {
+        
         [self sendProductDetailMessageWithId:_p_model.product_id productName:_p_model.setmeal_name coverImageUrl:_p_model.cover_pic currentPrice:[_p_model.setmeal_original_price floatValue] originalPrice:[_p_model.setmeal_price floatValue]];
+        
     }
 }
 
@@ -158,31 +256,53 @@
     
     //1.0
     RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
+    
     [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
         DDLOG(@"messageid %ld",messageId);
         
     } error:^(RCErrorCode nErrorCode, long messageId) {
         DDLOG(@"nErrorCode %ld",(long)nErrorCode);
-        
+
     }];
 }
-
 
 #pragma - mark 自定义消息重写方法
 
 -(RCMessageBaseCell *)rcConversationCollectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
+    if (_msgType == CustomMsgTypeProduct) {
+        
+        NSString * cellIndentifier=@"CustomProductMsgCell";
+        CustomProductMsgCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
+        cell.backgroundColor = [UIColor whiteColor];
+        [cell.senderButton addTarget:self action:@selector(clickToSendMessage) forControlEvents:UIControlEventTouchUpInside];
+        [cell loadData:self.msg_model];
+        return (RCMessageBaseCell *)cell;
+    }else if (_msgType == CustomMsgTypeOrder){
+        
+        NSString * cellIndentifier=@"CustomOrderMsgCell";
+        CustomOrderMsgCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
+        cell.backgroundColor = [UIColor whiteColor];
+        [cell.senderButton addTarget:self action:@selector(clickToSendMessage) forControlEvents:UIControlEventTouchUpInside];
+        [cell setCellWithModel:self.msg_model];
+        return (RCMessageBaseCell *)cell;
+    }
+
+    RCMessageModel *msg = self.conversationDataRepository[indexPath.row];
     NSString * cellIndentifier=@"SimpleMessageCell";
-    RCMessageBaseCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
-    
-    [cell setDataModel:model];
+    SimpleMessageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor whiteColor];
+    [cell setDataModel:msg];
+
     return cell;
 }
 -(CGSize)rcConversationCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     //返回自定义cell的实际高度
-    return CGSizeMake(300, 60 + 5 + 50);
+    if (_msgType == CustomMsgTypeOrder) {
+        return CGSizeMake(DEVICE_WIDTH, 60 + 10);
+    }
+    return CGSizeMake(DEVICE_WIDTH, 60 + 50);
 }
 
 -(void) leftBarButtonItemPressed:(id)sender
@@ -312,8 +432,34 @@
 - (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber model:(RCMessageModel *)model
 {
     NSLog(@"phoneNumber %@",phoneNumber);
+    
+    _phoneNumber = phoneNumber;
+    
+    NSMutableString *phone = [NSMutableString stringWithString:phoneNumber];
+    if ([phone hasPrefix:@"tel://"]) {
+        [phone replaceOccurrencesOfString:@"tel://" withString:@"" options:0 range:NSMakeRange(0, phone.length)];
+        NSString *msg = [NSString stringWithFormat:@"拨打:%@",phone];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alert show];
+
+    }
 }
 
+#pragma - mark UIAlertViewDelegate <NSObject>
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        
+        NSString *phone = _phoneNumber;
+        
+        if (phone) {
+            
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:phone]];
+        }
+    }
+}
 
 /**
  *  消息发送状态通知

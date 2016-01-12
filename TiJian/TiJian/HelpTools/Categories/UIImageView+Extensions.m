@@ -110,10 +110,24 @@
         [self addSubview:indicator];
         indicator.center = CGPointMake(self.width/2.f, self.height/2.f);
         [indicator startAnimating];
-//        indicator.backgroundColor = [UIColor redColor];
+    }else
+    {
+        if ([placeholder isKindOfClass:[UIImage class]]) {
+            
+            CGSize imageSize = placeholder.size;
+            //默认图比imageView大
+            if (imageSize.width > CGRectGetWidth(self.frame) ||
+                imageSize.height > CGRectGetHeight(self.frame)) {
+                
+                self.contentMode = UIViewContentModeScaleAspectFit;//等比例填充
+
+            }else
+            {
+                self.contentMode = UIViewContentModeCenter;//中间显示
+            }
+        }
     }
     
-    self.contentMode = UIViewContentModeScaleAspectFit;//等比例填充
     self.clipsToBounds = YES;
 
     __weak typeof(self)weakSelf = self;

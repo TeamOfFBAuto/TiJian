@@ -30,4 +30,6 @@
 @property(nonatomic,retain)NSString *pic_height;
 @property(nonatomic,retain)NSString *url;//活动的详情url
 
+//
+
 @end

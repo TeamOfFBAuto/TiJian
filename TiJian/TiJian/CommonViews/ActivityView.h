@@ -22,4 +22,8 @@ typedef void(^ActionBlock)(ActionStyle actionStyle,NSInteger index);
                 actionBlock:(void(^)(ActionStyle style,NSInteger index))actionBlock;
 - (void)show;
 
+- (void)showWithView:(UIView *)view;
+
+- (void)updateShowWithViewWillAppear;
+
 @end

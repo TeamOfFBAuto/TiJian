@@ -59,10 +59,6 @@
     self.originalPriceLabel.font = [UIFont systemFontOfSize:12];
     [self.contentView addSubview:self.originalPriceLabel];
     
-    
-    
-    
-    
 }
 
 

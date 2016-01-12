@@ -20,7 +20,6 @@
 #import "TuiKuanViewController.h"//申请退款
 #import "BrandModel.h"//品牌model
 #import "GconfirmOrderCell.h"
-#import "RCDChatViewController.h"
 #import "AddCommentViewController.h"
 
 #import "RCIM.h"

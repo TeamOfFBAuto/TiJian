@@ -53,10 +53,14 @@
     
     chatService.title = chatService.userName;
     
-    if (type == SourceType_ProductDetail) {
-        [chatService setProductMessageWithProductModel:model];
-    }else if (SourceType_Order){
-        [chatService setOrderMessageWithOrderId:((OrderModel *)model).order_id orderNum:((OrderModel *)model).order_no];
+//    if (type == SourceType_ProductDetail) {
+//        [chatService setProductMessageWithProductModel:model];
+//    }else if (SourceType_Order){
+//        [chatService setOrderMessageWithOrderId:((OrderModel *)model).order_id orderNum:((OrderModel *)model).order_no];
+//    }
+    
+    if (model) {
+        chatService.msg_model = model;
     }
     
     chatService.hidesBottomBarWhenPushed = hiddenBottom;

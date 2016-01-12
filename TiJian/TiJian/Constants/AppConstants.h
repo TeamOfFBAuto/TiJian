@@ -102,6 +102,7 @@
 
 #define USERLocation @"locationInfo"
 #define USER_MSG_NUM @"msgNum" //通知消息个数
+#define USER_READED_NEWESTMSGID @"readedNewestMsgId"//存储上次最新的活动id,用于判断是否需要自动打开活动轮播页
 
 #define USERCOMMONLYUSEDADDRESS @"USERCOMMONLYUSEDADDRESS"//用户常用地址
 

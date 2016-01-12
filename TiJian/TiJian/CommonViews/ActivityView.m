@@ -7,11 +7,12 @@
 //
 
 #import "ActivityView.h"
-#import "MessageModel.h"
+#import "ActivityModel.h"
 
 @interface ActivityView ()<UIScrollViewDelegate>
 {
     NSInteger _currentPage;//当前页数
+    BOOL _show;//是否在显示
 }
 
 @property(nonatomic,retain)UIScrollView *scrollView;
@@ -56,10 +57,13 @@
         CGFloat width = 570 / 2.f;
         CGFloat height = 760 / 2.f;
         
-        if (iPhone6PLUS) {
+        
+        width = FitScreen(width);
+        height = FitScreen(height);
+        if (iPhone4) {
             
-            width = 850 / 2.f;
-            height = 1140 / 2.f;
+            width *= 0.85;
+            height *= 0.85;
         }
         CGFloat top = (DEVICE_HEIGHT - height) / 2.f - 20;
         CGFloat left = (DEVICE_WIDTH - width) / 2.f;
@@ -88,11 +92,12 @@
         
         for (int i = 0;i < count;i ++) {
             
-            MessageModel *aModel = itemArray[i];
+            ActivityModel *aModel = itemArray[i];
             UIImageView *item = [[UIImageView alloc]initWithFrame:CGRectMake(width * i, 0, width, height)];
             [_scrollView addSubview:item];
-            [item l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
+            [item l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
             _scrollView.contentSize = CGSizeMake(width * count, height);
+//            item.backgroundColor = [UIColor redColor];
         }
         
         if (count > 1) {
@@ -102,7 +107,7 @@
         
         //右上角关闭按钮
         
-        _clostBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 27 - 15 + 5, 20 + (49 - 25)/2.f - 3, 25, 25) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"homepage_close"] selectedImage:nil target:self action:@selector(clickToClose:)];
+        _clostBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 27 - 15 + 2, 20 + (49 - 25)/2.f - 3, 25, 25) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"homepage_close"] selectedImage:nil target:self action:@selector(clickToClose:)];
         [self addSubview:_clostBtn];
         _clostBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         
@@ -128,6 +133,8 @@
 - (void)clickAtIndex:(UITapGestureRecognizer *)tap
 {
     [self hidden];
+    
+    _show = YES;
     if (_actionBlock) {
         _actionBlock(ActionStyle_Select,_currentPage);
     }
@@ -144,6 +151,7 @@
 
 - (void)show
 {
+    _show = YES;
     UIView *root = [UIApplication sharedApplication].keyWindow;
     [root addSubview:self];
     
@@ -156,8 +164,36 @@
     }];
 }
 
+- (void)updateShowWithViewWillAppear
+{
+    if (_show) {
+        
+        [self show];
+    }
+}
+
+- (void)showWithView:(UIView *)view
+{
+    if (nil == view) {
+        return;
+    }
+    _show = YES;
+
+    [view addSubview:self];
+    
+    @WeakObj(_scrollView);
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        _clostBtn.alpha = 1.f;
+        self.alpha = 1.0;
+        Weak_scrollView.alpha = 1.f;
+    }];
+}
+
 - (void)hidden
 {
+    _show = NO;
+    
      @WeakObj(_scrollView);
     [UIView animateWithDuration:0.3 animations:^{
         
