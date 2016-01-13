@@ -82,7 +82,7 @@
     [self.logoImv l_setImageWithURL:[NSURL URLWithString:theModel.cover_pic] placeholderImage:nil];
     
     
-    self.titleLabel.text = [NSString stringWithFormat:@"%@ %@",theModel.brand_name,theModel.setmeal_name];
+    self.titleLabel.text = [NSString stringWithFormat:@"%@ %@",[LTools isEmpty:theModel.brand_name]?@"":theModel.brand_name,theModel.setmeal_name];
     CGFloat imv_W = 255.0/750 * DEVICE_WIDTH;
     [self.titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(CGRectGetMaxX(self.logoImv.frame)+10, self.logoImv.frame.origin.y) width:DEVICE_WIDTH-20-imv_W -10];
     if (self.titleLabel.frame.size.height > self.logoImv.frame.size.height*0.5) {

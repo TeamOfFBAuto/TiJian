@@ -49,10 +49,20 @@
 //page: 当前页
 //per_page: 每页显示数量
 
+//搜索套餐
+#define ProductSearch @"/index.php?d=api&c=setmeal&m=search"
+
+//获取热门搜索
+#define ProductHotSearch @"/index.php?d=api&c=setmeal&m=hot_search"
 
 //根据城市查询品牌列表
 #define BrandList_oneClass @"/index.php?d=api&c=setmeal&m=brand_city_list"
 
+//获取我的足迹
+#define GetMyProductsFoot @"/index.php?d=api&c=track&m=get_tracks"
+
+//添加足迹
+#define AddMyProductFoot @"/index.php?d=api&c=track&m=add_track"
 
 //套餐详情
 #define StoreProductDetail @"/index.php?d=api&c=setmeal&m=setmeal_detail"

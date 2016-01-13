@@ -29,7 +29,6 @@
 
 #import "RCDChatViewController.h"
 
-
 #import "ProductListViewController.h"
 
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
@@ -42,6 +41,7 @@
     AFHTTPRequestOperation *_request_adv;
     AFHTTPRequestOperation *_request_ProductClass;
     AFHTTPRequestOperation *_request_ProductRecommend;
+    AFHTTPRequestOperation *_request_hotSearch;
     
     RefreshTableView *_table;
     
@@ -63,11 +63,26 @@
     UILabel *_shopCarNumLabel;//购物车数量label
     
     
+    GSearchView *_theCustomSearchView;//自定义搜索view
+    
+    
+    NSArray *_hotSearchArray;//热门搜索
+    
+    UIBarButtonItem *_rightItem1;
+    UILabel *_rightItem2Label;
+    UIView *_kuangView;
+    
+    
+    //购物车数量
+    AFHTTPRequestOperation *_request_GetShopCarNum;
+    NSDictionary *_shopCarDic;
+    int _gouwucheNum;//购物车里商品数量
+    
 }
 
 @property(nonatomic,strong)NSMutableArray *upAdvArray;
 
-@property(nonatomic,strong)UIView *theTopView;;
+@property(nonatomic,strong)UIView *theTopView;
 
 @end
 
@@ -81,7 +96,8 @@
     [_request removeOperation:_request_adv];
     [_request removeOperation:_request_ProductClass];
     [_request removeOperation:_request_ProductRecommend];
-    
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_LOGIN object:nil];
     
     [self removeObserver:self forKeyPath:@"_count"];
 }
@@ -106,14 +122,18 @@
     
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-
+    
+    
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
     [self setupNavigation];
     [self creatTableView];
     [self creatDownBtnView];
     [self creatMysearchView];
-    
- 
+    [self getHotSearch];
+    [self getshopcarNum];//购物车数量
     
 }
 
@@ -123,12 +143,29 @@
 }
 
 
-#pragma mark - UITextField
+#pragma mark - UITextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     NSLog(@"%s",__FUNCTION__);
     _mySearchView.hidden = NO;
+    _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
     
-    [_searchView setWidth:DEVICE_WIDTH - 50];
+    [_theCustomSearchView.tab reloadData];
+    
+//    [_searchView setWidth:DEVICE_WIDTH - 20];
+//    [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+    if (!_rightItem2Label) {
+        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+        _rightItem2Label.text = @"取消";
+        _rightItem2Label.font = [UIFont systemFontOfSize:13];
+        _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
+        _rightItem2Label.textAlignment = NSTextAlignmentRight;
+        [_rightItem2Label addTaget:self action:@selector(myNavcRightBtnClicked) tag:0];
+    }
+    
+    [_searchView addSubview:_rightItem2Label];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -156,9 +193,25 @@
     }
 }
 
--(void)myNavcRightBtnClicked{
+
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
     
-    [_searchView setWidth:DEVICE_WIDTH - 100];
+    if (![LTools isEmpty:self.searchTf.text]) {
+        [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
+    }
+    
+    
+    
+    return YES;
+}
+
+
+
+-(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
     [_searchTf resignFirstResponder];
     _mySearchView.hidden = YES;
@@ -173,9 +226,19 @@
             alphaView.alpha = 0;
         }
     }
+    
+    if (!isHot) {
+        [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+    }
+    
+    
+    
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.theSearchWorld = theWord;
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    
 }
-
-
 
 
 #pragma mark - 返回上个界面
@@ -285,6 +348,21 @@
     }];
 }
 
+//热门搜索
+-(void)getHotSearch{
+   
+    
+    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _hotSearchArray = [result arrayValueForKey:@"list"];
+        _theCustomSearchView.hotSearch = _hotSearchArray;
+        [_theCustomSearchView.tab reloadData];
+    } failBlock:^(NSDictionary *result) {
+        
+        
+    }];
+}
+
+
 
 //首页精品推荐上拉加载更多
 -(void)prepareMoreProducts{
@@ -317,6 +395,40 @@
     }];
 }
 
+
+//获取购物车数量
+-(void)getshopcarNum{
+    
+    if ([LoginViewController isLogin]) {
+        [self getShopcarNumWithLoginSuccess];
+    }else{
+        
+    }
+    
+    
+}
+
+//获取购物车数量
+-(void)getShopcarNumWithLoginSuccess{
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+}
 
 
 
@@ -362,6 +474,25 @@
 }
 
 
+#pragma mark - 改变searchTf和框的大小
+/**
+ *  改变searchTf和框的大小
+ *
+ *  @param state 1 编辑状态 0常态
+ */
+-(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
+    if (state == 0) {//常态
+        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
+        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width, 30)];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+
+    }else if (state == 1){//编辑状态
+        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 20, 30)];
+        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+        
+    }
+}
 
 
 #pragma mark - 视图创建
@@ -384,7 +515,7 @@
     if (!self.theTopView) {
         self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
         self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
-        _table.tableHeaderView = self.theTopView;
+        
     }
     
     //refresh头部
@@ -397,8 +528,6 @@
                                           +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
                                           +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
                                           )];
-    
-    
     
     
     //设置轮播图
@@ -477,32 +606,39 @@
 - (void)setupNavigation{
     
     [self resetShowCustomNavigationBar:YES];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"back" style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"ios7_goback4032.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
     self.currentNavigationItem.leftBarButtonItem = leftItem;
     
     
-    _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 100, 30)];
+    _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
     _searchView.backgroundColor = [UIColor whiteColor];
-    _searchView.layer.cornerRadius = 5;
-    _searchView.layer.borderColor = [RGBCOLOR(192, 193, 194)CGColor];
-    _searchView.layer.borderWidth = 0.5;
+    
+    //带框的view
+    _kuangView = [[UIView alloc]initWithFrame:CGRectZero];
+    _kuangView.layer.cornerRadius = 5;
+    _kuangView.layer.borderColor = [RGBCOLOR(192, 193, 194)CGColor];
+    _kuangView.layer.borderWidth = 0.5;
+    [_searchView addSubview:_kuangView];
     
     
     UIImageView *fdjImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 8, 13, 13)];
     [fdjImv setImage:[UIImage imageNamed:@"search_fangdajing.png"]];
     [_searchView addSubview:fdjImv];
     
-    self.searchTf = [[UITextField alloc]initWithFrame:CGRectMake(30, 0, _searchView.frame.size.width - 30, 30)];
+    self.searchTf = [[UITextField alloc]initWithFrame:CGRectZero];
     self.searchTf.font = [UIFont systemFontOfSize:13];
     self.searchTf.backgroundColor = [UIColor whiteColor];
     self.searchTf.layer.cornerRadius = 5;
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
-    [_searchView addSubview:self.searchTf];
+    [_kuangView addSubview:self.searchTf];
     
-    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
-    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithTitle:@"btn" style:UIBarButtonItemStylePlain target:self action:@selector(myNavcRightBtnClicked)];
-    self.currentNavigationItem.rightBarButtonItems = @[rightItem2,rightItem1];
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    
+    _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
+    
+    
+    self.currentNavigationItem.rightBarButtonItems = @[_rightItem1];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -523,9 +659,16 @@
     [self.view addSubview:_mySearchView];
     
     
-    GSearchView *aa = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
-    aa.d1 = self;
-    [_mySearchView addSubview:aa];
+    _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
+    _theCustomSearchView.d1 = self;
+    
+    __weak typeof (self)bself = self;
+    
+    [_theCustomSearchView setKuangBlock:^(NSString *theStr) {
+        [bself searchBtnClickedWithStr:theStr isHotSearch:NO];
+    }];
+    
+    [_mySearchView addSubview:_theCustomSearchView];
     
     
     
@@ -555,10 +698,10 @@
             
         }
         if (i<3) {
-            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
+            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 17, 25, 0)];
         }else{
             if (DEVICE_WIDTH<375) {//4s 5s
-                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
+                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 22, 25, 17)];
             }else{
                 [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
             }
@@ -688,30 +831,37 @@
         
         [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
         
-        
         CGFloat height = self.theTopView.frame.size.height;
         height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
         [self.theTopView setHeight:height];
+        _table.tableHeaderView = self.theTopView;
         
     }
 }
 
 
 #pragma mark - 点击方法
--(void)rightButtonTap:(UIButton *)sender{
+
+
+-(void)myNavcRightBtnClicked{
     
-    if ([LoginViewController isLogin]) {//已登录
-        GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-        [self.navigationController pushViewController:cc animated:YES];
-    }else{
-        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-            if (success) {
-                GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-                [self.navigationController pushViewController:cc animated:YES];
-            }else{
-                
-            }
-        }];
+    //    [_searchView setWidth:DEVICE_WIDTH - 70];
+    //    [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    
+    [_rightItem2Label removeFromSuperview];
+    [_searchTf resignFirstResponder];
+    _mySearchView.hidden = YES;
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        if (_table.contentOffset.y > 64) {
+            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
+            alpha = MIN(alpha, 1);
+            alphaView.alpha = alpha;
+        }else{
+            alphaView.alpha = 0;
+        }
     }
 }
 
@@ -740,8 +890,10 @@
         [self.navigationController pushViewController:cc animated:YES];
         
         
-    }else if (sender.tag == 102){//品牌店
-        
+    }else if (sender.tag == 102){//筛选
+        GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+        cc.className = @"精品推荐";
+        [self.navigationController pushViewController:cc animated:YES];
         
     }else if (sender.tag == 103){//购物车
         
@@ -758,8 +910,6 @@
                 
             
         }
-        
-    }else if (sender.tag == 104){//加入购物车
         
     }
 }
@@ -920,6 +1070,57 @@
         custom.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:custom animated:YES];
     }
+}
+
+
+
+#pragma mark - 购物车数量
+//登录成功更新购物车数量
+-(void)updateShopCarNum{
+    
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+    
+}
+
+//登录成功更新商品收藏和购物车数量
+-(void)updateIsFavorAndShopCarNum{
+    [self updateShopCarNum];
+    
+}
+
+
+-(void)updateShopCarNumAndFrame{
+    
+    if ([_shopCarNumLabel.text intValue] == 0) {
+        _shopCarNumLabel.hidden = YES;
+    }else{
+        _shopCarNumLabel.hidden = NO;
+        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
+        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
+        UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
+        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with-20, -2, with+5, 15)];
+        
+    }
+    
 }
 
 

@@ -1,16 +1,18 @@
 //
-//  GStoreHomeViewController.h
+//  GCustomSearchViewController.h
 //  TiJian
 //
-//  Created by gaomeng on 15/10/27.
-//  Copyright © 2015年 lcw. All rights reserved.
+//  Created by gaomeng on 16/1/13.
+//  Copyright © 2016年 lcw. All rights reserved.
 //
 
 
-//商城首页
+/**
+ *  搜索界面
+ */
 #import "MyViewController.h"
 
-@interface GStoreHomeViewController : MyViewController
+@interface GCustomSearchViewController : MyViewController
 
 @property(nonatomic,strong)UITextField *searchTf;//搜索栏输入框;
 

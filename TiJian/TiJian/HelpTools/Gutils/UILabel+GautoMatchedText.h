@@ -16,4 +16,7 @@
 
 -(void)setMatchedFrame4LabelWithOrigin:(CGPoint)o height:(CGFloat)theHeight limitMaxWidth:(CGFloat)theWidth;
 
+-(CGFloat)getTextWidth;
+
+
 @end

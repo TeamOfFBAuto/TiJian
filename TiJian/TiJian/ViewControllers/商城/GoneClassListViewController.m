@@ -54,6 +54,10 @@
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+    
+    if (self.theSearchWorld) {
+        self.className = @"搜索";
+    }
     self.myTitle = self.className;
     self.rightImage = [UIImage imageNamed:@"shaixuan.png"];
     
@@ -254,6 +258,74 @@
     
 }
 
+
+//根据关键词搜索
+-(void)prepareNetDataWithSearchDic:(NSDictionary *)theDic{
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    _count = 0;
+    
+    NSDictionary *dic;
+    
+    if (theDic) {
+        NSString *voucherId = self.uc_id ? self.uc_id : @"";
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+        
+        if (voucherId.length > 0) {
+            [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金券id
+            dic = temp_dic;
+        }else
+        {
+            dic = temp_dic;
+        }
+    }else{
+        
+        dic = @{
+                @"province_id":[GMAPI getCurrentProvinceId],
+                @"city_id":[GMAPI getCurrentCityId],
+                @"page":NSStringFromInt(_table.pageNum),
+                @"per_page":NSStringFromInt(PAGESIZE_MID)
+                };
+    }
+    
+    
+    NSMutableDictionary *m_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    [m_dic setValue:self.theSearchWorld forKey:@"keywords"];
+    
+    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:m_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        
+        _productOneClassArray = [NSMutableArray arrayWithCapacity:1];
+        
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_productOneClassArray addObject:model];
+        }
+        
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
+        
+        if (_productOneClassArray.count == 0) {
+            [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
+            
+        }else{
+            _filterButton.hidden = NO;
+        }
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
+    }];
+    
+    
+}
+
 //根据城市查询品牌列表
 -(void)prepareBrandListWithLocation{
     
@@ -310,12 +382,23 @@
     
     [_request removeOperation:_request_ProductOneClass];
     
-    [self prepareNetDataWithDic:self.shaixuanDic];
+    if (self.theSearchWorld) {
+        [self prepareNetDataWithSearchDic:self.shaixuanDic];
+    }else{
+        [self prepareNetDataWithDic:self.shaixuanDic];
+    }
+    
+    
     
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    [self prepareNetDataWithDic:self.shaixuanDic];
+    if (self.theSearchWorld) {
+        [self prepareNetDataWithSearchDic:self.shaixuanDic];
+    }else{
+        [self prepareNetDataWithDic:self.shaixuanDic];
+    }
+    
     
 }
 

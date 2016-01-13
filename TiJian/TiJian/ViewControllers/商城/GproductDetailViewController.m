@@ -17,6 +17,8 @@
 #import "ProductModel.h"
 #import "CouponModel.h"
 #import "GoneClassListViewController.h"
+#import "GmyFootViewController.h"
+#import "GCustomSearchViewController.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -62,7 +64,18 @@
     UIImageView *_imageView;
     UIButton    *_btn;
     UIBezierPath *_path;
+    
+    
+    
+    //顶部工具栏
+    UIView *_upToolView;
+    
+    UIView *_downToolBlackView;
+    
+    BOOL _toolShow;
 }
+
+
 
 @end
 
@@ -84,6 +97,8 @@
     
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
     
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_LOGIN object:nil];
+    
     
 }
 
@@ -91,7 +106,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+    self.rightImage = [UIImage imageNamed:@"dian_three.png"];
     
     self.myTitle = @"产品详情";
     _gouwucheNum = 0;
@@ -106,7 +122,6 @@
     
     
     
-    
     [self prepareNetData];
     
     
@@ -117,6 +132,108 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+#pragma mark - 点击处理
+
+-(void)rightButtonTap:(UIButton *)sender{
+    
+    _toolShow = !_toolShow;
+    
+    if (_toolShow) {
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            [_upToolView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
+        } completion:^(BOOL finished) {
+            if (!_downToolBlackView) {
+                _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, DEVICE_HEIGHT)];
+                _downToolBlackView.backgroundColor = [UIColor blackColor];
+                _downToolBlackView.alpha = 0.6;
+                [self.view addSubview:_downToolBlackView];
+                
+                [_downToolBlackView addTapGestureTaget:self action:@selector(upToolShou) imageViewTag:0];
+            }
+            _downToolBlackView.hidden = NO;
+        }];
+        
+        
+    }else{
+        if (!_downToolBlackView) {
+            _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, DEVICE_HEIGHT)];
+            _downToolBlackView.backgroundColor = [UIColor blackColor];
+            _downToolBlackView.alpha = 0.6;
+            [self.view addSubview:_downToolBlackView];
+        }
+        _downToolBlackView.hidden = YES;
+        
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            [_upToolView setFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
+        }];
+    }
+    
+    
+}
+
+-(void)upToolShou{
+    
+    if (_toolShow) {
+        if (!_downToolBlackView) {
+            _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, DEVICE_HEIGHT)];
+            _downToolBlackView.backgroundColor = [UIColor blackColor];
+            _downToolBlackView.alpha = 0.6;
+            [self.view addSubview:_downToolBlackView];
+        }
+        _downToolBlackView.hidden = YES;
+        
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            [_upToolView setFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
+        }];
+        
+        _toolShow = !_toolShow;
+    }else{
+        [UIView animateWithDuration:0.2 animations:^{
+            [_upToolView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
+        } completion:^(BOOL finished) {
+            if (!_downToolBlackView) {
+                _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, DEVICE_HEIGHT)];
+                _downToolBlackView.backgroundColor = [UIColor blackColor];
+                _downToolBlackView.alpha = 0.6;
+                [self.view addSubview:_downToolBlackView];
+                
+                [_downToolBlackView addTapGestureTaget:self action:@selector(upToolShou) imageViewTag:0];
+            }
+            _downToolBlackView.hidden = NO;
+        }];
+        _toolShow = !_toolShow;
+    }
+}
+
+
+
+//工具栏按钮点击
+-(void)upToolBtnClicked:(NSInteger)index{
+    if (index == 10) {//足迹
+        if ([LoginViewController isLogin]) {
+            GmyFootViewController *cc = [[GmyFootViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }else{
+            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+                if (success) {
+                    GmyFootViewController *cc = [[GmyFootViewController alloc]init];
+                    [self.navigationController pushViewController:cc animated:YES];
+                }
+                
+            }];
+        }
+        
+    }else if (index == 11){//搜索
+        GCustomSearchViewController *cc = [[GCustomSearchViewController alloc]init];
+        [self.navigationController pushViewController:cc animated:YES];
+    }else if (index == 12){//首页
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
 
 
 
@@ -187,11 +304,37 @@
     //浏览量加1
     [self productLiulanNum];
     
+    //足迹
+    [self addProductFoot];
+    
     
 }
 
-//商品浏览+1
+//添加足迹
+-(void)addProductFoot{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic;
+    if ([LoginViewController isLogin]) {
+        dic = @{
+                @"authcode":[UserInfo getAuthkey],
+                @"product_id":self.productId
+                };
+        
+        [_request requestWithMethod:YJYRequstMethodPost api:AddMyProductFoot parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+            
+        } failBlock:^(NSDictionary *result) {
+            
+        }];
+    }
+    
+    
+}
 
+
+//商品浏览+1
 -(void)productLiulanNum{
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
@@ -600,6 +743,9 @@
             
             [self updateShopCarNumAndFrame];
         }
+        
+        
+        [self creatUpToolView];
     }
     
     
@@ -608,6 +754,17 @@
 
 
 #pragma mark - 视图创建
+
+-(void)creatUpToolView{
+    GMAPI *gmapi = [GMAPI sharedManager];
+    _upToolView = [gmapi creatThreeBtnUpToolView];
+    [self.view addSubview:_upToolView];
+    __weak typeof (self)bself = self;
+    [gmapi setUpToolViewBlock:^(NSInteger index) {
+        [bself upToolBtnClicked:index];
+    }];
+}
+
 -(void)creatTabAndDownView{
     _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStylePlain];
     _tab.tag = 1000;

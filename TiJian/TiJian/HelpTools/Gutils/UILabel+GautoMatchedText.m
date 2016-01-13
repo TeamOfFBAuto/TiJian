@@ -53,4 +53,10 @@
 }
 
 
+-(CGFloat)getTextWidth{
+    CGRect r = [self matchedrectWithHeight:self.frame.size.height];
+    return r.size.width;
+}
+
+
 @end
