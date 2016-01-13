@@ -58,7 +58,7 @@
 //    }else if (SourceType_Order){
 //        [chatService setOrderMessageWithOrderId:((OrderModel *)model).order_id orderNum:((OrderModel *)model).order_no];
 //    }
-    
+    //
     if (model) {
         chatService.msg_model = model;
     }
