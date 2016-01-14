@@ -102,7 +102,7 @@
     _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
     
     [_theCustomSearchView.tab reloadData];
-   
+
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
         UIView *alphaView = [effectView viewWithTag:10000];
@@ -205,6 +205,7 @@
 - (void)setupNavigation{
     
     [self resetShowCustomNavigationBar:YES];
+
     
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
     _searchView.backgroundColor = [UIColor whiteColor];
@@ -227,6 +228,7 @@
     self.searchTf.layer.cornerRadius = 5;
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
+    self.searchTf.returnKeyType = UIReturnKeySearch;//lcw
     [_kuangView addSubview:self.searchTf];
     
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
@@ -353,13 +355,8 @@
 
 - (void)clickToChat
 {
-    RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
-    chatService.userName = @"客服";
-    chatService.targetId = SERVICE_ID;
-    chatService.conversationType = ConversationType_CUSTOMERSERVICE;
-    chatService.title = chatService.userName;
-    //    [chatService setProductMessageWithProductModel:_theProductModel];
-    [self.navigationController pushViewController:chatService animated:YES];
+    //update by lcw
+    [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:self model:nil];
 }
 
 

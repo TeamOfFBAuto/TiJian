@@ -24,6 +24,8 @@
 
 #import "UIView+Frame.h"
 #import "UIImage+Additions.h"
+//NSDictionary
 #import "NSDictionary+Additions.h"
+
 
 #endif

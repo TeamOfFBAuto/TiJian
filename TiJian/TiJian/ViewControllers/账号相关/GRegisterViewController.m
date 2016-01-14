@@ -218,6 +218,7 @@ static int seconds = 60;//计时60s
     self.phoneTF.delegate = self;
     self.phoneTF.returnKeyType = UIReturnKeyNext;
     self.phoneTF.textColor = [UIColor whiteColor];
+    self.phoneTF.keyboardType = UIKeyboardTypeNumberPad;
     
     NSAttributedString *string = [LTools attributedString:@"请输入手机号" keyword:@"请输入手机号" color:[UIColor whiteColor]];
     [self.phoneTF setAttributedPlaceholder:string];
@@ -249,6 +250,8 @@ static int seconds = 60;//计时60s
     self.yanzhengmaTf.returnKeyType = UIReturnKeyNext;//下一步
     self.yanzhengmaTf.delegate = self;
     self.yanzhengmaTf.textColor = [UIColor whiteColor];
+    self.yanzhengmaTf.keyboardType = UIKeyboardTypeNumberPad;
+
     [yanzhengmaView addSubview:self.yanzhengmaTf];
     NSString *y_text = @"请输入验证码";
     [self.yanzhengmaTf setAttributedPlaceholder:[LTools attributedString:y_text keyword:y_text color:[UIColor whiteColor]]];

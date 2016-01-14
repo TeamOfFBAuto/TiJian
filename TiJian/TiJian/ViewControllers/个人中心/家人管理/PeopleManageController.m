@@ -166,30 +166,21 @@
     
     NSString *family_uid = [_selectedArray componentsJoinedByString:@","];
     //myself 是否包括本人 1是 0不是（若是个人买单，则要传）
-    NSString *myself = _isMyselfSelected ? @"1" : @"0";
+//    NSString *myself = _isMyselfSelected ? @"1" : @"0";
     
     NSString *authkey = [UserInfo getAuthkey];
 
-    NSDictionary *params = nil;
-    
-    if (_isMyselfSelected) {
-        params = @{@"authcode":authkey,
-                   @"order_id":_order_id,
-                   @"product_id":_product_id,
-                   @"exam_center_id":_exam_center_id,
-                   @"date":_date,
-                   @"myself":myself
-                   };
-    }else
-    {
-        params = @{@"authcode":authkey,
-                   @"order_id":_order_id,
-                   @"product_id":_product_id,
-                   @"exam_center_id":_exam_center_id,
-                   @"date":_date,
-                   @"family_uid":family_uid,
-                   @"myself":myself
-                   };
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:authkey forKey:@"authcode"];
+    [params safeSetValue:_order_id forKey:@"order_id"];
+    [params safeSetValue:_product_id forKey:@"product_id"];
+    [params safeSetValue:_exam_center_id forKey:@"exam_center_id"];
+    [params safeSetValue:_date forKey:@"date"];
+    [params safeSetBool:_isMyselfSelected forKey:@"myself"];
+
+    //不是自己
+    if (!_isMyselfSelected) {
+        [params safeSetValue:family_uid forKey:@"family_uid"];
     }
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];

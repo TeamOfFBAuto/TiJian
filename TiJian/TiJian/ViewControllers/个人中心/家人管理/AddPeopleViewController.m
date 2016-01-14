@@ -173,6 +173,9 @@
     [[UIApplication sharedApplication].keyWindow addSubview:_backPickView];
     self.backPickView.alpha = 0.f;//默认初始
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clickToCancel:)];
+    [self.backPickView addGestureRecognizer:tap];
+    
     //初始为
     _pickerBgView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 216 + 40)];
     _pickerBgView.backgroundColor = [UIColor whiteColor];
@@ -435,6 +438,10 @@
     if (indexPath.section == _items.count - 1) {
         
         cell.tf_right.returnKeyType = UIReturnKeyDone;
+        cell.tf_right.keyboardType = UIKeyboardTypeNumberPad;//数字键
+    }else
+    {
+        cell.tf_right.keyboardType = UIKeyboardTypeDefault;
     }
         
 //    }else if (self.actionStyle == ACTIONSTYLE_DETTAILT) {

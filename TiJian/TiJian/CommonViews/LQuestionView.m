@@ -238,7 +238,7 @@
         NSString *colorHexThring = gender == Gender_Boy ? @"4fb8ce" : @"f26a74";
         NSString *arrowImageName = gender == Gender_Boy ? @"3_m_2_6fcbe7" : @"2_w_5_f26a73";
         //年龄选择器
-        GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"年龄/岁" rangeLow:0 rangeHigh:100 imageName:arrowImageName];
+        GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"年龄/岁" rangeLow:16 rangeHigh:80 imageName:arrowImageName];
         [self addSubview:moveView];
         
         if (iPhone4) {
@@ -309,7 +309,7 @@
         NSString *colorHexThring = gender == Gender_Boy ? @"4fb8ce" : @"f26a74";
         NSString *arrowImageName = gender == Gender_Boy ? @"3_m_2_6fcbe7" : @"2_w_5_f26a73";
         //选择器
-        GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"身高/cm" rangeLow:90 rangeHigh:251 imageName:arrowImageName];
+        GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"身高/cm" rangeLow:120 rangeHigh:200 imageName:arrowImageName];
         [self addSubview:moveView];
         
         if (iPhone4) {
@@ -368,7 +368,7 @@
         NSString *colorHexThring = @"e7bf79";
         NSString *arrowImageName = @"4_2_e8bf78";
         //选择器
-        GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"体重/kg" rangeLow:45 rangeHigh:300 imageName:arrowImageName];
+        GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"体重/kg" rangeLow:40 rangeHigh:150 imageName:arrowImageName];
         [self addSubview:moveView];
         
         if (iPhone4) {

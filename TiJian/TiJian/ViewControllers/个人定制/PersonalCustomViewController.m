@@ -966,6 +966,9 @@
         int age = [[_questionDictionary objectForKey:Q_AGE]intValue];
         if (age > 0) {
             [_view_Age setInitValue:NSStringFromInt(age)];
+        }else
+        {
+            age = 46;//初始值46岁
         }
         
         Gender gender = [[_questionDictionary objectForKey:Q_SEX]intValue];

@@ -19,17 +19,10 @@
         //允许用户交互
         self.userInteractionEnabled = YES;
         
-        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(frame.size.width*0.5-7.5, 0, 15, 22)];
+        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(frame.size.width*0.5-7.5, frame.size.height - 22 + 2, 15, 22)];
         [imv setImage:[UIImage imageNamed:imvName]];
         
         [self addSubview:imv];
-        
-        
-        
-        
-        
-        
-        
     }
     return self;
 }
