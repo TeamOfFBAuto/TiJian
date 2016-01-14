@@ -212,17 +212,17 @@ typedef enum {
     _exam_center_id = NSStringFromInt(_selectHospitalId);
     
     NSString *authey = [LTools objectForKey:USER_AUTHOD];
-    NSDictionary *params = @{@"authcode":authey,
-                             @"order_id":_order_id,
-                             @"product_id":_productId,
-                             @"exam_center_id":_exam_center_id,
-                             @"date":_selectDate,
-                             @"company_id":_company_id ? : @"", //公司订单才有的
-                             @"order_checkuper_id":_order_checkuper_id ? : @"", //公司订单才有的
-                             };
     
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    __weak typeof(self)weakSelf = self;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:authey forKey:@"authcode"];
+    [params safeSetValue:_order_id forKey:@"order_id"];
+    [params safeSetValue:_productId forKey:@"product_id"];
+    [params safeSetValue:_exam_center_id forKey:@"exam_center_id"];
+    [params safeSetValue:_selectDate forKey:@"company_id"];
+    [params safeSetValue:_company_id forKey:@"date"];
+    [params safeSetValue:_order_checkuper_id forKey:@"order_checkuper_id"];
+    
+        __weak typeof(self)weakSelf = self;
 //    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         

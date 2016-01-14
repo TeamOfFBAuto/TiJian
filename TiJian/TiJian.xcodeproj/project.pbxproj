@@ -88,7 +88,6 @@
 		1306090F1C3E1302004489A5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1306090E1C3E1302004489A5 /* libz.tbd */; };
 		130609111C3E13E4004489A5 /* PushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 130609101C3E13E4004489A5 /* PushConfig.plist */; };
 		130609141C3E3A3C004489A5 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 130609131C3E3A3C004489A5 /* MessageModel.m */; };
-		130609171C3E611A004489A5 /* NSDictionary+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 130609161C3E611A004489A5 /* NSDictionary+Additions.m */; };
 		130D2E011BFC7229002E301F /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E001BFC7229002E301F /* MapViewController.m */; };
 		130D2E031BFC7332002E301F /* gpin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E021BFC7332002E301F /* gpin@2x.png */; };
 		130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E051BFDBF30002E301F /* UpdateUserInfoController.m */; };
@@ -130,6 +129,7 @@
 		1324B6A31BD7671E00FB47A9 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A21BD7671E00FB47A9 /* HomeViewController.m */; };
 		1324B6A71BD76B6A00FB47A9 /* PersonalCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */; };
 		1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */; };
+		1339F2F31C478BA10001F74B /* NSDictionary+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */; };
 		133FB5CD1C43AB09002A2DDE /* ActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133FB5CC1C43AB09002A2DDE /* ActivityView.m */; };
 		133FB5CF1C43AD3C002A2DDE /* homepage_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 133FB5CE1C43AD3C002A2DDE /* homepage_close@2x.png */; };
 		13426BAF1BE7482B00979279 /* hema.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 13426BAE1BE7482B00979279 /* hema.sqlite */; };
@@ -624,8 +624,6 @@
 		130609101C3E13E4004489A5 /* PushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PushConfig.plist; sourceTree = "<group>"; };
 		130609121C3E3A3C004489A5 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		130609131C3E3A3C004489A5 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
-		130609151C3E611A004489A5 /* NSDictionary+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Additions.h"; sourceTree = "<group>"; };
-		130609161C3E611A004489A5 /* NSDictionary+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Additions.m"; sourceTree = "<group>"; };
 		130D2DFF1BFC7229002E301F /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		130D2E001BFC7229002E301F /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		130D2E021BFC7332002E301F /* gpin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gpin@2x.png"; sourceTree = "<group>"; };
@@ -693,6 +691,8 @@
 		1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCustomViewController.m; sourceTree = "<group>"; };
 		1324B6A91BD76DEF00FB47A9 /* LQuestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQuestionView.h; sourceTree = "<group>"; };
 		1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQuestionView.m; sourceTree = "<group>"; };
+		1339F2F11C478BA10001F74B /* NSDictionary+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Additions.h"; sourceTree = "<group>"; };
+		1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Additions.m"; sourceTree = "<group>"; };
 		133FB5CB1C43AB09002A2DDE /* ActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityView.h; sourceTree = "<group>"; };
 		133FB5CC1C43AB09002A2DDE /* ActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityView.m; sourceTree = "<group>"; };
 		133FB5CE1C43AD3C002A2DDE /* homepage_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homepage_close@2x.png"; sourceTree = "<group>"; };
@@ -1699,6 +1699,15 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		1339F2F01C478BA10001F74B /* NSDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				1339F2F11C478BA10001F74B /* NSDictionary+Additions.h */,
+				1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */,
+			);
+			path = NSDictionary;
+			sourceTree = "<group>";
+		};
 		134822E21BECA2F200EA2E06 /* 家人管理 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2074,9 +2083,10 @@
 		13F1F2A11BBA9A4B00885D31 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				13F1F2A21BBA9A4B00885D31 /* CategoriesHeader.h */,
+				1339F2F01C478BA10001F74B /* NSDictionary */,
 				13E6173D1C1584E700E370E5 /* UIImageView+ProgressView.h */,
 				13E6173E1C1584E700E370E5 /* UIImageView+ProgressView.m */,
-				13F1F2A21BBA9A4B00885D31 /* CategoriesHeader.h */,
 				13F1F4031BBA9EC800885D31 /* UIView+Frame.h */,
 				13F1F4041BBA9EC800885D31 /* UIView+Frame.m */,
 				13F1F2A31BBA9A4B00885D31 /* NSDate+Additons.h */,
@@ -2101,8 +2111,6 @@
 				1303C2DD1BE9F6DC00700847 /* NSObject+Addtions.m */,
 				1303C2DF1BE9FB2400700847 /* NSArray+Additons.h */,
 				1303C2E01BE9FB2400700847 /* NSArray+Additons.m */,
-				130609151C3E611A004489A5 /* NSDictionary+Additions.h */,
-				130609161C3E611A004489A5 /* NSDictionary+Additions.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -3322,7 +3330,6 @@
 				133FB5CD1C43AB09002A2DDE /* ActivityView.m in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
 				13F8C5811C05A9C8004C3FC7 /* AddCommentDetailViewController.m in Sources */,
-				130609171C3E611A004489A5 /* NSDictionary+Additions.m in Sources */,
 				137780B21C119CF800677363 /* AddReportViewController.m in Sources */,
 				136276621C12F37D0077C75D /* ReportDetailController.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
@@ -3331,6 +3338,7 @@
 				13F8C5AD1C05AA7E004C3FC7 /* JKAssetsGroupsView.m in Sources */,
 				E3E2B3FF1BFB1F19007988C5 /* PayResultViewController.m in Sources */,
 				E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */,
+				1339F2F31C478BA10001F74B /* NSDictionary+Additions.m in Sources */,
 				131A17761BF3309800B12D2F /* CompanyCell.m in Sources */,
 				E3E2B4061BFB203B007988C5 /* ProductBuyCell.m in Sources */,
 				E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */,
@@ -3526,8 +3534,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3549,7 +3557,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -3571,8 +3579,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -3587,7 +3595,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3599,8 +3607,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3624,7 +3632,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -3635,8 +3643,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3660,7 +3668,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;

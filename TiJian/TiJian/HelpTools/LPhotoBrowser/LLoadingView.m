@@ -9,6 +9,9 @@
 #import "LLoadingView.h"
 
 @interface LLoadingView ()
+{
+    BOOL _isAddPath;//是否加载过转圈path
+}
 
 @property(nonatomic,retain)UILabel *percentLabel;//百分比
 @property(nonatomic,assign)CGFloat percent;//
@@ -35,6 +38,7 @@
         
         self.progressWidth = 5.f;
         _annimationType = AnnimationType_always;//一直转圈
+        _isAddPath = NO;//默认没加
         
     }
     return self;
@@ -53,6 +57,7 @@
 
 //完成部分
 - (void)setProgressWithProgress:(CGFloat)progress{
+    
     CGPoint point = CGPointMake(self.bounds.size.width / 2.f, self.bounds.size.height / 2.f);
     CGFloat radius = (self.bounds.size.width - _progressWidth) / 2.f;
     _progressPath = [UIBezierPath bezierPathWithArcCenter:point radius:radius startAngle:- M_PI_2 endAngle:(M_PI * 2 * progress - M_PI_2) clockwise:YES];
@@ -117,8 +122,12 @@
 
     if (_annimationType == AnnimationType_always) {
         
-        [self setProgressWithProgress:0.7];//设置固定的
-        [self startProgressAnimation];//一直转圈
+        
+        if (_isAddPath == NO) {
+            [self setProgressWithProgress:0.7];//设置固定的
+            [self startProgressAnimation];//一直转圈
+            _isAddPath = YES;
+        }
         
         if (progress >= 1.f) {
             
