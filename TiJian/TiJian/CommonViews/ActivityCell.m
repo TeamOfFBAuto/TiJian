@@ -109,6 +109,7 @@
     height += 31;
     height += 11;
     
+    NSLog(@"---%f",height);
     return height;
 }
 
@@ -124,7 +125,26 @@
     CGFloat height_content = [LTools heightForText:content width:width font:13.f];
     self.contentLabel.height = height_content;
     
+    BOOL existImage;
+    if (aModel.pic && [aModel.pic hasPrefix:@"http"]) {
+        existImage = YES;
+    }
+    
+    CGFloat radio = 8.f/5.f;
+    
+    //时间top:25 bottom:15 height:20、标题 height:35
+    CGFloat height = 0.f;
+    //封面 摘要封面间距 14
+    CGFloat dis = 0.f;
+    if (existImage) {
+        
+        height = width / radio;
+        dis = 14.f;
+    }
+    self.coverImageView.height = height;
     [self.coverImageView l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
+    
+    _contentLabel.top = self.coverImageView.bottom + dis;
     
     self.toolView.top = _contentLabel.bottom + 11;
     //未读

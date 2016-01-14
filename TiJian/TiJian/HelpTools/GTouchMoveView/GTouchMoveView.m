@@ -37,7 +37,7 @@
     self = [super initWithFrame:frame];
     
     if (self) {
-        
+                
         _theFrame = frame;
         
         _theRangeLow = theRangeLow;
@@ -66,12 +66,16 @@
         
         [self addSubview:_titelLabel];
         
-        //滑块
-        UIView *backMoveView = [[UIView alloc]initWithFrame:CGRectMake(0, _titelLabel.frame.origin.y, frame.size.width, 25)];
+        //滑道
+        UIView *backMoveView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self addSubview:backMoveView];
-        _moveImv = [[GmoveImv alloc]initWithFrame:CGRectMake(frame.size.width*0.5 - 12.5, 0, 25, 25) imageName:imvName];
+        backMoveView.backgroundColor = [UIColor clearColor];
+        
+        //滑块
+        _moveImv = [[GmoveImv alloc]initWithFrame:CGRectMake(frame.size.width*0.5 - 12.5, 0, 25, backMoveView.height) imageName:imvName];
         _moveImv.delegate = self;
         [backMoveView addSubview:_moveImv];
+        _moveImv.backgroundColor = [UIColor clearColor];
         
         
         CGFloat chooseValue = _moveImv.frame.origin.x +_moveImv.frame.size.width*0.5;

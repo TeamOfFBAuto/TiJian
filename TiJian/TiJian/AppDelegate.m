@@ -763,6 +763,7 @@
 
 - (void)loginRongCloudWithToken:(NSString *)userToken
 {
+    
     if (userToken.length) {
         
         __weak typeof(self)weakSelf = self;
@@ -919,10 +920,20 @@
             
             NSLog(@"该远程推送来自融云的推送服务");
             
-            BOOL hidden;
+            BOOL hidden = false;
             if (viewsCount == 1) {
                 hidden = YES;
             }
+            
+            if ([unVc isKindOfClass:[UINavigationController class]]){
+                
+                UIViewController *viewController = unVc.visibleViewController;
+                if ([NSStringFromClass(viewController.class) isEqualToString:@"RCDChatViewController"]) {
+                    
+                    return;
+                }
+            }
+
             [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:unVc model:nil hiddenBottom:hidden];
             return;
         }

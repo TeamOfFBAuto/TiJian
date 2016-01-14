@@ -232,8 +232,8 @@
  */
 + (void)updateTabbarUnreadMessageNumber
 {
-    int unreadMsgCount = [[RCIMClient sharedRCIMClient]getUnreadCount: @[@(ConversationType_CUSTOMERSERVICE),@(ConversationType_APPSERVICE)]];
-    
+    int unreadMsgCount = [[RCIMClient sharedRCIMClient]getUnreadCount: @[@(ConversationType_APPSERVICE)]];
+//    @(ConversationType_CUSTOMERSERVICE),//客服1.0
     NSString *number_str = nil;
     
     //未登陆

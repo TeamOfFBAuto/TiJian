@@ -163,7 +163,7 @@
     [self changeSearchViewAndKuangFrameAndTfWithState:1];
     
     if (!_rightItem2Label) {
-        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45 + 5, 30)];
         _rightItem2Label.text = @"取消";
         _rightItem2Label.font = [UIFont systemFontOfSize:13];
         _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
@@ -613,7 +613,7 @@
 - (void)setupNavigation{
     
     [self resetShowCustomNavigationBar:YES];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"ios7_goback4032.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
     self.currentNavigationItem.leftBarButtonItem = leftItem;
     
     

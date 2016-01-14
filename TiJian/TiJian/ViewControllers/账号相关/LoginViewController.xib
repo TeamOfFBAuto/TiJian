@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -21,7 +21,6 @@
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iUg-1o-2SZ">
                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                    <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <state key="normal" title="忘记密码?">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -39,7 +38,6 @@
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="user_shoujihao.png" translatesAutoresizingMaskIntoConstraints="NO" id="UGF-hT-y1j">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                    <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="UGF-hT-y1j" secondAttribute="height" multiplier="1:1" id="0UV-X8-plP"/>
                                         <constraint firstAttribute="width" constant="40" id="bj4-yZ-p1c"/>
@@ -62,13 +60,12 @@
                                 </imageView>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入手机号" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JMt-fU-Yym">
                                     <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
-                                    <animations/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="ZGf-lZ-cgo"/>
                                     </constraints>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
+                                    <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="next"/>
                                     <variation key="default">
                                         <mask key="constraints">
                                             <exclude reference="ZGf-lZ-cgo"/>
@@ -81,7 +78,6 @@
                                     </variation>
                                 </textField>
                             </subviews>
-                            <animations/>
                             <color key="backgroundColor" red="0.3529411764705882" green="0.5490196078431373" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="JMt-fU-Yym" secondAttribute="trailing" id="3Ns-4j-Owg"/>
@@ -128,7 +124,6 @@
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="user_mima.png" translatesAutoresizingMaskIntoConstraints="NO" id="Spq-g4-Pfl">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                    <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="40" id="uX8-Ca-lfG"/>
                                         <constraint firstAttribute="height" constant="40" id="y79-ED-PFW"/>
@@ -148,7 +143,6 @@
                                 </imageView>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入密码" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hQJ-xQ-YBv">
                                     <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
-                                    <animations/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="u5S-ml-x5U"/>
                                     </constraints>
@@ -167,7 +161,6 @@
                                     </variation>
                                 </textField>
                             </subviews>
-                            <animations/>
                             <color key="backgroundColor" red="0.35294117650000001" green="0.54901960780000003" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="hQJ-xQ-YBv" firstAttribute="leading" secondItem="Spq-g4-Pfl" secondAttribute="trailing" id="1MC-2f-Pwh"/>
@@ -207,7 +200,6 @@
                             </variation>
                         </view>
                     </subviews>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="101" id="XUd-Gl-q2s"/>
                         <constraint firstAttribute="trailing" secondItem="AqV-cF-vLh" secondAttribute="trailing" id="aCr-EC-F7q"/>
@@ -250,7 +242,6 @@
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pI7-sj-waQ">
                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                    <animations/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="45" id="cCh-DT-ByF"/>
@@ -275,7 +266,6 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HeN-eq-Uu0">
                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="fOc-1E-D0U"/>
                         <constraint firstAttribute="width" constant="70" id="wK6-da-rtE"/>
@@ -296,7 +286,6 @@
                     </variation>
                 </button>
             </subviews>
-            <animations/>
             <color key="backgroundColor" red="0.42745098039215684" green="0.62745098039215685" blue="0.81176470588235294" alpha="0.80415355215827333" colorSpace="custom" customColorSpace="sRGB"/>
             <gestureRecognizers/>
             <constraints>

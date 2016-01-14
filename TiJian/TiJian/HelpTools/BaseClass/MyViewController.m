@@ -196,7 +196,10 @@
     
     if (theType == MyViewControllerLeftbuttonTypeBack)
     {
-        self.navigationItem.leftBarButtonItem = self.leftButtonItem;
+        //调整与左边的间距
+        UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+        spaceButton1.width = -6;
+        self.navigationItem.leftBarButtonItems = @[spaceButton1, self.leftButtonItem];
         
     }else if(theType == MyViewControllerLeftbuttonTypeOther)
     {
@@ -315,6 +318,7 @@
         
         UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
         [button_back addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+//        button_back.backgroundColor = [UIColor orangeColor];
         [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
         [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         _leftButton = button_back;
