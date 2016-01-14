@@ -81,11 +81,6 @@
 }
 
 
-
-
-
-
-
 -(ResultView *)resultViewWithType:(PageResultType)type
 {
     NSString *content;

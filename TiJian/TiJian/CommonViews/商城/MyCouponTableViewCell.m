@@ -218,6 +218,9 @@
             title_minus = @"优惠券";
             title_full = [NSString stringWithFormat:@"本店享%@折优惠",discount];
             title = [NSString stringWithFormat:@"%@折",discount];
+        }else if (type == 4){
+            self.contentLabel.text = @"新人优惠券";
+            title = [NSString stringWithFormat:@"￥%@",theModel.newer_money];
         }
         
         //优惠标题

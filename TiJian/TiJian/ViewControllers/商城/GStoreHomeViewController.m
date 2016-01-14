@@ -127,6 +127,9 @@
     // Do any additional setup after loading the view.
     
     
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    
+    
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
     [self hiddenNavigationBar:YES animated:YES];
@@ -157,8 +160,6 @@
     
     [_theCustomSearchView.tab reloadData];
     
-//    [_searchView setWidth:DEVICE_WIDTH - 20];
-//    [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
     
     [self changeSearchViewAndKuangFrameAndTfWithState:1];
     
@@ -496,9 +497,13 @@
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
 
     }else if (state == 1){//编辑状态
-        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 20, 30)];
-        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
+        [_searchView setWidth:DEVICE_WIDTH - 20];
+        [_kuangView setWidth:_searchView.frame.size.width - 30];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+        
+//        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 20, 30)];
+//        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
+//        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
         
     }
 }
