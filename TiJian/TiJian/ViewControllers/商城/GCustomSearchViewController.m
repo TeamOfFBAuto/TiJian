@@ -207,10 +207,16 @@
 -(void)getHotSearch{
     
     
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
     _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         _hotSearchArray = [result arrayValueForKey:@"list"];
+        
         _theCustomSearchView.hotSearch = _hotSearchArray;
         [_theCustomSearchView.tab reloadData];
+        
     } failBlock:^(NSDictionary *result) {
         
         

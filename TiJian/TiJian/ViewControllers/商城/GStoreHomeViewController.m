@@ -104,10 +104,16 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewWillAppear:NO];
     [self hiddenNavigationBar:YES animated:animated];
     
 }
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self hiddenNavigationBar:YES animated:animated];
+}
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -123,7 +129,7 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
-    
+    [self hiddenNavigationBar:YES animated:YES];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
@@ -595,6 +601,7 @@
     ttl.textColor = [UIColor blackColor];
     
     
+    _table.tableHeaderView = self.theTopView;
     
     [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
 }
@@ -845,8 +852,6 @@
 
 -(void)myNavcRightBtnClicked{
     
-    //    [_searchView setWidth:DEVICE_WIDTH - 70];
-    //    [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
     [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
     [_rightItem2Label removeFromSuperview];

@@ -438,6 +438,8 @@
 - (void)clickToBuy
 {
     GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];
+    cc.hidesBottomBarWhenPushed = YES;
+    
     [self.navigationController pushViewController:cc animated:YES];
 }
 - (void)clickToCustomization:(PropertyButton *)sender
