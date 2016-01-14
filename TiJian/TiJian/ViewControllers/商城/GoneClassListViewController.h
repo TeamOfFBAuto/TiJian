@@ -25,6 +25,8 @@
 
 @property(nonatomic,assign)BOOL haveChooseGender;//yes 可以选择性别  no 限定性别
 
+@property(nonatomic,assign)BOOL isShowShaixuanAuto;//自动显示筛选
+
 
 @property(nonatomic,strong)NSString *theSearchWorld;//是否为搜索跳转过来的
 

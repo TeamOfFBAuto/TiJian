@@ -70,6 +70,13 @@
     [self creatRightTranslucentSideBar];
     [self prepareBrandListWithLocation];
     
+    if (self.isShowShaixuanAuto) {
+        [self.rightSideBar show];
+    }
+    
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -139,15 +146,6 @@
 #pragma mark - Gesture Handler
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
 {
-    
-    
-//    if (recognizer.state == UIGestureRecognizerStateBegan) {
-//        
-//        CGPoint startPoint = [recognizer locationInView:self.view];
-//        NSLog(@"startPoint.x :%f  startPoint.y :%f",startPoint.x,startPoint.y);
-//        self.rightSideBar.isCurrentPanGestureTarget = YES;
-//    }
-    
     self.rightSideBar.isCurrentPanGestureTarget = YES;
     [self.rightSideBar handlePanGestureToShow:recognizer inView:self.view];
     

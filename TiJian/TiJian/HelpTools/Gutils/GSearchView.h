@@ -14,7 +14,7 @@
 @class GStoreHomeViewController;
 @class GCustomSearchViewController;
 
-typedef void (^kuangBlock)(NSString *theStr);//定义block
+typedef void (^kuangBlock)(NSString *theStr);//定义block  cell点击block
 
 @interface GSearchView : UIView<UITableViewDataSource,UITableViewDelegate>
 

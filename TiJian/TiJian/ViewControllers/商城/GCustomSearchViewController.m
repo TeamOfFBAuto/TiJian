@@ -102,22 +102,7 @@
     _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
     
     [_theCustomSearchView.tab reloadData];
-    
-    
-    
-    [self changeSearchViewAndKuangFrameAndTfWithState:1];
-    
-    if (!_rightItem2Label) {
-        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
-        _rightItem2Label.text = @"取消";
-        _rightItem2Label.font = [UIFont systemFontOfSize:13];
-        _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
-        _rightItem2Label.textAlignment = NSTextAlignmentRight;
-        [_rightItem2Label addTaget:self action:@selector(myNavcRightBtnClicked) tag:0];
-    }
-    
-    [_searchView addSubview:_rightItem2Label];
-    
+   
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
         UIView *alphaView = [effectView viewWithTag:10000];
@@ -128,17 +113,7 @@
 
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
-//    UIView *effectView = self.currentNavigationBar.effectContainerView;
-//    if (effectView) {
-//        UIView *alphaView = [effectView viewWithTag:10000];
-//        if (_table.contentOffset.y > 64) {
-//            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
-//            alpha = MIN(alpha, 1);
-//            alphaView.alpha = alpha;
-//        }else{
-//            alphaView.alpha = 0;
-//        }
-//    }
+
 }
 
 
@@ -146,11 +121,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     
-    if (![LTools isEmpty:self.searchTf.text]) {
-        [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
-    }
-    
-    
+    [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
     
     return YES;
 }
@@ -159,27 +130,15 @@
 
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
     
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
     [_searchTf resignFirstResponder];
-    _mySearchView.hidden = YES;
-//    UIView *effectView = self.currentNavigationBar.effectContainerView;
-//    if (effectView) {
-//        UIView *alphaView = [effectView viewWithTag:10000];
-//        if (_table.contentOffset.y > 64) {
-//            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
-//            alpha = MIN(alpha, 1);
-//            alphaView.alpha = alpha;
-//        }else{
-//            alphaView.alpha = 0;
-//        }
-//    }
-    
+
     if (!isHot) {
-        [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+        if (![LTools isEmpty:self.searchTf.text]) {
+            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+        }
+        
     }
-    
-    
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.theSearchWorld = theWord;
@@ -196,16 +155,10 @@
 
 
 
-
-
-
 #pragma mark - 请求网络数据
-
-
 
 //热门搜索
 -(void)getHotSearch{
-    
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
@@ -222,15 +175,6 @@
         
     }];
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -261,9 +205,6 @@
 - (void)setupNavigation{
     
     [self resetShowCustomNavigationBar:YES];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"ios7_goback4032.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
-    self.currentNavigationItem.leftBarButtonItem = leftItem;
-    
     
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
     _searchView.backgroundColor = [UIColor whiteColor];
@@ -288,14 +229,14 @@
     self.searchTf.delegate = self;
     [_kuangView addSubview:self.searchTf];
     
-    [self.searchTf becomeFirstResponder];
-    
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
-    
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
-    
-    
     self.currentNavigationItem.rightBarButtonItems = @[_rightItem1];
+    
+    
+    
+    
+    
+    
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -304,6 +245,21 @@
         alphaView.backgroundColor = [UIColor whiteColor];
         alphaView.tag = 10000;
     }
+    
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+    if (!_rightItem2Label) {
+        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+        _rightItem2Label.text = @"取消";
+        _rightItem2Label.font = [UIFont systemFontOfSize:13];
+        _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
+        _rightItem2Label.textAlignment = NSTextAlignmentRight;
+        [_rightItem2Label addTaget:self action:@selector(myNavcRightBtnClicked) tag:0];
+    }
+    [_searchView addSubview:_rightItem2Label];
+    
+    [self.searchTf becomeFirstResponder];
 }
 
 
@@ -312,7 +268,6 @@
     
     _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     _mySearchView.backgroundColor = [UIColor whiteColor];
-    _mySearchView.hidden = YES;
     [self.view addSubview:_mySearchView];
     
     
@@ -341,7 +296,6 @@
     
     [_rightItem2Label removeFromSuperview];
     [_searchTf resignFirstResponder];
-    _mySearchView.hidden = YES;
     
     [self gogoback];
 

@@ -234,7 +234,10 @@
     }
     
     if (!isHot) {
-        [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+        if (![LTools isEmpty:self.searchTf.text]) {
+            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+        }
+        
     }
     
     
@@ -613,11 +616,27 @@
 - (void)setupNavigation{
     
     [self resetShowCustomNavigationBar:YES];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"ios7_goback4032.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
+    
+    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftBtn setFrame:CGRectMake(0, 0, 30, 30)];
+    leftBtn.backgroundColor = RGBCOLOR(220, 220, 220);
+    leftBtn.layer.cornerRadius = 15;
+    [leftBtn setImage:[UIImage imageNamed:@"back_w.png"] forState:UIControlStateNormal];
+    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
+    [leftView addSubview:leftBtn];
+    
+//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back_w.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
+    
+    
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
+    
     self.currentNavigationItem.leftBarButtonItem = leftItem;
     
     
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
+    _searchView.layer.cornerRadius = 5;
     _searchView.backgroundColor = [UIColor whiteColor];
     
     //带框的view
@@ -898,6 +917,8 @@
     }else if (sender.tag == 102){//筛选
         GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
         cc.className = @"精品推荐";
+        cc.isShowShaixuanAuto = YES;
+        cc.haveChooseGender = YES;
         [self.navigationController pushViewController:cc animated:YES];
         
     }else if (sender.tag == 103){//购物车

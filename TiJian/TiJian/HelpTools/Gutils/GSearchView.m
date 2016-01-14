@@ -38,7 +38,12 @@
 //热搜按钮点击
 -(void)hotSearchBtnClicked:(UIButton *)sender{
     [GMAPI setuserCommonlyUsedSearchWord:sender.titleLabel.text];
-    [self.d1 searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
+    if (self.d1) {
+        [self.d1 searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
+    }else if (self.d2){
+        [self.d2 searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
+    }
+    
     
 }
 
@@ -199,6 +204,7 @@
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSString *str = self.dataArray[indexPath.row];
     self.kuangBlock(str);
 }
