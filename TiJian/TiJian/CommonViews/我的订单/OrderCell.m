@@ -93,7 +93,7 @@
         }
     }
     
-    NSString *address = [NSString stringWithFormat:@"配送地址:%@",aModel.address];
+    NSString *address = [NSString stringWithFormat:@"配送地址:%@",[LTools NSStringNotNull:aModel.address]];
     self.addressLabel.text = address;
     _addressLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _addressLabel.numberOfLines = 2;

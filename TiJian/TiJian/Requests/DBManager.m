@@ -546,4 +546,91 @@
 }
 
 
+#pragma mark - 拓展问题
+
+/**
+ *  查询问题信息
+ *
+ *  @param questionId    问题id
+ *
+ *  @return QuestionModel对象
+ */
+- (id)queryExtensionQuestionById:(int)questionId
+{
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_questions where question_id = %d",questionId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        QuestionModel *aModel = [[QuestionModel alloc]init];
+        while (rs.next) {
+            
+            int q_id = [rs intForColumn:@"question_id"];
+            NSString *q_name = [rs stringForColumn:@"question_name"];
+            int type = [rs intForColumn:@"type"];
+            int special_option_id = [rs intForColumn:@"special_option_id"];//特殊选项id
+            int select_option_type = [rs intForColumn:@"select_option_type"];//问题的选项类型 1234
+            aModel.questionId = q_id;
+            aModel.questionName = q_name;
+            aModel.type = type;
+            aModel.special_option_id = special_option_id;
+            aModel.select_option_type = select_option_type;
+        }
+        [rs close];
+        [_dataBase close];
+        return aModel;
+    }
+    return nil;
+}
+
+/**
+ *  根据组合id查找对应所有问题id
+ *
+ *  @param groupId 组合id
+ */
+- (NSArray *)queryExtensionQuestionIdsByGroupId:(int)groupId
+{
+    if ([_dataBase open]) {
+        FMResultSet *rs = [_dataBase executeQuery:
+                           @"select question_id from j_customization_group_questions where group_id = ? order by 'order'",[NSNumber numberWithInt:groupId]];
+        
+        NSMutableArray *temp = [NSMutableArray array];
+        while (rs.next) {
+            
+            int x = [rs intForColumn:@"question_id"];
+            [temp addObject:NSStringFromInt(x)];
+        }
+        [rs close];
+        [_dataBase close];
+        return temp;
+    }
+    return nil;
+}
+
+/**
+ *  根据问题id查找对应所有选项
+ *
+ *  @param groupId 组合id
+ */
+- (NSArray *)queryExtensionOptionsIdsByQuestionId:(int)groupId
+{
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select option_id from j_customization_question_options where question_id = %d order by option_order",groupId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        NSMutableArray *temp = [NSMutableArray array];
+        while (rs.next) {
+            
+            int x = [rs intForColumn:@"option_id"];
+            [temp addObject:NSStringFromInt(x)];
+        }
+        [rs close];
+        [_dataBase close];
+        return temp;
+    }
+    return nil;
+}
+
+
+
+
 @end

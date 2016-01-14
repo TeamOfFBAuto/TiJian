@@ -44,6 +44,8 @@
     int _groupId;//当前groupId
     NSMutableArray *_groupSortArray;//组合id排序
     NSString *_jsonString;//最终结果json串
+    
+    BOOL _extensionQuestion;//是否是拓展问题
 }
 
 @end
@@ -67,6 +69,9 @@
     _groupSortArray = [NSMutableArray array];
     _groupId = 0;//初始化,第一个组合不能获取到组合id,默认为0
     [_groupSortArray addObject:NSStringFromInt(_groupId)];
+    
+    //加拓展问题
+    _extensionQuestion = NO;//默认正常问题
     
     //下个组合问题ids
     NSArray *questions = [[DBManager shareInstance]queryQuestionIdsByGroupId:1];
@@ -365,6 +370,21 @@
         
     }else if (_questionId == 4) //体重
     {
+        //--------------- 拓展
+//        _extensionQuestion = YES;//开始拓展问题部分
+//        
+//        _questionId = 1;
+//        
+//        
+//        
+//        
+//        UIView *currentView_extension = _view_Weight;
+//        UIView *toView_extension = [self configExtensionItemWithQuestionId:_questionId forward:YES];
+//        [self swapView:currentView_extension ToView:toView_extension forward:YES];
+        
+        
+        //--------------- end
+        
         CGFloat weight = [[_questionDictionary objectForKey:Q_WEIGHT] floatValue];
         CGFloat height = [[_questionDictionary objectForKey:Q_HEIGHT] floatValue];
         
@@ -372,13 +392,9 @@
         DDLOG(@"BMI : %.2f",BMI(weight, height));
         
         //需要切换组合
-        
         //第一个问题组合不能确定组合id,问题一样也不能保证组合id一样
         
         NSString *groupOne_answerString = [self groupOneAnswerstring];
-        
-        //test
-//        groupOne_answerString = @"10100000100";//跳转至组合2
         
         int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:groupOne_answerString];
         
@@ -393,7 +409,6 @@
         int questionId = [self swapQuestionIdAtIndex:index forGroupId:nextGroupId];
         //记录当前是组合中第几个问题
         [self updateQuestionIndex:index forGroupId:nextGroupId];
-
         
         UIView *currentView = _view_Weight;
         UIView *toView = [self configItemWithQuestionId:questionId forward:YES];
@@ -925,6 +940,96 @@
 }
 
 #pragma - mark 控制页面切换
+
+/**
+ *  根据问题id获取对应拓展问题view
+ *
+ *  @param questionId 问题id
+ *  @param forward 是否是前进
+ *
+ *  @return view
+ */
+- (UIView *)configExtensionItemWithQuestionId:(NSInteger)questionId
+                             forward:(BOOL)forward
+{
+    
+    _questionId = (int)questionId;//记录当前问题id
+    
+    DDLOG(@"extension questionId: %d - %d",_groupId,_questionId);
+    
+    UIView *view = nil;
+    __weak typeof(self)weakSelf = self;
+    
+    //拓展的问题
+    
+    QuestionModel *aModel = [[DBManager shareInstance]queryQuestionById:(int)questionId];
+    
+//    //记录特殊选项
+//    int specialId = aModel.special_option_id;
+    
+    NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:(int)questionId];
+    int optionsNum = (int)[options count];
+    
+    NSMutableArray *options_arr = [NSMutableArray array];
+    //获取选项和选项对应图片
+    for (int i = 0; i < optionsNum; i ++) {
+        NSString *imageName = [NSString stringWithFormat:@"%d_%d",(int)questionId,i + 1];
+        UIImage *image = [UIImage imageNamed:imageName];
+        if (image) {
+            
+            int optionId = [options[i] intValue];
+            OptionModel *option = [[OptionModel alloc]initWithQuestionId:(int)questionId optionId:optionId optionImage:image];
+            [options_arr addObject:option];
+        }
+    }
+    
+    //需要拼接组合的答案二进制串
+    
+    NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)questionId];
+    NSString *initAnswerString = [_questionDictionary objectForKey:key];
+    
+    LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        
+        NSString *answerString = result[QUESTION_ANSERSTRING];
+        [weakSelf updateQuestionAnswertring:answerString withQuestionId:aModel.questionId forGroupId:_groupId];//针对问题记录
+        
+        NSArray *optionStates = [result objectForKey:QUESTION_OPTION_IDS];
+        for (NSDictionary *aDic in optionStates) {
+            
+            int optionid = [[[aDic allKeys]lastObject] intValue];
+            int state = [[[aDic allValues]lastObject]intValue];
+            
+            [weakSelf updateOptionState:state withOptionId:optionid withQuestionId:(int)questionId forGroupId:_groupId];//针对选项记录
+        }
+        
+        //判断是否是单选,单选的情况下自动跳转
+        if (type == QUESTIONOPTIONTYPE_SINGLE) {
+            
+            [weakSelf clickToForward:nil];
+        }
+        
+    } mulSelect:aModel.select_option_type specialOptionId:0];
+    
+    [self.view addSubview:quetionView];
+    
+    view = quetionView;
+
+
+    
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    if (view == _view_sex) {
+        [closeBtn setImage:[UIImage imageNamed:@"tuichu"] forState:UIControlStateNormal];
+    }else
+    {
+        [closeBtn setImage:[UIImage imageNamed:@"tuichu_w"] forState:UIControlStateNormal];
+    }
+    [view addSubview:closeBtn];
+    closeBtn.frame = CGRectMake(0, 20, 44, 44);
+    [closeBtn addTarget:self action:@selector(clickToClose) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    return view;
+}
 
 /**
  *  根据问题id获取对应问题view

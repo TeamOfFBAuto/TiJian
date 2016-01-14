@@ -198,6 +198,7 @@
 
     NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
     
+     @WeakObj(self);
     if ([result isKindOfClass:[NSDictionary class]]) {
         
         int erroCode = [[result objectForKey:@"errorcode"]intValue];
@@ -210,13 +211,14 @@
         }else //代表请求结果有错误,或者特殊操作结果
         {
             //大于2000的可以正常提示错误,小于2000的为内部错误 参数错误等
-            if (erroCode >= 2000) {
+            if (erroCode >= EnableErroLogCode) {
                 
+
                 NSDictionary *result = @{Erro_Info:erroInfo,
                                          Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 failBlock(result);
                 
-                [self showErroInfo:erroInfo];
+                [Weakself showErroInfo:erroInfo];
                 
             }else
             {
@@ -270,9 +272,10 @@
     failBlock(failDic);
     
     [self removeOperation:operation];
-    failBlock = nil;
-    
     [self showErroInfo:errInfo];
+    
+    failBlock = nil;
+
 }
 
 - (void)removeBlock
@@ -287,8 +290,8 @@
  */
 - (void)showErroInfo:(NSString *)errInfo
 {
-//    [MBProgressHUD hideHUDForView:[UIApplication sharedApplication].keyWindow animated:YES];
-    [LTools showMBProgressWithText:errInfo addToView:[UIApplication sharedApplication].keyWindow];
+    UIView *view = ((AppDelegate *)[UIApplication sharedApplication].delegate).window;
+    [LTools showMBProgressWithText:errInfo addToView:view];
 }
 
 /**

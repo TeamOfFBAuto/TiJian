@@ -544,12 +544,13 @@
 
     int tableViewTag = (int)tableView.tag;
     switch (tableViewTag) {
-            
+  
         case TABLEVIEW_TAG_All + 200:
         {
+            ORDERACTIONTYPE type = ORDERACTIONTYPE_Default;
+
             int status = [aModel.status intValue];
             NSString *text1 = nil;
-            ORDERACTIONTYPE type;
             if (status == 1) {
                 //待支付
                 text1 = @"去支付";
@@ -576,6 +577,17 @@
                 {
                     cell.actionButton.hidden = YES;
                 }
+            }
+            //显示退款状态
+            if (refund_status == 3) { //退款成功 只显示一个退款状态
+                cell.actionButton.hidden = YES;
+                text1 = text;
+                type = ORDERACTIONTYPE_Refund;
+                
+            }else if(refund_status > 0) //显示退款状态、显示前去预约
+            {
+                cell.actionButton.hidden = NO;
+                [cell.actionButton setTitle:text forState:UIControlStateNormal];
             }
             
             [cell.commentButton setTitle:text1 forState:UIControlStateNormal];

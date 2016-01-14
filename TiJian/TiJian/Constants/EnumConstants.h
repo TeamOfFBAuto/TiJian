@@ -70,6 +70,7 @@ typedef enum{
 }ORDERTYPE;
 
 typedef enum{
+    ORDERACTIONTYPE_Default = 0, //不做任何操作
     ORDERACTIONTYPE_Pay = 1, //去支付
     ORDERACTIONTYPE_Appoint,//去预约
     ORDERACTIONTYPE_Comment, //评价晒单

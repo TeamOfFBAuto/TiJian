@@ -166,5 +166,8 @@
 #define WXAPPSECRET @"a71699732e3bef01aefdaf324e2f522c"
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
 
+//是否开启所有日志
+#define EnableErroLogCode 0  //n代表显示大于n的所有错误信息 发布时改为2000
+
 
 #endif

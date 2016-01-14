@@ -218,24 +218,21 @@ typedef enum {
     [params safeSetValue:_order_id forKey:@"order_id"];
     [params safeSetValue:_productId forKey:@"product_id"];
     [params safeSetValue:_exam_center_id forKey:@"exam_center_id"];
-    [params safeSetValue:_selectDate forKey:@"company_id"];
-    [params safeSetValue:_company_id forKey:@"date"];
+    [params safeSetValue:_selectDate forKey:@"date"];
+    [params safeSetValue:_company_id forKey:@"company_id"];
     [params safeSetValue:_order_checkuper_id forKey:@"order_checkuper_id"];
     
         __weak typeof(self)weakSelf = self;
 //    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
+                
         [LTools showMBProgressWithText:@"恭喜您预约成功！" addToView:weakSelf.view];
         [weakSelf performSelector:@selector(appointSuccess) withObject:nil afterDelay:0.5];
         NSLog(@"预约成功 result");
         
     } failBlock:^(NSDictionary *result) {
         
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-        
+
     }];
 }
 
