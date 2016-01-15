@@ -24,6 +24,9 @@
 
 #define Q_RESULT @"questionResult" //最终答案结果am等
 
+#define Q_Extension @"q_extension" //记录是否是拓展
+#define Q_Extension_qid @"q_extension_qid" //拓展问题id
+
 @interface PersonalCustomViewController ()<UIAlertViewDelegate>
 {
     UIView *_view_sex;//性别选择
@@ -46,7 +49,13 @@
     NSString *_jsonString;//最终结果json串
     
     BOOL _extensionQuestion;//是否是拓展问题
+    int _extensionQuestionId;//拓展问题id
+    NSMutableArray *_sortArray;//存储顺序字典情况@{@"q_extension":1,@"q_extension_qid":@"3"}
 }
+
+@property(nonatomic,retain)NSArray *extensionQuestionArray;//所有的拓展问题
+@property(nonatomic,assign)Gender gender;//年龄
+@property(nonatomic,assign)int age;//性别
 
 @end
 
@@ -69,6 +78,8 @@
     _groupSortArray = [NSMutableArray array];
     _groupId = 0;//初始化,第一个组合不能获取到组合id,默认为0
     [_groupSortArray addObject:NSStringFromInt(_groupId)];
+    
+    _sortArray = [NSMutableArray array];//存储排序情况
     
     //加拓展问题
     _extensionQuestion = NO;//默认正常问题
@@ -184,8 +195,31 @@
     [forwardBtn addTarget:self action:@selector(clickToForward:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-#pragma - mark 事件处理
+#pragma mark - 事件处理
 
+/**
+ *  排序加新问题
+ *
+ *  @param questionId 问题id
+ *  @param extension  是否是拓展
+ */
+- (void)addSortArrayWithQuestionId:(NSInteger)questionId
+                         extension:(BOOL)extension
+{
+    NSDictionary *dic = @{Q_Extension:[NSNumber numberWithBool:extension],
+                          Q_Extension_qid:[NSNumber numberWithInteger:questionId]};
+    [_sortArray addObject:dic];
+}
+
+/**
+ *  移除最后一个
+ */
+- (void)removeSortArrayLastObject
+{
+    if (_sortArray.count) {
+        [_sortArray removeLastObject];
+    }
+}
 
 /**
  *  跳转至个性化定制结果页
@@ -259,7 +293,34 @@
  */
 - (void)clickToLast:(UIButton *)sender
 {
-//    __weak typeof(self)weakSelf = self;
+
+#pragma mark - 拓展问题 start
+    //-----------------开始拓展问题倒退
+    
+    int count = (int)_sortArray.count;
+    if (count > 2) {
+        
+        NSDictionary *dic = [_sortArray objectAtIndex:count - 2];
+        if (dic) {
+            
+            BOOL extension = [dic[Q_Extension]boolValue];
+            if (extension) {
+                
+                int extensionId = [dic[Q_Extension_qid]intValue];
+                
+                //跳性别
+                UIView *currentView = _currentView;
+                UIView *toView = [self configExtensionItemWithQuestionId:extensionId forward:NO];
+                [self swapView:currentView ToView:toView forward:NO];
+                
+                return;
+            }
+        }
+
+    }
+    
+    //------------拓展结束
+    
     
     if (_questionId == 2) { //年龄
         
@@ -286,6 +347,7 @@
         
         UIView *currentView = _currentView;
         UIView *toView;
+        
         //组合内上一个问题
         //判断是否是组合第一个问题
         
@@ -370,18 +432,55 @@
         
     }else if (_questionId == 4) //体重
     {
-        //--------------- 拓展
-//        _extensionQuestion = YES;//开始拓展问题部分
-//        
-//        _questionId = 1;
-//        
-//        
-//        
-//        
-//        UIView *currentView_extension = _view_Weight;
-//        UIView *toView_extension = [self configExtensionItemWithQuestionId:_questionId forward:YES];
-//        [self swapView:currentView_extension ToView:toView_extension forward:YES];
+#define mark - extension start
+        //--------------- 拓展 start
+        _extensionQuestion = YES;//开始拓展问题部分
         
+        NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
+        NSNumber *age = [_questionDictionary objectForKey:Q_AGE];
+        
+        //男 并且上一个问题是 3,则结束拓展
+        //女 上一个问题是2,则结束拓展
+        if (([sex intValue] == Gender_Boy && _extensionQuestionId == 3) ||
+            ([sex intValue] == Gender_Girl && _extensionQuestionId == 2)) {
+            
+            _extensionQuestion = NO;
+        }
+        
+        //女 年龄大于45 则不需要此次拓展
+        if (self.age > 45 && self.gender == Gender_Girl) {
+            
+            _extensionQuestion = NO;
+        }
+        
+        //是拓展
+        if (_extensionQuestion) {
+            
+            //先判断男、或者女
+            //如果是男 询问 3问题 然后直接结束 拓展，询问烟酒情况
+            if ([sex intValue] == Gender_Boy) {
+                
+                _extensionQuestionId = 3;
+            }
+            
+            //女 并且小于45岁 询问 1、2问题,然后直接结束 拓展，询问烟酒情况
+            if ([sex intValue] == Gender_Girl &&
+                [age intValue] <= 45) {
+                
+                if (_extensionQuestionId == 1) {
+                    _extensionQuestionId = 2;//问题1之后问题2
+                }else
+                {
+                    _extensionQuestionId = 1;//问题1
+                }
+            }
+            
+            UIView *currentView_extension = _currentView;
+            UIView *toView_extension = [self configExtensionItemWithQuestionId:_extensionQuestionId forward:YES];
+            [self swapView:currentView_extension ToView:toView_extension forward:YES];
+            
+            return;
+        }
         
         //--------------- end
         
@@ -417,6 +516,71 @@
         
     }else if (_questionId >= 5)
     {
+        
+        //-------------------------开始拓展问题 start
+
+        //--------------------拓展第二部分拓展id from 4
+        
+        //如果是喝酒则开始 以下为喝酒相关问题id
+        if (_questionId == 6 ||
+            _questionId == 15 ||
+            _questionId == 21 ||
+            _questionId == 28) {
+            
+            _extensionQuestion = YES;
+            
+        }else
+        {
+            _extensionQuestion = NO;
+        }
+        
+        //开始拓展、拓展问题id 4开始
+        if (_extensionQuestion && _extensionQuestionId >= 4 && _extensionQuestionId <= self.extensionQuestionArray.count){
+            
+            QuestionModel *current_model = self.extensionQuestionArray[_extensionQuestionId - 1];//当前问题
+            if (current_model.is_end == 1) {
+                
+                _extensionQuestion = NO;
+            }
+        
+        }
+        
+        if (_extensionQuestion) {
+            
+            if (_extensionQuestionId < 4) {
+                _extensionQuestionId = 4;//第二部分拓展问题id从4开始
+            }else
+            {
+                if (_extensionQuestionId < self.extensionQuestionArray.count) {
+                    
+                    QuestionModel *next_model = self.extensionQuestionArray[_extensionQuestionId];//下一个问题
+                    int startAge = next_model.start_age;
+                    int endAge = next_model.end_age;
+                    
+                    //年龄满足
+                    if (self.age >= startAge && (self.age < endAge || endAge == 0)) {
+                        _extensionQuestionId = next_model.questionId;
+                    }else
+                    {
+                        //继续下一个
+                        _extensionQuestionId += 1;//看看下一个拓展问题是否可以
+                        [self clickToForward:nil];
+                        
+                        return;
+                    }
+                    
+                }
+            }
+            //页面跳转
+            
+            UIView *currentView_extension = _currentView;
+            UIView *toView_extension = [self configExtensionItemWithQuestionId:_extensionQuestionId forward:YES];
+            [self swapView:currentView_extension ToView:toView_extension forward:YES];
+            
+            return;
+        }
+        
+        //---------------------拓展 end
         
         //首先判断是否切换组合或者本组合内切换问题
         NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(_groupId)];
@@ -478,6 +642,13 @@
         
         
     }
+    
+    
+}
+
+- (void)forwardToExtension
+{
+    
 }
 
 /**
@@ -562,6 +733,56 @@
     [_questionDictionary setObject:g_answerString forKey:key];
 }
 
+/**
+ *  更新拓展问题选项id串
+ *
+ *  @param optionidString
+ */
+- (void)updateExtensionQustionOptionidString:(NSString *)optionidString
+                                  questionId:(NSInteger)questionid
+{
+    NSString *key = [NSString stringWithFormat:@"extension_questionOption_%d",(int)questionid];
+    [_questionDictionary safeSetString:optionidString forKey:key];
+}
+
+/**
+ *  获取拓展问题选项id串
+ *
+ *  @param questionid
+ *
+ *  @return
+ */
+- (NSString *)extensionQustionOptionStringWithQuestionId:(NSInteger)questionid
+{
+    NSString *key = [NSString stringWithFormat:@"extension_questionOption_%d",(int)questionid];
+    return [_questionDictionary objectForKey:key];
+}
+
+
+/**
+ *  拓展问题 字典组成数组
+ *
+ *  @return
+ */
+- (NSArray *)extensionQuestionResultArray
+{
+    NSMutableArray *temp = [NSMutableArray array];
+    for (NSDictionary *dic in _sortArray) {
+        
+        BOOL extension = [dic[Q_Extension]boolValue];
+        if (extension) {
+            int extension_qid = [dic[Q_Extension_qid]intValue];
+            NSString * optionString = [self extensionQustionOptionStringWithQuestionId:extension_qid];
+            NSArray *optionArray = [optionString componentsSeparatedByString:@","];
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            [param safeSetValue:optionArray forKey:NSStringFromInt(extension_qid)];
+            
+            [temp addObject:param];
+        }
+    }
+    return temp;
+}
+
 #pragma - mark 处理问题回答完毕--执行结束操作
 
 - (void)actionForFinishQuestionWithGroupId:(int)groupId
@@ -590,8 +811,6 @@
         //问题
         NSArray *questions = [_questionDictionary objectForKey:groupId];
         
-//        NSMutableArray *questionArray = [NSMutableArray array];
-        
         NSMutableDictionary *quesitonDic = [NSMutableDictionary dictionary];
         
         for (NSString *questionId in questions) {
@@ -608,10 +827,7 @@
                     
                     [optionsArray addObject:optionId];
                 }
-                
-//                NSDictionary *option_dic = @{optionId : NSStringFromInt(state)};
-//                [optionsArray addObject:option_dic];
-                
+
                 //忽略
                 NSString *key = [NSString stringWithFormat:@"ignore_group_%@_question_%@_option_%@",groupId,questionId,optionId];
                 NSNumber *n1_type_id = [_questionDictionary objectForKey:key];
@@ -623,15 +839,11 @@
             
             //问题对应的所有选项
             
-//            NSDictionary *question_dic = @{questionId : optionsArray};
-//            [questionArray addObject:question_dic];
-            
             [quesitonDic setObject:optionsArray forKey:questionId];
         }
         
         //组合对应所有问题
-//        NSDictionary *group_dic = @{groupId:questionArray};
-//        [groupArray addObject:group_dic];
+
         [groupDic setObject:quesitonDic forKey:groupId];
     }
     
@@ -640,9 +852,13 @@
     
     groupId = groupId > 0 ? groupId : -groupId;
     
-    NSDictionary *result = @{@"group_ids":groupDic,
-                             @"final_groupId":NSStringFromInt(groupId),
-                             @"nq_ids":n1_ids};
+    //添加拓展参数
+    
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [result safeSetValue:groupDic forKey:@"group_ids"];
+    [result safeSetValue:NSStringFromInt(groupId) forKey:@"final_groupId"];
+    [result safeSetValue:n1_ids forKey:@"nq_ids"];
+    [result safeSetValue:[self extensionQuestionResultArray] forKey:@"e_result"];
     
     NSString *jsonString = [LTools JSONStringWithObject:result];
     _jsonString = jsonString;
@@ -706,42 +922,6 @@
     return answerString;
 }
 
-/**
- *  获取满足的n+1忽略条件的 n1_type_id,-1代表不忽略,大于等于0代表忽略
- *
- *  @param groupId    组合id
- *  @param questionId 问题id
- *  @param optionId   选项id
- *  @param answer     是否选中1或者0
- *  @param type       目前默认1
- *  @param affectNext 目前默认0
- *
- *  @return
- */
-//- (int)n1TypeIdForGroupId:(int)groupId
-//               questionId:(int)questionId
-//                 optionId:(int)optionId
-//                   answer:(int)answer
-//                     type:(int)type
-//               affectNext:(int)affectNext
-//          withIgnoreArray:(NSArray *)ignoreArray
-//{
-//    
-//    for (IgnoreConditionModel *aMode in ignoreArray) {
-//        
-//        if (aMode.group_id == groupId &&
-//            aMode.question_id == questionId &&
-//            aMode.option_id == optionId &&
-//            aMode.answer == answer &&
-//            aMode.type == type &&
-//            aMode.affect_next == affectNext) {
-//            
-//            return aMode.n1_type_id;
-//        }
-//    }
-//    
-//    return -1;
-//}
 
 /**
  *  获取满足的n+1忽略条件的 model,aMode.n1_type_id为-1代表不忽略,大于等于0代表忽略
@@ -941,6 +1121,7 @@
 
 #pragma - mark 控制页面切换
 
+
 /**
  *  根据问题id获取对应拓展问题view
  *
@@ -952,28 +1133,41 @@
 - (UIView *)configExtensionItemWithQuestionId:(NSInteger)questionId
                              forward:(BOOL)forward
 {
+    if (forward) {
+        //记录问题顺序
+        [self addSortArrayWithQuestionId:questionId extension:YES];
+    }else
+    {
+        [self removeSortArrayLastObject];
+    }
     
-    _questionId = (int)questionId;//记录当前问题id
+    _extensionQuestionId = (int)questionId;//记录当前问题id
     
-    DDLOG(@"extension questionId: %d - %d",_groupId,_questionId);
+    DDLOG(@"extension questionId: %d",_questionId);
     
     UIView *view = nil;
     __weak typeof(self)weakSelf = self;
     
     //拓展的问题
     
-    QuestionModel *aModel = [[DBManager shareInstance]queryQuestionById:(int)questionId];
+    QuestionModel *aModel = [[DBManager shareInstance]queryExtensionQuestionById:(int)questionId];
     
-//    //记录特殊选项
-//    int specialId = aModel.special_option_id;
+    //问题 经常自我感觉不适 是多选,其他单选
+    if (aModel.questionId == 6) {
+        aModel.select_option_type = QUESTIONOPTIONTYPE_MULTI;
+    }else
+    {
+        aModel.select_option_type = QUESTIONOPTIONTYPE_SINGLE;
+    }
     
-    NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:(int)questionId];
+    NSArray *options = [[DBManager shareInstance]queryExtensionOptionsIdsByQuestionId:(int)questionId];
+    
     int optionsNum = (int)[options count];
     
     NSMutableArray *options_arr = [NSMutableArray array];
     //获取选项和选项对应图片
     for (int i = 0; i < optionsNum; i ++) {
-        NSString *imageName = [NSString stringWithFormat:@"%d_%d",(int)questionId,i + 1];
+        NSString *imageName = [NSString stringWithFormat:@"extension_%d_%d",(int)questionId + 30,i + 1];
         UIImage *image = [UIImage imageNamed:imageName];
         if (image) {
             
@@ -985,22 +1179,29 @@
     
     //需要拼接组合的答案二进制串
     
-    NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)questionId];
+    NSString *key = [NSString stringWithFormat:@"extension_question_%d",(int)questionId];
     NSString *initAnswerString = [_questionDictionary objectForKey:key];
     
     LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
         
-        NSString *answerString = result[QUESTION_ANSERSTRING];
-        [weakSelf updateQuestionAnswertring:answerString withQuestionId:aModel.questionId forGroupId:_groupId];//针对问题记录
+        DDLOG(@"result %@",result);
         
-        NSArray *optionStates = [result objectForKey:QUESTION_OPTION_IDS];
-        for (NSDictionary *aDic in optionStates) {
-            
-            int optionid = [[[aDic allKeys]lastObject] intValue];
-            int state = [[[aDic allValues]lastObject]intValue];
-            
-            [weakSelf updateOptionState:state withOptionId:optionid withQuestionId:(int)questionId forGroupId:_groupId];//针对选项记录
+        NSString *answerString = result[QUESTION_ANSERSTRING];
+        //记录答案
+        [_questionDictionary safeSetString:answerString forKey:key];
+        
+        //记录选项id
+        NSArray *optionIds = [result objectForKey:QUESTION_OPTION_IDS];
+        NSMutableArray *temp = [NSMutableArray array];
+        for (NSDictionary *option in optionIds) {
+            int optionid = [[[option allKeys]lastObject] intValue];
+            int state = [[[option allValues]lastObject]intValue];
+            if (state == 1) { //选择了
+                [temp addObject:NSStringFromInt(optionid)];
+            }
         }
+        
+        [weakSelf updateExtensionQustionOptionidString:[temp componentsJoinedByString:@","] questionId:questionId];
         
         //判断是否是单选,单选的情况下自动跳转
         if (type == QUESTIONOPTIONTYPE_SINGLE) {
@@ -1042,6 +1243,14 @@
 - (UIView *)configItemWithQuestionId:(NSInteger)questionId
                              forward:(BOOL)forward
 {
+    
+    if (forward) {
+        //记录问题顺序
+        [self addSortArrayWithQuestionId:questionId extension:NO];
+    }else
+    {
+        [self removeSortArrayLastObject];
+    }
     
     _questionId = (int)questionId;//记录当前问题id
     
@@ -1353,5 +1562,40 @@
     }
 }
 
+#pragma mark - 拓展问题处理
+/**
+ *  获取所有的拓展问题 getter
+ *
+ *  @return
+ */
+- (NSArray *)extensionQuestionArray
+{
+    if (!_extensionQuestionArray) {
+        _extensionQuestionArray = [[DBManager shareInstance]queryAllExtensionQuestions];
+    }
+    return _extensionQuestionArray;
+}
+
+/**
+ *  当前性别
+ *
+ *  @return
+ */
+-(Gender)gender
+{
+    NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
+    return [sex intValue];
+}
+
+/**
+ *  当前年龄
+ *
+ *  @return
+ */
+-(int)age
+{
+    NSNumber *age = [_questionDictionary objectForKey:Q_AGE];
+    return [age intValue];
+}
 
 @end

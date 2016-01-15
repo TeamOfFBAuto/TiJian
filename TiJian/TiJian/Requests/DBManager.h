@@ -81,7 +81,14 @@
 #pragma mark - 拓展问题
 
 /**
- *  查询问题信息
+ *  查询所有拓展问题信息
+ *
+ *  @return 所有拓展QuestionModel对象
+ */
+- (NSArray *)queryAllExtensionQuestions;
+
+/**
+ *  查询拓展问题信息
  *
  *  @param questionId    问题id
  *
@@ -89,15 +96,9 @@
  */
 - (id)queryExtensionQuestionById:(int)questionId;
 
-/**
- *  根据组合id查找对应所有问题id
- *
- *  @param groupId 组合id
- */
-- (NSArray *)queryExtensionQuestionIdsByGroupId:(int)groupId;
 
 /**
- *  根据问题id查找对应所有选项
+ *  根据拓展问题id查找对应所有选项
  *
  *  @param groupId 组合id
  */

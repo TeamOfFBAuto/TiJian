@@ -549,55 +549,36 @@
 #pragma mark - 拓展问题
 
 /**
- *  查询问题信息
+ *  查询所有拓展问题信息
  *
- *  @param questionId    问题id
- *
- *  @return QuestionModel对象
+ *  @return 所有拓展QuestionModel对象
  */
-- (id)queryExtensionQuestionById:(int)questionId
+- (NSArray *)queryAllExtensionQuestions
 {
     if ([_dataBase open]) {
         
-        NSString *sql = [NSString stringWithFormat:@"select * from j_customization_questions where question_id = %d",questionId];
+        NSString *sql = [NSString stringWithFormat:@"select * from j_extention_questions where extention_question_id != 0"];
         FMResultSet *rs = [_dataBase executeQuery:sql];
-        QuestionModel *aModel = [[QuestionModel alloc]init];
-        while (rs.next) {
-            
-            int q_id = [rs intForColumn:@"question_id"];
-            NSString *q_name = [rs stringForColumn:@"question_name"];
-            int type = [rs intForColumn:@"type"];
-            int special_option_id = [rs intForColumn:@"special_option_id"];//特殊选项id
-            int select_option_type = [rs intForColumn:@"select_option_type"];//问题的选项类型 1234
-            aModel.questionId = q_id;
-            aModel.questionName = q_name;
-            aModel.type = type;
-            aModel.special_option_id = special_option_id;
-            aModel.select_option_type = select_option_type;
-        }
-        [rs close];
-        [_dataBase close];
-        return aModel;
-    }
-    return nil;
-}
-
-/**
- *  根据组合id查找对应所有问题id
- *
- *  @param groupId 组合id
- */
-- (NSArray *)queryExtensionQuestionIdsByGroupId:(int)groupId
-{
-    if ([_dataBase open]) {
-        FMResultSet *rs = [_dataBase executeQuery:
-                           @"select question_id from j_customization_group_questions where group_id = ? order by 'order'",[NSNumber numberWithInt:groupId]];
         
         NSMutableArray *temp = [NSMutableArray array];
         while (rs.next) {
+            QuestionModel *aModel = [[QuestionModel alloc]init];
+
+            int q_id = [rs intForColumn:@"extention_question_id"];
+            NSString *q_name = [rs stringForColumn:@"question_name"];
+            int gender = [rs intForColumn:@"gender"];
+            int start_age = [rs intForColumn:@"start_age"];//特殊选项id
+            int end_age = [rs intForColumn:@"end_age"];//问题的选项类型 1234
+            int is_end = [rs intForColumn:@"is_end"];//是否结束
             
-            int x = [rs intForColumn:@"question_id"];
-            [temp addObject:NSStringFromInt(x)];
+            aModel.questionId = q_id;
+            aModel.questionName = q_name;
+            aModel.gender = gender;
+            aModel.start_age = start_age;
+            aModel.end_age = end_age;
+            aModel.is_end = is_end;
+            
+            [temp addObject:aModel];
         }
         [rs close];
         [_dataBase close];
@@ -607,20 +588,56 @@
 }
 
 /**
- *  根据问题id查找对应所有选项
+ *  查询拓展问题信息
  *
- *  @param groupId 组合id
+ *  @param questionId    问题id
+ *
+ *  @return QuestionModel对象
  */
-- (NSArray *)queryExtensionOptionsIdsByQuestionId:(int)groupId
+- (id)queryExtensionQuestionById:(int)questionId
 {
     if ([_dataBase open]) {
         
-        NSString *sql = [NSString stringWithFormat:@"select option_id from j_customization_question_options where question_id = %d order by option_order",groupId];
+        NSString *sql = [NSString stringWithFormat:@"select * from j_extention_questions where extention_question_id = %d",questionId];
+        FMResultSet *rs = [_dataBase executeQuery:sql];
+        QuestionModel *aModel = [[QuestionModel alloc]init];
+        while (rs.next) {
+            
+            int q_id = [rs intForColumn:@"extention_question_id"];
+            NSString *q_name = [rs stringForColumn:@"question_name"];
+            int gender = [rs intForColumn:@"gender"];
+            int start_age = [rs intForColumn:@"start_age"];//特殊选项id
+            int end_age = [rs intForColumn:@"end_age"];//问题的选项类型 1234
+            int is_end = [rs intForColumn:@"is_end"];//是否结束
+
+            aModel.questionId = q_id;
+            aModel.questionName = q_name;
+            aModel.gender = gender;
+            aModel.start_age = start_age;
+            aModel.end_age = end_age;
+            aModel.is_end = is_end;
+        }
+        [rs close];
+        [_dataBase close];
+        return aModel;
+    }
+    return nil;
+}
+
+/**
+ *  根据问题id查找对应所有选项id
+ *
+ */
+- (NSArray *)queryExtensionOptionsIdsByQuestionId:(int)qustionId
+{
+    if ([_dataBase open]) {
+        
+        NSString *sql = [NSString stringWithFormat:@"select question_option_id from j_extention_question_option where question_id = %d order by question_option_id",qustionId];
         FMResultSet *rs = [_dataBase executeQuery:sql];
         NSMutableArray *temp = [NSMutableArray array];
         while (rs.next) {
             
-            int x = [rs intForColumn:@"option_id"];
+            int x = [rs intForColumn:@"question_option_id"];
             [temp addObject:NSStringFromInt(x)];
         }
         [rs close];

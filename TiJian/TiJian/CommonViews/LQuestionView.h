@@ -13,7 +13,7 @@
 
 #define QUESTION_OPTION_TYPE @"questionOptionType" //选项情况，单选、多选等
 #define QUESTION_ANSERSTRING @"questionAnswerString" //答案二进制串
-#define QUESTION_OPTION_IDS @"questionOptionIdS" //问题对应所有选项id
+#define QUESTION_OPTION_IDS @"questionOptionIds" //问题对应所有选项id
 #define QUESTION_OPTION_STATE @"questionOptionState" //问题选项状态 1或者0
 
 typedef void(^RESULTBLOCK)(QUESTIONTYPE type,id object, NSDictionary *result);

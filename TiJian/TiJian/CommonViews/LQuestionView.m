@@ -176,6 +176,31 @@
                     top_view = (DEVICE_HEIGHT - 64 - FitScreen(40) - maxDis) / 2.f;
                     top_view = top_view + top + (FitScreen(15) + height) * i;
                 }
+            }else if (count == 8){
+                
+                //八个选项
+                width = FitScreen(150);
+                height =  FitScreen(78);
+                
+                CGFloat heightPadding = height * 3/4.f;
+                if (iPhone5) { //单独适配 5s
+                    
+                    width -= 10;
+                    height = 78 * width / 150;
+                    heightPadding = height * 3/5.f;
+                }
+                
+                if (iPhone4) { //适配4s
+                    width -= 30;
+                    height = 78 * width / 150;
+                    heightPadding = height * 3/5.f;
+                }
+                
+                left = (DEVICE_WIDTH - 20 - width * 2) / 2.f;//计算两个x之间的差
+
+                int colum = i % 2;//第几列
+                left = colum == 0 ? left : (left + 20 + width);
+                top_view = top + 30 + i * heightPadding;
             }
             
             btn.frame = CGRectMake(left, top_view, width, height);
