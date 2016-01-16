@@ -105,7 +105,19 @@
 - (NSArray *)queryExtensionOptionsIdsByQuestionId:(int)groupId;
 
 
+/**
+ *  查询所有拓展符合年龄条件id > 3的问题
+ *
+ *  @return 所有拓展QuestionModel对象
+ */
+- (NSArray *)queryAllExtensionQuestionsWithAge:(int)age;
 
 
+/**
+ *  查询所有拓展符合年龄条件id > 3的问题id
+ *
+ *  @return 所有拓展QuestionModel对象
+ */
+- (NSArray *)queryAllExtensionQuestionIdsWithAge:(int)age;
 
 @end

@@ -27,6 +27,8 @@
 #define Q_Extension @"q_extension" //记录是否是拓展
 #define Q_Extension_qid @"q_extension_qid" //拓展问题id
 
+#define Q_ExtensionGroupId @"extension_2" //拓展问题第二部分groupId
+
 @interface PersonalCustomViewController ()<UIAlertViewDelegate>
 {
     UIView *_view_sex;//性别选择
@@ -43,7 +45,7 @@
     Gender _selectedGender;//记录选择的性别
     NSMutableDictionary *_questionDictionary;//记录问题信息
     
-    int _questionId;//当前问题id
+    NSString *_questionId;//当前问题id
     int _groupId;//当前groupId
     NSMutableArray *_groupSortArray;//组合id排序
     NSString *_jsonString;//最终结果json串
@@ -266,9 +268,6 @@
     }
     
     [_questionDictionary setObject:result[@"result"] forKey:key];
-    
-    DDLOG(@"---%@",_questionDictionary);
-    
 }
 
 - (void)clickToSelectSex:(UIButton *)sender
@@ -293,57 +292,28 @@
  */
 - (void)clickToLast:(UIButton *)sender
 {
-
-#pragma mark - 拓展问题 start
-    //-----------------开始拓展问题倒退
-    
-    int count = (int)_sortArray.count;
-    if (count > 2) {
-        
-        NSDictionary *dic = [_sortArray objectAtIndex:count - 2];
-        if (dic) {
-            
-            BOOL extension = [dic[Q_Extension]boolValue];
-            if (extension) {
-                
-                int extensionId = [dic[Q_Extension_qid]intValue];
-                
-                //跳性别
-                UIView *currentView = _currentView;
-                UIView *toView = [self configExtensionItemWithQuestionId:extensionId forward:NO];
-                [self swapView:currentView ToView:toView forward:NO];
-                
-                return;
-            }
-        }
-
-    }
-    
-    //------------拓展结束
-    
-    
-    if (_questionId == 2) { //年龄
+    if ([_questionId intValue] == 2) { //年龄
         
         //跳性别
         UIView *currentView = _view_Age;
         UIView *toView = [self configItemWithQuestionId:1 forward:NO];
         [self swapView:currentView ToView:toView forward:NO];
         
-    }else if (_questionId == 3) //身高
+    }else if ([_questionId intValue] == 3) //身高
     {
         //跳年龄
         UIView *currentView = _view_Height;
         UIView *toView = [self configItemWithQuestionId:2 forward:NO];
         [self swapView:currentView ToView:toView forward:NO];
         
-    }else if (_questionId == 4) //体重
+    }else if ([_questionId intValue] == 4) //体重
     {
         //跳身高
         UIView *currentView = _view_Weight;
         UIView *toView = [self configItemWithQuestionId:3 forward:NO];
         [self swapView:currentView ToView:toView forward:NO];
         
-    }else if (_questionId >= 5){
+    }else if ([_questionId intValue] >= 5 || [_questionId hasPrefix:Q_Extension]){
         
         UIView *currentView = _currentView;
         UIView *toView;
@@ -355,14 +325,18 @@
         
         NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(_groupId)];
         int count = (int)questions.count;//当前组合问题个数
-        int questionId = 0;
+        NSString *questionId = @"";
         //当前第几个问题
-        int index = [self questionIndexForGroupId:_groupId];
+        int index = [self questionIndexForGroupId:NSStringFromInt(_groupId)];
         
         if (index == 0) { //第一个问题,要切换组合
+            
+            DDLOG(@"切换组合");
             //先移除当前组合
             [_questionDictionary removeObjectForKey:NSStringFromInt(_groupId)];
             [_groupSortArray removeObject:NSStringFromInt(_groupId)];
+            [self removeQuestionIndexForGroupId:_groupId];//移除组合问题下标记录
+            
             int lastGroupId = [[_groupSortArray lastObject] intValue];
             _groupId = lastGroupId;
             
@@ -375,18 +349,39 @@
             index = count - 1;//最后一个开始
             questionId = [self swapQuestionIdAtIndex:index forGroupId:lastGroupId];
             //记录当前是组合中第几个问题
-            [self updateQuestionIndex:index forGroupId:lastGroupId];
+            [self updateQuestionIndex:index forGroupId:NSStringFromInt(lastGroupId)];
             
-            toView = [self configItemWithQuestionId:questionId forward:NO];
+            //拓展问题
+            if ([questionId hasPrefix:Q_Extension]) {
+                
+                NSMutableString *temp = [NSMutableString stringWithString:questionId];
+                [temp replaceOccurrencesOfString:[NSString stringWithFormat:@"%@_",Q_Extension] withString:@"" options:0 range:NSMakeRange(0, questionId.length)];
+                int q_id = [temp intValue];
+                toView = [self configExtensionItemWithQuestionId:q_id forward:NO];
+            }else
+            {
+                toView = [self configItemWithQuestionId:[questionId intValue] forward:NO];
+            }
+            
         }else
         {
             //获取问题id
             index --;//最后一个开始
             questionId = [self swapQuestionIdAtIndex:index forGroupId:_groupId];
             //记录当前是组合中第几个问题
-            [self updateQuestionIndex:index forGroupId:_groupId];
+            [self updateQuestionIndex:index forGroupId:NSStringFromInt(_groupId)];
             
-            toView = [self configItemWithQuestionId:questionId forward:NO];
+            //拓展问题
+            if ([questionId hasPrefix:Q_Extension]) {
+                
+                NSMutableString *temp = [NSMutableString stringWithString:questionId];
+                [temp replaceOccurrencesOfString:[NSString stringWithFormat:@"%@_",Q_Extension] withString:@"" options:0 range:NSMakeRange(0, questionId.length)];
+                int q_id = [temp intValue];
+                toView = [self configExtensionItemWithQuestionId:q_id forward:NO];
+            }else
+            {
+                toView = [self configItemWithQuestionId:[questionId intValue] forward:NO];
+            }
         }
         
         //切换至上一个组合
@@ -394,6 +389,11 @@
         [self swapView:currentView ToView:toView forward:NO];
 
     }
+    
+    DDLOG(@"---->%@",_questionDictionary);
+    
+    //移除顺序记录
+    [self removeSortArrayLastObject];
 
 }
 
@@ -416,73 +416,22 @@
         return;
     }
     
-    if (_questionId == 2) { //年龄
+    if ([_questionId intValue] == 2) { //年龄
         
         //跳身高
         UIView *currentView = _view_Age;
         UIView *toView = [self configItemWithQuestionId:3 forward:YES];
         [self swapView:currentView ToView:toView forward:YES];
         
-    }else if (_questionId == 3) //身高
+    }else if ([_questionId intValue] == 3) //身高
     {
         //跳身高
         UIView *currentView = _view_Height;
         UIView *toView = [self configItemWithQuestionId:4 forward:YES];
         [self swapView:currentView ToView:toView forward:YES];
         
-    }else if (_questionId == 4) //体重
+    }else if ([_questionId intValue] == 4) //体重
     {
-#define mark - extension start
-        //--------------- 拓展 start
-        _extensionQuestion = YES;//开始拓展问题部分
-        
-        NSNumber *sex = [_questionDictionary objectForKey:Q_SEX];
-        NSNumber *age = [_questionDictionary objectForKey:Q_AGE];
-        
-        //男 并且上一个问题是 3,则结束拓展
-        //女 上一个问题是2,则结束拓展
-        if (([sex intValue] == Gender_Boy && _extensionQuestionId == 3) ||
-            ([sex intValue] == Gender_Girl && _extensionQuestionId == 2)) {
-            
-            _extensionQuestion = NO;
-        }
-        
-        //女 年龄大于45 则不需要此次拓展
-        if (self.age > 45 && self.gender == Gender_Girl) {
-            
-            _extensionQuestion = NO;
-        }
-        
-        //是拓展
-        if (_extensionQuestion) {
-            
-            //先判断男、或者女
-            //如果是男 询问 3问题 然后直接结束 拓展，询问烟酒情况
-            if ([sex intValue] == Gender_Boy) {
-                
-                _extensionQuestionId = 3;
-            }
-            
-            //女 并且小于45岁 询问 1、2问题,然后直接结束 拓展，询问烟酒情况
-            if ([sex intValue] == Gender_Girl &&
-                [age intValue] <= 45) {
-                
-                if (_extensionQuestionId == 1) {
-                    _extensionQuestionId = 2;//问题1之后问题2
-                }else
-                {
-                    _extensionQuestionId = 1;//问题1
-                }
-            }
-            
-            UIView *currentView_extension = _currentView;
-            UIView *toView_extension = [self configExtensionItemWithQuestionId:_extensionQuestionId forward:YES];
-            [self swapView:currentView_extension ToView:toView_extension forward:YES];
-            
-            return;
-        }
-        
-        //--------------- end
         
         CGFloat weight = [[_questionDictionary objectForKey:Q_WEIGHT] floatValue];
         CGFloat height = [[_questionDictionary objectForKey:Q_HEIGHT] floatValue];
@@ -495,7 +444,7 @@
         
         NSString *groupOne_answerString = [self groupOneAnswerstring];
         
-        int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:groupOne_answerString];
+        int nextGroupId = [self swapNextGroupWithGroupId:_groupId answerString:groupOne_answerString extension:YES];
         
         if (nextGroupId <= 0) { //表示结束了,不需要回答下个组合问题了
             
@@ -505,83 +454,30 @@
         
         //获取问题id
         int index = 0;
-        int questionId = [self swapQuestionIdAtIndex:index forGroupId:nextGroupId];
+        NSString *questionId = [self swapQuestionIdAtIndex:index forGroupId:nextGroupId];
         //记录当前是组合中第几个问题
-        [self updateQuestionIndex:index forGroupId:nextGroupId];
+        [self updateQuestionIndex:index forGroupId:NSStringFromInt(nextGroupId)];
         
         UIView *currentView = _view_Weight;
-        UIView *toView = [self configItemWithQuestionId:questionId forward:YES];
+        
+        UIView *toView = nil;
+
+        //拓展问题
+        if ([questionId hasPrefix:Q_Extension]) {
+            
+            NSMutableString *temp = [NSMutableString stringWithString:questionId];
+            [temp replaceOccurrencesOfString:[NSString stringWithFormat:@"%@_",Q_Extension] withString:@"" options:0 range:NSMakeRange(0, questionId.length)];
+            int q_id = [temp intValue];
+            toView = [self configExtensionItemWithQuestionId:q_id forward:YES];
+        }else
+        {
+            toView = [self configItemWithQuestionId:[questionId intValue] forward:YES];
+        }
         
         [self swapView:currentView ToView:toView forward:YES];
         
-    }else if (_questionId >= 5)
+    }else if ([_questionId intValue] >= 5 || [_questionId hasPrefix:Q_Extension])
     {
-        
-        //-------------------------开始拓展问题 start
-
-        //--------------------拓展第二部分拓展id from 4
-        
-        //如果是喝酒则开始 以下为喝酒相关问题id
-        if (_questionId == 6 ||
-            _questionId == 15 ||
-            _questionId == 21 ||
-            _questionId == 28) {
-            
-            _extensionQuestion = YES;
-            
-        }else
-        {
-            _extensionQuestion = NO;
-        }
-        
-        //开始拓展、拓展问题id 4开始
-        if (_extensionQuestion && _extensionQuestionId >= 4 && _extensionQuestionId <= self.extensionQuestionArray.count){
-            
-            QuestionModel *current_model = self.extensionQuestionArray[_extensionQuestionId - 1];//当前问题
-            if (current_model.is_end == 1) {
-                
-                _extensionQuestion = NO;
-            }
-        
-        }
-        
-        if (_extensionQuestion) {
-            
-            if (_extensionQuestionId < 4) {
-                _extensionQuestionId = 4;//第二部分拓展问题id从4开始
-            }else
-            {
-                if (_extensionQuestionId < self.extensionQuestionArray.count) {
-                    
-                    QuestionModel *next_model = self.extensionQuestionArray[_extensionQuestionId];//下一个问题
-                    int startAge = next_model.start_age;
-                    int endAge = next_model.end_age;
-                    
-                    //年龄满足
-                    if (self.age >= startAge && (self.age < endAge || endAge == 0)) {
-                        _extensionQuestionId = next_model.questionId;
-                    }else
-                    {
-                        //继续下一个
-                        _extensionQuestionId += 1;//看看下一个拓展问题是否可以
-                        [self clickToForward:nil];
-                        
-                        return;
-                    }
-                    
-                }
-            }
-            //页面跳转
-            
-            UIView *currentView_extension = _currentView;
-            UIView *toView_extension = [self configExtensionItemWithQuestionId:_extensionQuestionId forward:YES];
-            [self swapView:currentView_extension ToView:toView_extension forward:YES];
-            
-            return;
-        }
-        
-        //---------------------拓展 end
-        
         //首先判断是否切换组合或者本组合内切换问题
         NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(_groupId)];
         int count = (int)questions.count;//当前组合问题个数
@@ -593,10 +489,10 @@
         }
         
         //当前第几个问题
-        int index = [self questionIndexForGroupId:_groupId];
+        int index = [self questionIndexForGroupId:NSStringFromInt(_groupId)];
         UIView *currentView = _currentView;
         UIView *toView;
-        int questionId = 0;
+        NSString *questionId = 0;
         if (index == count - 1) { //已经是组合最后一个了
             
             DDLOG(@"切换组合------%@",_questionDictionary);
@@ -606,7 +502,7 @@
             int lastGroupId = _groupId;//暂时记录上一个组合id
             
             NSString *answerString = [self answerStringForGroupId:lastGroupId];
-            int nextGroupId = [self swapNextGroupWithGroupId:lastGroupId answerString:answerString];
+            int nextGroupId = [self swapNextGroupWithGroupId:lastGroupId answerString:answerString extension:NO];
             
             if (nextGroupId <= 0) { //表示结束了,不需要回答下个组合问题了
                 [self actionForFinishQuestionWithGroupId:nextGroupId];
@@ -616,8 +512,22 @@
             //获取问题id
             int index = 0;
             questionId = [self swapQuestionIdAtIndex:index forGroupId:nextGroupId];
+            
+            UIView *toView = nil;
+            
+            //拓展问题
+            if ([questionId hasPrefix:Q_Extension]) {
+                
+                NSMutableString *temp = [NSMutableString stringWithString:questionId];
+                [temp replaceOccurrencesOfString:[NSString stringWithFormat:@"%@_",Q_Extension] withString:@"" options:0 range:NSMakeRange(0, questionId.length)];
+                int q_id = [temp intValue];
+                toView = [self configExtensionItemWithQuestionId:q_id forward:YES];
+            }else
+            {
+                toView = [self configItemWithQuestionId:[questionId intValue] forward:YES];
+            }
             //记录当前是组合中第几个问题
-            [self updateQuestionIndex:index forGroupId:nextGroupId];
+            [self updateQuestionIndex:index forGroupId:NSStringFromInt(nextGroupId)];
             
             
         }else
@@ -626,13 +536,22 @@
             
             //更新index
             index ++;
-            [self updateQuestionIndex:index forGroupId:_groupId];
+            [self updateQuestionIndex:index forGroupId:NSStringFromInt(_groupId)];
     
-            questionId = [[questions objectAtIndex:index] intValue];//获取问题id
+            questionId = [questions objectAtIndex:index];//获取问题id
+            
+            //拓展问题
+            if ([questionId hasPrefix:Q_Extension]) {
+                
+                NSMutableString *temp = [NSMutableString stringWithString:questionId];
+                [temp replaceOccurrencesOfString:[NSString stringWithFormat:@"%@_",Q_Extension] withString:@"" options:0 range:NSMakeRange(0, questionId.length)];
+                int q_id = [temp intValue];
+                toView = [self configExtensionItemWithQuestionId:q_id forward:YES];
+            }else
+            {
+                toView = [self configItemWithQuestionId:[questionId intValue] forward:YES];
+            }
         }
-        
-        //问题view
-        toView = [self configItemWithQuestionId:questionId forward:YES];
 
         [self swapView:currentView ToView:toView forward:YES];
         
@@ -764,9 +683,9 @@
  *
  *  @return
  */
-- (NSArray *)extensionQuestionResultArray
+- (NSDictionary *)extensionQuestionResultDictionary
 {
-    NSMutableArray *temp = [NSMutableArray array];
+    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
     for (NSDictionary *dic in _sortArray) {
         
         BOOL extension = [dic[Q_Extension]boolValue];
@@ -774,10 +693,7 @@
             int extension_qid = [dic[Q_Extension_qid]intValue];
             NSString * optionString = [self extensionQustionOptionStringWithQuestionId:extension_qid];
             NSArray *optionArray = [optionString componentsSeparatedByString:@","];
-            NSMutableDictionary *param = [NSMutableDictionary dictionary];
-            [param safeSetValue:optionArray forKey:NSStringFromInt(extension_qid)];
-            
-            [temp addObject:param];
+            [temp setObject:optionArray forKey:NSStringFromInt(extension_qid)];
         }
     }
     return temp;
@@ -814,6 +730,12 @@
         NSMutableDictionary *quesitonDic = [NSMutableDictionary dictionary];
         
         for (NSString *questionId in questions) {
+            
+            //拓展的问题排除
+            if ([questionId hasPrefix:Q_Extension]) {
+                
+                continue;
+            }
             
             NSArray *options = [[DBManager shareInstance]queryOptionsIdsByQuestionId:[questionId intValue]];
             
@@ -858,7 +780,7 @@
     [result safeSetValue:groupDic forKey:@"group_ids"];
     [result safeSetValue:NSStringFromInt(groupId) forKey:@"final_groupId"];
     [result safeSetValue:n1_ids forKey:@"nq_ids"];
-    [result safeSetValue:[self extensionQuestionResultArray] forKey:@"e_result"];
+    [result safeSetValue:[self extensionQuestionResultDictionary] forKey:@"e_result"];
     
     NSString *jsonString = [LTools JSONStringWithObject:result];
     _jsonString = jsonString;
@@ -1040,9 +962,16 @@
 
 /**
  *  切换组合
+ *
+ *  @param groupId
+ *  @param answerString
+ *  @param extension    是否拓展问题
+ *
+ *  @return
  */
 - (int)swapNextGroupWithGroupId:(int)groupId
                    answerString:(NSString *)answerString
+                     extension:(BOOL)extension
 {
     
     //判断是否有下个组合,还是说已经问答完毕 ？
@@ -1059,6 +988,50 @@
     
     //下个组合问题ids
     NSArray *questions = [[DBManager shareInstance]queryQuestionIdsByGroupId:nextGroupId];
+    
+    //如果拓展问题
+    if (extension) {
+        
+        //烟、酒
+        NSMutableArray *temp = [NSMutableArray array];
+        
+        //第一个部分 放在前面
+        
+        if (self.gender == Gender_Boy) {
+            
+            //3
+            [temp addObject:[NSString stringWithFormat:@"%@_3",Q_Extension]];
+            
+        }else if (self.gender == Gender_Girl){
+            
+            if (self.age <= 45) {
+                
+                //1
+                [temp addObject:[NSString stringWithFormat:@"%@_1",Q_Extension]];
+                //2
+                [temp addObject:[NSString stringWithFormat:@"%@_2",Q_Extension]];
+
+            }
+        }
+        [temp addObjectsFromArray:@[questions[0],questions[1]]];//烟酒
+        
+        //第二部分
+        
+        NSArray *extensionQids = [[DBManager shareInstance]queryAllExtensionQuestionIdsWithAge:self.age];
+        
+        for (NSString *q_id in extensionQids) {
+            [temp addObject:[NSString stringWithFormat:@"%@_%@",Q_Extension,q_id]];
+        }
+        
+        //烟酒剩余部分
+        
+        for (int i = 2; i < questions.count; i ++) {
+            
+            [temp addObject:questions[i]];
+        }
+        
+        questions = [NSArray arrayWithArray:temp];
+    }
     
     if (questions.count > 0) {
         [_questionDictionary setObject:questions forKey:NSStringFromInt(nextGroupId)];//记录组合对应的问题ids
@@ -1077,14 +1050,14 @@
  *
  *  @return 问题id
  */
-- (int)swapQuestionIdAtIndex:(int)q_index
+- (NSString *)swapQuestionIdAtIndex:(int)q_index
                   forGroupId:(int)groupId
 {
     //记录当前是组合中第几个问题
-    [self updateQuestionIndex:q_index forGroupId:groupId];
+    [self updateQuestionIndex:q_index forGroupId:NSStringFromInt(groupId)];
     
     NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(groupId)];
-    int questionId = [[questions objectAtIndex:q_index] intValue];//获取问题id
+    NSString *questionId = [questions objectAtIndex:q_index];//获取问题id
     _questionId = questionId;
     return questionId;
 }
@@ -1097,10 +1070,19 @@
  *  @param groupId 组合id
  */
 - (void)updateQuestionIndex:(int)q_index
-                 forGroupId:(int)groupId
+                 forGroupId:(NSString *)groupId
+{
+    NSString *key = [NSString stringWithFormat:@"q_index_%@",groupId];//定义key
+    [_questionDictionary setObject:NSStringFromInt(q_index) forKey:key];
+}
+
+/**
+ *  移除组合回答问题下表
+ */
+- (void)removeQuestionIndexForGroupId:(int)groupId
 {
     NSString *key = [NSString stringWithFormat:@"q_index_%d",groupId];//定义key
-    [_questionDictionary setObject:NSStringFromInt(q_index) forKey:key];
+    [_questionDictionary removeObjectForKey:key];
 }
 
 /**
@@ -1110,9 +1092,9 @@
  *
  *  @return
  */
-- (int)questionIndexForGroupId:(int)groupId
+- (int)questionIndexForGroupId:(NSString *)groupId
 {
-    NSString *key = [NSString stringWithFormat:@"q_index_%d",groupId];//定义key
+    NSString *key = [NSString stringWithFormat:@"q_index_%@",groupId];//定义key
     
     int index = [[_questionDictionary objectForKey:key]intValue];//当前第几个问题
     
@@ -1136,14 +1118,11 @@
     if (forward) {
         //记录问题顺序
         [self addSortArrayWithQuestionId:questionId extension:YES];
-    }else
-    {
-        [self removeSortArrayLastObject];
     }
     
     _extensionQuestionId = (int)questionId;//记录当前问题id
     
-    DDLOG(@"extension questionId: %d",_questionId);
+    DDLOG(@"extension questionId: %@",_questionId);
     
     UIView *view = nil;
     __weak typeof(self)weakSelf = self;
@@ -1247,14 +1226,13 @@
     if (forward) {
         //记录问题顺序
         [self addSortArrayWithQuestionId:questionId extension:NO];
-    }else
-    {
-        [self removeSortArrayLastObject];
     }
     
-    _questionId = (int)questionId;//记录当前问题id
     
-    DDLOG(@"questionId: %d - %d",_groupId,_questionId);
+    
+    _questionId = NSStringFromInt((int)questionId);//记录当前问题id
+    
+    DDLOG(@"questionId: %d - %@",_groupId,_questionId);
     
     UIView *view = nil;
     __weak typeof(self)weakSelf = self;
@@ -1570,9 +1548,7 @@
  */
 - (NSArray *)extensionQuestionArray
 {
-    if (!_extensionQuestionArray) {
-        _extensionQuestionArray = [[DBManager shareInstance]queryAllExtensionQuestions];
-    }
+    _extensionQuestionArray = [[DBManager shareInstance]queryAllExtensionQuestionsWithAge:self.age];
     return _extensionQuestionArray;
 }
 
