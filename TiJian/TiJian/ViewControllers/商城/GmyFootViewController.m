@@ -27,6 +27,9 @@
     BOOL _toolShow;
     
     
+    NSMutableArray *_dataArray;//二维数组数据源
+    
+    
 }
 @end
 
@@ -160,7 +163,7 @@
 
 
 -(void)creatRTab{
-    _rtab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _rtab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStyleGrouped];
     _rtab.refreshDelegate = self;
     _rtab.dataSource = self;
     [self.view addSubview:_rtab];
@@ -181,13 +184,14 @@
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    NSInteger num = 1;
+    NSInteger num = _dataArray.count;
     return num;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
-    num = _rtab.dataArray.count;
+    NSArray *arr = _dataArray[section];
+    num = arr.count;
     return num;
 }
 
@@ -197,7 +201,7 @@
 }
 
 - (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
-    CGFloat height = 0.01;
+    CGFloat height = 30;
     return height;
 }
 
@@ -207,7 +211,44 @@
 }
 
 - (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 30)];
+    view.backgroundColor = [UIColor whiteColor];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH-10, 30)];
+    titleLabel.font = [UIFont systemFontOfSize:12];
+    titleLabel.textColor = RGBCOLOR(81, 82, 83);
+    [view addSubview:titleLabel];
+    
+    NSArray *arr = _dataArray[section];
+    ProductModel *model = arr[0];
+    NSString *titleStr = model.track_time;
+    
+    if (section == 0) {//今天
+        
+        NSDate *now = [NSDate date];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd";
+        NSString *nowTimeStr = [formatter stringFromDate:now];
+        
+        if ([nowTimeStr isEqualToString:model.track_time]) {
+            titleStr = @"今天";
+        }
+    }else if (section == 1){//昨天
+        
+        NSDate *now = [NSDate date];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd";
+        NSTimeInterval secondsPerDay1 = 24*60*60;
+        NSDate *yesterDay = [now dateByAddingTimeInterval:-secondsPerDay1];
+        NSString *yesterDayTimeStr = [formatter stringFromDate:yesterDay];
+        
+        if ([yesterDayTimeStr isEqualToString:model.track_time]) {
+            titleStr = @"昨天";
+        }
+    }
+
+    
+    titleLabel.text = titleStr;
     return view;
 }
 
@@ -226,7 +267,9 @@
     }
     
     
-    ProductModel *model = _rtab.dataArray[indexPath.row];
+    NSArray *arr = _dataArray[indexPath.section];
+
+    ProductModel *model = arr[indexPath.row];
     
     [cell loadData:model];
     
@@ -273,12 +316,48 @@
         
         for (NSDictionary *dic in list) {
             ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            model.track_time = [GMAPI timechangeYMD:[dic stringValueForKey:@"track_time"]];
             [dataArray_net addObject:model];
         }
         
+        //数据融合
+        BOOL isHaveMore = dataArray_net.count <= G_PER_PAGE ? NO : YES;
+        [_rtab reloadDataWithNoFinishReloading:dataArray_net isHaveMore:isHaveMore];
+        
+        NSMutableDictionary *m_dic = [NSMutableDictionary dictionaryWithCapacity:1];
+        
+        //按时间分组
+        for (ProductModel *model in dataArray_net) {
+            NSMutableArray *arr = [m_dic objectForKey:model.track_time];
+            if (arr.count>0) {
+                [arr addObject:model];
+                [m_dic setValue:arr forKey:model.track_time];
+            }else{
+                NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
+                [arr addObject:model];
+                [m_dic setValue:arr forKey:model.track_time];
+            }
+        }
+        
+        NSArray *allKeyArray = [m_dic allKeys];
+        NSArray *allKeyArray_paixu = [allKeyArray sortedArrayUsingSelector:@selector(compare:)];
+        NSMutableArray *arr_data = [NSMutableArray arrayWithCapacity:1];
+        
+        NSInteger count = allKeyArray_paixu.count;
+        
+        for (int i = 0; i < count; i++) {
+            NSString *str = allKeyArray_paixu[count-i-1];
+            NSArray *arr = [m_dic arrayValueForKey:str];
+            [arr_data addObject:arr];
+        }
         
         
-        [_rtab reloadData:dataArray_net pageSize:G_PER_PAGE];
+        _dataArray = arr_data;
+        
+        
+        //刷新界面
+        [_rtab finishReloadingData];
+        
         
     } failBlock:^(NSDictionary *result) {
         [_rtab loadFail];
@@ -286,5 +365,11 @@
     }];
     
 }
+
+
+
+
+
+
 
 @end

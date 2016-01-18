@@ -101,6 +101,10 @@
     [btn addTarget:self action:@selector(qingkongBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btn];
     
+    if (self.dataArray.count == 0) {
+        btn.hidden = YES;
+    }
+    
     
     return view;
 }

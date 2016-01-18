@@ -141,6 +141,22 @@
     [self finishReloadingData];
 }
 
+- (void)reloadDataWithNoFinishReloading:(NSArray *)data isHaveMore:(BOOL)isHave
+{
+    self.isHaveMoreData = isHave;
+    
+    if (self.isReloadData) {
+        
+        [self.dataArray removeAllObjects];
+    }
+    [self.dataArray addObjectsFromArray:data];
+    
+}
+
+
+
+
+
 /**
  *  reload 数据
  *

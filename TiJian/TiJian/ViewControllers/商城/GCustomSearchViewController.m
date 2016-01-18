@@ -68,6 +68,10 @@
     [super viewWillAppear:animated];
     [self hiddenNavigationBar:YES animated:animated];
     
+    if (_theCustomSearchView) {
+        [_theCustomSearchView.tab reloadData];
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated

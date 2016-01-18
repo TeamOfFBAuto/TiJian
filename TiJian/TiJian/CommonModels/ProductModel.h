@@ -41,7 +41,8 @@
 @property(nonatomic,strong)NSArray *project_info;
 @property(nonatomic,strong)NSArray *coupon_list;
 @property(nonatomic,strong)NSString *is_favor;//是否收藏 1收藏 2未收藏
-@property(nonatomic,strong)NSString *footTime;//足迹时间
+@property(nonatomic,strong)NSString *track_time;//足迹时间
+
 
 //购物车相关
 @property(nonatomic,strong)NSString *product_name;

@@ -216,6 +216,8 @@
 
 
 
+
+
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
     
     [self changeSearchViewAndKuangFrameAndTfWithState:0];
@@ -658,6 +660,7 @@
     self.searchTf.layer.cornerRadius = 5;
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
+    self.searchTf.returnKeyType = UIReturnKeySearch;
     [_kuangView addSubview:self.searchTf];
     
     [self changeSearchViewAndKuangFrameAndTfWithState:0];
@@ -1023,6 +1026,7 @@
         
     });
 }
+
 
 
 #pragma mark - UITableViewDataSource

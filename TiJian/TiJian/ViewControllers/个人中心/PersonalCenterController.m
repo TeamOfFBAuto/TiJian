@@ -492,6 +492,7 @@
             
             //@"我的购物车";
             GShopCarViewController *shop = [[GShopCarViewController alloc]init];
+            shop.isPersonalCenterPush = YES;
             shop.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:shop animated:YES];
             

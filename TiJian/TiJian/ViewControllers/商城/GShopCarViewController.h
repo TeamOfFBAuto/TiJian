@@ -20,6 +20,8 @@
 
 @property(nonatomic,strong)UIButton *allChooseBtn;
 
+@property(nonatomic,assign)BOOL isPersonalCenterPush;//是从个人中心跳转的购物车
+
 -(void)updateRtabTotolPrice;
 
 -(void)setOpenArray1WithIndex:(int)index;

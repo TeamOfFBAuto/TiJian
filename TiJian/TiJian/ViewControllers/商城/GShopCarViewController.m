@@ -890,7 +890,6 @@
                                                   content:content];
     
     
-    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 200, 36);
     [btn addCornerRadius:5.f];
@@ -910,9 +909,19 @@
 
 -(void)quguangguangBtnClicked{
     NSLog(@"%s",__FUNCTION__);
-    GStoreHomeViewController *cc = [[GStoreHomeViewController alloc]init];
-    cc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:cc animated:YES];
+    if (self.isPersonalCenterPush) {
+        GStoreHomeViewController *cc = [[GStoreHomeViewController alloc]init];
+        cc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:cc animated:YES];
+    }else{
+        for (UIViewController *vc in self.navigationController.viewControllers) {
+            if ([vc isKindOfClass:[GStoreHomeViewController class]]) {
+                [self.navigationController popToViewController:vc animated:YES];
+                continue;
+            }
+        }
+    }
+    
 }
 
 
