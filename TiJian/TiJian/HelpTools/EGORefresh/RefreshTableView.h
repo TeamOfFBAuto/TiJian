@@ -64,6 +64,10 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 
 @property (nonatomic,copy)OBSERVERBLOCK dataArrayObeserverBlock;//监控数据源
 
+@property (nonatomic,assign)BOOL                        isReloadData;      //是否是下拉刷新数据
+@property (nonatomic,assign)BOOL                        reloading;         //是否正在loading
+@property (nonatomic,assign)BOOL                        isLoadMoreData;    //是否是载入更多
+@property (nonatomic,assign)BOOL                        isHaveMoreData;    //是否还有更多数据,决定是否有更多view
 
 #pragma mark - 初始化
 

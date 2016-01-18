@@ -20,12 +20,6 @@
 @property (nonatomic,retain)RefreshHeaderView * refreshHeaderView;//顶部刷新view
 @property (nonatomic,retain)RefreshFooterView *refreshFooterView;//底部加载更多view
 
-
-@property (nonatomic,assign)BOOL                        isReloadData;      //是否是下拉刷新数据
-@property (nonatomic,assign)BOOL                        reloading;         //是否正在loading
-@property (nonatomic,assign)BOOL                        isLoadMoreData;    //是否是载入更多
-@property (nonatomic,assign)BOOL                        isHaveMoreData;    //是否还有更多数据,决定是否有更多view
-
 -(void)createHeaderView;
 -(void)removeHeaderView;
 -(void)beginToReloadData:(EGORefreshPos)aRefreshPos;

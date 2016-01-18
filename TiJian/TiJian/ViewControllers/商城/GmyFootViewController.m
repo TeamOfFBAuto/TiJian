@@ -267,22 +267,8 @@
     
     _request_foot = [_request requestWithMethod:YJYRequstMethodGet api:GetMyProductsFoot parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSArray *list = [result arrayValueForKey:@"list"];
-//        NSArray *allKeysArray = [listDic allKeys];
-//        NSArray *allKeysArray2 = [allKeysArray sortedArrayUsingSelector:@selector(compare:)];
-//        
-//        //所有数据
-//        NSMutableArray *dataArray_net = [NSMutableArray arrayWithCapacity:20];
-//        
-//        //网络数据
-//        for (NSString *str in allKeysArray2) {
-//            NSArray *arr = [listDic arrayValueForKey:str];
-//            for (NSDictionary *dic in arr) {
-//                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-//                model.footTime = [GMAPI timechangeYMD:str];
-//                [dataArray_net addObject:model];
-//            }
-//        }
-        
+
+    
         NSMutableArray *dataArray_net = [NSMutableArray arrayWithCapacity:1];
         
         for (NSDictionary *dic in list) {
