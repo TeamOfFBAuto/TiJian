@@ -109,16 +109,11 @@
     
 }
 
-//-(void)viewDidAppear:(BOOL)animated{
-//    [super viewDidAppear:animated];
-//    [self hiddenNavigationBar:YES animated:NO];
-//}
-
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self hiddenNavigationBar:NO animated:animated];
+    [self hiddenNavigationBar:NO animated:NO];
 }
 
 
@@ -127,8 +122,10 @@
     // Do any additional setup after loading the view.
     
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeText WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
+    
+    self.leftString = @" ";
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
@@ -137,8 +134,8 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
-    [self setupNavigation];
     [self creatTableView];
+    [self setupNavigation];
     [self creatDownBtnView];
     [self creatMysearchView];
     [self getHotSearch];
@@ -624,17 +621,15 @@
     
     [self resetShowCustomNavigationBar:YES];
     
-//    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-//    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [leftBtn setFrame:CGRectMake(0, 0, 30, 30)];
-//    leftBtn.backgroundColor = RGBCOLOR(220, 220, 220);
-//    leftBtn.layer.cornerRadius = 15;
-//    [leftBtn setImage:[UIImage imageNamed:@"back_w.png"] forState:UIControlStateNormal];
-//    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
-//    [leftView addSubview:leftBtn];
-//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
+    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
+    [leftBtn setImage:[UIImage imageNamed:@"back_storehome.png"] forState:UIControlStateNormal];
+    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
+    [leftView addSubview:leftBtn];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
     
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(gogoback)];
+//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back_storehome.png"] style:UIBarButtonItemStyleDone target:self action:@selector(gogoback)];
     self.currentNavigationItem.leftBarButtonItem = leftItem;
     
     
@@ -676,7 +671,11 @@
         [effectView addSubview:alphaView];
         alphaView.backgroundColor = [UIColor whiteColor];
         alphaView.tag = 10000;
-    }
+    };
+    
+    [self setEffectViewAlpha:0];
+    
+    
 }
 
 
@@ -715,18 +714,13 @@
     
     CGFloat tw = _downView.frame.size.width/4;
     NSArray *titleArray = @[@"客服",@"收藏",@"筛选",@"购物车"];
-    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"pinpaidian_pd.png",@"gouwuche_pd.png"];
+    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucangjia.png",@"pinpaidian_pd.png",@"gouwuche_pd.png"];
     for (int i = 0; i<4; i++) {
         UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
         [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
         [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
-        if (i == 1) {
-            [oneBtn setImage:[UIImage imageNamed:@"shoucang_pd.png"] forState:UIControlStateNormal];
-            [oneBtn setImage:[UIImage imageNamed:@"yishoucang.png"] forState:UIControlStateSelected];
-            
-            
-        }
+        
         if (i<3) {
             [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 17, 25, 0)];
         }else{
@@ -784,7 +778,7 @@
     [self loadCache];
     
     
-    [_table showRefreshHeader:YES];
+    [_table refreshNewData];
     
     
 }
@@ -914,8 +908,22 @@
         }];
         
     }else if (sender.tag == 101){//收藏
-        ProductListViewController *cc = [[ProductListViewController alloc]init];
-        [self.navigationController pushViewController:cc animated:YES];
+        
+        if ([LoginViewController isLogin]) {//已登录
+            ProductListViewController *cc = [[ProductListViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }else{
+            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+                if (success) {//登录成功
+                    
+                }else{
+                    
+                }
+            }];
+        }
+        
+        
+        
         
         
     }else if (sender.tag == 102){//筛选
@@ -1154,5 +1162,60 @@
     
 }
 
+
+
+
+
+//#pragma mark - 无数据默认view
+//-(ResultView *)resultViewWithType:(PageResultType)type
+//{
+//    NSString *content;
+//    NSString *btnTitle;
+//    if (type == PageResultType_nodata){
+//        
+//        content = @"快去挑几件喜欢的宝贝吧";
+//        btnTitle = @"去逛逛";
+//        
+//    }
+//    
+//    
+//    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"gouwuche-kong.png"]
+//                                                    title:@"购物车还是空的"
+//                                                  content:content];
+//    
+//    
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    btn.frame = CGRectMake(0, 0, 200, 36);
+//    [btn addCornerRadius:5.f];
+//    btn.backgroundColor = DEFAULT_TEXTCOLOR;
+//    [btn setTitle:btnTitle forState:UIControlStateNormal];
+//    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+//    [btn addTarget:self action:@selector(quguangguangBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+//    [result setBottomView:btn];
+//    
+//    
+//    
+//    
+//    return result;
+//}
+//
+//
+//-(void)quguangguangBtnClicked{
+//    NSLog(@"%s",__FUNCTION__);
+//    if (self.isPersonalCenterPush) {
+//        GStoreHomeViewController *cc = [[GStoreHomeViewController alloc]init];
+//        cc.hidesBottomBarWhenPushed = YES;
+//        [self.navigationController pushViewController:cc animated:YES];
+//    }else{
+//        for (UIViewController *vc in self.navigationController.viewControllers) {
+//            if ([vc isKindOfClass:[GStoreHomeViewController class]]) {
+//                [self.navigationController popToViewController:vc animated:YES];
+//                continue;
+//            }
+//        }
+//    }
+//    
+//}
 
 @end

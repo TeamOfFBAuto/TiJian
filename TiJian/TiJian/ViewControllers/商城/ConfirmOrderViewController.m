@@ -884,39 +884,39 @@
     
     [liuyanView addSubview:_liuyantf];
     
-    //第二条分割线
-    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(liuyanView.frame), DEVICE_WIDTH, 2)];
-    line2.backgroundColor = RGBCOLOR(244, 245, 246);
-    [_tabFooterView addSubview:line2];
+//    //第二条分割线
+//    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(liuyanView.frame), DEVICE_WIDTH, 2)];
+//    line2.backgroundColor = RGBCOLOR(244, 245, 246);
+//    [_tabFooterView addSubview:line2];
     
-    //联系卖家
-    UIButton *chatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [chatBtn setFrame:CGRectMake(0, CGRectGetMaxY(line2.frame), DEVICE_WIDTH/2, 45)];
-    [chatBtn setImage:[UIImage imageNamed:@"order_chat.png"] forState:UIControlStateNormal];
-    [chatBtn setTitle:@"联系卖家" forState:UIControlStateNormal];
-    [chatBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
-    chatBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [chatBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];
-    [_tabFooterView addSubview:chatBtn];
-    
-    
-    //竖条
-    UIView *line_shu = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(chatBtn.frame), chatBtn.frame.origin.y+10, 1, 25)];
-    line_shu.backgroundColor = RGBCOLOR(244, 245, 246);
-    [_tabFooterView addSubview:line_shu];
-    
-    //拨打电话
-    UIButton *phoneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [phoneBtn setFrame:CGRectMake(CGRectGetMaxX(line_shu.frame), chatBtn.frame.origin.y, DEVICE_WIDTH/2, 45)];
-    [phoneBtn setImage:[UIImage imageNamed:@"order_phone.png"] forState:UIControlStateNormal];
-    [phoneBtn setTitle:@"拨打电话" forState:UIControlStateNormal];
-    [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
-    phoneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [phoneBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];
-    [_tabFooterView addSubview:phoneBtn];
+//    //联系卖家
+//    UIButton *chatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [chatBtn setFrame:CGRectMake(0, CGRectGetMaxY(line2.frame), DEVICE_WIDTH/2, 45)];
+//    [chatBtn setImage:[UIImage imageNamed:@"order_chat.png"] forState:UIControlStateNormal];
+//    [chatBtn setTitle:@"联系卖家" forState:UIControlStateNormal];
+//    [chatBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+//    chatBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [chatBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];
+//    [_tabFooterView addSubview:chatBtn];
+//    
+//    
+//    //竖条
+//    UIView *line_shu = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(chatBtn.frame), chatBtn.frame.origin.y+10, 1, 25)];
+//    line_shu.backgroundColor = RGBCOLOR(244, 245, 246);
+//    [_tabFooterView addSubview:line_shu];
+//    
+//    //拨打电话
+//    UIButton *phoneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [phoneBtn setFrame:CGRectMake(CGRectGetMaxX(line_shu.frame), chatBtn.frame.origin.y, DEVICE_WIDTH/2, 45)];
+//    [phoneBtn setImage:[UIImage imageNamed:@"order_phone.png"] forState:UIControlStateNormal];
+//    [phoneBtn setTitle:@"拨打电话" forState:UIControlStateNormal];
+//    [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+//    phoneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [phoneBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];
+//    [_tabFooterView addSubview:phoneBtn];
     
     //第3条分割线
-    UIView *line3 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(phoneBtn.frame), DEVICE_WIDTH, 5)];
+    UIView *line3 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_liuyantf.frame), DEVICE_WIDTH, 5)];
     line3.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:line3];
     
