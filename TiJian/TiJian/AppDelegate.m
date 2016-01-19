@@ -46,6 +46,8 @@
     
     [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     
+    sleep(1);
+    
     //友盟统计
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
     [MobClick setLogEnabled:YES];
@@ -53,6 +55,7 @@
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_UPDATEMSGNUM object:nil];
     
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
@@ -276,6 +279,8 @@
         [self netWorkForMsgNum];//获取未读消息条数
     }else if ([notification.name isEqualToString:NOTIFICATION_UPDATEHEADIMAGE]){
         [self uploadHeadImage];//上传头像
+    }else if ([notification.name isEqualToString:NOTIFICATION_UPDATEMSGNUM]){
+        [self netWorkForMsgNum];
     }
 }
 
@@ -876,7 +881,6 @@
         int count = [[result objectForKey:@"count"]intValue];
         
         [LTools setObject:[NSNumber numberWithInt:count] forKey:USER_MSG_NUM];//未读消息个数
-        DDLOG_CURRENT_METHOD;
         [LTools updateTabbarUnreadMessageNumber];
         
     } failBlock:^(NSDictionary *result) {

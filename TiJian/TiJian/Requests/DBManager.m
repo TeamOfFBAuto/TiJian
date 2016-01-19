@@ -323,11 +323,11 @@
  *
  *  @param groupId 组合id
  */
-- (NSArray *)queryOptionsIdsByQuestionId:(int)groupId
+- (NSArray *)queryOptionsIdsByQuestionId:(int)questionid
 {
     if ([_dataBase open]) {
         
-        NSString *sql = [NSString stringWithFormat:@"select option_id from j_customization_question_options where question_id = %d order by option_order",groupId];
+        NSString *sql = [NSString stringWithFormat:@"select option_id from j_customization_question_options where question_id = %d order by option_order",questionid];
         FMResultSet *rs = [_dataBase executeQuery:sql];
         NSMutableArray *temp = [NSMutableArray array];
         while (rs.next) {

@@ -414,16 +414,17 @@ static int seconds = 60;//计时60s
 //输入完验证码
 -(void)clickToNext{
     
+    int code = [self.yanzhengmaTf.text intValue];//填写的验证码
     //下一步
-    if (![self.yanzhengmaTf.text intValue] == [_encryptcode intValue]) {
-        
-        [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
-        
-    }else{
+    if (code == [_encryptcode intValue]) {
         
         [self changeTheUpViewStateWithNum:3];
         [_downScrollView setContentOffset:CGPointMake(2 * DEVICE_WIDTH, 0) animated:YES];
-    }    
+        
+    }else{
+        
+        [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
+    }
 }
 
 //提交注册

@@ -86,6 +86,7 @@
             [btn setBackgroundImage:option.optionImage forState:UIControlStateNormal];
             [self addSubview:btn];
             [btn addTarget:self action:@selector(clickToSelectAnswer:) forControlEvents:UIControlEventTouchUpInside];
+            
             btn.tag = [questionId intValue] * 100 + i;
             btn.aModel = option;
             
@@ -252,6 +253,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        _questionId = 0;
+        
         self.resultBlock = aBlock;
         UIImage *bgImage = [UIImage imageNamed:@"2_1_bg"];
         UIImageView *bgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [LTools fitWidth:bgImage.size.height])];
@@ -321,6 +324,7 @@
     if (self) {
         
         self.resultBlock = aBlock;
+        _questionId = 0;
         
         NSString *bgImageName = gender == Gender_Boy ? @"3_m_1_bg" : @"3_w_1_bg";
 
@@ -380,7 +384,8 @@
     if (self) {
         
         self.resultBlock = aBlock;
-        
+        _questionId = 0;
+
         NSString *bgImageName = @"4_1_bg";
         
         UIImage *bgImage = [UIImage imageNamed:bgImageName];
@@ -577,7 +582,8 @@
  */
 - (BOOL)enableForward
 {
-    if (_questionId <= 4) { //性别、年龄、身高、体重 是可以直接跳转的
+    if (_questionId == 0) { //性别、年龄、身高、体重 是可以直接跳转的
+        
         return YES;
     }
     

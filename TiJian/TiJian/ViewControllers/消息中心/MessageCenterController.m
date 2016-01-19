@@ -187,6 +187,11 @@
         
        [weakTable reloadData:temp pageSize:10 noDataView:[self noDataView]];
         
+        //获取列表请求成功
+        if (index == 2){
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATEMSGNUM object:nil];//更新消息未读个数
+        }
+        
     } failBlock:^(NSDictionary *result) {
         [weakTable reloadData:nil pageSize:10 noDataView:[self noDataView]];
         

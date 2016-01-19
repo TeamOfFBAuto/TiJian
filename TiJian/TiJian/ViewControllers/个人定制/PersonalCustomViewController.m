@@ -51,7 +51,6 @@
     NSString *_jsonString;//最终结果json串
     
     BOOL _extensionQuestion;//是否是拓展问题
-    int _extensionQuestionId;//拓展问题id
     NSMutableArray *_sortArray;//存储顺序字典情况@{@"q_extension":1,@"q_extension_qid":@"3"}
 }
 
@@ -292,6 +291,7 @@
  */
 - (void)clickToLast:(UIButton *)sender
 {
+    
     if ([_questionId intValue] == 2) { //年龄
         
         //跳性别
@@ -492,7 +492,7 @@
         int index = [self questionIndexForGroupId:NSStringFromInt(_groupId)];
         UIView *currentView = _currentView;
         UIView *toView;
-        NSString *questionId = 0;
+        NSString *questionId = @"";
         if (index == count - 1) { //已经是组合最后一个了
             
             DDLOG(@"切换组合------%@",_questionDictionary);
@@ -513,7 +513,10 @@
             int index = 0;
             questionId = [self swapQuestionIdAtIndex:index forGroupId:nextGroupId];
             
-            UIView *toView = nil;
+            if (!questionId) {
+                [LTools showMBProgressWithText:@"抱歉您的情况已超出河马认知范围!" addToView:self.view];
+                return;
+            }
             
             //拓展问题
             if ([questionId hasPrefix:Q_Extension]) {
@@ -1058,7 +1061,9 @@
     
     NSArray *questions = [_questionDictionary objectForKey:NSStringFromInt(groupId)];
     NSString *questionId = [questions objectAtIndex:q_index];//获取问题id
-    _questionId = questionId;
+    if (questionId) {
+        _questionId = questionId;
+    }
     return questionId;
 }
 
@@ -1120,7 +1125,7 @@
         [self addSortArrayWithQuestionId:questionId extension:YES];
     }
     
-    _extensionQuestionId = (int)questionId;//记录当前问题id
+    _questionId = [NSString stringWithFormat:@"%@_%ld",Q_Extension,questionId];
     
     DDLOG(@"extension questionId: %@",_questionId);
     
@@ -1146,7 +1151,7 @@
     NSMutableArray *options_arr = [NSMutableArray array];
     //获取选项和选项对应图片
     for (int i = 0; i < optionsNum; i ++) {
-        NSString *imageName = [NSString stringWithFormat:@"extension_%d_%d",(int)questionId + 30,i + 1];
+        NSString *imageName = [NSString stringWithFormat:@"extension_%d_%d.png",(int)questionId + 30,i + 1];
         UIImage *image = [UIImage imageNamed:imageName];
         if (image) {
             
@@ -1227,8 +1232,6 @@
         //记录问题顺序
         [self addSortArrayWithQuestionId:questionId extension:NO];
     }
-    
-    
     
     _questionId = NSStringFromInt((int)questionId);//记录当前问题id
     
@@ -1322,7 +1325,7 @@
         NSMutableArray *options_arr = [NSMutableArray array];
         //获取选项和选项对应图片
         for (int i = 0; i < optionsNum; i ++) {
-            NSString *imageName = [NSString stringWithFormat:@"%d_%d",(int)questionId,i + 1];
+            NSString *imageName = [NSString stringWithFormat:@"%d_%d.png",(int)questionId,i + 1];
             UIImage *image = [UIImage imageNamed:imageName];
             if (image) {
 
