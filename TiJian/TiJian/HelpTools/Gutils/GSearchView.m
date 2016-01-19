@@ -152,7 +152,7 @@
         btn.layer.borderWidth = 0.5;
         btn.layer.borderColor = [RGBCOLOR(229, 230, 231)CGColor];
         [btn setTitle:[NSString stringWithFormat:@"%@",hotStr] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btn setTitleColor:RGBCOLOR(80, 81, 82) forState:UIControlStateNormal];
         [hotSearchScrollView addSubview:btn];
         btn.tag = 1000+i;
         [btn addTarget:self action:@selector(hotSearchBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -200,7 +200,7 @@
     
     cell.textLabel.text = self.dataArray[indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:13];
-    
+    cell.textLabel.textColor = RGBCOLOR(38, 38, 39);
     
     
     return cell;

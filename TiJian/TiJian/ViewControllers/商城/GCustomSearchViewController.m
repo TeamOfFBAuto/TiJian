@@ -90,7 +90,6 @@
     [self getHotSearch];
     
     
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -237,12 +236,7 @@
     
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
     self.currentNavigationItem.rightBarButtonItems = @[_rightItem1];
-    
-    
-    
-    
-    
-    
+
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -287,7 +281,6 @@
     }];
     
     [_mySearchView addSubview:_theCustomSearchView];
-    
     
     
 }

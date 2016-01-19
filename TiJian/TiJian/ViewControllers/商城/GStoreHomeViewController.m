@@ -105,14 +105,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:NO];
-    [self hiddenNavigationBar:YES animated:animated];
+    [self hiddenNavigationBar:YES animated:NO];
     
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    [self hiddenNavigationBar:YES animated:animated];
-}
+//-(void)viewDidAppear:(BOOL)animated{
+//    [super viewDidAppear:animated];
+//    [self hiddenNavigationBar:YES animated:NO];
+//}
 
 
 - (void)viewWillDisappear:(BOOL)animated
