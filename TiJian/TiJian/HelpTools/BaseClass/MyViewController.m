@@ -49,8 +49,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
@@ -66,10 +64,6 @@
     [self.navigationController setNavigationBarHidden:self.lastPageNavigationHidden animated:animated];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
 
 - (void)viewDidLoad
 {

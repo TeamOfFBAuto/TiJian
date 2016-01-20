@@ -104,16 +104,15 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:NO];
-    [self hiddenNavigationBar:YES animated:NO];
-    
+    [super viewWillAppear:animated];
+    [self hiddenNavigationBar:YES animated:animated];
 }
 
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self hiddenNavigationBar:NO animated:NO];
+    [self hiddenNavigationBar:NO animated:animated];
 }
 
 
@@ -1019,6 +1018,7 @@
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *aModel = _table.dataArray[indexPath.row];
     cc.productId = aModel.product_id;
+//    cc.lastPageNavigationHidden = YES;
     [self.navigationController pushViewController:cc animated:YES];
 }
 
