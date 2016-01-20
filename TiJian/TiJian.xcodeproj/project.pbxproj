@@ -527,6 +527,8 @@
 		E3E2B4281BFB2466007988C5 /* AddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E2B4261BFB2466007988C5 /* AddressCell.xib */; };
 		E3E2B42C1BFB2491007988C5 /* SelectAddressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E2B42A1BFB2491007988C5 /* SelectAddressCell.m */; };
 		E3E2B42D1BFB2491007988C5 /* SelectAddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E2B42B1BFB2491007988C5 /* SelectAddressCell.xib */; };
+		E3E487E71C4FCE2D0081B4B2 /* shaixuan_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E487E61C4FCE2D0081B4B2 /* shaixuan_white@2x.png */; };
+		E3E487EA1C4FE02E0081B4B2 /* StoreHomeOneBrandModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E487E91C4FE02E0081B4B2 /* StoreHomeOneBrandModel.m */; };
 		E3E6C3601BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E6C35D1BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png */; };
 		E3E6C3611BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E6C35E1BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png */; };
 		E3E6C3621BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E6C35F1BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png */; };
@@ -1354,6 +1356,9 @@
 		E3E2B4291BFB2491007988C5 /* SelectAddressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectAddressCell.h; path = "../../ViewControllers/商城/SelectAddressCell.h"; sourceTree = "<group>"; };
 		E3E2B42A1BFB2491007988C5 /* SelectAddressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectAddressCell.m; path = "../../ViewControllers/商城/SelectAddressCell.m"; sourceTree = "<group>"; };
 		E3E2B42B1BFB2491007988C5 /* SelectAddressCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SelectAddressCell.xib; path = "../../ViewControllers/商城/SelectAddressCell.xib"; sourceTree = "<group>"; };
+		E3E487E61C4FCE2D0081B4B2 /* shaixuan_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shaixuan_white@2x.png"; sourceTree = "<group>"; };
+		E3E487E81C4FE02E0081B4B2 /* StoreHomeOneBrandModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreHomeOneBrandModel.h; sourceTree = "<group>"; };
+		E3E487E91C4FE02E0081B4B2 /* StoreHomeOneBrandModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreHomeOneBrandModel.m; sourceTree = "<group>"; };
 		E3E6C35D1BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_dd_top_line@2x.png"; sourceTree = "<group>"; };
 		E3E6C35E1BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_dd_top_name@2x.png"; sourceTree = "<group>"; };
 		E3E6C35F1BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_dd_top_phone@2x.png"; sourceTree = "<group>"; };
@@ -2002,6 +2007,8 @@
 				1378ED3D1C3CEE4900A40582 /* ActivityModel.m */,
 				130609121C3E3A3C004489A5 /* MessageModel.h */,
 				130609131C3E3A3C004489A5 /* MessageModel.m */,
+				E3E487E81C4FE02E0081B4B2 /* StoreHomeOneBrandModel.h */,
+				E3E487E91C4FE02E0081B4B2 /* StoreHomeOneBrandModel.m */,
 			);
 			path = CommonModels;
 			sourceTree = "<group>";
@@ -2824,6 +2831,7 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E3E487E61C4FCE2D0081B4B2 /* shaixuan_white@2x.png */,
 				E30888581C4E483000C6A8DD /* back_storehome@2x.png */,
 				E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */,
 				E3C4DBF11C45DD7A00A29259 /* uptool_homepage@2x.png */,
@@ -3090,6 +3098,7 @@
 				139333A61BE0DF3E00B4628B /* 12_2@2x.png in Resources */,
 				139333F91BE0DF3E00B4628B /* left@2x.png in Resources */,
 				E3C4DBF21C45DD7A00A29259 /* uptool_homepage@2x.png in Resources */,
+				E3E487E71C4FCE2D0081B4B2 /* shaixuan_white@2x.png in Resources */,
 				139333BE1BE0DF3E00B4628B /* 1_3_girl@2x.png in Resources */,
 				139333AC1BE0DF3E00B4628B /* 15_1@2x.png in Resources */,
 				139333DC1BE0DF3E00B4628B /* 2_1_bg@2x.png in Resources */,
@@ -3516,6 +3525,7 @@
 				13F8C5AB1C05AA7E004C3FC7 /* JKAssetsCollectionFooterView.m in Sources */,
 				137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */,
 				E3C4DBE41C45926200A29259 /* GmyFootViewController.m in Sources */,
+				E3E487EA1C4FE02E0081B4B2 /* StoreHomeOneBrandModel.m in Sources */,
 				E352F9101C0B7DDB0037E4AE /* LocationChooseViewController.m in Sources */,
 				1322B6A71C1965E500596DAE /* CoupeView.m in Sources */,
 				1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */,

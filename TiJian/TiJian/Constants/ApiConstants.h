@@ -36,6 +36,9 @@
 //商城套餐分类
 #define StoreProductClass @"/index.php?d=api&c=setmeal&m=setmeal_category_list"
 
+//商城首页精品推荐
+#define StoreJingpinTuijian @"/index.php?d=api&c=setmeal&m=index_setmeal_list"
+
 //商品列表 get方式
 #define StoreProductList @"/index.php?d=api&c=setmeal&m=setmeal_list"
 //province_id：省份id 必填

@@ -1594,7 +1594,6 @@
 {
     
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
     
     
     PayActionViewController *pay = [[PayActionViewController alloc]init];

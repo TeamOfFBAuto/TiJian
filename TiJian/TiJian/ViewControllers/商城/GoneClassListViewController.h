@@ -15,7 +15,10 @@
 
 @property(nonatomic,assign)int category_id;//分类id
 
-@property(nonatomic,strong)NSString *className;//分类名称
+@property(nonatomic,strong)NSString *className;//分类名称 控制title显示
+
+@property(nonatomic,strong)NSString *brand_id;//品牌id 控制筛选的品牌选择 品牌店套餐列表
+@property(nonatomic,strong)NSString *brand_name;//品牌名 控制筛选的品牌选择
 
 @property(nonatomic,strong)NSArray *brand_city_list;
 

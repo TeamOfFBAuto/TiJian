@@ -53,7 +53,6 @@
     self.rTab.dataSource = nil;
     self.rTab = nil;
     
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
 }
 
 
@@ -63,6 +62,7 @@
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+    
     
 }
 
@@ -82,14 +82,13 @@
         _open[i] = 0;
     }
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCar) name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCar) name:NOTIFICATION_ORDER_COMMIT object:nil];
     
     _request = [YJYRequstManager shareInstance];
     _rTab.pageNum = 1;
     _totolPrice = 0;
     
     
-//    [self creatNoProductView];
     
     [self creaTab];
     
@@ -174,21 +173,7 @@
     
 }
 
-////创建购物车没有东西的提示界面
-//-(void)creatNoProductView{
-//    _noProductView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-//    
-//    UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
-//    tishiLabel.center = _noProductView.center;
-//    tishiLabel.font = [UIFont systemFontOfSize:15];
-//    tishiLabel.text = @"~空空如也~";
-//    tishiLabel.textAlignment = NSTextAlignmentCenter;
-//    tishiLabel.textColor = [UIColor grayColor];
-//    [_noProductView addSubview:tishiLabel];
-//    
-//    _noProductView.hidden = YES;
-//    [self.view addSubview:_noProductView];
-//}
+
 
 
 

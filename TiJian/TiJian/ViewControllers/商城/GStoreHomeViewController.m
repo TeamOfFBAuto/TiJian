@@ -16,20 +16,15 @@
 #import "GProductCellTableViewCell.h"
 #import "PhysicalTestResultController.h"
 #import "PersonalCustomViewController.h"
-
 #import "LBannerView.h"
 #import "UIImageView+WebCache.h"
 #import "UIImageView+ProgressView.h"
-
 #import "GShopCarViewController.h"
-
 #import "DLNavigationEffectKit.h"
-
 #import "GSearchView.h"
-
 #import "RCDChatViewController.h"
-
 #import "ProductListViewController.h"
+#import "StoreHomeOneBrandModel.h"
 
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
 {
@@ -77,6 +72,10 @@
     AFHTTPRequestOperation *_request_GetShopCarNum;
     NSDictionary *_shopCarDic;
     int _gouwucheNum;//购物车里商品数量
+    
+    
+    
+    
     
 }
 
@@ -272,10 +271,20 @@
         
         //精品推荐数据
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *arr = [storeProductListDic arrayValueForKey:@"data"];
-        for (NSDictionary *dic in arr) {
-            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-            [_StoreProductListArray addObject:model];
+        
+        
+        NSArray *data = [storeProductListDic arrayValueForKey:@"data"];
+        
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray addObject:model_b];
         }
         
         [self creatRefreshHeader];
@@ -331,19 +340,30 @@
                               @"province_id":[GMAPI getCurrentProvinceId],
                               @"city_id":[GMAPI getCurrentCityId],
                               @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
-                              @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
+                              @"per_page":[NSString stringWithFormat:@"%d",5]
                               };
     
     
     
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *arr = [result arrayValueForKey:@"data"];
-        for (NSDictionary *dic in arr) {
-            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-            [_StoreProductListArray addObject:model];
+        NSArray *data = [result arrayValueForKey:@"data"];
+        
+        
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray addObject:model_b];
         }
+        
+        
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
@@ -387,14 +407,23 @@
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *arr = [result arrayValueForKey:@"data"];
-        for (NSDictionary *dic in arr) {
-            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-            [_StoreProductListArray addObject:model];
+        NSArray *data = [result arrayValueForKey:@"data"];
+        
+        
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray addObject:model_b];
         }
         
         
-        [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
+        [_table reloadData:_StoreProductListArray pageSize:5];
         
         
     } failBlock:^(NSDictionary *result) {
@@ -609,7 +638,7 @@
     
     _table.tableHeaderView = self.theTopView;
     
-    [_table reloadData:_StoreProductListArray pageSize:G_PER_PAGE];
+    [_table reloadData:_StoreProductListArray pageSize:5];
 }
 
 
@@ -668,7 +697,7 @@
     if (effectView) {
         UIView *alphaView = [[UIView alloc] initWithFrame:effectView.bounds];
         [effectView addSubview:alphaView];
-        alphaView.backgroundColor = [UIColor whiteColor];
+        alphaView.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:0.8];
         alphaView.tag = 10000;
     };
     
@@ -713,7 +742,7 @@
     
     CGFloat tw = _downView.frame.size.width/4;
     NSArray *titleArray = @[@"客服",@"收藏",@"筛选",@"购物车"];
-    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucangjia.png",@"pinpaidian_pd.png",@"gouwuche_pd.png"];
+    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucangjia.png",@"shaixuan_white.png",@"gouwuche_pd.png"];
     for (int i = 0; i<4; i++) {
         UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
@@ -865,6 +894,19 @@
 
 #pragma mark - 点击方法
 
+-(void)viewForHeaderClicked:(UIButton*)sender{
+    NSInteger index = sender.tag - 20000;
+    StoreHomeOneBrandModel *model_b = _table.dataArray[index];
+    
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.className = model_b.brand_name;
+    cc.brand_name = model_b.brand_name;
+    cc.brand_id = model_b.brand_id;
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    
+}
+
 
 -(void)myNavcRightBtnClicked{
     
@@ -979,7 +1021,6 @@
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
     
-    
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
         UIView *alphaView = [effectView viewWithTag:10000];
@@ -995,7 +1036,6 @@
                 alphaView.alpha = 0;
             }
         }
-    
         
     }
     
@@ -1016,9 +1056,10 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    ProductModel *aModel = _table.dataArray[indexPath.row];
+    
+    StoreHomeOneBrandModel *model_b = _table.dataArray[indexPath.section];
+    ProductModel *aModel = model_b.list[indexPath.row];
     cc.productId = aModel.product_id;
-//    cc.lastPageNavigationHidden = YES;
     [self.navigationController pushViewController:cc animated:YES];
 }
 
@@ -1040,7 +1081,10 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _table.dataArray.count;
+    NSInteger num = 0;
+    StoreHomeOneBrandModel *model = _table.dataArray[section];
+    num = model.list.count;
+    return num;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -1050,7 +1094,10 @@
         cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    ProductModel *model = _table.dataArray[indexPath.row];
+    StoreHomeOneBrandModel *brandModel = _table.dataArray[indexPath.section];
+    
+    
+    ProductModel *model = brandModel.list[indexPath.row];
     
     [cell loadData:model];
     
@@ -1060,16 +1107,102 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 1;
+    NSInteger num = 0;
+    num = _table.dataArray.count;
+    return num;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    
     return [UIView new];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 0.5;
+    
 }
+
+
+
+- (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView{
+    
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 45)];
+    if (section == 0) {
+        [view setHeight:40];
+    }
+    view.backgroundColor = [UIColor whiteColor];
+    
+    if (section != 0) {
+        UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
+        upLine.backgroundColor = RGBCOLOR(244, 245, 246);
+        [view addSubview:upLine];
+    }
+    
+    
+    
+    //数据源
+    StoreHomeOneBrandModel *model_b = _table.dataArray[section];
+    
+    UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 15, 20, 20)];
+    if (section == 0) {
+        [logoImv setFrame:CGRectMake(10, 10, 20, 20)];
+    }
+    [logoImv l_setImageWithURL:[NSURL URLWithString:model_b.brand_logo] placeholderImage:nil];
+    logoImv.layer.cornerRadius = 10;
+    [view addSubview:logoImv];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(logoImv.right + 5, logoImv.frame.origin.y, DEVICE_WIDTH - 10 - 20 - 5 - 10 - 8 - 5, 20)];
+    titleLabel.font = [UIFont systemFontOfSize:12];
+    
+    [view addSubview:titleLabel];
+    
+    //向右箭头
+    if (model_b.list.count>0) {
+        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 18, 17, 8, 15)];
+        
+        if (section == 0) {
+            [jiantouImv setFrame:CGRectMake(DEVICE_WIDTH - 18, 12, 8, 15)];
+        }
+        
+        [jiantouImv setImage:[UIImage imageNamed:@"qrdd_jiantou_big.png"]];
+        [view addSubview:jiantouImv];
+        
+        titleLabel.text = model_b.brand_name;
+        
+        [view addTaget:self action:@selector(viewForHeaderClicked:) tag:section+20000];
+        
+    }else{
+        NSString *str1 = model_b.brand_name;
+        NSString *str2 = @"(暂无更多套餐)";
+        NSString *str = [NSString stringWithFormat:@"%@ %@",str1,str2];
+        
+        NSMutableAttributedString *str_a = [[NSMutableAttributedString alloc] initWithString:str];
+        
+        [str_a addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0,str1.length)];
+        [str_a addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(str1.length+1,str2.length)];
+        [str_a addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, str1.length)];
+        [str_a addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(str1.length+1, str2.length)];
+        
+        titleLabel.attributedText = str_a;
+    }
+    
+    
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 44.5, DEVICE_WIDTH, 0.5)];
+    if (section == 0) {
+        [line setFrame:CGRectMake(0, 39.5, DEVICE_WIDTH, 0.5)];
+    }
+    line.backgroundColor = RGBCOLOR(220, 221, 223);
+    [view addSubview:line];
+    
+    
+    
+    return view;
+}
+- (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView{
+    return 45;
+}
+
+
 
 
 

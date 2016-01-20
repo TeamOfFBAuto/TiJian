@@ -58,7 +58,11 @@
     if (self.theSearchWorld) {
         self.className = @"搜索";
     }
+    
+    
     self.myTitle = self.className;
+    
+    
     self.rightImage = [UIImage imageNamed:@"shaixuan.png"];
     
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
@@ -214,6 +218,12 @@
         {
             dic = temp_dic;
         }
+        
+        if (self.brand_id) {
+            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
+            dic = temp_dic;
+        }
+        
     }else{
         
         dic = @{
@@ -224,6 +234,15 @@
                   @"page":NSStringFromInt(_table.pageNum),
                   @"per_page":NSStringFromInt(PAGESIZE_MID)
                   };
+        
+        if (self.brand_id) {
+            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+            [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+            [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
+            dic = temp_dic;
+        }
+        
     }
     
     _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -276,10 +295,17 @@
         if (voucherId.length > 0) {
             [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金券id
             dic = temp_dic;
-        }else
-        {
+        }else{
+            
             dic = temp_dic;
         }
+        
+        if (self.brand_id) {
+            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
+            dic = temp_dic;
+        }
+        
+        
     }else{
         
         dic = @{
@@ -288,7 +314,20 @@
                 @"page":NSStringFromInt(_table.pageNum),
                 @"per_page":NSStringFromInt(PAGESIZE_MID)
                 };
+        
+        
+        if (self.brand_id) {
+            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+            [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+            [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
+            dic = temp_dic;
+        }
+        
     }
+    
+    
+    
     
     
     NSMutableDictionary *m_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
@@ -339,6 +378,21 @@
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         self.brand_city_list = @[dic];
         
+        return;
+    }
+    
+    
+    //商城首页品牌跳转 单品详情页品牌跳转
+    if ([self.brand_id intValue] > 0) {
+        //过滤掉其他品牌
+        if ([LTools isEmpty:self.brand_name]) {
+            self.brandName = @"其他品牌";
+        }
+        NSDictionary *dic = @{@"brand_id":self.brand_id,
+                              @"brand_name":self.brand_name
+                              };
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+        self.brand_city_list = @[dic];
         return;
     }
     
