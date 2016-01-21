@@ -74,7 +74,7 @@
     int _gouwucheNum;//购物车里商品数量
     
     
-    
+    BOOL _isPresenting;//是否在模态
     
     
 }
@@ -105,12 +105,21 @@
 {
     [super viewWillAppear:animated];
     [self hiddenNavigationBar:YES animated:animated];
+    
+    _isPresenting = NO;
 }
 
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    //模态
+    if (_isPresenting) {
+        _isPresenting = NO;
+        return;
+    }
+    
     [super viewWillDisappear:animated];
+    
     [self hiddenNavigationBar:NO animated:animated];
 }
 
@@ -441,8 +450,6 @@
     }else{
         
     }
-    
-    
 }
 
 //获取购物车数量
@@ -938,36 +945,33 @@
     
     if (sender.tag == 100) {//客服
         
-        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-            if (success) {//登录成功
-                
+
+        [LoginManager isLogin:self loginBlock:^(BOOL success) {
+            if (success) {
                 [self clickToChat];
-                
-            }else{
-                
+            }else
+            {
+                _isPresenting = YES;
+
             }
         }];
         
     }else if (sender.tag == 101){//收藏
         
-        if ([LoginViewController isLogin]) {//已登录
-            ProductListViewController *cc = [[ProductListViewController alloc]init];
-            [self.navigationController pushViewController:cc animated:YES];
-        }else{
-            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-                if (success) {//登录成功
-                    
-                }else{
-                    
-                }
-            }];
-        }
-        
-        
-        
-        
+        [LoginManager isLogin:self loginBlock:^(BOOL success) {
+            if (success)
+            {
+                ProductListViewController *cc = [[ProductListViewController alloc]init];
+                [self.navigationController pushViewController:cc animated:YES];
+            }else
+            {
+                _isPresenting = YES;
+                
+            }
+        }];
         
     }else if (sender.tag == 102){//筛选
+        
         GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
         cc.className = @"精品推荐";
         cc.isShowShaixuanAuto = YES;
@@ -976,19 +980,17 @@
         
     }else if (sender.tag == 103){//购物车
         
-        if ([LoginViewController isLogin]) {//已登录
-            GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-            [self.navigationController pushViewController:cc animated:YES];
-        }else{
-             [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-                 if (success) {
-                     GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-                     [self.navigationController pushViewController:cc animated:YES];
-                 }
-             }];
+        [LoginManager isLogin:self loginBlock:^(BOOL success) {
+            if (success)
+            {
+                GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+                [self.navigationController pushViewController:cc animated:YES];
+            }else
+            {
+                _isPresenting = YES;
                 
-            
-        }
+            }
+        }];
         
     }
 }
@@ -1219,6 +1221,7 @@
         }else
         {
             NSLog(@"没登陆成功");
+            _isPresenting = YES;
         }
     }];
 }

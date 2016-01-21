@@ -13,6 +13,7 @@
 @interface RecommendMedicalCheckController : MyViewController
 
 @property(nonatomic,retain)NSString *jsonString;
+@property(nonatomic,retain)NSString *extensionString;//拓展问题
 @property(nonatomic,retain)NSString *vouchers_id;//代金券
 
 @end

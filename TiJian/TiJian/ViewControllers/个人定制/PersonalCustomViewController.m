@@ -49,7 +49,8 @@
     int _groupId;//当前groupId
     NSMutableArray *_groupSortArray;//组合id排序
     NSString *_jsonString;//最终结果json串
-    
+    NSString *_extensionJsonString;//最终拓展问题结果json串
+
     BOOL _extensionQuestion;//是否是拓展问题
     NSMutableArray *_sortArray;//存储顺序字典情况@{@"q_extension":1,@"q_extension_qid":@"3"}
 }
@@ -229,6 +230,7 @@
 {
     RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
     recommend.jsonString = _jsonString;
+    recommend.extensionString = _extensionJsonString;
     recommend.vouchers_id = self.vouchers_id;
     recommend.hidesBottomBarWhenPushed = YES;
     [self.lastViewController.navigationController popViewControllerAnimated:NO];
@@ -783,13 +785,15 @@
     [result safeSetValue:groupDic forKey:@"group_ids"];
     [result safeSetValue:NSStringFromInt(groupId) forKey:@"final_groupId"];
     [result safeSetValue:n1_ids forKey:@"nq_ids"];
-    [result safeSetValue:[self extensionQuestionResultDictionary] forKey:@"e_result"];
+//    [result safeSetValue: forKey:@"e_result"];
     
     NSString *jsonString = [LTools JSONStringWithObject:result];
+    NSString *extensionString = [LTools JSONStringWithObject:[self extensionQuestionResultDictionary]];
     _jsonString = jsonString;
+    _extensionJsonString = extensionString;
     
     DDLOG(@"result %@",jsonString);
-    
+    DDLOG(@"extension %@",extensionString);
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"个性化定制完成,是否确定提交结果" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"确定", nil];
     alert.tag = 10000;
     [alert show];

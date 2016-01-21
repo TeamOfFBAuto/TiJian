@@ -170,21 +170,23 @@
 {
     NSString *authey = [UserInfo getAuthkey];
     authey = authey.length ? authey : @"";
-    NSDictionary *params;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *api;
     if (self.jsonString) {
-        params = @{@"c_result":self.jsonString,
-                   @"province_id":[GMAPI getCurrentProvinceId],
-                   @"city_id":[GMAPI getCurrentCityId],
-                   @"authcode":authey,
-                   @"vouchers_id":self.vouchers_id ? self.vouchers_id : @""};
+        [params safeSetString:self.jsonString forKey:@"c_result"];
+        [params safeSetString:self.extensionString forKey:@"e_result"];
+        [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+        [params safeSetString:authey forKey:@"authcode"];
+        [params safeSetString:self.vouchers_id forKey:@"vouchers_id"];
+        
         api = GET_CUSTOMIZAITION_RESULT;
     }else
     {
         //获取最近体检结果
-        params = @{@"province_id":[GMAPI getCurrentProvinceId],
-                   @"city_id":[GMAPI getCurrentCityId],
-                   @"authcode":authey};
+        [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+        [params safeSetString:authey forKey:@"authcode"];
         api = GET_LATEST_CUSTOMIZATION_RESULT;
     }
     
