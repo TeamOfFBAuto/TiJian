@@ -27,7 +27,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [self setNavigationStyle:NAVIGATIONSTYLE_CUSTOM title:@"测试结果"];
     
     NSString *title = @"已经完成测试,快来看看结果吧";

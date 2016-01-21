@@ -1233,17 +1233,15 @@
     if (isOver) {
         //已经个性化定制过
         PhysicalTestResultController *physical = [[PhysicalTestResultController alloc]init];
-        physical.hidesBottomBarWhenPushed = YES;
+        physical.lastPageNavigationHidden = YES;
         [self.navigationController pushViewController:physical animated:YES];
     }else
     {
         PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
         custom.lastViewController = self;
-        custom.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:custom animated:YES];
     }
 }
-
 
 
 #pragma mark - 购物车数量

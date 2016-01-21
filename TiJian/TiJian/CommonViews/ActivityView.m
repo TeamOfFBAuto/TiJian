@@ -107,7 +107,7 @@
         
         //右上角关闭按钮
         
-        _clostBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 27 - 15 + 2, 20 + (49 - 25)/2.f - 3, 25, 25) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"homepage_close"] selectedImage:nil target:self action:@selector(clickToClose:)];
+        _clostBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 27 - 15 + 2, 20 + (49 - 30)/2.f - 5, 30, 30) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"homepage_close"] selectedImage:nil target:self action:@selector(clickToClose:)];
         [self addSubview:_clostBtn];
         _clostBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         

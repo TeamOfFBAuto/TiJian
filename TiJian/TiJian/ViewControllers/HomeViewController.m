@@ -420,8 +420,9 @@
         int num = [result[@"num"]intValue];
         _unreadActivityNum = num;
         Weakself.right_button.hidden =  NO;//打开活动按钮
-        Weakself.redPoint.hidden = num > 0 ? NO : YES;
-        
+//        Weakself.redPoint.hidden = num > 0 ? NO : YES;
+        Weakself.redPoint.hidden = NO;
+
         //存储最新的msgId,用于判断是否需要自动弹出
         
         //上次的
