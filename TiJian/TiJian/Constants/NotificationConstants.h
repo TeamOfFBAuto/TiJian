@@ -43,6 +43,8 @@
 #define NOTIFICATION_REPORT_ADD_SUCCESS @"NOTIFICATION_REPORT_ADD_SUCCESS"//添加体检报告成功
 #define NOTIFICATION_REPORT_DEL_SUCCESS @"NOTIFICATION_REPORT_DEL_SUCCESS"//删除体检报告成功
 #define NOTIFICATION_UPDATEMSGNUM @"updateMsgNum" //更新消息未读个数
+#define NOTIFICATION_PersonalCustomization_SUCCESS @"PersonalCustomization_SUCCESS"//个性化定制成功
+
 
 
 #endif

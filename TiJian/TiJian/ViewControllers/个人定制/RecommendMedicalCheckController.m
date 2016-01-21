@@ -19,6 +19,11 @@
     NSArray *_dataArray;
     NSArray *_projectsArray;//推荐项目
     NSString *_result_id;//个性化定制结果id
+    NSString *_extention_result_id;//拓展问题结果id
+    
+    NSArray *_fiveStarArray;//五星
+    NSArray *_fourStarArray;//四星
+    NSArray *_threeStarArray;//三星
 }
 
 @end
@@ -53,6 +58,54 @@
     [label addCornerRadius:3.f];
     label.backgroundColor = [UIColor whiteColor];
     return label;
+}
+
+- (void)createViewsWithDesc:(NSString *)desc
+{
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table.delegate = self;
+    _table.dataSource = self;
+    [self.view addSubview:_table];
+    _table.backgroundColor = [UIColor clearColor];
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [_table reloadData];
+    
+    UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
+    headview.backgroundColor = [UIColor whiteColor];
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, DEVICE_WIDTH - 20, 0) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:desc];
+    [headview addSubview:label];
+    CGFloat height = [LTools heightForText:desc width:label.width font:13];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByCharWrapping;
+    label.height = height;
+    
+    //line
+    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom + 10, DEVICE_WIDTH, 0.5)];
+    line.backgroundColor = DEFAULT_LINECOLOR;
+    [headview addSubview:line];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setTitle:@"<<详细报告解读>>" forState:UIControlStateNormal];
+    btn.frame = CGRectMake(0, line.bottom, DEVICE_WIDTH, 35);
+    btn.backgroundColor = [UIColor whiteColor];
+    [btn setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+    [btn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    [headview addSubview:btn];
+    
+    //line
+    UIImageView *space = [[UIImageView alloc]initWithFrame:CGRectMake(0, btn.bottom, 10, 35)];
+    space.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+    [headview addSubview:space];
+    
+    UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(space.right, btn.bottom, DEVICE_WIDTH - 10, 35) title:@"体检套餐推荐" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
+    [headview addSubview:label2];
+    label2.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
+    
+    headview.height = label2.bottom;
+    _table.tableHeaderView = headview;
+    
 }
 
 
@@ -100,43 +153,6 @@
 
 }
 
-//test1
-
-//    //下面开始体检项目
-//    CGFloat top = logo.bottom + 30;
-//    CGFloat dis = 5.f;//间距
-//    CGFloat left = 15.f;
-//    CGFloat labelRight = left - dis;
-//    CGFloat labelBottom = 0.f;
-//
-//    for (int i = 0; i < items.count; i ++) {
-//
-//        ProjectModel *p_model = items[i];
-//        NSString *title = p_model.project_name;
-//        CGFloat width = [LTools widthForText:title font:15.f];//字本身宽度
-//        width += 10*2;//左右各加10
-//
-//        if (labelRight + dis + width < DEVICE_WIDTH - 15) { //计算横着能否放下
-//
-//            left = labelRight + dis;
-//        }else
-//        {
-//            top = labelBottom + 7;
-//            left = 15.f;
-//        }
-//
-//        UIColor *textColor = [UIColor randomColor];
-//
-//        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(left, top, width, 25) title:title font:15 align:NSTextAlignmentCenter textColor:textColor];
-//        [label setBorderWidth:1.f borderColor:textColor];
-//        [label addCornerRadius:3.f];
-//        label.backgroundColor = [UIColor whiteColor];
-//        [head_bg_view addSubview:label];
-//        labelBottom = label.bottom;
-//        labelRight = label.right;
-//    }
-
-
 #pragma - mark 网络请求
 /**
  *  同步个性化定制结果
@@ -172,6 +188,8 @@
     authey = authey.length ? authey : @"";
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *api;
+    YJYRequstMethod method = YJYRequstMethodPost;
+    BOOL custom = NO;
     if (self.jsonString) {
         [params safeSetString:self.jsonString forKey:@"c_result"];
         [params safeSetString:self.extensionString forKey:@"e_result"];
@@ -181,6 +199,8 @@
         [params safeSetString:self.vouchers_id forKey:@"vouchers_id"];
         
         api = GET_CUSTOMIZAITION_RESULT;
+        custom = YES;
+        
     }else
     {
         //获取最近体检结果
@@ -188,12 +208,18 @@
         [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
         [params safeSetString:authey forKey:@"authcode"];
         api = GET_LATEST_CUSTOMIZATION_RESULT;
+        method = YJYRequstMethodGet;
+        custom = NO;
     }
     
     __weak typeof(self)weakSelf = self;
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:method api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [weakSelf parseDataWithResult:result];
+        if (custom) {
+            //发送个性化定制成功通知
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_PersonalCustomization_SUCCESS object:nil];
+        }
         
     } failBlock:^(NSDictionary *result) {
         
@@ -204,20 +230,25 @@
 - (void)parseDataWithResult:(NSDictionary *)result
 {
     [UserInfo updateUserCustomed:@"1"];//记录已个性化定制过状态
+    
     NSDictionary *data = result[@"data"];
-    NSArray *setmeal_product_list = data[@"setmeal_product_list"];
-    _dataArray = [ProductModel modelsFromArray:setmeal_product_list];
     
-    NSArray *projects_data = data[@"projects_data"];
-    _projectsArray = [ProjectModel modelsFromArray:projects_data];
+    NSString *combination_desc = data[@"combination_desc"];//简单解读
     
-    [self createViewsWithProjects:_projectsArray];
-    [_table reloadData];
+    NSDictionary *attention_project_data = data[@"attention_project_data"];
+    
+    _threeStarArray = attention_project_data[@"three_star_level"];
+    _fourStarArray = attention_project_data[@"four_star_level"];
+    _fiveStarArray = attention_project_data[@"five_star_level"];
+    
+    [self createViewsWithDesc:combination_desc];
     
     NSString *result_id = data[@"result_id"];//未登录时个性化结果保存id
     _result_id = [NSString stringWithFormat:@"%@",result_id];
+    NSString *extention_result_id = data[@"extention_result_id"];
+    _extention_result_id = [NSString stringWithFormat:@"%@",extention_result_id];
     
-    if (![LoginManager isLogin] && _result_id) {
+    if (![LoginManager isLogin] && (_result_id || _extention_result_id)) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否登录保存个性化定制结果？" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
         [alert show];
     }
@@ -244,7 +275,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [GProductCellTableViewCell getCellHight];
+    return 60;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -265,19 +296,24 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
     
-    return _dataArray.count;
+    return 1.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     static NSString *identifier = @"GProductCellTableViewCell";
-    GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        
+        UILabel *concernLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, 50, 13) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"关  注 度"];
+        [cell.contentView addSubview:concernLabel];
+        
+        UILabel *projectLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, concernLabel.bottom + 5, 50, 13) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"体检项目"];
+        [cell.contentView addSubview:projectLabel];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    ProductModel *product = _dataArray[indexPath.row];
-    [cell loadData:product];
+    
     
     return cell;
 }
@@ -285,7 +321,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 3;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -293,12 +329,26 @@
     UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
     head.backgroundColor = [UIColor whiteColor];
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 100, 40) title:@"推荐套餐" font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, 40) title:@"" font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
     [head addSubview:label];
     
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 39.5, DEVICE_WIDTH, 0.5)];
+    if (section == 0) {
+        label.text = @"基础套餐";
+    }else if (section == 1){
+        label.text = @"标准套餐";
+    }else if (section == 2){
+        label.text = @"专业套餐";
+    }
+    
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(15, 39.5, DEVICE_WIDTH - 30, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
     [head addSubview:line];
+    
+    //箭头
+    UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 35, 0, 35, head.height)];
+    arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
+    arrow.contentMode = UIViewContentModeCenter;
+    [head addSubview:arrow];
     
     return head;
 }

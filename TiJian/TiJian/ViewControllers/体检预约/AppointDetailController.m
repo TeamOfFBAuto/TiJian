@@ -10,7 +10,6 @@
 #import "AppointUpdateController.h"
 #import "MapViewController.h"
 #import "AppointModel.h"
-#import "WebviewController.h"
 
 #define kAlertTagPhone 100 //打电话
 #define kAlertTagCancelAppoint 101 //取消预约
@@ -343,10 +342,9 @@
 {
     NSLog(@"体检须知");
     
-    WebviewController *web = [[WebviewController alloc]init];
-    web.webUrl = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_TIJIANXUZHI];
-    web.navigationTitle = @"体检须知";
-    [self.navigationController pushViewController:web animated:YES];
+    NSString *webUrl = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_TIJIANXUZHI];
+    
+    [MiddleTools pushToWebFromViewController:self weburl:webUrl title:@"体检须知" moreInfo:NO hiddenBottom:NO];
 }
 
 /**

@@ -9,7 +9,6 @@
 #import "GStoreHomeViewController.h"
 #import "NSDictionary+GJson.h"
 #import "RefreshTableView.h"
-#import "GwebViewController.h"
 #import "CycleAdvModel.h"
 #import "GoneClassListViewController.h"
 #import "GproductDetailViewController.h"
@@ -865,10 +864,8 @@
             
             CycleAdvModel *amodel = bself.upAdvArray[index];
             if ([amodel.redirect_type intValue] == 1) {//外链
-                GwebViewController *ccc = [[GwebViewController alloc]init];
-                ccc.urlstring = amodel.redirect_url;
-                ccc.hidesBottomBarWhenPushed = YES;
-                [bself.navigationController pushViewController:ccc animated:YES];
+                
+                [MiddleTools pushToWebFromViewController:bself weburl:amodel.redirect_url title:nil moreInfo:NO hiddenBottom:YES];
                 
             }else if ([amodel.redirect_type intValue] == 0){//应用内
                 if ([amodel.adv_type_val intValue] == 1) {//套餐 单品详情

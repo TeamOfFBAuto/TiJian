@@ -8,7 +8,6 @@
 
 #import "GScoreDetailViewController.h"
 #import "GUserScoreDetailTableViewCell.h"
-#import "GwebViewController.h"
 
 @interface GScoreDetailViewController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -158,14 +157,8 @@
 -(void)jifenGuizeLabelClicked{
     NSLog(@"%s",__FUNCTION__);
     
-    GwebViewController *ccc = [[GwebViewController alloc]init];
-    
-    ccc.urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_JIFENSHUOMING];
-    ccc.targetTitle = @"积分使用规则";
-    ccc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:ccc animated:YES];
-    
-    
+    NSString *urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_JIFENSHUOMING];
+    [MiddleTools pushToWebFromViewController:self weburl:urlstring title:@"积分使用规则" moreInfo:NO hiddenBottom:YES];
 }
 
 

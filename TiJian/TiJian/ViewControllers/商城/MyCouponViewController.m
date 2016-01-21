@@ -9,7 +9,6 @@
 #import "MyCouponViewController.h"
 #import "MyCouponTableViewCell.h"
 #import "ConfirmOrderViewController.h"
-#import "GwebViewController.h"
 #import "ProductModel.h"
 @interface MyCouponViewController ()<UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
 {
@@ -124,14 +123,8 @@
 #pragma mark - 重载方法
 -(void)rightButtonTap:(UIButton *)sender{
     
-    GwebViewController *ccc = [[GwebViewController alloc]init];
-    
-    ccc.urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,_theUrl];
-    ccc.targetTitle = _targetTitle;
-    ccc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:ccc animated:YES];
-    
-    
+    NSString *urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,_theUrl];
+    [MiddleTools pushToWebFromViewController:self weburl:urlstring title:_targetTitle moreInfo:NO hiddenBottom:YES];
 }
 
 

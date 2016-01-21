@@ -11,7 +11,6 @@
 #import "AddReportViewController.h"
 #import "ReportDetailController.h"
 #import "ArticleListController.h"
-#import "WebviewController.h"
 #import "ArticleModel.h"
 
 @interface NewMedicalReportController ()<RefreshDelegate,UITableViewDataSource,UIAlertViewDelegate>
@@ -394,11 +393,8 @@
         
     }else
     {
-        WebviewController *article = [[WebviewController alloc]init];
         ArticleModel *aModel = _articleArray[indexPath.row];
-        article.webUrl = aModel.url;
-        article.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:article animated:YES];
+        [MiddleTools pushToWebFromViewController:self weburl:aModel.url title:nil moreInfo:NO hiddenBottom:YES];
     }
     
 }

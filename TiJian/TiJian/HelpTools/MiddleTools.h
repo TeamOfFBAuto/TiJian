@@ -52,4 +52,19 @@ typedef NS_ENUM(NSInteger ,SourceType) {
                            model:(id)model
                     hiddenBottom:(BOOL)hiddenBottom;
 
+/**
+ *  内置浏览器
+ *
+ *  @param viewController
+ *  @param weburl         访问地址url
+ *  @param title          标题
+ *  @param moreInfo       是否显示右上角更多按钮
+ *  @param hiddenBottom   隐藏底部tabbar
+ */
++ (void)pushToWebFromViewController:(UIViewController *)viewController
+                             weburl:(NSString *)weburl
+                              title:(NSString *)title
+                           moreInfo:(BOOL)moreInfo
+                       hiddenBottom:(BOOL)hiddenBottom;
+
 @end

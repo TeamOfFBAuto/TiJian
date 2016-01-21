@@ -7,7 +7,6 @@
 //
 
 #import "ArticleListController.h"
-#import "WebviewController.h"
 #import "ArticleModel.h"
 #import "ArticleCell.h"
 
@@ -92,10 +91,8 @@
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    WebviewController *article = [[WebviewController alloc]init];
     ArticleModel *aModel = _table.dataArray[indexPath.row];
-    article.webUrl = aModel.url;
-    [self.navigationController pushViewController:article animated:YES];
+    [MiddleTools pushToWebFromViewController:self weburl:aModel.url title:nil moreInfo:NO hiddenBottom:NO];
     
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView

@@ -559,11 +559,7 @@
  */
 - (void)pushToHealthNews
 {
-    WebviewController *web = [[WebviewController alloc]init];
-    web.webUrl = self.articleModel.url;
-    web.moreInfo = YES;
-    web.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:web animated:YES];
+    [MiddleTools pushToWebFromViewController:self weburl:self.articleModel.url title:nil moreInfo:YES hiddenBottom:YES];
 }
 /**
  *  资讯列表

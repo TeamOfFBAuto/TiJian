@@ -9,7 +9,6 @@
 #import "GCustomSearchViewController.h"
 #import "NSDictionary+GJson.h"
 #import "RefreshTableView.h"
-#import "GwebViewController.h"
 #import "CycleAdvModel.h"
 #import "GoneClassListViewController.h"
 #import "GproductDetailViewController.h"

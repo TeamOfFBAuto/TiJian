@@ -10,6 +10,7 @@
 #import "RCDChatViewController.h"
 #import "OrderModel.h"
 #import "ProductModel.h"
+#import "WebviewController.h"//内置浏览器
 
 @implementation MiddleTools
 
@@ -75,6 +76,27 @@
     
 }
 
-
+/**
+ *  内置浏览器
+ *
+ *  @param viewController
+ *  @param weburl         访问地址url
+ *  @param title          标题
+ *  @param moreInfo       是否显示右上角更多按钮
+ *  @param hiddenBottom   隐藏底部tabbar
+ */
++ (void)pushToWebFromViewController:(UIViewController *)viewController
+                             weburl:(NSString *)weburl
+                              title:(NSString *)title
+                           moreInfo:(BOOL)moreInfo
+                       hiddenBottom:(BOOL)hiddenBottom
+{
+    WebviewController *web = [[WebviewController alloc]init];
+    web.webUrl = weburl;
+    web.navigationTitle = title;
+    web.moreInfo = moreInfo;
+    web.hidesBottomBarWhenPushed = hiddenBottom;
+    [viewController.navigationController pushViewController:web animated:YES];
+}
 
 @end
