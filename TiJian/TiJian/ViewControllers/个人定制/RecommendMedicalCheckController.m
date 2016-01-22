@@ -313,7 +313,7 @@
         [cell.contentView addSubview:projectLabel];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+    //
     
     return cell;
 }
