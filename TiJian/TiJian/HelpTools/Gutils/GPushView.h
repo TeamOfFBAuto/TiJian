@@ -94,4 +94,11 @@
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender;
 
 
+
+/**
+ *  清空筛选条件
+ */
+-(void)qingkongshaixuanBtnClicked;
+
+
 @end

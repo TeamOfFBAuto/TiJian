@@ -19,6 +19,7 @@
 #import "GoneClassListViewController.h"
 #import "GmyFootViewController.h"
 #import "GCustomSearchViewController.h"
+#import "GUpToolView.h"
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -68,7 +69,7 @@
     
     
     //顶部工具栏
-    UIView *_upToolView;
+    GUpToolView *_upToolView;
     
     UIView *_downToolBlackView;
     
@@ -756,11 +757,11 @@
 #pragma mark - 视图创建
 
 -(void)creatUpToolView{
-    GMAPI *gmapi = [GMAPI sharedManager];
-    _upToolView = [gmapi creatThreeBtnUpToolView];
+    
+    _upToolView = [[GUpToolView alloc]initWithFrame:CGRectZero count:3];
     [self.view addSubview:_upToolView];
     __weak typeof (self)bself = self;
-    [gmapi setUpToolViewBlock:^(NSInteger index) {
+    [_upToolView setUpToolViewBlock:^(NSInteger index) {
         [bself upToolBtnClicked:index];
     }];
 }
@@ -836,10 +837,10 @@
         
         if (i == 3) {
             _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-            _shopCarNumLabel.textColor = [UIColor whiteColor];
-            _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
+            _shopCarNumLabel.textColor = RGBCOLOR(242, 120, 47);
+            _shopCarNumLabel.backgroundColor = [UIColor whiteColor];
             _shopCarNumLabel.layer.cornerRadius = 7;
-            _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
+            _shopCarNumLabel.layer.borderColor = [[UIColor whiteColor]CGColor];
             _shopCarNumLabel.layer.borderWidth = 0.5f;
             _shopCarNumLabel.layer.masksToBounds = YES;
             _shopCarNumLabel.font = [UIFont systemFontOfSize:11];

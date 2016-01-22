@@ -12,6 +12,7 @@
 
 #import "MyViewController.h"
 @class HomeViewController;
+@class GStoreHomeViewController;
 
 @interface LocationChooseViewController : MyViewController
 
@@ -21,5 +22,7 @@
 @property(nonatomic,assign)int nowLocationBtn_cityid;
 
 @property(nonatomic,assign)HomeViewController *delegate;
+
+@property(nonatomic,assign)GStoreHomeViewController *delegate1;
 
 @end

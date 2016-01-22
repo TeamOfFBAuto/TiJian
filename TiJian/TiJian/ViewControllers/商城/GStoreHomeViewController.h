@@ -18,4 +18,7 @@
 
 -(void)setEffectViewAlpha:(CGFloat)theAlpha;
 
+
+-(void)afterChangeCityUpdateTableWithCstr:(NSString *)cStr Pstr:(NSString *)pStr;
+
 @end

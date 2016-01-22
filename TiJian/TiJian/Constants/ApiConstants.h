@@ -280,6 +280,9 @@
 //47、提交订单,后台生成订单号
 #define ORDER_SUBMIT @"/index.php?d=api&c=order&m=submit_order"
 
+//获取我最近使用的发票列表
+#define FAPIAO_MYNEAR @"/index.php?d=api&c=user&m=get_user_invoice"
+
 //45、获取用户默认地址
 #define ORDER_GET_DEFAULT_ADDRESS @"/index.php?d=api&c=user&m=get_default_address"
 

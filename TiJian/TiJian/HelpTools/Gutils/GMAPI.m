@@ -16,13 +16,7 @@
     NSArray *_areaData;
 }
 
--(void)setUpToolViewBlock:(upToolViewBlock)upToolViewBlock{
-    _upToolViewBlock = upToolViewBlock;
-}
 
--(void)setUpToolViewBlock1:(upToolViewBlock)upToolViewBlock1{
-    _upToolViewBlock1 = upToolViewBlock1;
-}
 
 
 //出入宽或高和比例 想计算的值传0
@@ -438,67 +432,10 @@
 
 
 
--(UIView *)creatThreeBtnUpToolView{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
-    view.backgroundColor = [UIColor whiteColor];
-    
-    
-    NSArray *titleArray = @[@"足迹",@"搜索",@"首页"];
-    NSArray *imageArray = @[[UIImage imageNamed:@"uptool_zuji.png"],[UIImage imageNamed:@"uptool_search.png"],[UIImage imageNamed:@"uptool_homepage.png"]];
-    for (int i = 0; i<3; i++) {
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setTitleColor:RGBCOLOR(152, 153, 154) forState:UIControlStateNormal];
-        btn.titleLabel.font = [UIFont systemFontOfSize:12];
-        CGFloat w = DEVICE_WIDTH/3;
-        btn.tag = 10+i;
-        [btn setFrame:CGRectMake(i*w, 0, DEVICE_WIDTH/3, 50)];
-        [view addSubview:btn];
-        [btn setTitle:titleArray[i] forState:UIControlStateNormal];
-        [btn setImage:imageArray[i] forState:UIControlStateNormal];
-        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -25, -25, 0)];
-        [btn setImageEdgeInsets:UIEdgeInsetsMake(5, 18, 25, 0)];
-        [btn addTarget:self action:@selector(upToolBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        
-    }
-    
-    
-    
-    return view;
-}
 
--(UIView *)creatTwoBtnUpToolView{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
-    view.backgroundColor = [UIColor whiteColor];
-    
-    NSArray *titleArray = @[@"搜索",@"首页"];
-    NSArray *imageArray = @[[UIImage imageNamed:@"uptool_search.png"],[UIImage imageNamed:@"uptool_homepage.png"]];
-    
-    for (int i = 0; i<2; i++) {
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        CGFloat w = DEVICE_WIDTH/2;
-        [btn setTitleColor:RGBCOLOR(152, 153, 154) forState:UIControlStateNormal];
-        btn.titleLabel.font = [UIFont systemFontOfSize:12];
-        btn.tag = 20+i;
-        [btn setFrame:CGRectMake(i*w, 0, w, 50)];
-        [view addSubview:btn];
-        [btn setTitle:titleArray[i] forState:UIControlStateNormal];
-        [btn setImage:imageArray[i] forState:UIControlStateNormal];
-        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -25, -25, 0)];
-        [btn setImageEdgeInsets:UIEdgeInsetsMake(5, 18, 25, 0)];
-        [btn addTarget:self action:@selector(upToolBtnClicked1:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    
-    return view;
-}
 
--(void)upToolBtnClicked:(UIButton*)sender{
-    self.upToolViewBlock(sender.tag);
-}
 
--(void)upToolBtnClicked1:(UIButton*)sender{
-    self.upToolViewBlock1(sender.tag);
-}
+
 
 
 

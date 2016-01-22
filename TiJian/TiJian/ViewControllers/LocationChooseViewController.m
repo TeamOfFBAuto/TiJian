@@ -8,6 +8,7 @@
 
 #import "LocationChooseViewController.h"
 #import "HomeViewController.h"
+#import "GStoreHomeViewController.h"
 #define MY_MACRO_NAME ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
 @interface LocationChooseViewController ()<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 {
@@ -181,7 +182,13 @@
     
     NSString *provinceName = _provinceArray[indexPath.section];
     
-    [self.delegate setLocationDataWithCityStr:cityName provinceStr:provinceName];
+    if (self.delegate) {
+        [self.delegate setLocationDataWithCityStr:cityName provinceStr:provinceName];
+    }
+    if (self.delegate1) {
+        [self.delegate1 afterChangeCityUpdateTableWithCstr:cityName Pstr:provinceName];
+    }
+    
     [self setuserCommonlyUsedCityWithStr:cityName];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -195,7 +202,13 @@
     
      NSString *str = _provinceArray[ges.view.tag - 10];
     
-    [self.delegate setLocationDataWithCityStr:str provinceStr:str];
+    if (self.delegate) {
+        [self.delegate setLocationDataWithCityStr:str provinceStr:str];
+    }
+    if (self.delegate1) {
+        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:str];
+    }
+    
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
     
@@ -456,7 +469,14 @@
     aaa = [aaa stringByAppendingString:@"00"];
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
-    [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    if (self.delegate) {
+        [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    }
+    
+    if (self.delegate1) {
+        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:ppp];
+    }
+    
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -470,7 +490,13 @@
     aaa = [aaa stringByAppendingString:@"00"];
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
-    [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    if (self.delegate) {
+        [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    }
+    if (self.delegate1) {
+        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:ppp];
+    }
+    
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -611,7 +637,15 @@
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
     [self setuserCommonlyUsedCityWithStr:str];
-    [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    
+    if (self.delegate) {
+        [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
+    }
+    
+    if (self.delegate1) {
+        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:ppp];
+    }
+    
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
     

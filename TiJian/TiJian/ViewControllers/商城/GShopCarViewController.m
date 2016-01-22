@@ -317,8 +317,14 @@
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(3, pStr.length+1)];
     self.totolPriceLabel.attributedText = aaa;
     
+    
+    CGFloat youhui = totolPrice_o - _totolPrice;
+    if (youhui<0) {
+        youhui = 0;
+    }
+    
     //原价统计
-    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,totolPrice_o - _totolPrice];
+    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%.1f  优惠:￥%.1f",totolPrice_o,youhui];
     
     
 }
@@ -486,6 +492,11 @@
             _request = [YJYRequstManager shareInstance];
         }
         
+        if ([LTools isEmpty:pids_str]) {
+            [GMAPI showAutoHiddenMBProgressWithText:@"请选择需要删除的套餐" addToView:self.view];
+            return;
+        }
+        
         NSDictionary *dic = @{
                               @"authcode":[UserInfo getAuthkey],
                               @"cart_pro_id":pids_str
@@ -507,6 +518,11 @@
             _totolPrice = 0;
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+            
+            [self updateShopCar];
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
         } failBlock:^(NSDictionary *result) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         }];

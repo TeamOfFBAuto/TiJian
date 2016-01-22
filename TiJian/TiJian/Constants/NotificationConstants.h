@@ -17,6 +17,8 @@
 
 #define NOTIFICATION_UPDATE_TO_CART @"updateProductToCart"//更新购物车
 
+#define NOTIFICATION_UPDATE_HOMEVCLEFTSTR @"NOTIFICATION_UPDATE_HOMEVCLEFTSTR"//更新首页左上角地区
+
 #define NOTIFICATION_PAY_WEIXIN_RESULT @"weiXinPayResult" //微信支付结果成功或者失败
 #define NOTIFICATION_PAY_ALI_RESULT @"aliPayResult" //支付宝支付结果成功或者失败
 

@@ -199,6 +199,62 @@
     [self finishReloadDataWithView:noDataView pageSize:pageSize];
 }
 
+/**
+ *  成功加载数据reload
+ *
+ *  @param data       每次请求数据
+ *  @param pageSize   每页个数
+ *  @param noDataView 自定义没有数据时view
+ */
+- (void)reloadData:(NSArray *)data
+          pageSize:(int)pageSize
+        CustomNoDataView:(UIView *)noDataView
+{
+    BOOL isHaveMore = (data.count < pageSize || data.count == 0) ? NO : YES;//每页实际请求条数 与 每页条数
+    self.isHaveMoreData = isHaveMore;
+    
+    if (self.isReloadData) {
+        
+        [self.dataArray removeAllObjects];
+    }
+    [self.dataArray addObjectsFromArray:data];
+    [self finishReloadDataWithCustomView:noDataView pageSize:pageSize];
+}
+
+
+//完成数据加载
+- (void)finishReloadDataWithCustomView:(UIView *)noDataView
+                        pageSize:(int)pageSize
+{
+    
+    /**
+     *  此处仅处理没有数据时的默认视图情况,顶部和底部加载view不在此处理
+     */
+    //没有数据时
+    if (self.dataArray.count == 0) {
+        
+        if (self.tableFooterView != self.resultView) {
+            [self.tableFooterView removeFromSuperview];
+            self.resultView = noDataView;
+            self.tableFooterView = self.resultView;
+        }
+    }
+    //有数据
+    else
+    {
+        if (self.tableFooterView == self.resultView) {
+            
+            [self.resultView removeFromSuperview];
+            self.tableFooterView = nil;
+        }
+    }
+    
+    [self finishReloadingData];
+    
+}
+
+
+
 //完成数据加载
 
 - (void)finishReloadDataWithView:(UIView *)noDataView

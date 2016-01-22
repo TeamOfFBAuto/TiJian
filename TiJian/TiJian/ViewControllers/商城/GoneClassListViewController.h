@@ -39,8 +39,14 @@
 @property(nonatomic,strong)NSString *brandId;//品牌id
 @property(nonatomic,strong)NSString *brandName;//品牌name
 
+
+//搜索框相关
+@property(nonatomic,strong)UITextField *searchTf;
+
 -(void)therightSideBarDismiss;
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic;
+
+-(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot;
 
 @end

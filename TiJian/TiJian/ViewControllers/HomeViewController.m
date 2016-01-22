@@ -66,6 +66,9 @@
     //退出登录
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGOUT object:nil];
     
+    //更新左上角地区
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateLeftUpLocationStr) name:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
+    
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     
     UIScrollView *bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 48 - 64)];
@@ -308,6 +311,29 @@
     
     
 }
+
+
+/**
+ *  更新左上角地区信息
+ */
+-(void)updateLeftUpLocationStr{
+    NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
+    
+    NSString *cityName;
+    
+    NSString *city_id = [dic stringValueForKey:@"city"];
+    NSString *province_id = [dic stringValueForKey:@"province"];
+    if ([city_id intValue] == 0) {
+        cityName = [GMAPI cityNameForId:[province_id intValue]];
+    }else{
+        cityName = [GMAPI cityNameForId:[city_id intValue]];
+    }
+    
+    self.leftLabel.text = cityName;
+    
+}
+
+
 #pragma mark - 定位相关 gm - end
 
 

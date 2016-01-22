@@ -35,6 +35,10 @@
     CGPoint _now_tab_contentOffset;//现在的偏移量
     UIView *_shouView;//用于收键盘的点击view
     
+    
+    //定位相关
+    NSDictionary *_locationDic;
+    
 }
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender{
     self = [super initWithFrame:frame];
@@ -59,6 +63,7 @@
     for (int i = 0; i<200; i++) {
         _isMark_brand[i] = 0;
     }
+    _isMark_brand[0] = 1;
     
     _orig_tab_contentOffset = CGSizeMake(0, 0);
     
@@ -127,6 +132,23 @@
 
 //创建tab
 -(void)creatTab{
+    
+    
+    NSString *defaultCityName;
+    NSString *defaultCityId = [GMAPI getCurrentCityId];
+    if ([defaultCityId intValue] == 0) {
+        NSString *defaultPid = [GMAPI getCurrentProvinceId];
+        defaultCityName = [GMAPI cityNameForId:[defaultPid intValue]];
+    }else{
+        defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
+    }
+    
+    self.userChooseCity = defaultCityName;
+    
+    
+    
+    
+    
     //主筛选
     self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
     self.tab1.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -141,6 +163,8 @@
     self.tab2.tag = 2;
     self.tab2.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self creatTab2Header];
+    
+    [self getjingweidu];
     
     
     //价格
@@ -175,16 +199,7 @@
     //定位城市label
     _locationCityLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, self.frame.size.width-150, 44)];
     _locationCityLabel.textColor = RGBCOLOR(236, 108, 20);
-    NSString *province_id = [GMAPI getCurrentProvinceId];
-    NSString *province_name = [GMAPI cityNameForId:[province_id intValue]];
-    NSString *curent_city_Name = [GMAPI getCurrentCityName];
-    if ([province_name isEqualToString:@"北京市"] || [province_name isEqualToString:@"上海市"] || [province_name isEqualToString:@"天津市"] || [province_name isEqualToString:@"重庆市"]){
-        curent_city_Name = province_name;
-    }
-    
-    
-    
-    _locationCityLabel.text = curent_city_Name;
+    _locationCityLabel.text = @"正在定位...";
     _locationCityLabel.font = [UIFont systemFontOfSize:13];
     [view addSubview:_locationCityLabel];
     
@@ -193,14 +208,7 @@
     tishiLabel.textAlignment = NSTextAlignmentRight;
     tishiLabel.font = [UIFont systemFontOfSize:10];
     tishiLabel.textColor = RGBCOLOR(134, 135, 136);
-    
-    if ([LTools isEmpty:curent_city_Name]) {
-        _locationCityLabel.text = @"北京市";
-        tishiLabel.text = @"定位失败默认北京";
-    }else{
-        _locationCityLabel.text = curent_city_Name;
-        tishiLabel.text = @"当前所在位置";
-    }
+    tishiLabel.text = @"当前所在位置";
     
     
     
@@ -210,23 +218,17 @@
     
     
     
-//    //箭头
-//    if ([self.userChooseCity isEqualToString:province_name]) {
-//        UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
-//        [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
-//        [view addSubview:mark_imv];
-//        [tishiLabel setFrame:CGRectMake(self.frame.size.width - 30-70, 0, 65, 44)];
-//    }
-    
-    
-    
     [view addSubview:tishiLabel];
 }
 
 
 -(void)tab2HeaderClicked{
-    self.userChooseCity = _locationCityLabel.text;
     
+    if ([_locationCityLabel.text isEqualToString:@"正在定位..."] || [_locationCityLabel.text isEqualToString:@"定位失败"]) {
+        return;
+    }
+    
+    self.userChooseCity = _locationCityLabel.text;
     [self.tab2 reloadData];
     [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     [self hiddenTab:self.tab2];
@@ -491,6 +493,9 @@
     [sender setTitleColor:RGBCOLOR(237, 108, 22) forState:UIControlStateNormal];
     sender.layer.borderColor = [RGBCOLOR(237, 108, 22)CGColor];
     sender.selected = YES;
+    
+    NSLog(@"%@",sender.titleLabel.text);
+    
 }
 
 
@@ -650,7 +655,7 @@
     }else if (tableView.tag == 3){//价格选择
         num = _priceArray.count;
     }else if (tableView.tag == 4){//体检品牌
-        num = self.delegate.brand_city_list.count;
+        num = self.delegate.brand_city_list.count+1;
     }
     return num;
 }
@@ -702,6 +707,7 @@
         
         
     }
+
     
     
     return view;
@@ -791,11 +797,18 @@
 
 -(void)qingkongshaixuanBtnClicked{
     
-    NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
-    if ([LTools isEmpty:cityName]) {
-        cityName = @"北京市";
+    
+    
+    NSString *defaultCityName;
+    NSString *defaultCityId = [GMAPI getCurrentCityId];
+    if ([defaultCityId intValue] == 0) {
+        NSString *defaultPid = [GMAPI getCurrentProvinceId];
+        defaultCityName = [GMAPI cityNameForId:[defaultPid intValue]];
+    }else{
+        defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
     }
-    self.userChooseCity = cityName;
+    self.userChooseCity = defaultCityName;
+    
     self.userChoosePinpai = @"全部";
     self.userChoosePinpai_id = nil;
     self.userChoosePrice = @"全部";
@@ -806,8 +819,9 @@
     _defaultPriceImv.hidden = NO;
     
     
-//    int _isMark_price[10];
-//    int _isMark_brand[200];
+    
+    
+
     
     for (int i = 0; i < 10; i++) {
         _isMark_price[i] = 0;
@@ -816,16 +830,14 @@
     for (int i = 0; i<200; i++) {
         _isMark_brand[i] = 0;
     }
-    
-    
-    
-    
+    _isMark_brand[0] = 1;
     
     
     [self.tab1 reloadData];
     [self.tab2 reloadData];
     [self.tab3 reloadData];
     [self.tab4 reloadData];
+    self.delegate.shaixuanDic = nil;
 }
 
 
@@ -983,13 +995,7 @@
                 cLabel.textAlignment = NSTextAlignmentRight;
                 cLabel.font = [UIFont systemFontOfSize:13];
                 if (indexPath.row == 1) {
-                    
-                    NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
-                    if ([LTools isEmpty:cityName]) {
-                        cityName = @"北京市";
-                    }
-                    
-                    cLabel.text = self.userChooseCity ? self.userChooseCity: cityName;
+                    cLabel.text = self.userChooseCity;
                 }else if (indexPath.row == 2){
                     cLabel.text = self.userChoosePrice ? self.userChoosePrice : @"全部" ;
                 }else if (indexPath.row == 3){
@@ -1122,8 +1128,15 @@
         }
         
         cell.textLabel.font = [UIFont systemFontOfSize:13];
-        NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
-        cell.textLabel.text = [dic stringValueForKey:@"brand_name"];
+        
+        if (indexPath.row == 0) {
+            cell.textLabel.text = @"全部";
+        }else{
+            NSDictionary *dic = self.delegate.brand_city_list[indexPath.row - 1];
+            cell.textLabel.text = [dic stringValueForKey:@"brand_name"];
+        }
+        
+        
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
         line.backgroundColor = RGBCOLOR(234, 235, 236);
@@ -1139,6 +1152,7 @@
         
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         return cell;
         
     }
@@ -1233,10 +1247,15 @@
     }else if (tableView.tag == 4){//体检品牌
         
         
+        if (indexPath.row == 0) {
+            self.userChoosePinpai = @"全部";
+            self.userChoosePinpai_id = nil;
+        }else{
+            NSDictionary *dic = self.delegate.brand_city_list[indexPath.row - 1];
+            self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
+            self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];
+        }
         
-        NSDictionary *dic = self.delegate.brand_city_list[indexPath.row];
-        self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
-        self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];
         
         for (int i = 0; i<200; i++) {
             _isMark_brand[i] = 0;
@@ -1274,50 +1293,7 @@
 }
 
 
-//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
-//    
-//    CGPoint origin = textField.frame.origin;
-//    CGPoint point = [textField.superview convertPoint:origin toView:self.tab3];
-//    float navBarHeight = self.navigationView.frame.size.height;
-//    CGPoint offset = self.tab3.contentOffset;
-//    // Adjust the below value as you need
-//    
-//    
-//    offset.y = (point.y - navBarHeight - 150);
-//    
-//    if (iPhone4) {
-//        offset.y = (point.y - navBarHeight - 50);
-//    }
-//    
-//    _now_tab_contentOffset = offset;
-//    
-//    
-//    if (_orig_tab_contentOffset.height == 0) {
-//        _orig_tab_contentOffset = self.tab3.contentSize;
-//    }
-//    
-//    
-//
-//    CGSize sss = _orig_tab_contentOffset;
-//    
-//    
-//    
-//    sss.height = _orig_tab_contentOffset.height + offset.y;
-//    self.tab3.contentSize = sss;
-//    
-//    [self.tab3 setContentOffset:offset animated:YES];
-//    
-//    
-////    if (!_shouView) {
-////        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
-////        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
-////        [_shouView addGestureRecognizer:tap];
-////    }
-////    
-////    [self addSubview:_shouView];
-//    
-//    return YES;
-//}
+
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -1337,19 +1313,42 @@
     return YES;
 }
 
+#pragma mark - 定位相关
 
-
-
-
--(void)hiddenKeyBord{
+-(void)getjingweidu{
     
-//    [_shouView removeFromSuperview];
-//    
-//    [self.tab3 setContentOffset:_orig_tab_contentOffset animated:YES];
-//    
-//    [self.tf_low resignFirstResponder];
-//    [self.tf_high resignFirstResponder];
+    __weak typeof(self)weakSelf = self;
+    
+    [[GMAPI appDeledate]startDingweiWithBlock:^(NSDictionary *dic) {
+        
+        [weakSelf theLocationDictionary:dic];
+    }];
+}
 
+
+- (void)theLocationDictionary:(NSDictionary *)dic{
+    
+    NSLog(@"%@",dic);
+    _locationDic = dic;
+    NSLog(@"%@",_locationDic);
+    
+    NSString *theString;
+    
+    if ([[dic stringValueForKey:@"province"]isEqualToString:@"北京市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"上海市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"天津市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"重庆市"]) {
+        theString = [dic stringValueForKey:@"province"];
+    }else{
+        theString = [dic stringValueForKey:@"city"];
+    }
+    
+    if ([LTools isEmpty:theString]) {
+        _locationCityLabel.text = @"定位失败";
+    }else{
+        _locationCityLabel.text = theString;
+    }
+    
+    
+    
+    
 }
 
 

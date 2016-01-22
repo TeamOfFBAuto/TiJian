@@ -10,8 +10,7 @@
 #import "NSDictionary+GJson.h"
 #import "BMapKit.h"
 
-typedef void (^upToolViewBlock)(NSInteger index);//定义block
-typedef void (^upToolViewBlock1)(NSInteger index);//定义block
+
 
 @protocol GgetllocationDelegate <NSObject>
 @optional
@@ -25,11 +24,7 @@ typedef void (^upToolViewBlock1)(NSInteger index);//定义block
 @property(nonatomic,strong)NSDictionary *theLocationDic;
 @property(nonatomic,assign)id<GgetllocationDelegate> delegate;
 
-@property(nonatomic,copy)upToolViewBlock upToolViewBlock;//弄成属性
-@property(nonatomic,copy)upToolViewBlock1 upToolViewBlock1;//弄成属性
 
--(void)setUpToolViewBlock:(upToolViewBlock)upToolViewBlock;//block的set方法
--(void)setUpToolViewBlock1:(upToolViewBlock)upToolViewBlock1;//block的set方法
 
 //出入宽或高和比例 想计算的值传0
 +(CGFloat)scaleWithHeight:(CGFloat)theH width:(CGFloat)theW theWHscale:(CGFloat)theWHS;
@@ -100,20 +95,7 @@ typedef void (^upToolViewBlock1)(NSInteger index);//定义block
 +(void)setuserCommonlyUsedSearchWord:(NSString*)searchWorlds;
 
 
-/**
- *  创建顶部工具栏 足迹 搜索 首页
- *
- *  @return 工具栏
- */
--(UIView *)creatThreeBtnUpToolView;
 
-
-/**
- *  创建顶部工具栏 搜索 首页
- *
- *  @return 工具栏
- */
--(UIView *)creatTwoBtnUpToolView;
 
 
 

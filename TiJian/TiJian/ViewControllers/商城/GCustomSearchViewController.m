@@ -208,9 +208,7 @@
     
     [self resetShowCustomNavigationBar:YES];
 
-    
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
-    _searchView.backgroundColor = [UIColor whiteColor];
     
     //带框的view
     _kuangView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -233,8 +231,13 @@
     self.searchTf.returnKeyType = UIReturnKeySearch;//lcw
     [_kuangView addSubview:self.searchTf];
     
+    
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
-    self.currentNavigationItem.rightBarButtonItems = @[_rightItem1];
+    
+    UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [spaceButtonItem setWidth:-5];
+    
+    self.currentNavigationItem.rightBarButtonItems = @[spaceButtonItem,_rightItem1];
 
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;

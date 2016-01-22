@@ -14,8 +14,10 @@
 #import "GTranslucentSideBar.h"
 #import "GPushView.h"
 #import "ProductModel.h"
+#import "DLNavigationEffectKit.h"
+#import "GSearchView.h"
 
-@interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate>
+@interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate,UITextFieldDelegate>
 {
     RefreshTableView *_table;
     YJYRequstManager *_request;
@@ -26,6 +28,25 @@
     int _count;//网络请求个数
     UIView *_backBlackView;//筛选界面下面的黑色透明view
     UIButton *_filterButton;//筛选按钮
+    
+    
+    GPushView *_pushView;//筛选view
+    
+    //搜索框相关
+    UIView *_searchView;
+    UIView *_kuangView;
+    UIBarButtonItem *_rightItem1;
+    UIButton *_rightItem2Btn;
+    UIView *_mySearchView;//点击搜索盖上的搜索浮层
+    GSearchView *_theCustomSearchView;//自定义搜索view
+    int _searchState;
+    AFHTTPRequestOperation *_request_hotSearch;
+    NSArray *_hotSearchArray;//热门搜索
+    
+    //轻扫手势
+    UIPanGestureRecognizer *_panGestureRecognizer;
+    
+    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;
@@ -46,6 +67,19 @@
     [self removeObserver:self forKeyPath:@"_count"];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self hiddenNavigationBar:YES animated:animated];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self hiddenNavigationBar:NO animated:animated];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -53,24 +87,19 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
-    
-    if (self.theSearchWorld) {
-        self.className = @"搜索";
-    }
-    
-    
-    self.myTitle = self.className;
-    
-    
-    self.rightImage = [UIImage imageNamed:@"shaixuan.png"];
+
     
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
     _backBlackView.alpha = 0.5;
     
+    _searchState = 0;
     
+    //视图创建
     [self creatTableView];
+    [self setupNavigation];
+    [self creatMysearchView];
+    [self getHotSearch];
     [self creatRightTranslucentSideBar];
     [self prepareBrandListWithLocation];
     
@@ -90,8 +119,106 @@
 
 #pragma mark - 视图创建
 
+
+//创建搜索界面
+-(void)creatMysearchView{
+    
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView.backgroundColor = [UIColor whiteColor];
+    _mySearchView.hidden = YES;
+    [self.view addSubview:_mySearchView];
+    
+    
+    _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
+    _theCustomSearchView.d3 = self;
+    
+    __weak typeof (self)bself = self;
+    
+    [_theCustomSearchView setKuangBlock:^(NSString *theStr) {
+        [bself searchBtnClickedWithStr:theStr isHotSearch:NO];
+    }];
+    
+    [_mySearchView addSubview:_theCustomSearchView];
+    
+    
+    
+}
+
+
+//创建自定义navigation
+- (void)setupNavigation{
+    
+    [self resetShowCustomNavigationBar:YES];
+    
+    
+    //左边
+    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 40, 30)];
+    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
+    [leftBtn setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
+    [leftView addSubview:leftBtn];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
+    UIBarButtonItem *spaceButtonItem_l = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [spaceButtonItem_l setWidth:-17];
+    self.currentNavigationItem.leftBarButtonItems = @[spaceButtonItem_l,leftItem];
+    
+    
+    
+    //右边
+    _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
+    _searchView.layer.cornerRadius = 5;
+    _searchView.backgroundColor = [UIColor whiteColor];
+    
+    //带框的view
+    _kuangView = [[UIView alloc]initWithFrame:CGRectZero];
+    _kuangView.layer.cornerRadius = 5;
+    _kuangView.layer.borderColor = [RGBCOLOR(192, 193, 194)CGColor];
+    _kuangView.layer.borderWidth = 0.5;
+    [_searchView addSubview:_kuangView];
+    
+    
+    UIImageView *fdjImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 8, 13, 13)];
+    [fdjImv setImage:[UIImage imageNamed:@"search_fangdajing.png"]];
+    [_searchView addSubview:fdjImv];
+    
+    self.searchTf = [[UITextField alloc]initWithFrame:CGRectZero];
+    self.searchTf.font = [UIFont systemFontOfSize:13];
+    self.searchTf.backgroundColor = [UIColor whiteColor];
+    self.searchTf.layer.cornerRadius = 5;
+    self.searchTf.placeholder = @"输入您要找的商品";
+    self.searchTf.delegate = self;
+    self.searchTf.returnKeyType = UIReturnKeySearch;
+    [_kuangView addSubview:self.searchTf];
+    
+    
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    
+    _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
+    UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [spaceButtonItem setWidth:-15];
+    self.currentNavigationItem.rightBarButtonItems = @[spaceButtonItem,_rightItem1];
+    
+    
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [[UIView alloc] initWithFrame:effectView.bounds];
+        [effectView addSubview:alphaView];
+        alphaView.backgroundColor = [UIColor whiteColor];
+        alphaView.tag = 10000;
+    };
+    
+    [self setEffectViewAlpha:1];
+    
+    
+}
+
+
+
 -(void)creatTableView{
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
@@ -109,19 +236,132 @@
     self.rightSideBar.tag = 1;
     
     // Add PanGesture to Show SideBar by PanGesture
-    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    [self.view addGestureRecognizer:panGestureRecognizer];
+//    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+//    [self.view addGestureRecognizer:_panGestureRecognizer];
     
     //避免滑动返回手势与此冲突
-    [panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
+    [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
 
-    GPushView *pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender];
-    pushView.delegate = self;
-    [self.rightSideBar setContentViewInSideBar:pushView];
+    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender];
+    _pushView.delegate = self;
+    [self.rightSideBar setContentViewInSideBar:_pushView];
 
 }
 
 #pragma mark - 逻辑处理
+
+
+-(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    
+    [_searchTf resignFirstResponder];
+    _mySearchView.hidden = YES;
+    
+    if (!isHot) {
+        if (![LTools isEmpty:self.searchTf.text]) {
+            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+        }
+        
+    }
+    
+    [_pushView qingkongshaixuanBtnClicked];
+    _pushView.gender = YES;
+    [_pushView.tab1 reloadData];
+    self.theSearchWorld = self.searchTf.text;
+    [_table showRefreshHeader:YES];
+    
+    
+}
+
+-(void)myNavcRightBtnClicked{
+    
+    
+    if (_searchState == 0) {
+        [self.rightSideBar show];
+    }else if (_searchState == 1){
+        [self changeSearchViewAndKuangFrameAndTfWithState:0];
+        [_searchTf resignFirstResponder];
+        _mySearchView.hidden = YES;
+    }
+    
+    
+    
+}
+
+//返回上个界面
+-(void)gogoback{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+/**
+ *  改变searchTf和框的大小
+ *
+ *  @param state 1 编辑状态 0常态
+ */
+-(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
+    if (state == 0) {//常态
+        _searchState = 0;
+        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 40, 30)];
+        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 45, 30)];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+        
+        if (!_rightItem2Btn) {
+            _rightItem2Btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_rightItem2Btn setFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+            [_rightItem2Btn setTitle:@"筛选" forState:UIControlStateNormal];
+            _rightItem2Btn.titleLabel.font = [UIFont systemFontOfSize:13];
+            [_rightItem2Btn setTitleColor:RGBCOLOR(134, 135, 136) forState:UIControlStateNormal];
+            [_rightItem2Btn setImage:[UIImage imageNamed:@"shaixuan.png"] forState:UIControlStateNormal];
+            [_rightItem2Btn setTitle:nil forState:UIControlStateNormal];
+            
+            [_rightItem2Btn addTarget:self action:@selector(myNavcRightBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+            [_searchView addSubview:_rightItem2Btn];
+        }else{
+            [_rightItem2Btn setFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+            [_rightItem2Btn setImage:[UIImage imageNamed:@"shaixuan.png"] forState:UIControlStateNormal];
+            [_rightItem2Btn setTitle:nil forState:UIControlStateNormal];
+        }
+        
+        if (!_panGestureRecognizer) {
+            _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        }
+        [self.view addGestureRecognizer:_panGestureRecognizer];
+        
+        
+    }else if (state == 1){//编辑状态
+        _searchState = 1;
+        [_searchView setWidth:DEVICE_WIDTH - 10];
+        [_kuangView setWidth:_searchView.frame.size.width - 45];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+        if (!_rightItem2Btn) {
+            _rightItem2Btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_rightItem2Btn setFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+            [_rightItem2Btn setTitle:@"取消" forState:UIControlStateNormal];
+            [_rightItem2Btn setImage:nil forState:UIControlStateNormal];
+            _rightItem2Btn.titleLabel.font = [UIFont systemFontOfSize:13];
+            [_rightItem2Btn setTitleColor:RGBCOLOR(134, 135, 136) forState:UIControlStateNormal];
+            [_rightItem2Btn addTarget:self action:@selector(myNavcRightBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+            [_searchView addSubview:_rightItem2Btn];
+        }else{
+            [_rightItem2Btn setFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+            [_rightItem2Btn setTitle:@"取消" forState:UIControlStateNormal];
+            [_rightItem2Btn setImage:nil forState:UIControlStateNormal];
+        }
+        
+        [self.view removeGestureRecognizer:_panGestureRecognizer];
+        
+    }
+}
+
+-(void)setEffectViewAlpha:(CGFloat)theAlpha{
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        alphaView.alpha = theAlpha;
+    }
+}
 
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic{
@@ -136,9 +376,7 @@
 }
 
 
--(void)rightButtonTap:(UIButton *)sender{
-    [self.rightSideBar show];
-}
+
 
 
 -(void)clickToFilter:(UIButton *)sender{
@@ -274,6 +512,20 @@
  
     
 }
+
+//热门搜索
+-(void)getHotSearch{
+
+    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _hotSearchArray = [result arrayValueForKey:@"list"];
+        _theCustomSearchView.hotSearch = _hotSearchArray;
+        [_theCustomSearchView.tab reloadData];
+    } failBlock:^(NSDictionary *result) {
+        
+        
+    }];
+}
+
 
 
 //根据关键词搜索
@@ -562,6 +814,41 @@
     
     return result;
 }
+
+
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSLog(@"%s",__FUNCTION__);
+    _mySearchView.hidden = NO;
+    _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
+    
+    [_theCustomSearchView.tab reloadData];
+
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+    
+}
+
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    if (![LTools isEmpty:self.searchTf.text]) {
+        [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
+    }
+    
+    
+    
+    return YES;
+}
+
+
+
+
+
+
+
+
 
 
 

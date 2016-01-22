@@ -11,6 +11,7 @@
 #import "GProductCellTableViewCell.h"
 #import "GproductDetailViewController.h"
 #import "GCustomSearchViewController.h"
+#import "GUpToolView.h"
 
 @interface GmyFootViewController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -20,7 +21,7 @@
     AFHTTPRequestOperation *_request_foot;
     
     //顶部工具栏
-    UIView *_upToolView;
+    GUpToolView *_upToolView;
     
     UIView *_downToolBlackView;
     
@@ -152,11 +153,10 @@
 
 
 -(void)creatUpToolView{
-    GMAPI *gmapi = [GMAPI sharedManager];
-    _upToolView = [gmapi creatTwoBtnUpToolView];
+    _upToolView = [[GUpToolView alloc]initWithFrame:CGRectZero count:2];
     [self.view addSubview:_upToolView];
     __weak typeof (self)bself = self;
-    [gmapi setUpToolViewBlock1:^(NSInteger index) {
+    [_upToolView setUpToolViewBlock:^(NSInteger index) {
         [bself upToolBtnClicked1:index];
     }];
 }

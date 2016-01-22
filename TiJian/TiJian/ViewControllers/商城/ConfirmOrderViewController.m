@@ -880,7 +880,7 @@
     _liuyantf.delegate = self;
     _liuyantf.tag = 10000;
     _liuyantf.returnKeyType = UIReturnKeyDone;
-    _liuyantf.placeholder = @"选填";
+    _liuyantf.placeholder = @"选填(最多50个字)";
     
     [liuyanView addSubview:_liuyantf];
     
@@ -1521,6 +1521,9 @@
         }else if ([_userChooseKuaidiStr isEqualToString:@"快递体检凭证"]){
             [dic setValue:@"1" forKey:@"require_post"];
         }
+    }else{
+        [GMAPI showAutoHiddenMBProgressWithText:@"请选择快递方式" addToView:self.view];
+        return;
     }
     
     if (_fapiaoChooseLabel.text.length>0 ) {
@@ -1733,6 +1736,10 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
+    
+    
+    
+    
     CGPoint origin = textField.frame.origin;
     CGPoint point = [textField.superview convertPoint:origin toView:_tab];
     float navBarHeight = self.navigationController.navigationBar.frame.size.height;
@@ -1824,6 +1831,17 @@
             
         }
         
+    }else if (textField.tag == 10000){
+        if (string.length == 0) {//删除
+            
+        }else{//新输入
+            
+            NSString *str = [NSString stringWithFormat:@"%@%@",textField.text,string];
+            if (str.length>50) {
+                return NO;
+            }
+            
+        }
     }
     
     return YES;

@@ -24,6 +24,7 @@
 #import "RCDChatViewController.h"
 #import "ProductListViewController.h"
 #import "StoreHomeOneBrandModel.h"
+#import "LocationChooseViewController.h"
 
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
 {
@@ -167,7 +168,7 @@
     [self changeSearchViewAndKuangFrameAndTfWithState:1];
     
     if (!_rightItem2Label) {
-        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45 + 5, 30)];
+        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
         _rightItem2Label.text = @"取消";
         _rightItem2Label.font = [UIFont systemFontOfSize:13];
         _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
@@ -342,6 +343,30 @@
     
     
     //首页精品推荐
+    [self prepareProducts];
+    
+    
+}
+
+//热门搜索
+-(void)getHotSearch{
+   
+    
+    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _hotSearchArray = [result arrayValueForKey:@"list"];
+        _theCustomSearchView.hotSearch = _hotSearchArray;
+        [_theCustomSearchView.tab reloadData];
+    } failBlock:^(NSDictionary *result) {
+        
+        
+    }];
+}
+
+
+
+//首页精品推荐
+-(void)prepareProducts{
+    
     
     
     NSDictionary *listDic = @{
@@ -350,8 +375,6 @@
                               @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
                               @"per_page":[NSString stringWithFormat:@"%d",5]
                               };
-    
-    
     
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -380,23 +403,54 @@
     } failBlock:^(NSDictionary *result) {
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-
+        
     }];
 }
 
-//热门搜索
--(void)getHotSearch{
-   
+
+//首页精品推荐
+-(void)gotoPrepareProducts{
     
-    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _hotSearchArray = [result arrayValueForKey:@"list"];
-        _theCustomSearchView.hotSearch = _hotSearchArray;
-        [_theCustomSearchView.tab reloadData];
+    
+    
+    NSDictionary *listDic = @{
+                              @"province_id":[GMAPI getCurrentProvinceId],
+                              @"city_id":[GMAPI getCurrentCityId],
+                              @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
+                              @"per_page":[NSString stringWithFormat:@"%d",5]
+                              };
+    
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *data = [result arrayValueForKey:@"data"];
+        
+        
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray addObject:model_b];
+        }
+        
+        
+        _table.tableFooterView = nil;
+        [_table reloadData:_StoreProductListArray pageSize:5];
+        
+        [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
+        
     } failBlock:^(NSDictionary *result) {
         
+        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
     }];
 }
+
 
 
 
@@ -525,18 +579,34 @@
  */
 -(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
     if (state == 0) {//常态
+        UIView *effectView = self.currentNavigationBar.effectContainerView;
+        if (effectView) {
+            for (UIView *view in effectView.subviews) {
+                if (view.tag == 10000) {
+                     view.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:0.8];
+                }
+            }
+        };
+        
         [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
         [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width, 30)];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
 
     }else if (state == 1){//编辑状态
+        
+        UIView *effectView = self.currentNavigationBar.effectContainerView;
+        if (effectView) {
+            for (UIView *view in effectView.subviews) {
+                if (view.tag == 10000) {
+                    view.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:1];
+                }
+            }
+        };
+        
         [_searchView setWidth:DEVICE_WIDTH - 20];
         [_kuangView setWidth:_searchView.frame.size.width - 30];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
         
-//        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 20, 30)];
-//        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
-//        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
         
     }
 }
@@ -644,7 +714,16 @@
     
     _table.tableHeaderView = self.theTopView;
     
-    [_table reloadData:_StoreProductListArray pageSize:5];
+    if (_StoreProductListArray.count > 0) {
+        [_table reloadData:_StoreProductListArray pageSize:5];
+    }else{
+        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+        
+    }
+    
+    
+    
+    
 }
 
 
@@ -663,7 +742,7 @@
     [leftView addSubview:leftBtn];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
     
-//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back_storehome.png"] style:UIBarButtonItemStyleDone target:self action:@selector(gogoback)];
+
     self.currentNavigationItem.leftBarButtonItem = leftItem;
     
     
@@ -697,7 +776,11 @@
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
     
     
-    self.currentNavigationItem.rightBarButtonItems = @[_rightItem1];
+    UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    [spaceButtonItem setWidth:-5];
+    
+    
+    self.currentNavigationItem.rightBarButtonItems = @[spaceButtonItem,_rightItem1];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -774,15 +857,14 @@
         
         if (i == 3) {
             _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-            _shopCarNumLabel.textColor = [UIColor whiteColor];
-            _shopCarNumLabel.backgroundColor = RGBCOLOR(255, 126, 170);
+            _shopCarNumLabel.textColor = RGBCOLOR(242, 120, 47);
+            _shopCarNumLabel.backgroundColor = [UIColor whiteColor];
             _shopCarNumLabel.layer.cornerRadius = 7;
-            _shopCarNumLabel.layer.borderColor = [RGBCOLOR(255, 126, 170)CGColor];
+            _shopCarNumLabel.layer.borderColor = [[UIColor whiteColor]CGColor];
             _shopCarNumLabel.layer.borderWidth = 0.5f;
             _shopCarNumLabel.layer.masksToBounds = YES;
             _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
             _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
-            
             _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
             
             [oneBtn addSubview:_shopCarNumLabel];
@@ -1117,7 +1199,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 0.5;
+    return 0.01;
     
 }
 
@@ -1163,7 +1245,7 @@
             [jiantouImv setFrame:CGRectMake(DEVICE_WIDTH - 18, 12, 8, 15)];
         }
         
-        [jiantouImv setImage:[UIImage imageNamed:@"qrdd_jiantou_big.png"]];
+        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_small.png"]];
         [view addSubview:jiantouImv];
         
         titleLabel.text = model_b.brand_name;
@@ -1251,7 +1333,7 @@
     NSDictionary *dic = @{
                           @"authcode":[UserInfo getAuthkey]
                           };
-    _request_GetShopCarNum = _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+      _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _shopCarDic = result;
         
@@ -1297,56 +1379,88 @@
 
 
 
-//#pragma mark - 无数据默认view
-//-(ResultView *)resultViewWithType:(PageResultType)type
-//{
-//    NSString *content;
-//    NSString *btnTitle;
-//    if (type == PageResultType_nodata){
-//        
-//        content = @"快去挑几件喜欢的宝贝吧";
-//        btnTitle = @"去逛逛";
-//        
-//    }
-//    
-//    
-//    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"gouwuche-kong.png"]
-//                                                    title:@"购物车还是空的"
-//                                                  content:content];
-//    
-//    
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    btn.frame = CGRectMake(0, 0, 200, 36);
-//    [btn addCornerRadius:5.f];
-//    btn.backgroundColor = DEFAULT_TEXTCOLOR;
-//    [btn setTitle:btnTitle forState:UIControlStateNormal];
-//    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-//    [btn addTarget:self action:@selector(quguangguangBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-//    [result setBottomView:btn];
-//    
-//    
-//    
-//    
-//    return result;
-//}
-//
-//
-//-(void)quguangguangBtnClicked{
-//    NSLog(@"%s",__FUNCTION__);
-//    if (self.isPersonalCenterPush) {
-//        GStoreHomeViewController *cc = [[GStoreHomeViewController alloc]init];
-//        cc.hidesBottomBarWhenPushed = YES;
-//        [self.navigationController pushViewController:cc animated:YES];
-//    }else{
-//        for (UIViewController *vc in self.navigationController.viewControllers) {
-//            if ([vc isKindOfClass:[GStoreHomeViewController class]]) {
-//                [self.navigationController popToViewController:vc animated:YES];
-//                continue;
-//            }
-//        }
-//    }
-//    
-//}
+#pragma mark - 无数据默认view
+-(UIView *)resultViewWithT
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 150)];
+    view.backgroundColor = RGBCOLOR(240, 245, 246);
+    
+    UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 85)];
+    view1.backgroundColor = [UIColor whiteColor];
+    [view addSubview:view1];
+    
+    
+    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(200.0/830*DEVICE_WIDTH, 85*0.5 - 36*0.5, 36, 36)];
+    [imv setImage:[UIImage imageNamed:@"storehomeNodatatixing.png"]];
+    [view1 addSubview:imv];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(imv.right + 10, imv.frame.origin.y, 270.0/830*DEVICE_WIDTH,imv.frame.size.height)];
+    titleLabel.textColor = RGBCOLOR(130, 133, 133);
+    titleLabel.font = [UIFont systemFontOfSize:10];
+    titleLabel.numberOfLines = 2;
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = @"该城市还没有相应套餐先去其他城市逛逛吧";
+    [view1 addSubview:titleLabel];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.backgroundColor = [UIColor whiteColor];
+    btn.layer.borderWidth = 0.5;
+    btn.layer.borderColor = [RGBCOLOR(236, 237, 240)CGColor];
+    [btn setFrame:CGRectMake(40, CGRectGetMaxY(view1.frame)+17, DEVICE_WIDTH - 80, 32)];
+    btn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [btn setTitle:@"切换城市" forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(changeCityBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:btn];
+    
+    
+    
+    
+    
+    return view;
+}
+
+
+-(void)changeCityBtnClicked{
+    LocationChooseViewController *cc = [[LocationChooseViewController alloc]init];
+    cc.delegate1 = self;
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    
+}
+
+
+
+
+#pragma mark - 代理回调
+-(void)afterChangeCityUpdateTableWithCstr:(NSString *)cStr Pstr:(NSString *)pStr{
+    
+    NSString *provinceStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:pStr]];
+    NSString *cityStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:cStr]];
+    
+    if ([provinceStr isEqualToString:cityStr]) {
+        cityStr = @"0";
+    }
+    
+    NSDictionary *dic = @{
+                          @"province":provinceStr,
+                          @"city":cityStr
+                          };
+    
+    
+    [GMAPI cache:dic ForKey:USERLocation];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
+    
+    _table.pageNum = 1;
+    _table.isReloadData = YES;
+    [self gotoPrepareProducts];
+    
+    
+    
+    
+}
+
+
 
 @end

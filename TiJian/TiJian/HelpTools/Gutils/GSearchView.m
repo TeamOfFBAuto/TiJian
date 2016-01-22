@@ -10,6 +10,7 @@
 #import "GStoreHomeViewController.h"
 #import "UILabel+GautoMatchedText.h"
 #import "GCustomSearchViewController.h"
+#import "GoneClassListViewController.h"
 
 @implementation GSearchView
 
@@ -40,8 +41,12 @@
     [GMAPI setuserCommonlyUsedSearchWord:sender.titleLabel.text];
     if (self.d1) {
         [self.d1 searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
-    }else if (self.d2){
+    }
+    if (self.d2){
         [self.d2 searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
+    }
+    if (self.d3){
+        [self.d3 searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
     }
     
     
@@ -50,13 +55,27 @@
 //清空历史搜索
 -(void)qingkongBtnClicked{
     
-    [GMAPI cache:nil ForKey:USERCOMMONLYUSEDSEARCHWORD];
-    
-    self.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
-    
-    [self.tab reloadData];
     
     
+    UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"确定清空历史记录？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    al.delegate = self;
+    [al show];
+    
+    
+    
+    
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        
+    }else if (buttonIndex == 1){
+        [GMAPI cache:nil ForKey:USERCOMMONLYUSEDSEARCHWORD];
+        
+        self.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
+        
+        [self.tab reloadData];
+    }
 }
 
 
@@ -157,7 +176,7 @@
         btn.tag = 1000+i;
         [btn addTarget:self action:@selector(hotSearchBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
-    [hotSearchScrollView setContentSize:CGSizeMake(s_width+titleLabel.frame.size.width+5, 50)];
+    [hotSearchScrollView setContentSize:CGSizeMake(s_width+10, 50)];
 
     UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(hotSearchScrollView.frame), DEVICE_WIDTH, 5)];
     downLine.backgroundColor = RGBCOLOR(244, 245, 246);
