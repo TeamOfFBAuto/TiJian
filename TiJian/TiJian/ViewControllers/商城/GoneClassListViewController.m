@@ -168,7 +168,7 @@
     //右边
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
     _searchView.layer.cornerRadius = 5;
-    _searchView.backgroundColor = [UIColor whiteColor];
+    _searchView.backgroundColor = RGBCOLOR(248, 248, 248);
     
     //带框的view
     _kuangView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -184,7 +184,7 @@
     
     self.searchTf = [[UITextField alloc]initWithFrame:CGRectZero];
     self.searchTf.font = [UIFont systemFontOfSize:13];
-    self.searchTf.backgroundColor = [UIColor whiteColor];
+    self.searchTf.backgroundColor = RGBCOLOR(248, 248, 248);
     self.searchTf.layer.cornerRadius = 5;
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
