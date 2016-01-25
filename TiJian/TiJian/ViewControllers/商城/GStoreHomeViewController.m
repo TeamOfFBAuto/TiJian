@@ -440,6 +440,9 @@
         
         
         _table.tableFooterView = nil;
+        
+        
+        
         [_table reloadData:_StoreProductListArray pageSize:5];
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
@@ -461,12 +464,12 @@
                               @"province_id":[GMAPI getCurrentProvinceId],
                               @"city_id":[GMAPI getCurrentCityId],
                               @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
-                              @"per_page":[NSString stringWithFormat:@"%d",G_PER_PAGE]
+                              @"per_page":[NSString stringWithFormat:@"%d",5]
                               };
     
     
     
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *data = [result arrayValueForKey:@"data"];
