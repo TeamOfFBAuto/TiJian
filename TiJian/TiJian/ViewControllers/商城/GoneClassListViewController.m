@@ -67,18 +67,18 @@
     [self removeObserver:self forKeyPath:@"_count"];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self hiddenNavigationBar:YES animated:animated];
-}
-
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self hiddenNavigationBar:NO animated:animated];
-}
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [self hiddenNavigationBar:YES animated:animated];
+//}
+//
+//
+//- (void)viewWillDisappear:(BOOL)animated
+//{
+//    [super viewWillDisappear:animated];
+//    [self hiddenNavigationBar:NO animated:animated];
+//}
 
 
 - (void)viewDidLoad {
@@ -123,7 +123,7 @@
 //创建搜索界面
 -(void)creatMysearchView{
     
-    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     _mySearchView.backgroundColor = [UIColor whiteColor];
     _mySearchView.hidden = YES;
     [self.view addSubview:_mySearchView];
@@ -139,31 +139,31 @@
     }];
     
     [_mySearchView addSubview:_theCustomSearchView];
-    
-    
-    
 }
 
 
 //创建自定义navigation
 - (void)setupNavigation{
     
-    [self resetShowCustomNavigationBar:YES];
+//    [self resetShowCustomNavigationBar:YES];
     
     
-    //左边
-    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 40, 30)];
-    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
-    [leftBtn setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
-    [leftView addSubview:leftBtn];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
-    UIBarButtonItem *spaceButtonItem_l = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    [spaceButtonItem_l setWidth:-17];
-    self.currentNavigationItem.leftBarButtonItems = @[spaceButtonItem_l,leftItem];
+//    //左边
+//    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 40, 30)];
+//    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
+//    [leftBtn setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+//    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
+//    [leftView addSubview:leftBtn];
+//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
+//    UIBarButtonItem *spaceButtonItem_l = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
+//    [spaceButtonItem_l setWidth:-17];
+//    self.currentNavigationItem.leftBarButtonItems = @[spaceButtonItem_l,leftItem];
     
+    //update by lcw
     
+    self.rightImage = [UIImage imageNamed:@"shaixuan"];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     
     //右边
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
@@ -212,13 +212,12 @@
     
     [self setEffectViewAlpha:1];
     
-    
 }
 
 
 
 -(void)creatTableView{
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];

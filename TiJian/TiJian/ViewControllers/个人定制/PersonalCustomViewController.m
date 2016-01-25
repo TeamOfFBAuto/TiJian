@@ -1267,7 +1267,7 @@
             [_view_Age setInitValue:NSStringFromInt(age)];
         }else
         {
-            age = 46;//初始值46岁
+            age = 30;//初始值30岁
         }
         
         Gender gender = [[_questionDictionary objectForKey:Q_SEX]intValue];
@@ -1288,6 +1288,18 @@
         int height = [[_questionDictionary objectForKey:Q_HEIGHT]intValue];
         if (height > 0) {
             [_view_Height setInitValue:NSStringFromInt(height)];
+        }else
+        {
+//            个性化定制
+//            男：30岁、175、70kg
+//            女：30岁、160、45kg
+            //初始值
+            if (self.gender == Gender_Boy) {
+                height = 175.f;
+            }else
+            {
+                height = 160.f;
+            }
         }
         _view_Height = [[LQuestionView alloc]initHeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:height resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             
@@ -1305,6 +1317,18 @@
         int weight = [[_questionDictionary objectForKey:Q_WEIGHT]intValue];
         if (weight > 0) {
             [_view_Weight setInitValue:NSStringFromInt(weight)];
+        }else
+        {
+            //            个性化定制
+            //            男：30岁、175、70kg
+            //            女：30岁、160、45kg
+            //初始值
+            if (self.gender == Gender_Boy) {
+                weight = 70;
+            }else
+            {
+                weight = 45;
+            }
         }
         _view_Weight = [[LQuestionView alloc]initWeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:weight resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             [weakSelf updateQuestionType:type result:result];

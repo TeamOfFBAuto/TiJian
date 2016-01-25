@@ -9,6 +9,7 @@
 #import "GTouchMoveView.h"
 #import "UILabel+GautoMatchedText.h"
 
+
 @implementation GTouchMoveView
 {
     CGRect _theFrame;
@@ -69,13 +70,11 @@
         //滑道
         UIView *backMoveView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self addSubview:backMoveView];
-        backMoveView.backgroundColor = [UIColor clearColor];
         
         //滑块
         _moveImv = [[GmoveImv alloc]initWithFrame:CGRectMake(frame.size.width*0.5 - 12.5, 0, 25, backMoveView.height) imageName:imvName];
         _moveImv.delegate = self;
         [backMoveView addSubview:_moveImv];
-        _moveImv.backgroundColor = [UIColor clearColor];
         
         
         CGFloat chooseValue = _moveImv.frame.origin.x +_moveImv.frame.size.width*0.5;
@@ -87,15 +86,16 @@
          _progressNumLabel.text = [NSString stringWithFormat:@"%d",switchValue];
         
         self.theValue = _progressNumLabel.text;
-        
-        
     }
-    
-    
     
     return self;
 }
 
+//能够滑动最大宽度
+-(CGFloat)maxWidth
+{
+    return self.width - 12.5 * 2;
+}
 
 -(void)setTheValue:(NSString *)theValue
 {
@@ -116,8 +116,6 @@
     CGRect r = _progressNumLabel.frame;
     r.origin.x = chooseValue - r.size.width*0.5;
     _progressNumLabel.frame = r;
-    
-    
     
     int switchValue = [self valueSwitch:chooseValue];
     if (_titleTextWidth>=(chooseValue-_moveImv.frame.size.width + 6)) {
@@ -180,8 +178,17 @@
     
 }
 
-
-
+//update by lcw
+/**
+ *  根据百分比控制滑块
+ *
+ *  @param value 百分比 0 - 1
+ */
+-(void)setLocationxpercernt:(CGFloat)value{
+    
+    //设置滑块位置
+    [_moveImv setTargetX:self.maxWidth * value];
+}
 
 
 

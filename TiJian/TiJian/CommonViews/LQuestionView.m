@@ -268,7 +268,7 @@
         //年龄选择器
         GTouchMoveView *moveView = [[GTouchMoveView alloc]initWithFrame:CGRectMake(15, frame.size.height - 48 - 25, moveWidth, 48) color:[UIColor colorWithHexString:colorHexThring] title:@"年龄/岁" rangeLow:16 rangeHigh:80 imageName:arrowImageName];
         [self addSubview:moveView];
-        
+                
         if (iPhone4) {
             
             moveView.top += 20;
@@ -303,8 +303,33 @@
             [self addSubview:imageView];
             
         }
+        
+        /**
+         *  增大滑动区域
+         */
+        [self addTouchAreaWithFrame:frame];
+        
     }
     return self;
+}
+
+/**
+ *  控制滑块
+ *
+ *  @param pan
+ */
+- (void)pangeture:(UIPanGestureRecognizer *)pan
+{
+    CGPoint point = [pan locationInView:self];
+    CGFloat x = point.x;
+    CGFloat percent = (x - 20) / (self.width - 20 * 2);
+    if (percent < 0) {
+        percent = 0.f;
+    }
+    if (percent > 1) {
+        percent = 1;
+    }
+    [_moveView setLocationxpercernt:percent];
 }
 
 /**
@@ -363,6 +388,10 @@
             }
         };
         
+        /**
+         *  增大滑动区域
+         */
+        [self addTouchAreaWithFrame:frame];
     }
     return self;
 }
@@ -423,6 +452,10 @@
             }
         };
         
+        /**
+         *  增大滑动区域
+         */
+        [self addTouchAreaWithFrame:frame];
     }
     return self;
 }
@@ -597,6 +630,21 @@
     }
     
     return NO;//没有被选择代表还没有选
+}
+
+#pragma mark - 增大滑动区域
+
+- (void)addTouchAreaWithFrame:(CGRect)frame
+{
+    //目的增大滑动区域
+    //滑动区域
+    UIView *panView = [[UIView alloc]initWithFrame:CGRectMake(_moveView.left, frame.size.height - 150, _moveView.width, 150)];
+    [self addSubview:panView];
+    panView.backgroundColor = [UIColor clearColor];
+    
+    //拖拽手势控制滑块
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pangeture:)];
+    [panView addGestureRecognizer:pan];
 }
 
 @end

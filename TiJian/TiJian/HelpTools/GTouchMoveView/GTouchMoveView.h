@@ -16,6 +16,8 @@ typedef void(^VALUEBLOCK)(NSString *value);
 @property(nonatomic,strong)NSString *theValue;//值
 @property(nonatomic,copy)VALUEBLOCK valueBlock;
 
+@property(nonatomic,assign)CGFloat maxWidth;
+
 /**
  *  初始化方法
  *  @param frame    最小height为53
@@ -31,5 +33,7 @@ typedef void(^VALUEBLOCK)(NSString *value);
 
 //设置滑块位置
 -(void)setCustomValueWithStr:(NSString *)value;
+
+-(void)setLocationxpercernt:(CGFloat)value;
 
 @end

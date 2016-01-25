@@ -75,7 +75,21 @@
     
 }
 
-
+#pragma mark - setter
+//update by lcw
+/**
+ *  外部控制滑块
+ *
+ *  @param targetX x坐标值
+ */
+-(void)setTargetX:(CGFloat)targetX
+{
+    self.left = targetX;
+    
+    if (self && [self.delegate respondsToSelector:@selector(theValue:)]) {
+        [self.delegate theValue:self.center.x];
+    }
+}
 
 
 @end

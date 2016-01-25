@@ -22,6 +22,8 @@
 @property(nonatomic,assign)id<GmoveImvDelegate>delegate;
 @property(nonatomic,strong)NSString *imageName;
 
+@property(nonatomic,assign)CGFloat targetX;//目标x
+
 
 - (id)initWithFrame:(CGRect)frame imageName:(NSString*)imvName;
 
