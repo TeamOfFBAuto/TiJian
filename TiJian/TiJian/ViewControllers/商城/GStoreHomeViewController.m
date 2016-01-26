@@ -64,7 +64,7 @@
     NSArray *_hotSearchArray;//热门搜索
     
     UIBarButtonItem *_rightItem1;
-    UILabel *_rightItem2Label;
+//    UILabel *_rightItem2Label;
     UIView *_kuangView;
     
     
@@ -75,6 +75,10 @@
     
     
     BOOL _isPresenting;//是否在模态
+    
+    
+    UIButton *_myNavcRightBtn;
+    int _editState;//0常态 1编辑状态
     
     
 }
@@ -141,6 +145,8 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
+    _editState = 0;
+    
     [self creatTableView];
     [self setupNavigation];
     [self creatDownBtnView];
@@ -167,16 +173,16 @@
     
     [self changeSearchViewAndKuangFrameAndTfWithState:1];
     
-    if (!_rightItem2Label) {
-        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
-        _rightItem2Label.text = @"取消";
-        _rightItem2Label.font = [UIFont systemFontOfSize:13];
-        _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
-        _rightItem2Label.textAlignment = NSTextAlignmentRight;
-        [_rightItem2Label addTaget:self action:@selector(myNavcRightBtnClicked) tag:0];
-    }
-    
-    [_searchView addSubview:_rightItem2Label];
+//    if (!_rightItem2Label) {
+//        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
+//        _rightItem2Label.text = @"取消";
+//        _rightItem2Label.font = [UIFont systemFontOfSize:13];
+//        _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
+//        _rightItem2Label.textAlignment = NSTextAlignmentRight;
+//        [_rightItem2Label addTaget:self action:@selector(myNavcRightBtnClicked) tag:0];
+//    }
+//    
+//    [_searchView addSubview:_rightItem2Label];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -581,7 +587,13 @@
  *  @param state 1 编辑状态 0常态
  */
 -(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
+    
+    _editState = state;
+    
     if (state == 0) {//常态
+        
+        [_myNavcRightBtn setTitle:@"分院" forState:UIControlStateNormal];
+        
         UIView *effectView = self.currentNavigationBar.effectContainerView;
         if (effectView) {
             for (UIView *view in effectView.subviews) {
@@ -591,11 +603,13 @@
             }
         };
         
-        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
+        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 90, 30)];
         [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width, 30)];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
 
     }else if (state == 1){//编辑状态
+        
+        [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
         
         UIView *effectView = self.currentNavigationBar.effectContainerView;
         if (effectView) {
@@ -606,9 +620,9 @@
             }
         };
         
-        [_searchView setWidth:DEVICE_WIDTH - 20];
-        [_kuangView setWidth:_searchView.frame.size.width - 30];
-        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+        [_searchView setWidth:DEVICE_WIDTH - 60];
+        [_kuangView setWidth:_searchView.frame.size.width];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width-30, 30)];
         
         
     }
@@ -752,7 +766,7 @@
     self.currentNavigationItem.leftBarButtonItems = @[spaceButton1,leftItem];
     
     
-    _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
+    _searchView = [[UIView alloc]initWithFrame:CGRectZero];
     _searchView.layer.cornerRadius = 5;
     _searchView.backgroundColor = [UIColor whiteColor];
     
@@ -777,16 +791,23 @@
     self.searchTf.returnKeyType = UIReturnKeySearch;
     [_kuangView addSubview:self.searchTf];
     
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
+    _editState = 0;
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
     
-    
     UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    [spaceButtonItem setWidth:-5];
+    [spaceButtonItem setWidth:-10];
+    
+    _myNavcRightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_myNavcRightBtn setFrame:CGRectMake(0, 0, 30, 30)];
+    _myNavcRightBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [_myNavcRightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [_myNavcRightBtn addTarget:self action:@selector(myNavcRightBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *rightBtnItem = [[UIBarButtonItem alloc]initWithCustomView:_myNavcRightBtn];
     
     
-    self.currentNavigationItem.rightBarButtonItems = @[spaceButtonItem,_rightItem1];
+    self.currentNavigationItem.rightBarButtonItems = @[spaceButtonItem,rightBtnItem,_rightItem1];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -798,6 +819,8 @@
     
     [self setEffectViewAlpha:0];
     
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
 }
 
@@ -1002,9 +1025,15 @@
 
 -(void)myNavcRightBtnClicked{
     
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
-    [_rightItem2Label removeFromSuperview];
+    if (_editState == 0) {//常态 跳转分院
+        [self pushToFenyuan];
+    }else if (_editState == 1){//编辑态 取消搜索
+        [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    }
+    
+    
+//    [_rightItem2Label removeFromSuperview];
     [_searchTf resignFirstResponder];
     _mySearchView.hidden = YES;
     UIView *effectView = self.currentNavigationBar.effectContainerView;
@@ -1018,6 +1047,11 @@
             alphaView.alpha = 0;
         }
     }
+}
+
+//跳转分院
+-(void)pushToFenyuan{
+    
 }
 
 
