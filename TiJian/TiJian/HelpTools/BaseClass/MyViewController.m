@@ -192,7 +192,7 @@
     {
         //调整与左边的间距
         UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-        spaceButton1.width = -6;
+        spaceButton1.width = -7;
         self.navigationItem.leftBarButtonItems = @[spaceButton1, self.leftButtonItem];
         
     }else if(theType == MyViewControllerLeftbuttonTypeOther)

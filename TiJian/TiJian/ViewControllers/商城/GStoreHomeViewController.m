@@ -737,6 +737,10 @@
     
     [self resetShowCustomNavigationBar:YES];
     
+    //调整与左边的间距
+    UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spaceButton1.width = -10;
+    
     UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
@@ -745,8 +749,7 @@
     [leftView addSubview:leftBtn];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
     
-
-    self.currentNavigationItem.leftBarButtonItem = leftItem;
+    self.currentNavigationItem.leftBarButtonItems = @[spaceButton1,leftItem];
     
     
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];

@@ -281,17 +281,17 @@
 {
     NSLog(@"跳转至体检套餐购买页面");
     
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    ProductModel *aModel = _dataArray[indexPath.row];
-    cc.productId = aModel.product_id;
-    if ([self.vouchers_id intValue] > 0) {
-//        cc.isVoucherPush = YES;
-        cc.VoucherId = self.vouchers_id;
-    }
-    [self.navigationController pushViewController:cc animated:YES];
+//    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+//    ProductModel *aModel = _dataArray[indexPath.row];
+//    cc.productId = aModel.product_id;
+//    if ([self.vouchers_id intValue] > 0) {
+////        cc.isVoucherPush = YES;
+//        cc.VoucherId = self.vouchers_id;
+//    }
+//    [self.navigationController pushViewController:cc animated:YES];
 }
 
-#pragma - mark UITableViewDataSource<NSObject>
+#pragma - mark UITableViewDataSource <NSObject>
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {

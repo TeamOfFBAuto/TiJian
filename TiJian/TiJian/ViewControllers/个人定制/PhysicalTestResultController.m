@@ -14,6 +14,7 @@
 {
     UIView *_bgView;
     Gender _gender;
+    UIImageView *_genderImageView;//显示男女
 }
 
 @property(nonatomic,retain)ResultView *result_View;
@@ -97,6 +98,15 @@
         self.rightBtn = nil;
     }
     
+    if (_bgView) {
+        
+        //只更新小人
+        _genderImageView.image = _gender == Gender_Boy ? [UIImage imageNamed:@"result_nan"] : [UIImage imageNamed:@"result_nv"];
+
+        return;
+        
+    }
+    
     _bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     [self.view addSubview:_bgView];
     NSString *title = @"已经完成测试,快来看看结果吧";
@@ -130,6 +140,7 @@
     [_bgView addSubview:imageView];
     imageView.centerY = _bgView.height/2.f;
     imageView.centerX = _bgView.width /2.f;
+    _genderImageView = imageView;
     
     //是否按钮
     CGFloat left = FitScreen(40);
