@@ -30,7 +30,7 @@
 
 #import "ProductListViewController.h"
 
-@interface GCustomSearchViewController ()<UITextFieldDelegate,UIScrollViewDelegate>
+@interface GCustomSearchViewController ()<UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate>
 {
     
     
@@ -196,7 +196,7 @@
         [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 20, 30)];
         [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width - 30, 30)];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
-        
+        [self.navigationController.navigationBar bringSubviewToFront:_searchView];
     }
 }
 
@@ -274,7 +274,7 @@
     
     
     _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
-    _theCustomSearchView.d2 = self;
+    _theCustomSearchView.delegate = self;
     
     __weak typeof (self)bself = self;
     

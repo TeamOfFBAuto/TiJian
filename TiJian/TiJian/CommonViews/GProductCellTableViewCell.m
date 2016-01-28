@@ -78,6 +78,11 @@
 
 -(void)loadData:(ProductModel *)theModel{
     
+    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.5)];
+    upLine.backgroundColor = RGBCOLOR(220, 221, 223);
+    [self.contentView addSubview:upLine];
+    
+    
     
     [self.logoImv l_setImageWithURL:[NSURL URLWithString:theModel.cover_pic] placeholderImage:nil];
     

@@ -478,6 +478,7 @@
 		E3A7099B1BE0754300750D27 /* NSDictionary+GJson.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A7099A1BE0754300750D27 /* NSDictionary+GJson.m */; };
 		E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */; };
 		E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A71BE0B07000750D27 /* GwebViewController.m */; };
+		E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3B16A2B1C5749540061A384 /* GBrandListViewController.m */; };
 		E3B720991BF3268B007F7FFE /* shuliang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B720981BF3268B007F7FFE /* shuliang@2x.png */; };
 		E3B7209C1BF32887007F7FFE /* shuliang-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */; };
 		E3B7209D1BF32887007F7FFE /* shuliang+@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */; };
@@ -543,6 +544,7 @@
 		E3EE361E1BEA13320089A89C /* GPushView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE361D1BEA13320089A89C /* GPushView.m */; };
 		E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */; };
 		E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */; };
+		E3FEFA5E1C59E9300024AE0E /* GBrandHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1285,6 +1287,8 @@
 		E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CycleAdvModel.m; sourceTree = "<group>"; };
 		E3A709A61BE0B07000750D27 /* GwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GwebViewController.h; sourceTree = "<group>"; };
 		E3A709A71BE0B07000750D27 /* GwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GwebViewController.m; sourceTree = "<group>"; };
+		E3B16A2A1C5749540061A384 /* GBrandListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBrandListViewController.h; sourceTree = "<group>"; };
+		E3B16A2B1C5749540061A384 /* GBrandListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandListViewController.m; sourceTree = "<group>"; };
 		E3B720981BF3268B007F7FFE /* shuliang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang@2x.png"; sourceTree = "<group>"; };
 		E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang-@2x.png"; sourceTree = "<group>"; };
 		E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang+@2x.png"; sourceTree = "<group>"; };
@@ -1385,6 +1389,8 @@
 		E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoneClassListViewController.m; sourceTree = "<group>"; };
 		E3F364C11BE747BE00C34A0B /* GproductDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GproductDetailViewController.h; sourceTree = "<group>"; };
 		E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GproductDetailViewController.m; sourceTree = "<group>"; };
+		E3FEFA5C1C59E9300024AE0E /* GBrandHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBrandHomeViewController.h; sourceTree = "<group>"; };
+		E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandHomeViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2701,6 +2707,10 @@
 				E3C4DBE31C45926200A29259 /* GmyFootViewController.m */,
 				E3C4DBEA1C45D40700A29259 /* GCustomSearchViewController.h */,
 				E3C4DBEB1C45D40700A29259 /* GCustomSearchViewController.m */,
+				E3B16A2A1C5749540061A384 /* GBrandListViewController.h */,
+				E3B16A2B1C5749540061A384 /* GBrandListViewController.m */,
+				E3FEFA5C1C59E9300024AE0E /* GBrandHomeViewController.h */,
+				E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -3517,6 +3527,7 @@
 				130609141C3E3A3C004489A5 /* MessageModel.m in Sources */,
 				139334061BE3789000B4628B /* OptionModel.m in Sources */,
 				134822E11BEC8DF200EA2E06 /* EditUserInfoViewController.m in Sources */,
+				E3FEFA5E1C59E9300024AE0E /* GBrandHomeViewController.m in Sources */,
 				13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */,
 				13FFBFC81C0D4FEA0077DD29 /* RCDChatViewController.m in Sources */,
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
@@ -3562,6 +3573,7 @@
 				1303C2DB1BE9F42D00700847 /* ProjectModel.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
+				E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */,
 				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
 				131A177D1BF341E900B12D2F /* PreViewCell.m in Sources */,
 				E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */,
