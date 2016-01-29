@@ -405,7 +405,6 @@
 		13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E30888571C4E47E800C6A8DD /* shoucangjia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */; };
-		E30888591C4E483000C6A8DD /* back_storehome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30888581C4E483000C6A8DD /* back_storehome@2x.png */; };
 		E30FE3961C3CCCE9001CF9BA /* UINavigationBar+Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE38F1C3CCCE9001CF9BA /* UINavigationBar+Appearance.m */; };
 		E30FE3971C3CCCE9001CF9BA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */; };
 		E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */; };
@@ -489,6 +488,7 @@
 		E3A7099B1BE0754300750D27 /* NSDictionary+GJson.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A7099A1BE0754300750D27 /* NSDictionary+GJson.m */; };
 		E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */; };
 		E3A709A81BE0B07000750D27 /* GwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A709A71BE0B07000750D27 /* GwebViewController.m */; };
+		E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3B16A2B1C5749540061A384 /* GBrandListViewController.m */; };
 		E3B720991BF3268B007F7FFE /* shuliang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B720981BF3268B007F7FFE /* shuliang@2x.png */; };
 		E3B7209C1BF32887007F7FFE /* shuliang-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */; };
 		E3B7209D1BF32887007F7FFE /* shuliang+@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */; };
@@ -554,6 +554,10 @@
 		E3EE361E1BEA13320089A89C /* GPushView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE361D1BEA13320089A89C /* GPushView.m */; };
 		E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */; };
 		E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */; };
+		E3FEFA5E1C59E9300024AE0E /* GBrandHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */; };
+		E3FEFA631C5B44710024AE0E /* GBrandTabHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FEFA621C5B44710024AE0E /* GBrandTabHeaderView.m */; };
+		E3FEFA651C5B69EC0024AE0E /* fenyuan_storehome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3FEFA641C5B69EC0024AE0E /* fenyuan_storehome@2x.png */; };
+		E3FEFA691C5B6C550024AE0E /* back_storehome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3FEFA681C5B6C550024AE0E /* back_storehome@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1201,7 +1205,6 @@
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoucangjia@2x.png"; sourceTree = "<group>"; };
-		E30888581C4E483000C6A8DD /* back_storehome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_storehome@2x.png"; sourceTree = "<group>"; };
 		E30FE38C1C3CCCE9001CF9BA /* DLConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLConst.h; sourceTree = "<group>"; };
 		E30FE38D1C3CCCE9001CF9BA /* DLNavigationEffectKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNavigationEffectKit.h; sourceTree = "<group>"; };
 		E30FE38E1C3CCCE9001CF9BA /* UINavigationBar+Appearance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+Appearance.h"; sourceTree = "<group>"; };
@@ -1313,6 +1316,8 @@
 		E3A709A41BE0AE7100750D27 /* CycleAdvModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CycleAdvModel.m; sourceTree = "<group>"; };
 		E3A709A61BE0B07000750D27 /* GwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GwebViewController.h; sourceTree = "<group>"; };
 		E3A709A71BE0B07000750D27 /* GwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GwebViewController.m; sourceTree = "<group>"; };
+		E3B16A2A1C5749540061A384 /* GBrandListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBrandListViewController.h; sourceTree = "<group>"; };
+		E3B16A2B1C5749540061A384 /* GBrandListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandListViewController.m; sourceTree = "<group>"; };
 		E3B720981BF3268B007F7FFE /* shuliang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang@2x.png"; sourceTree = "<group>"; };
 		E3B7209A1BF32887007F7FFE /* shuliang-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang-@2x.png"; sourceTree = "<group>"; };
 		E3B7209B1BF32887007F7FFE /* shuliang+@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuliang+@2x.png"; sourceTree = "<group>"; };
@@ -1413,6 +1418,12 @@
 		E3F364BF1BE7044F00C34A0B /* GoneClassListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoneClassListViewController.m; sourceTree = "<group>"; };
 		E3F364C11BE747BE00C34A0B /* GproductDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GproductDetailViewController.h; sourceTree = "<group>"; };
 		E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GproductDetailViewController.m; sourceTree = "<group>"; };
+		E3FEFA5C1C59E9300024AE0E /* GBrandHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBrandHomeViewController.h; sourceTree = "<group>"; };
+		E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandHomeViewController.m; sourceTree = "<group>"; };
+		E3FEFA611C5B44710024AE0E /* GBrandTabHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBrandTabHeaderView.h; sourceTree = "<group>"; };
+		E3FEFA621C5B44710024AE0E /* GBrandTabHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandTabHeaderView.m; sourceTree = "<group>"; };
+		E3FEFA641C5B69EC0024AE0E /* fenyuan_storehome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fenyuan_storehome@2x.png"; sourceTree = "<group>"; };
+		E3FEFA681C5B6C550024AE0E /* back_storehome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_storehome@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2754,6 +2765,10 @@
 				E3C4DBE31C45926200A29259 /* GmyFootViewController.m */,
 				E3C4DBEA1C45D40700A29259 /* GCustomSearchViewController.h */,
 				E3C4DBEB1C45D40700A29259 /* GCustomSearchViewController.m */,
+				E3B16A2A1C5749540061A384 /* GBrandListViewController.h */,
+				E3B16A2B1C5749540061A384 /* GBrandListViewController.m */,
+				E3FEFA5C1C59E9300024AE0E /* GBrandHomeViewController.h */,
+				E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2848,6 +2863,8 @@
 				E38551041C0ACFDB00CE23E7 /* MyCouponTableViewCell.m */,
 				E3BB6B291C515D1700B837A5 /* GUpToolView.h */,
 				E3BB6B2A1C515D1700B837A5 /* GUpToolView.m */,
+				E3FEFA611C5B44710024AE0E /* GBrandTabHeaderView.h */,
+				E3FEFA621C5B44710024AE0E /* GBrandTabHeaderView.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2891,9 +2908,10 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E3FEFA681C5B6C550024AE0E /* back_storehome@2x.png */,
+				E3FEFA641C5B69EC0024AE0E /* fenyuan_storehome@2x.png */,
 				E388EC9B1C51085600C3E6E1 /* storehomeNodatatixing@2x.png */,
 				E3E487E61C4FCE2D0081B4B2 /* shaixuan_white@2x.png */,
-				E30888581C4E483000C6A8DD /* back_storehome@2x.png */,
 				E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */,
 				E3C4DBF11C45DD7A00A29259 /* uptool_homepage@2x.png */,
 				E3C4DBEF1C45DD5100A29259 /* uptool_zuji@2x.png */,
@@ -3171,6 +3189,7 @@
 				1303C3541BEB0D7100700847 /* personal_qianbao_youhuiquan@2x.png in Resources */,
 				E388EC9C1C51085600C3E6E1 /* storehomeNodatatixing@2x.png in Resources */,
 				139333AB1BE0DF3E00B4628B /* 14_2@2x.png in Resources */,
+				E3FEFA651C5B69EC0024AE0E /* fenyuan_storehome@2x.png in Resources */,
 				130D2E2F1BFDF2DC002E301F /* UMSLoginViewController.xib in Resources */,
 				E385510A1C0AF73700CE23E7 /* daijinquan@2x.png in Resources */,
 				13F9D1271C2FB06800993738 /* imageFail@2x.png in Resources */,
@@ -3196,6 +3215,7 @@
 				139333ED1BE0DF3E00B4628B /* 5_1@2x.png in Resources */,
 				139333B51BE0DF3E00B4628B /* 18_1@2x.png in Resources */,
 				1303C2C61BE9ABCA00700847 /* navigationbarBackgroudImage_iOS6@2x.png in Resources */,
+				E3FEFA691C5B6C550024AE0E /* back_storehome@2x.png in Resources */,
 				139333B21BE0DF3E00B4628B /* 17_1@2x.png in Resources */,
 				13F9D10D1C2FAD1300993738 /* home_button_top@2x.png in Resources */,
 				139333B01BE0DF3E00B4628B /* 16_3@2x.png in Resources */,
@@ -3317,7 +3337,6 @@
 				E3E6C3621BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png in Resources */,
 				139333F51BE0DF3E00B4628B /* 8_3@2x.png in Resources */,
 				13D6DA9F1C48C6A90091FCFE /* extension_36_5.png in Resources */,
-				E30888591C4E483000C6A8DD /* back_storehome@2x.png in Resources */,
 				139333D11BE0DF3E00B4628B /* 26_1@2x.png in Resources */,
 				130D2E031BFC7332002E301F /* gpin@2x.png in Resources */,
 				139333EF1BE0DF3E00B4628B /* 6_1@2x.png in Resources */,
@@ -3505,6 +3524,7 @@
 				E3D8AE361BF61D70003AE2E3 /* CouponModel.m in Sources */,
 				13D119A81C2803970042EB6D /* LSuitableView.m in Sources */,
 				E3E2B3F91BFB0859007988C5 /* GchooseAreaViewController.m in Sources */,
+				E3FEFA631C5B44710024AE0E /* GBrandTabHeaderView.m in Sources */,
 				E3EE36061BE9D4A10089A89C /* GproductDirectoryTableViewCell.m in Sources */,
 				13F8C5AA1C05AA7E004C3FC7 /* JKAssets.m in Sources */,
 				E335FAB91BFF172800708BF6 /* GuserAddressTableViewCell.m in Sources */,
@@ -3578,6 +3598,7 @@
 				130609141C3E3A3C004489A5 /* MessageModel.m in Sources */,
 				139334061BE3789000B4628B /* OptionModel.m in Sources */,
 				134822E11BEC8DF200EA2E06 /* EditUserInfoViewController.m in Sources */,
+				E3FEFA5E1C59E9300024AE0E /* GBrandHomeViewController.m in Sources */,
 				13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */,
 				13FFBFC81C0D4FEA0077DD29 /* RCDChatViewController.m in Sources */,
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
@@ -3626,6 +3647,7 @@
 				131EC61D1C58F3670008F517 /* SetmealModel.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
+				E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */,
 				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
 				131A177D1BF341E900B12D2F /* PreViewCell.m in Sources */,
 				E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */,

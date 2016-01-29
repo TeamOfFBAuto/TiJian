@@ -9,6 +9,7 @@
 #import "GPushView.h"
 #import "GcustomNavcView.h"
 #import "GoneClassListViewController.h"
+#import "GBrandListViewController.h"
 
 @implementation GPushView
 {
@@ -311,9 +312,9 @@
     self.tf_low.text = nil;
     [self setDefaultPriceImvHidden];
     [self.tab3 reloadData];
-    
     [self hiddenTab:self.tab3];
-    
+    [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
+    [self.tab1 reloadData];
 }
 
 
@@ -375,9 +376,6 @@
         NSLog(@"%@",self.userChoosePrice);
         NSLog(@"%@",self.userChoosePrice_high);
         NSLog(@"%@",self.userChoosePrice_low);
-        
-
-        
         
         
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];

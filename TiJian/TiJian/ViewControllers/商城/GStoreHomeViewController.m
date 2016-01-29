@@ -26,8 +26,10 @@
 #import "StoreHomeOneBrandModel.h"
 #import "LocationChooseViewController.h"
 #import "HospitalViewController.h"//分院
+#import "GBrandListViewController.h"
+#import "GBrandHomeViewController.h"
 
-@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
+@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate>
 {
     
     LBannerView *_bannerView;//轮播图
@@ -566,16 +568,17 @@
     //数据数组
     NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
     NSDictionary *dic = classData[sender.tag - 10];
-    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    
+    GBrandListViewController *cc = [[GBrandListViewController alloc]init];
+    cc.class_Id = [dic stringValueForKey:@"category_id"];
+    cc.className = [dic stringValueForKey:@"name"];
     if ([[dic stringValueForKey:@"gender"] intValue] == 1 || [[dic stringValueForKey:@"gender"] intValue] == 2) {
         cc.haveChooseGender = NO;
     }else if ([[dic stringValueForKey:@"gender"] intValue] == 99){
         cc.haveChooseGender = YES;
     }
-    cc.className = [dic stringValueForKey:@"name"];
-    cc.category_id = [[dic stringValueForKey:@"category_id"] intValue];
-    
     [self.navigationController pushViewController:cc animated:YES];
+    
     
     
 }
@@ -593,7 +596,9 @@
     
     if (state == 0) {//常态
         
-        [_myNavcRightBtn setTitle:@"分院" forState:UIControlStateNormal];
+//        [_myNavcRightBtn setTitle:@"分院" forState:UIControlStateNormal];
+        [_myNavcRightBtn setTitle:nil forState:UIControlStateNormal];
+        [_myNavcRightBtn setImage:[UIImage imageNamed:@"fenyuan_storehome.png"] forState:UIControlStateNormal];
         
         UIView *effectView = self.currentNavigationBar.effectContainerView;
         if (effectView) {
@@ -609,7 +614,7 @@
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
 
     }else if (state == 1){//编辑状态
-        
+        [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
         [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
         
         UIView *effectView = self.currentNavigationBar.effectContainerView;
@@ -625,6 +630,7 @@
         [_kuangView setWidth:_searchView.frame.size.width];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width-30, 30)];
         
+        [self.navigationController.navigationBar bringSubviewToFront:_searchView];
         
     }
 }
@@ -836,7 +842,7 @@
     
     
     _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
-    _theCustomSearchView.d1 = self;
+    _theCustomSearchView.delegate = self;
     
     __weak typeof (self)bself = self;
     
@@ -915,12 +921,12 @@
 
 //创建tabelview
 -(void)creatTableView{
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50) style:UITableViewStyleGrouped];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     _table.showsVerticalScrollIndicator = NO;
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
-    
     [self loadCache];
     
     
@@ -1014,11 +1020,16 @@
     NSInteger index = sender.tag - 20000;
     StoreHomeOneBrandModel *model_b = _table.dataArray[index];
     
-    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-    cc.className = model_b.brand_name;
-    cc.brand_name = model_b.brand_name;
+    GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
     cc.brand_id = model_b.brand_id;
+    cc.brand_name = model_b.brand_name;
     [self.navigationController pushViewController:cc animated:YES];
+    
+//    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+//    cc.className = model_b.brand_name;
+//    cc.brand_name = model_b.brand_name;
+//    cc.brand_id = model_b.brand_id;
+//    [self.navigationController pushViewController:cc animated:YES];
     
     
 }
@@ -1164,6 +1175,19 @@
     }
     
     [self controlTopButtonWithScrollView:scrollView];
+    
+    
+    
+//    // 去掉UItableview headerview黏性(sticky)
+//    CGFloat sectionHeaderHeight = 40;
+//    if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
+//        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+//    }
+//    else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
+//        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
+//    }
+    
+    
 }
 
 -(void)setEffectViewAlpha:(CGFloat)theAlpha{
@@ -1310,20 +1334,20 @@
         titleLabel.attributedText = str_a;
     }
     
-    
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 44.5, DEVICE_WIDTH, 0.5)];
-    if (section == 0) {
-        [line setFrame:CGRectMake(0, 39.5, DEVICE_WIDTH, 0.5)];
-    }
-    line.backgroundColor = RGBCOLOR(220, 221, 223);
-    [view addSubview:line];
+
     
     
     
     return view;
 }
 - (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView{
-    return 45;
+    CGFloat height = 0.01;
+    if (section == 0) {
+        height = 40;
+    }else{
+        height = 45;
+    }
+    return height;
 }
 
 

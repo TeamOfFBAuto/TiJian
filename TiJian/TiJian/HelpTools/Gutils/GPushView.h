@@ -9,9 +9,20 @@
 #import <UIKit/UIKit.h>
 @class GcustomNavcView;
 @class GoneClassListViewController;
+@class GBrandListViewController;
+
+@protocol GpushViewDelegate <NSObject>
+
+@property(nonatomic,strong)NSArray *brand_city_list;
+@property(nonatomic,strong)NSDictionary *shaixuanDic;
+
+-(void)shaixuanFinishWithDic:(NSDictionary *)dic;
+
+-(void)therightSideBarDismiss;
+
+@end
 
 @interface GPushView : UIView<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
-
 
 @property(nonatomic,strong)GcustomNavcView *navigationView;//上面navigationview
 
@@ -71,7 +82,8 @@
 /**
  *  代理
  */
-@property(nonatomic,assign)GoneClassListViewController *delegate;
+@property(nonatomic,assign)id<GpushViewDelegate> delegate;
+//@property(nonatomic,assign)GBrandListViewController *delegate1;
 
 /**
  *  价格选择填写最低价的label

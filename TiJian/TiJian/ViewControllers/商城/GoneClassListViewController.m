@@ -17,7 +17,7 @@
 #import "DLNavigationEffectKit.h"
 #import "GSearchView.h"
 
-@interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate,UITextFieldDelegate>
+@interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate,UITextFieldDelegate,GpushViewDelegate,GsearchViewDelegate>
 {
     RefreshTableView *_table;
     YJYRequstManager *_request;
@@ -67,18 +67,6 @@
     [self removeObserver:self forKeyPath:@"_count"];
 }
 
-//- (void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    [self hiddenNavigationBar:YES animated:animated];
-//}
-//
-//
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    [super viewWillDisappear:animated];
-//    [self hiddenNavigationBar:NO animated:animated];
-//}
 
 
 - (void)viewDidLoad {
@@ -88,7 +76,6 @@
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
 
-    
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
     _backBlackView.alpha = 0.5;
@@ -130,7 +117,7 @@
     
     
     _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
-    _theCustomSearchView.d3 = self;
+    _theCustomSearchView.delegate = self;
     
     __weak typeof (self)bself = self;
     
@@ -144,23 +131,6 @@
 
 //创建自定义navigation
 - (void)setupNavigation{
-    
-//    [self resetShowCustomNavigationBar:YES];
-    
-    
-//    //左边
-//    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 40, 30)];
-//    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
-//    [leftBtn setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-//    [leftBtn addTarget:self action:@selector(gogoback) forControlEvents:UIControlEventTouchUpInside];
-//    [leftView addSubview:leftBtn];
-//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
-//    UIBarButtonItem *spaceButtonItem_l = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
-//    [spaceButtonItem_l setWidth:-17];
-//    self.currentNavigationItem.leftBarButtonItems = @[spaceButtonItem_l,leftItem];
-    
-    //update by lcw
     
     self.rightImage = [UIImage imageNamed:@"shaixuan"];
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
@@ -220,6 +190,7 @@
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
     [_table showRefreshHeader:YES];
 }
@@ -348,6 +319,8 @@
             [_rightItem2Btn setTitle:@"取消" forState:UIControlStateNormal];
             [_rightItem2Btn setImage:nil forState:UIControlStateNormal];
         }
+        
+        [self.navigationController.navigationBar bringSubviewToFront:_searchView];
         
         [self.view removeGestureRecognizer:_panGestureRecognizer];
         
@@ -650,12 +623,10 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-//    __weak typeof(self)weakSelf = self;
     _request_BrandListWithLocation = [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         self.brand_city_list = [NSArray arrayWithArray:arr];
-//        [self creatFilterBtn];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
     } failBlock:^(NSDictionary *result) {
@@ -835,8 +806,6 @@
     if (![LTools isEmpty:self.searchTf.text]) {
         [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
     }
-    
-    
     
     return YES;
 }
