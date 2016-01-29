@@ -20,15 +20,15 @@
 #import "GUpToolView.h"
 #import "GmyFootViewController.h"
 #import "GCustomSearchViewController.h"
+#import "GBrandTabHeaderView.h"
+#import "GProductCellTableViewCell.h"
 
-@interface GBrandHomeViewController ()<UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
+@interface GBrandHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
     YJYRequstManager *_request;
-    AFHTTPRequestOperation *_request_hotSearch;
     
     UIView *_mySearchView;//点击搜索盖上的搜索浮层
     UIView *_searchView;//输入框下层view
-    GSearchView *_theCustomSearchView;//自定义搜索view
     NSArray *_hotSearchArray;//热门搜索
     
     UIBarButtonItem *_rightItem1;
@@ -60,6 +60,13 @@
     
     BOOL _isPresenting;//是否在模态
     
+    
+    
+    //tableHeaderView
+    GBrandTabHeaderView *_tabHeaderView;
+    
+    NSMutableArray *_productOneClassArray;
+    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;//筛选view
@@ -78,11 +85,12 @@
     
     _searchState = 0;
     
+    [self prepareBrandDetail];
+    
     //视图创建
-//    [self creatTableView];
+    [self creatTab];
     [self setupNavigation];
     [self creatMysearchView];
-    [self getHotSearch];
     [self creatRightTranslucentSideBar];
     [self prepareBrandListWithLocation];
     [self creatUpToolView];
@@ -98,19 +106,6 @@
 
 
 #pragma mark - 网络请求
-//热门搜索
--(void)getHotSearch{
-    
-    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _hotSearchArray = [result arrayValueForKey:@"list"];
-        _theCustomSearchView.hotSearch = _hotSearchArray;
-        [_theCustomSearchView.tab reloadData];
-    } failBlock:^(NSDictionary *result) {
-        
-        
-    }];
-}
-
 
 //根据城市查询品牌列表
 -(void)prepareBrandListWithLocation{
@@ -143,6 +138,25 @@
 
 
 #pragma mark - 视图创建
+
+-(void)creatTab{
+    
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64-50) style:UITableViewStylePlain];
+    _table.refreshDelegate = self;
+    _table.dataSource = self;
+    [self creatTabHeaderView];
+    [self.view addSubview:_table];
+    [_table showRefreshHeader:YES];
+    
+}
+
+
+-(void)creatTabHeaderView{
+    _tabHeaderView = [[GBrandTabHeaderView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 100)];
+    _table.tableHeaderView = _tabHeaderView;
+}
+
+
 
 -(void)creatUpToolView{
     
@@ -236,7 +250,7 @@
     self.searchTf.font = [UIFont systemFontOfSize:13];
     self.searchTf.backgroundColor = RGBCOLOR(248, 248, 248);
     self.searchTf.layer.cornerRadius = 5;
-    self.searchTf.placeholder = @"输入您要找的商品";
+    self.searchTf.placeholder = @"在店内搜索您要找的商品";
     self.searchTf.delegate = self;
     self.searchTf.returnKeyType = UIReturnKeySearch;
     [_kuangView addSubview:self.searchTf];
@@ -289,24 +303,188 @@
 //创建搜索界面
 -(void)creatMysearchView{
     
-    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-    _mySearchView.backgroundColor = [UIColor whiteColor];
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView.backgroundColor = [UIColor blackColor];
+    _mySearchView.alpha = 0.3;
+    [_mySearchView addTapGestureTaget:self action:@selector(myNavcRightBtnClicked) imageViewTag:0];
     _mySearchView.hidden = YES;
     [self.view addSubview:_mySearchView];
     
-    _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
-    _theCustomSearchView.delegate = self;
-    
-    __weak typeof (self)bself = self;
-    
-    [_theCustomSearchView setKuangBlock:^(NSString *theStr) {
-        [bself searchBtnClickedWithStr:theStr isHotSearch:NO];
-    }];
-    
-    [_mySearchView addSubview:_theCustomSearchView];
     
     
 }
+
+
+
+#pragma mark - RefreshDelegate && UITableViewDataSource
+
+- (void)loadNewDataForTableView:(UITableView *)tableView{
+    [self prepareNetDataWithDic:nil];
+}
+- (void)loadMoreDataForTableView:(UITableView *)tableView{
+    [self prepareNetDataWithDic:nil];
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    NSInteger num = 1;
+    return num;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    NSInteger num = 0;
+    num = _table.dataArray.count;
+    return num;
+}
+
+
+- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    CGFloat height = 0;
+    height = [GProductCellTableViewCell getCellHight];
+    return height;
+}
+
+- (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
+    CGFloat height = 0.01;
+    return height;
+}
+
+-(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView{
+    CGFloat height = 0.01;
+    return height;
+}
+
+- (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    return view;
+}
+
+-(UIView *)viewForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    return view;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *identifier = @"identifier";
+    GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    
+    ProductModel *model = _table.dataArray[indexPath.row];
+    
+    [cell loadData:model];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    return cell;
+}
+
+
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
+    NSLog(@"%s",__FUNCTION__);
+}
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    NSLog(@"%s",__FUNCTION__);
+}
+
+
+#pragma mark - 网络请求
+
+-(void)prepareBrandDetail{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic = @{
+                          @"brand_id":self.brand_id
+                          };
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:StoreHomeDetail parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [_tabHeaderView reloadViewWithBrandDic:result classDic:nil];
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:StoreProductClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [_tabHeaderView reloadViewWithBrandDic:nil classDic:result];
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+}
+
+
+-(void)prepareNetDataWithDic:(NSDictionary *)theDic{
+    
+//    NSDictionary *dic = @{
+//                          @"order_field":@"recommend",//默认推荐
+//                          @"order_direct":@"desc",//默认降序
+//                          @"show_type":@"1",
+//                          @"brand_id":self.brand_id,
+//                          @"province_id":[GMAPI getCurrentProvinceId],
+//                          @"city_id":[GMAPI getCurrentCityId]
+//                          };
+    
+    
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic;
+    
+    if (theDic) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+        dic = temp_dic;
+        
+    }else{
+        dic = @{
+                @"province_id":[GMAPI getCurrentProvinceId],
+                @"city_id":[GMAPI getCurrentCityId],
+                @"page":NSStringFromInt(_table.pageNum),
+                @"per_page":NSStringFromInt(PAGESIZE_MID)
+                };
+        
+        if (self.brand_id) {
+            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+            [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+            [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
+            dic = temp_dic;
+        }
+        
+    }
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        
+        _productOneClassArray = [NSMutableArray arrayWithCapacity:1];
+        
+        for (NSDictionary *dic in arr) {
+            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+            [_productOneClassArray addObject:model];
+        }
+        
+        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID];
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+    
+    
+}
+
+
+
+
 
 
 #pragma mark - 改变searchTf和框的大小
@@ -364,10 +542,12 @@
             [_rightItem2Btn setImage:nil forState:UIControlStateNormal];
         }
         
-        [self.navigationController.navigationBar bringSubviewToFront:_searchView];
         [self.view removeGestureRecognizer:_panGestureRecognizer];
         
     }
+    
+    [self.navigationController.navigationBar bringSubviewToFront:_searchView];
+    
 }
 
 #pragma mark - 点击处理
@@ -436,8 +616,6 @@
         [_searchTf resignFirstResponder];
         _mySearchView.hidden = YES;
     }
-    
-    
     
     
 }
@@ -553,9 +731,6 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     NSLog(@"%s",__FUNCTION__);
     _mySearchView.hidden = NO;
-    _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
-    
-    [_theCustomSearchView.tab reloadData];
     
     [self changeSearchViewAndKuangFrameAndTfWithState:1];
     

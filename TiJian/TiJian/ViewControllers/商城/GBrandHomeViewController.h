@@ -16,6 +16,7 @@
 @property(nonatomic,assign)BOOL haveChooseGender;
 @property(nonatomic,strong)NSArray *brand_city_list;
 
+
 //下列两个属性必传
 @property(nonatomic,strong)NSString *brand_id;//品牌id
 @property(nonatomic,strong)NSString *brand_name;//品牌名 控制筛选的品牌选择

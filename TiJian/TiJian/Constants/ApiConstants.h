@@ -42,6 +42,9 @@
 //商品列表 get方式
 #define StoreProductList @"/index.php?d=api&c=setmeal&m=setmeal_list"
 
+//品牌店
+#define StoreHomeDetail @"/index.php?d=api&c=setmeal&m=brand_shop"
+
 
 //搜索套餐
 #define ProductSearch @"/index.php?d=api&c=setmeal&m=search"

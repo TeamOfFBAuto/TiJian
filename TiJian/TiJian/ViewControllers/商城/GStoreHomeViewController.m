@@ -595,7 +595,9 @@
     
     if (state == 0) {//常态
         
-        [_myNavcRightBtn setTitle:@"分院" forState:UIControlStateNormal];
+//        [_myNavcRightBtn setTitle:@"分院" forState:UIControlStateNormal];
+        [_myNavcRightBtn setTitle:nil forState:UIControlStateNormal];
+        [_myNavcRightBtn setImage:[UIImage imageNamed:@"fenyuan_storehome.png"] forState:UIControlStateNormal];
         
         UIView *effectView = self.currentNavigationBar.effectContainerView;
         if (effectView) {
@@ -611,7 +613,7 @@
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
 
     }else if (state == 1){//编辑状态
-        
+        [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
         [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
         
         UIView *effectView = self.currentNavigationBar.effectContainerView;

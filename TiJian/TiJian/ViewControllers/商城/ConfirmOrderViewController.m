@@ -833,7 +833,7 @@
 #pragma mark - 视图创建
 //创建tableview
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStylePlain];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
     _tab.delegate = self;
     _tab.dataSource = self;
     [self.view addSubview:_tab];
