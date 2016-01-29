@@ -166,7 +166,7 @@
         return _appointedView;
     }
     
-    _appointedView = [self viewForResult];
+    _appointedView = [self viewForResultWithTitle:@"您还没有预约任何套餐"];
         
     return _appointedView;
 }
@@ -181,11 +181,11 @@
     if (_appointedOverView) {
         return _appointedOverView;
     }
-    _appointedOverView = [self viewForResult];
+    _appointedOverView = [self viewForResultWithTitle:@"您还没有已过期套餐"];
     return _appointedOverView;
 }
 
-- (UIView *)viewForResult
+- (UIView *)viewForResultWithTitle:(NSString *)title
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     CGFloat width = FitScreen(96);
@@ -195,7 +195,7 @@
     icon.image = [UIImage imageNamed:@"hema"];
     [view addSubview:icon];
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, icon.bottom - 5, DEVICE_WIDTH, 15) title:@"您还没有预约任何套餐" font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, icon.bottom - 5, DEVICE_WIDTH, 15) title:title font:14 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"323232"]];
     [view addSubview:label];
     return view;
 }
@@ -785,7 +785,14 @@
     else if (index == 3 || (index == 0 && indexPath.section == 3)){
         
         NSString *days = NSStringFromInt([aModel.days intValue]);
-        NSString *text = [NSString stringWithFormat:@"过期%@天",days];
+        
+        NSString *text;
+        if ([days intValue] == 0) {
+            text = @"今日体检";
+        }else
+        {
+            text = [NSString stringWithFormat:@"过期%@天",days];
+        }
         [timeLabel setAttributedText:[LTools attributedString:text keyword:days color:[UIColor colorWithHexString:@"f88326"]]];
     }
     

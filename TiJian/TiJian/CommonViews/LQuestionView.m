@@ -208,7 +208,8 @@
             
             //加选择按钮
             UIButton *selectedButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [selectedButton setImage:[UIImage imageNamed:@"duihao"] forState:UIControlStateNormal];
+            [selectedButton setImage:nil forState:UIControlStateNormal];
+            [selectedButton setImage:[UIImage imageNamed:@"duihao"] forState:UIControlStateSelected];
             [btn addSubview:selectedButton];
             selectedButton.frame = CGRectMake(btn.width - 23 - 5, btn.height - 23 - 5, 23, 23);
             btn.selectedButton = selectedButton;

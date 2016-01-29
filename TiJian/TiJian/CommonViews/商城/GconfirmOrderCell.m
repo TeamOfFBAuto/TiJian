@@ -15,6 +15,7 @@
 @property(nonatomic,retain)UILabel *contentLabel;
 @property(nonatomic,retain)UILabel *priceLabel;
 @property(nonatomic,retain)UILabel *numLabel;
+@property(nonatomic,retain)UIImageView *markImageView;//标记加项
 
 @end
 
@@ -72,6 +73,11 @@
         line.backgroundColor = DEFAULT_LINECOLOR;
         [self.contentView addSubview:line];
         
+        CGFloat width = 77/2.f;
+        self.markImageView = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - width, 0, width, width)];
+        _markImageView.image = [UIImage imageNamed:@"jiaqiang"];
+        [self.contentView addSubview:_markImageView];
+        
     }
     return self;
 }
@@ -89,7 +95,9 @@
     self.priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
     
     self.numLabel.text = [NSString stringWithFormat:@"X %@",model.product_num];
-
+    
+    BOOL additon = [model.is_append intValue] == 1 ? YES : NO;//是否是加强
+    self.markImageView.hidden = !additon;
 }
 
 + (CGFloat)heightForCell

@@ -36,7 +36,7 @@
 
 #pragma mark - 视图创建
 
--(UIView *)resultView
+-(ResultView *)resultView
 {
     if (_resultView) {
         

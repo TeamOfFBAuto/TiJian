@@ -21,6 +21,7 @@
 #import "BrandModel.h"//品牌model
 #import "GconfirmOrderCell.h"
 #import "AddCommentViewController.h"
+#import "ChooseHopitalController.h"
 
 #import "RCIM.h"
 
@@ -109,6 +110,9 @@
     if ([self.order_id intValue] == 0) {
         
         [LTools showMBProgressWithText:@"查看订单无效" addToView:self.view];
+        
+        [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.3];
+        
         return;
     }
     
@@ -126,6 +130,7 @@
     
     __weak typeof(self)weakSelf = self;
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_INFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"获取订单详情%@ %@",result[RESULT_INFO],result);
         [weakSelf parseDataWithResult:result];
@@ -133,9 +138,12 @@
         if (weakSelf.msg_id && weakSelf.updateParamsBlock) {
             weakSelf.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});
         }
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         
     } failBlock:^(NSDictionary *result) {
         NSLog(@"获取订单详情 失败 %@",result);
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+
     }];
     
 }
@@ -284,6 +292,7 @@
         [self buyAgain:_orderModel];
         
     }else if ([text isEqualToString:@"前去预约"]){
+        
         OrderProductListController *list = [[OrderProductListController alloc]init];
         list.orderId = _orderModel.order_id;
         [self.navigationController pushViewController:list animated:YES];
@@ -362,6 +371,45 @@
     [alert show];
 }
 
+/**
+ *  如果只有一个套餐的话 直接预约
+ *
+ */
+- (void)tttselectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+{
+    if (_orderModel.products.count == 1) {
+        
+        ProductModel *aModel = [self.products lastObject];
+        if ([aModel.product_num intValue] == 1) {
+            
+            
+        }
+    }
+    
+    ProductModel *aModel = nil;
+    aModel.order_id = _order_id;
+    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+    choose.gender = [aModel.gender intValue];
+    
+    if ([aModel.no_appointed_num intValue] == 0) {
+        return;
+    }
+    
+    //公司
+    if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
+        
+        NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
+        [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:[NSString stringWithFormat:@"%@",aModel.company_id] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+    }else
+    {
+        choose.productId = aModel.product_id;
+        choose.order_id = aModel.order_id;
+        choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
+        choose.lastViewController = self;//需要选择体检人的时候需要传
+    }
+    
+    [self.navigationController pushViewController:choose animated:YES];
+}
 
 #pragma mark - 创建视图
 /**
@@ -505,6 +553,41 @@
     phoneBtn.backgroundColor = [UIColor whiteColor];
     [phoneBtn setTitle:@"  拨打电话" forState:UIControlStateNormal];
     
+    //加上发票信息 和 快递方式
+    
+    UIView *billView = [[UIView alloc]initWithFrame:CGRectMake(0, phoneBtn.bottom + 5, DEVICE_WIDTH, 50)];
+    billView.backgroundColor = [UIColor whiteColor];
+    [bgView addSubview:billView];
+    
+    UILabel *billtitle = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD title:@"发票信息"];
+    [billView addSubview:billtitle];
+    
+    //发票信息
+    NSDictionary *invoice_info = _orderModel.invoice_info;
+    NSString *invoiceString = @"无";
+    if ([invoice_info isKindOfClass:[NSDictionary class]]) {
+        
+        invoiceString = [NSString stringWithFormat:@"%@\n%@",invoice_info[@"title"],invoice_info[@"desc"]];
+    }
+    CGFloat width = DEVICE_WIDTH - 15 - billtitle.right - 15;
+    UILabel *billContent = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - width, 0, width, 50) font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE title:invoiceString];
+    billContent.numberOfLines = 2;
+//    billContent
+    [billView addSubview:billContent];
+    
+    //快递方式
+    billView = [[UIView alloc]initWithFrame:CGRectMake(0, billView.bottom + 5, DEVICE_WIDTH, 50)];
+    billView.backgroundColor = [UIColor whiteColor];
+    [bgView addSubview:billView];
+    
+    NSString *expressString = [_orderModel.require_post intValue] == 0 ? @"电子体检码" : @"快递体检凭证";
+    billtitle = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD title:@"快递方式"];
+    [billView addSubview:billtitle];
+    
+    billContent = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - width, 0, width, 50) font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE title:expressString];
+    [billView addSubview:billContent];
+    
+    
 //    real_price;//实际付款
 //    coupon_offset_money;  //优惠券优惠金额
 //    vouchers_offset_money;//代金券优惠金额
@@ -547,7 +630,7 @@
     }
     
     
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, phoneBtn.bottom + 5, DEVICE_WIDTH, titles.count * 22 + 10 + 10)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, billView.bottom + 5, DEVICE_WIDTH, titles.count * 22 + 10 + 10)];
     view.backgroundColor = [UIColor whiteColor];
     [bgView addSubview:view];
     

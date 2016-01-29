@@ -25,6 +25,7 @@
 #import "ProductListViewController.h"
 #import "StoreHomeOneBrandModel.h"
 #import "LocationChooseViewController.h"
+#import "HospitalViewController.h"//分院
 
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
 {
@@ -1052,6 +1053,8 @@
 //跳转分院
 -(void)pushToFenyuan{
     
+    HospitalViewController *hospital = [[HospitalViewController alloc]init];
+    [self.navigationController pushViewController:hospital animated:YES];
 }
 
 

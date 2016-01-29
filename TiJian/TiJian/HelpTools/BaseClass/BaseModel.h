@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface BaseModel : NSObject
+
 -(id)initWithDictionary:(NSDictionary *)dic;
 
 /**

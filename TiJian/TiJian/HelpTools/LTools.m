@@ -65,6 +65,22 @@
     return NO;
 }
 
+/**
+ *  获取appName
+ *
+ *  @return
+ */
++ (NSString *)getAppName
+{
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    // app名称
+    NSString *app_Name = [infoDictionary objectForKey:@"CFBundleDisplayName"];
+    
+    return app_Name;
+}
+
+
+
 #pragma - mark MD5 加密
 
 /**
@@ -1303,6 +1319,45 @@
     [attibutedString addAttribute:NSForegroundColorAttributeName value:color range:range];
     
     return attibutedString;
+}
+
+/**
+ *  给关键字设置颜色、下划线、字体大小
+ *
+ *  @param content          目标string
+ *  @param underlineKeyword 关键词
+ *  @param textColor        颜色
+ *  @param keywordFontSize  字体大小
+ *
+ *  @return
+ */
++ (NSAttributedString *)attributedString:(NSString *)content
+                        underlineKeyword:(NSString *)underlineKeyword
+                                   color:(UIColor *)textColor
+                         keywordFontSize:(CGFloat)keywordFontSize
+{
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc]initWithString:content];
+    
+    if (content.length < underlineKeyword.length) {
+        return string;
+    }
+    
+    for (int i = 0; i <= content.length - underlineKeyword.length; i ++) {
+        
+        NSRange tmp = NSMakeRange(i, underlineKeyword.length);
+        
+        NSRange range = [content rangeOfString:underlineKeyword options:NSCaseInsensitiveSearch range:tmp];
+        
+        if (range.location != NSNotFound) {
+            [string addAttribute:NSForegroundColorAttributeName value:textColor range:range];
+            [string addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:keywordFontSize] range:range];
+            //下划线
+            [string addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:range];
+        }
+    }
+    
+    return string;
 }
 
 #pragma - mark 获取JSONString
