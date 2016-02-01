@@ -1439,9 +1439,19 @@
     NSMutableArray *product_ids_arr = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray *product_nums_arr = [NSMutableArray arrayWithCapacity:1];
     
+    NSMutableDictionary *jiaxiangbaoDic = [NSMutableDictionary dictionary];
+    
     for (NSArray *arr in _theData) {
         for (ProductModel *oneModel in arr) {
             if (oneModel.is_append.intValue == 1) {//加项包
+                if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
+                    NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
+                    [theArr addObject:oneModel.product_id];
+                    [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
+                }else{//没有
+                    NSArray *oneArr = @[oneModel.product_id];
+                    [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
+                }
                 
             }else{
                 [product_ids_arr addObject:oneModel.product_id];
@@ -1465,10 +1475,26 @@
     }
     
     
-    
-    
-    
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    NSArray *jiaxiangbaoDicAllKey = [jiaxiangbaoDic allKeys];
+    
+    if (jiaxiangbaoDicAllKey.count>0) {//有加项包
+        
+        NSMutableArray *jxb_final = [NSMutableArray arrayWithCapacity:1];
+        
+        for (NSString *str in jiaxiangbaoDicAllKey) {
+            NSString *houStr = [[jiaxiangbaoDic arrayValueForKey:str] componentsJoinedByString:@","];
+            NSString *qianStr = str;
+            [jxb_final addObject:[NSString stringWithFormat:@"%@:%@",qianStr,houStr]];
+            
+        }
+        
+        NSString *append_setmeal_str = [jxb_final componentsJoinedByString:@"|"];
+        [dic setValue:append_setmeal_str forKey:@"append_setmeal"];
+        
+    }
+    
     
     [dic setValue:[UserInfo getAuthkey] forKey:@"authcode"];//authcode
     [dic setValue:product_ids_str forKey:@"product_ids"];//产品id

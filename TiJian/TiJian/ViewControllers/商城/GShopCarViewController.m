@@ -123,7 +123,7 @@
     self.allChooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.allChooseBtn setFrame:CGRectMake(10, 0, DEVICE_WIDTH*140.0/750, 50)];
     self.allChooseBtn.selected = NO;
-    self.allChooseBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    self.allChooseBtn.titleLabel.font = [UIFont systemFontOfSize:13];
     [self.allChooseBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.allChooseBtn setTitle:@"全选" forState:UIControlStateNormal];
     [self.allChooseBtn setImage:[UIImage imageNamed:@"xuanzhong_no.png"] forState:UIControlStateNormal];
@@ -140,7 +140,7 @@
     UIView *midleView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.allChooseBtn.frame), 0, DEVICE_WIDTH*380.0/750, 50)];
     [_downView addSubview:midleView];
     
-    self.totolPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, midleView.frame.size.width, midleView.frame.size.height*0.5)];
+    self.totolPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, midleView.frame.size.width, midleView.frame.size.height)];
     NSString *pStr = @"0.00";
     NSString *price = [NSString stringWithFormat:@"合计：￥%@",pStr];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
@@ -153,11 +153,11 @@
     
     [midleView addSubview:self.totolPriceLabel];
     
-    self.detailPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.totolPriceLabel.frame), self.totolPriceLabel.frame.size.width, self.totolPriceLabel.frame.size.height)];
-    self.detailPriceLabel.font = [UIFont systemFontOfSize:12];
-    self.detailPriceLabel.textColor = [UIColor blackColor];
-    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%@  优惠:￥%@",@"0.0",@"0.0"];
-    [midleView addSubview:self.detailPriceLabel];
+//    self.detailPriceLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.totolPriceLabel.frame), self.totolPriceLabel.frame.size.width, self.totolPriceLabel.frame.size.height)];
+//    self.detailPriceLabel.font = [UIFont systemFontOfSize:12];
+//    self.detailPriceLabel.textColor = [UIColor blackColor];
+//    self.detailPriceLabel.text = [NSString stringWithFormat:@"总额:￥%@  优惠:￥%@",@"0.0",@"0.0"];
+//    [midleView addSubview:self.detailPriceLabel];
     
     
     _jiesuanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
