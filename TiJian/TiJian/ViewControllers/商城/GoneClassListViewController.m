@@ -90,9 +90,7 @@
     [self creatRightTranslucentSideBar];
     [self prepareBrandListWithLocation];
     
-    if (self.isShowShaixuanAuto) {
-        [self.rightSideBar show];
-    }
+    
     
     
     
@@ -212,7 +210,7 @@
     //避免滑动返回手势与此冲突
     [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
 
-    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender];
+    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender isHaveShaixuanDic:self.shaixuanDic];
     _pushView.delegate = self;
     [self.rightSideBar setContentViewInSideBar:_pushView];
 

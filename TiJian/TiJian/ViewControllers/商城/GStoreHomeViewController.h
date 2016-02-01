@@ -9,10 +9,16 @@
 
 //商城首页
 #import "MyViewController.h"
+@class GTranslucentSideBar;
 
 @interface GStoreHomeViewController : MyViewController
 
 @property(nonatomic,strong)UITextField *searchTf;//搜索栏输入框;
+
+@property(nonatomic,strong)NSArray *brand_city_list;
+@property (nonatomic, strong) GTranslucentSideBar *rightSideBar;//筛选view
+@property(nonatomic,strong)NSDictionary *shaixuanDic;
+@property(nonatomic,assign)BOOL haveChooseGender;
 
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot;
 
