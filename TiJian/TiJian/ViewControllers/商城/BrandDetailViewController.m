@@ -20,6 +20,8 @@
     NSArray *_fenyuanList;
     
     UILabel *_tmpLabel;
+    
+    NSString *_phoneNum;
 }
 
 
@@ -344,8 +346,11 @@
         }else if (indexPath.row == 3){//联系电话
             NSDictionary *data = [_dataDic dictionaryValueForKey:@"data"];
             NSString *phoneNum = [data stringValueForKey:@"brand_phone"];
-            NSString *strPhone = [NSString stringWithFormat:@"tel://%@",phoneNum];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:strPhone]];
+            NSMutableString *temp = [NSMutableString stringWithString:phoneNum];
+            [temp replaceOccurrencesOfString:@"－" withString:@"-" options:0 range:NSMakeRange(0, temp.length)];
+            _phoneNum = [NSString stringWithFormat:@"%@",temp];
+
+            [self clickToPhone];
         }
     }else if (indexPath.section == 1){
         NSDictionary *dic = _fenyuanList[indexPath.row];
@@ -355,6 +360,26 @@
         hospital.centerId = exam_center_id;
         [self.navigationController pushViewController:hospital animated:YES];
         
+    }
+}
+
+/**
+ *  打电话
+ */
+- (void)clickToPhone
+{
+    NSString *msg = [NSString stringWithFormat:@"拨打:%@",_phoneNum];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    [alert show];
+}
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex == 1) {
+        
+        NSString *msg = [NSString stringWithFormat:@"%@",_phoneNum];
+        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",msg]]];
     }
 }
 

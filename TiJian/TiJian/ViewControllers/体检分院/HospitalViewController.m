@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.myTitle = @"体检分院";
+    self.myTitle = @"附近";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     //创建视图
@@ -32,7 +32,8 @@
     //定位
     if ([GMAPI locationServiceEnabled]) {
         
-        [self getjingweidu];
+//        [self getjingweidu];
+        [_table showRefreshHeader:YES];
         
     }else
     {
@@ -160,6 +161,7 @@
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
+    
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         

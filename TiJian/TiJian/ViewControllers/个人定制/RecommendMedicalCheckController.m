@@ -34,7 +34,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.myTitle = @"推荐项目";
+    self.myTitle = @"专家鉴定";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         
@@ -75,16 +75,16 @@
     UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     headview.backgroundColor = [UIColor whiteColor];
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, DEVICE_WIDTH - 10, 40) title:@"专家鉴定" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
-    [headview addSubview:label];
+//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, DEVICE_WIDTH - 10, 40) title:@"专家鉴定" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
+//    [headview addSubview:label];
+//    
+//    //line
+//    UIView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom, DEVICE_WIDTH, 0.5)];
+//    line.backgroundColor = DEFAULT_LINECOLOR;
+//    [headview addSubview:line];
     
-    //line
-    UIView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom, DEVICE_WIDTH, 0.5)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [headview addSubview:line];
     
-    
-    label = [[UILabel alloc]initWithFrame:CGRectMake(10, line.bottom + 10, DEVICE_WIDTH - 20, 0) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:desc];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, DEVICE_WIDTH - 20, 0) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:desc];
     [headview addSubview:label];
     CGFloat height = [LTools heightForText:desc width:label.width font:13];
     label.numberOfLines = 0;
@@ -92,7 +92,7 @@
     label.height = height;
     
     //line
-    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom + 10, DEVICE_WIDTH, 0.5)];
+    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom + 10, DEVICE_WIDTH, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
     [headview addSubview:line];
     
