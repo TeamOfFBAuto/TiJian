@@ -9,15 +9,15 @@
 #import "BrandDetailViewController.h"
 #import "HospitalDetailViewController.h"
 
-@interface BrandDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface BrandDetailViewController ()<UITableViewDataSource,RefreshDelegate>
 {
     YJYRequstManager *_request;
-    UITableView *_tab;
-    NSDictionary *_dataDic;
+    RefreshTableView *_tab;
+    NSDictionary *_dataDic;//详情
     
     NSDictionary *_locationDic;
     
-    NSArray *_fenyuanList;
+    NSArray *_fenyuanList;//分院列表
     
     UILabel *_tmpLabel;
     
@@ -37,10 +37,9 @@
     self.myTitle = @"店铺详情";
     
     [self creatTab];
-    
+    [self prepareDetail];
     [self getjingweidu];
     
-    [self prepareDetail];
     
 }
 
@@ -50,66 +49,27 @@
 }
 
 
-#pragma mark - 网络请求
--(void)prepareDetail{
-    if (!_request) {
-        _request = [YJYRequstManager shareInstance];
-    }
-    
-    NSDictionary *dic = @{
-                          @"brand_id":self.brand_id
-                          };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [_request requestWithMethod:YJYRequstMethodGet api:StoreHomeDetail parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _dataDic = result;
-        [_tab reloadData];
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
-    
-}
 
-
--(void)getCenterList{
-    
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    NSDictionary *dic = @{
-                          @"province_id":[GMAPI getCurrentProvinceId],
-                          @"city_id":[GMAPI getCurrentCityId],
-                          @"brand_id":self.brand_id,
-                          @"latitude":[_locationDic stringValueForKey:@"lat"],
-                          @"longitude":[_locationDic stringValueForKey:@"long"],
-                          @"page":@"1",
-                          @"per_page":@"50"
-                          };
-    
-    [_request requestWithMethod:YJYRequstMethodGet api:GET_CENTER_LIST parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _fenyuanList = [result arrayValueForKey:@"list"];
-        [_tab reloadData];
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
-}
 
 #pragma mark - 视图创建
 
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
-    _tab.delegate = self;
+    _tab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
+    _tab.refreshDelegate = self;
     _tab.dataSource = self;
     _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tab];
-    [_tab reloadData];
 }
 
 
-#pragma mark - UITableViewDelegate && UITableViewDataSource
+#pragma mark - RefreshDelegate && UITableViewDataSource
+
+- (void)loadNewDataForTableView:(UITableView *)tableView{
+    [self prepareNetData];
+}
+- (void)loadMoreDataForTableView:(UITableView *)tableView{
+    [self prepareNetData];
+}
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     NSInteger num = 2;
@@ -119,24 +79,19 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
     if (section == 0) {
-        num = 4;
+        if (_dataDic) {
+            num = 4;
+        }else{
+            num = 0;
+        }
     }else if (section == 1){
         num = _fenyuanList.count;
     }
     return num;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    CGFloat height = 0.01;
-    return height;
-}
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    CGFloat height = 0.01;
-    return height;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     CGFloat height = 0;
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
@@ -165,12 +120,22 @@
     return height;
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+- (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
+    CGFloat height = 0.01;
+    return height;
+}
+
+-(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView{
+    CGFloat height = 0.01;
+    return height;
+}
+
+- (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     return view;
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+-(UIView *)viewForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
     return view;
 }
@@ -334,7 +299,13 @@
 }
 
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)clickToChat
+{
+    [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:self model:nil];
+}
+
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     if (indexPath.section == 0) {
         
         if (indexPath.row == 2){//在线客服
@@ -383,10 +354,56 @@
     }
 }
 
-- (void)clickToChat
-{
-    [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:self model:nil];
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    
 }
+
+
+#pragma mark - 网络请求
+-(void)prepareNetData{
+    [self getCenterList];
+}
+-(void)prepareDetail{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSDictionary *dic = @{
+                          @"brand_id":self.brand_id
+                          };
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:StoreHomeDetail parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _dataDic = result;
+        [_tab reloadData];
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+}
+
+
+-(void)getCenterList{
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    [dic safeSetValue:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+    [dic safeSetValue:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    [dic safeSetValue:self.brand_id forKey:@"brand_id"];
+    [dic safeSetValue:[_locationDic stringValueForKey:@"lat"] forKey:@"latitude"];
+    [dic safeSetValue:[_locationDic stringValueForKey:@"long"] forKey:@"longitude"];
+    [dic safeSetValue:[NSString stringWithFormat:@"%d",_tab.pageNum] forKey:@"page"];
+    [dic safeSetValue:[NSString stringWithFormat:@"%d",G_PER_PAGE] forKey:@"per_page"];
+    
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:GET_CENTER_LIST parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _fenyuanList = [result arrayValueForKey:@"list"];
+        [_tab reloadData:_fenyuanList pageSize:G_PER_PAGE];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
 
 
 #pragma mark - 获取经纬度
@@ -419,9 +436,7 @@
     _locationDic = dic;
     NSLog(@"%@",_locationDic);
     
-    
-    [self getCenterList];
-    
+    [_tab showRefreshHeader:YES];
 }
 
 @end

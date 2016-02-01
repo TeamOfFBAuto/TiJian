@@ -28,8 +28,10 @@
 #import "HospitalViewController.h"//分院
 #import "GBrandListViewController.h"
 #import "GBrandHomeViewController.h"
+#import "GTranslucentSideBar.h"
+#import "GPushView.h"
 
-@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate>
+@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
     
     LBannerView *_bannerView;//轮播图
@@ -83,12 +85,24 @@
     UIButton *_myNavcRightBtn;
     int _editState;//0常态 1编辑状态
     
+    UIView *_backBlackView;//筛选界面下面的黑色透明view
+    
+    //轻扫手势
+    UIPanGestureRecognizer *_panGestureRecognizer;
+    
+    GPushView *_pushView;//筛选view
+    
+    BOOL _isShaixuan;//是否为筛选刷新数据
     
 }
 
 @property(nonatomic,strong)NSMutableArray *upAdvArray;
 
 @property(nonatomic,strong)UIView *theTopView;
+
+
+
+
 
 @end
 
@@ -139,7 +153,9 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeText WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     
-    self.leftString = @" ";
+    _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+    _backBlackView.backgroundColor = [UIColor blackColor];
+    _backBlackView.alpha = 0.5;
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
@@ -154,8 +170,10 @@
     [self setupNavigation];
     [self creatDownBtnView];
     [self creatMysearchView];
+    [self prepareBrandListWithLocation];
     [self getHotSearch];
     [self getshopcarNum];//购物车数量
+    [self creatRightTranslucentSideBar];
     
 }
 
@@ -176,16 +194,6 @@
     
     [self changeSearchViewAndKuangFrameAndTfWithState:1];
     
-//    if (!_rightItem2Label) {
-//        _rightItem2Label = [[UILabel alloc]initWithFrame:CGRectMake(_searchView.frame.size.width - 45, 0, 45, 30)];
-//        _rightItem2Label.text = @"取消";
-//        _rightItem2Label.font = [UIFont systemFontOfSize:13];
-//        _rightItem2Label.textColor = RGBCOLOR(134, 135, 136);
-//        _rightItem2Label.textAlignment = NSTextAlignmentRight;
-//        [_rightItem2Label addTaget:self action:@selector(myNavcRightBtnClicked) tag:0];
-//    }
-//    
-//    [_searchView addSubview:_rightItem2Label];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -317,6 +325,15 @@
     _request = [YJYRequstManager shareInstance];
     _count = 0;
     
+    
+    if (_isShaixuan) {
+        //首页精品推荐
+        [self prepareProductsWithDic:self.shaixuanDic];
+        _isShaixuan = NO;
+        return;
+    }
+    
+    
     //轮播图
     _request_adv = [_request requestWithMethod:YJYRequstMethodGet api:StoreCycleAdv parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -352,7 +369,7 @@
     
     
     //首页精品推荐
-    [self prepareProducts];
+    [self prepareProductsWithDic:self.shaixuanDic];
     
     
 }
@@ -374,18 +391,32 @@
 
 
 //首页精品推荐
--(void)prepareProducts{
+-(void)prepareProductsWithDic:(NSDictionary *)theDic{
+    
+    NSDictionary *dic;
+    
+    if (theDic) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic setObject:NSStringFromInt(5) forKey:@"per_page"];
+        [temp_dic setObject:@"2" forKey:@"show_type"];
+        dic = temp_dic;
+        
+        
+    }else{
+        dic = @{
+                @"province_id":[GMAPI getCurrentProvinceId],
+                @"city_id":[GMAPI getCurrentCityId],
+                @"page":NSStringFromInt(_table.pageNum),
+                @"per_page":NSStringFromInt(5),
+                @"show_type":@"2"
+                };
+        
+    }
     
     
     
-    NSDictionary *listDic = @{
-                              @"province_id":[GMAPI getCurrentProvinceId],
-                              @"city_id":[GMAPI getCurrentCityId],
-                              @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
-                              @"per_page":[NSString stringWithFormat:@"%d",5]
-                              };
-    
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *data = [result arrayValueForKey:@"data"];
@@ -409,6 +440,9 @@
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
+         [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+        
+        
     } failBlock:^(NSDictionary *result) {
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
@@ -418,18 +452,32 @@
 
 
 //首页精品推荐
--(void)gotoPrepareProducts{
+-(void)gotoPrepareProductsWithDic:(NSDictionary *)theDic{
     
     
+    NSDictionary *dic;
     
-    NSDictionary *listDic = @{
-                              @"province_id":[GMAPI getCurrentProvinceId],
-                              @"city_id":[GMAPI getCurrentCityId],
-                              @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
-                              @"per_page":[NSString stringWithFormat:@"%d",5]
-                              };
+    if (theDic) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic setObject:NSStringFromInt(5) forKey:@"per_page"];
+        [temp_dic setObject:@"2" forKey:@"show_type"];
+        dic = temp_dic;
+        
+        
+    }else{
+        dic = @{
+                @"province_id":[GMAPI getCurrentProvinceId],
+                @"city_id":[GMAPI getCurrentCityId],
+                @"page":NSStringFromInt(_table.pageNum),
+                @"per_page":[NSString stringWithFormat:@"%d",5],
+                @"show_type":@"2"
+                };
+        
+    }
     
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *data = [result arrayValueForKey:@"data"];
@@ -452,7 +500,7 @@
         
         
         
-        [_table reloadData:_StoreProductListArray pageSize:5];
+         [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
@@ -497,7 +545,7 @@
         }
         
         
-        [_table reloadData:_StoreProductListArray pageSize:5];
+         [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
         
     } failBlock:^(NSDictionary *result) {
@@ -540,6 +588,21 @@
 }
 
 
+//根据城市查询品牌列表
+-(void)prepareBrandListWithLocation{
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        self.brand_city_list = [NSArray arrayWithArray:arr];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
 
 
 
@@ -613,6 +676,12 @@
         [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width, 30)];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
 
+        if (!_panGestureRecognizer) {
+            _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        }
+        [self.view addGestureRecognizer:_panGestureRecognizer];
+        
+        
     }else if (state == 1){//编辑状态
         [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
         [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
@@ -632,11 +701,34 @@
         
         [self.navigationController.navigationBar bringSubviewToFront:_searchView];
         
+        
+        [self.view removeGestureRecognizer:_panGestureRecognizer];
     }
 }
 
 
 #pragma mark - 视图创建
+
+//创建侧滑栏
+-(void)creatRightTranslucentSideBar{
+    
+    // Create Right SideBar
+    self.rightSideBar = [[GTranslucentSideBar alloc] initWithDirection:YES];
+    self.rightSideBar.delegate = self;
+    self.rightSideBar.sideBarWidth = DEVICE_WIDTH*670.0/750;
+    self.rightSideBar.translucentStyle = UIBarStyleBlack;
+    self.rightSideBar.tag = 1;
+    
+    
+    
+    //避免滑动返回手势与此冲突
+    [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
+    
+    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:YES isHaveShaixuanDic:self.shaixuanDic];
+    _pushView.delegate = self;
+    [self.rightSideBar setContentViewInSideBar:_pushView];
+    
+}
 
 
 //创建refresh头部
@@ -738,12 +830,9 @@
     
     _table.tableHeaderView = self.theTopView;
     
-    if (_StoreProductListArray.count > 0) {
-        [_table reloadData:_StoreProductListArray pageSize:5];
-    }else{
-        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+
+    [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
-    }
     
     
     
@@ -1105,11 +1194,7 @@
         
     }else if (sender.tag == 102){//筛选
         
-        GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-        cc.className = @"精品推荐";
-        cc.isShowShaixuanAuto = YES;
-        cc.haveChooseGender = YES;
-        [self.navigationController pushViewController:cc animated:YES];
+        [self.rightSideBar show];
         
     }else if (sender.tag == 103){//购物车
         
@@ -1518,16 +1603,76 @@
     [GMAPI cache:dic ForKey:USERLocation];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
-    
     _table.pageNum = 1;
     _table.isReloadData = YES;
-    [self gotoPrepareProducts];
-    
-    
-    
+    [self gotoPrepareProductsWithDic:self.shaixuanDic];
     
 }
 
+
+#pragma mark - Gesture Handler
+- (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
+{
+    self.rightSideBar.isCurrentPanGestureTarget = YES;
+    [self.rightSideBar handlePanGestureToShow:recognizer inView:self.view];
+    
+}
+
+#pragma mark - CDRTranslucentSideBarDelegate
+- (void)sideBar:(GTranslucentSideBar *)sideBar didAppear:(BOOL)animated
+{
+    
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar did appear");
+        
+    }
+}
+
+- (void)sideBar:(GTranslucentSideBar *)sideBar willAppear:(BOOL)animated
+{
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar will appear");
+        
+        [self.navigationController.view addSubview:_backBlackView];
+        
+    }
+}
+
+- (void)sideBar:(GTranslucentSideBar *)sideBar didDisappear:(BOOL)animated
+{
+    
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar did disappear");
+        [_backBlackView removeFromSuperview];
+    }
+}
+
+- (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated
+{
+    if (sideBar.tag == 1) {
+        NSLog(@"Right SideBar will disappear");
+        
+    }
+}
+
+
+
+-(void)shaixuanFinishWithDic:(NSDictionary *)dic{
+    self.shaixuanDic = dic;
+    _isShaixuan = YES;
+    
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.className = @"精品推荐";
+    cc.isShowShaixuanData = YES;
+    cc.haveChooseGender = YES;
+    cc.shaixuanDic = self.shaixuanDic;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+-(void)therightSideBarDismiss{
+    
+    [self.rightSideBar dismiss];
+}
 
 
 @end

@@ -103,7 +103,7 @@
  *
  *  @return 
  */
--(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender;
+-(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender isHaveShaixuanDic:(NSDictionary *)theDic;
 
 
 

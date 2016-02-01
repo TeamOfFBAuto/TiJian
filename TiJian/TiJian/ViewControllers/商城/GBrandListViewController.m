@@ -182,7 +182,7 @@
     
     
     
-    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender];
+    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender isHaveShaixuanDic:self.shaixuanDic];
     _pushView.delegate = self;
     [self.rightSideBar setContentViewInSideBar:_pushView];
     
@@ -650,7 +650,11 @@
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic{
     self.shaixuanDic = dic;
-    [_rTab showRefreshHeader:YES];
+    
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.isShowShaixuanData = YES;
+    cc.shaixuanDic = self.shaixuanDic;
+    [self.navigationController pushViewController:cc animated:YES];
 }
 
 

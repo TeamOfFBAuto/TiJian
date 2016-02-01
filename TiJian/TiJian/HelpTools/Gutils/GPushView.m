@@ -37,17 +37,20 @@
     UIView *_shouView;//用于收键盘的点击view
     
     
+    NSDictionary *_defaultShaixuanDic;//上个界面传过来的筛选条件
+    
     //定位相关
     NSDictionary *_locationDic;
     
 }
--(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender{
+-(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender isHaveShaixuanDic:(NSDictionary *)theDic{
     self = [super initWithFrame:frame];
+    
+    _defaultShaixuanDic = theDic;
     
     //数据部分
     self.gender = theGender;
     _tab1TitleDataArray = @[@"城市",@"价格",@"体检品牌"];
-    
     
     self.userChoosePinpai = @"全部";
     self.userChoosePrice = @"全部";
@@ -81,6 +84,65 @@
     //创建视图
     [self creatNavcView];
     [self creatTab];
+    
+    //地区
+    NSString *defaultCityName;
+    NSString *defaultCityId;
+    if ([_defaultShaixuanDic stringValueForKey:@"city_id"]) {
+        defaultCityId = [_defaultShaixuanDic stringValueForKey:@"city_id"];
+    }else{
+        defaultCityId = [GMAPI getCurrentCityId];
+    }
+    if ([defaultCityId intValue] == 0) {
+        NSString *defaultPid = [GMAPI getCurrentProvinceId];
+        defaultCityName = [GMAPI cityNameForId:[defaultPid intValue]];
+    }else{
+        defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
+    }
+    self.userChooseCity = defaultCityName;
+    
+    //品牌
+    if ([_defaultShaixuanDic stringValueForKey:@"brand_id"]>0) {
+        self.userChoosePinpai = [_defaultShaixuanDic stringValueForKey:@"self.userChoosePinpai"];
+        self.userChoosePinpai_id = [_defaultShaixuanDic stringValueForKey:@"brand_id"];
+    }
+    [self.tab4 reloadData];
+    [self.tab1 reloadData];
+    
+    
+    
+    //价格
+    if ([_defaultShaixuanDic stringValueForKey:@"high_price"]) {
+        self.userChoosePrice_high = [_defaultShaixuanDic stringValueForKey:@"high_price"];
+    }
+    
+    if ([_defaultShaixuanDic stringValueForKey:@"low_price"]) {
+        self.userChoosePrice_low = [_defaultShaixuanDic stringValueForKey:@"low_price"];
+    }
+    
+    if ([self.userChoosePrice_low intValue]>0 && [self.userChoosePrice_high intValue]>0) {
+        self.userChoosePrice = [NSString stringWithFormat:@"%@ - %@",self.userChoosePrice_low,self.userChoosePrice_high];
+    }else if ([self.userChoosePrice_low intValue]>0){
+        self.userChoosePrice = [NSString stringWithFormat:@"%@以上",self.userChoosePrice_low];
+    }else if ([self.userChoosePrice_high intValue]>0){
+        self.userChoosePrice = [NSString stringWithFormat:@"%@以下",self.userChoosePrice_high];
+    }
+    
+    for (int i = 0; i<_priceArray.count; i++) {
+        NSString *str = _priceArray[i];
+        if ([str isEqualToString:self.userChoosePrice]) {
+            for (int j = 0; j<10; j++) {
+                _isMark_price[j] = 0;
+            }
+            _isMark_price[i] = 1;
+        }
+    }
+    [self creatTab3Header];
+    [self.tab3 reloadData];
+    
+    
+    
+    
     
     
     return self;
@@ -393,6 +455,7 @@
         //品牌选择
         if (self.userChoosePinpai_id) {
             [dic setValue:self.userChoosePinpai_id forKey:@"brand_id"];
+            [dic setValue:self.userChoosePinpai forKey:@"self.userChoosePinpai"];
         }
         
         //价格选择
@@ -426,6 +489,7 @@
         if (gender) {
             [dic setValue:gender forKey:@"gender"];
         }
+        
         
         
         
@@ -798,16 +862,31 @@
     
     
     NSString *defaultCityName;
-    NSString *defaultCityId = [GMAPI getCurrentCityId];
+    
+    NSString *defaultCityId;
+    
+    if (_locationDic) {
+        defaultCityId = [_defaultShaixuanDic stringValueForKey:@"city_id"];
+    }else{
+        defaultCityId = [GMAPI getCurrentCityId];
+    }
+    
     if ([defaultCityId intValue] == 0) {
         NSString *defaultPid = [GMAPI getCurrentProvinceId];
         defaultCityName = [GMAPI cityNameForId:[defaultPid intValue]];
     }else{
         defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
     }
+    
+    
     self.userChooseCity = defaultCityName;
     
     self.userChoosePinpai = @"全部";
+    
+    NSMutableDictionary *tmpDic = [NSMutableDictionary dictionaryWithDictionary:_defaultShaixuanDic];
+    [tmpDic setObject:@"99" forKey:@"gender"];
+    _defaultShaixuanDic = tmpDic;
+    
     self.userChoosePinpai_id = nil;
     self.userChoosePrice = @"全部";
     self.userChoosePrice_high = nil;
@@ -979,6 +1058,19 @@
                     [_genderBtnArray addObject:btn];
                 }
                 
+                int flag = 0;
+                if ([[_defaultShaixuanDic stringValueForKey:@"gender"] intValue] == 1) {//男
+                    flag = 2;
+                }else if ([[_defaultShaixuanDic stringValueForKey:@"gender"] intValue] == 2){//女
+                    flag = 1;
+                }else if ([[_defaultShaixuanDic stringValueForKey:@"gender"] intValue] == 99){//全部
+                    flag = 0;
+                }
+                
+                UIButton *btn = _genderBtnArray[flag];
+                [self genderBtnClicked:btn];
+                
+                
                 UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/125] - 5, self.frame.size.width, 5)];
                 line.backgroundColor = RGBCOLOR(244, 245, 246);
                 [cell.contentView addSubview:line];
@@ -1106,11 +1198,13 @@
         line.backgroundColor = RGBCOLOR(234, 235, 236);
         [cell.contentView addSubview:line];
         
-        if (_isMark_price[indexPath.row]) {
+        if ([cell.textLabel.text isEqualToString:self.userChoosePrice]) {
             UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
             [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
             [cell.contentView addSubview:mark_imv];
         }
+        
+        
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -1141,7 +1235,7 @@
         [cell.contentView addSubview:line];
         
         
-        if (_isMark_brand[indexPath.row]) {
+        if ([self.userChoosePinpai isEqualToString:cell.textLabel.text]) {
             UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
             [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
             [cell.contentView addSubview:mark_imv];
