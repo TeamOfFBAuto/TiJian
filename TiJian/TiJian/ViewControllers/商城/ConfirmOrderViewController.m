@@ -1441,8 +1441,13 @@
     
     for (NSArray *arr in _theData) {
         for (ProductModel *oneModel in arr) {
-            [product_ids_arr addObject:oneModel.product_id];
-            [product_nums_arr addObject:oneModel.product_num];
+            if (oneModel.is_append.intValue == 1) {//加项包
+                
+            }else{
+                [product_ids_arr addObject:oneModel.product_id];
+                [product_nums_arr addObject:oneModel.product_num];
+            }
+            
         }
     }
     

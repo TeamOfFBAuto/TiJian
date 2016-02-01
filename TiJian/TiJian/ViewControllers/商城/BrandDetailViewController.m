@@ -7,6 +7,7 @@
 //
 
 #import "BrandDetailViewController.h"
+#import "HospitalDetailViewController.h"
 
 @interface BrandDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -349,7 +350,10 @@
     }else if (indexPath.section == 1){
         NSDictionary *dic = _fenyuanList[indexPath.row];
         NSString *exam_center_id = [dic stringValueForKey:@"exam_center_id"];
-        NSLog(@"%s",__FUNCTION__);
+        
+        HospitalDetailViewController *hospital = [[HospitalDetailViewController alloc]init];
+        hospital.centerId = exam_center_id;
+        [self.navigationController pushViewController:hospital animated:YES];
         
     }
 }
