@@ -57,6 +57,14 @@
 
 @property(nonatomic,retain)NSString *enable_refund;//是否可以退款 等于1 就可以退款 0 不可以退款
 
+//{
+//    "title": "北京衣加衣",
+//    "desc": "体检费",
+//    "use_time": "1452690911"
+//}
+@property(nonatomic,retain)NSDictionary *invoice_info;//发票信息
+@property(nonatomic,retain)NSString *require_post;//快递方式 0电子体检码 1快递体检凭证
+
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 
 @end

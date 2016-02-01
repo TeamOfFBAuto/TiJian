@@ -9,9 +9,12 @@
 #import "RecommendMedicalCheckController.h"
 #import "GProductCellTableViewCell.h"
 #import "GproductDetailViewController.h"
+#import "BrandRecommendController.h"
 #import "ProjectModel.h"
 #import "ProductModel.h"
 #import "LSuitableView.h"
+#import "RecommendCell.h"
+#import "RecommendProjectModel.h"//推荐项目
 
 @interface RecommendMedicalCheckController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 {
@@ -20,10 +23,7 @@
     NSArray *_projectsArray;//推荐项目
     NSString *_result_id;//个性化定制结果id
     NSString *_extention_result_id;//拓展问题结果id
-    
-    NSArray *_fiveStarArray;//五星
-    NSArray *_fourStarArray;//四星
-    NSArray *_threeStarArray;//三星
+    NSString *_info_url;//详细解读
 }
 
 @end
@@ -39,6 +39,8 @@
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         
     [self getCustomizationResult];
+    
+//    [self createViewsWithDesc:@"ajdalsjdkasjdkl"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -69,12 +71,20 @@
     _table.backgroundColor = [UIColor clearColor];
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    [_table reloadData];
     
     UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     headview.backgroundColor = [UIColor whiteColor];
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, DEVICE_WIDTH - 20, 0) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:desc];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, DEVICE_WIDTH - 10, 40) title:@"专家鉴定" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
+    [headview addSubview:label];
+    
+    //line
+    UIView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom, DEVICE_WIDTH, 0.5)];
+    line.backgroundColor = DEFAULT_LINECOLOR;
+    [headview addSubview:line];
+    
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(10, line.bottom + 10, DEVICE_WIDTH - 20, 0) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:desc];
     [headview addSubview:label];
     CGFloat height = [LTools heightForText:desc width:label.width font:13];
     label.numberOfLines = 0;
@@ -82,28 +92,33 @@
     label.height = height;
     
     //line
-    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom + 10, DEVICE_WIDTH, 0.5)];
+    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom + 10, DEVICE_WIDTH, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
     [headview addSubview:line];
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setTitle:@"<<详细报告解读>>" forState:UIControlStateNormal];
+    [btn setTitle:@"查看详细报告解读" forState:UIControlStateNormal];
     btn.frame = CGRectMake(0, line.bottom, DEVICE_WIDTH, 35);
+    [btn addTarget:self action:@selector(clickToWeb) forControlEvents:UIControlEventTouchUpInside];
     btn.backgroundColor = [UIColor whiteColor];
     [btn setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
     [btn.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [headview addSubview:btn];
     
     //line
-    UIImageView *space = [[UIImageView alloc]initWithFrame:CGRectMake(0, btn.bottom, 10, 35)];
+    UIImageView *space = [[UIImageView alloc]initWithFrame:CGRectMake(0, btn.bottom, DEVICE_WIDTH, 5)];
     space.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [headview addSubview:space];
     
-    UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(space.right, btn.bottom, DEVICE_WIDTH - 10, 35) title:@"体检套餐推荐" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
+    UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(10, space.bottom, DEVICE_WIDTH - 10, 40) title:@"套餐推荐" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
     [headview addSubview:label2];
-    label2.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
-    headview.height = label2.bottom;
+    //line
+    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label2.bottom, DEVICE_WIDTH, 0.5)];
+    line.backgroundColor = DEFAULT_LINECOLOR;
+    [headview addSubview:line];
+    
+    headview.height = line.bottom + 15;
     _table.tableHeaderView = headview;
     
 }
@@ -153,6 +168,14 @@
 
 }
 
+#pragma mark - 事件处理
+
+- (void)clickToWeb
+{
+    NSString *url = [NSString stringWithFormat:@"%@%@&result_id=%@",SERVER_URL,Get_customization_detail,_result_id];
+    [MiddleTools pushToWebFromViewController:self weburl:url title:@"专家详细解读" moreInfo:NO hiddenBottom:NO];
+}
+
 #pragma - mark 网络请求
 /**
  *  同步个性化定制结果
@@ -160,7 +183,8 @@
 - (void)updateCustomization
 {
     NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
-                             @"result_id":_result_id};
+                             @"result_id":_result_id,
+                             @"extention_result_id":_extention_result_id};
     NSString *api = UPDATE_CUSTOMIZATION_RESULT;
     
     __weak typeof(self)weakSelf = self;
@@ -213,6 +237,7 @@
     }
     
     __weak typeof(self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:method api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [weakSelf parseDataWithResult:result];
@@ -220,9 +245,10 @@
             //发送个性化定制成功通知
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_PersonalCustomization_SUCCESS object:nil];
         }
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
     }];
 }
@@ -232,23 +258,27 @@
     [UserInfo updateUserCustomed:@"1"];//记录已个性化定制过状态
     
     NSDictionary *data = result[@"data"];
-    
+    NSString *result_id = data[@"result_id"];//未登录时个性化结果保存id
+    NSString *extention_result_id = data[@"extention_result_id"];//拓展结果id
     NSString *combination_desc = data[@"combination_desc"];//简单解读
-    
-    NSDictionary *attention_project_data = data[@"attention_project_data"];
-    
-    _threeStarArray = attention_project_data[@"three_star_level"];
-    _fourStarArray = attention_project_data[@"four_star_level"];
-    _fiveStarArray = attention_project_data[@"five_star_level"];
+    NSArray *attention_project_data = data[@"attention_project_data"];
+    _info_url = data[@"info_url"];//详细解读
     
     [self createViewsWithDesc:combination_desc];
+
+    //推荐套餐
+    if ([attention_project_data isKindOfClass:[NSArray class]]) {
+        
+        NSArray *temp = [RecommendProjectModel modelsFromArray:attention_project_data];
+        _dataArray = [NSArray arrayWithArray:temp];
+        [_table reloadData];
+    }
     
-    NSString *result_id = data[@"result_id"];//未登录时个性化结果保存id
+    
     _result_id = [NSString stringWithFormat:@"%@",result_id];
-    NSString *extention_result_id = data[@"extention_result_id"];
     _extention_result_id = [NSString stringWithFormat:@"%@",extention_result_id];
     
-    if (![LoginManager isLogin] && (_result_id || _extention_result_id)) {
+    if (![LoginManager isLogin] && (_result_id && _extention_result_id)) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否登录保存个性化定制结果？" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
         [alert show];
     }
@@ -275,45 +305,44 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    return [RecommendCell heightForCellWithModel:_dataArray[indexPath.row]];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"跳转至体检套餐购买页面");
-    
-//    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-//    ProductModel *aModel = _dataArray[indexPath.row];
-//    cc.productId = aModel.product_id;
-//    if ([self.vouchers_id intValue] > 0) {
-////        cc.isVoucherPush = YES;
-//        cc.VoucherId = self.vouchers_id;
-//    }
-//    [self.navigationController pushViewController:cc animated:YES];
+    RecommendProjectModel *p_model = _dataArray[indexPath.row];
+    BrandRecommendController *recommend = [[BrandRecommendController alloc]init];
+    recommend.result_id = _result_id;
+    recommend.starNum = [p_model.star_num intValue];
+    [self.navigationController pushViewController:recommend animated:YES];
 }
 
 #pragma - mark UITableViewDataSource <NSObject>
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
-    
-    return 1.f;
+    return _dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"GProductCellTableViewCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    static NSString *identifier = @"RecommendCell";
+    RecommendCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        
-        UILabel *concernLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, 50, 13) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"关  注 度"];
-        [cell.contentView addSubview:concernLabel];
-        
-        UILabel *projectLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, concernLabel.bottom + 5, 50, 13) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"体检项目"];
-        [cell.contentView addSubview:projectLabel];
+        cell = [[RecommendCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //
+    
+    if (indexPath.row == 0) {
+        
+        cell.backView.backgroundColor = [UIColor colorWithHexString:@"8ec7f7"];
+    }else if (indexPath.row == 1){
+        cell.backView.backgroundColor = [UIColor colorWithHexString:@"7cc1f8"];
+    }else
+    {
+        cell.backView.backgroundColor = [UIColor colorWithHexString:@"74bcf5"];
+    }
+    RecommendProjectModel *p_model = _dataArray[indexPath.row];
+    [cell setCellWithModel:p_model];
     
     return cell;
 }
@@ -321,41 +350,41 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 1;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
-    head.backgroundColor = [UIColor whiteColor];
-    
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, 40) title:@"" font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
-    [head addSubview:label];
-    
-    if (section == 0) {
-        label.text = @"基础套餐";
-    }else if (section == 1){
-        label.text = @"标准套餐";
-    }else if (section == 2){
-        label.text = @"专业套餐";
-    }
-    
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(15, 39.5, DEVICE_WIDTH - 30, 0.5)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [head addSubview:line];
-    
-    //箭头
-    UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 35, 0, 35, head.height)];
-    arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
-    arrow.contentMode = UIViewContentModeCenter;
-    [head addSubview:arrow];
-    
-    return head;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 40.f;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
+//    head.backgroundColor = [UIColor whiteColor];
+//    
+//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, 40) title:@"" font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
+//    [head addSubview:label];
+//    
+//    if (section == 0) {
+//        label.text = @"基础套餐";
+//    }else if (section == 1){
+//        label.text = @"标准套餐";
+//    }else if (section == 2){
+//        label.text = @"专业套餐";
+//    }
+//    
+//    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(15, 39.5, DEVICE_WIDTH - 30, 0.5)];
+//    line.backgroundColor = DEFAULT_LINECOLOR;
+//    [head addSubview:line];
+//    
+//    //箭头
+//    UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 35, 0, 35, head.height)];
+//    arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
+//    arrow.contentMode = UIViewContentModeCenter;
+//    [head addSubview:arrow];
+//    
+//    return head;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 40.f;
+//}
 
 @end

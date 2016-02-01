@@ -96,7 +96,12 @@
 
 
 
-
+/**
+ *  判断是否可以定位
+ *
+ *  @return
+ */
++ (BOOL)locationServiceEnabled;
 
 
 @end

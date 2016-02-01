@@ -33,6 +33,13 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (BOOL)isEnterprise;
 
+/**
+ *  获取appName
+ *
+ *  @return
+ */
++ (NSString *)getAppName;
+
 #pragma - mark MD5 加密
 
 /**
@@ -452,6 +459,21 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
                           originalString:(NSString *)string
                               AddKeyword:(NSString *)keyword
                                    color:(UIColor *)color;
+
+/**
+ *  给关键字设置颜色、下划线、字体大小
+ *
+ *  @param content          目标string
+ *  @param underlineKeyword 关键词
+ *  @param textColor        颜色
+ *  @param keywordFontSize  字体大小
+ *
+ *  @return
+ */
++ (NSAttributedString *)attributedString:(NSString *)content
+                        underlineKeyword:(NSString *)underlineKeyword
+                                   color:(UIColor *)textColor
+                         keywordFontSize:(CGFloat)keywordFontSize;
 
 #pragma - mark 获取JSONString
 /**

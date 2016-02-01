@@ -21,7 +21,14 @@
 -(void)setSelectedState:(BOOL)selectedState
 {
     _selectedState = selectedState;
-    self.selectedButton.hidden = !selectedState;//记录选中状态
+    self.selected = selectedState;
+    self.selectedButton.selected = selectedState;//记录选中状态
+}
+
+-(void)setSelectedButton:(UIButton *)selectedButton
+{
+    _selectedButton = selectedButton;
+    _selectedButton.userInteractionEnabled = NO;
 }
 
 @end

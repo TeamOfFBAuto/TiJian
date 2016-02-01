@@ -25,6 +25,7 @@
 #import "ProductListViewController.h"
 #import "StoreHomeOneBrandModel.h"
 #import "LocationChooseViewController.h"
+#import "HospitalViewController.h"//分院
 #import "GBrandListViewController.h"
 #import "GBrandHomeViewController.h"
 
@@ -1063,6 +1064,8 @@
 //跳转分院
 -(void)pushToFenyuan{
     
+    HospitalViewController *hospital = [[HospitalViewController alloc]init];
+    [self.navigationController pushViewController:hospital animated:YES];
 }
 
 

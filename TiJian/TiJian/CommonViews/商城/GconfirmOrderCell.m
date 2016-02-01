@@ -77,6 +77,8 @@
         line.backgroundColor = DEFAULT_LINECOLOR;
         [self.contentView addSubview:line];
         
+        
+        
     }
     return self;
 }
@@ -94,11 +96,14 @@
     self.priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
     self.numLabel.text = [NSString stringWithFormat:@"X %@",model.product_num];
     
-    if (/* DISABLES CODE */ (0)) {
+    
+    BOOL additon = [model.is_append intValue] == 1 ? YES : NO;//是否是加项
+    if (additon) {
         self.jiaxiangbaoImv.hidden = NO;
     }else{
         self.jiaxiangbaoImv.hidden = YES;
     }
+
 
 }
 

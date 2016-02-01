@@ -102,9 +102,7 @@
         
         //只更新小人
         _genderImageView.image = _gender == Gender_Boy ? [UIImage imageNamed:@"result_nan"] : [UIImage imageNamed:@"result_nv"];
-
         return;
-        
     }
     
     _bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];

@@ -511,6 +511,8 @@
     {
         [self getActivity];//为空时请求活动
     }
+    
+//    [MiddleTools pushToWebFromViewController:self weburl:@"htttp://www.open-open.com/lib/view/open1408609311366.html" title:@"企业体检" moreInfo:NO hiddenBottom:YES];
 }
 
 - (void)clickToPush:(UIButton *)sender

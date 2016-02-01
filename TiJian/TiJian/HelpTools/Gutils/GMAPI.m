@@ -431,13 +431,33 @@
     }
 }
 
-
-
-
-
-
-
-
-
+/**
+ *  判断是否可以定位
+ *
+ *  @return
+ */
++ (BOOL)locationServiceEnabled
+{
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if ([CLLocationManager locationServicesEnabled] &&
+        (status == kCLAuthorizationStatusAuthorized ||
+         status == kCLAuthorizationStatusNotDetermined||
+         status == kCLAuthorizationStatusAuthorizedAlways ||
+         status == kCLAuthorizationStatusAuthorizedWhenInUse))
+    {
+        //定位功能可用，开始定位
+        DDLOG(@"定位可用 %d",status);
+        return YES;
+    }
+    else if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
+             [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted)
+    {
+        DDLOG(@"定位功能不可用，提示用户或忽略");
+        
+        return NO;
+    }
+    
+    return NO;
+}
 
 @end

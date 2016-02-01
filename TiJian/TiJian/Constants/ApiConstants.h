@@ -118,6 +118,12 @@
 //单品 - 添加收藏 (参数:product_id、authcode)
 #define HOME_PRODUCT_COLLECT_ADD @"/?d=api&c=products&m=favor"
 
+//品牌推荐 -- 加强包
+#define Get_c_setmeal_product @"/index.php?d=api&c=customization&m=get_c_setmeal_product"
+
+//专家解读 详细解读web页 result_id
+#define Get_customization_detail @"/index.php?d=api&c=customization&m=view_customization"
+
 /**************************登录注册相关用户接口**********************************/
 
 #pragma mark - 登录注册相关用户接口
@@ -386,7 +392,17 @@
 //appoint_status：预约状态  1：未预约  2：已预约未过期  3：已预约已过期
 #define GET_ALL_APPOINTS @"/index.php?d=api&c=appoint&m=get_all_appoints"
 
+//9、获取分院列表 province_id  省份id  必填
+//city_id  城市id  必填
+//brand_id  品牌id  选填
+//latitude  纬度  选填
+//longitude 经度  选填
+//page
+//per_page
+#define Get_hospital_list @"/index.php?d=api&c=appoint&m=get_center_list"
 
+//10、分院详情
+#define Get_hospital_detail @"/index.php?d=api&c=appoint&m=get_center_detail"
 
 //=======================================================
 

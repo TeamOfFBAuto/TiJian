@@ -74,5 +74,11 @@
 
 @property(nonatomic,strong)NSString *order_id;//对应订单id
 
+@property(nonatomic,retain)NSNumber *is_append;//是否是加项
+
+//套餐加强包
+@property(nonatomic,retain)NSString *package_price;
+@property(nonatomic,retain)NSString *package_original_price;
+@property(nonatomic,retain)NSString *package_name;
 
 @end
