@@ -243,7 +243,8 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(theLocationDictionary:)]) {
         self.theLocationDic = @{
                                 @"lat":[NSString stringWithFormat:@"%f",40.041951],
-                                @"long":[NSString stringWithFormat:@"%f",116.33934]
+                                @"long":[NSString stringWithFormat:@"%f",116.33934],
+                                @"isSuccess":@"NO"
                                 };
         [self.delegate theLocationFaild:self.theLocationDic];
     }

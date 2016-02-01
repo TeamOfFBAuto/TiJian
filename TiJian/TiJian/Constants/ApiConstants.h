@@ -45,6 +45,8 @@
 //品牌店
 #define StoreHomeDetail @"/index.php?d=api&c=setmeal&m=brand_shop"
 
+//获取体检分院列表
+#define GET_CENTER_LIST @"/index.php?d=api&c=appoint&m=get_center_list"
 
 //搜索套餐
 #define ProductSearch @"/index.php?d=api&c=setmeal&m=search"

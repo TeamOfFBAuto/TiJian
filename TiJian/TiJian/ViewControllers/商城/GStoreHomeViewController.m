@@ -689,7 +689,7 @@
     for (int i = 0; i<classData.count; i++) {
         
         NSDictionary *dic = classData[i];
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*DEVICE_WIDTH*0.5, i/hang*hh, kk, hh)];
+        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
         [bankuaiView addSubview:view];
         view.backgroundColor = RGBCOLOR_ONE;
         

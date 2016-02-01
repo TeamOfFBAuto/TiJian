@@ -15,6 +15,9 @@
 
 @interface GconfirmOrderCell : UITableViewCell
 
+
+@property(nonatomic,strong)UIImageView *jiaxiangbaoImv;
+
 -(void)loadCustomViewWithModel:(ProductModel *)model;
 
 + (CGFloat)heightForCell;

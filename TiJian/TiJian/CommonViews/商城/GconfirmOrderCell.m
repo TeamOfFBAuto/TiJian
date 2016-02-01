@@ -35,6 +35,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
+        self.jiaxiangbaoImv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195])];
+        self.jiaxiangbaoImv.hidden = YES;
+        [self.jiaxiangbaoImv setImage:[UIImage imageNamed:@"order_jiaxiangbao.png"]];
+        [self.contentView addSubview:self.jiaxiangbaoImv];
+        
         CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195];
         UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, [GMAPI scaleWithHeight:height - 20 width:0 theWHscale:250.0/155], height - 20)];
         [self.contentView addSubview:logoImv];
@@ -87,8 +92,13 @@
     [self.contentLabel setMatchedFrame4LabelWithOrigin:CGPointMake(CGRectGetMaxX(self.iconImageView.frame)+5, self.iconImageView.frame.origin.y) height:self.iconImageView.frame.size.height/3 limitMaxWidth:DEVICE_WIDTH - 5 - 15 - 5 - self.iconImageView.frame.size.width - 5 - 5 - 30];
     
     self.priceLabel.text = [NSString stringWithFormat:@"￥%@",model.current_price];
-    
     self.numLabel.text = [NSString stringWithFormat:@"X %@",model.product_num];
+    
+    if (/* DISABLES CODE */ (0)) {
+        self.jiaxiangbaoImv.hidden = NO;
+    }else{
+        self.jiaxiangbaoImv.hidden = YES;
+    }
 
 }
 

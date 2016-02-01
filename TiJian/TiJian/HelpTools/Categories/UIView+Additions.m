@@ -20,7 +20,7 @@
     [self addSubview:personalButton];
 }
 
-- (void)addTapGestureTaget:(id)target action:(SEL)selector imageViewTag:(int)imageViewTag
+- (void)addTapGestureTaget:(id)target action:(SEL)selector imageViewTag:(NSInteger)imageViewTag
 {
     self.userInteractionEnabled = YES;
     self.tag = imageViewTag;

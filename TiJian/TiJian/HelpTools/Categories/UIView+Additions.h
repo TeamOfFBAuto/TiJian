@@ -26,7 +26,7 @@
  *  @param selector
  *  @param imageViewTag
  */
-- (void)addTapGestureTaget:(id)target action:(SEL)selector imageViewTag:(int)imageViewTag;
+- (void)addTapGestureTaget:(id)target action:(SEL)selector imageViewTag:(NSInteger)imageViewTag;
 
 /**
  *  给view加圆角

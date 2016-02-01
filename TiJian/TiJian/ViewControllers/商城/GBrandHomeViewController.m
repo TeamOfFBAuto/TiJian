@@ -22,6 +22,8 @@
 #import "GCustomSearchViewController.h"
 #import "GBrandTabHeaderView.h"
 #import "GProductCellTableViewCell.h"
+#import "GproductDetailViewController.h"
+#import "BrandDetailViewController.h"
 
 @interface GBrandHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
@@ -67,6 +69,11 @@
     
     NSMutableArray *_productOneClassArray;
     
+    NSDictionary *_classDic;
+    
+    
+    BOOL _priceState;
+    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;//筛选view
@@ -74,6 +81,7 @@
 @end
 
 @implementation GBrandHomeViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -145,6 +153,7 @@
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self creatTabHeaderView];
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_table];
     [_table showRefreshHeader:YES];
     
@@ -153,9 +162,52 @@
 
 -(void)creatTabHeaderView{
     _tabHeaderView = [[GBrandTabHeaderView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 100)];
+    __weak typeof (self)bself = self;
+    
+    [_tabHeaderView setFourBtnClickedBlock:^(NSInteger index, BOOL state) {
+        [bself fourBtnClicked:index isSelect:state];
+    }];
+    
+    [_tabHeaderView setClassImvClickedBlock:^(NSInteger index) {
+        [bself classImvClicked:index];
+    }];
+    
+    [_tabHeaderView setBannerImvClickedBlock:^{
+        [bself brandBannerClicked];
+    }];
+    
     _table.tableHeaderView = _tabHeaderView;
+    
 }
 
+-(void)brandBannerClicked{
+    BrandDetailViewController *cc = [[BrandDetailViewController alloc]init];
+    cc.brand_id = self.brand_id;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+-(void)classImvClicked:(NSInteger)theIndex{
+    NSArray *arr = [_classDic arrayValueForKey:@"data"];
+    NSDictionary *dic = arr[theIndex-100];
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.brand_id = self.brand_id;
+    cc.brand_name = self.brand_name;
+    cc.category_id = [[dic stringValueForKey:@"category_id"]intValue];
+    [self.navigationController pushViewController:cc animated:YES];
+    
+}
+
+
+-(void)fourBtnClicked:(NSInteger)theIndex isSelect:(BOOL)state{
+    if (theIndex == 13){//价格
+        if (state) {//升序
+        }else{//降序
+        }
+        _priceState = state;
+    }
+    
+    [_table refreshNewData];
+}
 
 
 -(void)creatUpToolView{
@@ -319,10 +371,10 @@
 #pragma mark - RefreshDelegate && UITableViewDataSource
 
 - (void)loadNewDataForTableView:(UITableView *)tableView{
-    [self prepareNetDataWithDic:nil];
+    [self prepareNetDataWithDic:self.shaixuanDic];
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
-    [self prepareNetDataWithDic:nil];
+    [self prepareNetDataWithDic:self.shaixuanDic];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -382,7 +434,14 @@
 
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    NSLog(@"%s",__FUNCTION__);
+    
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    ProductModel *model = _table.dataArray[indexPath.row];
+    cc.productId = model.product_id;
+    cc.userChooseLocationDic = self.shaixuanDic;
+    [self.navigationController pushViewController:cc animated:YES];
+
+    
 }
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
@@ -403,6 +462,7 @@
     
     [_request requestWithMethod:YJYRequstMethodGet api:StoreHomeDetail parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [_tabHeaderView reloadViewWithBrandDic:result classDic:nil];
+        _table.tableHeaderView = _tabHeaderView;
     } failBlock:^(NSDictionary *result) {
         
     }];
@@ -410,7 +470,9 @@
     
     
     [_request requestWithMethod:YJYRequstMethodGet api:StoreProductClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _classDic = result;
         [_tabHeaderView reloadViewWithBrandDic:nil classDic:result];
+        _table.tableHeaderView = _tabHeaderView;
     } failBlock:^(NSDictionary *result) {
         
     }];
@@ -420,17 +482,6 @@
 
 
 -(void)prepareNetDataWithDic:(NSDictionary *)theDic{
-    
-//    NSDictionary *dic = @{
-//                          @"order_field":@"recommend",//默认推荐
-//                          @"order_direct":@"desc",//默认降序
-//                          @"show_type":@"1",
-//                          @"brand_id":self.brand_id,
-//                          @"province_id":[GMAPI getCurrentProvinceId],
-//                          @"city_id":[GMAPI getCurrentCityId]
-//                          };
-    
-    
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
@@ -442,7 +493,9 @@
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
         [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
         [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+        [temp_dic setObject:self.brand_id forKey:@"brand_id"];
         dic = temp_dic;
+        
         
     }else{
         dic = @{
@@ -452,15 +505,34 @@
                 @"per_page":NSStringFromInt(PAGESIZE_MID)
                 };
         
-        if (self.brand_id) {
-            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-            [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-            [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
-            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
-            dic = temp_dic;
-        }
-        
     }
+    
+    
+    NSMutableDictionary *tempDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    
+    
+    for (UIButton *btn in _tabHeaderView.fourBtnArray) {
+        if (btn.selected) {
+            if (btn.tag == 10) {//推荐
+                [tempDic setValue:@"recommend" forKey:@"order_field"];
+            }else if (btn.tag == 11){//热销
+                [tempDic setValue:@"sale_num" forKey:@"order_field"];
+            }else if (btn.tag == 12){//新品
+                [tempDic setValue:@"new_product" forKey:@"order_field"];
+            }else if (btn.tag == 13){//价格
+                [tempDic setValue:@"sale_price" forKey:@"order_field"];
+                if (_priceState) {
+                    [tempDic setValue:@"asc" forKey:@"order_direct"];//升序
+                }else{
+                    [tempDic setValue:@"desc" forKey:@"order_direct"];//降序
+                }
+                
+            }
+        }
+    }
+    
+    dic = tempDic;
+    
     
     [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -741,7 +813,11 @@
     
     if (![LTools isEmpty:self.searchTf.text]) {
         [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
+        [self changeSearchViewAndKuangFrameAndTfWithState:0];
+        [_searchTf resignFirstResponder];
+        _mySearchView.hidden = YES;
     }
+    
     
     return YES;
 }
@@ -768,6 +844,8 @@
     }
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.brand_id = self.brand_id;
+    cc.brand_name = self.brand_name;
     cc.theSearchWorld = theWord;
     [self.navigationController pushViewController:cc animated:YES];
     

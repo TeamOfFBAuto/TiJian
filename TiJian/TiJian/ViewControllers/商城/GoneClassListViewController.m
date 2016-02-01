@@ -430,7 +430,11 @@
         }
         
         if (self.brand_id) {
-            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
+            [temp_dic setObject:self.brand_id forKey:@"brand_id"];
+            dic = temp_dic;
+        }
+        if (self.category_id) {
+            [temp_dic setObject:[NSString stringWithFormat:@"self.category_id"] forKey:@"category_id"];
             dic = temp_dic;
         }
         

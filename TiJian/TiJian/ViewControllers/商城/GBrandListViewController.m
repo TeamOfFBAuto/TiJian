@@ -365,11 +365,7 @@
     cc.brand_id = model_b.brand_id;
     [self.navigationController pushViewController:cc animated:YES];
     
-//    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-//    cc.className = model_b.brand_name;
-//    cc.brand_name = model_b.brand_name;
-//    cc.brand_id = model_b.brand_id;
-//    [self.navigationController pushViewController:cc animated:YES];
+
     
     
 }
