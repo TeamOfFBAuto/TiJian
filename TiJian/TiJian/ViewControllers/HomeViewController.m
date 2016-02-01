@@ -417,6 +417,9 @@
         if (_activityArray.count) {
             
             [Weakself.activityView show];
+        }else
+        {
+            [LTools showMBProgressWithText:@"精彩活动敬请期待！" addToView:Weakself.view];
         }
         
     } failBlock:^(NSDictionary *result) {
@@ -444,10 +447,10 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         int num = [result[@"num"]intValue];
+        int show = [result[@"show"]intValue];
         _unreadActivityNum = num;
-        Weakself.right_button.hidden =  NO;//打开活动按钮
-//        Weakself.redPoint.hidden = num > 0 ? NO : YES;
-        Weakself.redPoint.hidden = NO;
+        Weakself.right_button.hidden =  show == 1 ? NO : YES;//打开活动按钮
+        Weakself.redPoint.hidden = num > 0 ? NO : YES;
 
         //存储最新的msgId,用于判断是否需要自动弹出
         

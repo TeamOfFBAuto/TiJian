@@ -164,6 +164,7 @@
         NSMutableArray *temp = [NSMutableArray array];
         NSDictionary *selectMain = _selectSetmeal[Select_main];
         NSArray *selectAddition = _selectSetmeal[Select_additon];//附加套餐
+        NSString *mainProductId;
         if (selectMain && [selectMain isKindOfClass:[NSDictionary class]])
         {
             ProductModel *amodel = [[ProductModel alloc]initWithDictionary:selectMain];
@@ -173,6 +174,8 @@
             amodel.original_price = amodel.setmeal_original_price;
             amodel.product_name = amodel.setmeal_name;
             amodel.product_num = @"1";
+            amodel.main_product_id = amodel.product_id;//主套餐id
+            mainProductId = amodel.product_id;//记录主套餐id
             [temp addObject:amodel];
             
         }
@@ -187,6 +190,7 @@
                 amodel.current_price = amodel.package_price;
                 amodel.original_price = amodel.package_original_price;
                 amodel.product_num = @"1";
+                amodel.main_product_id = mainProductId;
                 [temp addObject:amodel];
                 
 //                cover_pic\product_name\product_num\is_append

@@ -23,6 +23,7 @@
 @property(nonatomic,retain)NSString *gender;
 @property(nonatomic,retain)NSString *is_common;
 @property(nonatomic,retain)NSString *product_id;
+@property(nonatomic,retain)NSString *main_product_id;//主套餐id,是加强包时才有
 @property(nonatomic,retain)NSString *setmeal_id;
 @property(nonatomic,retain)NSString *setmeal_inprice;
 @property(nonatomic,retain)NSString *setmeal_name;
