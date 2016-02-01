@@ -27,6 +27,8 @@
     
     self.myTitle = self.navigationTitle ? :  @"健康资讯";
     
+//    [self registerForKeyboardNotifications]; //键盘通知
+    
     if (self.moreInfo) {
         self.rightImageName = @"article_more";
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
@@ -39,6 +41,7 @@
     self.webView.delegate = self;
     self.webView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [self.view addSubview:_webView];
+    self.webView.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag; // 当拖动时移除键盘
     
     _progressview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 3.f)];
     _progressview.backgroundColor = RGBCOLOR(0, 188, 22);
@@ -52,6 +55,9 @@
         
     } success:^NSString *(NSHTTPURLResponse *response, NSString *HTML) {
         
+        if (HTML.length == 0) {
+            return Alert_ServerErroInfo;
+        }
         return HTML;
         
     } failure:^(NSError *error) {
@@ -123,6 +129,78 @@
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
 {
+    
+}
+
+#pragma mark - 键盘处理
+
+// Call this method somewhere in your view controller setup code.
+
+- (void)registerForKeyboardNotifications
+
+{
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+     
+                                             selector:@selector(keyboardWasShown:)
+     
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+     
+                                             selector:@selector(keyboardWillBeHidden:)
+     
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+    
+    
+}
+
+
+
+// Called when the UIKeyboardDidShowNotification is sent.
+
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    
+    NSDictionary* info = [aNotification userInfo];
+    
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    
+    _webView.scrollView.contentInset = contentInsets;
+    
+    _webView.scrollView.scrollIndicatorInsets = contentInsets;
+    
+    
+    // If active text field is hidden by keyboard, scroll it so it's visible
+    
+    // Your app might not need or want this behavior.
+    
+    CGRect aRect = self.view.frame;
+    
+    aRect.size.height -= kbSize.height;
+    
+//    if (!CGRectContainsPoint(aRect, activeField.frame.origin) ) {
+//        
+//        [self.scrollView scrollRectToVisible:activeField.frame animated:YES];
+//        
+//    }
+    
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    
+    _webView.scrollView.contentInset = contentInsets;
+    _webView.scrollView.scrollIndicatorInsets = contentInsets;
     
 }
 

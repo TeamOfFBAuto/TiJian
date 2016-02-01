@@ -145,6 +145,10 @@
     
     NSArray *pic = _hospitalModel.pic;
     
+//    NSMutableArray *temp = [NSMutableArray arrayWithArray:pic];
+//    [temp addObjectsFromArray:pic];
+//    pic = temp;
+    
     if (pic && [pic isKindOfClass:[NSArray class]]) {
         
         CGFloat width = (DEVICE_WIDTH - 20 - 10) / 3.f;

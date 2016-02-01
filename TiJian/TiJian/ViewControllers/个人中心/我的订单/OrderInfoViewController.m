@@ -293,9 +293,7 @@
         
     }else if ([text isEqualToString:@"前去预约"]){
         
-        OrderProductListController *list = [[OrderProductListController alloc]init];
-        list.orderId = _orderModel.order_id;
-        [self.navigationController pushViewController:list animated:YES];
+        [self clickToAppoint];
         
     }else if ([text isEqualToString:@"删除订单"]){
         
@@ -372,43 +370,45 @@
 }
 
 /**
- *  如果只有一个套餐的话 直接预约
+ *  如果只有一个套餐的话 直接预约,有多个的话跳转至列表
  *
  */
-- (void)tttselectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+- (void)clickToAppoint
 {
-    if (_orderModel.products.count == 1) {
-        
-        ProductModel *aModel = [self.products lastObject];
-        if ([aModel.product_num intValue] == 1) {
-            
-            
-        }
-    }
-    
-    ProductModel *aModel = nil;
-    aModel.order_id = _order_id;
-    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-    choose.gender = [aModel.gender intValue];
-    
-    if ([aModel.no_appointed_num intValue] == 0) {
-        return;
-    }
-    
-    //公司
-    if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
-        
-        NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
-        [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:[NSString stringWithFormat:@"%@",aModel.company_id] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
-    }else
-    {
-        choose.productId = aModel.product_id;
-        choose.order_id = aModel.order_id;
-        choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
-        choose.lastViewController = self;//需要选择体检人的时候需要传
-    }
-    
-    [self.navigationController pushViewController:choose animated:YES];
+//    if (_orderModel.products.count == 1) {
+//        
+//        ProductModel *aModel = [self.products firstObject];
+//        
+//        aModel.order_id = _order_id;
+//        ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+//        choose.gender = [aModel.gender intValue];
+//        
+//        if ([aModel.no_appointed_num intValue] == 0) {
+//            return;
+//        }
+//        //公司
+//        if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
+//            
+//            NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
+//            [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:[NSString stringWithFormat:@"%@",aModel.company_id] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+//        }else
+//        {
+//            choose.productId = aModel.product_id;
+//            choose.order_id = aModel.order_id;
+//            choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
+//            choose.lastViewController = self;//需要选择体检人的时候需要传
+//        }
+//        
+//        [self.navigationController pushViewController:choose animated:YES];
+//        
+//        
+//        return;
+//    }
+//    
+    OrderProductListController *list = [[OrderProductListController alloc]init];
+    list.orderId = _orderModel.order_id;
+    [self.navigationController pushViewController:list animated:YES];
+
 }
 
 #pragma mark - 创建视图

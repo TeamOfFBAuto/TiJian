@@ -172,7 +172,8 @@
 
 - (void)clickToWeb
 {
-    [MiddleTools pushToWebFromViewController:self weburl:_info_url title:@"专家详细解读" moreInfo:NO hiddenBottom:NO];
+    NSString *url = [NSString stringWithFormat:@"%@%@&result_id=%@",SERVER_URL,Get_customization_detail,_result_id];
+    [MiddleTools pushToWebFromViewController:self weburl:url title:@"专家详细解读" moreInfo:NO hiddenBottom:NO];
 }
 
 #pragma - mark 网络请求
@@ -182,7 +183,8 @@
 - (void)updateCustomization
 {
     NSDictionary *params = @{@"authcode":[UserInfo getAuthkey],
-                             @"result_id":_result_id};
+                             @"result_id":_result_id,
+                             @"extention_result_id":_extention_result_id};
     NSString *api = UPDATE_CUSTOMIZATION_RESULT;
     
     __weak typeof(self)weakSelf = self;
@@ -276,7 +278,7 @@
     _result_id = [NSString stringWithFormat:@"%@",result_id];
     _extention_result_id = [NSString stringWithFormat:@"%@",extention_result_id];
     
-    if (![LoginManager isLogin] && (_result_id || _extention_result_id)) {
+    if (![LoginManager isLogin] && (_result_id && _extention_result_id)) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否登录保存个性化定制结果？" delegate:self cancelButtonTitle:@"否" otherButtonTitles:@"是", nil];
         [alert show];
     }

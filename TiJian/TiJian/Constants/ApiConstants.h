@@ -119,6 +119,9 @@
 //品牌推荐 -- 加强包
 #define Get_c_setmeal_product @"/index.php?d=api&c=customization&m=get_c_setmeal_product"
 
+//专家解读 详细解读web页 result_id
+#define Get_customization_detail @"/index.php?d=api&c=customization&m=view_customization"
+
 /**************************登录注册相关用户接口**********************************/
 
 #pragma mark - 登录注册相关用户接口

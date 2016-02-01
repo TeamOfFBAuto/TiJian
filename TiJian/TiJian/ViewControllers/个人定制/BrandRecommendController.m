@@ -46,6 +46,15 @@
 
 #pragma mark - 视图创建
 
+-(UIView *)resultView
+{
+    if (!_resultView) {
+        
+        _resultView = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"温馨提示" content:@"没找到符合条件的品牌"];
+    }
+    return _resultView;
+}
+
 - (void)prepareRefreshTableView
 {
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStylePlain];
@@ -53,7 +62,7 @@
     _table.dataSource = self;
     [self.view addSubview:_table];
     
-    [self creatBottomTools];
+//    [self creatBottomTools];
     UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
     _table.tableFooterView = footer;
     
@@ -117,13 +126,22 @@
 //        [tt addObjectsFromArray:temp];[tt addObjectsFromArray:temp];
 //        [tt addObjectsFromArray:temp];[tt addObjectsFromArray:temp];
 //        [tt addObjectsFromArray:temp];
-        [weakTable reloadData:temp pageSize:10 noDataView:nil];
+        if (temp.count > 0) {
+            
+            if (!_bottom) {
+                [weakSelf creatBottomTools];
+            }
+        }
+        [weakTable reloadData:temp pageSize:10 noDataView:self.resultView];
         
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        [weakTable loadFailWithView:nil pageSize:10];
+        
+        ResultView *resultView = (ResultView *)weakSelf.resultView;
+        resultView.content = @"请检查网络稍后再试";
+        [weakTable loadFailWithView:weakSelf.resultView pageSize:10];
         
     }];
 }
