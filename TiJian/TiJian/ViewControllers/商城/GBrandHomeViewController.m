@@ -74,6 +74,9 @@
     
     BOOL _priceState;
     
+    NSDictionary *_shopCarDic;
+    int _gouwucheNum;//购物车里商品数量
+    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;//筛选view
@@ -81,6 +84,12 @@
 @end
 
 @implementation GBrandHomeViewController
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_LOGIN object:nil];
+}
 
 
 - (void)viewDidLoad {
@@ -95,6 +104,14 @@
     
     [self prepareBrandDetail];
     
+    
+    
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_LOGIN object:nil];
+    
+    
+    
     //视图创建
     [self creatTab];
     [self setupNavigation];
@@ -104,6 +121,7 @@
     [self creatUpToolView];
     [self creatDownBtnView];
     
+    [self getshopcarNum];//购物车数量
     
 }
 
@@ -114,6 +132,80 @@
 
 
 #pragma mark - 网络请求
+
+//获取购物车数量
+-(void)getshopcarNum{
+    
+    if ([LoginViewController isLogin]) {
+        [self getShopcarNumWithLoginSuccess];
+    }else{
+        
+    }
+}
+
+
+//获取购物车数量
+-(void)getShopcarNumWithLoginSuccess{
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+}
+
+-(void)updateShopCarNumAndFrame{
+    
+    if ([_shopCarNumLabel.text intValue] == 0) {
+        _shopCarNumLabel.hidden = YES;
+    }else{
+        _shopCarNumLabel.hidden = NO;
+        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
+        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
+        UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
+        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with-20, -2, with+5, 15)];
+        
+    }
+    
+}
+
+//登录成功更新购物车数量
+-(void)updateShopCarNum{
+    
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+    
+}
+
+
 
 //根据城市查询品牌列表
 -(void)prepareBrandListWithLocation{
@@ -212,7 +304,7 @@
 
 -(void)creatUpToolView{
     
-    _upToolView = [[GUpToolView alloc]initWithFrame:CGRectZero count:3];
+    _upToolView = [[GUpToolView alloc]initWithFrame:CGRectZero count:4];
     [self.view addSubview:_upToolView];
     __weak typeof (self)bself = self;
     [_upToolView setUpToolViewBlock:^(NSInteger index) {
@@ -625,7 +717,7 @@
 #pragma mark - 点击处理
 //工具栏按钮点击
 -(void)upToolBtnClicked:(NSInteger)index{
-    if (index == 10) {//足迹
+    if (index == 20) {//足迹
         if ([LoginViewController isLogin]) {
             GmyFootViewController *cc = [[GmyFootViewController alloc]init];
             [self.navigationController pushViewController:cc animated:YES];
@@ -639,10 +731,7 @@
             }];
         }
         
-    }else if (index == 11){//搜索
-        GCustomSearchViewController *cc = [[GCustomSearchViewController alloc]init];
-        [self.navigationController pushViewController:cc animated:YES];
-    }else if (index == 12){//首页
+    }else if (index == 21){//搜索
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }

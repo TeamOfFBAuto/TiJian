@@ -46,6 +46,9 @@
     GPushView *_pushView;//筛选view
     UIView *_backBlackView;//筛选界面下面的黑色透明view
     
+    NSDictionary *_shopCarDic;
+    int _gouwucheNum;//购物车里商品数量
+    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;
@@ -54,6 +57,12 @@
 
 
 @implementation GBrandListViewController
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_LOGIN object:nil];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -69,6 +78,9 @@
     _backBlackView.alpha = 0.5;
     
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_LOGIN object:nil];
+    
     
     [self creatRtab];
     [self creatRightTranslucentSideBar];
@@ -76,11 +88,39 @@
     [self creatUpToolView];
     [self creatDownBtnView];
     
+    [self getshopcarNum];//购物车数量
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+//登录成功更新购物车数量
+-(void)updateShopCarNum{
+    
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+     [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+    
 }
 
 
@@ -520,8 +560,58 @@
 
 
 #pragma mark - 网络请求
--(void)prepareNetDataWithDic:(NSDictionary *)theDic{
+
+//获取购物车数量
+-(void)getshopcarNum{
     
+    if ([LoginViewController isLogin]) {
+        [self getShopcarNumWithLoginSuccess];
+    }else{
+        
+    }
+}
+
+
+//获取购物车数量
+-(void)getShopcarNumWithLoginSuccess{
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+     [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+}
+
+-(void)updateShopCarNumAndFrame{
+    
+    if ([_shopCarNumLabel.text intValue] == 0) {
+        _shopCarNumLabel.hidden = YES;
+    }else{
+        _shopCarNumLabel.hidden = NO;
+        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
+        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
+        UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
+        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with-20, -2, with+5, 15)];
+        
+    }
+    
+}
+
+
+
+-(void)prepareNetDataWithDic:(NSDictionary *)theDic{
     
     NSDictionary *dic = [NSDictionary dictionary];
     

@@ -263,6 +263,8 @@
         [GMAPI cache:cachDic ForKey:USERLocation];
     }
     
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
+    
 }
 
 

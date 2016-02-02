@@ -14,7 +14,6 @@
 
 typedef void (^upToolViewBlock)(NSInteger index);//定义block
 
-
 @interface GUpToolView : UIView
 
 @property(nonatomic,copy)upToolViewBlock upToolViewBlock;//弄成属性

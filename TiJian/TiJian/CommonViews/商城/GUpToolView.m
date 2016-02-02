@@ -14,10 +14,12 @@
 -(id)initWithFrame:(CGRect)frame count:(int)theCount{
     self = [super initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     if (self) {
-        if (theCount == 2) {
+        if (theCount == 2) {//搜索 首页
             [self creat2Btn];
-        }else if (theCount == 3){
+        }else if (theCount == 3){//足迹 搜索 首页
             [self creat3btn];
+        }else if (theCount == 4){//足迹 首页
+            [self creat4Btn];
         }
     }
     
@@ -25,7 +27,28 @@
 }
 
 
-
+-(void)creat4Btn{
+    [self setFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
+    self.backgroundColor = [UIColor whiteColor];
+    
+    NSArray *titleArray = @[@"足迹",@"首页"];
+    NSArray *imageArray = @[[UIImage imageNamed:@"uptool_zuji.png"],[UIImage imageNamed:@"uptool_homepage.png"]];
+    
+    for (int i = 0; i<2; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        CGFloat w = DEVICE_WIDTH/2;
+        [btn setTitleColor:RGBCOLOR(152, 153, 154) forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont systemFontOfSize:12];
+        btn.tag = 20+i;
+        [btn setFrame:CGRectMake(i*w, 0, w, 50)];
+        [self addSubview:btn];
+        [btn setTitle:titleArray[i] forState:UIControlStateNormal];
+        [btn setImage:imageArray[i] forState:UIControlStateNormal];
+        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -25, -25, 0)];
+        [btn setImageEdgeInsets:UIEdgeInsetsMake(5, 18, 25, 0)];
+        [btn addTarget:self action:@selector(upToolBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
 
 
 -(void)creat2Btn{
@@ -47,7 +70,7 @@
         [btn setImage:imageArray[i] forState:UIControlStateNormal];
         [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -25, -25, 0)];
         [btn setImageEdgeInsets:UIEdgeInsetsMake(5, 18, 25, 0)];
-        [btn addTarget:self action:@selector(upToolBtnClicked1:) forControlEvents:UIControlEventTouchUpInside];
+        [btn addTarget:self action:@selector(upToolBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 

@@ -851,6 +851,10 @@
     UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     spaceButton1.width = -10;
     
+    if (iPhone6PLUS) {
+        spaceButton1.width = -15;
+    };
+    
     UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];

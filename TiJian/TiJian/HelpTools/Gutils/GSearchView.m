@@ -106,7 +106,7 @@
     btn.layer.borderWidth = 0.5;
     btn.layer.cornerRadius = 4;
     btn.layer.masksToBounds = YES;
-    [btn setFrame:CGRectMake(60, 30, DEVICE_WIDTH - 120, 30)];
+    [btn setFrame:CGRectMake(60, 20, DEVICE_WIDTH - 120, 30)];
     [btn setTitle:@"清空历史搜索" forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont systemFontOfSize:12];
     btn.backgroundColor = [UIColor whiteColor];

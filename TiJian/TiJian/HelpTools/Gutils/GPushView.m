@@ -102,7 +102,7 @@
     self.userChooseCity = defaultCityName;
     
     //品牌
-    if ([_defaultShaixuanDic stringValueForKey:@"brand_id"]>0) {
+    if ([[_defaultShaixuanDic stringValueForKey:@"brand_id"]intValue]>0) {
         self.userChoosePinpai = [_defaultShaixuanDic stringValueForKey:@"self.userChoosePinpai"];
         self.userChoosePinpai_id = [_defaultShaixuanDic stringValueForKey:@"brand_id"];
     }
