@@ -35,7 +35,7 @@
         [self.contentView addSubview:self.subTitleLabel];
         //时间
         CGFloat width = 150;
-        self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 10 - width, _subTitleLabel.bottom + 10, width, 14) title:@"2015-09-30" font:13 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
+        self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 10 - width, _subTitleLabel.bottom + 10, width, 14) title:@" " font:13 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
         [self.contentView addSubview:_timeLabel];
     }
     return self;
@@ -45,6 +45,7 @@
 {
     self.titleLable.text = aModel.title;
     self.subTitleLabel.text = aModel.summary;
+    self.timeLabel.text = [GMAPI timechangeYMD:aModel.add_time];
     [self.iconImageView l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
 }
 
