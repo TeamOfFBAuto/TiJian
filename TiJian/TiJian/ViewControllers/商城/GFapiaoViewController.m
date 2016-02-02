@@ -100,7 +100,6 @@
 #pragma mark - 视图创建
 -(void)creatTab{
     _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT) style:UITableViewStylePlain];
-    _tab.backgroundColor = [UIColor orangeColor];
     _tab.tag = 1;
     _tab.scrollEnabled = NO;
     _tab.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -117,11 +116,13 @@
     [self.view addSubview:_tab];
     
     
-    _tab_fapiao = [[UITableView alloc]initWithFrame:CGRectMake(15, 85, DEVICE_WIDTH - 30, 0) style:UITableViewStylePlain];
+    _tab_fapiao = [[UITableView alloc]initWithFrame:CGRectMake(15, 84, DEVICE_WIDTH - 30, 0) style:UITableViewStylePlain];
     _tab_fapiao.tag = 2;
     _tab_fapiao.delegate = self;
     _tab_fapiao.dataSource = self;
     _tab_fapiao.hidden = YES;
+    _tab_fapiao.layer.borderWidth = 0.5;
+    _tab_fapiao.layer.borderColor = [RGBCOLOR(220, 221, 223)CGColor];
     [self.view addSubview:_tab_fapiao];
     
     
@@ -303,6 +304,7 @@
         UIView *line_right = [[UIView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH-30.5, 0, 0.5, 34.5)];
         line_right.backgroundColor = RGBCOLOR(220, 221, 223);
         [cell.contentView addSubview:line_right];
+        
     }
     
     
