@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     [super viewDidLoad];
 
     UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    
+    spaceButton1.width = -7;
     UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(10,8,40,44)];
     [button_back addTarget:self action:@selector(leftBarButtonItemPressed:) forControlEvents:UIControlEventTouchUpInside];
     [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];

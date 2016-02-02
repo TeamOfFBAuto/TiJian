@@ -245,7 +245,6 @@
 -(void)startFollowHeading{
     NSLog(@"进入罗盘态");
     [_locService startUserLocationService];
-    _mapView.showsUserLocation = NO;
     _mapView.zoomLevel = 13;
     _mapView.userTrackingMode = BMKUserTrackingModeFollow;
     _mapView.showsUserLocation = YES;
