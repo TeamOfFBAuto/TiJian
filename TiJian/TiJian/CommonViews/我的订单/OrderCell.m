@@ -31,7 +31,7 @@
 {
     CGFloat height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
  
-    return 89 + height + 10 + 10 + 50;
+    return 89 + height + 10 + 10 + 50 + 20;
 }
 
 - (void)setCellWithModel:(OrderModel *)aModel
@@ -102,6 +102,9 @@
     self.realPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",[aModel.real_price floatValue]];
     self.infoView.top = _addressLabel.bottom + 10;
     self.backView.height = _infoView.bottom;
+    
+    NSString *text = [NSString stringWithFormat:@"下单时间:%@",[LTools timeString:aModel.add_time withFormat:@"yyyy-MM-dd"]];
+    self.addTimeLabel.text = text;
 }
 
 @end

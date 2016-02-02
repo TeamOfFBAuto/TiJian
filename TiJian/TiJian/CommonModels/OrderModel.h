@@ -39,6 +39,8 @@
 @property(nonatomic,retain)NSString *score_offset_money;// 积分优惠金额
 @property(nonatomic,retain)NSString *express_fee; //运费
 
+@property(nonatomic,retain)NSString *add_time; //订单创建时间
+
 @property(nonatomic,retain)NSString *pay_type;//1 支付宝 2 微信
 
 //订单状态 1=》待付款 2=》待预约 3=》已预约 4=》已完成 5=》已取消 6=》已删除

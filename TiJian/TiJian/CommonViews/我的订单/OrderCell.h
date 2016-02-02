@@ -25,6 +25,7 @@
 
 @property (strong, nonatomic) IBOutlet UIView *infoView;
 @property (strong, nonatomic) IBOutlet UIView *backView;
+@property (strong, nonatomic) IBOutlet UILabel *addTimeLabel;
 
 @property (nonatomic,retain)LScrollView *contentScroll;//放置多个商品
 

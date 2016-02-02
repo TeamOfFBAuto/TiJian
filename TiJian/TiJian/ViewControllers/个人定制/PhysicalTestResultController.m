@@ -25,19 +25,26 @@
 
 @implementation PhysicalTestResultController
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
-}
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"测试结果"];
+//
+////    [self.navigationController setNavigationBarHidden:YES animated:animated];
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated
+//{
+//    [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"测试结果"];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self setNavigationStyle:NAVIGATIONSTYLE_CUSTOM title:@"测试结果"];
-    
+//    [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"测试结果"];
+    self.myTitle = @"测试结果";
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     [self getCustomizationResult];
     
 }
@@ -105,8 +112,9 @@
         return;
     }
     
-    _bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     [self.view addSubview:_bgView];
+    
     NSString *title = @"已经完成测试,快来看看结果吧";
     
     CGFloat top = 40;
