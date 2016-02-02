@@ -25,6 +25,8 @@
     BMKPointAnnotation *_targetAnnocation;
     //导航按钮
     UIButton *_button_daohang;
+    
+    BOOL _isFirst;//是否是第一个
 }
 
 @property(nonatomic,retain)BMKPointAnnotation *targetAnnocation;
@@ -98,11 +100,13 @@
     _myTitleLabel.center = CGPointMake(DEVICE_WIDTH/2.f, _myTitleLabel.center.y);
     
     //返回按钮
-    UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(15,20,40,44)];
+    UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(7,20,40,44)];
     [button_back addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
     [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [daohangView addSubview:button_back];
+    
+    _isFirst = YES;
     
     //初始化地图
     [self setGMap];
@@ -140,6 +144,16 @@
     item.title = self.titleName;
     return item;
 }
+
+-(BMKPointAnnotation *)annocationWithCoordinate:(CLLocationCoordinate2D)coordinate
+                                          title:(NSString *)title
+{
+    BMKPointAnnotation* item = [[BMKPointAnnotation alloc]init];
+    item.coordinate = coordinate;
+    item.title = title;
+    return item;
+}
+
 /**
  *  添加目标地图标注
  */
@@ -245,10 +259,11 @@
 -(void)startFollowHeading{
     NSLog(@"进入罗盘态");
     [_locService startUserLocationService];
+//    _mapView.showsUserLocation = NO;
     _mapView.zoomLevel = 13;
-    _mapView.userTrackingMode = BMKUserTrackingModeFollow;
+    _mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView.showsUserLocation = YES;
-    
+//    [_mapView  setCenterCoordinate:self.coordinate];
 }
 
 #pragma mark - 定位相关
@@ -264,6 +279,72 @@
 {
     [_mapView updateLocationData:userLocation];
 //    NSLog(@"heading is %@",userLocation.heading);
+    if (_isFirst) { //第一次进来
+        
+        _isFirst = NO;
+    //        {{{"50m","100m","200m","500m","1km","2km","5km","10km","20km","25km","50km","100km","200km","500km","1000km","2000km"}
+//        CLLocationCoordinate2D user = userLocation.location.coordinate;
+//        BMKMapPoint point1 = BMKMapPointForCoordinate(user);
+//        BMKMapPoint point2 = BMKMapPointForCoordinate(self.coordinate);
+//        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+//        
+//        DDLOG(@"---distance%f",distance);
+//        
+//        CLLocationCoordinate2D coordinate;
+//        coordinate.latitude = user.latitude;//纬度
+//        coordinate.longitude = user.longitude;//经度
+//        
+//        BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake(self.coordinate, BMKCoordinateSpanMake(0.1,0.1));
+//        BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+//        
+//        [_mapView setRegion:adjustedRegion animated:YES];
+//        
+//        [_mapView getMapStatus];
+        
+//        - (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(UIView *)view;
+
+
+//        [_mapView showAnnotations:@[[self annocationWithCoordinate:user title:@"ahh"],self.targetAnnocation] animated:YES];
+        
+//        int level = 3;
+//        if (distance <= 50) {
+//            level = 3;
+//        }else if (distance <= 100){
+//            level = 4;
+//        }else if (distance <= 200){
+//            level = 5;
+//        }else if (distance <= 500){
+//            level = 6;
+//        }else if (distance <= 1000){
+//            level = 7;
+//        }else if (distance <= 2000){
+//            level = 8;
+//        }else if (distance <= 5000){
+//            level = 9;
+//        }else if (distance <= 10000){
+//            level = 10;
+//        }else if (distance <= 20 * 1000){
+//            level = 11;
+//        }else if (distance <= 25 * 1000){
+//            level = 12;
+//        }else if (distance <= 50 * 1000){
+//            level = 13;
+//        }else if (distance <= 100 * 1000){ //100km
+//            level = 14;
+//        }else if (distance <= 200 * 1000){
+//            level = 15;
+//        }else if (distance <= 500 * 1000){
+//            level = 16;
+//        }else if (distance <= 1000 * 1000){
+//            level = 17;
+//        }else if (distance <= 2000 * 1000){
+//            level = 18;
+//        }else{
+//            level = 19;
+//        }
+//        _mapView.zoomLevel = level;
+//        DDLOG(@"level %f",_mapView.zoomLevel);
+    }
     
 }
 

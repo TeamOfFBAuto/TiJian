@@ -108,8 +108,6 @@
     [self prepareBrandDetail];
     
     
-    
-    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
@@ -544,7 +542,7 @@
 }
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    NSLog(@"%s",__FUNCTION__);
+//    DDLOG(@"%s",__FUNCTION__);
 }
 
 

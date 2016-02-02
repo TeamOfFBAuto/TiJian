@@ -13,6 +13,7 @@
 
 @property(nonatomic,strong)NSString *titleName;
 @property(nonatomic,assign)CLLocationCoordinate2D coordinate;
+//@property(nonatomic,)
 
 
 @end

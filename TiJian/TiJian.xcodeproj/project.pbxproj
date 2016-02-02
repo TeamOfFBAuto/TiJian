@@ -397,7 +397,6 @@
 		13F9D12B1C2FB06800993738 /* LPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D1191C2FB06800993738 /* LPhotoModel.m */; };
 		13F9D12C1C2FB06800993738 /* LPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D11B1C2FB06800993738 /* LPhotoView.m */; };
 		13FCD6A11BFAD6BD005AE05B /* AppointDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */; };
-		13FCD6A31BFAD863005AE05B /* personal_yuyue_xiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */; };
 		13FCD6A51BFAD935005AE05B /* yuyue_wenhao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */; };
 		13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */; };
 		13FFBFC81C0D4FEA0077DD29 /* RCDChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFC71C0D4FEA0077DD29 /* RCDChatViewController.m */; };
@@ -1197,7 +1196,6 @@
 		13F9D11B1C2FB06800993738 /* LPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPhotoView.m; sourceTree = "<group>"; };
 		13FCD69F1BFAD6BD005AE05B /* AppointDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointDetailController.h; sourceTree = "<group>"; };
 		13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointDetailController.m; sourceTree = "<group>"; };
-		13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_yuyue_xiugai@2x.png"; sourceTree = "<group>"; };
 		13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_wenhao@2x.png"; sourceTree = "<group>"; };
 		13FCD6A61BFB316C005AE05B /* AppointUpdateController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointUpdateController.h; sourceTree = "<group>"; };
 		13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointUpdateController.m; sourceTree = "<group>"; };
@@ -1582,7 +1580,6 @@
 			isa = PBXGroup;
 			children = (
 				13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */,
-				13FCD6A21BFAD863005AE05B /* personal_yuyue_xiugai@2x.png */,
 				13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */,
 				13F242171BF4925A002C9D81 /* yuyue_jiantou_down@2x.png */,
 				13F242181BF4925A002C9D81 /* yuyue_jiantou_up@2x.png */,
@@ -3414,7 +3411,6 @@
 				130D2E311BFDF2DC002E301F /* UMSShareListController.xib in Resources */,
 				E3796D0B1BFB37CD004B63F7 /* my_weixin@2x.png in Resources */,
 				139333C91BE0DF3E00B4628B /* 23_2@2x.png in Resources */,
-				13FCD6A31BFAD863005AE05B /* personal_yuyue_xiugai@2x.png in Resources */,
 				E3E2B4171BFB2122007988C5 /* SelectCell.xib in Resources */,
 				1303C3611BEB0D7100700847 /* sex_nan@2x.png in Resources */,
 				130D2E2E1BFDF2DC002E301F /* UMShareEditViewControlleriPad.xib in Resources */,
@@ -3889,7 +3885,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/BaiduMap_IOSSDK_v2.6.0_Lib/inc",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/BaiduMap_IOSSDK_v2.6.0_Lib",
-					"$(PROJECT_DIR)/TiJian/ThirdClass/lib",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_4.2.1",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -3925,7 +3920,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/BaiduMap_IOSSDK_v2.6.0_Lib/inc",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/BaiduMap_IOSSDK_v2.6.0_Lib",
-					"$(PROJECT_DIR)/TiJian/ThirdClass/lib",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_4.2.1",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",

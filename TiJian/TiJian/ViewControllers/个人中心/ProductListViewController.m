@@ -40,7 +40,7 @@
 {
     if (_resultView) {
         
-        return _resultView;
+        return (ResultView *)_resultView;
     }
     self.resultView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     _resultView.backgroundColor = [UIColor clearColor];
@@ -48,7 +48,7 @@
     
     self.resultView = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"温馨提示" content:@"您还没有添加收藏"];
     
-    return _resultView;
+    return (ResultView *)_resultView;
 }
 
 - (void)prepareRefreshTableView
