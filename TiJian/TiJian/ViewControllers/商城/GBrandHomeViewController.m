@@ -107,13 +107,8 @@
     
     [self prepareBrandDetail];
     
-    
-    
-    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_LOGIN object:nil];
-    
-    
     
     //视图创建
     [self creatTab];
@@ -601,7 +596,8 @@
                 @"province_id":[GMAPI getCurrentProvinceId],
                 @"city_id":[GMAPI getCurrentCityId],
                 @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":NSStringFromInt(PAGESIZE_MID)
+                @"per_page":NSStringFromInt(PAGESIZE_MID),
+                @"brand_id":self.brand_id
                 };
         
     }

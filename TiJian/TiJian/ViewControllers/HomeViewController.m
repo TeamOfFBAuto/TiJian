@@ -331,6 +331,10 @@
         cityName = [GMAPI cityNameForId:[city_id intValue]];
     }
     
+    if ([province_id intValue] == 1000 || [province_id intValue] == 1100 || [province_id intValue] == 1200 || [province_id intValue] == 1300) {
+        cityName = [GMAPI cityNameForId:[province_id intValue]];
+    }
+    
     self.leftLabel.text = cityName;
     
 }
