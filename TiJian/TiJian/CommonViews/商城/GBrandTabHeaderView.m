@@ -39,57 +39,8 @@
         self.classView.backgroundColor = [UIColor purpleColor];
         [self addSubview:self.classView];
         
-        //四个按钮view
-        self.fourBtnView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.classView.frame), DEVICE_WIDTH, 42)];
-        self.fourBtnView.backgroundColor = [UIColor whiteColor];
-        CGFloat width = DEVICE_WIDTH/4;
-        NSArray *titleArray = @[@"推荐",@"热销",@"新品",@"价格"];
         
-        self.fourBtnArray = [NSMutableArray arrayWithCapacity:1];
-        
-        for (int i = 0; i<4; i++) {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [btn setFrame:CGRectMake(width*i, 0.5, width, 37)];
-            
-            //竖线
-            UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(width*i, 8, 0.5, 23)];
-            fenLine.backgroundColor = RGBCOLOR(226, 228, 229);
-            [self.fourBtnView addSubview:fenLine];
-            
-            [btn setTitle:titleArray[i] forState:UIControlStateNormal];
-            btn.titleLabel.font = [UIFont systemFontOfSize:13];
-            [btn setTitleColor:RGBCOLOR(80, 81, 82) forState:UIControlStateNormal];
-            [btn setTitleColor:RGBCOLOR(116, 162, 208) forState:UIControlStateSelected];
-            
-            
-            if (i == 0) {
-                btn.selected = YES;
-            }else if (i == 3){
-                [btn setImage:[UIImage imageNamed:@"pricejiantou_down.png"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-                [btn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -width+15)];
-            }
-
-            btn.tag = 10+i;
-            [btn addTarget:self action:@selector(forBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [self.fourBtnView addSubview:btn];
-            [self.fourBtnArray addObject:btn];
-        }
-        
-        [self addSubview:self.fourBtnView];
-        
-        //分割线
-        UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.5)];
-        upLine.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.fourBtnView addSubview:upLine];
-        
-        UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, 37, DEVICE_WIDTH, 5)];
-        downLine.backgroundColor = RGBCOLOR(244, 245, 246);
-        [self.fourBtnView addSubview:downLine];
-        
-        
-        CGFloat height = self.brandBannerImv.frame.size.height + self.classView.frame.size.height + self.fourBtnView.frame.size.height;
+        CGFloat height = self.brandBannerImv.frame.size.height + self.classView.frame.size.height;
         
         [self setHeight:height];
         
@@ -98,6 +49,63 @@
     }
     return self;
 }
+
+
+-(UIView *)getFourBtnView{
+    //四个按钮view
+    self.fourBtnView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 42)];
+    self.fourBtnView.backgroundColor = [UIColor whiteColor];
+    CGFloat width = DEVICE_WIDTH/4-0.5;
+    NSArray *titleArray = @[@"推荐",@"热销",@"新品",@"价格"];
+    
+    self.fourBtnArray = [NSMutableArray arrayWithCapacity:1];
+    
+    for (int i = 0; i<4; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn setFrame:CGRectMake((width+0.5)*i, 0.5, width, 37)];
+        
+        //竖线
+        UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(width*i-0.5, 8, 0.5, 23)];
+        fenLine.backgroundColor = RGBCOLOR(226, 228, 229);
+        [self.fourBtnView addSubview:fenLine];
+        
+        [btn setTitle:titleArray[i] forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont systemFontOfSize:13];
+        [btn setTitleColor:RGBCOLOR(80, 81, 82) forState:UIControlStateNormal];
+        [btn setTitleColor:RGBCOLOR(116, 162, 208) forState:UIControlStateSelected];
+        
+        
+        if (i == 0) {
+            btn.selected = YES;
+        }else if (i == 3){
+            [btn setImage:[UIImage imageNamed:@"pricejiantou_down.png"] forState:UIControlStateNormal];
+            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+            [btn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -width+15)];
+        }
+        btn.backgroundColor = [UIColor whiteColor];
+        btn.tag = 10+i;
+        [btn addTarget:self action:@selector(forBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.fourBtnView addSubview:btn];
+        [self.fourBtnArray addObject:btn];
+    }
+    
+    //分割线
+    UIView *upLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.5)];
+    upLine.backgroundColor = RGBCOLOR(244, 245, 246);
+    [self.fourBtnView addSubview:upLine];
+    
+    UIView *downLine = [[UIView alloc]initWithFrame:CGRectMake(0, 37, DEVICE_WIDTH, 5)];
+    downLine.backgroundColor = RGBCOLOR(244, 245, 246);
+    [self.fourBtnView addSubview:downLine];
+    
+    return self.fourBtnView;
+}
+
+
+
+
+
 
 -(void)reloadViewWithBrandDic:(NSDictionary *)theBranddic classDic:(NSDictionary *)theClassDic{
     
@@ -149,9 +157,7 @@
             [self.classView addSubview:imv];
         }
         
-        [self.fourBtnView setFrame:CGRectMake(0, CGRectGetMaxY(self.classView.frame), DEVICE_WIDTH, 37)];
-        
-        CGFloat self_height = self.brandBannerImv.frame.size.height + self.classView.frame.size.height + self.fourBtnView.frame.size.height;
+        CGFloat self_height = self.brandBannerImv.frame.size.height + self.classView.frame.size.height;
         [self setHeight:self_height];
         
     }

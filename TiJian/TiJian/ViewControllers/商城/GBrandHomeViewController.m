@@ -77,6 +77,9 @@
     NSDictionary *_shopCarDic;
     int _gouwucheNum;//购物车里商品数量
     
+    
+    UIView *_fourBtn_sectionHeaderView;
+    
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;//筛选view
@@ -255,6 +258,8 @@
 -(void)creatTabHeaderView{
     _tabHeaderView = [[GBrandTabHeaderView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 100)];
     __weak typeof (self)bself = self;
+    
+    _fourBtn_sectionHeaderView = [_tabHeaderView getFourBtnView];
     
     [_tabHeaderView setFourBtnClickedBlock:^(NSInteger index, BOOL state) {
         [bself fourBtnClicked:index isSelect:state];
@@ -489,6 +494,7 @@
 
 - (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
     CGFloat height = 0.01;
+    height = 42;
     return height;
 }
 
@@ -499,6 +505,7 @@
 
 - (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(UITableView *)tableView{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    view = _fourBtn_sectionHeaderView;
     return view;
 }
 

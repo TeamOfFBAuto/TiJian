@@ -36,6 +36,8 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"店铺详情";
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [self creatTab];
     [self prepareDetail];
     [self getjingweidu];
@@ -376,6 +378,7 @@
     [_request requestWithMethod:YJYRequstMethodGet api:StoreHomeDetail parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         _dataDic = result;
         [_tab reloadData];
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     } failBlock:^(NSDictionary *result) {
         
     }];
@@ -436,7 +439,8 @@
     _locationDic = dic;
     NSLog(@"%@",_locationDic);
     
-    [_tab showRefreshHeader:YES];
+    [_tab refreshNewData];
+    
 }
 
 @end

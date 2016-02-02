@@ -35,6 +35,8 @@ typedef void(^bannerImvClickedBlock)();
 
 -(id)initWithFrame:(CGRect)frame;
 
+-(UIView *)getFourBtnView;
+
 -(void)reloadViewWithBrandDic:(NSDictionary *)theBranddic classDic:(NSDictionary *)theClassDic;
 
 -(void)setFourBtnClickedBlock:(fourBtnClickedBlock)fourBtnClickedBlock;
