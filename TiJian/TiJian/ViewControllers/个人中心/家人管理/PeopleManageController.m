@@ -178,10 +178,7 @@
     [params safeSetValue:_date forKey:@"date"];
     [params safeSetBool:_isMyselfSelected forKey:@"myself"];
 
-    //不是自己
-    if (!_isMyselfSelected) {
-        [params safeSetValue:family_uid forKey:@"family_uid"];
-    }
+    [params safeSetValue:family_uid forKey:@"family_uid"];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak typeof(self)weakSelf = self;

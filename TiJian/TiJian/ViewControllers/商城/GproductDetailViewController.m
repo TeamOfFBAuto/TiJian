@@ -1234,10 +1234,13 @@
             [imv setImage:[UIImage imageNamed:@"tijianxiangmu1.png"]];
             [titleView addSubview:imv];
             
-            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(imv.frame)+10, 0, titleView.frame.size.width - 10-imv.frame.size.width-5, titleView.frame.size.height)];
+            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(imv.frame)+10, 0, titleView.frame.size.width - 10 - imv.frame.size.width - 5 - 5, titleView.frame.size.height)];
             tLabel.font = [UIFont systemFontOfSize:15];
             tLabel.textColor = [UIColor blackColor];
-            tLabel.text = @"健康优选套餐(男/女二选一)";
+//            tLabel.backgroundColor = [UIColor orangeColor];
+            tLabel.numberOfLines = 2.f;
+            tLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            tLabel.text = self.theProductModel.setmeal_name;
             [titleView addSubview:tLabel];
             
             UIView *blueView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(titleView.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
