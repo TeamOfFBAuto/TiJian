@@ -32,6 +32,7 @@
 @property(nonatomic,retain)NSString *shelf_status;
 @property(nonatomic,retain)NSString *status;
 @property(nonatomic,retain)NSString *type_id;
+@property(nonatomic,strong)NSString *setmeal_desc;//套餐描述
 
 @property(nonatomic,retain)NSString *is_recommend;
 @property(nonatomic,retain)NSString *is_comment;//是否评论

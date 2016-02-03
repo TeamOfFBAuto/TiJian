@@ -121,8 +121,6 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
     
     
-    
-    
     [self prepareNetData];
     
     
@@ -299,6 +297,7 @@
     
     [self getProductDetail];//单品详情
     [self getProductConmment];//产品评论
+    
     [self prepareProductProjectList];//具体项目
     [self getshopcarNum];//购物车数量
     
@@ -1095,7 +1094,7 @@
         //5     上拉显示体检项目详情
         num = 6;
     }else if (tableView.tag == 1001){
-        num = _productProjectListDataArray.count;
+        num = 1;
     }
     
     return num;
@@ -1270,14 +1269,14 @@
             
         }else{
             
-            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
-            view.backgroundColor = RGBCOLOR(222, 245, 255);
-            
-            UILabel *canhouxiangmuLabel = [[UILabel alloc]initWithFrame:view.bounds];
-            canhouxiangmuLabel.textAlignment = NSTextAlignmentCenter;
-            canhouxiangmuLabel.text = @"餐后项目";
-            canhouxiangmuLabel.font = [UIFont systemFontOfSize:12];
-            [view addSubview:canhouxiangmuLabel];
+//            [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
+//            view.backgroundColor = RGBCOLOR(222, 245, 255);
+//            
+//            UILabel *canhouxiangmuLabel = [[UILabel alloc]initWithFrame:view.bounds];
+//            canhouxiangmuLabel.textAlignment = NSTextAlignmentCenter;
+//            canhouxiangmuLabel.text = @"餐后项目";
+//            canhouxiangmuLabel.font = [UIFont systemFontOfSize:12];
+//            [view addSubview:canhouxiangmuLabel];
             
             
             

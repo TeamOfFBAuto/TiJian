@@ -57,20 +57,36 @@
             [self.contentView addSubview:imv];
             height += imv.frame.size.height;
             
-            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(imv.frame)+15, DEVICE_WIDTH - 20, 0)];
-            titleLabel.font = [UIFont systemFontOfSize:13];
-            titleLabel.text = [NSString stringWithFormat:@"%@ %@",self.delegate.theProductModel.brand_name,self.delegate.theProductModel.setmeal_name];
             
-            titleLabel.numberOfLines = 2;
+            //商品名
+            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(imv.frame)+15, DEVICE_WIDTH - 20, 0)];
+            titleLabel.font = [UIFont systemFontOfSize:14];
+            titleLabel.text = [NSString stringWithFormat:@"%@ %@",self.delegate.theProductModel.brand_name,self.delegate.theProductModel.setmeal_name];
             [titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(imv.frame)+15) width:DEVICE_WIDTH - 20];
             [self.contentView addSubview:titleLabel];
             height += titleLabel.frame.size.height+15;
             
+            //商品描述
+            UILabel *setmeal_descLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame)+10, DEVICE_WIDTH - 20, 0)];
+            setmeal_descLabel.font = [UIFont systemFontOfSize:12];
+            setmeal_descLabel.textColor = RGBCOLOR(220, 103, 21);
+            setmeal_descLabel.text = self.delegate.theProductModel.setmeal_desc;
+            [setmeal_descLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(titleLabel.frame)+10) width:DEVICE_WIDTH - 20];
+            [self.contentView addSubview:setmeal_descLabel];
             
+            //价格
             NSString *xianjia = self.delegate.theProductModel.setmeal_price;
             NSString *yuanjia = self.delegate.theProductModel.setmeal_original_price;
-            
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame)+12, DEVICE_WIDTH - 20, 15)];
+            if ([LTools isEmpty:self.delegate.theProductModel.setmeal_desc]) {
+                [priceLabel setFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame)+12, DEVICE_WIDTH - 20, 15)];
+            }else{
+                [priceLabel setFrame:CGRectMake(10, CGRectGetMaxY(setmeal_descLabel.frame)+12, DEVICE_WIDTH - 20, 15)];
+                height += setmeal_descLabel.frame.size.height + 12;
+            }
+            
+            
+            
             NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
             NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
             [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
