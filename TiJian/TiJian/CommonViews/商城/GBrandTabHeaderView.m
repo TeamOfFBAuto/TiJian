@@ -36,7 +36,7 @@
         
         //分类view
         self.classView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.brandBannerImv.frame), DEVICE_WIDTH, 0)];
-        self.classView.backgroundColor = [UIColor purpleColor];
+        self.classView.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.classView];
         
         

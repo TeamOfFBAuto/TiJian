@@ -28,7 +28,12 @@
     CGFloat imv_w = (DEVICE_WIDTH - imv_j*4)/3;
     if (model.comment_pic.count>0) {
         for (int i = 0; i<model.comment_pic.count; i++) {
-            UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(i*(imv_w+imv_j)+imv_j, CGRectGetMaxY(tLabel.frame)+10, imv_w, [GMAPI scaleWithHeight:0 width:imv_w theWHscale:1.6])];
+            UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectZero];
+            if (tLabel.text.length>0) {
+                [imv setFrame:CGRectMake(i*(imv_w+imv_j)+imv_j, CGRectGetMaxY(tLabel.frame)+10, imv_w, [GMAPI scaleWithHeight:0 width:imv_w theWHscale:1.6])];
+            }else{
+                [imv setFrame:CGRectMake(i*(imv_w+imv_j)+imv_j, 10, imv_w, [GMAPI scaleWithHeight:0 width:imv_w theWHscale:1.6])];
+            }
             NSDictionary *dic = model.comment_pic[i];
             [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"url"]] placeholderImage:nil];
             [self addSubview:imv];
