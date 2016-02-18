@@ -24,10 +24,24 @@
 
 -(CGFloat)loadCustomViewWithModel:(ProductCommentModel*)model{
     GproductCommentView *vv = [[GproductCommentView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 10)];
+    vv.delegate = self.delegate;
     CGFloat hh = [vv loadCustomViewWithModel:model];
     [self.contentView addSubview:vv];
     
+    
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    btn.backgroundColor = [UIColor purpleColor];
+//    [btn setFrame:CGRectMake(0, 0, 50, 50)];
+//    [btn addTarget:self action:@selector(aaaa) forControlEvents:UIControlEventTouchUpInside];
+//    [self.contentView addSubview:btn];
+    
     return hh;
+}
+
+
+
+-(void)aaaa{
+    NSLog(@"%s",__FUNCTION__);
 }
 
 

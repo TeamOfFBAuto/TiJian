@@ -109,7 +109,6 @@
 
 -(void)reloadViewWithBrandDic:(NSDictionary *)theBranddic classDic:(NSDictionary *)theClassDic{
     
-    
     //品牌详情
     if (theBranddic) {
         NSDictionary *dataDic = [theBranddic dictionaryValueForKey:@"data"];

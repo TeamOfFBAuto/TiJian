@@ -119,6 +119,7 @@
         [view removeFromSuperview];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.delegate = self;
     [cell loadCustomViewWithModel:_rTab.dataArray[indexPath.row]];
     
     return cell;

@@ -14,6 +14,12 @@
 #import "ProductCommentModel.h"
 
 @interface GproductCommentView : UIView
+{
+    UIScrollView *_scrollView;
+    ProductCommentModel* _theModel;
+}
+
+@property(nonatomic,assign)UIViewController *delegate;
 
 -(CGFloat)loadCustomViewWithModel:(ProductCommentModel*)model;
 

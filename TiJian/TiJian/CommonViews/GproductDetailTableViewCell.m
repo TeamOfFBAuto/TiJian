@@ -352,6 +352,7 @@
                 CGFloat h_y = 0;
                 for (int i = 0; i<commentArr.count; i++) {
                     GproductCommentView *view = [[GproductCommentView alloc]initWithFrame:CGRectMake(0, h_y, DEVICE_WIDTH, 10)];
+                    view.delegate = self.delegate;
                     CGFloat hh = [view loadCustomViewWithModel:commentArr[i]];
                     [self.contentView addSubview:view];
                     height += hh;
