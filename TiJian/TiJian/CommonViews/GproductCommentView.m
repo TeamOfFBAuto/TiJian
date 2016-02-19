@@ -12,6 +12,17 @@
 @implementation GproductCommentView
 
 
+//-(id)initWithFrame:(CGRect)frame{
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        self.userInteractionEnabled = YES;
+//    }
+//    
+//    return self;
+//}
+
+
+
 -(CGFloat)loadCustomViewWithModel:(ProductCommentModel*)model{
     
     self.userInteractionEnabled = YES;
@@ -41,7 +52,7 @@
             NSDictionary *dic = model.comment_pic[i];
             [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"url"]] placeholderImage:nil];
             imv.userInteractionEnabled = YES;
-            
+            [imv addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
             [self addSubview:imv];
             
 //            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -102,6 +113,11 @@
     line.backgroundColor = RGBCOLOR(223, 224, 225);
     [self addSubview:line];
     
+    
+    
+    [self setHeight:height];
+    
+    
     return height;
 }
 
@@ -111,11 +127,18 @@
  *
  *  @param sender 手势
  */
-- (void)tapToBrowser:(UIButton *)sender
+- (void)tapToBrowser:(UITapGestureRecognizer *)sender
 {
-    int index = (int)sender.tag - 200;
+    int index = (int)sender.view.tag - 200;
     
-    NSArray *img = _theModel.comment_pic;
+    NSMutableArray *imgUrlArray = [NSMutableArray arrayWithCapacity:1];
+    for (NSDictionary *dic in _theModel.comment_pic) {
+        NSString *url_img = [dic stringValueForKey:@"url"];
+        [imgUrlArray addObject:url_img];
+    }
+    
+    
+    NSArray *img = (NSArray*)imgUrlArray;
     
     int count = (int)[img count];
     
@@ -130,7 +153,7 @@
             
             UIImageView *imageView = [Weak_scrollView viewWithTag:200 + i];
             LPhotoModel *photo = [[LPhotoModel alloc]init];
-            photo.imageUrl = img[i][@"img"];
+            photo.imageUrl = img[i];
             imageView = imageView;
             photo.thumbImage = imageView.image;
             photo.sourceImageView = imageView;

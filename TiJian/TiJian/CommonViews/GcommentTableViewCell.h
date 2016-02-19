@@ -14,7 +14,9 @@
 
 @interface GcommentTableViewCell : UITableViewCell
 
+
 @property(nonatomic,assign)UIViewController *delegate;
+
 -(CGFloat)loadCustomViewWithModel:(ProductCommentModel*)model;
 
 
