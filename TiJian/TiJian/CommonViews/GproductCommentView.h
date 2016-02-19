@@ -21,7 +21,6 @@
 
 @property(nonatomic,assign)UIViewController *delegate;
 
-//-(id)initWithFrame:(CGRect)frame;
 
 -(CGFloat)loadCustomViewWithModel:(ProductCommentModel*)model;
 

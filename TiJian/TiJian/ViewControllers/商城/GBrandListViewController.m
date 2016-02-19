@@ -228,6 +228,25 @@
     
 }
 
+#pragma mark - 无数据默认view
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"暂无可用套餐";
+    }
+    
+    
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    return result;
+}
+
+
+
 
 #pragma mark - 点击处理
 
@@ -657,11 +676,13 @@
             [_StoreProductListArray addObject:model_b];
         }
         
-        [_rTab reloadData:_StoreProductListArray pageSize:5];
+         
+         
+         [_rTab reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithType:PageResultType_nodata]];
         
         
     } failBlock:^(NSDictionary *result) {
-        [_rTab loadFail];
+        [_rTab reloadData:nil pageSize:5 noDataView:[self resultViewWithType:PageResultType_nodata]];
         
     }];
     

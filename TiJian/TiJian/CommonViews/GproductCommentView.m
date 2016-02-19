@@ -12,17 +12,6 @@
 @implementation GproductCommentView
 
 
-//-(id)initWithFrame:(CGRect)frame{
-//    self = [super initWithFrame:frame];
-//    if (self) {
-//        self.userInteractionEnabled = YES;
-//    }
-//    
-//    return self;
-//}
-
-
-
 -(CGFloat)loadCustomViewWithModel:(ProductCommentModel*)model{
     
     self.userInteractionEnabled = YES;
@@ -42,6 +31,7 @@
     CGFloat imv_j = 15;
     CGFloat imv_w = (DEVICE_WIDTH - imv_j*4)/3;
     if (model.comment_pic.count>0) {
+        _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 10, 10)];
         for (int i = 0; i<model.comment_pic.count; i++) {
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectZero];
             if ([LTools isEmpty:model.content]) {
@@ -52,17 +42,10 @@
             NSDictionary *dic = model.comment_pic[i];
             [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"url"]] placeholderImage:nil];
             imv.userInteractionEnabled = YES;
+            imv.tag = 200+i;
+            [_scrollView addSubview:imv];
             [imv addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
             [self addSubview:imv];
-            
-//            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//            btn.backgroundColor = [UIColor orangeColor];
-//            [btn setFrame:CGRectMake(i*(imv_w+imv_j)+imv_j, CGRectGetMaxY(tLabel.frame)+10, imv_w, [GMAPI scaleWithHeight:0 width:imv_w theWHscale:1.6])];
-//            btn.tag = 200 + i;
-//            [btn addTarget:self action:@selector(tapToBrowser:) forControlEvents:UIControlEventTouchUpInside];
-//            [self addSubview:btn];
-            
-            
             
             
         }
@@ -144,14 +127,14 @@
     
     NSInteger initPage = index;
     
-    @WeakObj(_scrollView);
+    @WeakObj(self);
     [LPhotoBrowser showWithViewController:self.delegate initIndex:initPage photoModelBlock:^NSArray *{
         
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
         
         for (int i = 0; i < count; i ++) {
             
-            UIImageView *imageView = [Weak_scrollView viewWithTag:200 + i];
+            UIImageView *imageView = [Weakself viewWithTag:200 + i];
             LPhotoModel *photo = [[LPhotoModel alloc]init];
             photo.imageUrl = img[i];
             imageView = imageView;

@@ -8,7 +8,8 @@
 
 
 
-//商城单一分类列表页
+//搜索结果页
+
 #import "MyViewController.h"
 
 @interface GoneClassListViewController : MyViewController
