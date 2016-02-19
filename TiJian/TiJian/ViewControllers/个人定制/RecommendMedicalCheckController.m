@@ -179,6 +179,10 @@
 - (void)clickToWeb
 {
     NSString *url = [NSString stringWithFormat:@"%@%@&result_id=%@",SERVER_URL,Get_customization_detail,_result_id];
+    if ([UserInfo getAuthkey]) {
+        
+        url = [NSString stringWithFormat:@"%@&authcode=%@",url,[UserInfo getAuthkey]];
+    }
     [MiddleTools pushToWebFromViewController:self weburl:url title:@"专家详细解读" moreInfo:NO hiddenBottom:NO];
 }
 

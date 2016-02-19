@@ -67,6 +67,9 @@
         return nil;
     }
     
+    //显示菊花
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
     NSString *baseUrl = [SERVER_URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -179,6 +182,9 @@
               completion:(AFResultBlock)completionBlock
                failBlock:(AFResultBlock)failBlock
 {
+    //隐藏菊花
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
     NSString *key = [self requestHashKey:operation];
     _requstRecordDictionary[key] = operation;
     
@@ -249,6 +255,9 @@
                     error:(NSError *)error
               failtBlock:(AFResultBlock)failBlock
 {
+    //隐藏菊花
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
     DDLOG(@"failure %@",operation.responseString);
     NSString *errInfo = @"网络有问题,请检查网络";
     switch (error.code) {

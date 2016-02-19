@@ -64,23 +64,29 @@
     UILabel *content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 0, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:centerName];
     [nameView addSubview:content];
     
-    //品牌介绍
-    nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
-    nameView.backgroundColor = [UIColor whiteColor];
-    [_scrollView addSubview:nameView];
+    //公交路线
     
-    title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"品牌介绍"];
-    [nameView addSubview:title];
+    NSString *brandDesc = _hospitalModel.bus_route;
+
+    CGFloat height = 0.f;
     
-    NSString *brandDesc = _hospitalModel.desc;
-    content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 15, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:brandDesc];
-    [nameView addSubview:content];
-    content.numberOfLines = 0;
-    content.lineBreakMode = NSLineBreakByCharWrapping;
-    CGFloat height = [LTools heightForText:brandDesc width:content.width font:13];
-    content.height = height;
-    nameView.height = content.bottom + 15;
-    
+    if ([brandDesc isKindOfClass:[NSString class]] && brandDesc.length > 0) {
+        
+        nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
+        nameView.backgroundColor = [UIColor whiteColor];
+        [_scrollView addSubview:nameView];
+        
+        title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"公交路线"];
+        [nameView addSubview:title];
+        
+        content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 15, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:brandDesc];
+        [nameView addSubview:content];
+        content.numberOfLines = 0;
+        content.lineBreakMode = NSLineBreakByCharWrapping;
+        height = [LTools heightForText:brandDesc width:content.width font:13];
+        content.height = height;
+        nameView.height = content.bottom + 15;
+    }
     
     //分院地址
     nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
@@ -113,7 +119,7 @@
     nameView.backgroundColor = [UIColor whiteColor];
     [_scrollView addSubview:nameView];
     
-    title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院地址"];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院电话"];
     [nameView addSubview:title];
     
     NSString *phone = _hospitalModel.center_phone;
@@ -134,42 +140,55 @@
     [_scrollView addSubview:line];
     
     //分院环境
-    nameView = [[UIView alloc]initWithFrame:CGRectMake(0, line.bottom, DEVICE_WIDTH, 45)];
-    nameView.backgroundColor = [UIColor whiteColor];
-    [_scrollView addSubview:nameView];
-    
-    title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院环境"];
-    [nameView addSubview:title];
     
     //分院环境的图片
     
     NSArray *pic = _hospitalModel.pic;
     
-//    NSMutableArray *temp = [NSMutableArray arrayWithArray:pic];
-//    [temp addObjectsFromArray:pic];
-//    pic = temp;
+    CGFloat re_top = line.bottom;
     
-    if (pic && [pic isKindOfClass:[NSArray class]]) {
+    if (pic &&
+        [pic isKindOfClass:[NSArray class]] &&
+        pic.count > 0) {
         
-        CGFloat width = (DEVICE_WIDTH - 20 - 10) / 3.f;
-        height = width / 1.6;
-        UIScrollView *scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(10, title.bottom, DEVICE_WIDTH - 20, height)];
-        scroll.showsHorizontalScrollIndicator = NO;
-        [nameView addSubview:scroll];
+        nameView = [[UIView alloc]initWithFrame:CGRectMake(0, line.bottom, DEVICE_WIDTH, 45)];
+        nameView.backgroundColor = [UIColor whiteColor];
+        [_scrollView addSubview:nameView];
+        
+        title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院环境"];
+        [nameView addSubview:title];
+        
+        CGFloat width = (DEVICE_WIDTH - 20);
+        CGFloat imageBottom = title.bottom + 5;
         int count = (int)pic.count;
         for (int i = 0; i < count; i ++) {
-            NSString *dic = pic[i];
-            UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake((5 + width) * i, 0, width, height)];
-            [imageview l_setImageWithURL:[NSURL URLWithString:dic] placeholderImage:DEFAULT_HEADIMAGE];
-            [scroll addSubview:imageview];
-            imageview.tag = 200 + i;
-            [imageview addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
+            NSDictionary *dic = pic[i];
+            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                
+                CGFloat image_width = [dic[@"width"]floatValue];
+                CGFloat image_height = [dic[@"height"]floatValue];
+                
+                height = width * image_height / image_width;
+
+                NSString *url = dic[@"url"];
+                
+                UIImageView *imageview = [[UIImageView alloc]initWithFrame:CGRectMake(10, imageBottom, width, height)];
+                [imageview l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
+                imageview.tag = 200 + i;
+                [nameView addSubview:imageview];
+//                [imageview addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
+                imageBottom = imageview.bottom + 5;
+                
+                nameView.height = imageview.bottom;
+                
+                re_top = nameView.bottom;
+
+            }
         }
-        scroll.contentSize = CGSizeMake((width + 5) * count - 5, height);
-        nameView.height = scroll.bottom + 10;
+        
     }
     
-    _recommentTop = nameView.bottom;
+    _recommentTop = re_top;
     
     _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, nameView.bottom > DEVICE_HEIGHT ? nameView.bottom + 20 : DEVICE_HEIGHT);
 }
@@ -340,6 +359,11 @@
 {
     MapViewController *map = [[MapViewController alloc]init];
     map.coordinate = CLLocationCoordinate2DMake([_hospitalModel.latitude floatValue], [_hospitalModel.longitude floatValue]);
+    
+//    118.367589,35.115255
+//    116.312857,39.990157
+    
+//    map.coordinate = CLLocationCoordinate2DMake(39.990157, 116.312857);
     map.titleName = _hospitalModel.center_name;
     [self presentViewController:map animated:YES completion:^{
     }];

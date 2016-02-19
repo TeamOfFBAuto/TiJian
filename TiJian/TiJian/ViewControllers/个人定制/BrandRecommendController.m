@@ -160,6 +160,12 @@
 {
     DDLOG(@"pay");
     
+    //判断登录
+    if (![LoginManager isLogin:self]) {
+        
+        return;
+    }
+    
     if (_selectSetmeal) {
         
         NSDictionary *dic = _table.dataArray[_selectIndex];

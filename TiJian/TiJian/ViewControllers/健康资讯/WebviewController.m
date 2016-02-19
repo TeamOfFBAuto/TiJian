@@ -9,6 +9,7 @@
 #import "WebviewController.h"
 #import "UIWebView+AFNetworking.h"
 #import "ArticleListController.h"
+#import "GproductDetailViewController.h"//单品详情
 
 @interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate>
 {
@@ -113,8 +114,27 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    NSLog(@"navigationType %ld",(long)navigationType);
+    NSLog(@"request %@",request.URL.relativeString);
+    
+    NSString *relativeUrl = request.URL.relativeString;
+    
+    //单品链接
+    if ([relativeUrl rangeOfString:@"product_id"].length > 0) {
+        
+        NSArray *arr = [relativeUrl componentsSeparatedByString:@":"];
+        if (arr.count > 1) {
+            NSString *productId = [arr lastObject];
+            GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+            cc.productId = productId;
+            [self.navigationController pushViewController:cc animated:YES];
+            
+            return NO;
+        }
+    }
     return YES;
 }
+
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];

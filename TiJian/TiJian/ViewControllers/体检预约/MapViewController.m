@@ -260,10 +260,10 @@
     NSLog(@"进入罗盘态");
     [_locService startUserLocationService];
 //    _mapView.showsUserLocation = NO;
-    _mapView.zoomLevel = 13;
+//    _mapView.zoomLevel = 13;
     _mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView.showsUserLocation = YES;
-//    [_mapView  setCenterCoordinate:self.coordinate];
+//    [_mapView  setCenterCoordinate:self.coordinate];//目标地址作为中心
 }
 
 #pragma mark - 定位相关
@@ -274,78 +274,59 @@
     NSLog(@"start locate");
 }
 
+/*!
+ *  @brief  根据已有的标注数据计算得到刚好可以全部展示的QCoordinateRegion
+ *
+ *  @param list 数组元素为BMKPointAnnotation
+ *
+ *  @return QCoordinateRegion
+ */
+- (BMKMapRect)minixumMapRectForMapPoints:(NSArray *)list{
+    NSAssert(list != nil && list.count > 1, @"%s: invalid arguments", __func__);
+    
+    BMKPointAnnotation *mapAnno = [list objectAtIndex:0];
+    BMKMapPoint mapPoint = BMKMapPointForCoordinate(mapAnno.coordinate);
+    
+//    mapPoint
+    
+    CGFloat minX = mapPoint.x;
+    CGFloat minY = mapPoint.y;
+    CGFloat maxX = minX;
+    CGFloat maxY = minY;
+    
+    /* Traverse and find the min, max. */
+    for (int i = 1; i < list.count; i++){
+        BMKPointAnnotation *mapAnno = [list objectAtIndex:i];
+        BMKMapPoint point = BMKMapPointForCoordinate(mapAnno.coordinate);
+        if (point.x < minX){
+            minX = point.x;
+        }
+        
+        if (point.x > maxX){
+            maxX = point.x;
+        }
+        
+        if (point.y < minY){
+            minY = point.y;
+        }
+        
+        if (point.y > maxY){
+            maxY = point.y;
+        }
+    }
+    
+    /* Construct outside min rectangle. */
+    BMKMapRect mapRect = BMKMapRectMake(minX, minY, fabs(maxX - minX), fabs(maxY - minY));
+    
+    //    QCoordinateRegion region = QMCoordinateRegionForMapRect(mapRect);
+    return mapRect;
+}
+
 //用户方向更新后，会调用此函数
 - (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
 {
     [_mapView updateLocationData:userLocation];
-//    NSLog(@"heading is %@",userLocation.heading);
-    if (_isFirst) { //第一次进来
-        
-        _isFirst = NO;
-    //        {{{"50m","100m","200m","500m","1km","2km","5km","10km","20km","25km","50km","100km","200km","500km","1000km","2000km"}
-//        CLLocationCoordinate2D user = userLocation.location.coordinate;
-//        BMKMapPoint point1 = BMKMapPointForCoordinate(user);
-//        BMKMapPoint point2 = BMKMapPointForCoordinate(self.coordinate);
-//        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-//        
-//        DDLOG(@"---distance%f",distance);
-//        
-//        CLLocationCoordinate2D coordinate;
-//        coordinate.latitude = user.latitude;//纬度
-//        coordinate.longitude = user.longitude;//经度
-//        
-//        BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake(self.coordinate, BMKCoordinateSpanMake(0.1,0.1));
-//        BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
-//        
-//        [_mapView setRegion:adjustedRegion animated:YES];
-//        
-//        [_mapView getMapStatus];
-        
-//        - (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(UIView *)view;
-
-
-//        [_mapView showAnnotations:@[[self annocationWithCoordinate:user title:@"ahh"],self.targetAnnocation] animated:YES];
-        
-//        int level = 3;
-//        if (distance <= 50) {
-//            level = 3;
-//        }else if (distance <= 100){
-//            level = 4;
-//        }else if (distance <= 200){
-//            level = 5;
-//        }else if (distance <= 500){
-//            level = 6;
-//        }else if (distance <= 1000){
-//            level = 7;
-//        }else if (distance <= 2000){
-//            level = 8;
-//        }else if (distance <= 5000){
-//            level = 9;
-//        }else if (distance <= 10000){
-//            level = 10;
-//        }else if (distance <= 20 * 1000){
-//            level = 11;
-//        }else if (distance <= 25 * 1000){
-//            level = 12;
-//        }else if (distance <= 50 * 1000){
-//            level = 13;
-//        }else if (distance <= 100 * 1000){ //100km
-//            level = 14;
-//        }else if (distance <= 200 * 1000){
-//            level = 15;
-//        }else if (distance <= 500 * 1000){
-//            level = 16;
-//        }else if (distance <= 1000 * 1000){
-//            level = 17;
-//        }else if (distance <= 2000 * 1000){
-//            level = 18;
-//        }else{
-//            level = 19;
-//        }
-//        _mapView.zoomLevel = level;
-//        DDLOG(@"level %f",_mapView.zoomLevel);
-    }
-    
+    NSLog(@"heading is %@",userLocation.heading);
 }
 
 //用户位置更新后，会调用此函数
@@ -358,7 +339,22 @@
     
     [_mapView updateLocationData:userLocation];
     
-//    [_mapView showAnnotations:@[userLocation,self.targetAnnocation] animated:YES];
+    CLLocationCoordinate2D user = userLocation.location.coordinate;
+    
+    //设置显示视野
+    
+    DDLOG(@"user %f %f",user.latitude,user.longitude);
+    
+    if (_isFirst && user.latitude > 0) { //第一次进来
+        
+        _isFirst = NO;
+
+//        NSArray *annotations = @[[self annocationWithCoordinate:user title:@"当前位置"],self.targetAnnocation];
+//        BMKMapRect mapRect = [self minixumMapRectForMapPoints:annotations];
+//        [_mapView setVisibleMapRect:mapRect animated:YES];
+        
+        [_mapView showAnnotations:@[[self annocationWithCoordinate:user title:@"当前位置"],self.targetAnnocation] animated:YES];
+    }
 }
 
 
@@ -461,6 +457,39 @@
 - (void)mapView:(BMKMapView *)mapView didAddAnnotationViews:(NSArray *)views
 {
     NSLog(@"didAddAnnotationViews");
+    
+    //声明解析时对坐标数据的位置区域的筛选，包括经度和纬度的最小值和最大值
+    CLLocationDegrees minLat;
+    CLLocationDegrees maxLat;
+    CLLocationDegrees minLon;
+    CLLocationDegrees maxLon;
+    
+//    CLLocationCoordinate2D user = _mapView.
+    
+    //对比筛选出最小纬度，最大纬度；最小经度，最大经度
+//    minLat = MIN(self.coordinate.latitude, user.latitude);
+//    maxLat = MAX(self.coordinate.latitude, user.latitude);
+//    minLon = MIN(self.coordinate.longitude, user.longitude);
+//    maxLon = MAX(self.coordinate.longitude, user.longitude);
+//    
+//    //动态的根据坐标数据的区域，来确定地图的显示中心点和缩放级别
+//    //        if (_carPointArray.count > 0) {
+//    //计算中心点
+//    CLLocationCoordinate2D centCoor;
+//    centCoor.latitude = (CLLocationDegrees)((maxLat+minLat) * 0.5f);
+//    centCoor.longitude = (CLLocationDegrees)((maxLon+minLon) * 0.5f);
+//    BMKCoordinateSpan span;
+//    //计算地理位置的跨度
+//    span.latitudeDelta = maxLat - minLat;
+//    span.longitudeDelta = maxLon - minLon;
+//    //得出数据的坐标区域
+//    BMKCoordinateRegion region = BMKCoordinateRegionMake(centCoor, span);
+//    //百度地图的坐标范围转换成相对视图的位置
+//    CGRect fitRect = [_mapView convertRegion:region toRectToView:_mapView];
+//    //将地图视图的位置转换成地图的位置
+//    BMKMapRect fitMapRect = [_mapView convertRect:fitRect toMapRectFromView:_mapView];
+//    //设置地图可视范围为数据所在的地图位置
+//    [_mapView setVisibleMapRect:fitMapRect animated:YES];
 }
 
 
