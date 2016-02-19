@@ -41,6 +41,7 @@
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
+    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_table showRefreshHeader:YES];
 }
 
@@ -56,7 +57,6 @@
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];

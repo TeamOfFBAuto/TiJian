@@ -11,7 +11,7 @@
 static int seconds = 60;//计时60s
 #define kSeconds 60
 
-@interface GRegisterViewController ()<UITextFieldDelegate>
+@interface GRegisterViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 {
     NSMutableArray *_yuanViewArray;
     NSMutableArray *_downYuanTitleLabelArray;
@@ -35,6 +35,8 @@ static int seconds = 60;//计时60s
     self.registerBlock = nil;
     [timer invalidate];
     timer = nil;
+    
+    DDLOG(@"注册 dealloc");
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -42,6 +44,12 @@ static int seconds = 60;//计时60s
     [super viewWillAppear:animated];
     
     [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"注册"];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self renewTimer];
 }
 
 - (void)viewDidLoad {
@@ -473,18 +481,51 @@ static int seconds = 60;//计时60s
                              };
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+     @WeakObj(self);
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_REGISTER_ACTION parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
-        [LTools showMBProgressWithText:@"注册成功" addToView:self.view];
-        
-        [self performSelector:@selector(clickToClose) withObject:nil afterDelay:1.5];
+        int newer_coupon = [result[@"newer_coupon"]intValue];
+        [Weakself actionForRegiterSuccess:newer_coupon];
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         NSLog(@"failDic %@",result);
     }];
 }
+
+/**
+ *  注册成功
+ *
+ *  @param newerCoupon 是否领取新人优惠劵
+ */
+- (void)actionForRegiterSuccess:(int)newerCoupon
+{
+    
+    int newer_coupon = newerCoupon;
+    if (newer_coupon == 1) { //领取了新人优惠劵
+        
+        NSString *title = @"注册成功";
+        NSString *msg = @"恭喜您获得新人优惠劵一张,已放入您的钱包";
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+        
+    }else
+    {
+        [LTools showMBProgressWithText:@"注册成功" addToView:self.view];
+        
+        [self performSelector:@selector(clickToClose) withObject:nil afterDelay:0.5];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        
+        [self performSelector:@selector(clickToClose) withObject:nil afterDelay:0.5];
+    }
+}
+
 
 - (void)clickToClose {
     
@@ -521,6 +562,8 @@ static int seconds = 60;//计时60s
         title = [NSString stringWithFormat:@"%ds",seconds];
     }
     self.codeLabel.text = title;
+    DDLOG(@"计算秒数 %@",title);
+
     
     if (seconds != 0) {
         seconds --;
