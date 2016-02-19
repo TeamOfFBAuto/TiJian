@@ -224,7 +224,7 @@
                 if ([coupon.type intValue] == 1) {//满减
                     CGFloat total_p = 0;
                     for (ProductModel *product in self.dataArray) {
-                        if (product.brand_id == coupon.brand_id) {
+                        if ([product.brand_id integerValue] == [coupon.brand_id integerValue]) {
                             total_p +=[product.current_price floatValue]*[product.product_num intValue];
                         }
                     }
@@ -241,7 +241,7 @@
                     
                     
                     for (ProductModel *prodt in self.dataArray) {
-                        if (prodt.brand_id == coupon.brand_id) {
+                        if ([prodt.brand_id integerValue] == [coupon.brand_id integerValue]) {
                             //按比例均摊到每件商品上的满减价格
                             CGFloat bili = [prodt.current_price floatValue] * [prodt.product_num intValue]/total_p;
                             prodt.afterUsedYouhuiquan_Price = [prodt.current_price floatValue] - youhuiquan_1*bili;
@@ -253,7 +253,7 @@
                 }else if ([coupon.type intValue] == 2){//打折
                     CGFloat p_t_price = 0;
                     for (ProductModel *product in self.dataArray) {
-                        if (coupon.brand_id == product.brand_id) {
+                        if ([coupon.brand_id integerValue] == [product.brand_id integerValue]) {
                             p_t_price += [product.current_price floatValue] *[product.product_num intValue];
                             product.afterUsedYouhuiquan_Price = [product.current_price floatValue]*[coupon.discount_num floatValue];
                         }
@@ -335,7 +335,7 @@
                 
                 CGFloat p_t_price = 0;
                 for (ProductModel *product in self.dataArray) {
-                    if (model.brand_id == product.brand_id) {
+                    if ([model.brand_id integerValue] == [product.brand_id integerValue]) {
                         p_t_price += product.afterUsedYouhuiquan_Price *[product.product_num intValue];
                     }
                 }
