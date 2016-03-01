@@ -145,14 +145,21 @@
 
 //融云
 //1、开发环境
-#define RONGCLOUD_IM_APPKEY    @"p5tvi9dst1qn4" //融云账号 18600912932
-#define RONGCLOUD_IM_APPSECRET @"qCqG93VU6WBz"
+//#define RONGCLOUD_IM_APPKEY    @"p5tvi9dst1qn4" //融云账号 18600912932
+//#define RONGCLOUD_IM_APPSECRET @"qCqG93VU6WBz"
+
+//1、发布环境
+#define RONGCLOUD_IM_APPKEY    @"n19jmcy59o089"
+#define RONGCLOUD_IM_APPSECRET @"aeVAMwLAZF"
 
 //融云客服 1.0
 #define SERVICE_ID @"KEFU1448965696367"
 
-//融云客服 2.0
-#define SERVICE_ID_2 @"KEFU144894028332333"
+//融云客服 2.0 开发
+//#define SERVICE_ID_2 @"KEFU144894028332333"
+
+//正式
+#define SERVICE_ID_2 @"KEFU145261606391628"
 
 //==========================待注册
 
@@ -170,7 +177,7 @@
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
 
 //是否开启所有日志
-#define EnableErroLogCode 0  //n代表显示大于n的所有错误信息 发布时改为2000
+#define EnableErroLogCode 2000  //n代表显示大于n的所有错误信息 发布时改为2000
 
 
 #endif

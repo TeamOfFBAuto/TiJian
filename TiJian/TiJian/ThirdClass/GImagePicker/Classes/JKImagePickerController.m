@@ -16,6 +16,9 @@
 #import "JKPhotoBrowser.h"
 #import "PhotoAlbumManager.h"
 
+#import <AVFoundation/AVCaptureDevice.h>
+#import <AVFoundation/AVMediaFormat.h>
+
 ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePickerControllerFilterType type) {
     switch (type) {
         case JKImagePickerControllerFilterTypeNone:
@@ -33,7 +36,7 @@ ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePick
 }
 
 
-@interface JKImagePickerController ()<JKAssetsGroupsViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,JKAssetsViewCellDelegate,JKPhotoBrowserDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface JKImagePickerController ()<JKAssetsGroupsViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,JKAssetsViewCellDelegate,JKPhotoBrowserDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) ALAssetsLibrary     *assetsLibrary;
 @property (nonatomic, strong) NSArray *groupTypes;
@@ -61,6 +64,7 @@ ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePick
 @property (nonatomic, strong) UILabel       *finishLabel;
 
 @property (nonatomic, strong) UICollectionView   *collectionView;
+@property (nonatomic, assign) BOOL isFirstAlert;//是否是第一次提示错误
 
 @end
 
@@ -84,7 +88,7 @@ ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePick
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
-    
+    self.isFirstAlert = YES;//默认第一次
     [self collectionView];
     [self toolbar];
     [self loadAssetsGroups];
@@ -333,10 +337,76 @@ ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePick
                                                   }
                                               }
                                           } failureBlock:^(NSError *error) {
-
+                                              
+                                              [weakSelf actionForAccessLibraryErro:error];//update by lcw
                                           }];
     }
 }
+
+- (void)actionForAccessLibraryErro:(NSError *)error
+{
+    if (!_isFirstAlert) {
+        
+        return;
+    }else
+    {
+        _isFirstAlert = NO;
+    }
+    
+//    NSString *errorMessage;
+//    switch ([error code]) {
+//        case ALAssetsLibraryAccessUserDeniedError:
+//        case ALAssetsLibraryAccessGloballyDeniedError:
+//            errorMessage = @"用户拒绝访问相册,请在<隐私>中开启";
+//            break;
+//        default:
+//            errorMessage = @"Reason unknown.";
+//            break;
+//    }
+    if (error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //无权限
+            NSString *title = @"此应用没有权限访问您的相册或视频";
+            NSString *errorMessage = @"您可以在\"隐私设置\"中启用访问。";
+            if (IOS8_OR_LATER) {
+                
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                                   message:errorMessage
+                                                                  delegate:self
+                                                         cancelButtonTitle:@"取消"
+                                                         otherButtonTitles:@"设置", nil];
+                [alertView show];
+            }else
+            {
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                                   message:errorMessage
+                                                                  delegate:nil
+                                                         cancelButtonTitle:@"确定"
+                                                         otherButtonTitles:nil, nil];
+                [alertView show];
+            }
+            
+        });
+    }
+}
+
+
+#pragma mark - UIAlerViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        
+    }else if (buttonIndex == 1){
+        
+        if (IOS8_OR_LATER) {
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        }
+    }
+}
+
+#pragma mark -
 
 - (NSArray *)sortAssetsGroups:(NSArray *)assetsGroups typesOrder:(NSArray *)typesOrder
 {
@@ -591,6 +661,7 @@ static NSString *kJKAssetsFooterViewIdentifier = @"kJKAssetsFooterViewIdentifier
 }
 
 #pragma mark - JKAssetsViewCellDelegate
+
 - (void)startPhotoAssetsViewCell:(JKAssetsViewCell *)assetsCell
 {
     if (self.selectedAssetArray.count>=self.maximumNumberOfSelection) {
@@ -600,12 +671,46 @@ static NSString *kJKAssetsFooterViewIdentifier = @"kJKAssetsFooterViewIdentifier
     }
     
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        
+        
+        //相机
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (authStatus == kCLAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)
+        {
+            //无权限
+            NSString *title = @"此应用没有权限访问您的相机";
+            NSString *errorMessage = @"您可以在\"隐私设置\"中启用访问。";
+            
+            //iOS8 之后可以打开系统设置界面
+            if (IOS8_OR_LATER) {
+                
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                                   message:errorMessage
+                                                                  delegate:self
+                                                         cancelButtonTitle:@"取消"
+                                                         otherButtonTitles:@"设置", nil];
+                [alertView show];
+            }else
+            {
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                                   message:errorMessage
+                                                                  delegate:nil
+                                                         cancelButtonTitle:@"确定"
+                                                         otherButtonTitles:nil, nil];
+                [alertView show];
+            }
+            return;
+        }
+        
         UIImagePickerController *pickerController = [[UIImagePickerController alloc]init];
         pickerController.allowsEditing = NO;
         pickerController.delegate = self;
         pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
         [self presentViewController:pickerController animated:YES completion:^{
         }];
+    }else
+    {
+        
     }
 }
 

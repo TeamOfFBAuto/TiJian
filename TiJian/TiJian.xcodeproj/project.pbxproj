@@ -280,6 +280,7 @@
 		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; };
 		13D119A41C27A3920042EB6D /* RefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D119A31C27A3920042EB6D /* RefreshFooterView.m */; };
 		13D119A81C2803970042EB6D /* LSuitableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D119A71C2803970042EB6D /* LSuitableView.m */; };
+		13D254D31C85859F005A45CF /* RCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D254D21C85859F005A45CF /* RCMapViewController.m */; };
 		13D6DA871C48C6A90091FCFE /* extension_31_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA6B1C48C6A90091FCFE /* extension_31_1.png */; };
 		13D6DA881C48C6A90091FCFE /* extension_31_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA6C1C48C6A90091FCFE /* extension_31_2.png */; };
 		13D6DA891C48C6A90091FCFE /* extension_32_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA6D1C48C6A90091FCFE /* extension_32_1.png */; };
@@ -938,6 +939,8 @@
 		13D119A31C27A3920042EB6D /* RefreshFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshFooterView.m; sourceTree = "<group>"; };
 		13D119A61C2803970042EB6D /* LSuitableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSuitableView.h; sourceTree = "<group>"; };
 		13D119A71C2803970042EB6D /* LSuitableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSuitableView.m; sourceTree = "<group>"; };
+		13D254D11C85859F005A45CF /* RCMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMapViewController.h; sourceTree = "<group>"; };
+		13D254D21C85859F005A45CF /* RCMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMapViewController.m; sourceTree = "<group>"; };
 		13D6DA6B1C48C6A90091FCFE /* extension_31_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_31_1.png; sourceTree = "<group>"; };
 		13D6DA6C1C48C6A90091FCFE /* extension_31_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_31_2.png; sourceTree = "<group>"; };
 		13D6DA6D1C48C6A90091FCFE /* extension_32_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_32_1.png; sourceTree = "<group>"; };
@@ -2657,6 +2660,8 @@
 			children = (
 				13FFBFC61C0D4FEA0077DD29 /* RCDChatViewController.h */,
 				13FFBFC71C0D4FEA0077DD29 /* RCDChatViewController.m */,
+				13D254D11C85859F005A45CF /* RCMapViewController.h */,
+				13D254D21C85859F005A45CF /* RCMapViewController.m */,
 				13FFBFC91C0D504B0077DD29 /* RoncCloudCustomClass */,
 			);
 			path = "客服";
@@ -3670,6 +3675,7 @@
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
 				E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */,
+				13D254D31C85859F005A45CF /* RCMapViewController.m in Sources */,
 				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
 				131A177D1BF341E900B12D2F /* PreViewCell.m in Sources */,
 				E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */,
@@ -3796,8 +3802,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3819,7 +3825,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "844040c0-6776-4a5f-8bd5-87df7f345e9a";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -3841,8 +3847,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -3857,7 +3863,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "844040c0-6776-4a5f-8bd5-87df7f345e9a";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3869,8 +3875,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3891,9 +3897,9 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -3904,8 +3910,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3926,9 +3932,9 @@
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/Wechat",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
+				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5703892b-7511-4bf3-bee0-89955158bc7c";
+				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;
@@ -3937,12 +3943,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				INFOPLIST_FILE = TiJianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
+				PROVISIONING_PROFILE = "844040c0-6776-4a5f-8bd5-87df7f345e9a";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TiJian.app/TiJian";
 			};
 			name = Debug;
@@ -3951,12 +3957,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: chaowei li (WJC7LQ9EE7)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				INFOPLIST_FILE = TiJianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d889cdc4-556d-4b03-b120-252cc1a4abc4";
+				PROVISIONING_PROFILE = "844040c0-6776-4a5f-8bd5-87df7f345e9a";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TiJian.app/TiJian";
 			};
 			name = Release;
@@ -3964,13 +3970,13 @@
 		13F1F2961BBA78EE00885D31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				INFOPLIST_FILE = TiJianUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "71a6d456-3d77-46aa-aa79-0a9e6770ccce";
+				PROVISIONING_PROFILE = "844040c0-6776-4a5f-8bd5-87df7f345e9a";
 				TEST_TARGET_NAME = TiJian;
 				USES_XCTRUNNER = YES;
 			};
@@ -3979,13 +3985,13 @@
 		13F1F2971BBA78EE00885D31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co. LTD";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing yijiayi Network technology co., LTD (4QFHYF622N)";
 				INFOPLIST_FILE = TiJianUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hemaEnterprise;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "71a6d456-3d77-46aa-aa79-0a9e6770ccce";
+				PROVISIONING_PROFILE = "844040c0-6776-4a5f-8bd5-87df7f345e9a";
 				TEST_TARGET_NAME = TiJian;
 				USES_XCTRUNNER = YES;
 			};

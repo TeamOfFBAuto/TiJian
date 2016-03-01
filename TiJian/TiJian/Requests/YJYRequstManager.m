@@ -75,6 +75,10 @@
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript", nil];
+    // 设置超时时间
+    [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
+    manager.requestSerializer.timeoutInterval = 10.f;
+    [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
     
     AFHTTPRequestOperation *requestOpertation;
     

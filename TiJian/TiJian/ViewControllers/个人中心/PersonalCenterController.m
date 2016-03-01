@@ -17,8 +17,11 @@
 #import "MyWalletViewController.h"//我的钱包
 #import "MessageCenterController.h"//消息中心
 #import "MessageViewController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <AVFoundation/AVCaptureDevice.h>
+#import <AVFoundation/AVMediaFormat.h>
 
-@interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 {
     UITableView *_table;
     NSArray *_dataArray;
@@ -401,6 +404,44 @@
 
 -(void)choseImageWithTypeCameraTypePhotoLibrary:(UIImagePickerControllerSourceType)type{
     
+    if (type == UIImagePickerControllerSourceTypeCamera) { //相机
+        if (![UIImagePickerController isSourceTypeAvailable:type]) {
+            //不支持相机
+            return;
+        }
+        
+        //相机
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (authStatus == kCLAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)
+        {
+            //无权限
+            NSString *title = @"此应用没有权限访问您的相机";
+            NSString *errorMessage = @"您可以在\"隐私设置\"中启用访问。";
+            
+            //iOS8 之后可以打开系统设置界面
+            if (IOS8_OR_LATER) {
+                
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                                   message:errorMessage
+                                                                  delegate:self
+                                                         cancelButtonTitle:@"取消"
+                                                         otherButtonTitles:@"设置", nil];
+                [alertView show];
+            }else
+            {
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                                   message:errorMessage
+                                                                  delegate:nil
+                                                         cancelButtonTitle:@"确定"
+                                                         otherButtonTitles:nil, nil];
+                [alertView show];
+            }
+            return;
+        }
+    }
+    
+    
+    
     UIImagePickerController * imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.delegate =self;
     imagePicker.sourceType = type;
@@ -411,6 +452,25 @@
         
     }];
 }
+
+//NSString *title = [NSString stringWithFormat:@"打开\"定位服务\"来允许\"%@\"确定您的位置",[LTools getAppName]];
+//NSString *mes = @"以便获取附近分院信息";
+//UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:mes delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
+//[alert show];
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        
+    }else if (buttonIndex == 1){
+        
+        if (IOS8_OR_LATER) {
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        }
+    }
+}
+
 
 -(void)rightButtonTap:(UIButton *)sender
 {

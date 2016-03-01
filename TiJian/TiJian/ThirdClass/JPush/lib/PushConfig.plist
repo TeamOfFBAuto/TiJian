@@ -5,8 +5,8 @@
 	<key>APS_FOR_PRODUCTION</key>
 	<string>1</string>
 	<key>APP_KEY</key>
-	<string>881df2086185d4636f1d3efe</string>
+	<string>d191338077d6b2157afe2bf7</string>
 	<key>CHANNEL</key>
-	<string>enterprise</string>
+	<string>AppStore</string>
 </dict>
 </plist>

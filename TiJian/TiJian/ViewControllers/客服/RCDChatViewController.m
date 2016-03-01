@@ -35,6 +35,9 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     NSString *_phoneNumber;//电话号码
 }
 
+@property(nonatomic,retain)UIButton *leftButton;
+@property(nonatomic,retain)UILabel *navigationTitle;
+
 @end
 
 @implementation RCDChatViewController
@@ -60,12 +63,21 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
+//    {
+//        [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics: UIBarMetricsDefault];
+//        [self.leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
+//        _navigationTitle.textColor = DEFAULT_TEXTCOLOR;
+//    }
 }
 
 -(void)viewDidLoad
 {
     [super viewDidLoad];
 
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
     UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     spaceButton1.width = -7;
     UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(10,8,40,44)];
@@ -74,7 +86,7 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     UIBarButtonItem *back_item=[[UIBarButtonItem alloc]initWithCustomView:button_back];
     self.navigationItem.leftBarButtonItems=@[spaceButton1,back_item];
-    
+    _leftButton = button_back;
  
     UILabel *_myTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
     _myTitleLabel.textAlignment = NSTextAlignmentCenter;
@@ -82,6 +94,16 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
     _myTitleLabel.font = [UIFont systemFontOfSize:17];
     self.navigationItem.titleView = _myTitleLabel;
+    _navigationTitle = _myTitleLabel;
+    
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
+//    {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
+//        [button_back setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
+//        _myTitleLabel.textColor = [UIColor whiteColor];//白色字体
+//    }
+    
+    [self.pluginBoardView removeItemAtIndex:2];
     
     if (_msgType == CustomMsgTypeProduct) {
         //会话页面注册 UI
@@ -444,6 +466,16 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
 
     }
 }
+
+///**
+// *  打开地理位置。开发者可以重写，自己根据经纬度打开地图显示位置。默认使用内置地图
+// *
+// *  @param locationMessageContent 位置消息
+// */
+//- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent
+//{
+//    
+//}
 
 #pragma - mark UIAlertViewDelegate <NSObject>
 
