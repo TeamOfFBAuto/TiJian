@@ -471,7 +471,6 @@
     }
 }
 
-
 -(void)rightButtonTap:(UIButton *)sender
 {
     if ([LoginManager isLogin:self]) {
