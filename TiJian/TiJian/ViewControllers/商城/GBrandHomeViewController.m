@@ -24,6 +24,7 @@
 #import "GProductCellTableViewCell.h"
 #import "GproductDetailViewController.h"
 #import "BrandDetailViewController.h"
+#import "BrandSearchViewController.h"
 
 @interface GBrandHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
@@ -936,7 +937,7 @@
         }
     }
     
-    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    BrandSearchViewController *cc = [[BrandSearchViewController alloc]init];
     cc.brand_id = self.brand_id;
     cc.brand_name = self.brand_name;
     cc.theSearchWorld = theWord;

@@ -244,7 +244,6 @@
 
 -(void)myNavcRightBtnClicked{
     
-    
     if (_searchState == 0) {
         [self.rightSideBar show];
     }else if (_searchState == 1){
@@ -252,9 +251,6 @@
         [_searchTf resignFirstResponder];
         _mySearchView.hidden = YES;
     }
-    
-    
-    
 }
 
 //返回上个界面
