@@ -43,7 +43,7 @@
 @property(nonatomic,retain)NSString *status;
 @property(nonatomic,retain)NSString *center_latitude;//维度
 @property(nonatomic,retain)NSString *center_longitude;//经度
-
+@property(nonatomic,retain)NSString *report_status;//体检报告的进度状态
 
 
 @end

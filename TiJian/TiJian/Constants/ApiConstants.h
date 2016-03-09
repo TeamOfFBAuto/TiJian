@@ -374,6 +374,12 @@
 //get 方式 authcode、expired 是否过期的 0=》未过期 1=》已过期、page、per_page
 #define GET_APPOINT @"/index.php?d=api&c=appoint&m=get_appoints"
 
+//获取已体检的预约列表
+#define GET_FINISHED_APPOINT @"/index.php?d=api&c=appoint&m=get_finished_appoints"
+
+//获取已体检进度详情
+#define GET_AppointProgressDetail @"/index.php?d=api&c=appoint&m=view_finished_appoint"
+
 //5、查看预约详情
 //get 方式、authcode、appoint_id 预约id
 #define GET_APPOINT_DETAIL @"/index.php?d=api&c=appoint&m=view_appoint"

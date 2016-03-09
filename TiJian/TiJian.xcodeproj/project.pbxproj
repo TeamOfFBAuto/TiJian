@@ -158,6 +158,9 @@
 		136276651C1312420077C75D /* MoreReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276641C1312420077C75D /* MoreReportViewController.m */; };
 		136276841C1320770077C75D /* ZoomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276831C1320770077C75D /* ZoomScrollView.m */; };
 		1362768A1C1328130077C75D /* FBPhotoBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276891C1328130077C75D /* FBPhotoBrowserController.m */; };
+		136ABCE01C8EB41900F2B834 /* AppointProgressDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */; };
+		136ABCE31C8FF3F300F2B834 /* appointProgresscircle_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */; };
+		136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */; };
 		137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780A91C1183AD00677363 /* MedicalReportController.m */; };
 		137780AC1C1188BE00677363 /* hema_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137780AB1C1188BE00677363 /* hema_heart@2x.png */; };
 		137780AF1C118A3200677363 /* ResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780AE1C118A3200677363 /* ResultView.m */; };
@@ -797,6 +800,10 @@
 		136276831C1320770077C75D /* ZoomScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomScrollView.m; sourceTree = "<group>"; };
 		136276881C1328130077C75D /* FBPhotoBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBPhotoBrowserController.h; sourceTree = "<group>"; };
 		136276891C1328130077C75D /* FBPhotoBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBPhotoBrowserController.m; sourceTree = "<group>"; };
+		136ABCDE1C8EB41900F2B834 /* AppointProgressDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointProgressDetailController.h; sourceTree = "<group>"; };
+		136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointProgressDetailController.m; sourceTree = "<group>"; };
+		136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_1@2x.png"; sourceTree = "<group>"; };
+		136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_2@2x.png"; sourceTree = "<group>"; };
 		137780A81C1183AD00677363 /* MedicalReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalReportController.h; sourceTree = "<group>"; };
 		137780A91C1183AD00677363 /* MedicalReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalReportController.m; sourceTree = "<group>"; };
 		137780AB1C1188BE00677363 /* hema_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema_heart@2x.png"; sourceTree = "<group>"; };
@@ -1587,6 +1594,8 @@
 		1303C33A1BEB0D7100700847 /* 预约 */ = {
 			isa = PBXGroup;
 			children = (
+				136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */,
+				136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */,
 				13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */,
 				13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */,
 				13F242171BF4925A002C9D81 /* yuyue_jiantou_down@2x.png */,
@@ -1706,6 +1715,8 @@
 			children = (
 				13F2422F1BF5E17D002C9D81 /* AppointmentViewController.h */,
 				13F242301BF5E17D002C9D81 /* AppointmentViewController.m */,
+				136ABCDE1C8EB41900F2B834 /* AppointProgressDetailController.h */,
+				136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */,
 				1320F27B1C32325E008E5B05 /* ChooseHopitalController.h */,
 				1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */,
 				13FCD69F1BFAD6BD005AE05B /* AppointDetailController.h */,
@@ -3278,6 +3289,7 @@
 				139333BA1BE0DF3E00B4628B /* 19_2@2x.png in Resources */,
 				13D6DA9D1C48C6A90091FCFE /* extension_36_3.png in Resources */,
 				1385D39A1C3BD672006DE304 /* message_baogao@2x.png in Resources */,
+				136ABCE31C8FF3F300F2B834 /* appointProgresscircle_1@2x.png in Resources */,
 				1303C35E1BEB0D7100700847 /* personal_yuyue_daohang@2x.png in Resources */,
 				1303C3511BEB0D7100700847 /* personal_pinjia_tianjia@2x.png in Resources */,
 				13B07A131C06DB7300742AF7 /* homepage_star@2x.png in Resources */,
@@ -3288,6 +3300,7 @@
 				E3E6C3611BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png in Resources */,
 				E3D8AE501BF6203F003AE2E3 /* youhuiquan_r@2x.png in Resources */,
 				1303C3711BEB0D7200700847 /* fenyuan@2x.png in Resources */,
+				136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */,
 				139333A51BE0DF3E00B4628B /* 12_1@2x.png in Resources */,
 				13D6DA9E1C48C6A90091FCFE /* extension_36_4.png in Resources */,
 				139333F31BE0DF3E00B4628B /* 8_1@2x.png in Resources */,
@@ -3584,6 +3597,7 @@
 				1322E0621C44DE12008A3222 /* CustomProductMsgCell.m in Sources */,
 				E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */,
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
+				136ABCE01C8EB41900F2B834 /* AppointProgressDetailController.m in Sources */,
 				13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */,
 				1303C2E11BE9FB2400700847 /* NSArray+Additons.m in Sources */,
 				E3E2B42C1BFB2491007988C5 /* SelectAddressCell.m in Sources */,
