@@ -184,10 +184,8 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         OrderModel *aModel = (OrderModel *)_msg_model;
         NSString *extra = [NSString stringWithFormat:@"orderId=%@",aModel.order_id];
         NSString *content = aModel.info_url;//订单详情链接
-        
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;
-        
         [self sendMessage:msg pushContent:@"订单详情"];
     }
     
