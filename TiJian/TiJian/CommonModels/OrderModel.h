@@ -67,6 +67,9 @@
 @property(nonatomic,retain)NSDictionary *invoice_info;//发票信息
 @property(nonatomic,retain)NSString *require_post;//快递方式 0电子体检码 1快递体检凭证
 
+@property(nonatomic,retain)NSString *info_url;//详情web链接
+
+
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 
 @end

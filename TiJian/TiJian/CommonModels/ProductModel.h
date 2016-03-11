@@ -83,4 +83,7 @@
 @property(nonatomic,retain)NSString *package_original_price;
 @property(nonatomic,retain)NSString *package_name;
 
+//详情web链接
+@property(nonatomic,retain)NSString *info_url;//详情web链接
+
 @end

@@ -170,9 +170,10 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     //发送单品图文消息
     if (_msgType == CustomMsgTypeProduct) {
         
-        NSString *extra = [NSString stringWithFormat:@"productId=%@",((ProductModel *)_msg_model).product_id];
-        NSString *content = @"http://www.baidu.com";//单品链接
-        
+        ProductModel *aModel = (ProductModel *)_msg_model;
+        NSString *extra = [NSString stringWithFormat:@"productId=%@",aModel.product_id];
+        NSString *content = aModel.info_url;//单品链接
+//        content = [NSString stringWithFormat:@"详情链接:%@",content];
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;
         [self sendMessage:msg pushContent:@"套餐详情"];
@@ -180,8 +181,9 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         
     }else if (_msgType == CustomMsgTypeOrder){
         
-        NSString *extra = [NSString stringWithFormat:@"orderId=%@",((OrderModel *)_msg_model).order_id];
-        NSString *content = @"http://www.baidu.com";//订单详情链接
+        OrderModel *aModel = (OrderModel *)_msg_model;
+        NSString *extra = [NSString stringWithFormat:@"orderId=%@",aModel.order_id];
+        NSString *content = aModel.info_url;//订单详情链接
         
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;

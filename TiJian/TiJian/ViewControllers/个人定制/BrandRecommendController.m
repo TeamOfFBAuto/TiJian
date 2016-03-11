@@ -119,19 +119,12 @@
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         NSArray *temp = result[@"data"];
-//        NSMutableArray *tt = [NSMutableArray arrayWithArray:temp];
-//        [tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];[tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];[tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];
         if (temp.count > 0) {
             
             if (!_bottom) {
