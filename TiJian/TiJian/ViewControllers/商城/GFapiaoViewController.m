@@ -266,6 +266,7 @@
             
             UILabel *c_label = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(fenLine.frame), DEVICE_WIDTH - 15, 35)];
             c_label.text = @"体检费";
+            c_label.textColor = [UIColor grayColor];
             c_label.font = [UIFont systemFontOfSize:13];
             [cell.contentView addSubview:c_label];
             

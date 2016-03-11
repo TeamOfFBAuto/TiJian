@@ -54,11 +54,7 @@
     _rtab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _rtab.refreshDelegate = self;
     _rtab.dataSource = self;
-    
     _rtab.tableHeaderView = [self creatTabHeaderView];
-    
-    
-    
     
     [self.view addSubview:_rtab];
     

@@ -187,8 +187,14 @@
         NSArray *arr = [self getChoseProducts];
         int ccc = (int)arr.count;
         
-        UIActionSheet *aaa = [[UIActionSheet alloc]initWithTitle:[NSString stringWithFormat:@"确认要删除这%d种商品吗",ccc] delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [aaa showInView:self.view];
+        if (ccc == 0) {
+            [GMAPI showAutoHiddenMBProgressWithText:@"请选择需要删除的套餐" addToView:self.view];
+        }else{
+            UIActionSheet *aaa = [[UIActionSheet alloc]initWithTitle:[NSString stringWithFormat:@"确认要删除这%d种商品吗",ccc] delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [aaa showInView:self.view];
+        }
+        
+        
         
         
     }else{

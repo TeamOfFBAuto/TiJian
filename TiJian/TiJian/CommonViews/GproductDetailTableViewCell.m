@@ -162,6 +162,31 @@
         height += line.frame.size.height;
         
     }else if (theindexPath.section == 2){//主要参数
+        
+//        //点击跳转到品牌店
+//        UIView *brandNameView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
+//        brandNameView.backgroundColor = [UIColor orangeColor];
+//        
+//        UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 15, 20, 20)];
+//        logoImv.backgroundColor = [UIColor orangeColor];
+////        [logoImv l_setImageWithURL:[NSURL URLWithString:model_b.brand_logo] placeholderImage:nil];
+//        logoImv.layer.cornerRadius = 10;
+//        [brandNameView addSubview:logoImv];
+//        
+//        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(logoImv.right + 5, logoImv.frame.origin.y, DEVICE_WIDTH - 10 - 20 - 5 - 10 - 8 - 5, 20)];
+//        titleLabel.backgroundColor = [UIColor orangeColor];
+//        titleLabel.font = [UIFont systemFontOfSize:12];
+//        [brandNameView addSubview:titleLabel];
+//        
+//        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 18, 17, 8, 15)];
+//        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_small.png"]];
+//        [brandNameView addSubview:jiantouImv];
+//        [brandNameView addTaget:self action:@selector(viewForHeaderClicked:) tag:20000];
+//        
+//        [self.contentView addSubview:brandNameView];
+        
+        
+        //主要参数
         UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 60, 15)];
         tLabel.font = [UIFont systemFontOfSize:14];
         tLabel.text = @"主要参数";

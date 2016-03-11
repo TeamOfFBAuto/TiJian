@@ -399,6 +399,7 @@
     self.searchTf.placeholder = @"在店内搜索您要找的商品";
     self.searchTf.delegate = self;
     self.searchTf.returnKeyType = UIReturnKeySearch;
+    self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
     

@@ -244,6 +244,7 @@
     self.searchTf.delegate = self;
     self.searchTf.text = self.theSearchWorld;
     self.searchTf.returnKeyType = UIReturnKeySearch;
+    self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
     

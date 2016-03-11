@@ -70,13 +70,13 @@
     return confromTimespStr;
 }
 
-//hh:mm:ss
+//HH:mm:ss
 +(NSString *)timechangeYMDhms:(NSString *)placetime
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[placetime doubleValue]];
     NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
     return confromTimespStr;

@@ -206,18 +206,16 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     
-//    [_searchView setWidth:DEVICE_WIDTH - 100];
-    
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
         UIView *alphaView = [effectView viewWithTag:10000];
-        if (_table.contentOffset.y > 64) {
+//        if (_table.contentOffset.y > 64) {
             CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
             alpha = MIN(alpha, 1);
             alphaView.alpha = alpha;
-        }else{
-            alphaView.alpha = 0;
-        }
+//        }else{
+//            alphaView.alpha = 0;
+//        }
     }
 }
 
@@ -229,8 +227,6 @@
     if (![LTools isEmpty:self.searchTf.text]) {
         [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
     }
-    
-    
     
     return YES;
 }
@@ -264,7 +260,7 @@
         
     }
     
-    
+    self.searchTf.text = theWord;
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.theSearchWorld = theWord;
@@ -889,6 +885,7 @@
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
     self.searchTf.returnKeyType = UIReturnKeySearch;
+    self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
     

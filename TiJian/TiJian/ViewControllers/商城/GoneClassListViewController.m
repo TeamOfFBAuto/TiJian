@@ -91,10 +91,6 @@
     [self prepareBrandListWithLocation];
     
     
-    
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -157,6 +153,8 @@
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
     self.searchTf.returnKeyType = UIReturnKeySearch;
+    self.searchTf.text = self.theSearchWorld;
+    self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
     

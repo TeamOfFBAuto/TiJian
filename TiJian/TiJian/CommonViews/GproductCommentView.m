@@ -40,7 +40,7 @@
                 [imv setFrame:CGRectMake(i*(imv_w+imv_j)+imv_j, CGRectGetMaxY(tLabel.frame)+10, imv_w, [GMAPI scaleWithHeight:0 width:imv_w theWHscale:1.6])];
             }
             NSDictionary *dic = model.comment_pic[i];
-            [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"url"]] placeholderImage:nil];
+            [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"thumb_url"]] placeholderImage:nil];
             imv.userInteractionEnabled = YES;
             imv.tag = 200+i;
             [_scrollView addSubview:imv];
@@ -117,6 +117,7 @@
     NSMutableArray *imgUrlArray = [NSMutableArray arrayWithCapacity:1];
     for (NSDictionary *dic in _theModel.comment_pic) {
         NSString *url_img = [dic stringValueForKey:@"url"];
+        
         [imgUrlArray addObject:url_img];
     }
     
