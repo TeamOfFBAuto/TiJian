@@ -11,8 +11,9 @@
 #import "GTranslucentSideBar.h"
 #import "ProductModel.h"
 #import "GProductCellTableViewCell.h"
+#import "GPushView.h"
 
-@interface BrandSearchViewController ()<UITextFieldDelegate,RefreshDelegate,UITableViewDataSource>
+@interface BrandSearchViewController ()<UITextFieldDelegate,RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,GpushViewDelegate>
 {
     UIView *_searchView;
     UIView *_kuangView;
@@ -30,8 +31,13 @@
     NSMutableArray *_productOneClassArray;
     BOOL _priceState;
     
+    GPushView *_pushView;
+    
 }
+
+
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;
+
 
 @end
 
@@ -41,10 +47,29 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+    _backBlackView.backgroundColor = [UIColor blackColor];
+    _backBlackView.alpha = 0.5;
     _searchState = 0;
+    
+    self.haveChooseGender = YES;
+    
+    if ([self.brand_id intValue] > 0) {
+        //过滤掉其他品牌
+        if ([LTools isEmpty:self.brand_name]) {
+            self.brand_name = @"其他品牌";
+        }
+        NSDictionary *dic = @{@"brand_id":self.brand_id,
+                              @"brand_name":self.brand_name
+                              };
+        self.brand_city_list = @[dic];
+    }
+    
+    
     
     //视图创建
     [self setupNavigation];
+    [self creatRightTranslucentSideBar];
     [self getFourBtnView];
     [self creatTab];
     
@@ -57,11 +82,17 @@
 }
 
 
+
+
+
+#pragma mark - 视图创建
+
 //创建tab
 -(void)creatTab{
     _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 42, DEVICE_WIDTH, DEVICE_HEIGHT-64-42) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
+    _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_rTab];
     [_rTab refreshNewData];
     
@@ -117,6 +148,30 @@
     
     [self.view addSubview:self.fourBtnView];
 }
+
+
+//创建侧滑栏
+-(void)creatRightTranslucentSideBar{
+    
+    // Create Right SideBar
+    self.rightSideBar = [[GTranslucentSideBar alloc] initWithDirection:YES];
+    self.rightSideBar.delegate = self;
+    self.rightSideBar.sideBarWidth = DEVICE_WIDTH*670.0/750;
+    self.rightSideBar.translucentStyle = UIBarStyleBlack;
+    self.rightSideBar.tag = 1;
+    
+    
+    
+    //避免滑动返回手势与此冲突
+    [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
+    
+    _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender isHaveShaixuanDic:self.shaixuanDic];
+    _pushView.delegate = self;
+    [self.rightSideBar setContentViewInSideBar:_pushView];
+    
+}
+
+
 
 
 -(void)forBtnClicked:(UIButton *)sender{
@@ -214,13 +269,7 @@
 }
 
 
--(void)setEffectViewAlpha:(CGFloat)theAlpha{
-    UIView *effectView = self.currentNavigationBar.effectContainerView;
-    if (effectView) {
-        UIView *alphaView = [effectView viewWithTag:10000];
-        alphaView.alpha = theAlpha;
-    }
-}
+
 
 
 /**
@@ -296,6 +345,20 @@
         _mySearchView.hidden = YES;
     }
 }
+
+
+#pragma mark - 代理方法
+
+-(void)shaixuanFinishWithDic:(NSDictionary *)dic{
+    self.shaixuanDic = dic;
+    [_rTab showRefreshHeader:YES];
+}
+
+-(void)therightSideBarDismiss{
+    
+    [self.rightSideBar dismiss];
+}
+
 
 #pragma mark - Gesture Handler
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
@@ -427,7 +490,16 @@
         _request = [YJYRequstManager shareInstance];
     }
     
-    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    NSMutableDictionary *temp_dic;
+    
+    if (self.shaixuanDic) {
+        temp_dic = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
+    }else{
+        temp_dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    }
+    
+   
     [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
     [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
     [temp_dic safeSetString:NSStringFromInt(_rTab.pageNum)forKey:@"page"];
@@ -465,10 +537,6 @@
             }
         }
     }
-    
-    
-    
-    
 
     
      [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:temp_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -502,13 +570,73 @@
         content = @"暂无可用套餐";
     }
     
-    
     ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
                                                     title:@"温馨提示"
                                                   content:content];
-    
     return result;
 }
+
+
+
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSLog(@"%s",__FUNCTION__);
+    _mySearchView.hidden = NO;
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    if (![LTools isEmpty:self.searchTf.text]) {
+        [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
+        [self changeSearchViewAndKuangFrameAndTfWithState:0];
+        [_searchTf resignFirstResponder];
+        _mySearchView.hidden = YES;
+    }
+    
+    
+    return YES;
+}
+
+
+
+#pragma mark - GsearchViewDelegate
+
+-(void)setEffectViewAlpha:(CGFloat)theAlpha{
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        alphaView.alpha = theAlpha;
+    }
+}
+
+
+-(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
+    
+    [_searchTf resignFirstResponder];
+    
+//    if (!isHot) {
+//        if (![LTools isEmpty:self.searchTf.text]) {
+//            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+//        }
+//    }
+    if (![LTools isEmpty:self.searchTf.text]) {
+        self.theSearchWorld = theWord;
+        [_rTab showRefreshHeader:YES];
+    }
+    
+//    BrandSearchViewController *cc = [[BrandSearchViewController alloc]init];
+//    cc.brand_id = self.brand_id;
+//    cc.brand_name = self.brand_name;
+//    cc.theSearchWorld = theWord;
+//    [self.navigationController pushViewController:cc animated:YES];
+    
+}
+
+
 
 
 @end
