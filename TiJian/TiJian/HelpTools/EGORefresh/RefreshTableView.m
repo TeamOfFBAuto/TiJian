@@ -93,13 +93,13 @@
     {
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.0];
-        self.contentInset = UIEdgeInsetsMake(65.0f, 0.0f, 0.0f, 0.0f);
+        self.contentInset = UIEdgeInsetsMake(55.0f, 0.0f, 0.0f, 0.0f);
         [self scrollRectToVisible:CGRectMake(0, 0.0f, 1, 1) animated:NO];
         [UIView commitAnimations];
     }
     else
     {
-        self.contentInset = UIEdgeInsetsMake(65.0f, 0.0f, 0.0f, 0.0f);
+        self.contentInset = UIEdgeInsetsMake(55.0f, 0.0f, 0.0f, 0.0f);
         [self scrollRectToVisible:CGRectMake(0, 0.0f, 1, 1) animated:NO];
     }
     

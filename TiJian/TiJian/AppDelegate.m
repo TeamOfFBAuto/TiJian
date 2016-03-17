@@ -20,6 +20,7 @@
 #import "WebviewController.h"//web
 #import "AppointDetailController.h"//预约
 #import "LogView.h"
+#import <Bugtags/Bugtags.h>//bugtags
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
@@ -51,6 +52,11 @@
     //友盟统计
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
     [MobClick setLogEnabled:YES];
+    
+//    //bugtags
+//    BugtagsOptions *options = [[BugtagsOptions alloc] init];
+//    options.trackingCrashes = YES; // 具体可设置的属性请查看 Bugtags.h
+//    [Bugtags startWithAppKey:@"f29f7ea19c45c7a4d32a6e4a22a9800e" invocationEvent:BTGInvocationEventBubble options:options];
     
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];

@@ -323,6 +323,7 @@
     BrandRecommendController *recommend = [[BrandRecommendController alloc]init];
     recommend.result_id = _result_id;
     recommend.starNum = [p_model.star_num intValue];
+    recommend.min_price = NSStringFromFloat([p_model.min_price floatValue]);
     [self.navigationController pushViewController:recommend animated:YES];
 }
 

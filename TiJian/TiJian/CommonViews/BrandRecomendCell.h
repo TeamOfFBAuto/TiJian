@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger,SelectStyle) {
 @property(nonatomic,retain)UIButton *selectedButton;//选择状态按钮
 @property(nonatomic,assign)int selectIndex;//选择的下标
 @property (nonatomic,copy)void(^ AdditonSelectBlock)(int index,BOOL add,NSDictionary *dic);
+@property(nonatomic,copy)void(^ MainSetMealClickBlcok)(NSDictionary *setmealDic);//主套餐点击事件
 
 + (CGFloat)heightForCellWithModel:(id)model;
 

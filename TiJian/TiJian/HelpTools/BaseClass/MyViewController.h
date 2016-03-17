@@ -48,7 +48,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @property(nonatomic,copy)UpdateParamsBlock updateParamsBlock;//用户视图间数据回调
 @property(nonatomic,assign)BOOL lastPageNavigationHidden;//上一级是否隐藏navigationBar
-@property(nonatomic,retain)UIViewController *lastViewController;//上一个视图
+@property(nonatomic,assign)UIViewController *lastViewController;//上一个视图
 
 @property(nonatomic,strong)NSString * myTitle;//视图标题
 @property(nonatomic,retain)UIView *resultView;//结果view

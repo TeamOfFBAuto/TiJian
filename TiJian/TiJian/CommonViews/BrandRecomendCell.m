@@ -31,6 +31,7 @@
 
 @property(nonatomic,retain)UIView *additonView;//附加项
 @property(nonatomic,retain)UIView *additonInfo;//附加项
+@property(nonatomic,retain)UILabel *additionTitleLabel;//拓展标题
 
 @property(nonatomic,retain)PropertyButton *selectAllButton;//选择全部
 @property(nonatomic,retain)NSMutableDictionary *additonDic;//附加view
@@ -94,11 +95,23 @@
         line.backgroundColor = DEFAULT_LINECOLOR;
         [self.contentView addSubview:line];
         
+        /**
+         *  主套餐加点击事件
+         */
+        UIButton *cellClickButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        cellClickButton.frame = CGRectMake(_selectedButton.right, 0, DEVICE_WIDTH - _selectedButton.right, line.top);
+        [self.contentView addSubview:cellClickButton];
+//        cellClickButton.backgroundColor = [UIColor orangeColor];
+        [cellClickButton addTarget:self action:@selector(clickMainSetmeal:) forControlEvents:UIControlEventTouchUpInside];
+                                 
+        
 //        100 + 0.5
         
         //拓展套餐
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, line.bottom, DEVICE_WIDTH - 20, 30) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"购买该套餐的用户还购买了这些加项"];
         [self.contentView addSubview:label];
+        label.backgroundColor = [UIColor orangeColor];
+        self.additionTitleLabel = label;
         
         //+30
         
@@ -152,6 +165,10 @@
             }
         }
         height += top;
+    }else
+    {
+//        height -= 30;//标题
+        height -= 40;//全部按钮
     }
     
     return height;
@@ -186,6 +203,17 @@
         
         CGFloat top = 0.f;
         int count = (int)setmeal_package.count;
+        
+        if (count == 0) {
+            
+            self.additionTitleLabel.hidden = YES;
+            _selectAllButton.hidden = YES;
+        }else
+        {
+            self.additionTitleLabel.hidden = NO;
+            _selectAllButton.hidden = NO;
+        }
+        
         for (int i = 0; i < count; i ++) {
             
             NSString *key = [NSString stringWithFormat:@"additionView%d",i];
@@ -215,6 +243,20 @@
 }
 
 #pragma mark - 事件处理
+
+/**
+ *  点击主套餐
+ *
+ *  @param
+ */
+- (void)clickMainSetmeal:(UIButton *)btn
+{
+    if (_MainSetMealClickBlcok) {
+        if (self.mainDic) {
+            _MainSetMealClickBlcok(self.mainDic);
+        }
+    }
+}
 
 -(void)setAdditonSelectBlock:(void (^)(int index,BOOL add,NSDictionary *dic))AdditonSelectBlock
 {

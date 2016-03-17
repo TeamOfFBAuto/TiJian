@@ -10,6 +10,7 @@
 #import "BrandRecomendCell.h"
 #import "ConfirmOrderViewController.h"
 #import "ProductModel.h"
+#import "GproductDetailViewController.h"
 
 @interface BrandRecommendController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -114,7 +115,8 @@
 {
 //    &result_id=16&type=3
     NSDictionary *params = @{@"result_id":self.result_id,
-                             @"type":[NSNumber numberWithInt:self.starNum]};;
+                             @"type":[NSNumber numberWithInt:self.starNum],
+                             @"min_price":self.min_price};;
     NSString *api = Get_c_setmeal_product;
     
     __weak typeof(self)weakSelf = self;
@@ -148,6 +150,18 @@
 #pragma mark - 数据解析处理
 
 #pragma mark - 事件处理
+
+/**
+ *  跳转至单品详情
+ *
+ *  @param productId
+ */
+- (void)pushToSetmealDetailWithId:(NSString *)productId
+{
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    cc.productId = productId;
+    [self.navigationController pushViewController:cc animated:YES];
+}
 
 - (void)clickToPay:(UIButton *)btn
 {
@@ -326,6 +340,14 @@
         _selectIndex = index;
         [WeaktableView reloadData];
         [Weakself dealSelectSetmeal:dic];
+    }];
+    
+    [cell setMainSetMealClickBlcok:^(NSDictionary * setmealDic) {
+        if ([setmealDic isKindOfClass:[NSDictionary class]]) {
+            
+            NSString *product_id = setmealDic[@"product_id"];
+            [Weakself pushToSetmealDetailWithId:product_id];
+        }
     }];
     
     if ((int)indexPath.section == _selectIndex) {

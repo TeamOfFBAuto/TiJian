@@ -262,12 +262,15 @@
     NSLog(@"省份：%@ 城市：%@ 区：%@",result.addressDetail.province,result.addressDetail.city,result.addressDetail.district);
     
     NSDictionary *dic = self.theLocationDic;
-    self.theLocationDic = @{
-                            @"lat":[dic stringValueForKey:@"lat"],
-                            @"long":[dic stringValueForKey:@"long"],
-                            @"province":result.addressDetail.province,
-                            @"city":result.addressDetail.city
-                            };
+    
+    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+    [temp safeSetString:[dic stringValueForKey:@"lat"] forKey:@"lat"];
+    [temp safeSetString:[dic stringValueForKey:@"long"] forKey:@"long"];
+    [temp safeSetString:result.addressDetail.province forKey:@"province"];
+    [temp safeSetString:result.addressDetail.city forKey:@"city"];
+
+
+    self.theLocationDic = [NSDictionary dictionaryWithDictionary:temp];
     
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(theLocationDictionary:)]) {
