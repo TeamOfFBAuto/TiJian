@@ -20,7 +20,8 @@
         [self addSubview:self.brandBannerImv];
         
         //logo
-        self.logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, self.brandBannerImv.frame.size.height - 15 - 185.0/750*DEVICE_WIDTH*63/185, 185.0/750*DEVICE_WIDTH, 185.0/750*DEVICE_WIDTH*63/185)];
+        self.logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, self.brandBannerImv.frame.size.height - 15 - 185.0/750*DEVICE_WIDTH*63/185, 185.0/750*DEVICE_WIDTH*63/185, 185.0/750*DEVICE_WIDTH*63/185)];
+        self.logoImv.backgroundColor = [UIColor clearColor];
         [self.brandBannerImv addSubview:self.logoImv];
         
         self.brandName = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.logoImv.frame)+5, self.logoImv.frame.origin.y, DEVICE_WIDTH - 15 - 5 - self.logoImv.frame.size.width - 15, self.logoImv.frame.size.height*0.5)];

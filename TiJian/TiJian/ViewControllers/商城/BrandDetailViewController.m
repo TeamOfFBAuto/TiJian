@@ -164,7 +164,8 @@
             
             
             //logo
-            UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, brandBannerImv.frame.size.height - 15 - 185.0/750*DEVICE_WIDTH*63/185, 185.0/750*DEVICE_WIDTH, 185.0/750*DEVICE_WIDTH*63/185)];
+            UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, brandBannerImv.frame.size.height - 15 - 185.0/750*DEVICE_WIDTH*63/185, 185.0/750*DEVICE_WIDTH*63/185, 185.0/750*DEVICE_WIDTH*63/185)];
+            logoImv.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:logoImv];
             
             UILabel *brandName = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(logoImv.frame)+5, logoImv.frame.origin.y, DEVICE_WIDTH - 15 - 5 - logoImv.frame.size.width - 15, logoImv.frame.size.height*0.5)];
