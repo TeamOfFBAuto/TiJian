@@ -398,7 +398,7 @@
     UIActionSheet* alert = [[UIActionSheet alloc] initWithTitle:nil delegate:self
                                               cancelButtonTitle:@"取消"
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:@"相机",@"从相机选择",nil];
+                                              otherButtonTitles:@"拍照",@"从相册选择",nil];
     [alert showInView:self.view];
 }
 
@@ -445,7 +445,6 @@
     UIImagePickerController * imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.delegate =self;
     imagePicker.sourceType = type;
-    imagePicker.allowsEditing = YES;
     imagePicker.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     imagePicker.allowsEditing =YES;
     [self presentViewController:imagePicker animated:YES completion:^{

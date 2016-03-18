@@ -637,9 +637,6 @@
         cc.haveChooseGender = YES;
     }
     [self.navigationController pushViewController:cc animated:YES];
-    
-    
-    
 }
 
 
@@ -1161,30 +1158,28 @@
     
     if (sender.tag == 100) {//客服
         
-
-        [LoginManager isLogin:self loginBlock:^(BOOL success) {
-            if (success) {
-                [self clickToChat];
-            }else
-            {
-                _isPresenting = YES;
-
-            }
-        }];
+        if ([LoginManager isLogin]) {
+            
+            [self clickToChat];
+            
+        }else
+        {
+            _isPresenting = YES;
+            [LoginManager isLogin:self];
+        }
         
     }else if (sender.tag == 101){//收藏
         
-        [LoginManager isLogin:self loginBlock:^(BOOL success) {
-            if (success)
-            {
-                ProductListViewController *cc = [[ProductListViewController alloc]init];
-                [self.navigationController pushViewController:cc animated:YES];
-            }else
-            {
-                _isPresenting = YES;
-                
-            }
-        }];
+        if ([LoginManager isLogin]) {
+            
+            ProductListViewController *cc = [[ProductListViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }else
+        {
+            _isPresenting = YES;
+
+            [LoginManager isLogin:self];
+        }
         
     }else if (sender.tag == 102){//筛选
         
@@ -1192,18 +1187,15 @@
         
     }else if (sender.tag == 103){//购物车
         
-        [LoginManager isLogin:self loginBlock:^(BOOL success) {
-            if (success)
-            {
-                GShopCarViewController *cc = [[GShopCarViewController alloc]init];
-                [self.navigationController pushViewController:cc animated:YES];
-            }else
-            {
-                _isPresenting = YES;
-                
-            }
-        }];
-        
+        if ([LoginManager isLogin]) {
+            
+            GShopCarViewController *cc = [[GShopCarViewController alloc]init];
+            [self.navigationController pushViewController:cc animated:YES];
+        }else
+        {
+            _isPresenting = YES;
+            [LoginManager isLogin:self];
+        }
     }
 }
 
