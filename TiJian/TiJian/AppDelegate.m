@@ -20,7 +20,7 @@
 #import "WebviewController.h"//web
 #import "AppointDetailController.h"//预约
 #import "LogView.h"
-#import <Bugtags/Bugtags.h>//bugtags
+//#import <Bugtags/Bugtags.h>//bugtags
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
