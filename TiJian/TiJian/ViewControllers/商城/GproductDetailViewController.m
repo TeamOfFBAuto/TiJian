@@ -276,7 +276,7 @@
             _tab.top = 0;
             _hiddenView.top = CGRectGetMaxY(_tab.frame);
 //            _downView.top = DEVICE_HEIGHT - 50-64;
-            self.myTitle = @"体检项目";
+            self.myTitle = @"产品详情";
         }];
     }
     
@@ -296,7 +296,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self getProductDetail];//单品详情
+    [self getProductDetail];//单品详情和看了又看
     [self getProductConmment];//产品评论
     
     [self prepareProductProjectList];//具体项目
