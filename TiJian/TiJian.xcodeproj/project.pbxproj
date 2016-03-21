@@ -158,7 +158,6 @@
 		136276621C12F37D0077C75D /* ReportDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276611C12F37D0077C75D /* ReportDetailController.m */; };
 		136276651C1312420077C75D /* MoreReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276641C1312420077C75D /* MoreReportViewController.m */; };
 		136276841C1320770077C75D /* ZoomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276831C1320770077C75D /* ZoomScrollView.m */; };
-		1362768A1C1328130077C75D /* FBPhotoBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136276891C1328130077C75D /* FBPhotoBrowserController.m */; };
 		136ABCE01C8EB41900F2B834 /* AppointProgressDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */; };
 		136ABCE31C8FF3F300F2B834 /* appointProgresscircle_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */; };
 		136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */; };
@@ -284,7 +283,6 @@
 		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; };
 		13D119A41C27A3920042EB6D /* RefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D119A31C27A3920042EB6D /* RefreshFooterView.m */; };
 		13D119A81C2803970042EB6D /* LSuitableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D119A71C2803970042EB6D /* LSuitableView.m */; };
-		13D254D31C85859F005A45CF /* RCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D254D21C85859F005A45CF /* RCMapViewController.m */; };
 		13D6DA871C48C6A90091FCFE /* extension_31_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA6B1C48C6A90091FCFE /* extension_31_1.png */; };
 		13D6DA881C48C6A90091FCFE /* extension_31_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA6C1C48C6A90091FCFE /* extension_31_2.png */; };
 		13D6DA891C48C6A90091FCFE /* extension_32_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA6D1C48C6A90091FCFE /* extension_32_1.png */; };
@@ -800,8 +798,6 @@
 		136276641C1312420077C75D /* MoreReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreReportViewController.m; sourceTree = "<group>"; };
 		136276821C1320770077C75D /* ZoomScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomScrollView.h; sourceTree = "<group>"; };
 		136276831C1320770077C75D /* ZoomScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomScrollView.m; sourceTree = "<group>"; };
-		136276881C1328130077C75D /* FBPhotoBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBPhotoBrowserController.h; sourceTree = "<group>"; };
-		136276891C1328130077C75D /* FBPhotoBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBPhotoBrowserController.m; sourceTree = "<group>"; };
 		136ABCDE1C8EB41900F2B834 /* AppointProgressDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointProgressDetailController.h; sourceTree = "<group>"; };
 		136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointProgressDetailController.m; sourceTree = "<group>"; };
 		136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_1@2x.png"; sourceTree = "<group>"; };
@@ -950,8 +946,6 @@
 		13D119A31C27A3920042EB6D /* RefreshFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshFooterView.m; sourceTree = "<group>"; };
 		13D119A61C2803970042EB6D /* LSuitableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSuitableView.h; sourceTree = "<group>"; };
 		13D119A71C2803970042EB6D /* LSuitableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSuitableView.m; sourceTree = "<group>"; };
-		13D254D11C85859F005A45CF /* RCMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMapViewController.h; sourceTree = "<group>"; };
-		13D254D21C85859F005A45CF /* RCMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMapViewController.m; sourceTree = "<group>"; };
 		13D6DA6B1C48C6A90091FCFE /* extension_31_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_31_1.png; sourceTree = "<group>"; };
 		13D6DA6C1C48C6A90091FCFE /* extension_31_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_31_2.png; sourceTree = "<group>"; };
 		13D6DA6D1C48C6A90091FCFE /* extension_32_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_32_1.png; sourceTree = "<group>"; };
@@ -1919,8 +1913,6 @@
 				136276611C12F37D0077C75D /* ReportDetailController.m */,
 				136276631C1312420077C75D /* MoreReportViewController.h */,
 				136276641C1312420077C75D /* MoreReportViewController.m */,
-				136276881C1328130077C75D /* FBPhotoBrowserController.h */,
-				136276891C1328130077C75D /* FBPhotoBrowserController.m */,
 			);
 			path = "体检报告";
 			sourceTree = "<group>";
@@ -2679,8 +2671,6 @@
 			children = (
 				13FFBFC61C0D4FEA0077DD29 /* RCDChatViewController.h */,
 				13FFBFC71C0D4FEA0077DD29 /* RCDChatViewController.m */,
-				13D254D11C85859F005A45CF /* RCMapViewController.h */,
-				13D254D21C85859F005A45CF /* RCMapViewController.m */,
 				13FFBFC91C0D504B0077DD29 /* RoncCloudCustomClass */,
 			);
 			path = "客服";
@@ -3556,7 +3546,6 @@
 				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,
 				131EC6111C576CFA0008F517 /* HospitalDetailViewController.m in Sources */,
 				13F242211BF5C4B4002C9D81 /* WebviewController.m in Sources */,
-				1362768A1C1328130077C75D /* FBPhotoBrowserController.m in Sources */,
 				13F8C5B41C05AA7E004C3FC7 /* JKUtil.m in Sources */,
 				13FFBFCE1C0D504B0077DD29 /* SimpleMessage.m in Sources */,
 				13F1F4081BBA9F6B00885D31 /* RefreshTableView.m in Sources */,
@@ -3702,7 +3691,6 @@
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
 				E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */,
-				13D254D31C85859F005A45CF /* RCMapViewController.m in Sources */,
 				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
 				E3ED61071C801D53001E5BFC /* BrandSearchViewController.m in Sources */,
 				131A177D1BF341E900B12D2F /* PreViewCell.m in Sources */,

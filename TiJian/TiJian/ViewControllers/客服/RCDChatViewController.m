@@ -19,6 +19,7 @@
 #import "OrderModel.h"
 #import "CustomProductMsgCell.h"//自定义套餐cell
 #import "CustomOrderMsgCell.h"//自定义订单cell
+#import "LPhotoBrowser.h"
 
 typedef NS_ENUM(NSInteger,CustomMsgType) {
     CustomMsgTypeProduct = 0,//单品
@@ -467,15 +468,36 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     }
 }
 
-///**
-// *  打开地理位置。开发者可以重写，自己根据经纬度打开地图显示位置。默认使用内置地图
-// *
-// *  @param locationMessageContent 位置消息
-// */
-//- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent
-//{
-//    
-//}
+/*!
+ 查看图片消息中的图片
+ 
+ @param model   消息Cell的数据模型
+ 
+ @discussion SDK在此方法中会默认调用RCImagePreviewController下载并展示图片。
+ */
+- (void)presentImagePreviewController:(RCMessageModel *)model
+{
+    int index = 0;
+    
+    RCImageMessage *msg = (RCImageMessage *)model.content;
+    
+    NSInteger initPage = index;
+    
+    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
+        
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:0];
+        
+        LPhotoModel *photo = [[LPhotoModel alloc]init];
+        
+        UIImage *originalImage = [UIImage imageWithContentsOfFile:msg.imageUrl];
+        photo.image = originalImage;
+        photo.thumbImage = msg.thumbnailImage;
+        
+        [temp addObject:photo];
+        
+        return temp;
+    }];
+}
 
 #pragma - mark UIAlertViewDelegate <NSObject>
 

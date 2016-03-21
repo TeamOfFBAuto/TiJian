@@ -7,7 +7,6 @@
 //
 
 #import "MoreReportViewController.h"
-#import "FBPhotoBrowserController.h"
 #import "PhotoCell.h"
 #import "PhotoBrowserView.h"
 #import "LPhotoBrowser.h"
@@ -67,11 +66,6 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
 {
     NSLog(@"%ld",(long)[indexPath row]);
     int index = (int)indexPath.row;
-    //
-    //    FBPhotoBrowserController *browser = [[FBPhotoBrowserController alloc]init];
-    //    browser.showIndex = index;
-    //    browser.imagesArray = _imagesArray;
-    //    [self.navigationController pushViewController:browser animated:YES];
     
     NSArray *img = self.imageUrlArray;
     
