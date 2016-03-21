@@ -53,6 +53,7 @@
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
     [MobClick setLogEnabled:YES];
     
+    //
 //    //bugtags
 //    BugtagsOptions *options = [[BugtagsOptions alloc] init];
 //    options.trackingCrashes = YES; // 具体可设置的属性请查看 Bugtags.h
