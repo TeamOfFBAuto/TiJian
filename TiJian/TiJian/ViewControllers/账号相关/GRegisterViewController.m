@@ -74,7 +74,124 @@ static int seconds = 60;//计时60s
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - 网络请求
 
+//获取验证码
+-(void)getYanzhengmaBtnClicked{
+    
+    [self gShou];//收键盘
+    
+    SecurityCode_Type type;//默认注册
+    type = 1;
+    
+    NSString *mobile = self.phoneTF.text;
+    
+    if (![LTools isValidateMobile:mobile]) {
+        
+        [LTools alertText:ALERT_ERRO_PHONE viewController:self];
+        return;
+    }
+    
+    __weak typeof(self)weakSelf = self;
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    NSDictionary *param = @{
+                            @"mobile":mobile,
+                            @"type":@"1",
+                            @"encryptcode":[LTools md5Phone:mobile]
+                            };
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_GET_SECURITY_CODE parameters:param constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"result %@",result);
+        
+        _encryptcode = result[@"code"];//记录验证码
+        
+        //获取验证码成功之后切换界面
+        [weakSelf changeTheUpViewStateWithNum:2];
+        [_downScrollView setContentOffset:CGPointMake(DEVICE_WIDTH, 0) animated:YES];
+        
+        //开始计时
+        [weakSelf startTimer];
+        
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        NSLog(@"failDic %@",result);
+        [weakSelf renewTimer];
+    }];
+    
+}
+
+//提交注册
+-(void)networkForRegister{
+    //    get方式调取
+    //    参数解释依次为:
+    //    username(昵称,可不填，系统自动分配一个) string
+    //    password（密码，必须大于等于6位，不能有中文）string
+    //    gender(性别，1=》男 2=》女，可不填，默认为女) int
+    //    type(注册类型，1=》手机注册 2=》邮箱注册，默认为手机注册) int
+    //    code(验证码 6位数字) int
+    //    mobile(手机号) string
+    
+    [self gShou];
+    
+    
+    if (![self.mimaTf.text isEqualToString:self.mima2Tf.text]) {
+        
+        [LTools showMBProgressWithText:@"两次输入密码不一致" addToView:self.view];
+        return;
+    }
+    
+    //    NSString *userName = @"";
+    NSString *password = self.mimaTf.text;
+    //    Gender sex = Gender_Girl;//默认女
+    //    Register_Type type = Register_Phone;//默认手机号方式
+    int code = [self.yanzhengmaTf.text intValue];
+    NSString *mobile = self.phoneTF.text;
+    
+    if (![LTools isValidateMobile:mobile]) {
+        
+        [LTools alertText:ALERT_ERRO_PHONE viewController:self];
+        return;
+    }
+    
+    if (![LTools isValidatePwd:password]) {
+        
+        [LTools alertText:ALERT_ERRO_PASSWORD viewController:self];
+        return;
+    }
+    
+    NSString *codestr = [NSString stringWithFormat:@"%d",code];
+    NSDictionary *params = @{@"mobile":mobile,
+                             @"code":codestr,
+                             @"password":password
+                             };
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_REGISTER_ACTION parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        int errorcode = [result[@"errorcode"]intValue];
+
+        if (errorcode == 2005) { // 验证码过期
+            
+            [Weakself performSelector:@selector(backToEncrocode) withObject:nil afterDelay:1.f];
+            
+            return ;
+        }
+        
+        int newer_coupon = [result[@"newer_coupon"]intValue];
+        [Weakself actionForRegiterSuccess:newer_coupon];
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"failDic %@",result);
+    }];
+}
 
 #pragma mark - MyMeThod
 
@@ -102,23 +219,15 @@ static int seconds = 60;//计时60s
             
             
             UIImageView *fenge = [[UIImageView alloc]initWithFrame:CGRectMake(oneView.right, oneView.center.y, jianju + 10, 20)];
-//            fenge.backgroundColor = [UIColor redColor];
             fenge.image = [UIImage imageNamed:@"user_xuxian"];
             [self.upThreeStepView addSubview:fenge];
-            
-//            UIView *fenge = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(oneView.frame)+15, oneView.center.y, jianju - 20, 0.5f)];
-//            fenge.backgroundColor = [UIColor whiteColor];
-//            [self.upThreeStepView addSubview:fenge];
+
         }else if (i == 2){
             [oneView setFrame:CGRectMake(jianju + 10 + i*(jianju+32), 20, 32, 32)];
             
         }else if (i == 1){
-//            UIView *fenge = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(oneView.frame)+15, oneView.center.y, jianju - 20, 0.5f)];
-//            fenge.backgroundColor = [UIColor whiteColor];
-//            [self.upThreeStepView addSubview:fenge];
             
             UIImageView *fenge = [[UIImageView alloc]initWithFrame:CGRectMake(oneView.right, oneView.center.y, jianju + 10, 20)];
-//            fenge.backgroundColor = [UIColor lightGrayColor];
             fenge.image = [UIImage imageNamed:@"user_xuxian"];
             [self.upThreeStepView addSubview:fenge];
 
@@ -157,9 +266,7 @@ static int seconds = 60;//计时60s
 //修改上方状态
 -(void)changeTheUpViewStateWithNum:(int)theNum{
     
-    
     //修改顶部
-    
     for (UILabel *lable in _numLabelArray) {
         lable.textColor = [UIColor whiteColor];
     }
@@ -175,8 +282,7 @@ static int seconds = 60;//计时60s
     for (UILabel *titleLabel in _downYuanTitleLabelArray) {
         titleLabel.textColor = [UIColor colorWithHexString:@"d4eeff"];
     }
-    
-    
+
     UIView *oneView = _yuanViewArray[theNum - 1];
     oneView.backgroundColor = [UIColor whiteColor];
     oneView.layer.borderWidth = 0;
@@ -184,7 +290,7 @@ static int seconds = 60;//计时60s
     numlabel.textColor = DEFAULT_TEXTCOLOR;
     UILabel *ttLabel = _downYuanTitleLabelArray[theNum - 1];
     ttLabel.textColor = [UIColor whiteColor];
-    
+
 }
 
 
@@ -346,7 +452,7 @@ static int seconds = 60;//计时60s
     UIButton *querenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [querenBtn setFrame:CGRectMake(2 * DEVICE_WIDTH + 50, CGRectGetMaxY(mimaView.frame) + 30, DEVICE_WIDTH - 50 * 2, 40)];
     [querenBtn setTitle:@"开启健康之旅" forState:UIControlStateNormal];
-    [querenBtn addTarget:self action:@selector(querenBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [querenBtn addTarget:self action:@selector(networkForRegister) forControlEvents:UIControlEventTouchUpInside];
     querenBtn.layer.cornerRadius = 2;
     querenBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [querenBtn setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
@@ -371,54 +477,6 @@ static int seconds = 60;//计时60s
 }
 
 
-//获取验证码
--(void)getYanzhengmaBtnClicked{
-    
-    [self gShou];//收键盘
-    
-    SecurityCode_Type type;//默认注册
-    type = 1;
-    
-    NSString *mobile = self.phoneTF.text;
-    
-    if (![LTools isValidateMobile:mobile]) {
-        
-        [LTools alertText:ALERT_ERRO_PHONE viewController:self];
-        return;
-    }
-    
-    __weak typeof(self)weakSelf = self;
-       
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    NSDictionary *param = @{
-                            @"mobile":mobile,
-                            @"type":@"1",
-                            @"encryptcode":[LTools md5Phone:mobile]
-                            };
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_GET_SECURITY_CODE parameters:param constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        NSLog(@"result %@",result);
-        _encryptcode = result[@"code"];//记录验证码
-        
-        //获取验证码成功之后切换界面
-        [weakSelf changeTheUpViewStateWithNum:2];
-        [_downScrollView setContentOffset:CGPointMake(DEVICE_WIDTH, 0) animated:YES];
-        
-        //开始计时
-        [weakSelf startTimer];
-        
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-        
-    } failBlock:^(NSDictionary *result) {
-        
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        NSLog(@"failDic %@",result);
-        [weakSelf renewTimer];
-    }];
-    
-}
-
 //输入完验证码
 -(void)clickToNext{
     
@@ -429,69 +487,21 @@ static int seconds = 60;//计时60s
         [self changeTheUpViewStateWithNum:3];
         [_downScrollView setContentOffset:CGPointMake(2 * DEVICE_WIDTH, 0) animated:YES];
         
+        [self renewTimer];//停止计时器
+        
     }else{
         
         [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
     }
 }
 
-//提交注册
--(void)querenBtnClicked{
-    //    get方式调取
-    //    参数解释依次为:
-    //    username(昵称,可不填，系统自动分配一个) string
-    //    password（密码，必须大于等于6位，不能有中文）string
-    //    gender(性别，1=》男 2=》女，可不填，默认为女) int
-    //    type(注册类型，1=》手机注册 2=》邮箱注册，默认为手机注册) int
-    //    code(验证码 6位数字) int
-    //    mobile(手机号) string
-    
-    [self gShou];
-    
-    
-    if (![self.mimaTf.text isEqualToString:self.mima2Tf.text]) {
-        
-        [LTools showMBProgressWithText:@"两次输入密码不一致" addToView:self.view];
-        return;
-    }
-    
-//    NSString *userName = @"";
-    NSString *password = self.mimaTf.text;
-//    Gender sex = Gender_Girl;//默认女
-//    Register_Type type = Register_Phone;//默认手机号方式
-    int code = [self.yanzhengmaTf.text intValue];
-    NSString *mobile = self.phoneTF.text;
-    
-    if (![LTools isValidateMobile:mobile]) {
-        
-        [LTools alertText:ALERT_ERRO_PHONE viewController:self];
-        return;
-    }
-    
-    if (![LTools isValidatePwd:password]) {
-        
-        [LTools alertText:ALERT_ERRO_PASSWORD viewController:self];
-        return;
-    }
-    
-    NSString *codestr = [NSString stringWithFormat:@"%d",code];
-    NSDictionary *params = @{@"mobile":mobile,
-                             @"code":codestr,
-                             @"password":password
-                             };
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-     @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_REGISTER_ACTION parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
-        int newer_coupon = [result[@"newer_coupon"]intValue];
-        [Weakself actionForRegiterSuccess:newer_coupon];
-        
-    } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        NSLog(@"failDic %@",result);
-    }];
+/**
+ *  返回验证码界面
+ */
+- (void)backToEncrocode
+{
+    [self changeTheUpViewStateWithNum:2];
+    [_downScrollView setContentOffset:CGPointMake(1 * DEVICE_WIDTH, 0) animated:YES];
 }
 
 /**
@@ -606,7 +616,7 @@ static int seconds = 60;//计时60s
         
         //完成
         
-        [self querenBtnClicked];
+        [self networkForRegister];
     }
     
     return YES;

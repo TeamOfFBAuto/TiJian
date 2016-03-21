@@ -11,7 +11,7 @@
 
 #import <RongIMKit/RongIMKit.h>
 
-@interface CustomProductMsgCell : UICollectionViewCell
+@interface CustomProductMsgCell : RCMessageBaseCell
 
 @property(nonatomic,retain)UIButton *senderButton;//发送按钮
 

@@ -152,6 +152,9 @@
     
     //获取未读消息num
     [self netWorkForMsgNum];
+    
+    //更新坐标
+    [self startDingweiWithBlock:nil];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

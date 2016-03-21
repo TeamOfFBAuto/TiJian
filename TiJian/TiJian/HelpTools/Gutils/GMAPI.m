@@ -210,9 +210,8 @@
                                 @"long":[NSString stringWithFormat:@"%f",userLocation.location.coordinate.longitude]
                                 };
         
-        
-        
-        
+        //更新记录用户坐标
+        [UserInfo updateUserLontitude:[NSString stringWithFormat:@"%f",userLocation.location.coordinate.longitude] latitude:[NSString stringWithFormat:@"%f",userLocation.location.coordinate.latitude]];
         
         BMKReverseGeoCodeOption *reverseGeoCodeSearchOption = [[BMKReverseGeoCodeOption alloc]init];
         reverseGeoCodeSearchOption.reverseGeoPoint = userLocation.location.coordinate;
@@ -227,31 +226,30 @@
             NSLog(@"反geo索引发送失败");
         }
         
-        
         [self stopLocation];
-        
-        
-        
     }
 }
-
 
 
 - (void)didFailToLocateUserWithError:(NSError *)error{
     //金领时代 40.041951,116.33934
     //天安门 39.915187,116.403877
     if (self.delegate && [self.delegate respondsToSelector:@selector(theLocationDictionary:)]) {
+        
+        NSString *lat = [NSString stringWithFormat:@"%f",40.041951];
+        NSString *lon = [NSString stringWithFormat:@"%f",116.33934];
         self.theLocationDic = @{
-                                @"lat":[NSString stringWithFormat:@"%f",40.041951],
-                                @"long":[NSString stringWithFormat:@"%f",116.33934],
+                                @"lat":lat,
+                                @"long":lon,
                                 @"isSuccess":@"NO"
                                 };
+        
+        //更新记录用户坐标
+        [UserInfo updateUserLontitude:lon latitude:lat];
+        
         [self.delegate theLocationFaild:self.theLocationDic];
     }
 }
-
-
-
 
 
 - (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error{
@@ -268,19 +266,16 @@
     [temp safeSetString:[dic stringValueForKey:@"long"] forKey:@"long"];
     [temp safeSetString:result.addressDetail.province forKey:@"province"];
     [temp safeSetString:result.addressDetail.city forKey:@"city"];
-
+    
+    //更新记录用户坐标
+    [UserInfo updateUserLontitude:[dic stringValueForKey:@"long"] latitude:[dic stringValueForKey:@"lat"]];
 
     self.theLocationDic = [NSDictionary dictionaryWithDictionary:temp];
-    
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(theLocationDictionary:)]) {
         [self.delegate theLocationDictionary:self.theLocationDic];
     }
-    
 }
-
-
-
 
 //NSUserDefault存
 + (void)cache:(id)dataInfo ForKey:(NSString *)key

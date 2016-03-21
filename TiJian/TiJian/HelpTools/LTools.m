@@ -371,6 +371,9 @@
 //存
 + (void)setObject:(id)object forKey:(NSString *)key;
 {
+    if (!key) {
+        return;
+    }
     @try {
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -695,6 +698,9 @@
  */
 + (NSString *)distanceString:(NSString *)distance
 {
+    if (!distance || [LTools isEmpty:distance]) {
+        return nil;
+    }
     NSString *distanceStr;
     
     double dis = [distance doubleValue];

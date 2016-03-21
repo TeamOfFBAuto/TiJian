@@ -87,10 +87,10 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     UIBarButtonItem *back_item=[[UIBarButtonItem alloc]initWithCustomView:button_back];
     self.navigationItem.leftBarButtonItems=@[spaceButton1,back_item];
     _leftButton = button_back;
- 
+
     UILabel *_myTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
     _myTitleLabel.textAlignment = NSTextAlignmentCenter;
-    _myTitleLabel.text = self.userName;
+    _myTitleLabel.text = self.chatTitle;
     _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
     _myTitleLabel.font = [UIFont systemFontOfSize:17];
     self.navigationItem.titleView = _myTitleLabel;

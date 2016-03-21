@@ -11,7 +11,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CustomOrderMsgCell : UICollectionViewCell
+@interface CustomOrderMsgCell : RCMessageBaseCell
 
 @property(nonatomic,retain)UIButton *senderButton;//发送按钮
 
