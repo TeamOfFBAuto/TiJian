@@ -68,6 +68,9 @@
 //NSUserDefault取
 + (id)cacheForKey:(NSString *)key;
 
+//NSUserDefault删除
++ (void)deleteCacheForKey:(NSString *)key;
+
 
 //根据city_id查询province_id;
 +(NSString*)getProvineIdWithCityId:(int)cityId;

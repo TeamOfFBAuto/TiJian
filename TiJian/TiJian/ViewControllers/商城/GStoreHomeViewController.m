@@ -119,6 +119,9 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_UPDATE_TO_CART object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIFICATION_LOGIN object:nil];
     
+    _table.dataSource = nil;
+    _table.refreshDelegate = nil;
+    _table = nil;
     [self removeObserver:self forKeyPath:@"_count"];
 }
 
@@ -317,7 +320,11 @@
 
 -(void)prepareNetData{
     
-    _request = [YJYRequstManager shareInstance];
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
     _count = 0;
     
     
@@ -392,9 +399,9 @@
     
     if (theDic) {
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic setObject:NSStringFromInt(5) forKey:@"per_page"];
-        [temp_dic setObject:@"2" forKey:@"show_type"];
+        [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic safeSetString:NSStringFromInt(5) forKey:@"per_page"];
+        [temp_dic safeSetString:@"2" forKey:@"show_type"];
         dic = temp_dic;
         
         
@@ -416,7 +423,6 @@
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *data = [result arrayValueForKey:@"data"];
         
-        
         for (NSDictionary *dic in data) {
             NSArray *list = [dic arrayValueForKey:@"list"];
             NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
@@ -433,7 +439,9 @@
         
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
-        [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
+        if (_table.pageNum == 1) {
+            [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
+        }
         
          [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
@@ -446,7 +454,7 @@
 }
 
 
-//首页精品推荐
+//选择完地区之后请求首页精品推荐
 -(void)gotoPrepareProductsWithDic:(NSDictionary *)theDic{
     
     
@@ -490,12 +498,9 @@
             [_StoreProductListArray addObject:model_b];
         }
         
-        
         _table.tableFooterView = nil;
         
-        
-        
-         [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
@@ -506,48 +511,6 @@
     }];
 }
 
-
-
-
-//首页精品推荐上拉加载更多
--(void)prepareMoreProducts{
-    //首页精品推荐
-    NSDictionary *listDic = @{
-                              @"province_id":[GMAPI getCurrentProvinceId],
-                              @"city_id":[GMAPI getCurrentCityId],
-                              @"page":[NSString stringWithFormat:@"%d",_table.pageNum],
-                              @"per_page":[NSString stringWithFormat:@"%d",5]
-                              };
-    
-    
-    
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:listDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *data = [result arrayValueForKey:@"data"];
-        
-        
-        for (NSDictionary *dic in data) {
-            NSArray *list = [dic arrayValueForKey:@"list"];
-            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
-            for (NSDictionary *dic in list) {
-                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-                [model_listArray addObject:model];
-            }
-            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
-            model_b.list = model_listArray;
-            [_StoreProductListArray addObject:model_b];
-        }
-        
-        
-         [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
-        
-        
-    } failBlock:^(NSDictionary *result) {
-        [_table loadFail];
-        
-    }];
-}
 
 
 //获取购物车数量
@@ -820,7 +783,7 @@
     ttl.textColor = [UIColor blackColor];
     
     _table.tableHeaderView = self.theTopView;
-    [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+    
 }
 
 
@@ -921,7 +884,8 @@
     ttl.textColor = [UIColor blackColor];
     
     _table.tableHeaderView = self.theTopView;
-    [_table reloadData:_StoreProductListArray_cache pageSize:5 CustomNoDataView:[self resultViewWithT]];
+    
+    
 }
 
 
@@ -1311,10 +1275,11 @@
     [_request removeOperation:_request_ProductRecommend];
     
     [self prepareNetData];
+    
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    [self prepareMoreProducts];
+    [self prepareProductsWithDic:self.shaixuanDic];
 
 }
 

@@ -298,6 +298,25 @@
     }
 }
 
+//NSUserDefault删除
++ (void)deleteCacheForKey:(NSString *)key
+{
+    NSLog(@"key===%@",key);
+    @try {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults removeObjectForKey:key];
+        [defaults synchronize];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception %@",exception);
+    }
+    @finally {
+    }
+}
+
+
+
+
 //NSUserDefault取
 + (id)cacheForKey:(NSString *)key
 {
