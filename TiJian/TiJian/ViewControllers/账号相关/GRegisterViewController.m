@@ -167,7 +167,8 @@ static int seconds = 60;//计时60s
     NSString *codestr = [NSString stringWithFormat:@"%d",code];
     NSDictionary *params = @{@"mobile":mobile,
                              @"code":codestr,
-                             @"password":password
+                             @"password":password,
+                             @"reg_source":@"iOS"
                              };
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
