@@ -241,6 +241,12 @@
     CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
     
     NSInteger count = 3;
+    if (_recommendArray.count >= 3) {
+        count = 3;
+    }else
+    {
+        count = 0;
+    }
     
     for (int i = 0; i<count; i++) {
         

@@ -241,6 +241,8 @@
 
 - (void)clickToSelectImage
 {
+    [self hiddenKeyboard];
+    
     if (_selectedImage) {
         
         UIActionSheet* alert = [[UIActionSheet alloc] initWithTitle:nil delegate:self
