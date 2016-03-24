@@ -417,7 +417,7 @@
     }
     
     
-    
+
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];

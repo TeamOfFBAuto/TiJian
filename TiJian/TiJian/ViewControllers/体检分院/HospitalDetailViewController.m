@@ -226,8 +226,21 @@
  *  品牌推荐view
  */
 - (void)createRecommendViewWithTop:(CGFloat)top
-{
-    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, 175 + 20)];
+{    
+    //没有推荐套餐则不显示该部分
+    if (!_recommendArray || _recommendArray.count == 0) {
+        return;
+    }
+    
+    NSInteger count = _recommendArray.count;
+    CGFloat height = 0.f;
+    
+    if (count >= 3) {
+        count = 3;
+        height = 175 + 20;
+    }
+    
+    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, height)];
     backView.backgroundColor = [UIColor whiteColor];
     [_scrollView addSubview:backView];
     
@@ -240,15 +253,7 @@
     CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
     CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
     
-    NSInteger count = 3;
-    if (_recommendArray.count >= 3) {
-        count = 3;
-    }else
-    {
-        count = 0;
-    }
-    
-    for (int i = 0; i<count; i++) {
+    for (int i = 0; i < count; i++) {
         
         ProductModel *amodel = _recommendArray[i];
         UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), tLabel.bottom, theW, theH)];
@@ -283,16 +288,15 @@
         [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
         priceLabel.attributedText = aaa;
         [logoAndContentView addSubview:priceLabel];
-        
-        
     }
     
     if (count>0) {
 
     }else{
         
-        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, top, DEVICE_WIDTH, 30)];
-        tt.text = @"暂无数据";
+        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, 45, DEVICE_WIDTH - 40, 30)];
+        tt.text = @"暂无可推荐套餐";
+        tt.textAlignment = NSTextAlignmentCenter;
         tt.font = [UIFont systemFontOfSize:11];
         tt.textColor = [UIColor grayColor];
         [backView addSubview:tt];
