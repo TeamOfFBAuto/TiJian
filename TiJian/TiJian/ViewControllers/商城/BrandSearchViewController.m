@@ -12,7 +12,7 @@
 #import "ProductModel.h"
 #import "GProductCellTableViewCell.h"
 #import "GPushView.h"
-
+#import "GproductDetailViewController.h"
 @interface BrandSearchViewController ()<UITextFieldDelegate,RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,GpushViewDelegate>
 {
     UIView *_searchView;
@@ -423,7 +423,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
-    num = _productOneClassArray.count;
+    num = _rTab.dataArray.count;
     return num;
 }
 
@@ -474,11 +474,18 @@
 
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    NSLog(@"%s",__FUNCTION__);
+    
+    ProductModel *model = _rTab.dataArray[indexPath.row];
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    cc.productId = model.product_id;
+    [self.navigationController pushViewController:cc animated:YES];
+    
 }
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    NSLog(@"%s",__FUNCTION__);
+    
+    [self controlTopButtonWithScrollView:scrollView];
+    
 }
 
 

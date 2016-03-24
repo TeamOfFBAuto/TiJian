@@ -439,6 +439,14 @@
     [self prepareNetDataWithDic:self.shaixuanDic];
 }
 
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [self controlTopButtonWithScrollView:scrollView];
+    
+}
+
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     NSInteger num = 0;
     num = _rTab.dataArray.count;

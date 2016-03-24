@@ -410,8 +410,7 @@
                 @"province_id":[GMAPI getCurrentProvinceId],
                 @"city_id":[GMAPI getCurrentCityId],
                 @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":NSStringFromInt(5),
-                @"show_type":@"2"
+                @"per_page":NSStringFromInt(5)
                 };
         
     }
@@ -471,8 +470,7 @@
                 @"province_id":[GMAPI getCurrentProvinceId],
                 @"city_id":[GMAPI getCurrentCityId],
                 @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":[NSString stringWithFormat:@"%d",5],
-                @"show_type":@"2"
+                @"per_page":[NSString stringWithFormat:@"%d",5]
                 };
         
     }
@@ -1303,18 +1301,6 @@
     }
     
     [self controlTopButtonWithScrollView:scrollView];
-    
-    
-    
-//    // 去掉UItableview headerview黏性(sticky)
-//    CGFloat sectionHeaderHeight = 40;
-//    if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
-//        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
-//    }
-//    else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
-//        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
-//    }
-    
     
 }
 

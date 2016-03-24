@@ -541,10 +541,13 @@
     
 }
 
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-//    DDLOG(@"%s",__FUNCTION__);
-}
 
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [self controlTopButtonWithScrollView:scrollView];
+    
+}
 
 #pragma mark - 网络请求
 
