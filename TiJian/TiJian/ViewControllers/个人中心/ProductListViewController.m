@@ -80,7 +80,8 @@
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
-        
+        [weakTable reloadData:nil pageSize:G_PER_PAGE noDataView:weakSelf.resultView];
+
     }];
 }
 

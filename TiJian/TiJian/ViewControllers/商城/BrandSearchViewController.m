@@ -511,7 +511,7 @@
     [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
     [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
     [temp_dic safeSetString:NSStringFromInt(_rTab.pageNum)forKey:@"page"];
-    [temp_dic safeSetString:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+    [temp_dic safeSetString:NSStringFromInt(PAGESIZE_SMALL) forKey:@"per_page"];
     [temp_dic safeSetString:self.brand_id forKey:@"brand_id"];
     
     
@@ -558,12 +558,12 @@
             [_productOneClassArray addObject:model];
         }
         
-        [_rTab reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
+        [_rTab reloadData:_productOneClassArray pageSize:PAGESIZE_SMALL noDataView:[self resultViewWithType:PageResultType_nodata]];
         
         
     } failBlock:^(NSDictionary *result) {
         
-        [_rTab reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
+        [_rTab reloadData:nil pageSize:PAGESIZE_SMALL noDataView:[self resultViewWithType:PageResultType_nodata]];
     }];
     
     

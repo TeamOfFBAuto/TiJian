@@ -440,7 +440,7 @@
             [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         }
         
-         [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+         [_table reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithT]];
         
         
     } failBlock:^(NSDictionary *result) {
@@ -496,7 +496,7 @@
         
         _table.tableFooterView = nil;
         
-        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+        [_table reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithT]];
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
