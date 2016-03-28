@@ -68,7 +68,6 @@
     
     NSInteger _keyongJifen;//使用完优惠券和代金券之后可用的积分
     
-//    BOOL _isUseScore;//是否使用积分
     NSInteger _fanal_usedScore;//最终使用的积分
     
     NSInteger _enabledNum_coupon;//可用优惠券数量
@@ -1460,12 +1459,12 @@
     }
     
     
-    [dic setValue:[UserInfo getAuthkey] forKey:@"authcode"];//authcode
-    [dic setValue:product_ids_str forKey:@"product_ids"];//产品id
-    [dic setValue:product_nums_str forKey:@"product_nums"];//产品数量
-    [dic setValue:_theAddressModel.address_id forKey:@"address_id"];//地址
-    [dic setValue:[NSString stringWithFormat:@"%.2f",_price_total] forKey:@"total_price"];//总价钱
-    [dic setValue:[NSString stringWithFormat:@"%.2f",_finalPrice] forKey:@"real_price"];//实际价钱
+    [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];//authcode
+    [dic safeSetValue:product_ids_str forKey:@"product_ids"];//产品id
+    [dic safeSetValue:product_nums_str forKey:@"product_nums"];//产品数量
+    [dic safeSetValue:_theAddressModel.address_id forKey:@"address_id"];//地址
+    [dic safeSetValue:[NSString stringWithFormat:@"%.2f",_price_total] forKey:@"total_price"];//总价钱
+    [dic safeSetValue:[NSString stringWithFormat:@"%.2f",_finalPrice] forKey:@"real_price"];//实际价钱
     
     //订单备注
     if (_liuyantf.text.length>0) {
@@ -1483,7 +1482,7 @@
         
         NSString *coupon_id = [arr componentsJoinedByString:@","];
         
-        [dic setValue:coupon_id forKey:@"coupon_id"];
+        [dic safeSetValue:coupon_id forKey:@"coupon_id"];
     }
     
     if (self.userSelectDaijinquanArray.count>0) {//使用代金券
@@ -1492,7 +1491,7 @@
             [arr addObject:model.uc_id];
         }
         NSString *vouchers_id = [arr componentsJoinedByString:@","];
-        [dic setValue:vouchers_id forKey:@"vouchers_uc_ids"];
+        [dic safeSetValue:vouchers_id forKey:@"vouchers_uc_ids"];
     }
     
     
@@ -1505,16 +1504,16 @@
         }
         
         NSString *aa = [NSString stringWithFormat:@"%ld",(long)_fanal_usedScore];
-        [dic setValue:aa forKey:@"score"];//使用的积分
-        [dic setValue:@"1" forKey:@"is_use_score"];//是否使用积分
+        [dic safeSetValue:aa forKey:@"score"];//使用的积分
+        [dic safeSetValue:@"1" forKey:@"is_use_score"];//是否使用积分
     }
     
     
     if (_userChooseKuaidiStr.length>0) {//快递凭证
         if ([_userChooseKuaidiStr isEqualToString:@"电子体检码"]) {
-            [dic setValue:@"0" forKey:@"require_post"];
+            [dic safeSetValue:@"0" forKey:@"require_post"];
         }else if ([_userChooseKuaidiStr isEqualToString:@"快递体检凭证"]){
-            [dic setValue:@"1" forKey:@"require_post"];
+            [dic safeSetValue:@"1" forKey:@"require_post"];
         }
     }else{
         [GMAPI showAutoHiddenMBProgressWithText:@"请选择快递方式" addToView:self.view];
@@ -1522,7 +1521,16 @@
     }
     
     if (_fapiaoChooseLabel.text.length>0 ) {
-        [dic setValue:_fapiaoChooseLabel.text forKey:@"invoice_title"];
+        [dic safeSetValue:_fapiaoChooseLabel.text forKey:@"invoice_title"];
+    }
+    
+    
+    
+    if (self.exam_center_id && self.date && self.myself && self.family_uid) {
+        [dic safeSetValue:self.exam_center_id forKey:@"exam_center_id"];
+        [dic safeSetValue:self.date forKey:@"date"];
+        [dic safeSetValue:self.myself forKey:@"myself"];
+        [dic safeSetValue:self.family_uid forKey:@"family_uid"];
     }
     
     

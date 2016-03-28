@@ -143,17 +143,9 @@
             }
             
             
-            
-            
-            
-            
-            
         }else{
             [getCouponBtn setTitle:@"暂无优惠券" forState:UIControlStateNormal];
         }
-        
-        
-        
         
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(tLabel.frame), DEVICE_WIDTH, 5)];
@@ -163,31 +155,34 @@
         
     }else if (theindexPath.section == 2){//主要参数
         
-//        //点击跳转到品牌店
-//        UIView *brandNameView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
-//        brandNameView.backgroundColor = [UIColor orangeColor];
-//        
-//        UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 15, 20, 20)];
-//        logoImv.backgroundColor = [UIColor orangeColor];
-////        [logoImv l_setImageWithURL:[NSURL URLWithString:model_b.brand_logo] placeholderImage:nil];
-//        logoImv.layer.cornerRadius = 10;
-//        [brandNameView addSubview:logoImv];
-//        
-//        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(logoImv.right + 5, logoImv.frame.origin.y, DEVICE_WIDTH - 10 - 20 - 5 - 10 - 8 - 5, 20)];
-//        titleLabel.backgroundColor = [UIColor orangeColor];
-//        titleLabel.font = [UIFont systemFontOfSize:12];
-//        [brandNameView addSubview:titleLabel];
-//        
-//        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 18, 17, 8, 15)];
-//        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_small.png"]];
-//        [brandNameView addSubview:jiantouImv];
-//        [brandNameView addTaget:self action:@selector(viewForHeaderClicked:) tag:20000];
-//        
-//        [self.contentView addSubview:brandNameView];
+        //点击跳转到品牌店
+        UIView *brandNameView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
+        [brandNameView addTaget:self action:@selector(brandStoreClicked) tag:20000];
+        [self.contentView addSubview:brandNameView];
+        
+        UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 20, 20)];
+        [logoImv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.brand_logo] placeholderImage:nil];
+        logoImv.layer.cornerRadius = 10;
+        [brandNameView addSubview:logoImv];
+        
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(logoImv.right + 5, 40*0.5-10, DEVICE_WIDTH - 10 - 20 - 5 - 10 - 8 - 5, 20)];
+        titleLabel.text = self.delegate.theProductModel.brand_name;
+        titleLabel.font = [UIFont systemFontOfSize:12];
+        [brandNameView addSubview:titleLabel];
+        
+        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 18, 40*0.5-7.5, 8, 15)];
+        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_small.png"]];
+        [brandNameView addSubview:jiantouImv];
+        
+        
+        //分割线
+        UIView *fen_lin = [[UIView alloc]initWithFrame:CGRectMake(0,CGRectGetMaxY(brandNameView.frame) , DEVICE_WIDTH, 5)];
+        fen_lin.backgroundColor = RGBCOLOR(244, 245, 246);
+        [self.contentView addSubview:fen_lin];
         
         
         //主要参数
-        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 60, 15)];
+        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(fen_lin.frame)+10, 60, 15)];
         tLabel.font = [UIFont systemFontOfSize:14];
         tLabel.text = @"主要参数";
         [self.contentView addSubview:tLabel];
@@ -565,14 +560,18 @@
     [self.delegate goToProductDetailVcWithId:product_id];
 }
 
+//跳转品牌店
+-(void)brandStoreClicked{
+    [self.delegate goToBrandStoreHomeVc];
+}
+
+
 
 /**
  *  点击去获取优惠劵
  */
 - (void)clickToCoupe
 {
-    
-    
     
     if ([LoginViewController isLogin]) {
         

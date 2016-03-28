@@ -945,10 +945,7 @@
             }];
         }
         
-//        GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
-//        cc.brand_name = self.theProductModel.brand_name;
-//        cc.brand_id = self.theProductModel.brand_id;
-//        [self.navigationController pushViewController:cc animated:YES];
+        
         
     }else if (sender.tag == 103){//购物车
         
@@ -1318,6 +1315,13 @@
     [self.navigationController pushViewController:cc animated:YES];
 }
 
+//跳转品牌店
+-(void)goToBrandStoreHomeVc{
+    GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
+    cc.brand_name = self.theProductModel.brand_name;
+    cc.brand_id = self.theProductModel.brand_id;
+    [self.navigationController pushViewController:cc animated:YES];
+}
 
 
 

@@ -34,4 +34,6 @@
 
 -(void)goToProductDetailVcWithId:(NSString *)productId;
 
+-(void)goToBrandStoreHomeVc;
+
 @end
