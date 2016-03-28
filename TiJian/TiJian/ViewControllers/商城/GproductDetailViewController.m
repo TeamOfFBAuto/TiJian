@@ -933,15 +933,10 @@
         
         
     }else if (sender.tag == 102){//预约
-<<<<<<< HEAD
 
         //update by lcw 2期
         if ([LoginManager isLogin:self]) {//已登录
-=======
 #pragma mark - 李朝伟
-        if ([LoginViewController isLogin]) {//已登录
->>>>>>> master
-            
             ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
             [choose nopayAppointWithProductid:_theProductModel.product_id gender:[_theProductModel.gender_id intValue] noAppointNum:100];
             choose.lastViewController = self;
