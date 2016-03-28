@@ -66,7 +66,8 @@ typedef enum{
     ORDERTYPE_NoAppoint,//待预约
     ORDERTYPE_Appointed,//已预约
     ORDERTYPE_WanCheng, //完成
-    ORDERTYPE_TuiHuan //退换
+    ORDERTYPE_TuiHuan, //退换
+    ORDERTYPE_Payed//已付款
 }ORDERTYPE;
 
 typedef enum{

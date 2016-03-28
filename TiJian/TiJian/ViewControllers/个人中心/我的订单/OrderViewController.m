@@ -33,6 +33,16 @@
 #define TABLEVIEW_TAG_WanCheng 4 //完成
 #define TABLEVIEW_TAG_TuiHuan 5 //退换
 
+//NSArray *titles = @[@"全部",@"待付款",@"已付款",@"已完成",@"退换"];
+
+#define TableView_title_All @"全部" //全部
+#define TableView_title_DaiFu @"待付款" //待付款
+#define TableView_title_Payed @"已付款" //已付款
+#define TableView_title_WanCheng @"已完成" //完成
+#define TableView_title_TuiHuan @"退换" //退换
+
+#define Title_array @[@"全部",@"待付款",@"已付款",@"已完成",@"退换"]
+
 @interface CustomeAlertView : UIAlertView
 
 @property(nonatomic,retain)id object;//参数
@@ -69,7 +79,9 @@
     self.myTitle = @"我的订单";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    NSArray *titles = @[@"全部",@"待付款",@"待预约",@"已预约",@"已完成",@"退换"];
+//    NSArray *titles = @[@"全部",@"待付款",@"待预约",@"已预约",@"已完成",@"退换"];
+    NSArray *titles = Title_array;
+
     int count = (int)titles.count;
     CGFloat width = DEVICE_WIDTH / count;
     _buttonNum = count;
@@ -102,6 +114,7 @@
         _table.dataSource = self;
         _table.separatorStyle = UITableViewCellSeparatorStyleNone;
         [_scroll addSubview:_table];
+        _table.tableTitle = titles[i];
         _table.tag = 200 + i;
     }
     
@@ -129,7 +142,6 @@
 
 #pragma - mark 通知处理
 
-
 /**
  *  处理通知
  *
@@ -140,51 +152,102 @@
     DDLOG(@"%@ %@",notify.name,notify.userInfo);
     NSString *notifyName = notify.name;
     
-    int indexOne = -1;
-    int indexTwo = -1;
-    if ([notifyName isEqualToString:NOTIFICATION_PAY_SUCCESS]) {//支付成功
+    if ([notifyName isEqualToString:NOTIFICATION_PAY_SUCCESS])//支付成功
+    {
         //支付成功 更新
-        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
-        indexTwo = TABLEVIEW_TAG_NoAppoint;//待预约
+        [[self refreshTableForTitle:TableView_title_DaiFu]showRefreshHeader:YES];
+        [[self refreshTableForTitle:TableView_title_Payed]showRefreshHeader:YES];
         
     }else if ([notifyName isEqualToString:NOTIFICATION_RECIEVE_CONFIRM]){//确认收货
         DDLOG(@"确认收货通知");
-    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_CANCEL]){//取消订单
+    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_CANCEL])//取消订单
+    {
         //取消订单通知 只有待付款可以取消订单
-        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+        [[self refreshTableForTitle:TableView_title_DaiFu]showRefreshHeader:YES];
         
-    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_DEL]){//删除订单
-        
+    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_DEL])//删除订单
+    {
         //删除订单通知 完成的可以删除
-        indexOne = TABLEVIEW_TAG_WanCheng;
+        [[self refreshTableForTitle:TableView_title_WanCheng]showRefreshHeader:YES];
         
-    }else if ([notifyName isEqualToString:NOTIFICATION_TUIKUAN_SUCCESS]){//退款成功
+    }else if ([notifyName isEqualToString:NOTIFICATION_TUIKUAN_SUCCESS])//退款成功
+    {
+        [[self refreshTableForTitle:TableView_title_Payed]showRefreshHeader:YES];
+        [[self refreshTableForTitle:TableView_title_TuiHuan]showRefreshHeader:YES];
         
-        indexOne = TABLEVIEW_TAG_NoAppoint;//待付款
-        indexTwo = TABLEVIEW_TAG_TuiHuan;//退货列表
+    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_COMMIT])//提交订单
+    {
+        [[self refreshTableForTitle:TableView_title_DaiFu]showRefreshHeader:YES];
         
-    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_COMMIT]){//提交订单
-        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+    }else if ([notifyName isEqualToString:NOTIFICATION_COMMENTSUCCESS])//评价晒单
+    {
+        [[self refreshTableForTitle:TableView_title_WanCheng]showRefreshHeader:YES];
         
-    }else if ([notifyName isEqualToString:NOTIFICATION_COMMENTSUCCESS]){//评价晒单
-        
-        indexOne = TABLEVIEW_TAG_WanCheng;//完成
-        
-    }else if ([notifyName isEqualToString:NOTIFICATION_APPOINT_SUCCESS]){//体检预约成功
-        
-        indexOne = TABLEVIEW_TAG_NoAppoint;//待预约
-        indexTwo = TABLEVIEW_TAG_Appointed;//已预约
-    }
-    
-    if (indexOne >= 0) {
-        [[self refreshTableForIndex:indexOne]showRefreshHeader:YES];
-    }
-    if (indexTwo >= 0) {
-        [[self refreshTableForIndex:indexTwo]showRefreshHeader:YES];
+    }else if ([notifyName isEqualToString:NOTIFICATION_APPOINT_SUCCESS])//体检预约成功
+    {
+        [[self refreshTableForTitle:TableView_title_DaiFu]showRefreshHeader:YES];
+        [[self refreshTableForTitle:TableView_title_Payed]showRefreshHeader:YES];
     }
     
     [[self refreshTableForIndex:TABLEVIEW_TAG_All]showRefreshHeader:YES];//全部
 }
+
+///**
+// *  处理通知
+// *
+// *  @param notify
+// */
+//- (void)actionForNotify:(NSNotification *)notify
+//{
+//    DDLOG(@"%@ %@",notify.name,notify.userInfo);
+//    NSString *notifyName = notify.name;
+//    
+//    
+//    int indexOne = -1;
+//    int indexTwo = -1;
+//    if ([notifyName isEqualToString:NOTIFICATION_PAY_SUCCESS]) {//支付成功
+//        //支付成功 更新
+//        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+//        indexTwo = TABLEVIEW_TAG_NoAppoint;//待预约
+//        
+//    }else if ([notifyName isEqualToString:NOTIFICATION_RECIEVE_CONFIRM]){//确认收货
+//        DDLOG(@"确认收货通知");
+//    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_CANCEL]){//取消订单
+//        //取消订单通知 只有待付款可以取消订单
+//        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+//        
+//    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_DEL]){//删除订单
+//        
+//        //删除订单通知 完成的可以删除
+//        indexOne = TABLEVIEW_TAG_WanCheng;
+//        
+//    }else if ([notifyName isEqualToString:NOTIFICATION_TUIKUAN_SUCCESS]){//退款成功
+//        
+//        indexOne = TABLEVIEW_TAG_NoAppoint;//待付款
+//        indexTwo = TABLEVIEW_TAG_TuiHuan;//退货列表
+//        
+//    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_COMMIT]){//提交订单
+//        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
+//        
+//    }else if ([notifyName isEqualToString:NOTIFICATION_COMMENTSUCCESS]){//评价晒单
+//        
+//        indexOne = TABLEVIEW_TAG_WanCheng;//完成
+//        
+//    }else if ([notifyName isEqualToString:NOTIFICATION_APPOINT_SUCCESS]){//体检预约成功
+//        
+//        indexOne = TABLEVIEW_TAG_NoAppoint;//待预约
+//        indexTwo = TABLEVIEW_TAG_Appointed;//已预约
+//    }
+//    
+//    if (indexOne >= 0) {
+//        [[self refreshTableForIndex:indexOne]showRefreshHeader:YES];
+//    }
+//    if (indexTwo >= 0) {
+//        [[self refreshTableForIndex:indexTwo]showRefreshHeader:YES];
+//    }
+//    
+//    [[self refreshTableForIndex:TABLEVIEW_TAG_All]showRefreshHeader:YES];//全部
+//}
 
 #pragma - mark 网络请求
 
@@ -193,36 +256,36 @@
  *
  *  @param orderType 不同的订单状态
  */
-- (void)getOrderListWithStatus:(ORDERTYPE)orderType
+- (void)getOrderListWithRefreshTable:(RefreshTableView *)table
 {
     NSString *authey = [UserInfo getAuthkey];
     if (authey.length == 0) {
         return;
     }
+    
     NSString *status = nil;
-    switch (orderType) {
-        case ORDERTYPE_All:
-            status = @"all";
-            break;
-        case ORDERTYPE_DaiFu:
-            status = @"no_pay";
-            break;
-        case ORDERTYPE_NoAppoint:
-            status = @"no_appointment";
-            break;
-        case ORDERTYPE_Appointed:
-            status = @"appointment";
-            break;
-        case ORDERTYPE_WanCheng:
-            status = @"complete";
-            break;
-        case ORDERTYPE_TuiHuan:
-            status = @"refund";
-            break;
-        default:
-            break;
+    NSString *title = table.tableTitle;
+    if ([title isEqualToString:TableView_title_All]) { //全部
+        status = @"all";
     }
-    __weak typeof(RefreshTableView)*weakTable = [self refreshTableForIndex:orderType - 1];
+    else if ([title isEqualToString:TableView_title_DaiFu])//待付款
+    {
+        status = @"no_pay";
+        
+    }else if ([title isEqualToString:TableView_title_Payed])//已付款  根据实际订单状态判断 前去预约 还是 再次购买
+    {
+        status = @"payed";
+
+    }else if ([title isEqualToString:TableView_title_TuiHuan])//退换
+    {
+        status = @"refund";
+
+    }else if ([title isEqualToString:TableView_title_WanCheng]) //完成
+    {
+        status = @"complete";
+    }
+    
+    __weak typeof(RefreshTableView)*weakTable = table;
     NSString *api = ORDER_GET_MY_ORDERS;
     NSDictionary *params = @{@"authcode":authey,
                              @"status":status,
@@ -392,6 +455,25 @@
 }
 
 /**
+ *  根据标题获取tableView
+ *
+ *  @param title
+ *
+ *  @return
+ */
+- (RefreshTableView *)refreshTableForTitle:(NSString *)title
+{
+    for (int i = 0; i < Title_array.count; i ++) {
+        
+        RefreshTableView *table = [self refreshTableForIndex:i];
+        if ([table.tableTitle isEqualToString:title]) {
+            return table;
+        }
+    }
+    return nil;
+}
+
+/**
  *  控制button选中状态
  */
 - (void)controlSelectedButtonTag:(int)tag
@@ -409,7 +491,7 @@
     
     int index = tag - 100;
     if (![self refreshTableForIndex:index].isHaveLoaded) {
-        NSLog(@"请求数据 %d",index);
+        DDLOG(@"tableView request %d",index);
         [[self refreshTableForIndex:index] showRefreshHeader:YES];
     }
 }
@@ -450,17 +532,13 @@
 
 #pragma mark - RefreshDelegate
 
-- (void)loadNewDataForTableView:(UITableView *)tableView
+- (void)loadNewDataForTableView:(RefreshTableView *)tableView
 {
-    int tableTag = (int)tableView.tag - 200 + 1;
-    
-    [self getOrderListWithStatus:tableTag];
+    [self getOrderListWithRefreshTable:tableView];
 }
-- (void)loadMoreDataForTableView:(UITableView *)tableView
+- (void)loadMoreDataForTableView:(RefreshTableView *)tableView
 {
-    int tableTag = (int)tableView.tag - 200 + 1;
-    
-    [self getOrderListWithStatus:tableTag];
+    [self getOrderListWithRefreshTable:tableView];
 }
 
 //新加
@@ -541,83 +619,31 @@
     }
     
     cell.actionButton.hidden = YES;
-
-    int tableViewTag = (int)tableView.tag;
-    switch (tableViewTag) {
-  
-        case TABLEVIEW_TAG_All + 200:
-        {
-            ORDERACTIONTYPE type = ORDERACTIONTYPE_Default;
-
-            int status = [aModel.status intValue];
-            NSString *text1 = nil;
-            if (status == 1) {
-                //待支付
-                text1 = @"去支付";
-                type = ORDERACTIONTYPE_Pay;
-            }else if (status == 2){ //已付款就是待预约
-                //待预约
-                text1 = @"前去预约";
-                type = ORDERACTIONTYPE_Appoint;
-
-            }else if (status == 3){
-                //已预约
-                text1 = @"再次购买";
-                type = ORDERACTIONTYPE_BuyAgain;
-            }
-            else if (status == 4){
-                //已完成
-                text1 = @"再次购买";
-                type = ORDERACTIONTYPE_BuyAgain;
-                
-                //代表已评价
-                if ([aModel.is_comment intValue] == 0) {
-                    cell.actionButton.hidden = NO;
-                }else
-                {
-                    cell.actionButton.hidden = YES;
-                }
-            }
-            //显示退款状态
-            if (refund_status == 3) { //退款成功 只显示一个退款状态
-                cell.actionButton.hidden = YES;
-                text1 = text;
-                type = ORDERACTIONTYPE_Refund;
-                
-            }else if(refund_status > 0) //显示退款状态、显示前去预约
-            {
-                cell.actionButton.hidden = NO;
-                [cell.actionButton setTitle:text forState:UIControlStateNormal];
-            }
+    
+    NSString *title = table.tableTitle;
+    if ([title isEqualToString:TableView_title_All]) { //全部
+        ORDERACTIONTYPE type = ORDERACTIONTYPE_Default;
+        
+        int status = [aModel.status intValue];
+        NSString *text1 = nil;
+        if (status == 1) {
+            //待支付
+            text1 = @"去支付";
+            type = ORDERACTIONTYPE_Pay;
+        }else if (status == 2){ //已付款就是待预约
+            //待预约
+            text1 = @"前去预约";
+            type = ORDERACTIONTYPE_Appoint;
             
-            [cell.commentButton setTitle:text1 forState:UIControlStateNormal];
-            cell.commentButton.actionType = type;
+        }else if (status == 3){
+            //已预约
+            text1 = @"再次购买";
+            type = ORDERACTIONTYPE_BuyAgain;
         }
-            break;
-        case TABLEVIEW_TAG_DaiFu + 200:
-        {
-            [cell.commentButton setTitle:@"去支付" forState:UIControlStateNormal];
-            cell.commentButton.actionType = ORDERACTIONTYPE_Pay;
-        }
-            break;
-        case TABLEVIEW_TAG_NoAppoint + 200:
-        {
-            [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
-            cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
-
-        }
-            break;
-        case TABLEVIEW_TAG_Appointed + 200:
-        {
-            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
-            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
-        }
-            break;
-        case TABLEVIEW_TAG_WanCheng + 200:
-        {
-            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
-            cell.actionButton.hidden = NO;
-            cell.actionButton.actionType = ORDERACTIONTYPE_Comment;
+        else if (status == 4){
+            //已完成
+            text1 = @"再次购买";
+            type = ORDERACTIONTYPE_BuyAgain;
             
             //代表已评价
             if ([aModel.is_comment intValue] == 0) {
@@ -626,20 +652,152 @@
             {
                 cell.actionButton.hidden = YES;
             }
+        }
+        //显示退款状态
+        if (refund_status == 3) { //退款成功 只显示一个退款状态
+            cell.actionButton.hidden = YES;
+            text1 = text;
+            type = ORDERACTIONTYPE_Refund;
             
-            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
-            [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
-        }
-            break;
-        case TABLEVIEW_TAG_TuiHuan + 200:
+        }else if(refund_status > 0) //显示退款状态、显示前去预约
         {
-            [cell.commentButton setTitle:text forState:UIControlStateNormal];
+            cell.actionButton.hidden = NO;
+            [cell.actionButton setTitle:text forState:UIControlStateNormal];
         }
-            break;
-        default:
-            break;
+        
+        [cell.commentButton setTitle:text1 forState:UIControlStateNormal];
+        cell.commentButton.actionType = type;
+        
     }
-    
+    else if ([title isEqualToString:TableView_title_DaiFu])//待付款
+    {
+        [cell.commentButton setTitle:@"去支付" forState:UIControlStateNormal];
+        cell.commentButton.actionType = ORDERACTIONTYPE_Pay;
+        
+    }else if ([title isEqualToString:TableView_title_Payed])//已付款  根据实际订单状态判断 前去预约 还是 再次购买
+    {
+        [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
+        cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
+        
+    }else if ([title isEqualToString:TableView_title_TuiHuan])//退换
+    {
+        [cell.commentButton setTitle:text forState:UIControlStateNormal];
+        
+    }else if ([title isEqualToString:TableView_title_WanCheng]) //完成
+    {
+        [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
+        cell.actionButton.hidden = NO;
+        cell.actionButton.actionType = ORDERACTIONTYPE_Comment;
+        
+        //代表已评价
+        if ([aModel.is_comment intValue] == 0) {
+            cell.actionButton.hidden = NO;
+        }else
+        {
+            cell.actionButton.hidden = YES;
+        }
+        
+        cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
+        [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+//    int tableViewTag = (int)tableView.tag;
+//    switch (tableViewTag) {
+//  
+//        case TABLEVIEW_TAG_All + 200:
+//        {
+//            ORDERACTIONTYPE type = ORDERACTIONTYPE_Default;
+//
+//            int status = [aModel.status intValue];
+//            NSString *text1 = nil;
+//            if (status == 1) {
+//                //待支付
+//                text1 = @"去支付";
+//                type = ORDERACTIONTYPE_Pay;
+//            }else if (status == 2){ //已付款就是待预约
+//                //待预约
+//                text1 = @"前去预约";
+//                type = ORDERACTIONTYPE_Appoint;
+//
+//            }else if (status == 3){
+//                //已预约
+//                text1 = @"再次购买";
+//                type = ORDERACTIONTYPE_BuyAgain;
+//            }
+//            else if (status == 4){
+//                //已完成
+//                text1 = @"再次购买";
+//                type = ORDERACTIONTYPE_BuyAgain;
+//                
+//                //代表已评价
+//                if ([aModel.is_comment intValue] == 0) {
+//                    cell.actionButton.hidden = NO;
+//                }else
+//                {
+//                    cell.actionButton.hidden = YES;
+//                }
+//            }
+//            //显示退款状态
+//            if (refund_status == 3) { //退款成功 只显示一个退款状态
+//                cell.actionButton.hidden = YES;
+//                text1 = text;
+//                type = ORDERACTIONTYPE_Refund;
+//                
+//            }else if(refund_status > 0) //显示退款状态、显示前去预约
+//            {
+//                cell.actionButton.hidden = NO;
+//                [cell.actionButton setTitle:text forState:UIControlStateNormal];
+//            }
+//            
+//            [cell.commentButton setTitle:text1 forState:UIControlStateNormal];
+//            cell.commentButton.actionType = type;
+//        }
+//            break;
+//        case TABLEVIEW_TAG_DaiFu + 200:
+//        {
+//            [cell.commentButton setTitle:@"去支付" forState:UIControlStateNormal];
+//            cell.commentButton.actionType = ORDERACTIONTYPE_Pay;
+//        }
+//            break;
+//        case TABLEVIEW_TAG_NoAppoint + 200:
+//        {
+//            [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
+//            cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
+//
+//        }
+//            break;
+//        case TABLEVIEW_TAG_Appointed + 200:
+//        {
+//            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
+//            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
+//        }
+//            break;
+//        case TABLEVIEW_TAG_WanCheng + 200:
+//        {
+//            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
+//            cell.actionButton.hidden = NO;
+//            cell.actionButton.actionType = ORDERACTIONTYPE_Comment;
+//            
+//            //代表已评价
+//            if ([aModel.is_comment intValue] == 0) {
+//                cell.actionButton.hidden = NO;
+//            }else
+//            {
+//                cell.actionButton.hidden = YES;
+//            }
+//            
+//            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
+//            [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
+//        }
+//            break;
+//        case TABLEVIEW_TAG_TuiHuan + 200:
+//        {
+//            [cell.commentButton setTitle:text forState:UIControlStateNormal];
+//        }
+//            break;
+//        default:
+//            break;
+//    }
+//    
     [cell.commentButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
         
     return cell;

@@ -57,6 +57,7 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 @property (nonatomic,assign)BOOL isHaveLoaded;    //是否已经加载过数据
 @property (nonatomic,assign)int pageNum;//页数
 @property (nonatomic,retain)NSMutableArray *dataArray;//数据源
+@property (nonatomic,retain)NSString *tableTitle;//tableView价格属性,可用来各种标记
 
 @property(nonatomic,assign)BOOL hiddenLoadMoreWhenNoData;//没有更多数据时是否隐藏底部view,default YES
 @property(nonatomic,assign)BOOL neverShowLoadMore;//是否永远不显示加载更多

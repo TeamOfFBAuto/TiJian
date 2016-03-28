@@ -21,6 +21,7 @@
 #import "GCustomSearchViewController.h"
 #import "GUpToolView.h"
 #import "GBrandHomeViewController.h"
+#import "ChooseHopitalController.h"//选择分院
 
 @interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -933,17 +934,14 @@
         
         
     }else if (sender.tag == 102){//预约
-#pragma 李朝伟
-        if ([LoginViewController isLogin]) {//已登录
+
+        //update by lcw 2期
+        if ([LoginManager isLogin:self]) {//已登录
             
-        }else{
-            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-                if (success) {
-                    
-                }else{
-                    
-                }
-            }];
+            ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+            [choose nopayAppointWithProductid:_theProductModel.product_id gender:[_theProductModel.gender_id intValue] noAppointNum:100];
+            choose.lastViewController = self;
+            [self.navigationController pushViewController:choose animated:YES];
         }
         
 //        GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];

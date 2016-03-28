@@ -335,6 +335,24 @@ typedef enum {
     _selectHospitalId = [examCenterId intValue];
 }
 
+
+/**
+ *  直接预约,未支付
+ *
+ *  @param productId
+ *  @param gender       套餐适用性别
+ *  @param noAppointNum 剩余可预约数
+ */
+- (void)nopayAppointWithProductid:(NSString *)productId
+                           gender:(Gender)gender
+                     noAppointNum:(int)noAppointNum
+{
+    _isJustSelect = NO;
+    _productId = productId;
+    _gender = gender;
+    _noAppointNum = noAppointNum;
+}
+
 /**
  *  仅选择时间和分院,不做其他操作
  *

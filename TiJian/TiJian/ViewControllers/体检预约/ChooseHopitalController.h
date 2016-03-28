@@ -21,14 +21,16 @@
 
 @property(nonatomic,assign)Gender gender;//性别
 
-///**
-// *  仅选择时间和分院,不做其他操作
-// *
-// *  @param productId
-// *  @param examCenterId 分院id
-// */
-//- (void)setSelectParamWithProductId:(NSString *)productId
-//                       examCenterId:(NSString *)examCenterId;
+/**
+ *  直接预约,未支付
+ *
+ *  @param productId
+ *  @param gender       套餐适用性别
+ *  @param noAppointNum 剩余可预约数
+ */
+- (void)nopayAppointWithProductid:(NSString *)productId
+                           gender:(Gender)gender
+                     noAppointNum:(int)noAppointNum;
 
 /**
  *  仅选择时间和分院,不做其他操作
