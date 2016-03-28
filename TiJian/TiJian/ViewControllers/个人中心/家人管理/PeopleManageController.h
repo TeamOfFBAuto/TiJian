@@ -13,7 +13,8 @@
 typedef enum{
     PEOPLEACTIONTYPE_NORMAL = 0,//普通家人管理
     PEOPLEACTIONTYPE_SELECT_APPOINT, //选择并提交预约
-    PEOPLEACTIONTYPE_SELECT //仅选择体检人信息
+    PEOPLEACTIONTYPE_SELECT, //仅选择体检人信息
+    PEOPLEACTIONTYPE_NOPAYAPPOINT //不支付去预约
 }PEOPLEACTIONTYPE;
 
 @interface PeopleManageController : MyViewController
@@ -22,6 +23,7 @@ typedef enum{
 @property(nonatomic,assign)PEOPLEACTIONTYPE actionType;
 
 @property(nonatomic,assign)Gender gender;
+@property(nonatomic,retain)id productModel;//直接预约的单品详情model
 
 
 /**

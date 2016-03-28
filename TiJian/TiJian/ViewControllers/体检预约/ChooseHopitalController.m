@@ -33,6 +33,7 @@ typedef enum {
     int _noAppointNum;//未预约数
     BOOL _isCompanyAppoint;//是否是公司预约
     BOOL _isJustSelect;//是否仅为选择时间和分院
+    BOOL _nopayAppoint;//不支付直接预约
     
     CGFloat _lastOffsetY;
     
@@ -343,6 +344,25 @@ typedef enum {
     _selectHospitalId = [examCenterId intValue];
 }
 
+
+/**
+ *  直接预约,未支付
+ *
+ *  @param productId
+ *  @param gender       套餐适用性别
+ *  @param noAppointNum 剩余可预约数
+ */
+- (void)nopayAppointWithProductid:(NSString *)productId
+                           gender:(Gender)gender
+                     noAppointNum:(int)noAppointNum
+{
+    _isJustSelect = NO;
+    _productId = productId;
+    _gender = gender;
+    _noAppointNum = noAppointNum;
+    _nopayAppoint = YES;
+}
+
 /**
  *  仅选择时间和分院,不做其他操作
  *
@@ -439,7 +459,12 @@ typedef enum {
     
     //选择人 预约
     PeopleManageController *people = [[PeopleManageController alloc]init];
-    people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;
+    if (_nopayAppoint) {
+        people.actionType = PEOPLEACTIONTYPE_NOPAYAPPOINT;//未支付直接预约
+    }else
+    {
+        people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;
+    }
     [people setAppointOrderId:self.order_id productId:self.productId examCenterId:NSStringFromInt(_selectHospitalId) date:_selectDate noAppointNum:self.noAppointNum];
     
     people.lastViewController = self.lastViewController;

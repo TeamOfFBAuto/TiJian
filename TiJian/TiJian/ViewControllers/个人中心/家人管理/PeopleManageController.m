@@ -10,6 +10,8 @@
 #import "AddPeopleViewController.h"
 #import "EditUserInfoViewController.h"
 #import "AppointModel.h"
+#import "ConfirmOrderViewController.h"
+#import "ProductModel.h"
 
 #define kTag_Appoint 200 //预约
 #define kTag_Delete 201 //去删除
@@ -218,11 +220,39 @@
 - (void)clickToAppoint
 {
     
+    int num = (int)_selectedArray.count;
     //选择自己或者选择了至少一个其他人
-    if (_isMyselfSelected || _selectedArray.count > 0) {
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
-        alert.tag = kTag_Appoint;
-        [alert show];
+    if (_isMyselfSelected || num > 0) {
+        
+        //未付款去预约,跳转至确认订单页面
+        if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
+            
+            //如果直接预约
+//            exam_center_id 体检中心id
+//            date 预约时间
+//            myself 预约是否自己
+//            family_uid 预约家人
+            NSString *exam_center_id = _exam_center_id;
+            NSString *date = _date;
+            BOOL myself = _isMyselfSelected;
+            
+            ProductModel *productModel = (ProductModel *)self.productModel;
+            ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+            cc.lastViewController = self;
+            //    aModel.current_price\product_num、brand_name、cover_pic
+            productModel.product_num = NSStringFromInt(num);
+            productModel.current_price = productModel.setmeal_price;
+            productModel.product_name = productModel.setmeal_name;
+            cc.dataArray = [NSArray arrayWithObject:productModel];
+            [self.navigationController pushViewController:cc animated:YES];
+            
+        }else
+        {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
+            alert.tag = kTag_Appoint;
+            [alert show];
+        }
+        
     }else{
         
         [LTools showMBProgressWithText:@"请选择体检人" addToView:self.view];
@@ -530,7 +560,12 @@
     
     //确认预约按钮
     UIButton *sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [sureBtn setTitle:@"确认预约" forState:UIControlStateNormal];
+    if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
+        [sureBtn setTitle:@"确认选择体检人" forState:UIControlStateNormal];
+    }else
+    {
+        [sureBtn setTitle:@"确认预约" forState:UIControlStateNormal];
+    }
     sureBtn.backgroundColor = DEFAULT_TEXTCOLOR;
     sureBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [sureBtn addCornerRadius:2.f];
