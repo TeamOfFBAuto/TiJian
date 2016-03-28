@@ -801,8 +801,8 @@
     [_downView addSubview:_addShopCarBtn];
     
     CGFloat tw = (_downView.frame.size.width-theW)/4;
-    NSArray *titleArray = @[@"客服",@"收藏",@"品牌店",@"购物车"];
-    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"pinpaidian_pd.png",@"gouwuche_pd.png"];
+    NSArray *titleArray = @[@"客服",@"收藏",@"预约",@"购物车"];
+    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"yuyue_pd.png",@"gouwuche_pd.png"];
     for (int i = 0; i<4; i++) {
         UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
@@ -819,7 +819,7 @@
             }
             
         }
-        if (i<2) {
+        if (i<3) {
             [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
         }else{
             if (DEVICE_WIDTH<375) {//4s 5s
@@ -933,22 +933,22 @@
         
     }else if (sender.tag == 102){//预约
 #pragma mark - 李朝伟
-//        if ([LoginViewController isLogin]) {//已登录
-//            
-//        }else{
-//            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-//                if (success) {
-//                    
-//                }else{
-//                    
-//                }
-//            }];
-//        }
+        if ([LoginViewController isLogin]) {//已登录
+            
+        }else{
+            [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+                if (success) {
+                    
+                }else{
+                    
+                }
+            }];
+        }
         
-        GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
-        cc.brand_name = self.theProductModel.brand_name;
-        cc.brand_id = self.theProductModel.brand_id;
-        [self.navigationController pushViewController:cc animated:YES];
+//        GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
+//        cc.brand_name = self.theProductModel.brand_name;
+//        cc.brand_id = self.theProductModel.brand_id;
+//        [self.navigationController pushViewController:cc animated:YES];
         
     }else if (sender.tag == 103){//购物车
         
