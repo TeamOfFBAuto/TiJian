@@ -371,6 +371,9 @@
 //存
 + (void)setObject:(id)object forKey:(NSString *)key;
 {
+    if (!key) {
+        return;
+    }
     @try {
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -695,6 +698,9 @@
  */
 + (NSString *)distanceString:(NSString *)distance
 {
+    if (!distance || [LTools isEmpty:distance]) {
+        return nil;
+    }
     NSString *distanceStr;
     
     double dis = [distance doubleValue];
@@ -716,7 +722,7 @@
  *  时间戳转化为格式时间
  *
  *  @param placetime 时间线
- *  @param format    时间格式 @"yyyy-MM-dd HH:mm:ss"
+ *  @param format    时间格式 @"yyyy-MM-dd HH:mm:ss" HH代表24小时制 12代表12小时进制
  *
  *  @return 返回时间字符串
  */

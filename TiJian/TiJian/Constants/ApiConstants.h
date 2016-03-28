@@ -36,7 +36,7 @@
 //商城套餐分类
 #define StoreProductClass @"/index.php?d=api&c=setmeal&m=setmeal_category_list"
 
-//商城首页精品推荐
+////商城首页精品推荐
 #define StoreJingpinTuijian @"/index.php?d=api&c=setmeal&m=index_setmeal_list"
 
 //商品列表 get方式
@@ -373,6 +373,12 @@
 //4、获取已预约/过期列表
 //get 方式 authcode、expired 是否过期的 0=》未过期 1=》已过期、page、per_page
 #define GET_APPOINT @"/index.php?d=api&c=appoint&m=get_appoints"
+
+//获取已体检的预约列表
+#define GET_FINISHED_APPOINT @"/index.php?d=api&c=appoint&m=get_finished_appoints"
+
+//获取已体检进度详情
+#define GET_AppointProgressDetail @"/index.php?d=api&c=appoint&m=view_finished_appoint"
 
 //5、查看预约详情
 //get 方式、authcode、appoint_id 预约id

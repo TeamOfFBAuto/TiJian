@@ -11,7 +11,7 @@
 @implementation NSDate (Additons)
 
 /**
- *  时间间隔天数
+ *  时间间隔小时
  *
  *  @param toDate 比较的时间
  *
@@ -21,6 +21,19 @@
 {
     NSTimeInterval time = [self timeIntervalSinceDate:toDate];
     return  fabs(time / 60 / 60);
+}
+
+/**
+ *  时间间隔天数
+ *
+ *  @param toDate 比较的时间
+ *
+ *  @return 返回天数
+ */
+- (NSInteger)daysBetweenDate:(NSDate *)toDate
+{
+    NSTimeInterval time = [self timeIntervalSinceDate:toDate];
+    return  fabs(time / 60 / 60 / 24);
 }
 
 @end

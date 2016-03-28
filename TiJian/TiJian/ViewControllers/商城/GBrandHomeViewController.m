@@ -399,6 +399,7 @@
     self.searchTf.placeholder = @"在店内搜索您要找的商品";
     self.searchTf.delegate = self;
     self.searchTf.returnKeyType = UIReturnKeySearch;
+    self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
     
@@ -540,10 +541,13 @@
     
 }
 
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-//    DDLOG(@"%s",__FUNCTION__);
-}
 
+
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    [self controlTopButtonWithScrollView:scrollView];
+    
+}
 
 #pragma mark - 网络请求
 

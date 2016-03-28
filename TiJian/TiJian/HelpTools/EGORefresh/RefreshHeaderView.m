@@ -173,9 +173,9 @@
             _loading = [_delegate egoRefreshTableDataSourceIsLoading:self];
         }
         
-        if (_state == L_EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !_loading) {
+        if (_state == L_EGOOPullRefreshPulling && scrollView.contentOffset.y > -55.0f && scrollView.contentOffset.y < 0.0f && !_loading) {
             [self setState:L_EGOOPullRefreshNormal];
-        } else if (_state == L_EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !_loading) {
+        } else if (_state == L_EGOOPullRefreshNormal && scrollView.contentOffset.y < -55.0f && !_loading) {
             [self setState:L_EGOOPullRefreshPulling];
         }
         
@@ -193,7 +193,7 @@
         _loading = [_delegate egoRefreshTableDataSourceIsLoading:self];
     }
     
-    if (scrollView.contentOffset.y <= - 65.0f && !_loading) {
+    if (scrollView.contentOffset.y <= - 55.0f && !_loading) {
         
         if (_delegate && [_delegate respondsToSelector:@selector(egoRefreshTableDidTriggerRefresh:)]) {
             [_delegate egoRefreshTableDidTriggerRefresh:EGORefreshHeader];

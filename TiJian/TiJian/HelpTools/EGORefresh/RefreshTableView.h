@@ -114,10 +114,6 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
           pageSize:(int)pageSize
         noDataView:(UIView *)noDataView;
 
-- (void)reloadData:(NSArray *)data
-          pageSize:(int)pageSize
-  CustomNoDataView:(UIView *)noDataView;
-
 #pragma mark - 数据加载失败
 /**
  *  请求数据失败 显示自定义view

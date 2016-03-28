@@ -51,6 +51,8 @@
 {
     if (buttonIndex == 0) {
         
+        [self.navigationController popViewControllerAnimated:YES];
+        
     }else if (buttonIndex == 1){
         
         if (IOS8_OR_LATER) {

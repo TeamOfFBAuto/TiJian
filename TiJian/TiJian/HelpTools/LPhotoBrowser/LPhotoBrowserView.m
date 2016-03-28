@@ -87,7 +87,15 @@
     UIImageView *item = zoom.imageView;
     CGRect realFrame = item.frame;
     
-    item.frame = photo.sourceFrame;
+    
+    CGRect sourceFrame = photo.sourceFrame;
+    if (CGRectIsEmpty(sourceFrame) || CGRectIsNull(sourceFrame)) {
+        
+        sourceFrame = CGRectMake(self.width/2.f, self.height/2.f, 0, 0);
+    }
+    
+    item.frame = sourceFrame;
+    
     item.contentMode=UIViewContentModeScaleAspectFill;
     item.clipsToBounds = YES;
     
@@ -168,7 +176,7 @@
     }else
     {
         zoom.imageView.image = photo.image;
-        [zoom resetImageFrameAfterImageLoaded];
+//        [zoom resetImageFrameAfterImageLoaded];
 
     }
 }

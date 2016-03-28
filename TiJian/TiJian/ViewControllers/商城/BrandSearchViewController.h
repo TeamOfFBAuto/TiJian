@@ -23,5 +23,9 @@
 @property(nonatomic,strong)UIView *fourBtnView;
 @property(nonatomic,strong)NSMutableArray *fourBtnArray;
 
+@property(nonatomic,assign)BOOL haveChooseGender;//yes 可以选择性别  no 限定性别
+@property(nonatomic,strong)NSDictionary *shaixuanDic;
+@property(nonatomic,strong)NSArray *brand_city_list;
+
 
 @end

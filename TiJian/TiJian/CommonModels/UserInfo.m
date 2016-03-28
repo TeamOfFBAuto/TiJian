@@ -177,7 +177,49 @@
     return NO;
 }
 
+/**
+ *  获取经度
+ *
+ *  @return
+ */
++ (NSString *)getLontitude
+{
+    NSString *value = [LTools objectForKey:@"longtitude"];
+    if (value) {
+        return value;
+    }
+    return @"";
+}
+
+/**
+ *  获取维度
+ *
+ *  @return
+ */
++ (NSString *)getLatitude
+{
+    NSString *value = [LTools objectForKey:@"latitude"];
+    if (value) {
+        return value;
+    }
+    return @"";
+}
+
 #pragma mark - 用户信息更新
+
+/**
+ *  更新用户当前坐标
+ */
++ (void)updateUserLontitude:(NSString *)longtitude
+                   latitude:(NSString *)latitude
+{
+    if (longtitude) {
+        [LTools setObject:longtitude forKey:@"longtitude"];
+    }
+    if (latitude) {
+        [LTools setObject:latitude forKey:@"latitude"];
+    }
+}
 
 /**
  *  更新头像

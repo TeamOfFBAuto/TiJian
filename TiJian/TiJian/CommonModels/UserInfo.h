@@ -81,6 +81,9 @@
 @property(nonatomic,retain)NSString *url;//解读详情
 @property(nonatomic,retain)NSString *customed;//是否个性化定制过
 
+@property(nonatomic,retain)NSString *longtitude;//经度 记录用户当前位置
+@property(nonatomic,retain)NSString *latitude;//维度
+
 
 /**
  *  归档的方式存model对象 重写了编码解码方法
@@ -106,8 +109,27 @@
 + (NSString *)getDeviceToken;
 + (NSString *)getUserId;
 + (BOOL)getCustomState;//是否定制化过
+/**
+ *  获取经度
+ *
+ *  @return
+ */
++ (NSString *)getLontitude;
+
+/**
+ *  获取维度
+ *
+ *  @return
+ */
++ (NSString *)getLatitude;
 
 #pragma mark - 用户信息更新
+
+/**
+ *  更新用户当前坐标
+ */
++ (void)updateUserLontitude:(NSString *)longtitude
+                   latitude:(NSString *)latitude;
 
 /**
  *  更新头像

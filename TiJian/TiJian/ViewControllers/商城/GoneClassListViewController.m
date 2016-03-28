@@ -91,10 +91,6 @@
     [self prepareBrandListWithLocation];
     
     
-    
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -157,6 +153,8 @@
     self.searchTf.placeholder = @"输入您要找的商品";
     self.searchTf.delegate = self;
     self.searchTf.returnKeyType = UIReturnKeySearch;
+    self.searchTf.text = self.theSearchWorld;
+    self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
     
@@ -428,7 +426,7 @@
             dic = temp_dic;
         }
         if (self.category_id) {
-            [temp_dic setObject:[NSString stringWithFormat:@"self.category_id"] forKey:@"category_id"];
+            [temp_dic setObject:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
             dic = temp_dic;
         }
         
@@ -654,6 +652,15 @@
     
     [_request removeOperation:_request_ProductOneClass];
     
+    
+    if (self.brand_id && self.category_id) {
+        NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
+        [temp safeSetString:self.brand_id forKey:@"brand_id"];
+        [temp safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
+        self.shaixuanDic = temp;
+    }
+    
+    
     if (self.theSearchWorld) {
         [self prepareNetDataWithSearchDic:self.shaixuanDic];
     }else{
@@ -664,6 +671,15 @@
     
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
+    
+    if (self.brand_id && self.category_id) {
+        NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
+        [temp safeSetString:self.brand_id forKey:@"brand_id"];
+        [temp safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
+        self.shaixuanDic = temp;
+    }
+    
+    
     
     if (self.theSearchWorld) {
         [self prepareNetDataWithSearchDic:self.shaixuanDic];

@@ -277,7 +277,7 @@
             _tab.top = 0;
             _hiddenView.top = CGRectGetMaxY(_tab.frame);
 //            _downView.top = DEVICE_HEIGHT - 50-64;
-            self.myTitle = @"体检项目";
+            self.myTitle = @"产品详情";
         }];
     }
     
@@ -297,7 +297,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self getProductDetail];//单品详情
+    [self getProductDetail];//单品详情和看了又看
     [self getProductConmment];//产品评论
     
     [self prepareProductProjectList];//具体项目
@@ -607,7 +607,6 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
-    
 }
 
 
@@ -804,7 +803,7 @@
     
     CGFloat tw = (_downView.frame.size.width-theW)/4;
     NSArray *titleArray = @[@"客服",@"收藏",@"预约",@"购物车"];
-    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"yuyue_productd.png",@"gouwuche_pd.png"];
+    NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"yuyue_pd.png",@"gouwuche_pd.png"];
     for (int i = 0; i<4; i++) {
         UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
@@ -821,7 +820,7 @@
             }
             
         }
-        if (i<=2) {
+        if (i<3) {
             [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
         }else{
             if (DEVICE_WIDTH<375) {//4s 5s
@@ -934,9 +933,14 @@
         
         
     }else if (sender.tag == 102){//预约
+<<<<<<< HEAD
 
         //update by lcw 2期
         if ([LoginManager isLogin:self]) {//已登录
+=======
+#pragma mark - 李朝伟
+        if ([LoginViewController isLogin]) {//已登录
+>>>>>>> master
             
             ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
             [choose nopayAppointWithProductid:_theProductModel.product_id gender:[_theProductModel.gender_id intValue] noAppointNum:100];

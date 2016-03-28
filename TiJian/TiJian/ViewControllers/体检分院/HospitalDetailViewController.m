@@ -88,6 +88,29 @@
         nameView.height = content.bottom + 15;
     }
     
+    
+    //休息日
+    NSString *restDayDesc = _hospitalModel.rest_day;
+    height = 0.f;
+    
+    if ([restDayDesc isKindOfClass:[NSString class]] && restDayDesc.length > 0) {
+        
+        nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
+        nameView.backgroundColor = [UIColor whiteColor];
+        [_scrollView addSubview:nameView];
+        
+        title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"休息时间"];
+        [nameView addSubview:title];
+        
+        content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 15, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:restDayDesc];
+        [nameView addSubview:content];
+        content.numberOfLines = 0;
+        content.lineBreakMode = NSLineBreakByCharWrapping;
+        height = [LTools heightForText:restDayDesc width:content.width font:13];
+        content.height = height;
+        nameView.height = content.bottom + 15;
+    }
+    
     //分院地址
     nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
     nameView.backgroundColor = [UIColor whiteColor];
@@ -97,8 +120,14 @@
     [nameView addSubview:title];
     
     NSString *address = _hospitalModel.address;
-    content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 0, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:address];
+    content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 22.5 - 6.5 - 2, DEVICE_WIDTH - 10 - title.right - 15 - 20, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:address];
+    content.numberOfLines = 0.f;
     [nameView addSubview:content];
+    
+    CGFloat address_height = [LTools heightForText:address width:content.width font:13];
+    content.height = address_height;
+    
+    nameView.height = content.bottom + 12;
     
     //图标
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -176,7 +205,7 @@
                 [imageview l_setImageWithURL:[NSURL URLWithString:url] placeholderImage:DEFAULT_HEADIMAGE];
                 imageview.tag = 200 + i;
                 [nameView addSubview:imageview];
-//                [imageview addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
+                [imageview addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:200 + i];
                 imageBottom = imageview.bottom + 5;
                 
                 nameView.height = imageview.bottom;
@@ -197,8 +226,21 @@
  *  品牌推荐view
  */
 - (void)createRecommendViewWithTop:(CGFloat)top
-{
-    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, 175 + 20)];
+{    
+    //没有推荐套餐则不显示该部分
+    if (!_recommendArray || _recommendArray.count == 0) {
+        return;
+    }
+    
+    NSInteger count = _recommendArray.count;
+    CGFloat height = 0.f;
+    
+    if (count >= 3) {
+        count = 3;
+        height = 175 + 20;
+    }
+    
+    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, height)];
     backView.backgroundColor = [UIColor whiteColor];
     [_scrollView addSubview:backView];
     
@@ -211,9 +253,7 @@
     CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
     CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
     
-    NSInteger count = 3;
-    
-    for (int i = 0; i<count; i++) {
+    for (int i = 0; i < count; i++) {
         
         ProductModel *amodel = _recommendArray[i];
         UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), tLabel.bottom, theW, theH)];
@@ -248,16 +288,15 @@
         [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
         priceLabel.attributedText = aaa;
         [logoAndContentView addSubview:priceLabel];
-        
-        
     }
     
     if (count>0) {
 
     }else{
         
-        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, top, DEVICE_WIDTH, 30)];
-        tt.text = @"暂无数据";
+        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, 45, DEVICE_WIDTH - 40, 30)];
+        tt.text = @"暂无可推荐套餐";
+        tt.textAlignment = NSTextAlignmentCenter;
         tt.font = [UIFont systemFontOfSize:11];
         tt.textColor = [UIColor grayColor];
         [backView addSubview:tt];
@@ -409,9 +448,15 @@
         
         for (int i = 0; i < count; i ++) {
             
+            NSDictionary *imageDic = img[i];
+            
             UIImageView *imageView = [Weak_scrollView viewWithTag:200 + i];
             LPhotoModel *photo = [[LPhotoModel alloc]init];
-            photo.imageUrl = img[i];
+            if ([imageDic isKindOfClass:[NSDictionary class]]) {
+                photo.imageUrl = imageDic[@"url"];
+            }else if([imageDic isKindOfClass:[NSString class]]){
+                photo.imageUrl = (NSString *)imageDic;
+            }
             imageView = imageView;
             photo.thumbImage = imageView.image;
             photo.sourceImageView = imageView;

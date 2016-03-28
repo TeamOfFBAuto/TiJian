@@ -14,6 +14,7 @@
 #import "AppointDetailController.h"//预约详情
 #import "GStoreHomeViewController.h"//商城
 #import "GoneClassListViewController.h"
+#import "AppointProgressDetailController.h"//已体检预约进度
 
 #import "ProductModel.h"
 #import "AppointmentCell.h"
@@ -28,6 +29,7 @@
     NSArray *_personal;
     NSArray *_expired;//已过期
     NSArray *_no_expired;//未过期
+    NSArray *_finished;//已体检
     int _currentPage;//当前页面
 }
 @property(nonatomic,retain)UIScrollView *scroll;
@@ -35,6 +37,7 @@
 @property(nonatomic,retain)UIView *noAppointView;//待预约view
 @property(nonatomic,retain)UIView *appointedView;//已预约view
 @property(nonatomic,retain)UIView *appointedOverView;//已预约过期view
+@property(nonatomic,retain)UIView *appointedExamedView;//预约已体检view
 
 @end
 
@@ -133,9 +136,9 @@
     for (int i = 0; i < 2; i ++) {
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(aver * 2 + (width + aver) * i, label.bottom + 35, width, 35);
+        btn.frame = CGRectMake(aver * 2 + (width + aver) * i, label.bottom + 35, width, 30);
         [view addSubview:btn];
-        [btn addCornerRadius:2.f];
+        [btn addCornerRadius:5.f];
         btn.titleLabel.font = [UIFont systemFontOfSize:14];
         if (i == 0) {
             [btn setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
@@ -181,8 +184,17 @@
     if (_appointedOverView) {
         return _appointedOverView;
     }
-    _appointedOverView = [self viewForResultWithTitle:@"您还没有已过期套餐"];
+    _appointedOverView = [self viewForResultWithTitle:@"您还没有已过期预约"];
     return _appointedOverView;
+}
+
+-(UIView *)appointedExamedView
+{
+    if (_appointedExamedView) {
+        return _appointedExamedView;
+    }
+    _appointedExamedView = [self viewForResultWithTitle:@"您还没用预约已体检"];
+    return _appointedExamedView;
 }
 
 - (UIView *)viewForResultWithTitle:(NSString *)title
@@ -211,7 +223,7 @@
 
 - (void)prepareView
 {
-    NSArray *arr = @[@"全部",@"未预约",@"已预约",@"已过期"];
+    NSArray *arr = @[@"全部",@"未预约",@"已预约",@"已过期",@"已体检"];
     int sum = (int)arr.count;
     
     self.scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 45, DEVICE_WIDTH, DEVICE_HEIGHT - 45 - 64)];
@@ -280,11 +292,19 @@
                    @"per_page":NSStringFromInt(PAGESIZE_MID)};
     }
     //已过期
-    else if ([self tableViewWithIndex:3])
+    else if (table == [self tableViewWithIndex:3])
     {
         api = GET_APPOINT;
         params = @{@"authcode":authkey,
                    @"expired":@"1",
+                   @"page":NSStringFromInt(table.pageNum),
+                   @"per_page":NSStringFromInt(PAGESIZE_MID)};
+    }
+    //已体检
+    else if (table == [self tableViewWithIndex:4])
+    {
+        api = GET_FINISHED_APPOINT;
+        params = @{@"authcode":authkey,
                    @"page":NSStringFromInt(table.pageNum),
                    @"per_page":NSStringFromInt(PAGESIZE_MID)};
     }
@@ -322,11 +342,13 @@
         _personal = [ProductModel modelsFromArray:setmeal_list[@"personal"]];
         _no_expired = [AppointModel modelsFromArray:setmeal_list[@"no_expired"]];
         _expired = [AppointModel modelsFromArray:setmeal_list[@"expired"]];
+        _finished = [AppointModel modelsFromArray:setmeal_list[@"finished"]];
         
         if (_company.count == 0 &&
             _personal.count == 0 &&
             _no_expired.count == 0 &&
-            _expired.count == 0) {
+            _expired.count == 0 &&
+            _finished.count == 0) {
             
             //没有待预约
             
@@ -397,6 +419,18 @@
         }
         [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
 
+    }else if (index == 4){ //已体检部分
+        
+        NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
+        if (temp.count == 0) {
+            [[self tableViewWithIndex:index]addSubview:self.appointedExamedView];
+        }else
+        {
+            [self.appointedExamedView removeFromSuperview];
+            self.appointedExamedView = nil;
+        }
+        [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
+        
     }
 }
 
@@ -418,7 +452,7 @@
     }
     
     NSLog(@"%s",__FUNCTION__);
-    for (int i = 0; i < 4; i ++) {
+    for (int i = 0; i < 5; i ++) {
         [self buttonWithIndex:i].selected = (index == i);
     }
     
@@ -515,6 +549,8 @@
             aModel = _no_expired[indexPath.row];
         }else if (indexPath.section == 3){
             aModel = _expired[indexPath.row];
+        }else if (indexPath.section == 4){
+            aModel = _finished[indexPath.row];
         }
         
         if ([aModel isKindOfClass:[ProductModel class]] &&
@@ -545,17 +581,35 @@
         }else
         {
             AppointModel *aModel;
+            BOOL progress = NO;
             if (indexPath.section == 2){
                 aModel = _no_expired[indexPath.row];
             }else if (indexPath.section == 3){
                 aModel = _expired[indexPath.row];
+            }else if (indexPath.section == 4){
+                aModel = _finished[indexPath.row];
+                progress = YES;
             }
-            AppointDetailController *detail = [[AppointDetailController alloc]init];
-            detail.appoint_id = aModel.appoint_id;
-            [self.navigationController pushViewController:detail animated:YES];
+            if (progress) {
+                AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
+                detail.appointId = aModel.appoint_id;
+                [self.navigationController pushViewController:detail animated:YES];
+            }else
+            {
+                AppointDetailController *detail = [[AppointDetailController alloc]init];
+                detail.appoint_id = aModel.appoint_id;
+                [self.navigationController pushViewController:detail animated:YES];
+            }
         }
         
-    }else
+    }else if (index == 4){
+        
+        AppointModel *aModel = tableView.dataArray[indexPath.row];
+        AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
+        detail.appointId = aModel.appoint_id;
+        [self.navigationController pushViewController:detail animated:YES];
+    }
+    else
     {
         AppointModel *aModel = tableView.dataArray[indexPath.row];
         AppointDetailController *detail = [[AppointDetailController alloc]init];
@@ -570,7 +624,8 @@
     if (index == 0 || index == 1) {
         
         if (indexPath.section == 2 ||
-            indexPath.section == 3)
+            indexPath.section == 3 ||
+            indexPath.section == 4)
         {
             return 60.f;
         }
@@ -598,6 +653,8 @@
             title = @"已预约";
         }else if (section == 3){
             title = @"已过期";
+        }else if (section == 4){
+            title = @"已体检";
         }
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 120, 40) title:title font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"989898"]];
         [head addSubview:label];
@@ -630,6 +687,12 @@
         
         if (section == 3) {
             if (_expired.count == 0) {
+                return 0.f;
+            }
+        }
+        
+        if (section == 4) {
+            if (_finished.count == 0) {
                 return 0.f;
             }
         }
@@ -678,6 +741,8 @@
             return _no_expired.count;
         }else if (section == 3){
             return _expired.count;
+        }else if (section == 4){
+            return _finished.count;
         }
     }
     return tableView.dataArray.count;
@@ -765,6 +830,8 @@
             aModel = _no_expired[indexPath.row];
         }else if (indexPath.section == 3){
             aModel = _expired[indexPath.row];
+        }else if (indexPath.section == 4){
+            aModel = _finished[indexPath.row];
         }
     }else
     {
@@ -795,6 +862,13 @@
         }
         [timeLabel setAttributedText:[LTools attributedString:text keyword:days color:[UIColor colorWithHexString:@"f88326"]]];
     }
+    //已体检
+    else if (index == 4 || (index == 0 && indexPath.section == 4)){
+        
+        NSString *days = aModel.report_status;
+        timeLabel.text = days;
+        timeLabel.textColor = DEFAULT_TEXTCOLOR_ORANGE;
+    }
     
     return cell;
 }
@@ -803,7 +877,7 @@
 {
     int index = (int)tableView.tag - kTagTableView;
     if (index == 0) {
-        return 4;
+        return 5;
     }else if (index == 1){
         return 2;
     }

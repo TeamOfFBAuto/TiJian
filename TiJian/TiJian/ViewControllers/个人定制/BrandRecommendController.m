@@ -10,6 +10,7 @@
 #import "BrandRecomendCell.h"
 #import "ConfirmOrderViewController.h"
 #import "ProductModel.h"
+#import "GproductDetailViewController.h"
 
 @interface BrandRecommendController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -114,24 +115,18 @@
 {
 //    &result_id=16&type=3
     NSDictionary *params = @{@"result_id":self.result_id,
-                             @"type":[NSNumber numberWithInt:self.starNum]};;
+                             @"type":[NSNumber numberWithInt:self.starNum],
+                             @"min_price":self.min_price};;
     NSString *api = Get_c_setmeal_product;
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
         NSArray *temp = result[@"data"];
-//        NSMutableArray *tt = [NSMutableArray arrayWithArray:temp];
-//        [tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];[tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];[tt addObjectsFromArray:temp];
-//        [tt addObjectsFromArray:temp];
         if (temp.count > 0) {
             
             if (!_bottom) {
@@ -155,6 +150,18 @@
 #pragma mark - 数据解析处理
 
 #pragma mark - 事件处理
+
+/**
+ *  跳转至单品详情
+ *
+ *  @param productId
+ */
+- (void)pushToSetmealDetailWithId:(NSString *)productId
+{
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    cc.productId = productId;
+    [self.navigationController pushViewController:cc animated:YES];
+}
 
 - (void)clickToPay:(UIButton *)btn
 {
@@ -333,6 +340,14 @@
         _selectIndex = index;
         [WeaktableView reloadData];
         [Weakself dealSelectSetmeal:dic];
+    }];
+    
+    [cell setMainSetMealClickBlcok:^(NSDictionary * setmealDic) {
+        if ([setmealDic isKindOfClass:[NSDictionary class]]) {
+            
+            NSString *product_id = setmealDic[@"product_id"];
+            [Weakself pushToSetmealDetailWithId:product_id];
+        }
     }];
     
     if ((int)indexPath.section == _selectIndex) {

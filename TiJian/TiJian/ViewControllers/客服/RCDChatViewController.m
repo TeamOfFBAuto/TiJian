@@ -19,6 +19,7 @@
 #import "OrderModel.h"
 #import "CustomProductMsgCell.h"//自定义套餐cell
 #import "CustomOrderMsgCell.h"//自定义订单cell
+#import "LPhotoBrowser.h"
 
 typedef NS_ENUM(NSInteger,CustomMsgType) {
     CustomMsgTypeProduct = 0,//单品
@@ -87,10 +88,10 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     UIBarButtonItem *back_item=[[UIBarButtonItem alloc]initWithCustomView:button_back];
     self.navigationItem.leftBarButtonItems=@[spaceButton1,back_item];
     _leftButton = button_back;
- 
+
     UILabel *_myTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,44)];
     _myTitleLabel.textAlignment = NSTextAlignmentCenter;
-    _myTitleLabel.text = self.userName;
+    _myTitleLabel.text = self.chatTitle;
     _myTitleLabel.textColor = DEFAULT_TEXTCOLOR;
     _myTitleLabel.font = [UIFont systemFontOfSize:17];
     self.navigationItem.titleView = _myTitleLabel;
@@ -170,9 +171,10 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     //发送单品图文消息
     if (_msgType == CustomMsgTypeProduct) {
         
-        NSString *extra = [NSString stringWithFormat:@"productId=%@",((ProductModel *)_msg_model).product_id];
-        NSString *content = @"http://www.baidu.com";//单品链接
-        
+        ProductModel *aModel = (ProductModel *)_msg_model;
+        NSString *extra = [NSString stringWithFormat:@"productId=%@",aModel.product_id];
+        NSString *content = aModel.info_url;//单品链接
+//        content = [NSString stringWithFormat:@"详情链接:%@",content];
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;
         [self sendMessage:msg pushContent:@"套餐详情"];
@@ -180,12 +182,11 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         
     }else if (_msgType == CustomMsgTypeOrder){
         
-        NSString *extra = [NSString stringWithFormat:@"orderId=%@",((OrderModel *)_msg_model).order_id];
-        NSString *content = @"http://www.baidu.com";//订单详情链接
-        
+        OrderModel *aModel = (OrderModel *)_msg_model;
+        NSString *extra = [NSString stringWithFormat:@"orderId=%@",aModel.order_id];
+        NSString *content = aModel.info_url;//订单详情链接
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;
-        
         [self sendMessage:msg pushContent:@"订单详情"];
     }
     
@@ -467,15 +468,36 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     }
 }
 
-///**
-// *  打开地理位置。开发者可以重写，自己根据经纬度打开地图显示位置。默认使用内置地图
-// *
-// *  @param locationMessageContent 位置消息
-// */
-//- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent
-//{
-//    
-//}
+/*!
+ 查看图片消息中的图片
+ 
+ @param model   消息Cell的数据模型
+ 
+ @discussion SDK在此方法中会默认调用RCImagePreviewController下载并展示图片。
+ */
+- (void)presentImagePreviewController:(RCMessageModel *)model
+{
+    int index = 0;
+    
+    RCImageMessage *msg = (RCImageMessage *)model.content;
+    
+    NSInteger initPage = index;
+    
+    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
+        
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:0];
+        
+        LPhotoModel *photo = [[LPhotoModel alloc]init];
+        
+        UIImage *originalImage = [UIImage imageWithContentsOfFile:msg.imageUrl];
+        photo.image = originalImage;
+        photo.thumbImage = msg.thumbnailImage;
+        
+        [temp addObject:photo];
+        
+        return temp;
+    }];
+}
 
 #pragma - mark UIAlertViewDelegate <NSObject>
 

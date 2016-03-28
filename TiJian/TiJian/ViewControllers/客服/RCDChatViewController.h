@@ -10,6 +10,8 @@
 
 @interface RCDChatViewController : RCConversationViewController
 
+@property(nonatomic,retain)NSString *chatTitle;
+
 /**
  *  会话数据模型
  */

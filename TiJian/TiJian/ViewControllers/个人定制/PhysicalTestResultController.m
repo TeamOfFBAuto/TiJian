@@ -15,6 +15,7 @@
     UIView *_bgView;
     Gender _gender;
     UIImageView *_genderImageView;//显示男女
+    BOOL _isAddedObserver;//是否加过观察者
 }
 
 @property(nonatomic,retain)ResultView *result_View;
@@ -24,19 +25,6 @@
 @end
 
 @implementation PhysicalTestResultController
-
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"测试结果"];
-//
-////    [self.navigationController setNavigationBarHidden:YES animated:animated];
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"测试结果"];
-//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -208,6 +196,7 @@
         }
         
     } failBlock:^(NSDictionary *result) {
+        
         [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         
         //未进行个性化定制
@@ -275,7 +264,12 @@
  */
 - (void)clickToTest:(UIButton *)btn
 {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_PersonalCustomization_SUCCESS object:nil];
+    if (!_isAddedObserver) {
+        
+       [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_PersonalCustomization_SUCCESS object:nil];
+        _isAddedObserver = YES;
+    }
+    
     PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
     custom.lastViewController = self;
     [self.navigationController pushViewController:custom animated:YES];
@@ -283,10 +277,14 @@
 
 - (void)actionForNotification:(NSNotification *)notification
 {
+    NSLog(@"擦擦擦擦擦擦擦1");
+
     //个性化定制
     if ([notification.name isEqualToString:NOTIFICATION_PersonalCustomization_SUCCESS]) {
         
         [self getCustomizationResult];
+        NSLog(@"擦擦擦擦擦擦擦2");
+
     }
 }
 

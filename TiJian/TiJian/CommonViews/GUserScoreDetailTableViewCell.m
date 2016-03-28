@@ -56,6 +56,9 @@
     }else if ([[dic stringValueForKey:@"type"] intValue] == 2){//购买商品赠送积分
         NSString *score = [dic stringValueForKey:@"score"];
         self.score_detailLabel.text = [NSString stringWithFormat:@"+%@",score];
+    }else if ([[dic stringValueForKey:@"type"]intValue] == 3){//退款商品返还积分
+        NSString *score = [dic stringValueForKey:@"score"];
+        self.score_detailLabel.text = [NSString stringWithFormat:@"+%@",score];
     }
     
     

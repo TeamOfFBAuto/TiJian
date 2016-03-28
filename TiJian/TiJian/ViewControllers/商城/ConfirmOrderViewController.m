@@ -53,9 +53,7 @@
     UIButton *_confirmOrderBtn;//提交订单按钮
     
     AddressModel *_theAddressModel;//用户选择的收货地址
-    
     AddressModel *_theDefaultAddressModel;//用户默认收货地址
-    
     
     UILabel *_userChooseYouhuiquan_label;//使用几张
     UILabel *_userChooseDaijinquan_label;//使用几张
@@ -63,7 +61,6 @@
     int _count;//网络请求个数
     
     UILabel *_jifenMiaoshuLabel;//积分描述label
-    
     UITextField *_useScoreTf;//用户输入积分的tf
     
     UIView *_shouView;//用于收键盘的点击view
@@ -71,9 +68,8 @@
     
     NSInteger _keyongJifen;//使用完优惠券和代金券之后可用的积分
     
-    BOOL _isUseScore;//是否使用积分
+//    BOOL _isUseScore;//是否使用积分
     NSInteger _fanal_usedScore;//最终使用的积分
-    
     
     NSInteger _enabledNum_coupon;//可用优惠券数量
     NSInteger _enabledNum_vouchers;//可用代金券数量
@@ -81,25 +77,17 @@
     UILabel *_enabledNum_coupon_label;//可用优惠券数量label
     UILabel *_enabledNum_vouchers_label;//可用代金券数量label
     
-    
     NSString *_user_score;//用户积分
     
     CGPoint _orig_tab_contentOffset;
-    
-    
-    
+
     //快递方式选择
     UIPickerView *_pickeView;
-    
     NSArray *_kuaidiDataArray;//快递方式pickerview数据源
-    
     UILabel *_kuaidiChooseLabel;//用户选择的快递方式
     UILabel *_fapiaoChooseLabel;//用户选择的发票信息
     
-    
     NSString *_userChooseKuaidiStr;//用户选择的快递方式
-    
-    
     
 }
 
@@ -132,17 +120,10 @@
     _enabledNum_coupon = 0;
     _enabledNum_vouchers = 0;
     
-    
-    
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     
     [self makeDyadicArray];
-    
-    [self getUserScore];
-    
     [self prepareNetData];
-    
-    
     
 }
 
@@ -355,11 +336,7 @@
     }
     
     
-    
-    
-    
-    
-    if (_isUseScore) {//使用积分
+    if ([_user_score intValue] != 0) {//使用积分
         //积分
         CGFloat jifen = 0;
         
@@ -386,6 +363,7 @@
         
     }else{
         _fanal_usedScore = 0;
+        _jifenMiaoshuLabel.text = @"暂无可用积分";
     }
     
     
@@ -460,10 +438,19 @@
                           };
     
     
-    
     [_request requestWithMethod:YJYRequstMethodGet api:USER_GETJIFEN parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
         _user_score = [result stringValueForKey:@"score"];
+        
+        [self creatDownView];
+        [self creatTab];
+        [self creatAddressViewWithModel:_theDefaultAddressModel];
+        [self getDaijinquanNum];
+        [self getYouhuiquanNum];
+        [self createAreaPickView];
+        [self creatTabFooterViewWithUseState:nil];
         [_tab reloadData];
         
     } failBlock:^(NSDictionary *result) {
@@ -489,8 +476,6 @@
     
     _request_address = [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_DEFAULT_ADDRESS parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
         _addressArray = [NSMutableArray arrayWithCapacity:1];
         
         NSArray *arr = [result arrayValueForKey:@"list"];
@@ -506,14 +491,9 @@
             }
         }
         
-        [self creatDownView];
-        [self creatTab];
-        [self creatAddressViewWithModel:_theDefaultAddressModel];
+        //获取用户积分
+        [self getUserScore];
         
-        [self getDaijinquanNum];
-        [self getYouhuiquanNum];
-        
-        [self createAreaPickView];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -839,13 +819,19 @@
     [self.view addSubview:_tab];
     _tab.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
-    [self creatTabFooterViewWithUseState:NO];
+//    [self creatTabFooterViewWithUseState:NO];
     
 }
 
 
 //创建 更新 tabFooterView
 -(void)creatTabFooterViewWithUseState:(BOOL)state{
+    if ([_user_score integerValue] != 0) {//有积分
+        state = YES;
+    }else{
+        state = NO;
+    }
+    
     
     if (!_tabFooterView) {
         _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 435)];
@@ -871,7 +857,6 @@
     tLabel.text = @"给卖家留言:";
     tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [liuyanView addSubview:tLabel];
-    
     
     if (!_liuyantf) {
         _liuyantf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(tLabel.frame)+10, 0, DEVICE_WIDTH - 7-7-10 - tLabel.frame.size.width, 50)];
@@ -966,24 +951,16 @@
     _kuaidiChooseLabel.text = @"必选";
     [kuaidiView addSubview:_kuaidiChooseLabel];
     
-    
     UIImageView *jiantou_kuaidi = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
     [jiantou_kuaidi setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
     [kuaidiView addSubview:jiantou_kuaidi];
-    
-    
-    
-    
-    
     
     //分割线
     UIView *kuaidiFenLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(kuaidiView.frame), DEVICE_WIDTH, 5)];
     kuaidiFenLine.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:kuaidiFenLine];
     
-    
-    
-    
+
     //优惠券
     UIView *youhuiquanView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(kuaidiFenLine.frame), DEVICE_WIDTH, 44)];
     youhuiquanView.backgroundColor = [UIColor whiteColor];
@@ -1001,7 +978,6 @@
     _userChooseYouhuiquan_label.text = @"未使用";
     [youhuiquanView addSubview:_userChooseYouhuiquan_label];
     
-    
     _enabledNum_coupon_label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(y_tLabel.frame)+5, 13, 55, 18)];
     _enabledNum_coupon_label.backgroundColor = RGBCOLOR(237, 108, 22);
     _enabledNum_coupon_label.font = [UIFont systemFontOfSize:11];
@@ -1011,9 +987,6 @@
     _enabledNum_coupon_label.textAlignment = NSTextAlignmentCenter;
     _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
     [youhuiquanView addSubview:_enabledNum_coupon_label];
-    
-    
-    
 
     UIImageView *jiantou_y = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
     [jiantou_y setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
@@ -1055,21 +1028,14 @@
     _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
     [daijinquanView addSubview:_enabledNum_vouchers_label];
     
-    
-    
-
-    
     UIImageView *jiantou_d = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
     [jiantou_d setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
     [daijinquanView addSubview:jiantou_d];
-    
     
     //第5条分割线
     UIView *line5 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(daijinquanView.frame), DEVICE_WIDTH, 1)];
     line5.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:line5];
-    
-
     
     //积分
     UIView *jifenView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line5.frame), DEVICE_WIDTH, 44)];
@@ -1086,13 +1052,14 @@
     _jifenMiaoshuLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [jifenView addSubview:_jifenMiaoshuLabel];
     
-    UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, _jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
-    switchView.onTintColor = RGBCOLOR(237, 108, 22);
-    [switchView setOn:state];
-    [jifenView addSubview:switchView];
     
-    [switchView addTarget:self action:@selector(getValue:) forControlEvents:UIControlEventValueChanged];
-    
+    //开关按钮
+//    UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, _jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
+//    switchView.onTintColor = RGBCOLOR(237, 108, 22);
+//    [switchView setOn:state];
+//    [jifenView addSubview:switchView];
+//    
+//    [switchView addTarget:self action:@selector(getValue:) forControlEvents:UIControlEventValueChanged];
     
     //最后一条分割线
     UIView *lastLine;
@@ -1112,7 +1079,6 @@
         lb1.font = [UIFont systemFontOfSize:14];
         lb1.text = @"使用";
         [useJifenView addSubview:lb1];
-        
         
         _useScoreTf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb1.frame)+10, 10, 100, 24)];
         _useScoreTf.keyboardType = UIKeyboardTypeNumberPad;
@@ -1136,8 +1102,6 @@
         _realScore_dijia.font = [UIFont systemFontOfSize:15];
         _realScore_dijia.text = @"抵0.00元";
         [useJifenView addSubview:_realScore_dijia];
-        
-        
         
         //第7条分割线
         UIView *line7 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(useJifenView.frame), DEVICE_WIDTH, 5)];
@@ -1423,7 +1387,7 @@
 //获取开关按钮的值
 -(void)getValue:(UISwitch*)sender{
     
-    _isUseScore = sender.isOn;
+//    _isUseScore = sender.isOn;
     
     [self creatTabFooterViewWithUseState:sender.isOn];
     
@@ -1533,7 +1497,7 @@
     
     
     
-    if (_isUseScore && _fanal_usedScore) {//使用积分
+    if (_fanal_usedScore) {//使用积分
         
         if (_fanal_usedScore == -10 || _fanal_usedScore < 0) {
             [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的积分" addToView:self.view];
@@ -1822,8 +1786,6 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     [self hiddenKeyBord];
 }
-
-
 
 
 

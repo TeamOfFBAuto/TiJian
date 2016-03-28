@@ -241,27 +241,35 @@ typedef enum {
 //     套餐商品id、 省id、 城市id、 预约日期、longitude 经度（可不传）、latitude 纬度（可不传
 
     _selectDate = date;//记录选择的时间
-    NSDictionary *params;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
     /**
      *  仅选择时间分院,修改套餐,需要传参数 之前选择的分院id
      */
+    NSString *longtitude = [UserInfo getLontitude];
+    NSString *latitude = [UserInfo getLatitude];
     if (_isJustSelect) {
-        params = @{@"product_id":self.productId,
-                   @"province_id":[GMAPI getCurrentProvinceId],
-                   @"city_id":[GMAPI getCurrentCityId],
-                   @"date":date,
-                   @"exam_center_id":_exam_center_id};
         
+        [params safeSetString:self.productId forKey:@"product_id"];
+        [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+        [params safeSetString:date forKey:@"date"];
+        [params safeSetString:_exam_center_id forKey:@"exam_center_id"];
+        [params safeSetString:longtitude forKey:@"longitude"];
+        [params safeSetString:latitude forKey:@"latitude"];
+        
+//        longitude=111&latitude=50
         //不写分页,后台默认返回全部
         //@"page":NSStringFromInt(1),
         //@"per_page":@"50",
         
     }else
     {
-        params = @{@"product_id":self.productId,
-                   @"province_id":[GMAPI getCurrentProvinceId],
-                   @"city_id":[GMAPI getCurrentCityId],
-                   @"date":date};
+        [params safeSetString:self.productId forKey:@"product_id"];
+        [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+        [params safeSetString:date forKey:@"date"];
+        [params safeSetString:longtitude forKey:@"longitude"];
+        [params safeSetString:latitude forKey:@"latitude"];
     }
     
     NSString *api = GET_CENTER_PERCENT;
@@ -679,6 +687,12 @@ typedef enum {
         NSString *brand = h_model.brand_name;
         NSString *name = h_model.center_name;
         NSString *text = [NSString stringWithFormat:@"%@  %@",brand ? : @"",name ? : @""];
+        
+        NSString *distance = [LTools distanceString:h_model.distance];
+        if (distance) {
+            text = [NSString stringWithFormat:@"%@ %@",text,distance];
+        }
+        
         [cell.textLabel setAttributedText:[LTools attributedString:text keyword:name color:[UIColor colorWithHexString:@"323232"]]];
         
         NSString *numString = [NSString stringWithFormat:@"%d%%",[h_model.appoint_percent intValue]];
