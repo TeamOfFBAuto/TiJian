@@ -1526,12 +1526,24 @@
     
     
     
-    if (self.exam_center_id && self.date && self.myself && self.family_uid) {
-        [dic safeSetValue:self.exam_center_id forKey:@"exam_center_id"];
-        [dic safeSetValue:self.date forKey:@"date"];
-        [dic safeSetValue:self.myself forKey:@"myself"];
-        [dic safeSetValue:self.family_uid forKey:@"family_uid"];
-    }
+//    if (self.exam_center_id && self.date && self.myself && self.family_uid) {
+//        [dic safeSetValue:self.exam_center_id forKey:@"exam_center_id"];
+//        [dic safeSetValue:self.date forKey:@"date"];
+//        [dic safeSetValue:self.myself forKey:@"myself"];
+//        [dic safeSetValue:self.family_uid forKey:@"family_uid"];
+//    }
+    
+    
+    
+//    NSMutableDictionary *appoint_dic = [[NSMutableDictionary alloc]initWithCapacity:1];
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     __weak typeof(self)weakSelf = self;
