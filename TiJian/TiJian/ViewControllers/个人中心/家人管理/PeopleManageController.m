@@ -28,6 +28,7 @@
     UILabel *_numLabel;//位数
     int _deleteIndex;//待删除下标
     NSMutableArray *_selectedArray;//选中
+    NSMutableArray *_selectedUserArray;//选中model
     
     //此套餐可以预约个数
     int _noAppointNum;//未预约个数
@@ -76,6 +77,7 @@
     [self.view addSubview:_table];
     
     _selectedArray = [NSMutableArray array];
+    _selectedUserArray = [NSMutableArray array];
     _isOpen = YES;//默认打开
     _isEdit = NO;//默认非编辑
     _isMyselfSelected = NO;//默认未选择自己
@@ -246,7 +248,6 @@
  */
 - (void)clickToAppoint
 {
-    
     int num = (int)_selectedArray.count;
     //选择自己或者选择了至少一个其他人
     if (_isMyselfSelected || num > 0) {
@@ -264,7 +265,7 @@
         {
             //选择的体检人
             
-            NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedArray];
+            NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedUserArray];
             
             //是否包含自己
             if (_isMyselfSelected) {
@@ -772,6 +773,7 @@
             
             if ([self enableSelectNewPeople]) {
                 [_selectedArray addObject:uid];
+                [_selectedUserArray addObject:aModel];//记录model
             }
             [tableView reloadData];
             
@@ -786,6 +788,7 @@
             
             if ([_selectedArray containsObject:uid]) {
                 [_selectedArray removeObject:uid];
+                [_selectedUserArray removeObject:aModel];
                 
             }else
             {
@@ -793,6 +796,7 @@
                 if ([self enableSelectNewPeople]) {
                     
                     [_selectedArray addObject:uid];
+                    [_selectedUserArray addObject:aModel];
                     
                 }else
                 {
