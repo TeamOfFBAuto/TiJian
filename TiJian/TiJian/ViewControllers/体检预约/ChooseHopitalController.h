@@ -83,9 +83,9 @@ typedef enum {
  *  @param productId
  *  @param gender       套餐对应性别
  *  @param noAppointNum 可预约个数
- *  @param updateBlcok  
- *  [params safeSetValue:hospital forKey:@"hospital"];//分院
- *  [params safeSetValue:temp forKey:@"userInfo"];//用户model数组
+ *  @param updateBlcok  返回字典
+ *  key:hospital;//分院
+ *  key:userInfo;//用户model数组
  */
 - (void)selectCenterAndPeopleWithProductId:(NSString *)productId
                                     gender:(Gender)gender
