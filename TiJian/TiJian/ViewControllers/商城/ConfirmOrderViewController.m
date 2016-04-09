@@ -1834,7 +1834,7 @@
             have_num += model.usersArray.count;
         }
         no_num = [theModel.product_num intValue] - have_num;
-        
+        cc.lastViewController = bself;
         [cc selectCenterAndPeopleWithProductId:theModel.product_id gender:[theModel.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
             [bself chooseHospitalAndDateAndPersonFinishWithDic:params];
         }];
