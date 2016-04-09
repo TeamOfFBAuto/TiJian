@@ -20,6 +20,7 @@
 #import "MyCouponViewController.h"
 #import "PayResultViewController.h"
 #import "GFapiaoViewController.h"
+#import "ChooseHopitalController.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -356,7 +357,12 @@
             
             _fanal_usedScore = jifen;
         }else{
-            _fanal_usedScore = -10;
+            if ([LTools isEmpty:_useScoreTf.text]) {
+                _fanal_usedScore = 0;
+            }else{
+                _fanal_usedScore = -10;
+            }
+            
         }
         
         
@@ -399,30 +405,16 @@
 
 
 -(void)setUserSelectFapiaoWithStr:(NSString *)str{
-    
-    
     _fapiaoChooseLabel.text = str;
-    
-    
-    
 }
-
-
-
-
 
 #pragma mark - 请求网络数据
 
-
 //网络请求
 -(void)prepareNetData{
-    
     _count = 0;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
     [self getUserDefaultAddress];
-    
-    
 }
 
 
@@ -435,7 +427,6 @@
     NSDictionary *dic = @{
                           @"authcode":[UserInfo getAuthkey]
                           };
-    
     
     [_request requestWithMethod:YJYRequstMethodGet api:USER_GETJIFEN parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -457,14 +448,8 @@
     }];
 }
 
-
-
-
 //获取用户收货地址
 -(void)getUserDefaultAddress{
-    
-    
-    
     NSDictionary *dic = @{
                           @"authcode":[UserInfo getAuthkey]
                           };
@@ -499,14 +484,9 @@
     }];
 }
 
-
-
 //获取可用优惠券个数
 -(void)getYouhuiquanNum{
-    
-    
     NSLog(@"%s",__FUNCTION__);
-    
     NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
     CGFloat totolPrice = 0;
     for (ProductModel *model in self.dataArray) {
@@ -518,9 +498,7 @@
         
     }
     [arr addObject:[NSString stringWithFormat:@"0:%.2f",totolPrice]];
-    
     NSString *coupon = [arr componentsJoinedByString:@"|"];
-    
     NSString *url = ORDER_GETYOUHUIQUANLIST;
     NSDictionary *parame = @{
                       @"authcode":[UserInfo getAuthkey],
@@ -531,47 +509,27 @@
         _request = [YJYRequstManager shareInstance];
     }
     [_request requestWithMethod:YJYRequstMethodGet api:url parameters:parame constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
         NSDictionary *listDic = [result dictionaryValueForKey:@"list"];
-        
         //可用
         NSDictionary *enableDic = [listDic dictionaryValueForKey:@"enable"];
-        
         //可用里的通用
         NSArray *enableDic_common_Array = [enableDic arrayValueForKey:@"common"];
         //可用里的非通用
         NSArray *enableDic_uncommon_Array = [enableDic arrayValueForKey:@"uncommon"];
-        
         _enabledNum_coupon = enableDic_common_Array.count +enableDic_uncommon_Array.count;
-        
         
         if (_enabledNum_coupon_label) {
             _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
         }
         
-        
-  
-        
-        
     } failBlock:^(NSDictionary *result) {
         
-        
     }];
-    
-    
-    
-    
-    
-    
-    
-    
 }
 
 //获取可用代金券个数
 -(void)getDaijinquanNum{
-    
     NSLog(@"%s",__FUNCTION__);
-    
     NSArray *brand_ids_Array = [NSMutableArray arrayWithCapacity:1];
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
     int p_nums = 0;
@@ -579,57 +537,36 @@
         [dic setValue:@"1" forKey:model.brand_id];
         p_nums += [model.product_num intValue];
     }
-    
     brand_ids_Array = [dic allKeys];
     NSString *brand_ids_str = [brand_ids_Array componentsJoinedByString:@","];
-    
-    
-    
     NSString* url = ORDER_GETDAIJIQUANLIST;
-    
-    
-    
-    
     NSMutableDictionary* parame = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                   @"authcode":[UserInfo getAuthkey],
                                                                                   @"brand_ids":brand_ids_str,
                                                                                   @"product_num":[NSString stringWithFormat:@"%d",p_nums]
                                                                                   }];
-    
-    
     if (p_nums == 1) {
         for (ProductModel *model in self.dataArray) {
             [parame setValue:model.product_id forKey:@"product_id"];
         }
     }
     
-    
-    
-    
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
     [_request requestWithMethod:YJYRequstMethodGet api:url parameters:parame constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
         NSDictionary *listDic = [result dictionaryValueForKey:@"list"];
-        
         //可用
         NSDictionary *enableDic = [listDic dictionaryValueForKey:@"enable"];
-        
-        
         //可用里的通用
         NSArray *enableDic_common_Array = [enableDic arrayValueForKey:@"common"];
         //可用里的非通用
         NSArray *enableDic_uncommon_Array = [enableDic arrayValueForKey:@"uncommon"];
-        
-        
         _enabledNum_vouchers = enableDic_common_Array.count +enableDic_uncommon_Array.count;
         
         if (_enabledNum_vouchers_label) {
             _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
         }
-        
-        
         for (NSDictionary *dic in enableDic_common_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
             if ([self.voucherId integerValue] == [model.coupon_id integerValue]) {
@@ -646,58 +583,37 @@
             }
         }
         
-        
         [self jisuanPrice];
         
-        
-        
-        
-        
-        
-        
     } failBlock:^(NSDictionary *result) {
-        
-        
     }];
-    
-    
     
 }
 
 #pragma mark - 网络请求完成
+
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
     if ([keyPath isEqualToString:@"contentSize"]) {
         return;
     }
-    
     NSNumber *num = [change objectForKey:@"new"];
-    
     if ([num intValue] == 1) {
-        
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
         [self creatDownView];
         [self creatTab];
         [self creatAddressViewWithModel:_theDefaultAddressModel];
-        
     }
-    
-    
 }
 
 #pragma mark - 快递方式选择相关
 
 -(void)createAreaPickView{
-    
     //快递方式选择
     if (!self.backPickView) {
         self.backPickView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 266)];
         self.backPickView .backgroundColor = RGBCOLOR(38, 51, 62);
     }
-    
     _kuaidiDataArray = @[@"电子体检码",@"快递体检凭证"];
-    
     //快递方式pickview
     if (!_pickeView) {
         _pickeView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, 216)];
@@ -705,8 +621,6 @@
         _pickeView.dataSource = self;
         _pickeView.backgroundColor = [UIColor whiteColor];
         [self.backPickView addSubview:_pickeView];
-        
-        
         //取消按钮
         UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         quxiaoBtn.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -725,7 +639,6 @@
         [quedingBtn addTarget:self action:@selector(clickToSure:) forControlEvents:UIControlEventTouchUpInside];
         [self.backPickView addSubview:quedingBtn];
         
-        
         //title
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH*0.5-70, 0, 140, 50)];
         titleLabel.font = [UIFont systemFontOfSize:15];
@@ -733,18 +646,12 @@
         titleLabel.text = @"快递方式";
         titleLabel.textColor = [UIColor whiteColor];
         [self.backPickView addSubview:titleLabel];
-        
-        
     }
-
-    
 }
 
 
 //地区出现
 -(void)areaShow{
-    
-    NSLog(@"_backPickView");
     __weak typeof (self)bself = self;
     [UIView animateWithDuration:0.3 animations:^{
         bself.backPickView.frame = CGRectMake(0,DEVICE_HEIGHT - 266 - 40, DEVICE_WIDTH, 266);
@@ -766,7 +673,6 @@
 
 -(void)areaHidden{//快递选择隐藏
     __weak typeof (self)bself = self;
-    
     [UIView animateWithDuration:0.3 animations:^{
         bself.backPickView.frame = CGRectMake(0, DEVICE_HEIGHT, DEVICE_WIDTH, 266);
     } completion:^(BOOL finished) {
@@ -778,22 +684,18 @@
 }
 
 #pragma mark - UIPickerViewDataSource
-
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
     return 1;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
-    
     if (component == 0) {
         return _kuaidiDataArray.count;
     }
     return 0;
-    
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
-    
     if (component == 0) {
         NSString *str = _kuaidiDataArray[row];
         
@@ -817,9 +719,6 @@
     _tab.dataSource = self;
     [self.view addSubview:_tab];
     _tab.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
-    
-//    [self creatTabFooterViewWithUseState:NO];
-    
 }
 
 
@@ -904,7 +803,6 @@
     line3.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:line3];
     
-    
     //发票信息
     UIView *fapiaoView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line3.frame), DEVICE_WIDTH, 50)];
     [fapiaoView addTaget:self action:@selector(fapiaoViewClicked) tag:0];
@@ -916,8 +814,8 @@
     fapiao_tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
     [fapiaoView addSubview:fapiao_tLabel];
     
-    UIImageView *jiantou_fapiao = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 17, 8, 16)];
-    [jiantou_fapiao setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+    UIImageView *jiantou_fapiao = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 17, 6, 12)];
+    [jiantou_fapiao setImage:[UIImage imageNamed:@"jiantou.png"]];
     [fapiaoView addSubview:jiantou_fapiao];
     
     _fapiaoChooseLabel = [[UILabel alloc]initWithFrame:CGRectMake(fapiaoView.frame.size.width*0.5, 0, fapiaoView.frame.size.width * 0.5 - 25 , fapiaoView.frame.size.height)];
@@ -931,12 +829,10 @@
     fapiaoFenLine.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:fapiaoFenLine];
     
-    
     //快递方式
     UIView *kuaidiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(fapiaoFenLine.frame), DEVICE_WIDTH, 44)];
     [_tabFooterView addSubview:kuaidiView];
     [kuaidiView addTaget:self action:@selector(kuaidiViewClicked) tag:0];
-    
     UILabel *kuaidi_tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 44)];
     kuaidi_tLabel.font = [UIFont systemFontOfSize:14];
     kuaidi_tLabel.text = @"快递方式";
@@ -950,8 +846,8 @@
     _kuaidiChooseLabel.text = @"必选";
     [kuaidiView addSubview:_kuaidiChooseLabel];
     
-    UIImageView *jiantou_kuaidi = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
-    [jiantou_kuaidi setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+    UIImageView *jiantou_kuaidi = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 16, 6, 12)];
+    [jiantou_kuaidi setImage:[UIImage imageNamed:@"jiantou.png"]];
     [kuaidiView addSubview:jiantou_kuaidi];
     
     //分割线
@@ -959,7 +855,6 @@
     kuaidiFenLine.backgroundColor = RGBCOLOR(244, 245, 246);
     [_tabFooterView addSubview:kuaidiFenLine];
     
-
     //优惠券
     UIView *youhuiquanView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(kuaidiFenLine.frame), DEVICE_WIDTH, 44)];
     youhuiquanView.backgroundColor = [UIColor whiteColor];
@@ -976,7 +871,6 @@
     _userChooseYouhuiquan_label.font = [UIFont systemFontOfSize:15];
     _userChooseYouhuiquan_label.text = @"未使用";
     [youhuiquanView addSubview:_userChooseYouhuiquan_label];
-    
     _enabledNum_coupon_label = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(y_tLabel.frame)+5, 13, 55, 18)];
     _enabledNum_coupon_label.backgroundColor = RGBCOLOR(237, 108, 22);
     _enabledNum_coupon_label.font = [UIFont systemFontOfSize:11];
@@ -987,8 +881,8 @@
     _enabledNum_coupon_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_coupon];
     [youhuiquanView addSubview:_enabledNum_coupon_label];
 
-    UIImageView *jiantou_y = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
-    [jiantou_y setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+    UIImageView *jiantou_y = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 16, 6, 12)];
+    [jiantou_y setImage:[UIImage imageNamed:@"jiantou.png"]];
     [youhuiquanView addSubview:jiantou_y];
     
     [_tabFooterView addSubview:youhuiquanView];
@@ -1027,8 +921,8 @@
     _enabledNum_vouchers_label.text = [NSString stringWithFormat:@"%ld张可用",(long)_enabledNum_vouchers];
     [daijinquanView addSubview:_enabledNum_vouchers_label];
     
-    UIImageView *jiantou_d = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 14, 8, 16)];
-    [jiantou_d setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+    UIImageView *jiantou_d = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 16, 6, 12)];
+    [jiantou_d setImage:[UIImage imageNamed:@"jiantou.png"]];
     [daijinquanView addSubview:jiantou_d];
     
     //第5条分割线
@@ -1182,8 +1076,8 @@
         aLabel.font = [UIFont systemFontOfSize:15];
         [contentView addSubview:aLabel];
         
-        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 22, 8, 16)];
-        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 24, 6, 12)];
+        [jiantouImv setImage:[UIImage imageNamed:@"jiantou.png"]];
         [contentView addSubview:jiantouImv];
         
         //下分割线
@@ -1256,8 +1150,8 @@
         
         
         
-        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, _addressView.frame.size.height*0.5-8, 8, 16)];
-        [jiantouImv setImage:[UIImage imageNamed:@"personal_jiantou_r.png"]];
+        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, _addressView.frame.size.height*0.5-6, 6, 12)];
+        [jiantouImv setImage:[UIImage imageNamed:@"jiantou.png"]];
         [contentView addSubview:jiantouImv];
         
         
@@ -1888,7 +1782,9 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return [GconfirmOrderCell heightForCell];
+    NSArray *arr = _theData[indexPath.section];
+    ProductModel *model = arr[indexPath.row];
+    return [GconfirmOrderCell heightForCellWithModel:model];
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
@@ -1920,10 +1816,19 @@
         cell = [[GconfirmOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
+    for (UIView *view in cell.yuyueView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     NSArray *arr = _theData[indexPath.section];
     ProductModel *model = arr[indexPath.row];
-    
     [cell loadCustomViewWithModel:model];
+    __weak typeof (self)bself = self;
+    [cell setYuyueViewClickedBlock:^(ProductModel *theModel) {
+        ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
+        
+        [bself.navigationController pushViewController:cc animated:YES];
+    }];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -1934,9 +1839,7 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
     if (buttonIndex == 0) {//取消
-        
     }else if (buttonIndex == 1){
         [self goToAddressVC];
     }

@@ -13,7 +13,6 @@
 
 @interface ConfirmOrderViewController : MyViewController
 
-
 @property(nonatomic,strong)NSArray *dataArray;//数据源
 //用户选择的优惠券
 @property(nonatomic,strong)NSArray *userSelectYouhuiquanArray;
@@ -23,11 +22,12 @@
 //代金券购买 (默认选择传过来的代金券)
 @property(nonatomic,strong)NSString *voucherId;//代金券id
 
-//如果直接预约
+//单品详情直接预约
 @property(nonatomic,strong)NSString *exam_center_id;//体检中心id
 @property(nonatomic,strong)NSString *date;//预约时间
 @property(nonatomic,strong)NSString *myself;//预约是否自己
 @property(nonatomic,strong)NSArray *family_uid;//预约家人
+
 
 
 

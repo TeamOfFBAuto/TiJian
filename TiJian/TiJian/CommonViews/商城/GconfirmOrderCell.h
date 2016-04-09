@@ -13,13 +13,17 @@
 #import <UIKit/UIKit.h>
 @class ProductModel;
 
+
+typedef void(^yuyueViewClickedBlock)(ProductModel *theModel);
+
 @interface GconfirmOrderCell : UITableViewCell
 
-
-@property(nonatomic,strong)UIImageView *jiaxiangbaoImv;
+@property(nonatomic,strong)UIView *yuyueView;//预约相关view
+@property(nonatomic,copy)yuyueViewClickedBlock yuyueViewClickedBlock;
 
 -(void)loadCustomViewWithModel:(ProductModel *)model;
+-(void)setYuyueViewClickedBlock:(yuyueViewClickedBlock)yuyueViewClickedBlock;
 
-+ (CGFloat)heightForCell;
++ (CGFloat)heightForCellWithModel:(ProductModel*)theModel;
 
 @end

@@ -841,7 +841,7 @@
         
         if ([self productIndexPath:indexPath]) {
             
-            return [GconfirmOrderCell heightForCell];
+            return [GconfirmOrderCell heightForCellWithModel:nil];
         }
     }
     

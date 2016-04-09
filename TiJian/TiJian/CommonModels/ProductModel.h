@@ -81,6 +81,7 @@
 
 
 @property(nonatomic,strong)NSArray *hospitalArray;//分院数组 里面装HopitalModel
+@property(nonatomic,strong)NSArray *addProductsArray;//加项包数组里面装ProductModel
 
 
 
