@@ -82,7 +82,8 @@
     _table.tableHeaderView = [self tableHeadView];
     
     if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
-        _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
+        _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
+        _actionType == PEOPLEACTIONTYPE_SELECT_Mul) {
         UIView *view = [self tableFooterView];
         [self.view addSubview:view];
         view.top = DEVICE_HEIGHT - view.height - 64;
