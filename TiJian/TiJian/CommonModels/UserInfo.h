@@ -84,6 +84,8 @@
 @property(nonatomic,retain)NSString *longtitude;//经度 记录用户当前位置
 @property(nonatomic,retain)NSString *latitude;//维度
 
+@property(nonatomic,assign)BOOL mySelf;//是否当前用户
+
 
 /**
  *  归档的方式存model对象 重写了编码解码方法

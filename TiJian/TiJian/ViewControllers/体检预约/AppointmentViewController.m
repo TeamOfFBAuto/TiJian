@@ -567,13 +567,18 @@
             if ([aModel.type intValue] == 1) {
                 
                 NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
-                [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:aModel.company_info[@"company_id"] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+                NSString *companyId = aModel.company_info[@"company_id"];
+                
+                [choose companyAppointWithOrderId:aModel.order_id
+                                       productId:aModel.product_id
+                                       companyId:companyId order_checkuper_id:order_checkuper_id
+                                    noAppointNum:[aModel.no_appointed_num intValue]
+                                          gender:[aModel.gender intValue]];
             }else
             {
-                choose.productId = aModel.product_id;
-                choose.order_id = aModel.order_id;
-                choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
-                
+                [choose appointWithProductId:aModel.product_id
+                                     orderId:aModel.order_id
+                                noAppointNum:[aModel.no_appointed_num intValue]];
                 choose.lastViewController = self;//需要选择体检人的时候需要传
             }
             

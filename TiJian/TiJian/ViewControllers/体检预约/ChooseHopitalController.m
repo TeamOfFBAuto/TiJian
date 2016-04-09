@@ -32,7 +32,6 @@ typedef enum {
     NSString *_order_checkuper_id;//公司订单才有的
     int _noAppointNum;//未预约数
     BOOL _isCompanyAppoint;//是否是公司预约
-    BOOL _isJustSelect;//是否仅为选择时间和分院
     BOOL _nopayAppoint;//不支付直接预约
     
     CGFloat _lastOffsetY;
@@ -56,7 +55,8 @@ typedef enum {
     // Do any additional setup after loading the view.
     self.myTitle = @"选择时间、分院";
     self.rightString = @"确认";
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack
+                        WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
     _currentCalendar = [NSCalendar currentCalendar];
 
@@ -68,7 +68,6 @@ typedef enum {
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
-//    _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _table.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     NSString *selectDate = [LTools timeDate:self.beginDate withFormat:@"yyyy-MM-dd"];
@@ -248,35 +247,17 @@ typedef enum {
      */
     NSString *longtitude = [UserInfo getLontitude];
     NSString *latitude = [UserInfo getLatitude];
-    if (_isJustSelect) {
-        
-        [params safeSetString:self.productId forKey:@"product_id"];
-        [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
-        [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
-        [params safeSetString:date forKey:@"date"];
-        [params safeSetString:_exam_center_id forKey:@"exam_center_id"];
-        [params safeSetString:longtitude forKey:@"longitude"];
-        [params safeSetString:latitude forKey:@"latitude"];
-        
-//        longitude=111&latitude=50
-        //不写分页,后台默认返回全部
-        //@"page":NSStringFromInt(1),
-        //@"per_page":@"50",
-        
-    }else
-    {
-        [params safeSetString:self.productId forKey:@"product_id"];
-        [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
-        [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
-        [params safeSetString:date forKey:@"date"];
-        [params safeSetString:longtitude forKey:@"longitude"];
-        [params safeSetString:latitude forKey:@"latitude"];
-    }
     
+    [params safeSetString:self.productId forKey:@"product_id"];
+    [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+    [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    [params safeSetString:date forKey:@"date"];
+    [params safeSetString:_exam_center_id forKey:@"exam_center_id"];
+    [params safeSetString:longtitude forKey:@"longitude"];
+    [params safeSetString:latitude forKey:@"latitude"];
+
     NSString *api = GET_CENTER_PERCENT;
-    
     __weak typeof(self)weakSelf = self;
-//    __weak typeof(_table)weakTable = _table;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         DDLOG(@"success result %@",result);
@@ -286,21 +267,10 @@ typedef enum {
         
         NSLog(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
-//        [weakTable loadFail];
-        
     }];
 }
 
-
-#pragma mark - 事件处理
-
-- (void)appointSuccess
-{
-    //预约成功通知
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-    [self.navigationController popViewControllerAnimated:YES];
-}
+#pragma mark - 参数传递
 
 /**
  *  公司预约参数
@@ -309,41 +279,39 @@ typedef enum {
  *  @param productId
  *  @param companyId          公司id
  *  @param order_checkuper_id 公司订单特有
+ *  @param gender 套餐对应性别
  *  @param noAppointNum
  */
-- (void)setCompanyAppointOrderId:(NSString *)orderId
-                       productId:(NSString *)productId
-                       companyId:(NSString *)companyId
-              order_checkuper_id:(NSString *)order_checkuper_id
-                    noAppointNum:(int)noAppointNum
+- (void)companyAppointWithOrderId:(NSString *)orderId
+                        productId:(NSString *)productId
+                        companyId:(NSString *)companyId
+               order_checkuper_id:(NSString *)order_checkuper_id
+                     noAppointNum:(int)noAppointNum
+                           gender:(Gender)gender
 {
+    _chooseType = ChooseType_appoint;//选择时间、分院之后进行预约
     //提交预约参数
     _order_id = orderId;//订单id
     _productId = productId;//单品id
-    //    _exam_center_id = examCenterId;
     _company_id = companyId;
     _order_checkuper_id = order_checkuper_id;
     _noAppointNum = noAppointNum;
-    
+    _gender = gender;
     _isCompanyAppoint = YES;
 }
 
-
 /**
- *  仅选择时间和分院,不做其他操作
- *
- *  @param productId
- *  @param examCenterId 分院id
+ *  普通预约 选择时间、分院直接预约
  */
-- (void)setSelectParamWithProductId:(NSString *)productId
-                       examCenterId:(NSString *)examCenterId
+- (void)appointWithProductId:(NSString *)productId
+                     orderId:(NSString *)orderid
+                noAppointNum:(int)noAppointNum
 {
-    _isJustSelect = YES;
+    _chooseType = ChooseType_appoint;//直接预约
     _productId = productId;
-    _exam_center_id = examCenterId;
-    _selectHospitalId = [examCenterId intValue];
+    _order_id = orderid;
+    _noAppointNum = noAppointNum;
 }
-
 
 /**
  *  直接预约,未支付
@@ -352,12 +320,13 @@ typedef enum {
  *  @param gender       套餐适用性别
  *  @param noAppointNum 剩余可预约数
  */
-- (void)nopayAppointWithProductid:(NSString *)productId
-                           gender:(Gender)gender
-                     noAppointNum:(int)noAppointNum
+- (void)apppointNoPayWithProductModel:(ProductModel *)productModel
+                               gender:(Gender)gender
+                         noAppointNum:(int)noAppointNum
 {
-    _isJustSelect = NO;
-    _productId = productId;
+    _chooseType = ChooseType_nopayAppoint;
+    _productId = productModel.product_id;
+    self.productModel = productModel;
     _gender = gender;
     _noAppointNum = noAppointNum;
     _nopayAppoint = YES;
@@ -369,15 +338,46 @@ typedef enum {
  *  @param productId
  *  @param examCenterId 分院id
  */
-- (void)setSelectParamWithProductId:(NSString *)productId
-                       examCenterId:(NSString *)examCenterId
-                     examCenterName:(NSString *)examCenterName
+- (void)selectCenterWithProductId:(NSString *)productId
+                     examCenterId:(NSString *)examCenterId
+                   examCenterName:(NSString *)examCenterName
+                      updateBlock:(UpdateParamsBlock)updateBlock
 {
-    _isJustSelect = YES;
+    _chooseType = ChooseType_center;//仅选择时间和分院,不预约
+    self.updateParamsBlock = updateBlock;
     _productId = productId;
     _exam_center_id = examCenterId;
     _selectHospitalId = [examCenterId intValue];
     _selectCenterName = examCenterName;
+}
+
+/**
+ *  选择时间、分院以及人
+ *
+ *  @param productId
+ *  @param gender       套餐对应性别
+ *  @param noAppointNum 可预约个数
+ *  @param updateBlcok
+ */
+- (void)selectCenterAndPeopleWithProductId:(NSString *)productId
+                                    gender:(Gender)gender
+                              noAppointNum:(int)noAppointNum
+                               updateBlock:(UpdateParamsBlock)updateBlcok
+{
+    self.updateParamsBlock = updateBlcok;
+    _productId = productId;
+    _gender = gender;
+    _noAppointNum = noAppointNum;
+    _chooseType = ChooseType_centerAndPeople;
+}
+
+#pragma mark - 事件处理
+
+- (void)appointSuccess
+{
+    //预约成功通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)parseDataWithResult:(NSDictionary *)result
@@ -421,7 +421,7 @@ typedef enum {
 -(void)rightButtonTap:(UIButton *)sender
 {
     //仅是选择时间和分院,不做其他操作
-    if (_isJustSelect) {
+    if (_chooseType == ChooseType_center) {
         
         if (self.updateParamsBlock) {
             
@@ -442,7 +442,6 @@ typedef enum {
     if (index <= 0) {
         
         [LTools alertText:@"请选择体检分院" viewController:self];
-        
         return;
     }
     
@@ -455,20 +454,37 @@ typedef enum {
         return;
     }
     
+//    ChooseType_appoint = 0,//选择时间、分院之后进行预约
+//    ChooseType_center,//仅选择时间和分院,不预约
+//    ChooseType_centerAndPeople,//选择时间分院和人，不预约
+//    ChooseType_nopayAppoint // 未支付预约,跳转至确认订单
+    
     //确认 分院、时间
     
     //选择人 预约
     PeopleManageController *people = [[PeopleManageController alloc]init];
-    if (_nopayAppoint) {
-        people.actionType = PEOPLEACTIONTYPE_NOPAYAPPOINT;//未支付直接预约
-    }else
+    
+    if (_chooseType == ChooseType_appoint)
     {
-        people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;
+        people.actionType = PEOPLEACTIONTYPE_SELECT_APPOINT;//选择并预约
     }
+    else if (_chooseType == ChooseType_nopayAppoint)
+    {
+        people.actionType = PEOPLEACTIONTYPE_NOPAYAPPOINT;//未支付预约
+    }
+    else if (_chooseType == ChooseType_centerAndPeople)
+    {
+        people.actionType = PEOPLEACTIONTYPE_SELECT_Mul;//仅选择人
+        
+        [people selectMulPeopleWithExamCenterId:_exam_center_id examCenterName:_selectCenterName examDate:_selectDate noAppointNum:_noAppointNum updateBlock:self.updateParamsBlock];
+
+    }
+    
     [people setAppointOrderId:self.order_id productId:self.productId examCenterId:NSStringFromInt(_selectHospitalId) date:_selectDate noAppointNum:self.noAppointNum];
     
     people.lastViewController = self.lastViewController;
     people.gender = self.gender;
+    people.productModel = self.productModel;
     [self.navigationController pushViewController:people animated:YES];
     
 }

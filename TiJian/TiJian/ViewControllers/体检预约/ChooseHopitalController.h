@@ -10,8 +10,15 @@
 
 #import "MyViewController.h"
 #import "FSCalendar.h"
+#import "ProductModel.h"
 
-@class ProductModel;
+typedef enum {
+    ChooseType_appoint = 0,//选择时间、分院之后进行预约
+    ChooseType_center,//仅选择时间和分院,不预约
+    ChooseType_centerAndPeople,//选择时间分院和人，不预约
+    ChooseType_nopayAppoint // 未支付预约,跳转至确认订单
+}ChooseType;
+
 @interface ChooseHopitalController : MyViewController<FSCalendarDataSource, FSCalendarDelegate>
 
 @property(nonatomic,retain)FSCalendar *calendar;
@@ -20,6 +27,15 @@
 @property(nonatomic,assign)int noAppointNum;//剩余未预约个数
 
 @property(nonatomic,assign)Gender gender;//性别
+@property(nonatomic,retain)ProductModel *productModel;//直接预约model
+@property(nonatomic,assign)ChooseType chooseType;
+
+/**
+ *  普通预约 选择时间、分院直接预约
+ */
+- (void)appointWithProductId:(NSString *)productId
+                     orderId:(NSString *)orderid
+                noAppointNum:(int)noAppointNum;
 
 /**
  *  直接预约,未支付
@@ -28,19 +44,9 @@
  *  @param gender       套餐适用性别
  *  @param noAppointNum 剩余可预约数
  */
-- (void)nopayAppointWithProductid:(NSString *)productId
-                           gender:(Gender)gender
-                     noAppointNum:(int)noAppointNum;
-
-/**
- *  仅选择时间和分院,不做其他操作
- *
- *  @param productId
- *  @param examCenterId 分院id
- */
-- (void)setSelectParamWithProductId:(NSString *)productId
-                       examCenterId:(NSString *)examCenterId
-                     examCenterName:(NSString *)examCenterName;
+- (void)apppointNoPayWithProductModel:(ProductModel *)productModel
+                               gender:(Gender)gender
+                         noAppointNum:(int)noAppointNum;
 
 /**
  *  公司预约参数
@@ -49,12 +55,39 @@
  *  @param productId
  *  @param companyId          公司id
  *  @param order_checkuper_id 公司订单特有
+ *  @param gender 套餐对应性别
  *  @param noAppointNum
  */
-- (void)setCompanyAppointOrderId:(NSString *)orderId
+- (void)companyAppointWithOrderId:(NSString *)orderId
                        productId:(NSString *)productId
                        companyId:(NSString *)companyId
               order_checkuper_id:(NSString *)order_checkuper_id
-                    noAppointNum:(int)noAppointNum;
+                    noAppointNum:(int)noAppointNum
+                          gender:(Gender)gender;
+
+
+/**
+ *  仅选择时间和分院,不做其他操作
+ *
+ *  @param productId
+ *  @param examCenterId 分院id
+ */
+- (void)selectCenterWithProductId:(NSString *)productId
+                     examCenterId:(NSString *)examCenterId
+                   examCenterName:(NSString *)examCenterName
+                      updateBlock:(UpdateParamsBlock)updateBlock;
+
+/**
+ *  选择时间、分院以及人
+ *
+ *  @param productId
+ *  @param gender       套餐对应性别
+ *  @param noAppointNum 可预约个数
+ *  @param updateBlcok
+ */
+- (void)selectCenterAndPeopleWithProductId:(NSString *)productId
+                                    gender:(Gender)gender
+                              noAppointNum:(int)noAppointNum
+                               updateBlock:(UpdateParamsBlock)updateBlcok;
 
 @end

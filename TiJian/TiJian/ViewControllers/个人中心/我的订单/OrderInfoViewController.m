@@ -21,7 +21,6 @@
 #import "BrandModel.h"//品牌model
 #import "GconfirmOrderCell.h"
 #import "AddCommentViewController.h"
-#import "ChooseHopitalController.h"
 
 #import "RCIM.h"
 
@@ -375,36 +374,6 @@
  */
 - (void)clickToAppoint
 {
-//    if (_orderModel.products.count == 1) {
-//        
-//        ProductModel *aModel = [self.products firstObject];
-//        
-//        aModel.order_id = _order_id;
-//        ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-//        choose.gender = [aModel.gender intValue];
-//        
-//        if ([aModel.no_appointed_num intValue] == 0) {
-//            return;
-//        }
-//        //公司
-//        if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
-//            
-//            NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
-//            [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:[NSString stringWithFormat:@"%@",aModel.company_id] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
-//        }else
-//        {
-//            choose.productId = aModel.product_id;
-//            choose.order_id = aModel.order_id;
-//            choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
-//            choose.lastViewController = self;//需要选择体检人的时候需要传
-//        }
-//        
-//        [self.navigationController pushViewController:choose animated:YES];
-//        
-//        
-//        return;
-//    }
-//    
     OrderProductListController *list = [[OrderProductListController alloc]init];
     list.orderId = _orderModel.order_id;
     [self.navigationController pushViewController:list animated:YES];
@@ -488,6 +457,23 @@
                 text1 = @"再次购买";
                 text2 = @"评价晒单";
                 text3 = @"删除订单";
+            }
+        }else if (status == 5){
+            
+            text1 = @"已取消";
+            
+        }else if (status == 6){
+            
+            text1 = @"已删除";
+            
+        }else if (status == 7){
+            //已付款
+            BOOL is_appoint = [_orderModel.is_appoint boolValue];
+            if (is_appoint) {
+                text1 = @"前去预约";
+            }else
+            {
+                text1 = @"已预约";
             }
         }
     }

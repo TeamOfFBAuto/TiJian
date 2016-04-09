@@ -101,9 +101,7 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     ProductModel *aModel = _table.dataArray[indexPath.row];
-    aModel.order_id = self.orderId;
-    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-    choose.gender = [aModel.gender intValue];
+    
     if (!aModel.order_id) {
         [LTools showMBProgressWithText:@"订单无效！" addToView:self.view];
         [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
@@ -114,16 +112,26 @@
         return;
     }
     
+    aModel.order_id = self.orderId;
+    
+    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+    choose.gender = [aModel.gender intValue];
+    
     //公司
     if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
         
         NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
-        [choose setCompanyAppointOrderId:aModel.order_id productId:aModel.product_id companyId:[NSString stringWithFormat:@"%@",aModel.company_id] order_checkuper_id:order_checkuper_id noAppointNum:[aModel.no_appointed_num intValue]];
+        [choose companyAppointWithOrderId:aModel.order_id
+                               productId:aModel.product_id
+                               companyId:[NSString stringWithFormat:@"%@",aModel.company_id]
+                      order_checkuper_id:order_checkuper_id
+                            noAppointNum:[aModel.no_appointed_num intValue]
+                                  gender:[aModel.gender intValue]];
     }else
     {
-        choose.productId = aModel.product_id;
-        choose.order_id = aModel.order_id;
-        choose.noAppointNum = [aModel.no_appointed_num intValue];//未预约个数
+        [choose appointWithProductId:aModel.product_id
+                             orderId:aModel.order_id
+                        noAppointNum:[aModel.no_appointed_num intValue]];
         choose.lastViewController = self;//需要选择体检人的时候需要传
     }
     

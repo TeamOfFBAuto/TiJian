@@ -492,6 +492,10 @@
 
 + (BOOL) isEmpty:(NSString *) str {
     
+    if (![str isKindOfClass:[NSString class]]) {
+        return NO;
+    }
+    
     if (!str) {
         
         return YES;
@@ -698,7 +702,9 @@
  */
 + (NSString *)distanceString:(NSString *)distance
 {
-    if (!distance || [LTools isEmpty:distance]) {
+    if (!distance ||
+        ([distance isKindOfClass:[NSString class]] && [LTools isEmpty:distance])
+        ) {
         return nil;
     }
     NSString *distanceStr;

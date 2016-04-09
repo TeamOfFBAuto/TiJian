@@ -274,7 +274,7 @@
         
     }else if ([title isEqualToString:TableView_title_Payed])//已付款  根据实际订单状态判断 前去预约 还是 再次购买
     {
-        status = @"payed";
+        status = @"have_pay";
 
     }else if ([title isEqualToString:TableView_title_TuiHuan])//退换
     {
@@ -652,7 +652,29 @@
             {
                 cell.actionButton.hidden = YES;
             }
+        }else if (status == 5){
+            
+            text1 = @"已取消";
+            type = ORDERACTIONTYPE_Default;
+
+        }else if (status == 6){
+            text1 = @"已删除";
+            type = ORDERACTIONTYPE_Default;
+        }else if (status == 7){
+            //已付款
+            BOOL is_appoint = [aModel.is_appoint boolValue];
+            if (is_appoint) {
+                text1 = @"前去预约";
+                type = ORDERACTIONTYPE_Appoint;
+            }else
+            {
+                text1 = @"已预约";
+                type = ORDERACTIONTYPE_Default;
+            }
         }
+        
+        //1=》待付款      新版本没有2、3状态       4=》已完成 5=》已取消 6=》已删除 7=>已付款
+
         //显示退款状态
         if (refund_status == 3) { //退款成功 只显示一个退款状态
             cell.actionButton.hidden = YES;
@@ -676,8 +698,16 @@
         
     }else if ([title isEqualToString:TableView_title_Payed])//已付款  根据实际订单状态判断 前去预约 还是 再次购买
     {
-        [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
-        cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
+        //已付款
+        BOOL is_appoint = [aModel.is_appoint boolValue];
+        if (is_appoint) {
+            [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
+            cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
+        }else
+        {
+            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
+            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
+        }
         
     }else if ([title isEqualToString:TableView_title_TuiHuan])//退换
     {

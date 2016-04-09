@@ -227,7 +227,7 @@
 - (void)clickToSelectPeople
 {
     PeopleManageController *people = [[PeopleManageController alloc]init];
-    people.actionType = PEOPLEACTIONTYPE_SELECT;
+    people.actionType = PEOPLEACTIONTYPE_SELECT_Single;
     people.noAppointNum = 1;
     [self.navigationController pushViewController:people animated:YES];
     

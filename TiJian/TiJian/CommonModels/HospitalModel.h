@@ -14,7 +14,7 @@
 
 @property(nonatomic,retain)NSString *name;
 @property(nonatomic,retain)NSString *time;
-
+@property(nonatomic,retain)NSString *date;//时间
 @property(nonatomic,retain)NSArray *usersArray;//对应的user
 
 @property(nonatomic,retain)NSString *exam_center_id;

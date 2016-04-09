@@ -147,7 +147,7 @@
     _isUpdated = YES;
     
     PeopleManageController *people = [[PeopleManageController alloc]init];
-    people.actionType = PEOPLEACTIONTYPE_SELECT;
+    people.actionType = PEOPLEACTIONTYPE_SELECT_Single;
     people.noAppointNum = 1;
     people.gender = [_appointModel.setmeal_gender intValue];
     [self.navigationController pushViewController:people animated:YES];
@@ -185,14 +185,17 @@
     _isUpdated = YES;
     
     ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-    [choose setSelectParamWithProductId:_appointModel.product_id examCenterId:_appointModel.exam_center_id examCenterName:_appointModel.center_name];
-    [self.navigationController pushViewController:choose animated:YES];
     
-    __weak typeof(self)weakSelf = self;
-    choose.updateParamsBlock = ^(NSDictionary *params){
-        
-        [weakSelf updateCenterWithParams:params];
-    };
+    NSString *productId = _appointModel.product_id;
+    NSString *centerId = _appointModel.exam_center_id;
+    NSString *centerName = _appointModel.center_name;
+    
+     @WeakObj(self);
+    [choose selectCenterWithProductId:productId examCenterId:centerId examCenterName:centerName updateBlock:^(NSDictionary *params) {
+        [Weakself updateCenterWithParams:params];
+
+    }];
+    [self.navigationController pushViewController:choose animated:YES];
 }
 
 - (void)updateCenterWithParams:(NSDictionary *)params

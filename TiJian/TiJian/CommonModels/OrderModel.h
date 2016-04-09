@@ -20,6 +20,8 @@
 @property(nonatomic,retain)NSArray *shop_products;//单品列表(不同地方不同叫法)
 @property(nonatomic,retain)NSString *order_note;//备注
 
+@property(nonatomic,retain)NSString *is_comment;//是否评论
+@property(nonatomic,retain)NSNumber *is_appoint;//是否可以预约 1可以预约
 //订单详情
 @property(nonatomic,retain)NSString *total_price;//现价
 @property(nonatomic,retain)NSString *total_fee;//最终的价格(优惠后加邮费)
@@ -44,12 +46,11 @@
 @property(nonatomic,retain)NSString *pay_type;//1 支付宝 2 微信
 
 //订单状态 1=》待付款 2=》待预约 3=》已预约 4=》已完成 5=》已取消 6=》已删除
+//1=》待付款      新版本没有2、3状态       4=》已完成 5=》已取消 6=》已删除 7=>已付款
 @property(nonatomic,retain)NSString *status;
 
 //退单状态 0=>未申请退款 1=》用户已提交申请退款 2=》同意退款（已提交微信/支付宝）3=》同意退款（退款成功） 4=》同意退款（退款失败） 5=》拒绝退款
 @property(nonatomic,retain)NSString *refund_status;
-
-@property(nonatomic,retain)NSString *is_comment;//是否已评论
 
 @property(nonatomic,retain)NSString *real_product_total_price;//实际可以退的
 

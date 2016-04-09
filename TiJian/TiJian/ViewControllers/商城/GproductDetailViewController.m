@@ -934,16 +934,15 @@
         
     }else if (sender.tag == 102){//预约
 
-        //update by lcw 2期
+        //update by lcw 2期 直接预约
         if ([LoginManager isLogin:self]) {//已登录
-#pragma mark - 李朝伟
             ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-            [choose nopayAppointWithProductid:_theProductModel.product_id gender:[_theProductModel.gender_id intValue] noAppointNum:1000];
+            [choose apppointNoPayWithProductModel:self.theProductModel
+                                           gender:[_theProductModel.gender_id intValue]
+                                     noAppointNum:1000];
             choose.lastViewController = self;
             [self.navigationController pushViewController:choose animated:YES];
         }
-        
-        
         
     }else if (sender.tag == 103){//购物车
         

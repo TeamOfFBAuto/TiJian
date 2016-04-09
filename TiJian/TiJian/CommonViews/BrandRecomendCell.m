@@ -110,7 +110,6 @@
         //拓展套餐
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, line.bottom, DEVICE_WIDTH - 20, 30) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"购买该套餐的用户还购买了这些加项"];
         [self.contentView addSubview:label];
-        label.backgroundColor = [UIColor orangeColor];
         self.additionTitleLabel = label;
         
         //+30

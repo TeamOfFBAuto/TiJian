@@ -12,6 +12,7 @@
 #import "AppointModel.h"
 #import "ConfirmOrderViewController.h"
 #import "ProductModel.h"
+#import "HospitalModel.h"
 
 #define kTag_Appoint 200 //预约
 #define kTag_Delete 201 //去删除
@@ -34,6 +35,7 @@
     NSString *_order_id;//订单id
     NSString *_product_id;//单品id
     NSString *_exam_center_id;//体检机构id
+    NSString *_exam_center_name;//体检机构name
     NSString *_date;// 预约体检日期（如：2015-11-13）
     
     //个人特有
@@ -54,9 +56,11 @@
     
     if (_actionType == PEOPLEACTIONTYPE_NORMAL) {
         self.myTitle = @"家人管理";
-    }else if (_actionType == PEOPLEACTIONTYPE_SELECT){
+    }else if (_actionType == PEOPLEACTIONTYPE_SELECT_Single){
         self.myTitle = @"重新选择体检人";
-    }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT){
+    }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
+              _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
+              _actionType == PEOPLEACTIONTYPE_SELECT_Mul){
         self.myTitle = @"选择体检人";
     }
     
@@ -77,7 +81,8 @@
     _isMyselfSelected = NO;//默认未选择自己
     _table.tableHeaderView = [self tableHeadView];
     
-    if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT) {
+    if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
+        _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
         UIView *view = [self tableFooterView];
         [self.view addSubview:view];
         view.top = DEVICE_HEIGHT - view.height - 64;
@@ -158,6 +163,28 @@
     _noAppointNum = noAppointNum;
 }
 
+
+/**
+ *  选择多个体检人信息 回调
+ *  @param examCenterName   体检机构name
+ *  @param examCenterId     体检机构id
+ *  @param date             预约的时间 格式如：2015-11-13
+ *  @param noAppointNum     套餐未预约个数
+ */
+- (void)selectMulPeopleWithExamCenterId:(NSString *)examCenterId
+                         examCenterName:(NSString *)examName
+                               examDate:(NSString *)date
+                           noAppointNum:(int)noAppointNum
+                            updateBlock:(UpdateParamsBlock)updateBlock
+{
+    self.updateParamsBlock = updateBlock;
+    //提交预约参数
+    _exam_center_id = examCenterId;//体检机构id
+    _exam_center_name = examName;
+    _date = date;// 预约体检日期（如：2015-11-13）
+    _noAppointNum = noAppointNum;
+}
+
 /**
  *  提交预约信息
  */
@@ -184,7 +211,6 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak typeof(self)weakSelf = self;
-//    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
@@ -207,7 +233,7 @@
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
 
-    if (self.navigationController) {
+    if (self.lastViewController) {
         [self.navigationController popToViewController:self.lastViewController animated:YES];
         return;
     }
@@ -224,14 +250,65 @@
     //选择自己或者选择了至少一个其他人
     if (_isMyselfSelected || num > 0) {
         
-        //未付款去预约,跳转至确认订单页面
-        if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
+        if (_actionType == PEOPLEACTIONTYPE_NORMAL)
+        {
+            return;
+            
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_Single)
+        {
+            //仅选择人并自动返回
+            return;
+            
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_Mul)//选择多个体检人
+        {
+            //选择的体检人
+            
+            NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedArray];
+            
+            //是否包含自己
+            if (_isMyselfSelected) {
+
+                UserInfo *userInfo = [[UserInfo alloc]init];
+                userInfo.family_uid = 0;
+                userInfo.mySelf = YES;
+                [temp addObject:userInfo];
+            }
+            
+            
+            HospitalModel *hospital = [[HospitalModel alloc]init];
+            hospital.date = _date;
+            hospital.exam_center_id = _exam_center_id;
+            hospital.center_name = _exam_center_name;
+            
+            
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            [params safeSetValue:hospital forKey:@"hospital"];//分院
+            [params safeSetValue:temp forKey:@"userInfo"];//分院
+            
+            //回调值
+            if (self.updateParamsBlock) {
+                self.updateParamsBlock(params);
+            }
+            
+            [self.navigationController popToViewController:self.lastViewController animated:YES];
+            
+            
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT)
+        {
+//            @"选择体检人去预约";
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
+            alert.tag = kTag_Appoint;
+            [alert show];
+            
+        }else if (_actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT)
+        {
+//            @"选择体检人未支付去预约";
             
             //如果直接预约
-//            exam_center_id 体检中心id
-//            date 预约时间
-//            myself 预约是否自己
-//            family_uid 预约家人
+            //            exam_center_id 体检中心id
+            //            date 预约时间
+            //            myself 预约是否自己
+            //            family_uid 预约家人
             NSString *exam_center_id = _exam_center_id;
             NSString *date = _date;
             BOOL myself = _isMyselfSelected;
@@ -245,12 +322,15 @@
             productModel.product_name = productModel.setmeal_name;
             cc.dataArray = [NSArray arrayWithObject:productModel];
             [self.navigationController pushViewController:cc animated:YES];
+        }
+        
+        //未付款去预约,跳转至确认订单页面
+        if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
+
             
         }else
         {
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
-            alert.tag = kTag_Appoint;
-            [alert show];
+            
         }
         
     }else{
@@ -305,7 +385,7 @@
 
     }
     //选择人
-    else if (_actionType == PEOPLEACTIONTYPE_SELECT){
+    else if (_actionType == PEOPLEACTIONTYPE_SELECT_Single){
         
         if ([self enableSelectNewPeople]) {
             
@@ -333,7 +413,9 @@
         
     }
     //选择并预约
-    else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT){
+    else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
+             _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
+             _actionType == PEOPLEACTIONTYPE_SELECT_Mul){
         
         if (_isMyselfSelected) {
             
@@ -560,7 +642,8 @@
     
     //确认预约按钮
     UIButton *sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
+    if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
+        self.actionType == PEOPLEACTIONTYPE_SELECT_Mul) {
         [sureBtn setTitle:@"确认选择体检人" forState:UIControlStateNormal];
     }else
     {
@@ -684,22 +767,21 @@
             
             [self clickToUserInfo:aModel];
 
-        }else if (_actionType == PEOPLEACTIONTYPE_SELECT){
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_Single){
             
             if ([self enableSelectNewPeople]) {
                 [_selectedArray addObject:uid];
             }
             [tableView reloadData];
             
-            //选择成功 返回
-            
             //选择成功回调
             NSLog(@"选择体检人成功");
             
             [self selectPeople:aModel myself:NO];
-
             
-        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT){
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
+                  _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
+                  _actionType == PEOPLEACTIONTYPE_SELECT_Mul){
             
             if ([_selectedArray containsObject:uid]) {
                 [_selectedArray removeObject:uid];
@@ -759,19 +841,6 @@
 {
     return 56.f;
 }
-
-////meng新加
-//-(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView
-//{
-//    return 0.01f;
-//}
-//
-//-(UIView *)viewForFooterInSection:(NSInteger)section tableView:(UITableView *)tableView
-//{
-//    return [UIView new];
-//}
-
-
 
 #pragma - mark UITableViewDataSource<NSObject>
 
