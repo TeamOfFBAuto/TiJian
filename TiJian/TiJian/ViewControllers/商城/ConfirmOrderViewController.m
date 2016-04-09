@@ -21,6 +21,7 @@
 #import "PayResultViewController.h"
 #import "GFapiaoViewController.h"
 #import "ChooseHopitalController.h"
+#import "HospitalModel.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -1826,7 +1827,17 @@
     __weak typeof (self)bself = self;
     [cell setYuyueViewClickedBlock:^(ProductModel *theModel) {
         ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
+        //最大可预约人数
+        int have_num = 0;
+        int no_num = 0;
+        for (HospitalModel*model in theModel.hospitalArray) {
+            have_num += model.usersArray.count;
+        }
+        no_num = [theModel.product_num intValue] - have_num;
         
+        [cc selectCenterAndPeopleWithProductId:theModel.product_id gender:[theModel.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
+            [bself chooseHospitalAndDateAndPersonFinishWithDic:params];
+        }];
         [bself.navigationController pushViewController:cc animated:YES];
     }];
     
@@ -1834,6 +1845,14 @@
     
     return cell;
 }
+
+
+//选择完时间分院后的回调
+-(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params{
+    
+    NSLog(@"%@",params);
+}
+
 
 
 #pragma mark - UIAlertViewDelegate
