@@ -1052,6 +1052,7 @@
     if (!_addressView) {
         _addressView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 115)];
         _addressView.backgroundColor = RGBCOLOR(244, 245, 246);
+        
     }else{
         for (UIView *view in _addressView.subviews) {
             [view removeFromSuperview];
@@ -1077,10 +1078,6 @@
         aLabel.font = [UIFont systemFontOfSize:15];
         [contentView addSubview:aLabel];
         
-        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, 24, 6, 12)];
-        [jiantouImv setImage:[UIImage imageNamed:@"jiantou.png"]];
-        [contentView addSubview:jiantouImv];
-        
         //下分割线
         UIImageView *imv1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(contentView.frame), DEVICE_WIDTH, 2.5)];
         [imv1 setImage:[UIImage imageNamed:@"shoppingcart_dd_top_line.png"]];
@@ -1088,6 +1085,11 @@
         
         //调整addressview高度
         [_addressView setHeight:CGRectGetMaxY(imv1.frame)+5];
+        
+        //箭头
+        UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, _addressView.frame.size.height*0.5-6, 6, 12)];
+        [jiantouImv setImage:[UIImage imageNamed:@"jiantou.png"]];
+        [_addressView addSubview:jiantouImv];
         
         _tab.tableHeaderView = _addressView;
         
@@ -1149,11 +1151,10 @@
         //调整addressview高度
         [_addressView setHeight:CGRectGetMaxY(imv1.frame)+5];
         
-        
-        
+        //箭头
         UIImageView *jiantouImv = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 20, _addressView.frame.size.height*0.5-6, 6, 12)];
         [jiantouImv setImage:[UIImage imageNamed:@"jiantou.png"]];
-        [contentView addSubview:jiantouImv];
+        [_addressView addSubview:jiantouImv];
         
         
         
@@ -1825,6 +1826,8 @@
     ProductModel *model = arr[indexPath.row];
     [cell loadCustomViewWithModel:model];
     __weak typeof (self)bself = self;
+    
+    //跳转预约界面
     [cell setYuyueViewClickedBlock:^(ProductModel *theModel) {
         ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
         //最大可预约人数
@@ -1835,9 +1838,12 @@
         }
         no_num = [theModel.product_num intValue] - have_num;
         cc.lastViewController = bself;
+        
+        //设置回调
         [cc selectCenterAndPeopleWithProductId:theModel.product_id gender:[theModel.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
-            [bself chooseHospitalAndDateAndPersonFinishWithDic:params];
+            [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
         }];
+        
         [bself.navigationController pushViewController:cc animated:YES];
     }];
     
@@ -1848,9 +1854,25 @@
 
 
 //选择完时间分院后的回调
--(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params{
-    
+-(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params index:(NSIndexPath*)theIndex{
     NSLog(@"%@",params);
+    NSArray *userInfoArray = [params arrayValueForKey:@"userInfo"];
+    HospitalModel *hospital = [params objectForKey:@"hospital"];
+    hospital.usersArray = userInfoArray;
+    
+    
+    NSArray *arr = _theData[theIndex.section];
+    ProductModel *model = arr[theIndex.row];
+    
+    if (!model.hospitalArray) {
+        model.hospitalArray = [NSMutableArray arrayWithCapacity:1];
+        [model.hospitalArray addObject:hospital];
+    }else{
+        [model.hospitalArray addObject:hospital];
+    }
+    
+    [_tab reloadData];
+    
 }
 
 

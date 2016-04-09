@@ -9,6 +9,8 @@
 #import "GconfirmOrderCell.h"
 #import "ProductModel.h"
 #import "HospitalModel.h"
+#import "UserInfo.h"
+#import "Gbtn.h"
 
 
 @interface GconfirmOrderCell ()
@@ -111,15 +113,12 @@
 
 //根据productmodel设置预约相关view
 -(void)setYuyueViewWithModel:(ProductModel*)theModel{
-    
     //预约相关view
     self.yuyueView = [[UIView alloc]initWithFrame:CGRectMake(0, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195], DEVICE_WIDTH, 0)];
     [self.contentView addSubview:self.yuyueView];
     
-    
     //productModel.hospitalArray ==> hospitalModel.userArray.count
     int num = 0;
-    
     
     for (HospitalModel*model in theModel.hospitalArray) {
          num += model.usersArray.count;
@@ -132,11 +131,9 @@
             //此分院包含几个体检人
             HospitalModel *model_h = theModel.hospitalArray[i];
             NSInteger totlePerson_num = model_h.usersArray.count;
-            //分院和体检人的view
-            UIView *hospitalView = [[UIView alloc]initWithFrame:CGRectMake(0, height_hospital, DEVICE_WIDTH, 44*totlePerson_num+44)];
-            hospitalView.backgroundColor = RGBCOLOR_ONE;
-            height_hospital += hospitalView.frame.size.height;
-            [self.yuyueView addSubview:hospitalView];
+            //创建时间分院view
+            [self creatYuyueInfoViewWithFrame:CGRectMake(0, height_hospital, DEVICE_WIDTH, 44 * totlePerson_num + 44) userNum:totlePerson_num hospitalModel:model_h];
+            height_hospital += (44 * totlePerson_num + 44);
         }
         //设置高度
         [self.yuyueView setHeight:height_hospital];
@@ -144,7 +141,7 @@
     }else if (num < [theModel.product_num intValue]){//没有预约 & 部分预约
         if (num == 0){//没有预约
             
-            [self creatYuyueView];
+            [self creatAddYuyueViewWithY:0];
             //设置高度
             [self.yuyueView setHeight:44];
             
@@ -155,18 +152,16 @@
                 //此分院包含几个体检人
                 HospitalModel *model_h = theModel.hospitalArray[i];
                 NSInteger totlePerson_num = model_h.usersArray.count;
-                //分院和体检人的view
-                UIView *hospitalView = [[UIView alloc]initWithFrame:CGRectMake(0, height_hospital, DEVICE_WIDTH, 44*totlePerson_num+44)];
-                hospitalView.backgroundColor = RGBCOLOR_ONE;
-                height_hospital += hospitalView.frame.size.height;
-                [self.yuyueView addSubview:hospitalView];
+                [self creatYuyueInfoViewWithFrame:CGRectMake(0, height_hospital, DEVICE_WIDTH, 44*totlePerson_num) userNum:totlePerson_num hospitalModel:model_h];
+                height_hospital += (44*totlePerson_num)+44;//加上44时间分院栏
             }
             
+            
             //添加预约view
-            [self creatYuyueView];
+            [self creatAddYuyueViewWithY:height_hospital];
             
             //设置高度
-            [self.yuyueView setHeight:height_hospital];
+            [self.yuyueView setHeight:(height_hospital+44)];
             
             
         }
@@ -176,9 +171,9 @@
 
 
 //创建添加预约view
--(void)creatYuyueView{
+-(void)creatAddYuyueViewWithY:(CGFloat)theY{
     //添加预约view
-    UIView *addHospitalView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
+    UIView *addHospitalView = [[UIView alloc]initWithFrame:CGRectMake(0, theY, DEVICE_WIDTH, 44)];
     [self.yuyueView addSubview:addHospitalView];
     //按钮
     UIImageView *addImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, 44*0.5-7, 14, 14)];
@@ -199,17 +194,95 @@
     
 }
 
-//创建预约infoView
--(void)creatYuyueInfoView{
+//创建预约时间分院infoView
+-(void)creatYuyueInfoViewWithFrame:(CGRect)theFrame userNum:(NSInteger)theUserNum hospitalModel:(HospitalModel *)theModel{
+    
+    UIView *infoView =[[UIView alloc]initWithFrame:theFrame];
+    [self.yuyueView addSubview:infoView];
+    
     //时间分院view
     UIView *dateAndhospitalView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
-    dateAndhospitalView.backgroundColor = [UIColor orangeColor];
+    [infoView addSubview:dateAndhospitalView];
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 44*0.5-7, 65, 14)];
+    tLabel.font = [UIFont systemFontOfSize:13];
+    tLabel.text = @"时间、分院";
+    [dateAndhospitalView addSubview:tLabel];
+    UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH - 15 - 65 - 5 - 20, 14)];
+    cLabel.font = [UIFont systemFontOfSize:13];
+    cLabel.textColor = RGBCOLOR(95, 154, 205);
+    cLabel.textAlignment = NSTextAlignmentRight;
+    cLabel.text = [NSString stringWithFormat:@"%@  %@",theModel.date,theModel.center_name];
+    [dateAndhospitalView addSubview:cLabel];
+    
+    //分割线
+    UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(80, 43.5, DEVICE_WIDTH - 15, 0.5)];
+    fenLine.backgroundColor = RGBCOLOR(223, 224, 225);
+    [dateAndhospitalView addSubview:fenLine];
     
     //体检人view
-    UIView *personView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(dateAndhospitalView.frame), DEVICE_WIDTH, 44)];
-    personView.backgroundColor = [UIColor greenColor];
+    for (int i = 0; i<theUserNum; i++) {
+        
+        UserInfo *user = theModel.usersArray[i];
+        
+        UIView *personView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(dateAndhospitalView.frame)+i*44, DEVICE_WIDTH, 44)];
+        [infoView addSubview:personView];
+        if (i == 0) {
+            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 44*0.5-7, 50, 14)];
+            tLabel.font = [UIFont systemFontOfSize:13];
+            tLabel.text = @"体检人";
+            [personView addSubview:tLabel];
+            
+            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH - 15 - 50 - 5 - 25, 14)];
+            cLabel.font = [UIFont systemFontOfSize:13];
+            cLabel.textAlignment = NSTextAlignmentRight;
+            cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
+            cLabel.textColor = RGBCOLOR(95, 154, 205);
+            [personView addSubview:cLabel];
+            
+            //删除
+            Gbtn *deleteBtn = [Gbtn buttonWithType:UIButtonTypeCustom];
+            [deleteBtn setFrame:CGRectMake(cLabel.right, 10, 25, 25)];
+            deleteBtn.backgroundColor = [UIColor redColor];
+            [personView addSubview:deleteBtn];
+            [deleteBtn addTarget:self action:@selector(deleteUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+            
+        }else{
+            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 44*0.5-7, DEVICE_WIDTH - 15 - 25, 14)];
+            cLabel.font = [UIFont systemFontOfSize:13];
+            cLabel.textAlignment = NSTextAlignmentRight;
+            cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
+            cLabel.textColor = RGBCOLOR(95, 154, 205);
+            [personView addSubview:cLabel];
+            
+            //删除
+            Gbtn *deleteBtn = [Gbtn buttonWithType:UIButtonTypeCustom];
+            [deleteBtn setFrame:CGRectMake(cLabel.right, 10, 25, 25)];
+            deleteBtn.backgroundColor = [UIColor redColor];
+            [personView addSubview:deleteBtn];
+            [deleteBtn addTarget:self action:@selector(deleteUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
+        
+        if (i == theUserNum - 1) {
+            //分割线
+            UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(15, 43.5, DEVICE_WIDTH - 15, 0.5)];
+            fenLine.backgroundColor = RGBCOLOR(223, 224, 225);
+            [personView addSubview:fenLine];
+        }
+        
+        
+    }
+    
+    
 }
 
+//删除体检人
+-(void)deleteUserInfo:(Gbtn*)sender{
+    NSLog(@"%s",__FUNCTION__);
+    
+    
+    
+}
 
 
 
@@ -238,7 +311,7 @@
             //此分院包含几个体检人
             HospitalModel *model_h = theModel.hospitalArray[i];
             NSInteger totlePerson_num = model_h.usersArray.count;
-            height += 44*totlePerson_num+44;
+            height += (44*totlePerson_num+44);
         }
     }else if (num < [theModel.product_num intValue]){//没有预约 & 部分预约
         if (num == 0){//没有预约
@@ -249,7 +322,7 @@
                 //此分院包含几个体检人
                 HospitalModel *model_h = theModel.hospitalArray[i];
                 NSInteger totlePerson_num = model_h.usersArray.count;
-                height += 44*totlePerson_num+44;
+                height += (44*totlePerson_num+44);
             }
             
             height += 44;

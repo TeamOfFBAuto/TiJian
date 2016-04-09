@@ -80,7 +80,7 @@
 @property(nonatomic,retain)NSNumber *is_append;//是否是加项
 
 
-@property(nonatomic,strong)NSArray *hospitalArray;//分院数组 里面装HopitalModel
+@property(nonatomic,strong)NSMutableArray *hospitalArray;//分院数组 里面装HopitalModel
 @property(nonatomic,strong)NSArray *addProductsArray;//加项包数组里面装ProductModel
 
 
