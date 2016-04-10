@@ -89,7 +89,6 @@
     }
     _isOpen = YES;//默认打开
     _isEdit = NO;//默认非编辑
-    _isMyselfSelected = NO;//默认未选择自己
     _table.tableHeaderView = [self tableHeadView];
     
     if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
@@ -208,15 +207,24 @@
             noAppointNum:(int)noAppointNum
              updateBlock:(UpdateParamsBlock)updateBlock
 {
-    _tempSelectedUserArray = [NSMutableArray arrayWithArray:userArray];
+    NSMutableArray *tempUsers = [NSMutableArray array];
     NSMutableArray *tempIds = [NSMutableArray arrayWithCapacity:userArray.count];
     self.updateParamsBlock = updateBlock;
     for (UserInfo *user in userArray) {
-        NSString *uid = NSStringFromInt([user.family_uid intValue]);
-        [tempIds addObject:uid];
+        
+        if ([user.family_uid integerValue] == 0 ||
+            user.mySelf == YES) {
+            _isMyselfSelected = YES;
+        }else
+        {
+            NSString *uid = NSStringFromInt([user.family_uid intValue]);
+            [tempIds addObject:uid];
+            [tempUsers addObject:user];
+        }
     }
     //
     _tempSelectedArray = [NSArray arrayWithArray:tempIds];
+    _tempSelectedUserArray = [NSArray arrayWithArray:tempUsers];
     _noAppointNum = noAppointNum + (int)userArray.count;
     [_table reloadData];
 }
@@ -302,9 +310,13 @@
             
             //是否包含自己
             if (_isMyselfSelected) {
-
+                
+                UserInfo *loginUser = [UserInfo userInfoForCache];
                 UserInfo *userInfo = [[UserInfo alloc]init];
                 userInfo.family_uid = 0;
+                userInfo.appellation = @"本人";
+                userInfo.family_user_name = loginUser.real_name;
+                userInfo.id_card = loginUser.id_card;
                 userInfo.mySelf = YES;
                 [temp addObject:userInfo];
             }
@@ -737,6 +749,13 @@
         _selectedIcon = icon;
     }
     
+    if (_isMyselfSelected) {
+        _selectedIcon.hidden = NO;
+    }else
+    {
+        _selectedIcon.hidden = YES;
+    }
+    
     [bgView addTaget:self action:@selector(clickToMe) tag:0];
     
     return headView;
@@ -832,7 +851,15 @@
             
             if ([_selectedArray containsObject:uid]) {
                 [_selectedArray removeObject:uid];
-                [_selectedUserArray removeObject:aModel];
+                UserInfo *temp;
+                for (UserInfo *user in _selectedUserArray) {
+                    if ([user.family_uid integerValue] == [uid integerValue]) {
+                        temp = user;
+                    }
+                }
+                if (temp) {
+                    [_selectedUserArray removeObject:temp];
+                }
                 
             }else
             {
