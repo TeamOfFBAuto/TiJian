@@ -22,6 +22,7 @@
 #import "GFapiaoViewController.h"
 #import "ChooseHopitalController.h"
 #import "HospitalModel.h"
+#import "PeopleManageController.h"
 
 @interface ConfirmOrderViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -127,7 +128,6 @@
     [self makeDyadicArray];
     [self prepareNetData];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteYuyueUser) name:NOTIFICATION_CONFIRMORDERDELETAPERSON object:nil];
 
 }
 
@@ -138,12 +138,6 @@
 
 
 #pragma mark - 逻辑处理
-
-//预约删除体检人
--(void)deleteYuyueUser{
-    [_tab reloadData];
-}
-
 
 //一维数组(里面装产品model)做成二维数组(以品牌id区分)
 -(void)makeDyadicArray{
@@ -186,9 +180,7 @@
     _price_total = 0.0f;
     for (ProductModel *model in self.dataArray) {
         
-        
         [model.current_price floatValue];
-        
         
         CGFloat x = 0.0f;
         x = [model.current_price floatValue] * 100.0f;
@@ -1834,30 +1826,66 @@
     [cell loadCustomViewWithModel:model];
     __weak typeof (self)bself = self;
     
-    //跳转预约界面
-    [cell setYuyueViewClickedBlock:^(ProductModel *theModel) {
-        ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
-        //最大可预约人数
-        int have_num = 0;
-        int no_num = 0;
-        for (HospitalModel*model in theModel.hospitalArray) {
-            have_num += model.usersArray.count;
+    [cell setCellClickedBlock:^(CellClickedBlockType theType, ProductModel *theProduct, HospitalModel *theHospital, UserInfo *theUser) {
+        if (theType == CellClickedBlockType_yuyue) {//添加预约
+            ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
+            //最大可预约人数
+            int have_num = 0;
+            int no_num = 0;
+            for (HospitalModel*model in theProduct.hospitalArray) {
+                have_num += model.usersArray.count;
+            }
+            no_num = [theProduct.product_num intValue] - have_num;
+            cc.lastViewController = bself;
+            //设置回调
+            [cc selectCenterAndPeopleWithProductId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
+                [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
+            }];
+            
+            [bself.navigationController pushViewController:cc animated:YES];
+        }else if (theType == CellClickedBlockType_delete){//删除人
+            [_tab reloadData];
+        }else if (theType == CellClickedBlockType_changePerson){//更改人
+            
+            PeopleManageController *people = [[PeopleManageController alloc]init];
+            people.actionType = PEOPLEACTIONTYPE_SELECT_Single;
+            people.noAppointNum = 1;
+            people.gender = [theProduct.gender_id intValue];
+            
+            people.updateParamsBlock = ^(NSDictionary *params){
+                UserInfo *user = params[@"result"];
+                [bself changeUserWithUserInfo:theUser toUser:user productModel:theProduct hospitalModel:theHospital];
+            };
+            [bself.navigationController pushViewController:people animated:YES];
+            
+        }else if (theType == CellClickedBlockType_changeHostpital){//更改分院
+            
         }
-        no_num = [theModel.product_num intValue] - have_num;
-        cc.lastViewController = bself;
-        
-        //设置回调
-        [cc selectCenterAndPeopleWithProductId:theModel.product_id gender:[theModel.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
-            [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
-        }];
-        
-        [bself.navigationController pushViewController:cc animated:YES];
     }];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
 }
+
+
+//更改体检人
+-(void)changeUserWithUserInfo:(UserInfo*)theUser toUser:(UserInfo*)changedUser productModel:(ProductModel*)theProductModel hospitalModel:(HospitalModel*)theHospitalModel{
+    
+    
+    for (UserInfo *user in theHospitalModel.usersArray) {
+        if ([user.family_uid intValue] == [changedUser.family_uid intValue]) {
+            
+        }
+    }
+    
+    NSUInteger index = [theHospitalModel.usersArray indexOfObject:theUser];
+    [theHospitalModel.usersArray replaceObjectAtIndex:index withObject:changedUser];
+    
+    
+    [_tab reloadData];
+}
+
 
 
 //选择完时间分院后的回调
@@ -1899,20 +1927,12 @@
                        hospital:(HospitalModel *)hospital
                   userArray:(NSArray *)userArray
 {
-    
-    
+
     hospital.usersArray = [NSMutableArray arrayWithArray:userArray];
     productModel.hospitalArray = [NSMutableArray arrayWithObjects:hospital, nil];
     
     //套餐
     self.dataArray = [NSArray arrayWithObject:productModel];
-    
-//    //分院和体检人信息
-//    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
-//    [temp safeSetValue:hospital forKey:@"hospital"];
-//    [temp safeSetValue:userArray forKey:@"userInfo"];
-//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-//    [self chooseHospitalAndDateAndPersonFinishWithDic:temp index:indexPath];
 }
 
 

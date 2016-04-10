@@ -14,15 +14,24 @@
 @class ProductModel;
 @class Gbtn;
 @class ConfirmOrderViewController;
+@class HospitalModel;
 
-typedef void(^yuyueViewClickedBlock)(ProductModel *theModel);
+typedef enum : NSUInteger {
+    CellClickedBlockType_yuyue,
+    CellClickedBlockType_delete,
+    CellClickedBlockType_changePerson,
+    CellClickedBlockType_changeHostpital
+} CellClickedBlockType;
+
+typedef void(^cellClickedBlock)(CellClickedBlockType theType,ProductModel *theProduct,HospitalModel *theHospital,UserInfo *theUser);
 
 @interface GconfirmOrderCell : UITableViewCell
 @property(nonatomic,strong)UIView *yuyueView;//预约相关view
-@property(nonatomic,copy)yuyueViewClickedBlock yuyueViewClickedBlock;
+@property(nonatomic,copy)cellClickedBlock cellClickedBlock;
+
+-(void)setCellClickedBlock:(cellClickedBlock)cellClickedBlock;
 
 -(void)loadCustomViewWithModel:(ProductModel *)model;
--(void)setYuyueViewClickedBlock:(yuyueViewClickedBlock)yuyueViewClickedBlock;
 
 + (CGFloat)heightForCellWithModel:(ProductModel*)theModel;
 

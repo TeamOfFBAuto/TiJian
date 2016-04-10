@@ -11,6 +11,7 @@
 #import "HospitalModel.h"
 #import "UserInfo.h"
 #import "Gbtn.h"
+#import "GLabel.h"
 
 
 @interface GconfirmOrderCell ()
@@ -231,11 +232,14 @@
             tLabel.text = @"体检人";
             [infoView addSubview:tLabel];
             
-            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, tLabel.frame.origin.y, DEVICE_WIDTH - 15 - 50 - 5 - 25, 14)];
+            GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, tLabel.frame.origin.y, DEVICE_WIDTH - 15 - 50 - 5 - 25, 14)];
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentRight;
             cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
             cLabel.textColor = RGBCOLOR(95, 154, 205);
+            cLabel.hospitalModel = theModel;
+            cLabel.userInfo = user;
+            [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChooseUser:) imageViewTag:0];
             [infoView addSubview:cLabel];
             
             //删除
@@ -248,11 +252,14 @@
             
         }else{
             
-            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(dateAndhospitalView.frame)+i*44 + 44*0.5-7, DEVICE_WIDTH - 15 - 25, 14)];
+            GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(dateAndhospitalView.frame)+i*44 + 44*0.5-7, DEVICE_WIDTH - 15 - 25, 14)];
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentRight;
             cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
             cLabel.textColor = RGBCOLOR(95, 154, 205);
+            cLabel.hospitalModel = theModel;
+            cLabel.userInfo = user;
+            [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChooseUser:) imageViewTag:0];
             [infoView addSubview:cLabel];
             
             //删除
@@ -284,6 +291,20 @@
     
 }
 
+
+//更改体检人
+-(void)cLabelClickedToChooseUser:(UITapGestureRecognizer*)sender{
+    GLabel *label = (GLabel*)sender.view;
+    HospitalModel *hospital = label.hospitalModel;
+    UserInfo *user = label.userInfo;
+    if (self.cellClickedBlock) {
+        self.cellClickedBlock(CellClickedBlockType_changePerson,_theModel,hospital,user);
+    }
+    
+}
+
+
+
 //删除体检人
 -(void)deleteUserInfo:(Gbtn*)sender{
     NSLog(@"%s",__FUNCTION__);
@@ -311,18 +332,19 @@
         [_theModel.hospitalArray removeObjectAtIndex:tag1];
     }
     
+    if (self.cellClickedBlock) {
+        self.cellClickedBlock(CellClickedBlockType_delete,nil,nil,nil);
+    }
     
     
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_CONFIRMORDERDELETAPERSON object:nil];
 }
 
 
 
 //添加预约view点击
 -(void)yuyueViewClicked{
-    if (self.yuyueViewClickedBlock) {
-        self.yuyueViewClickedBlock(_theModel);
+    if (self.cellClickedBlock) {
+        self.cellClickedBlock(CellClickedBlockType_yuyue,_theModel,nil,nil);
     }
 }
 

@@ -406,6 +406,7 @@
 		13FFBFCE1C0D504B0077DD29 /* SimpleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCB1C0D504B0077DD29 /* SimpleMessage.m */; };
 		13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
+		E304A2441CBA567B00F9319C /* GLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E304A2431CBA567B00F9319C /* GLabel.m */; };
 		E30888571C4E47E800C6A8DD /* shoucangjia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */; };
 		E30FE3961C3CCCE9001CF9BA /* UINavigationBar+Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE38F1C3CCCE9001CF9BA /* UINavigationBar+Appearance.m */; };
 		E30FE3971C3CCCE9001CF9BA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */; };
@@ -1217,6 +1218,8 @@
 		4D536395CADC0784792F66D1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		92E9949F3A6967C2DBC3922E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E304A2421CBA567B00F9319C /* GLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLabel.h; sourceTree = "<group>"; };
+		E304A2431CBA567B00F9319C /* GLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLabel.m; sourceTree = "<group>"; };
 		E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoucangjia@2x.png"; sourceTree = "<group>"; };
 		E30FE38C1C3CCCE9001CF9BA /* DLConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLConst.h; sourceTree = "<group>"; };
 		E30FE38D1C3CCCE9001CF9BA /* DLNavigationEffectKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNavigationEffectKit.h; sourceTree = "<group>"; };
@@ -2931,6 +2934,8 @@
 				E39F1E0B1C0D013B00E9B41F /* Gbtn.m */,
 				E30FE39A1C3E56DF001CF9BA /* GSearchView.h */,
 				E30FE39B1C3E56DF001CF9BA /* GSearchView.m */,
+				E304A2421CBA567B00F9319C /* GLabel.h */,
+				E304A2431CBA567B00F9319C /* GLabel.m */,
 			);
 			path = Gutils;
 			sourceTree = "<group>";
@@ -3669,6 +3674,7 @@
 				1322B6A71C1965E500596DAE /* CoupeView.m in Sources */,
 				1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */,
 				E3E2B4121BFB20A4007988C5 /* FBActionSheet.m in Sources */,
+				E304A2441CBA567B00F9319C /* GLabel.m in Sources */,
 				13E6173B1C1584D100E370E5 /* PhotoBrowserView.m in Sources */,
 				131EC6231C58FA290008F517 /* BrandRecomendCell.m in Sources */,
 				13E6173C1C1584D100E370E5 /* TQStarRatingView.m in Sources */,
