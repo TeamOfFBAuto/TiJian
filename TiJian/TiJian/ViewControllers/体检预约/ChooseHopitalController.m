@@ -426,6 +426,18 @@ typedef enum {
         if (self.updateParamsBlock) {
             
             if (_selectCenterName.length > 0 && _selectDate.length > 0) {
+                
+                HospitalModel *aModel = [[HospitalModel alloc]init];
+                aModel.exam_center_id = NSStringFromInt(_selectHospitalId);
+                aModel.center_name = _selectCenterName;
+                aModel.date = _selectDate;
+                
+                NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+                [temp safeSetString:_selectDate forKey:@"date"];
+                [temp safeSetString:_selectCenterName forKey:@"centerName"];
+                [temp safeSetValue:NSStringFromInt(_selectHospitalId) forKey:@"centerId"];
+                [temp safeSetValue:aModel forKey:@"hospital"];
+                
                 NSDictionary *params = @{@"date":_selectDate,
                                          @"centerName":_selectCenterName,
                                          @"centerId":NSStringFromInt(_selectHospitalId)};
