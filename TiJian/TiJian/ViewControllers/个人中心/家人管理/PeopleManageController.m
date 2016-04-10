@@ -189,6 +189,30 @@
 }
 
 /**
+ *  更新体检人
+ *
+ *  @param userArray    体检人数组
+ *  @param noAppointNum
+ *  @param updateBlock
+ */
+- (void)replaceUserArray:(NSArray *)userArray
+            noAppointNum:(int)noAppointNum
+             updateBlock:(UpdateParamsBlock)updateBlock
+{
+    self.updateParamsBlock = updateBlock;
+    for (UserInfo *user in userArray) {
+        NSString *uid = user.family_uid;
+        if (![_selectedArray containsObject:uid]) {
+            
+            [_selectedArray addObject:uid];
+            [_selectedUserArray addObject:user];
+        }
+    }
+    _noAppointNum = noAppointNum;
+    [_table reloadData];
+}
+
+/**
  *  提交预约信息
  */
 - (void)networkForMakeAppoint
@@ -327,7 +351,6 @@
             hospital.date = _date;
             hospital.exam_center_id = _exam_center_id;
             hospital.center_name = _exam_center_name;
-            
             
             ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
             cc.lastViewController = self;

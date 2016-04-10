@@ -55,4 +55,15 @@ typedef enum{
                            noAppointNum:(int)noAppointNum
                             updateBlock:(UpdateParamsBlock)updateBlock;
 
+/**
+ *  更新体检人
+ *
+ *  @param userArray    体检人数组
+ *  @param noAppointNum 剩余可预约数
+ *  @param updateBlock
+ */
+- (void)replaceUserArray:(NSArray *)userArray
+            noAppointNum:(int)noAppointNum
+             updateBlock:(UpdateParamsBlock)updateBlock;
+
 @end
