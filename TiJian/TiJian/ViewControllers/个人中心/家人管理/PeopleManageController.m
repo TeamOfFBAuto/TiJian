@@ -215,8 +215,8 @@
         NSString *uid = NSStringFromInt([user.family_uid intValue]);
         [tempIds addObject:uid];
     }
+    //
     _tempSelectedArray = [NSArray arrayWithArray:tempIds];
-    
     _noAppointNum = noAppointNum + (int)userArray.count;
     [_table reloadData];
 }
