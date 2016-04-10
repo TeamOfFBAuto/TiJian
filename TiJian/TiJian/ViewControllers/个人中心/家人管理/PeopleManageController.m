@@ -321,7 +321,6 @@
                 [temp addObject:userInfo];
             }
             
-            
             HospitalModel *hospital = [[HospitalModel alloc]init];
             hospital.date = _date;
             hospital.exam_center_id = _exam_center_id;
