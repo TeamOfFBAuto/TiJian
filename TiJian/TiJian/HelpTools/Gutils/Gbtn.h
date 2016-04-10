@@ -14,4 +14,5 @@
 @property(nonatomic,strong)NSIndexPath *theIndex;
 @property(nonatomic,strong)UserInfo *userInfo;
 @property(nonatomic,strong)HospitalModel *hospitalModel;
+
 @end

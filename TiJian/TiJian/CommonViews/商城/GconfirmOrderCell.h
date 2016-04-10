@@ -12,12 +12,12 @@
 
 #import <UIKit/UIKit.h>
 @class ProductModel;
-
+@class Gbtn;
+@class ConfirmOrderViewController;
 
 typedef void(^yuyueViewClickedBlock)(ProductModel *theModel);
 
 @interface GconfirmOrderCell : UITableViewCell
-
 @property(nonatomic,strong)UIView *yuyueView;//预约相关view
 @property(nonatomic,copy)yuyueViewClickedBlock yuyueViewClickedBlock;
 

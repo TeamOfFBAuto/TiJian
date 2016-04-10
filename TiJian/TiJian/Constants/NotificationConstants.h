@@ -47,6 +47,8 @@
 #define NOTIFICATION_UPDATEMSGNUM @"updateMsgNum" //更新消息未读个数
 #define NOTIFICATION_PersonalCustomization_SUCCESS @"PersonalCustomization_SUCCESS"//个性化定制成功
 
+#define NOTIFICATION_CONFIRMORDERDELETAPERSON @"NOTIFICATION_CONFIRMORDERDELETAPERSON"//提交订单页面预约删除体检人
+
 
 
 #endif

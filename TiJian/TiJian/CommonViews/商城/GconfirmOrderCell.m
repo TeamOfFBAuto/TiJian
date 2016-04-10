@@ -152,7 +152,7 @@
                 //此分院包含几个体检人
                 HospitalModel *model_h = theModel.hospitalArray[i];
                 NSInteger totlePerson_num = model_h.usersArray.count;
-                [self creatYuyueInfoViewWithFrame:CGRectMake(0, height_hospital, DEVICE_WIDTH, 44*totlePerson_num) userNum:totlePerson_num hospitalModel:model_h];
+                [self creatYuyueInfoViewWithFrame:CGRectMake(0, height_hospital, DEVICE_WIDTH, 44*totlePerson_num + 44) userNum:totlePerson_num hospitalModel:model_h];
                 height_hospital += (44*totlePerson_num)+44;//加上44时间分院栏
             }
             
@@ -224,54 +224,62 @@
         
         UserInfo *user = theModel.usersArray[i];
         
-        UIView *personView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(dateAndhospitalView.frame)+i*44, DEVICE_WIDTH, 44)];
-        [infoView addSubview:personView];
         if (i == 0) {
-            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 44*0.5-7, 50, 14)];
+            
+            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(dateAndhospitalView.frame)+i*44 + 44*0.5-7, 50, 14)];
             tLabel.font = [UIFont systemFontOfSize:13];
             tLabel.text = @"体检人";
-            [personView addSubview:tLabel];
+            [infoView addSubview:tLabel];
             
-            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH - 15 - 50 - 5 - 25, 14)];
+            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, tLabel.frame.origin.y, DEVICE_WIDTH - 15 - 50 - 5 - 25, 14)];
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentRight;
             cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
             cLabel.textColor = RGBCOLOR(95, 154, 205);
-            [personView addSubview:cLabel];
+            [infoView addSubview:cLabel];
             
             //删除
-            Gbtn *deleteBtn = [Gbtn buttonWithType:UIButtonTypeCustom];
-            [deleteBtn setFrame:CGRectMake(cLabel.right, 10, 25, 25)];
+            Gbtn *deleteBtn = [[Gbtn alloc]initWithFrame:CGRectMake(cLabel.right, cLabel.frame.origin.y-7, 25, 25)];
+            deleteBtn.hospitalModel = theModel;
+            deleteBtn.userInfo = user;
             deleteBtn.backgroundColor = [UIColor redColor];
-            [personView addSubview:deleteBtn];
+            [infoView addSubview:deleteBtn];
             [deleteBtn addTarget:self action:@selector(deleteUserInfo:) forControlEvents:UIControlEventTouchUpInside];
             
         }else{
-            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 44*0.5-7, DEVICE_WIDTH - 15 - 25, 14)];
+            
+            UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(dateAndhospitalView.frame)+i*44 + 44*0.5-7, DEVICE_WIDTH - 15 - 25, 14)];
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentRight;
             cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
             cLabel.textColor = RGBCOLOR(95, 154, 205);
-            [personView addSubview:cLabel];
+            [infoView addSubview:cLabel];
             
             //删除
-            Gbtn *deleteBtn = [Gbtn buttonWithType:UIButtonTypeCustom];
-            [deleteBtn setFrame:CGRectMake(cLabel.right, 10, 25, 25)];
+            Gbtn *deleteBtn = [[Gbtn alloc]initWithFrame:CGRectMake(cLabel.right, cLabel.frame.origin.y-7, 25, 25)];
+            deleteBtn.hospitalModel = theModel;
+            deleteBtn.userInfo = user;
             deleteBtn.backgroundColor = [UIColor redColor];
-            [personView addSubview:deleteBtn];
+            [infoView addSubview:deleteBtn];
             [deleteBtn addTarget:self action:@selector(deleteUserInfo:) forControlEvents:UIControlEventTouchUpInside];
         }
         
         
         if (i == theUserNum - 1) {
             //分割线
-            UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(15, 43.5, DEVICE_WIDTH - 15, 0.5)];
+            UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(15, infoView.frame.size.height - 0.5, DEVICE_WIDTH - 15, 0.5)];
             fenLine.backgroundColor = RGBCOLOR(223, 224, 225);
-            [personView addSubview:fenLine];
+            [infoView addSubview:fenLine];
         }
         
         
     }
+    
+    
+    NSLog(@"%f",self.yuyueView.frame.size.height);
+    NSLog(@"%f",infoView.frame.size.height);
+    
+    
     
     
 }
@@ -280,8 +288,33 @@
 -(void)deleteUserInfo:(Gbtn*)sender{
     NSLog(@"%s",__FUNCTION__);
     
+    int tag1 = 0;
+    int tag2 = 0;
+    
+    for (int i = 0; i<_theModel.hospitalArray.count; i++) {
+        HospitalModel *model = _theModel.hospitalArray[i];
+        if (model == sender.hospitalModel) {
+            tag1 = i;
+            for (int j = 0; j<model.usersArray.count; j++) {
+                UserInfo *user = model.usersArray[j];
+                if (user == sender.userInfo) {
+                    tag2 = j;
+                }
+            }
+        }
+    }
     
     
+    HospitalModel *model_h = _theModel.hospitalArray[tag1];
+    [model_h.usersArray removeObjectAtIndex:tag2];
+    if (model_h.usersArray.count == 0) {
+        [_theModel.hospitalArray removeObjectAtIndex:tag1];
+    }
+    
+    
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_CONFIRMORDERDELETAPERSON object:nil];
 }
 
 

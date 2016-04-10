@@ -126,6 +126,8 @@
     [self makeDyadicArray];
     [self prepareNetData];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteYuyueUser) name:NOTIFICATION_CONFIRMORDERDELETAPERSON object:nil];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -135,6 +137,12 @@
 
 
 #pragma mark - 逻辑处理
+
+//预约删除体检人
+-(void)deleteYuyueUser{
+    [_tab reloadData];
+}
+
 
 //一维数组(里面装产品model)做成二维数组(以品牌id区分)
 -(void)makeDyadicArray{
