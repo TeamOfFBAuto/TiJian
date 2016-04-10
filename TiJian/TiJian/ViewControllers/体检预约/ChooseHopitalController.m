@@ -471,6 +471,7 @@ typedef enum {
     else if (_chooseType == ChooseType_nopayAppoint)
     {
         people.actionType = PEOPLEACTIONTYPE_NOPAYAPPOINT;//未支付预约
+        [people selectMulPeopleWithExamCenterId:_exam_center_id examCenterName:_selectCenterName examDate:_selectDate noAppointNum:_noAppointNum updateBlock:nil];
     }
     else if (_chooseType == ChooseType_centerAndPeople)
     {
