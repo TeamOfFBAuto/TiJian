@@ -934,6 +934,7 @@
         
     }else if (sender.tag == 102){//预约
 
+        
         //update by lcw 2期 直接预约
         if ([LoginManager isLogin:self]) {//已登录
             ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
