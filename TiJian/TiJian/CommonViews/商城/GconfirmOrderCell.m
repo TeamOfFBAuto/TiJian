@@ -208,10 +208,12 @@
     tLabel.font = [UIFont systemFontOfSize:13];
     tLabel.text = @"时间、分院";
     [dateAndhospitalView addSubview:tLabel];
-    UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH - 15 - 65 - 5 - 20, 14)];
+    GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH - 15 - 65 - 5 - 20, 14)];
     cLabel.font = [UIFont systemFontOfSize:13];
     cLabel.textColor = RGBCOLOR(95, 154, 205);
     cLabel.textAlignment = NSTextAlignmentRight;
+    cLabel.hospitalModel = theModel;
+    [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChangeHospital:) imageViewTag:0];
     cLabel.text = [NSString stringWithFormat:@"%@  %@",theModel.date,theModel.center_name];
     [dateAndhospitalView addSubview:cLabel];
     
@@ -284,6 +286,15 @@
     
 }
 
+//更改体检分院
+-(void)cLabelClickedToChangeHospital:(UITapGestureRecognizer *)sender{
+    GLabel *label = (GLabel*)sender.view;
+    HospitalModel *hospital = label.hospitalModel;
+    if (self.cellClickedBlock) {
+        self.cellClickedBlock(CellClickedBlockType_changeHostpital,_theModel,hospital,nil);
+    }
+    
+}
 
 //更改体检人
 -(void)cLabelClickedToChooseUser:(UITapGestureRecognizer*)sender{

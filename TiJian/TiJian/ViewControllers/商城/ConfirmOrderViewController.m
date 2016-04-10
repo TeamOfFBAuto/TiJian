@@ -1858,9 +1858,12 @@
             }
             num = [theProduct.product_num intValue] - num;
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
+                
                 NSArray *userArray = [params arrayValueForKey:@"userInfo"];
                 theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
                 [_tab reloadData];
+                
+                
             }];
             
 //            people.updateParamsBlock = ^(NSDictionary *params){
@@ -1870,7 +1873,16 @@
             [bself.navigationController pushViewController:people animated:YES];
             
         }else if (theType == CellClickedBlockType_changeHostpital){//更改分院
+            ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+            NSString *productId = theProduct.product_id;
+            NSString *centerId = theHospital.exam_center_id;
+            NSString *centerName = theHospital.center_name;
             
+            [choose selectCenterWithProductId:productId examCenterId:centerId examCenterName:centerName updateBlock:^(NSDictionary *params) {
+                HospitalModel *hospital = [params objectForKey:@"hospital"];
+                [bself changeHospital:theHospital toHospital:hospital productModel:theProduct];
+            }];
+            [self.navigationController pushViewController:choose animated:YES];
         }
     }];
     
@@ -1886,17 +1898,19 @@
     
 }
 
-////更改体检人
-//-(void)changeUserWithUserInfo:(UserInfo*)theUser toUser:(UserInfo*)changedUser productModel:(ProductModel*)theProductModel hospitalModel:(HospitalModel*)theHospitalModel{
-//    for (UserInfo *user in theHospitalModel.usersArray) {
-//        if ([user.family_uid intValue] == [changedUser.family_uid intValue]) {
+//更改体检分院
+-(void)changeHospital:(HospitalModel*)theHospital toHospital:(HospitalModel*)changedHospital productModel:(ProductModel*)theProductModel{
+    
+//    for (HospitalModel *model in theProductModel.hospitalArray) {
+//        if ([model.exam_center_id integerValue] == [theHospital.exam_center_id integerValue] && [model.date isEqualToString:theHospital.date]) {
 //            
 //        }
 //    }
-//    NSUInteger index = [theHospitalModel.usersArray indexOfObject:theUser];
-//    [theHospitalModel.usersArray replaceObjectAtIndex:index withObject:changedUser];
-//    [_tab reloadData];
-//}
+    changedHospital.usersArray = theHospital.usersArray;
+    NSUInteger index = [theProductModel.hospitalArray indexOfObject:theHospital];
+    [theProductModel.hospitalArray replaceObjectAtIndex:index withObject:changedHospital];
+    [_tab reloadData];
+}
 
 
 

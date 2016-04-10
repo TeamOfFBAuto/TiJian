@@ -438,10 +438,7 @@ typedef enum {
                 [temp safeSetValue:NSStringFromInt(_selectHospitalId) forKey:@"centerId"];
                 [temp safeSetValue:aModel forKey:@"hospital"];
                 
-                NSDictionary *params = @{@"date":_selectDate,
-                                         @"centerName":_selectCenterName,
-                                         @"centerId":NSStringFromInt(_selectHospitalId)};
-                self.updateParamsBlock(params);
+                self.updateParamsBlock(temp);
             }
             [self leftButtonTap:nil];
         }
