@@ -33,6 +33,7 @@
 @property(nonatomic,retain)NSString *status;
 @property(nonatomic,retain)NSString *type_id;
 @property(nonatomic,strong)NSString *setmeal_desc;//套餐描述
+@property(nonatomic,strong)NSArray *package_project;//加项包包含的项目数组 
 
 @property(nonatomic,retain)NSString *is_recommend;
 @property(nonatomic,retain)NSString *is_comment;//是否评论
@@ -81,7 +82,7 @@
 
 
 @property(nonatomic,strong)NSMutableArray *hospitalArray;//分院数组 里面装HopitalModel
-@property(nonatomic,strong)NSArray *addProductsArray;//加项包数组里面装ProductModel
+@property(nonatomic,strong)NSMutableArray *addProductsArray;//加项包数组里面装ProductModel
 
 
 

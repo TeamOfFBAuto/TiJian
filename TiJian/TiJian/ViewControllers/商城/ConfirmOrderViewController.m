@@ -114,6 +114,18 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"确认订单";
     
+    
+    NSMutableArray *addProductArray = [NSMutableArray arrayWithCapacity:1];
+    ProductModel *mainProduct;
+    for (ProductModel *model in self.dataArray) {
+        if (model.is_append) {
+            [addProductArray addObject:model];
+        }else{
+            mainProduct = model;
+        }
+    }
+    mainProduct.addProductsArray = addProductArray;
+    
     _sumPrice_pay = 0;
     _user_score = @"0";
     _keyongJifen = 0;
@@ -150,14 +162,18 @@
     
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
     for (ProductModel *model in self.dataArray) {
-        if (![dic objectForKey:model.brand_id]) {
-            NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
-            [arr addObject:model];
-            [dic setValue:arr forKey:model.brand_id];
+        if (model.is_append) {
         }else{
-            NSMutableArray *arr = [dic objectForKey:model.brand_id];
-            [arr addObject:model];
+            if (![dic objectForKey:model.brand_id]) {
+                NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
+                [arr addObject:model];
+                [dic setValue:arr forKey:model.brand_id];
+            }else{
+                NSMutableArray *arr = [dic objectForKey:model.brand_id];
+                [arr addObject:model];
+            }
         }
+        
     }
     
     NSArray *keys = [dic allKeys];
@@ -1421,24 +1437,63 @@
     
     
     
-//    if (self.exam_center_id && self.date && self.myself && self.family_uid) {
-//        [dic safeSetValue:self.exam_center_id forKey:@"exam_center_id"];
-//        [dic safeSetValue:self.date forKey:@"date"];
-//        [dic safeSetValue:self.myself forKey:@"myself"];
-//        [dic safeSetValue:self.family_uid forKey:@"family_uid"];
-//    }
+    //带预约信息的套餐数组
+    NSMutableArray *appendModelArray = [NSMutableArray arrayWithCapacity:1];
+    for (ProductModel *model in self.dataArray) {
+        if (model.hospitalArray.count>0) {
+            [appendModelArray addObject:model];
+        }
+    }
     
-    
-    
-//    NSMutableDictionary *appoint_dic = [[NSMutableDictionary alloc]initWithCapacity:1];
-    
-    
-    
-    
-    
-    
-    
-    
+    //添加预约相关信息
+    if (appendModelArray.count>0) {
+        
+        NSMutableDictionary *jsonDic = [NSMutableDictionary dictionaryWithCapacity:1];//预约相关的dic
+        
+        for (ProductModel *model_p in appendModelArray) {
+            
+            //单品下面的分院数组
+            NSMutableArray *fenyuanArray = [NSMutableArray arrayWithCapacity:1];
+            
+            for (HospitalModel *model_h in model_p.hospitalArray) {
+                NSMutableDictionary *hospitalDic = [NSMutableDictionary dictionaryWithCapacity:1];
+                [hospitalDic safeSetString:model_h.exam_center_id forKey:@"exam_center_id"];//分院id
+                [hospitalDic safeSetString:model_h.date forKey:@"date"];//时间
+                
+                NSMutableArray *userFamilyIdArray = [NSMutableArray arrayWithCapacity:1];
+                BOOL haveMyself = NO;
+                for (UserInfo *user in model_h.usersArray) {
+                    if ([user.family_uid intValue] == 0) {
+                        haveMyself = YES;
+                    }else{
+                        [userFamilyIdArray addObject:user.family_uid];
+                    }
+                }
+                
+                if (haveMyself) {
+                    [hospitalDic safeSetString:@"1" forKey:@"my_self"];
+                }else{
+                    [hospitalDic safeSetString:@"0" forKey:@"my_self"];
+                }
+                
+                if (userFamilyIdArray.count>0) {
+                    NSString *family_uid = [userFamilyIdArray componentsJoinedByString:@","];
+                    [hospitalDic safeSetString:family_uid forKey:@"family_uid"];
+                }
+                
+                [fenyuanArray addObject:hospitalDic];
+            }
+            
+            [jsonDic safeSetValue:fenyuanArray forKey:model_p.product_id];
+            
+        }
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:nil];
+        
+        NSString *jsonStr = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        [dic safeSetString:jsonStr forKey:@"appoint_info"];
+    }
     
     
     __weak typeof(self)weakSelf = self;
@@ -1821,6 +1876,10 @@
         [view removeFromSuperview];
     }
     
+    for (UIView *view in cell.addProductView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     NSArray *arr = _theData[indexPath.section];
     ProductModel *model = arr[indexPath.row];
     [cell loadCustomViewWithModel:model];
@@ -1906,6 +1965,9 @@
 //            
 //        }
 //    }
+    if (![theHospital isKindOfClass:[HospitalModel class]]) {
+        return;
+    }
     changedHospital.usersArray = theHospital.usersArray;
     NSUInteger index = [theProductModel.hospitalArray indexOfObject:theHospital];
     [theProductModel.hospitalArray replaceObjectAtIndex:index withObject:changedHospital];

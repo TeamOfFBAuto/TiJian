@@ -96,26 +96,158 @@
     //商品数量
     self.numLabel.text = [NSString stringWithFormat:@"X %@",model.product_num];
     
+    //加项包
+    if (model.addProductsArray.count>0) {
+        [self creatAddProductViewWithModel:model];
+    }
+    
+    //设置预约相关view
     [self setYuyueViewWithModel:model];
     
 
 
 }
 
+//返回单元格高度
 + (CGFloat)heightForCellWithModel:(ProductModel*)theModel{
     
     CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195];
-    
+    if (theModel.addProductsArray.count>0) {
+        height += [self heightForAddproductViewWithModel:theModel];
+    }
     height += [self heightWithYuyueViewWithModel:theModel];
     
     return height;
 }
 
 
+//创建加项包view
+-(void)creatAddProductViewWithModel:(ProductModel*)theModel{
+    CGFloat height = 0;
+    self.addProductView = [[UIView alloc]initWithFrame:CGRectMake(0, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195], DEVICE_WIDTH, 0)];
+    [self.contentView addSubview:self.addProductView];
+    
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH, 30)];
+    tLabel.text = @"所选加项包";
+    tLabel.font = [UIFont systemFontOfSize:14];
+    tLabel.textColor = [UIColor blackColor];
+    [self.addProductView addSubview:tLabel];
+    
+    
+    height += tLabel.frame.size.height;
+    
+    CGFloat height_p = 0;
+    for (int i = 0; i<theModel.addProductsArray.count; i++) {
+        ProductModel *model = theModel.addProductsArray[i];
+        UILabel *label_p_name = [[UILabel alloc]initWithFrame:CGRectZero];
+        label_p_name.font = [UIFont systemFontOfSize:13];
+        label_p_name.textColor = [UIColor blackColor];
+        
+        //加项包描述
+        NSArray *package_project = model.package_project;
+        NSString *keyword = [package_project componentsJoinedByString:@"、"];
+        keyword = [NSString stringWithFormat:@"(%@)",keyword];
+        
+        NSString *index_str = [NSString stringWithFormat:@"%d",i+1];
+        NSString *textVal = [NSString stringWithFormat:@"%@、%@%@",index_str,model.product_name,keyword];
+        NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:textVal];
+        [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(index_str.length+1+model.product_name.length, keyword.length)];
+        
+        label_p_name.attributedText = aaa;
+        
+        [label_p_name setMatchedFrame4LabelWithOrigin:CGPointMake(15, 30 + height_p) width:DEVICE_WIDTH - 30];
+        height_p += (label_p_name.frame.size.height + 5);
+        [self.addProductView addSubview:label_p_name];
+        
+        //价格
+        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(label_p_name.frame)+5, DEVICE_WIDTH - 30, 15)];
+        priceLabel.font = [UIFont systemFontOfSize:13];
+        priceLabel.textColor = [UIColor orangeColor];
+        priceLabel.text = [NSString stringWithFormat:@"¥:%@",model.current_price];
+        [self.addProductView addSubview:priceLabel];
+        height_p += 20;
+        
+        
+    }
+    
+    height += height_p;
+    
+    [self.addProductView setHeight:height];
+    
+    //分割线
+    UIView *line= [[UIView alloc]initWithFrame:CGRectMake(0, height-0.5, DEVICE_WIDTH, 0.5)];
+    line.backgroundColor = RGBCOLOR(223, 224, 225);
+    [self.addProductView addSubview:line];
+    
+    
+}
+
+
+//返回加项包view高度
++(CGFloat)heightForAddproductViewWithModel:(ProductModel *)theModel{
+    CGFloat height = 0;
+    height += 30;
+    CGFloat height_p = 0;
+    for (int i = 0; i<theModel.addProductsArray.count; i++) {
+        ProductModel *model = theModel.addProductsArray[i];
+        UILabel *label_p_name = [[UILabel alloc]initWithFrame:CGRectZero];
+        label_p_name.font = [UIFont systemFontOfSize:13];
+        label_p_name.textColor = [UIColor blackColor];
+        //加项包描述
+        NSArray *package_project = model.package_project;
+        NSString *keyword = [package_project componentsJoinedByString:@"、"];
+        keyword = [NSString stringWithFormat:@"(%@)",keyword];
+        label_p_name.text = [NSString stringWithFormat:@"%d、%@%@",i+1,model.product_name,keyword];
+        [label_p_name setMatchedFrame4LabelWithOrigin:CGPointMake(15, 40 + height_p) width:DEVICE_WIDTH - 30];
+        height_p += (label_p_name.frame.size.height + 5);
+        
+        height_p += 20;
+        
+    }
+    height += height_p;
+    
+    return height;
+}
+
+//返回加项包view高度
+-(CGFloat)heightForAddproductViewWithModel:(ProductModel *)theModel{
+    CGFloat height = 0;
+    height += 30;
+    CGFloat height_p = 0;
+    for (int i = 0; i<theModel.addProductsArray.count; i++) {
+        ProductModel *model = theModel.addProductsArray[i];
+        UILabel *label_p_name = [[UILabel alloc]initWithFrame:CGRectZero];
+        label_p_name.font = [UIFont systemFontOfSize:13];
+        label_p_name.textColor = [UIColor blackColor];
+        //加项包描述
+        NSArray *package_project = model.package_project;
+        NSString *keyword = [package_project componentsJoinedByString:@"、"];
+        keyword = [NSString stringWithFormat:@"(%@)",keyword];
+        label_p_name.text = [NSString stringWithFormat:@"%d、%@%@",i+1,model.product_name,keyword];
+        [label_p_name setMatchedFrame4LabelWithOrigin:CGPointMake(15, 40 + height_p) width:DEVICE_WIDTH - 30];
+        height_p += (label_p_name.frame.size.height + 5);
+        
+        height_p += 20;
+    }
+    height += height_p;
+    
+    return height;
+}
+
+
+
+
 //根据productmodel设置预约相关view
 -(void)setYuyueViewWithModel:(ProductModel*)theModel{
+
     //预约相关view
     self.yuyueView = [[UIView alloc]initWithFrame:CGRectMake(0, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195], DEVICE_WIDTH, 0)];
+    
+    if (theModel.addProductsArray.count>0) {
+        CGFloat height_lastView = [self heightForAddproductViewWithModel:theModel];
+        [self.yuyueView setFrame:CGRectMake(0, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195] + height_lastView, DEVICE_WIDTH, 0)];
+    }
+    
     [self.contentView addSubview:self.yuyueView];
     
     //productModel.hospitalArray ==> hospitalModel.userArray.count
@@ -354,7 +486,7 @@
 
 
 
-//返回单元格高度
+//返回预约相关view的高度
 +(CGFloat)heightWithYuyueViewWithModel:(ProductModel *)theModel{
     
     CGFloat height = 0;

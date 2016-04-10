@@ -26,8 +26,11 @@ typedef enum : NSUInteger {
 typedef void(^cellClickedBlock)(CellClickedBlockType theType,ProductModel *theProduct,HospitalModel *theHospital,UserInfo *theUser);
 
 @interface GconfirmOrderCell : UITableViewCell
-@property(nonatomic,strong)UIView *yuyueView;//预约相关view
 @property(nonatomic,copy)cellClickedBlock cellClickedBlock;
+
+//需要更改界面的view
+@property(nonatomic,strong)UIView *yuyueView;//预约相关view
+@property(nonatomic,strong)UIView *addProductView;//加项包view
 
 -(void)setCellClickedBlock:(cellClickedBlock)cellClickedBlock;
 

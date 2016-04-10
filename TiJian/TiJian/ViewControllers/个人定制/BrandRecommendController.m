@@ -210,6 +210,7 @@
                 amodel.original_price = amodel.package_original_price;
                 amodel.product_num = @"1";
                 amodel.main_product_id = mainProductId;
+                amodel.package_project = [dic arrayValueForKey:@"package_project"];
                 [temp addObject:amodel];
                 
 //                cover_pic\product_name\product_num\is_append
