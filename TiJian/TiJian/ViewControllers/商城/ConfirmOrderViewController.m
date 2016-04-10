@@ -1848,14 +1848,27 @@
         }else if (theType == CellClickedBlockType_changePerson){//更改人
             
             PeopleManageController *people = [[PeopleManageController alloc]init];
-            people.actionType = PEOPLEACTIONTYPE_SELECT_Single;
-            people.noAppointNum = 1;
+            people.actionType = PEOPLEACTIONTYPE_SELECT_Mul;
+//            people.noAppointNum = 1;
             people.gender = [theProduct.gender_id intValue];
             
-            people.updateParamsBlock = ^(NSDictionary *params){
-                UserInfo *user = params[@"result"];
-                [bself changeUserWithUserInfo:theUser toUser:user productModel:theProduct hospitalModel:theHospital];
-            };
+            
+            int num = 0;
+            for (HospitalModel *hospital in theProduct.hospitalArray) {
+                num += hospital.usersArray.count;
+            }
+            
+            num = [theProduct.product_num intValue] - num;
+            
+            [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
+                NSArray *userArray = [params arrayValueForKey:@"userInfo"];
+                theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
+            }];
+            
+//            people.updateParamsBlock = ^(NSDictionary *params){
+//                UserInfo *user = params[@"result"];
+//                [bself changeUserWithUserInfo:theUser toUser:user productModel:theProduct hospitalModel:theHospital];
+//            };
             [bself.navigationController pushViewController:people animated:YES];
             
         }else if (theType == CellClickedBlockType_changeHostpital){//更改分院
@@ -1868,6 +1881,12 @@
     return cell;
 }
 
+
+- (void)replaceUserArray:(NSArray *)userArray
+            noAppointNum:(int)noAppointNum
+             updateBlock:(UpdateParamsBlock)updateBlock{
+    
+}
 
 //更改体检人
 -(void)changeUserWithUserInfo:(UserInfo*)theUser toUser:(UserInfo*)changedUser productModel:(ProductModel*)theProductModel hospitalModel:(HospitalModel*)theHospitalModel{
