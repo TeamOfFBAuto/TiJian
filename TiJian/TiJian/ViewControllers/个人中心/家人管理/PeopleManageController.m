@@ -28,8 +28,11 @@
     UILabel *_numLabel;//位数
     int _deleteIndex;//待删除下标
     NSMutableArray *_selectedArray;//选中
+    NSArray *_tempSelectedArray;//选中
+
     NSMutableArray *_selectedUserArray;//选中model
-    
+    NSArray *_tempSelectedUserArray;//选中model
+
     //此套餐可以预约个数
     int _noAppointNum;//未预约个数
     //提交预约参数
@@ -77,7 +80,13 @@
     [self.view addSubview:_table];
     
     _selectedArray = [NSMutableArray array];
+    if (_tempSelectedArray) {
+        [_selectedArray addObjectsFromArray:_tempSelectedArray];
+    }
     _selectedUserArray = [NSMutableArray array];
+    if (_tempSelectedUserArray) {
+        [_selectedUserArray addObjectsFromArray:_tempSelectedUserArray];
+    }
     _isOpen = YES;//默认打开
     _isEdit = NO;//默认非编辑
     _isMyselfSelected = NO;//默认未选择自己
@@ -199,15 +208,15 @@
             noAppointNum:(int)noAppointNum
              updateBlock:(UpdateParamsBlock)updateBlock
 {
+    _tempSelectedUserArray = [NSMutableArray arrayWithArray:userArray];
+    NSMutableArray *tempIds = [NSMutableArray arrayWithCapacity:userArray.count];
     self.updateParamsBlock = updateBlock;
     for (UserInfo *user in userArray) {
-        NSString *uid = user.family_uid;
-        if (![_selectedArray containsObject:uid]) {
-            
-            [_selectedArray addObject:uid];
-            [_selectedUserArray addObject:user];
-        }
+        NSString *uid = NSStringFromInt([user.family_uid intValue]);
+        [tempIds addObject:uid];
     }
+    _tempSelectedArray = [NSArray arrayWithArray:tempIds];
+    
     _noAppointNum = noAppointNum + (int)userArray.count;
     [_table reloadData];
 }
