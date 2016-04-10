@@ -208,7 +208,7 @@
             [_selectedUserArray addObject:user];
         }
     }
-    _noAppointNum = noAppointNum;
+    _noAppointNum = noAppointNum + (int)userArray.count;
     [_table reloadData];
 }
 
