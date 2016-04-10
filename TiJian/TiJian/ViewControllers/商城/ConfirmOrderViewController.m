@@ -1851,18 +1851,16 @@
             people.actionType = PEOPLEACTIONTYPE_SELECT_Mul;
 //            people.noAppointNum = 1;
             people.gender = [theProduct.gender_id intValue];
-            
-            
+            people.lastViewController = self;
             int num = 0;
             for (HospitalModel *hospital in theProduct.hospitalArray) {
                 num += hospital.usersArray.count;
             }
-            
             num = [theProduct.product_num intValue] - num;
-            
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
                 NSArray *userArray = [params arrayValueForKey:@"userInfo"];
                 theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
+                [_tab reloadData];
             }];
             
 //            people.updateParamsBlock = ^(NSDictionary *params){
@@ -1888,22 +1886,17 @@
     
 }
 
-//更改体检人
--(void)changeUserWithUserInfo:(UserInfo*)theUser toUser:(UserInfo*)changedUser productModel:(ProductModel*)theProductModel hospitalModel:(HospitalModel*)theHospitalModel{
-    
-    
-    for (UserInfo *user in theHospitalModel.usersArray) {
-        if ([user.family_uid intValue] == [changedUser.family_uid intValue]) {
-            
-        }
-    }
-    
-    NSUInteger index = [theHospitalModel.usersArray indexOfObject:theUser];
-    [theHospitalModel.usersArray replaceObjectAtIndex:index withObject:changedUser];
-    
-    
-    [_tab reloadData];
-}
+////更改体检人
+//-(void)changeUserWithUserInfo:(UserInfo*)theUser toUser:(UserInfo*)changedUser productModel:(ProductModel*)theProductModel hospitalModel:(HospitalModel*)theHospitalModel{
+//    for (UserInfo *user in theHospitalModel.usersArray) {
+//        if ([user.family_uid intValue] == [changedUser.family_uid intValue]) {
+//            
+//        }
+//    }
+//    NSUInteger index = [theHospitalModel.usersArray indexOfObject:theUser];
+//    [theHospitalModel.usersArray replaceObjectAtIndex:index withObject:changedUser];
+//    [_tab reloadData];
+//}
 
 
 

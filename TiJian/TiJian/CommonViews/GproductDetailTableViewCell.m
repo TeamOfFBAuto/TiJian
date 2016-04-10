@@ -159,6 +159,7 @@
         UIView *brandNameView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40)];
         [brandNameView addTaget:self action:@selector(brandStoreClicked) tag:20000];
         [self.contentView addSubview:brandNameView];
+        height += brandNameView.frame.size.height;
         
         UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 20, 20)];
         [logoImv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.brand_logo] placeholderImage:nil];
@@ -272,10 +273,7 @@
         NSString *cityInfo_str = [cityInfoArray componentsJoinedByString:@" "];
         cityInfoLabel.text = [NSString stringWithFormat:@"%@",cityInfo_str];
         [cView addSubview:cityInfoLabel];
-        
-        
-        
-        
+
         //品牌名称
         brandNameLabel.font = [UIFont systemFontOfSize:12];
         [brandNameLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) width:cView.frame.size.width];
@@ -314,20 +312,10 @@
         height += cView.frame.size.height+5;
         
         
-//        //调试颜色
-//        brandNameLabel.backgroundColor = [UIColor orangeColor];
-//        genderLabel.backgroundColor = [UIColor orangeColor];
-//        suitLabel_info.backgroundColor = [UIColor orangeColor];
-//        projectInfoLabel.backgroundColor = [UIColor orangeColor];
-//        cityInfoLabel.backgroundColor = [UIColor orangeColor];
-        
-        
-        
-        
-        
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(cView.frame)+10, DEVICE_WIDTH, 5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
         [self.contentView addSubview:line];
+        
         height += line.frame.size.height+10;
         
     }else if (theindexPath.section == 3){//评价
@@ -381,11 +369,7 @@
             }
         }
         
-        
-        
-        
-        
-        
+    
     }else if (theindexPath.section == 4){//看了又看
         
         UIView *upline = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];

@@ -282,13 +282,6 @@
         
     }
     
-    
-    NSLog(@"%f",self.yuyueView.frame.size.height);
-    NSLog(@"%f",infoView.frame.size.height);
-    
-    
-    
-    
 }
 
 

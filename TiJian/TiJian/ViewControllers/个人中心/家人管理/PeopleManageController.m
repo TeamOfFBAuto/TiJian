@@ -324,8 +324,11 @@
             if (self.updateParamsBlock) {
                 self.updateParamsBlock(params);
             }
-            
-            [self.navigationController popToViewController:self.lastViewController animated:YES];
+            if (self.lastViewController) {
+                [self.navigationController popToViewController:self.lastViewController animated:YES];
+            }else{
+                [self.navigationController popViewControllerAnimated:YES];
+            }
             
             
         }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT)
