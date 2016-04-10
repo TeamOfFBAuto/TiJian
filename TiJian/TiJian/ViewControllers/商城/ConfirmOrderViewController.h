@@ -10,6 +10,8 @@
 //确认订单
 
 #import "MyViewController.h"
+@class HospitalModel;
+@class ProductModel;
 
 @interface ConfirmOrderViewController : MyViewController
 
@@ -37,6 +39,16 @@
 //设置发票信息
 -(void)setUserSelectFapiaoWithStr:(NSString *)str;
 
-
+/**
+ *  单品详情直接预约
+ *  add by lcw
+ *
+ *  @param productModel  套餐model
+ *  @param hospital  分院model
+ *  @param userArray 体检人信息model
+ */
+- (void)appointWithProductModel:(ProductModel *)productModel
+                       hospital:(HospitalModel *)hospital
+                      userArray:(NSArray *)userArray;
 
 @end

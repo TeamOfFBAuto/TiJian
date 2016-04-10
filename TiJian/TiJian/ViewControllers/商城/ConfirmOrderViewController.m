@@ -117,6 +117,7 @@
     _user_score = @"0";
     _keyongJifen = 0;
     _fanal_usedScore = 0;
+    _theData = [NSMutableArray arrayWithCapacity:1];
     
     _enabledNum_coupon = 0;
     _enabledNum_vouchers = 0;
@@ -168,8 +169,6 @@
     }
     
     NSArray *keys = [dic allKeys];
-    
-    _theData = [NSMutableArray arrayWithCapacity:1];
     
     for (NSString *key in keys) {
         NSMutableArray *arr = [dic objectForKey:key];
@@ -1862,7 +1861,13 @@
 
 
 //选择完时间分院后的回调
--(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params index:(NSIndexPath*)theIndex{
+-(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params
+                                             index:(NSIndexPath*)theIndex{
+    if (!params ||
+        ![params isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    
     NSLog(@"%@",params);
     NSArray *userInfoArray = [params arrayValueForKey:@"userInfo"];
     HospitalModel *hospital = [params objectForKey:@"hospital"];
@@ -1880,7 +1885,28 @@
     }
     
     [_tab reloadData];
-    
+}
+
+/**
+ *  单品详情直接预约
+ *  add by lcw
+ *
+ *  @param productModel  套餐model
+ *  @param hospital  分院model
+ *  @param userArray 体检人信息model
+ */
+- (void)appointWithProductModel:(ProductModel *)productModel
+                       hospital:(HospitalModel *)hospital
+                  userArray:(NSArray *)userArray
+{
+    //套餐
+    self.dataArray = [NSArray arrayWithObject:productModel];
+    //分院和体检人信息
+    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+    [temp safeSetValue:hospital forKey:@"hospital"];
+    [temp safeSetValue:userArray forKey:@"userInfo"];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self chooseHospitalAndDateAndPersonFinishWithDic:temp index:indexPath];
 }
 
 

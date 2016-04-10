@@ -306,23 +306,32 @@
         {
 //            @"选择体检人未支付去预约";
             
-            //如果直接预约
-            //            exam_center_id 体检中心id
-            //            date 预约时间
-            //            myself 预约是否自己
-            //            family_uid 预约家人
-            NSString *exam_center_id = _exam_center_id;
-            NSString *date = _date;
-            BOOL myself = _isMyselfSelected;
-            
+            //aModel.current_price\product_num、brand_name、cover_pic
             ProductModel *productModel = (ProductModel *)self.productModel;
-            ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
-            cc.lastViewController = self;
-            //    aModel.current_price\product_num、brand_name、cover_pic
             productModel.product_num = NSStringFromInt(num);
             productModel.current_price = productModel.setmeal_price;
             productModel.product_name = productModel.setmeal_name;
-            cc.dataArray = [NSArray arrayWithObject:productModel];
+            
+            //选择的体检人
+            NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedUserArray];
+            //是否包含自己
+            if (_isMyselfSelected) {
+                
+                UserInfo *userInfo = [[UserInfo alloc]init];
+                userInfo.family_uid = 0;
+                userInfo.mySelf = YES;
+                [temp addObject:userInfo];
+            }
+            
+            HospitalModel *hospital = [[HospitalModel alloc]init];
+            hospital.date = _date;
+            hospital.exam_center_id = _exam_center_id;
+            hospital.center_name = _exam_center_name;
+            
+            
+            ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+            cc.lastViewController = self;
+            [cc appointWithProductModel:productModel hospital:hospital userArray:temp];
             [self.navigationController pushViewController:cc animated:YES];
         }
         
