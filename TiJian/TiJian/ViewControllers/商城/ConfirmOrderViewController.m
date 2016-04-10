@@ -117,7 +117,7 @@
     _user_score = @"0";
     _keyongJifen = 0;
     _fanal_usedScore = 0;
-    _theData = [NSMutableArray arrayWithCapacity:1];
+    
     
     _enabledNum_coupon = 0;
     _enabledNum_vouchers = 0;
@@ -154,8 +154,6 @@
         model.afterUsedDaijinquan_Price = [model.current_price floatValue];
     }
     
-    
-    
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
     for (ProductModel *model in self.dataArray) {
         if (![dic objectForKey:model.brand_id]) {
@@ -169,6 +167,8 @@
     }
     
     NSArray *keys = [dic allKeys];
+    
+    _theData = [NSMutableArray arrayWithCapacity:1];
     
     for (NSString *key in keys) {
         NSMutableArray *arr = [dic objectForKey:key];
@@ -1871,7 +1871,7 @@
     NSLog(@"%@",params);
     NSArray *userInfoArray = [params arrayValueForKey:@"userInfo"];
     HospitalModel *hospital = [params objectForKey:@"hospital"];
-    hospital.usersArray = userInfoArray;
+    hospital.usersArray = [NSMutableArray arrayWithArray:userInfoArray];
     
     
     NSArray *arr = _theData[theIndex.section];
@@ -1899,14 +1899,20 @@
                        hospital:(HospitalModel *)hospital
                   userArray:(NSArray *)userArray
 {
+    
+    
+    hospital.usersArray = [NSMutableArray arrayWithArray:userArray];
+    productModel.hospitalArray = [NSMutableArray arrayWithObjects:hospital, nil];
+    
     //套餐
     self.dataArray = [NSArray arrayWithObject:productModel];
-    //分院和体检人信息
-    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
-    [temp safeSetValue:hospital forKey:@"hospital"];
-    [temp safeSetValue:userArray forKey:@"userInfo"];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self chooseHospitalAndDateAndPersonFinishWithDic:temp index:indexPath];
+    
+//    //分院和体检人信息
+//    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+//    [temp safeSetValue:hospital forKey:@"hospital"];
+//    [temp safeSetValue:userArray forKey:@"userInfo"];
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+//    [self chooseHospitalAndDateAndPersonFinishWithDic:temp index:indexPath];
 }
 
 
