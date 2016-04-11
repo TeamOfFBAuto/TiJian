@@ -1908,7 +1908,7 @@
     GconfirmOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[GconfirmOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.isConfirmCell = YES;
+        
     }
     
     for (UIView *view in cell.yuyueView.subviews) {
@@ -1918,6 +1918,9 @@
     for (UIView *view in cell.addProductView.subviews) {
         [view removeFromSuperview];
     }
+    
+    
+    cell.isConfirmCell = YES;
     
     NSArray *arr = _theData[indexPath.section];
     ProductModel *model = arr[indexPath.row];
