@@ -1932,6 +1932,7 @@
                     have_num += model.usersArray.count;
                 }
                 
+#pragma mark - //此处未预约个数貌似在选人的时候做了总数的用处=======================================
                 no_num = [theProduct.product_num intValue] - have_num;//未预约个数
                 cc.lastViewController = bself;
             
@@ -1957,6 +1958,7 @@
             num = [theProduct.product_num intValue] - num;
             
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
+#pragma mark - //此处返回的是hospitlModel=======================================
                 
                 NSArray *userArray = [params arrayValueForKey:@"userInfo"];
                 theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
