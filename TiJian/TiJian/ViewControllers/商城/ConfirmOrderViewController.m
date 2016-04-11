@@ -162,7 +162,7 @@
     
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
     for (ProductModel *model in self.dataArray) {
-        if (model.is_append.intValue == 1) {
+        if (model.is_append) {
         }else{
             if (![dic objectForKey:model.brand_id]) {
                 NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
@@ -1315,44 +1315,25 @@
     
     NSMutableDictionary *jiaxiangbaoDic = [NSMutableDictionary dictionary];
     
-    
-    for (ProductModel *oneModel in self.dataArray) {
-        if (oneModel.is_append.intValue == 1) {//加项包
-            if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
-                NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
-                [theArr addObject:oneModel.product_id];
-                [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
-            }else{//没有
-                NSArray *oneArr = @[oneModel.product_id];
-                [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
+    for (NSArray *arr in _theData) {
+        for (ProductModel *oneModel in arr) {
+            if (oneModel.is_append.intValue == 1) {//加项包
+                if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
+                    NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
+                    [theArr addObject:oneModel.product_id];
+                    [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
+                }else{//没有
+                    NSArray *oneArr = @[oneModel.product_id];
+                    [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
+                }
+                
+            }else{
+                [product_ids_arr addObject:oneModel.product_id];
+                [product_nums_arr addObject:oneModel.product_num];
             }
             
-        }else{
-            [product_ids_arr addObject:oneModel.product_id];
-            [product_nums_arr addObject:oneModel.product_num];
         }
     }
-    
-    
-//    for (NSArray *arr in _theData) {
-//        for (ProductModel *oneModel in arr) {
-//            if (oneModel.is_append.intValue == 1) {//加项包
-//                if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
-//                    NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
-//                    [theArr addObject:oneModel.product_id];
-//                    [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
-//                }else{//没有
-//                    NSArray *oneArr = @[oneModel.product_id];
-//                    [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
-//                }
-//                
-//            }else{
-//                [product_ids_arr addObject:oneModel.product_id];
-//                [product_nums_arr addObject:oneModel.product_num];
-//            }
-//            
-//        }
-//    }
     
     NSLog(@"%@",product_ids_arr);
     NSString *product_ids_str = [product_ids_arr componentsJoinedByString:@","];
@@ -1908,7 +1889,7 @@
     GconfirmOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[GconfirmOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        
+
     }
     
     for (UIView *view in cell.yuyueView.subviews) {
@@ -1967,9 +1948,8 @@
             num = [theProduct.product_num intValue] - num;
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
                 
-                NSArray *hospitalArray = [params arrayValueForKey:@"hospital"];
-                HospitalModel *hospitalModel = [hospitalArray lastObject];
-                theHospital.usersArray = [NSMutableArray arrayWithArray:hospitalModel.usersArray];
+                NSArray *userArray = [params arrayValueForKey:@"userInfo"];
+                theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
                 [_tab reloadData];
                 
                 
