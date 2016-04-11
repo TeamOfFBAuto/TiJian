@@ -703,6 +703,7 @@
     cc.productId = model.product_id;
     cc.userChooseLocationDic = self.shaixuanDic;
     cc.VoucherId = self.vouchers_id;
+    cc.user_voucher = self.user_voucher;
     [self.navigationController pushViewController:cc animated:YES];
 }
 
