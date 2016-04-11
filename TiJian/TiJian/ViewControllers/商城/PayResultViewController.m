@@ -68,8 +68,20 @@
         [btn1.titleLabel setFont:[UIFont systemFontOfSize:14]];
         [btn1 setTitleColor:[UIColor colorWithHexString:@"323232"] forState:UIControlStateNormal];
         
+        NSString *title;
+        SEL selector;
+        if (_noAppointNum > 0) {
+            
+            title = @"前去预约";
+            selector = @selector(clickToAppoint);
+        }else
+        {
+            title = @"返回首页";
+            selector = @selector(clickToShopping:);
+        }
+        
         //继续购买
-        UIButton *btn2 = [[UIButton alloc]initWithframe:CGRectMake(btn1.right + 20, label2.bottom + 30, btnWith, 33) buttonType:UIButtonTypeCustom normalTitle:@"前去预约" selectedTitle:nil target:self action:@selector(clickToAppoint)];
+        UIButton *btn2 = [[UIButton alloc]initWithframe:CGRectMake(btn1.right + 20, label2.bottom + 30, btnWith, 33) buttonType:UIButtonTypeCustom normalTitle:title selectedTitle:nil target:self action:selector];
         [self.view addSubview:btn2];
         [btn2 addCornerRadius:5.f];
         [btn2 setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
