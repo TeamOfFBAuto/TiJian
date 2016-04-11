@@ -516,7 +516,7 @@ typedef enum {
                     
                     aModel.usersArray = [NSMutableArray arrayWithObject:_userInfo];
                     self.productModel.hospitalArray = [NSMutableArray arrayWithObject:aModel];
-                    [temp safeSetValue:aModel forKey:@"product"];
+                    [temp safeSetValue:aModel forKey:@"productModel"];
 
                 }
                 
