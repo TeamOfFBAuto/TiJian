@@ -403,7 +403,12 @@
             cLabel.textColor = RGBCOLOR(95, 154, 205);
             cLabel.hospitalModel = theModel;
             cLabel.userInfo = user;
-            [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChooseUser:) imageViewTag:0];
+            if (!_theModel.isLimitUserInfo) {//不限制体检人
+                [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChooseUser:) imageViewTag:0];
+            }else{//限制体检人
+                cLabel.textColor = [UIColor blackColor];
+            }
+            
             [infoView addSubview:cLabel];
             
             //删除
@@ -423,7 +428,11 @@
             cLabel.textColor = RGBCOLOR(95, 154, 205);
             cLabel.hospitalModel = theModel;
             cLabel.userInfo = user;
-            [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChooseUser:) imageViewTag:0];
+            if (!_theModel.isLimitUserInfo) {//不限制体检人
+                [cLabel addTapGestureTaget:self action:@selector(cLabelClickedToChooseUser:) imageViewTag:0];
+            }else{//限制体检人
+                cLabel.textColor = [UIColor blackColor];
+            }
             [infoView addSubview:cLabel];
             
             //删除

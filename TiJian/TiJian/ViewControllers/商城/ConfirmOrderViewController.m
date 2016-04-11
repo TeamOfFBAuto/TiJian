@@ -1918,41 +1918,44 @@
     [cell setCellClickedBlock:^(CellClickedBlockType theType, ProductModel *theProduct, HospitalModel *theHospital, UserInfo *theUser) {
         if (theType == CellClickedBlockType_yuyue) {//添加预约时间、分院
             ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
-            //最大可预约人数
-            int have_num = 0;
-            int no_num = 0;
-            for (HospitalModel*model in theProduct.hospitalArray) {
-                have_num += model.usersArray.count;
-            }
-            no_num = [theProduct.product_num intValue] - have_num;
-            cc.lastViewController = bself;
-            //设置回调
-//            [cc selectCenterAndPeopleWithProductId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
-//                [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
-//            }];
+            if (self.voucherId) {//绑定体检人信息的代金券跳转过来的
+                [cc selectCenterUserInfo:self.user_voucher productModel:model updateBlock:^(NSDictionary *params) {
+                    ProductModel *newProductModel = [params objectForKey:@"productModel"];
+                    [bself getTheHospitalWithProductModel:theProduct newProductModel:newProductModel];
+                    
+                }];
+            }else{
+                //最大可预约人数
+                int have_num = 0;
+                int no_num = 0;
+                for (HospitalModel*model in theProduct.hospitalArray) {
+                    have_num += model.usersArray.count;
+                }
+                
+                no_num = [theProduct.product_num intValue] - have_num;//未预约个数
+                cc.lastViewController = bself;
             
-            //update by lcw
-             @WeakObj(self);
-            [cc selectCenterAndPeopleWithHospitalArray:theProduct.hospitalArray productId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
-                [Weakself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
-
-            }];
+                @WeakObj(self);
+                [cc selectCenterAndPeopleWithHospitalArray:theProduct.hospitalArray productId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
+                    [Weakself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
+                    
+                }];
+            }
             
             [bself.navigationController pushViewController:cc animated:YES];
         }else if (theType == CellClickedBlockType_delete){//删除人
             [_tab reloadData];
         }else if (theType == CellClickedBlockType_changePerson){//更改人
-            
             PeopleManageController *people = [[PeopleManageController alloc]init];
             people.actionType = PEOPLEACTIONTYPE_SELECT_Mul;
-//            people.noAppointNum = 1;
             people.gender = [theProduct.gender_id intValue];
             people.lastViewController = self;
-            int num = 0;
+            int num = 0;//未预约个数
             for (HospitalModel *hospital in theProduct.hospitalArray) {
                 num += hospital.usersArray.count;
             }
             num = [theProduct.product_num intValue] - num;
+            
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
                 
                 NSArray *userArray = [params arrayValueForKey:@"userInfo"];
@@ -1962,10 +1965,7 @@
                 
             }];
             
-//            people.updateParamsBlock = ^(NSDictionary *params){
-//                UserInfo *user = params[@"result"];
-//                [bself changeUserWithUserInfo:theUser toUser:user productModel:theProduct hospitalModel:theHospital];
-//            };
+
             [bself.navigationController pushViewController:people animated:YES];
             
         }else if (theType == CellClickedBlockType_changeHostpital){//更改分院
@@ -2055,6 +2055,15 @@
     
     [_tab reloadData];
 }
+
+
+//绑定体检人信息的代金券选择分院后的回调
+-(void)getTheHospitalWithProductModel:(ProductModel *)theModel newProductModel:(ProductModel*)newModel{
+    [_tab reloadData];
+}
+
+
+
 
 /**
  *  单品详情直接预约

@@ -407,6 +407,12 @@
         
         self.theProductModel = [[ProductModel alloc]initWithDictionary:dic];
         
+        if (self.VoucherId) {
+            if (self.user_voucher) {
+                self.theProductModel.isLimitUserInfo = YES;
+            }
+        }
+        
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
         for (NSDictionary *dic in self.theProductModel.coupon_list) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
@@ -1001,6 +1007,7 @@
     ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
     cc.lastViewController = self;
     cc.voucherId = self.VoucherId;
+    cc.user_voucher = self.user_voucher;
 //    aModel.current_price\product_num、brand_name、cover_pic
     self.theProductModel.product_num = @"1";
     self.theProductModel.current_price = _theProductModel.setmeal_price;
