@@ -11,6 +11,7 @@
 #import "SSLunarDate.h"
 #import "HospitalModel.h"
 #import "NSDate+FSExtension.h"
+#import "ConfirmOrderViewController.h"
 
 typedef enum {
     STATETYPE_OPEN = 0,//打开
@@ -30,6 +31,8 @@ typedef enum {
     NSString *_order_id;
     NSString *_company_id; //公司订单才有的
     NSString *_order_checkuper_id;//公司订单才有的
+    NSString *_voucherId;//代金卷id
+    id _userInfo;//代金卷绑定的体检人
     int _noAppointNum;//未预约数
     BOOL _isCompanyAppoint;//是否是公司预约
     BOOL _nopayAppoint;//不支付直接预约
@@ -302,6 +305,27 @@ typedef enum {
 }
 
 /**
+ *  代金卷直接预约
+ *
+ *  @param voucherId    代金卷id
+ *  @param userInfo    代金卷绑定体检人
+ *  @param productModel
+ */
+- (void)appointWithVoucherId:(NSString *)voucherId
+                   userInfo:(id)userInfo
+                        productModel:(ProductModel *)productModel
+{
+    _chooseType = ChooseType_centerAndConfirmOrder;//选择时间、分院之后进行预约
+    //提交预约参数
+    _voucherId = voucherId;
+    _productId = productModel.product_id;//单品id
+    self.productModel = productModel;
+    _gender = [productModel.gender_id intValue];
+    _userInfo = userInfo;
+}
+
+
+/**
  *  普通预约 选择时间、分院直接预约
  */
 - (void)appointWithProductId:(NSString *)productId
@@ -350,6 +374,23 @@ typedef enum {
     _exam_center_id = examCenterId;
     _selectHospitalId = [examCenterId intValue];
     _selectCenterName = examCenterName;
+}
+
+/**
+ *  仅选择时间和分院,不做其他操作
+ *
+ *  @param productId
+ *  @param examCenterId 分院id
+ */
+- (void)selectCenterUserInfo:(UserInfo *)userInfo
+                productModel:(ProductModel *)productModel
+                updateBlock:(UpdateParamsBlock)updateBlock
+{
+    _chooseType = ChooseType_center;//仅选择时间和分院,不预约
+    self.updateParamsBlock = updateBlock;
+    _productId = productModel.product_id;
+    _userInfo = userInfo;
+    self.productModel = productModel;
 }
 
 /**
@@ -444,6 +485,14 @@ typedef enum {
 
 -(void)rightButtonTap:(UIButton *)sender
 {
+    
+    int index = _selectHospitalId;
+    if (index <= 0) {
+        
+        [LTools alertText:@"请选择体检分院" viewController:self];
+        return;
+    }
+    
     _exam_center_id = NSStringFromInt(_selectHospitalId);
     //仅是选择时间和分院,不做其他操作
     if (_chooseType == ChooseType_center) {
@@ -463,6 +512,14 @@ typedef enum {
                 [temp safeSetValue:NSStringFromInt(_selectHospitalId) forKey:@"centerId"];
                 [temp safeSetValue:aModel forKey:@"hospital"];
                 
+                if (_userInfo) {
+                    
+                    aModel.usersArray = [NSMutableArray arrayWithObject:_userInfo];
+                    self.productModel.hospitalArray = [NSMutableArray arrayWithObject:aModel];
+                    [temp safeSetValue:aModel forKey:@"product"];
+
+                }
+                
                 self.updateParamsBlock(temp);
             }
             [self leftButtonTap:nil];
@@ -471,13 +528,29 @@ typedef enum {
         return;
     }
     
-    
-    int index = _selectHospitalId;
-    if (index <= 0) {
+    //选择完分院跳转至确认订单
+    if (_chooseType == ChooseType_centerAndConfirmOrder) {
         
-        [LTools alertText:@"请选择体检分院" viewController:self];
+        HospitalModel *aModel = [[HospitalModel alloc]init];
+        aModel.exam_center_id = NSStringFromInt(_selectHospitalId);
+        aModel.center_name = _selectCenterName;
+        aModel.date = _selectDate;
+        aModel.usersArray = [NSMutableArray arrayWithObject:_userInfo];
+
+        
+        ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
+        cc.lastViewController = self;
+        cc.voucherId = _voucherId;
+        self.productModel.product_num = @"1";
+        self.productModel.current_price = _productModel.setmeal_price;
+        self.productModel.product_name = _productModel.setmeal_name;
+        self.productModel.hospitalArray = [NSMutableArray arrayWithObject:aModel];//分院
+        cc.dataArray = [NSArray arrayWithObject:self.productModel];
+        [self.navigationController pushViewController:cc animated:YES];
+        
         return;
     }
+    
     
     //公司预约提交预约信息
     if (_isCompanyAppoint) {

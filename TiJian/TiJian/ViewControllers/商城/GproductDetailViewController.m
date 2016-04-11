@@ -936,6 +936,14 @@
         
         if (self.VoucherId) {//企业代金券
             
+            //update by lcw 2期 直接预约
+            if ([LoginManager isLogin:self]) {//已登录
+                ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+                [choose appointWithVoucherId:self.VoucherId userInfo:self.user_voucher productModel:self.theProductModel];
+                choose.lastViewController = self;
+                [self.navigationController pushViewController:choose animated:YES];
+            }
+            
         }else{
             //update by lcw 2期 直接预约
             if ([LoginManager isLogin:self]) {//已登录

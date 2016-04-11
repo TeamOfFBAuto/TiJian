@@ -16,7 +16,9 @@ typedef enum {
     ChooseType_appoint = 0,//选择时间、分院之后进行预约
     ChooseType_center,//仅选择时间和分院,不预约
     ChooseType_centerAndPeople,//选择时间分院和人，不预约
-    ChooseType_nopayAppoint // 未支付预约,跳转至确认订单
+    ChooseType_nopayAppoint, // 未支付预约,跳转至确认订单
+    ChooseType_centerAndConfirmOrder // 未支付预约,选择分院之后跳转至确认订单
+
 }ChooseType;
 
 @interface ChooseHopitalController : MyViewController<FSCalendarDataSource, FSCalendarDelegate>
@@ -106,6 +108,27 @@ typedef enum {
                                         gender:(Gender)gender
                                   noAppointNum:(int)noAppointNum
                                    updateBlock:(UpdateParamsBlock)updateBlcok;
+
+/**
+ *  代金卷直接预约
+ *
+ *  @param voucherId    代金卷id
+ *  @param userInfo    代金卷绑定体检人
+ *  @param productModel
+ */
+- (void)appointWithVoucherId:(NSString *)voucherId
+                    userInfo:(id)userInfo
+                productModel:(ProductModel *)productModel;
+
+/**
+ *  仅选择时间和分院,不做其他操作
+ *
+ *  @param productId
+ *  @param examCenterId 分院id
+ */
+- (void)selectCenterUserInfo:(UserInfo *)userInfo
+                productModel:(ProductModel *)productModel
+                 updateBlock:(UpdateParamsBlock)updateBlock;
 
 
 @end
