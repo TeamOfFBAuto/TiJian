@@ -116,6 +116,7 @@
     [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_PAY parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         // 0 未支付 1 已支付 2 正在支付
         
+        DDLOG(@"支付结果确认 %@",result);
         // 0和1的情况下,服务端已经收到支付宝异步通知
         int pay = [result[@"pay"]intValue];
         
@@ -146,6 +147,7 @@
         }
         
         _validateTime --;
+        
     } failBlock:^(NSDictionary *result) {
         _validateTime --;
     }];

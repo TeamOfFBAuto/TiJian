@@ -400,33 +400,36 @@
                 [self.navigationController popViewControllerAnimated:YES];
             }
             
-        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT)
+        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT) //选择直接预约
         {
-//            @"选择体检人去预约";
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
             alert.tag = kTag_Appoint;
             [alert show];
             
         }else if (_actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT)
         {
-//            @"选择体检人未支付去预约";
+            //选择的体检人
+            NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedUserArray];
+            //是否包含自己
+            if (_isMyselfSelected) {
+                
+                UserInfo *loginUser = [UserInfo userInfoForCache];
+                UserInfo *userInfo = [[UserInfo alloc]init];
+                userInfo.family_uid = 0;
+                userInfo.appellation = @"本人";
+                userInfo.family_user_name = loginUser.real_name;
+                userInfo.id_card = loginUser.id_card;
+                userInfo.mySelf = YES;
+                [temp addObject:userInfo];
+                
+                num += 1;
+            }
             
             //aModel.current_price\product_num、brand_name、cover_pic
             ProductModel *productModel = (ProductModel *)self.productModel;
             productModel.product_num = NSStringFromInt(num);
             productModel.current_price = productModel.setmeal_price;
             productModel.product_name = productModel.setmeal_name;
-            
-            //选择的体检人
-            NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedUserArray];
-            //是否包含自己
-            if (_isMyselfSelected) {
-                
-                UserInfo *userInfo = [[UserInfo alloc]init];
-                userInfo.family_uid = 0;
-                userInfo.mySelf = YES;
-                [temp addObject:userInfo];
-            }
             
             HospitalModel *hospital = [[HospitalModel alloc]init];
             hospital.date = _date;
@@ -437,15 +440,6 @@
             cc.lastViewController = self;
             [cc appointWithProductModel:productModel hospital:hospital userArray:temp];
             [self.navigationController pushViewController:cc animated:YES];
-        }
-        
-        //未付款去预约,跳转至确认订单页面
-        if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT) {
-
-            
-        }else
-        {
-            
         }
         
     }else{

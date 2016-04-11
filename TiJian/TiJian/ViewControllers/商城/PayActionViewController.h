@@ -17,5 +17,6 @@
 @property(nonatomic,assign)float sumPrice;//总价格
 
 @property(nonatomic,assign)int payStyle;//1 支付宝 2 为微信
+@property(nonatomic,assign)int noAppointNum;//未预约个数
 
 @end

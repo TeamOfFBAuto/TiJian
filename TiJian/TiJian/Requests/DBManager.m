@@ -516,7 +516,7 @@
         NSString *sql = [NSString stringWithFormat:@"select * from j_customization_n1 where group_id = %d",groupId];
         FMResultSet *rs = [_dataBase executeQuery:sql];
         
-        NSLog(@"%s %@",__FUNCTION__,sql);
+        DDLOG(@"%s %@",__FUNCTION__,sql);
         
         NSMutableArray *temp = [NSMutableArray array];
         

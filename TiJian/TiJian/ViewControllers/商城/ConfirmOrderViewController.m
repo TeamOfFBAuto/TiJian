@@ -1579,15 +1579,12 @@
 - (void)pushToPayPageWithOrderId:(NSString *)orderId
                         orderNum:(NSString *)orderNum
 {
-    
-    
-    
-    
     PayActionViewController *pay = [[PayActionViewController alloc]init];
     pay.orderId = orderId;
     pay.orderNum = orderNum;
     pay.sumPrice = _sumPrice_pay;
     pay.lastViewController = self.lastViewController;
+//    pay.noAppointNum = ;
     
     if (self.lastViewController) {
         
