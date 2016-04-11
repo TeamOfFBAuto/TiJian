@@ -501,10 +501,38 @@
  */
 - (void)clickToBugUseVoucher:(PropertyButton *)sender
 {
+//    checkuper_info" =                 {
+//    age = 28;
+//    gender = 1;
+//    "id_card" = 371311199999999999;
+//    mobile = 18612389982;
+//    "order_checkuper_id" = 0;
+//    "user_name" = "\U674e\U671d\U4f1f";
+    
     ProductModel *aModel = sender.aModel;
+    UserInfo *user;
+    NSDictionary *checkuper_info = aModel.checkuper_info;
+    if ([checkuper_info isKindOfClass:[NSDictionary class]]) {
+        
+        NSString *idcard = [checkuper_info objectForKey:@"id_card"];
+        NSString *name = checkuper_info[@"user_name"];
+        if (idcard && name) {
+            user = [[UserInfo alloc]init];
+            user.id_card = idcard;
+            user.appellation = @"本人";
+            user.family_uid = @"0";
+            user.family_user_name = name;
+            user.gender = NSStringFromInt([checkuper_info[@"gender"] intValue]);
+            user.mobile = checkuper_info[@"mobile"];
+        }
+    }
+    
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.className = @"使用代金券";
     cc.vouchers_id = aModel.coupon_id;//代金券
+    if (user) {
+        cc.userInfo = user;
+    }
     cc.uc_id = aModel.uc_id;
     cc.brandId = aModel.brand_id;
     cc.brandName = aModel.brand_name;
