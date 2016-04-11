@@ -357,11 +357,16 @@
     //时间分院view
     UIView *dateAndhospitalView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
     [infoView addSubview:dateAndhospitalView];
-    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 44*0.5-7, 65, 14)];
+    
+    UIImageView *dateAndHosImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, 44*0.5-7, 14, 14)];
+    [dateAndHosImv setImage:[UIImage imageNamed:@"fenyuan.png"]];
+    [dateAndhospitalView addSubview:dateAndHosImv];
+    
+    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(dateAndHosImv.right+5, 44*0.5-7, 65, 14)];
     tLabel.font = [UIFont systemFontOfSize:13];
     tLabel.text = @"时间、分院";
     [dateAndhospitalView addSubview:tLabel];
-    GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH - 15 - 65 - 5 - 20, 14)];
+    GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, 44*0.5-7, DEVICE_WIDTH -tLabel.right-5 - 5, 14)];
     cLabel.font = [UIFont systemFontOfSize:13];
     cLabel.textColor = RGBCOLOR(95, 154, 205);
     cLabel.textAlignment = NSTextAlignmentRight;
@@ -371,8 +376,8 @@
     [dateAndhospitalView addSubview:cLabel];
     
     //分割线
-    UIView *fenLine = [[UIView alloc]initWithFrame:CGRectMake(80, 43.5, DEVICE_WIDTH - 15, 0.5)];
-    fenLine.backgroundColor = RGBCOLOR(223, 224, 225);
+    UIImageView *fenLine = [[UIImageView alloc]initWithFrame:CGRectMake(15, 43.5, DEVICE_WIDTH - 15, 0.5)];
+    [fenLine setImage:[UIImage imageNamed:@"yuyue_xuxian.png"]];
     [dateAndhospitalView addSubview:fenLine];
     
     //体检人view
@@ -382,12 +387,16 @@
         
         if (i == 0) {
             
-            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(dateAndhospitalView.frame)+i*44 + 44*0.5-7, 50, 14)];
+            UIImageView *personImv = [[UIImageView alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(dateAndhospitalView.frame)+i*44+ 44*0.5-7, 14, 14)];
+            [personImv setImage:[UIImage imageNamed:@"tijianren_duo.png"]];
+            [infoView addSubview:personImv];
+            
+            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(personImv.right+5, personImv.frame.origin.y, 50, 14)];
             tLabel.font = [UIFont systemFontOfSize:13];
             tLabel.text = @"体检人";
             [infoView addSubview:tLabel];
             
-            GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, tLabel.frame.origin.y, DEVICE_WIDTH - 15 - 50 - 5 - 25, 14)];
+            GLabel *cLabel = [[GLabel alloc]initWithFrame:CGRectMake(tLabel.right + 5, tLabel.frame.origin.y, DEVICE_WIDTH - tLabel.right - 5 - 25, 14)];
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentRight;
             cLabel.text = [NSString stringWithFormat:@"%d. %@ %@ %@",i+1,user.appellation,user.family_user_name,user.id_card];
@@ -401,7 +410,7 @@
             Gbtn *deleteBtn = [[Gbtn alloc]initWithFrame:CGRectMake(cLabel.right, cLabel.frame.origin.y-7, 25, 25)];
             deleteBtn.hospitalModel = theModel;
             deleteBtn.userInfo = user;
-            deleteBtn.backgroundColor = [UIColor redColor];
+            [deleteBtn setImage:[UIImage imageNamed:@"guanbianniu.png"] forState:UIControlStateNormal];
             [infoView addSubview:deleteBtn];
             [deleteBtn addTarget:self action:@selector(deleteUserInfo:) forControlEvents:UIControlEventTouchUpInside];
             
@@ -421,7 +430,7 @@
             Gbtn *deleteBtn = [[Gbtn alloc]initWithFrame:CGRectMake(cLabel.right, cLabel.frame.origin.y-7, 25, 25)];
             deleteBtn.hospitalModel = theModel;
             deleteBtn.userInfo = user;
-            deleteBtn.backgroundColor = [UIColor redColor];
+            [deleteBtn setImage:[UIImage imageNamed:@"guanbianniu.png"] forState:UIControlStateNormal];
             [infoView addSubview:deleteBtn];
             [deleteBtn addTarget:self action:@selector(deleteUserInfo:) forControlEvents:UIControlEventTouchUpInside];
         }

@@ -115,10 +115,11 @@
     self.myTitle = @"确认订单";
     
     
+    //个性化定制过来的只有一个主套餐
     NSMutableArray *addProductArray = [NSMutableArray arrayWithCapacity:1];
     ProductModel *mainProduct;
     for (ProductModel *model in self.dataArray) {
-        if (model.is_append) {
+        if (model.is_append.intValue == 1) {
             [addProductArray addObject:model];
         }else{
             mainProduct = model;
@@ -162,7 +163,7 @@
     
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:1];
     for (ProductModel *model in self.dataArray) {
-        if (model.is_append) {
+        if (model.is_append.intValue == 1) {
         }else{
             if (![dic objectForKey:model.brand_id]) {
                 NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
