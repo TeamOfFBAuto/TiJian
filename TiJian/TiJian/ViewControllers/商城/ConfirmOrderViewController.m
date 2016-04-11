@@ -127,6 +127,12 @@
     }
     mainProduct.addProductsArray = addProductArray;
     
+    
+    
+    
+    
+    
+    
     _sumPrice_pay = 0;
     _user_score = @"0";
     _keyongJifen = 0;
