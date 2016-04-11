@@ -341,7 +341,6 @@
                 [self.navigationController popViewControllerAnimated:YES];
             }
             
-            
         }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT)
         {
 //            @"选择体检人去预约";
