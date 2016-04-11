@@ -936,6 +936,8 @@
         
         if (self.VoucherId) {//企业代金券
             
+            
+            
         }else{
             //update by lcw 2期 直接预约
             if ([LoginManager isLogin:self]) {//已登录
