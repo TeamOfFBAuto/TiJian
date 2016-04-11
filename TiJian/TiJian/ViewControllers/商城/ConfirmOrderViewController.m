@@ -1886,7 +1886,7 @@
     __weak typeof (self)bself = self;
     
     [cell setCellClickedBlock:^(CellClickedBlockType theType, ProductModel *theProduct, HospitalModel *theHospital, UserInfo *theUser) {
-        if (theType == CellClickedBlockType_yuyue) {//添加预约
+        if (theType == CellClickedBlockType_yuyue) {//添加预约时间、分院
             ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
             //最大可预约人数
             int have_num = 0;
@@ -1897,8 +1897,15 @@
             no_num = [theProduct.product_num intValue] - have_num;
             cc.lastViewController = bself;
             //设置回调
-            [cc selectCenterAndPeopleWithProductId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
-                [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
+//            [cc selectCenterAndPeopleWithProductId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
+//                [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
+//            }];
+            
+            //update by lcw
+             @WeakObj(self);
+            [cc selectCenterAndPeopleWithHospitalArray:theProduct.hospitalArray productId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
+                [Weakself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
+
             }];
             
             [bself.navigationController pushViewController:cc animated:YES];
@@ -1976,7 +1983,39 @@
 
 
 
-//选择完时间分院后的回调
+////选择完时间分院后的回调
+//-(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params
+//                                             index:(NSIndexPath*)theIndex{
+//    if (!params ||
+//        ![params isKindOfClass:[NSDictionary class]]) {
+//        return;
+//    }
+//    
+//    NSLog(@"%@",params);
+//    NSArray *userInfoArray = [params arrayValueForKey:@"userInfo"];
+//    HospitalModel *hospital = [params objectForKey:@"hospital"];
+//    hospital.usersArray = [NSMutableArray arrayWithArray:userInfoArray];
+//    
+//    
+//    NSArray *arr = _theData[theIndex.section];
+//    ProductModel *model = arr[theIndex.row];
+//    
+//    if (!model.hospitalArray) {
+//        model.hospitalArray = [NSMutableArray arrayWithCapacity:1];
+//        [model.hospitalArray addObject:hospital];
+//    }else{
+//        [model.hospitalArray addObject:hospital];
+//    }
+//    
+//    [_tab reloadData];
+//}
+
+/**
+ *  选择完时间分院后的回调 //update by lcw
+ *
+ *  @return
+ */
+
 -(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params
                                              index:(NSIndexPath*)theIndex{
     if (!params ||
@@ -1984,21 +2023,12 @@
         return;
     }
     
-    NSLog(@"%@",params);
-    NSArray *userInfoArray = [params arrayValueForKey:@"userInfo"];
-    HospitalModel *hospital = [params objectForKey:@"hospital"];
-    hospital.usersArray = [NSMutableArray arrayWithArray:userInfoArray];
-    
+    DDLOG(@"%@",params);
+    NSArray *hospitalArray = [params objectForKey:@"hospital"];
     
     NSArray *arr = _theData[theIndex.section];
     ProductModel *model = arr[theIndex.row];
-    
-    if (!model.hospitalArray) {
-        model.hospitalArray = [NSMutableArray arrayWithCapacity:1];
-        [model.hospitalArray addObject:hospital];
-    }else{
-        [model.hospitalArray addObject:hospital];
-    }
+    model.hospitalArray = [NSMutableArray arrayWithArray:hospitalArray];
     
     [_tab reloadData];
 }

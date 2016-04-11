@@ -56,6 +56,20 @@ typedef enum{
                             updateBlock:(UpdateParamsBlock)updateBlock;
 
 /**
+ *  选择多个体检人信息(根据已选择分院显示对应已选体检人) 回调
+ *  @param examCenterName   体检机构name
+ *  @param examCenterId     体检机构id
+ *  @param date             预约的时间 格式如：2015-11-13
+ *  @param noAppointNum     套餐未预约个数
+ */
+- (void)selectMulPeopleWithHospitalArray:(NSArray *)hospitalArray
+                            examCenterId:(NSString *)examCenterId
+                          examCenterName:(NSString *)examName
+                                examDate:(NSString *)date
+                            noAppointNum:(int)noAppointNum
+                             updateBlock:(UpdateParamsBlock)updateBlock;
+
+/**
  *  更新体检人
  *
  *  @param userArray    体检人数组

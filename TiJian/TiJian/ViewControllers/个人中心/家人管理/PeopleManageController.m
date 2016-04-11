@@ -32,6 +32,8 @@
 
     NSMutableArray *_selectedUserArray;//选中model
     NSArray *_tempSelectedUserArray;//选中model
+    
+    NSArray *_selectedHospitalArray;//已经选择过的体检分院及体检人
 
     //此套餐可以预约个数
     int _noAppointNum;//未预约个数
@@ -197,6 +199,41 @@
 }
 
 /**
+ *  选择多个体检人信息 回调
+ *  @param examCenterName   体检机构name
+ *  @param examCenterId     体检机构id
+ *  @param date             预约的时间 格式如：2015-11-13
+ *  @param noAppointNum     套餐未预约个数
+ */
+- (void)selectMulPeopleWithHospitalArray:(NSArray *)hospitalArray
+                            examCenterId:(NSString *)examCenterId
+                         examCenterName:(NSString *)examName
+                               examDate:(NSString *)date
+                           noAppointNum:(int)noAppointNum
+                            updateBlock:(UpdateParamsBlock)updateBlock
+{
+    self.updateParamsBlock = updateBlock;
+    //提交预约参数
+    _exam_center_id = examCenterId;//体检机构id
+    _exam_center_name = examName;
+    _date = date;// 预约体检日期（如：2015-11-13）
+    _noAppointNum = noAppointNum;
+    _selectedHospitalArray = hospitalArray;
+
+    NSArray *userArray;
+    for (HospitalModel *hospital in hospitalArray) {
+        //分院和时间都满足
+        if ([hospital.exam_center_id integerValue] == [examCenterId integerValue] &&
+            [hospital.date isEqualToString:date]) {
+            userArray = hospital.usersArray;
+        }
+    }
+    if (userArray.count) {
+        [self replaceUserArray:userArray noAppointNum:noAppointNum updateBlock:updateBlock];
+    }
+}
+
+/**
  *  更新体检人
  *
  *  @param userArray    体检人数组
@@ -305,7 +342,6 @@
         }else if (_actionType == PEOPLEACTIONTYPE_SELECT_Mul)//选择多个体检人
         {
             //选择的体检人
-            
             NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedUserArray];
             
             //是否包含自己
@@ -321,15 +357,38 @@
                 [temp addObject:userInfo];
             }
             
-            HospitalModel *hospital = [[HospitalModel alloc]init];
-            hospital.date = _date;
-            hospital.exam_center_id = _exam_center_id;
-            hospital.center_name = _exam_center_name;
+            HospitalModel *tempHospital;
+            NSMutableArray *hospitalsArray;
+            if (_selectedHospitalArray.count) {
+                hospitalsArray = [NSMutableArray arrayWithArray:_selectedHospitalArray];
+            }else
+            {
+                hospitalsArray = [NSMutableArray array];
+            }
             
+            for (HospitalModel *hospital in _selectedHospitalArray) {
+                //分院和时间都满足
+                if ([hospital.exam_center_id integerValue] == [_exam_center_id integerValue] &&
+                    [hospital.date isEqualToString:_date]) {
+                    
+                    tempHospital = hospital;
+                }
+            }
+            
+            if (tempHospital) {
+                tempHospital.usersArray = [NSMutableArray arrayWithArray:temp];//体检人信息
+            }else
+            {
+                HospitalModel *hospital = [[HospitalModel alloc]init];
+                hospital.date = _date;
+                hospital.exam_center_id = _exam_center_id;
+                hospital.center_name = _exam_center_name;
+                hospital.usersArray = [NSMutableArray arrayWithArray:temp];//体检人信息
+                [hospitalsArray addObject:hospital];
+            }
             
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
-            [params safeSetValue:hospital forKey:@"hospital"];//分院
-            [params safeSetValue:temp forKey:@"userInfo"];//分院
+            [params safeSetValue:hospitalsArray forKey:@"hospital"];//分院数组
             
             //回调值
             if (self.updateParamsBlock) {

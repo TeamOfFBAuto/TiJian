@@ -92,4 +92,20 @@ typedef enum {
                               noAppointNum:(int)noAppointNum
                                updateBlock:(UpdateParamsBlock)updateBlcok;
 
+/**
+ *  选择时间、分院以及人(可选择传入已选择分院)
+ *
+ *  @parsm hospitalArray 分院数组,包含分院对应的体检人
+ *  @param productId
+ *  @param gender       套餐对应性别
+ *  @param noAppointNum 可预约个数
+ *  @param updateBlcok
+ */
+- (void)selectCenterAndPeopleWithHospitalArray:(NSArray *)hospitalArray
+                                     productId:(NSString *)productId
+                                        gender:(Gender)gender
+                                  noAppointNum:(int)noAppointNum
+                                   updateBlock:(UpdateParamsBlock)updateBlcok;
+
+
 @end

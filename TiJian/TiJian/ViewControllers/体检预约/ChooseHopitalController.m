@@ -33,6 +33,7 @@ typedef enum {
     int _noAppointNum;//未预约数
     BOOL _isCompanyAppoint;//是否是公司预约
     BOOL _nopayAppoint;//不支付直接预约
+    NSArray *_selectedHospitalArray;//已经选择过分院model,并包含对应人员
     
     CGFloat _lastOffsetY;
     
@@ -371,6 +372,29 @@ typedef enum {
     _chooseType = ChooseType_centerAndPeople;
 }
 
+/**
+ *  选择时间、分院以及人(可选择传入已选择分院)
+ * 
+ *  @parsm hospitalArray 分院数组,包含分院对应的体检人
+ *  @param productId
+ *  @param gender       套餐对应性别
+ *  @param noAppointNum 可预约个数
+ *  @param updateBlcok
+ */
+- (void)selectCenterAndPeopleWithHospitalArray:(NSArray *)hospitalArray
+                                     productId:(NSString *)productId
+                                        gender:(Gender)gender
+                                  noAppointNum:(int)noAppointNum
+                                   updateBlock:(UpdateParamsBlock)updateBlcok
+{
+    self.updateParamsBlock = updateBlcok;
+    _productId = productId;
+    _gender = gender;
+    _noAppointNum = noAppointNum;
+    _chooseType = ChooseType_centerAndPeople;
+    _selectedHospitalArray = hospitalArray;
+}
+
 #pragma mark - 事件处理
 
 - (void)appointSuccess
@@ -420,6 +444,7 @@ typedef enum {
 
 -(void)rightButtonTap:(UIButton *)sender
 {
+    _exam_center_id = NSStringFromInt(_selectHospitalId);
     //仅是选择时间和分院,不做其他操作
     if (_chooseType == ChooseType_center) {
         
@@ -486,8 +511,7 @@ typedef enum {
     {
         people.actionType = PEOPLEACTIONTYPE_SELECT_Mul;//仅选择人
         
-        [people selectMulPeopleWithExamCenterId:_exam_center_id examCenterName:_selectCenterName examDate:_selectDate noAppointNum:_noAppointNum updateBlock:self.updateParamsBlock];
-
+        [people selectMulPeopleWithHospitalArray:_selectedHospitalArray examCenterId:_exam_center_id examCenterName:_selectCenterName examDate:_selectDate noAppointNum:_noAppointNum updateBlock:self.updateParamsBlock];
     }
     
     [people setAppointOrderId:self.order_id productId:self.productId examCenterId:NSStringFromInt(_selectHospitalId) date:_selectDate noAppointNum:self.noAppointNum];
