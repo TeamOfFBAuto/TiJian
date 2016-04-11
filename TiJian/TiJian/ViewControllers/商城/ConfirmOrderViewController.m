@@ -1980,13 +1980,6 @@
     return cell;
 }
 
-
-- (void)replaceUserArray:(NSArray *)userArray
-            noAppointNum:(int)noAppointNum
-             updateBlock:(UpdateParamsBlock)updateBlock{
-    
-}
-
 //更改体检分院
 -(void)changeHospital:(HospitalModel*)theHospital toHospital:(HospitalModel*)changedHospital productModel:(ProductModel*)theProductModel{
     
