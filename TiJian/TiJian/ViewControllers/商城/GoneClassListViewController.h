@@ -36,6 +36,7 @@
 
 //代金券购买套餐
 @property(nonatomic,strong)NSString *vouchers_id;//代金券id
+@property(nonatomic,strong)UserInfo *user_voucher;//代金券绑定的人
 @property(nonatomic,strong)NSString *uc_id;//代金券绑定了个人信息
 @property(nonatomic,strong)NSString *brandId;//品牌id
 @property(nonatomic,strong)NSString *brandName;//品牌name

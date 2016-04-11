@@ -21,11 +21,10 @@
 @property(nonatomic,strong)ProductModel *theProductModel;//产品model
 @property(nonatomic,strong)UIImage *gouwucheProductImage;//动画image
 
-//@property(nonatomic,assign)BOOL isVoucherPush;//是否是代金券过来
-
-//@property(nonatomic,strong)NSString *uc_id;//代金卷和用户信息绑定
-
+//代金券购买 (默认选择传过来的代金券)
 @property(nonatomic,strong)NSString *VoucherId;//代金券id
+//代金券预约
+@property(nonatomic,strong)UserInfo *user_voucher;//代金券绑定的人
 
 @property(nonatomic,strong)NSDictionary *userChooseLocationDic;//用户选择筛选的地址
 
