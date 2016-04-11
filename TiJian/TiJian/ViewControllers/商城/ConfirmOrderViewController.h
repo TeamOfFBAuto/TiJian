@@ -23,13 +23,8 @@
 
 //代金券购买 (默认选择传过来的代金券)
 @property(nonatomic,strong)NSString *voucherId;//代金券id
-
-//单品详情直接预约
-@property(nonatomic,strong)NSString *exam_center_id;//体检中心id
-@property(nonatomic,strong)NSString *date;//预约时间
-@property(nonatomic,strong)NSString *myself;//预约是否自己
-@property(nonatomic,strong)NSArray *family_uid;//预约家人
-
+//代金券预约
+@property(nonatomic,strong)UserInfo *user_voucher;//代金券绑定的人
 
 
 

@@ -933,17 +933,22 @@
         
         
     }else if (sender.tag == 102){//预约
-
         
-        //update by lcw 2期 直接预约
-        if ([LoginManager isLogin:self]) {//已登录
-            ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-            [choose apppointNoPayWithProductModel:self.theProductModel
-                                           gender:[_theProductModel.gender_id intValue]
-                                     noAppointNum:1000];
-            choose.lastViewController = self;
-            [self.navigationController pushViewController:choose animated:YES];
+        if (self.VoucherId) {//企业代金券
+            
+        }else{
+            //update by lcw 2期 直接预约
+            if ([LoginManager isLogin:self]) {//已登录
+                ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+                [choose apppointNoPayWithProductModel:self.theProductModel
+                                               gender:[_theProductModel.gender_id intValue]
+                                         noAppointNum:1000];
+                choose.lastViewController = self;
+                [self.navigationController pushViewController:choose animated:YES];
+            }
         }
+        
+        
         
     }else if (sender.tag == 103){//购物车
         

@@ -531,7 +531,7 @@
     cc.className = @"使用代金券";
     cc.vouchers_id = aModel.coupon_id;//代金券
     if (user) {
-        cc.userInfo = user;
+        cc.user_voucher = user;
     }
     cc.uc_id = aModel.uc_id;
     cc.brandId = aModel.brand_id;
