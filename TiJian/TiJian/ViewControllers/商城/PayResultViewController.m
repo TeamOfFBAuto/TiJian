@@ -164,8 +164,10 @@
 {
     [self.navigationController popToRootViewControllerAnimated:NO];
     
-    UITabBarController *root = (UITabBarController *)((LNavigationController *)ROOTVIEWCONTROLLER).topViewController;
-    root.selectedIndex = 1;
+    UITabBarController *root = (UITabBarController *)ROOTVIEWCONTROLLER;
+    if ([root isKindOfClass:[UITabBarController class]]) {
+        root.selectedIndex = 1;
+    }
 }
 
 ///前去预约

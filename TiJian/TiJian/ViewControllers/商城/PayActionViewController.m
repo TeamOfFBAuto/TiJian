@@ -399,6 +399,7 @@
     result.orderNum = self.orderNum;
     result.sumPrice = self.sumPrice;
     result.payResultType = resultType;
+    result.noAppointNum = self.noAppointNum;//未预约个数
     result.erroInfo = erroInfo;
     if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
        [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
