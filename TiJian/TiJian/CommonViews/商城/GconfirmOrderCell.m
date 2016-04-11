@@ -41,6 +41,14 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        
+        
+        //加项包图片
+        self.jiaxiangbaoImv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195])];
+        self.jiaxiangbaoImv.hidden = YES;
+        [self.jiaxiangbaoImv setImage:[UIImage imageNamed:@"order_jiaxiangbao.png"]];
+        [self.contentView addSubview:self.jiaxiangbaoImv];
+        
         //图片
         CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195];
         self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, [GMAPI scaleWithHeight:height - 20 width:0 theWHscale:250.0/155], height - 20)];
@@ -96,19 +104,32 @@
     //商品数量
     self.numLabel.text = [NSString stringWithFormat:@"X %@",model.product_num];
     
+    //确认订单页面加项包当做单品显示
+    BOOL additon = [model.is_append intValue] == 1 ? YES : NO;//是否是加项
+    if (additon) {
+        self.jiaxiangbaoImv.hidden = NO;
+    }else{
+        self.jiaxiangbaoImv.hidden = YES;
+    }
+    
     //加项包
     if (model.addProductsArray.count>0) {
         [self creatAddProductViewWithModel:model];
     }
     
-    //设置预约相关view
-    [self setYuyueViewWithModel:model];
+    if (self.isConfirmCell) {
+        //设置预约相关view
+        [self setYuyueViewWithModel:model];
+    }
+    
+    
+    
     
 
 
 }
 
-//返回单元格高度
+//返回单元格高度 订单详情界面传来的model为空
 + (CGFloat)heightForCellWithModel:(ProductModel*)theModel{
     
     CGFloat height = [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/195];
