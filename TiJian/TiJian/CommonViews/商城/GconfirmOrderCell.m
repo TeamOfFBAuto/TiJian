@@ -115,7 +115,7 @@
     //加项包
     if (model.addProductsArray.count>0) {
         [self creatAddProductViewWithModel:model];
-    }
+    } 
     
     if (self.isConfirmCell) {
         //设置预约相关view
