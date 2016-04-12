@@ -17,7 +17,7 @@
     [self.commentButton setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
     [self.commentButton addCornerRadius:3.f];
     
-    [self.actionButton setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
+    [self.actionButton setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE];
     [self.actionButton addCornerRadius:3.f];
 }
 

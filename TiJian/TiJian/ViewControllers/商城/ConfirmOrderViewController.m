@@ -1538,7 +1538,7 @@
         NSString *orderNum = [result stringValueForKey:@"order_no"];
         _sumPrice_pay = _finalPrice;
         
-        if (_sumPrice_pay <0.01) {
+        if (_sumPrice_pay < 0.01) {
             [weakSelf payResultSuccess:PAY_RESULT_TYPE_Success erroInfo:nil oderid:orderId sumPrice:_sumPrice_pay orderNum:orderNum];
         }else{
             [weakSelf pushToPayPageWithOrderId:orderId orderNum:orderNum];
@@ -1592,7 +1592,6 @@
     pay.orderNum = orderNum;
     pay.sumPrice = _sumPrice_pay;
     pay.lastViewController = self.lastViewController;
-    pay.noAppointNum = [self getNoAppointNum];
     
     if (self.lastViewController) {
         
@@ -1646,8 +1645,10 @@
     result.sumPrice = theSumPrice;
     result.payResultType = resultType;
     result.erroInfo = erroInfo;
-    result.noAppointNum = [self getNoAppointNum];
-    
+    //是否需要前去预约
+    if ([self getNoAppointNum]) {
+        result.needAppoint = YES;
+    }
     if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
         [self.lastViewController.navigationController popViewControllerAnimated:NO];
         [self.lastViewController.navigationController pushViewController:result animated:YES];

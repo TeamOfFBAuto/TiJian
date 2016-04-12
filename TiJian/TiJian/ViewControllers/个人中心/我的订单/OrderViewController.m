@@ -583,7 +583,6 @@
     
     int refund_status = 0;
     
-    
     OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
     [cell setCellWithModel:aModel];
     
@@ -618,7 +617,10 @@
         
     }
     
-    cell.actionButton.hidden = YES;
+//    PropertyButton *commentButton;//右边按钮
+//    PropertyButton *actionButton;//左边按钮
+    
+    cell.actionButton.hidden = YES;//默认左边隐藏
     
     NSString *title = table.tableTitle;
     if ([title isEqualToString:TableView_title_All]) { //全部
@@ -630,12 +632,12 @@
             //待支付
             text1 = @"去支付";
             type = ORDERACTIONTYPE_Pay;
-        }else if (status == 2){ //已付款就是待预约
+        }else if (status == 2){ // 新版本没有2
             //待预约
             text1 = @"前去预约";
             type = ORDERACTIONTYPE_Appoint;
             
-        }else if (status == 3){
+        }else if (status == 3){// 新版本没有3
             //已预约
             text1 = @"再次购买";
             type = ORDERACTIONTYPE_BuyAgain;
@@ -660,6 +662,7 @@
         }else if (status == 6){
             text1 = @"已删除";
             type = ORDERACTIONTYPE_Default;
+            
         }else if (status == 7){
             //已付款
             BOOL is_appoint = [aModel.is_appoint boolValue];
@@ -670,6 +673,11 @@
             {
                 text1 = @"已预约";
                 type = ORDERACTIONTYPE_Default;
+                
+                cell.actionButton.hidden = NO;
+                [cell.actionButton setTitle:@"再次购买" forState:UIControlStateNormal];
+                cell.actionButton.actionType = ORDERACTIONTYPE_BuyAgain;
+
             }
         }
         
@@ -705,8 +713,12 @@
             cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
         }else
         {
-            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
-            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
+            [cell.commentButton setTitle:@"已预约" forState:UIControlStateNormal];
+            cell.commentButton.actionType = ORDERACTIONTYPE_Default;
+            
+            cell.actionButton.hidden = NO;
+            [cell.actionButton setTitle:@"再次购买" forState:UIControlStateNormal];
+            cell.actionButton.actionType = ORDERACTIONTYPE_BuyAgain;
         }
         
     }else if ([title isEqualToString:TableView_title_TuiHuan])//退换
@@ -728,106 +740,9 @@
         }
         
         cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
-        [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
     }
-//    int tableViewTag = (int)tableView.tag;
-//    switch (tableViewTag) {
-//  
-//        case TABLEVIEW_TAG_All + 200:
-//        {
-//            ORDERACTIONTYPE type = ORDERACTIONTYPE_Default;
-//
-//            int status = [aModel.status intValue];
-//            NSString *text1 = nil;
-//            if (status == 1) {
-//                //待支付
-//                text1 = @"去支付";
-//                type = ORDERACTIONTYPE_Pay;
-//            }else if (status == 2){ //已付款就是待预约
-//                //待预约
-//                text1 = @"前去预约";
-//                type = ORDERACTIONTYPE_Appoint;
-//
-//            }else if (status == 3){
-//                //已预约
-//                text1 = @"再次购买";
-//                type = ORDERACTIONTYPE_BuyAgain;
-//            }
-//            else if (status == 4){
-//                //已完成
-//                text1 = @"再次购买";
-//                type = ORDERACTIONTYPE_BuyAgain;
-//                
-//                //代表已评价
-//                if ([aModel.is_comment intValue] == 0) {
-//                    cell.actionButton.hidden = NO;
-//                }else
-//                {
-//                    cell.actionButton.hidden = YES;
-//                }
-//            }
-//            //显示退款状态
-//            if (refund_status == 3) { //退款成功 只显示一个退款状态
-//                cell.actionButton.hidden = YES;
-//                text1 = text;
-//                type = ORDERACTIONTYPE_Refund;
-//                
-//            }else if(refund_status > 0) //显示退款状态、显示前去预约
-//            {
-//                cell.actionButton.hidden = NO;
-//                [cell.actionButton setTitle:text forState:UIControlStateNormal];
-//            }
-//            
-//            [cell.commentButton setTitle:text1 forState:UIControlStateNormal];
-//            cell.commentButton.actionType = type;
-//        }
-//            break;
-//        case TABLEVIEW_TAG_DaiFu + 200:
-//        {
-//            [cell.commentButton setTitle:@"去支付" forState:UIControlStateNormal];
-//            cell.commentButton.actionType = ORDERACTIONTYPE_Pay;
-//        }
-//            break;
-//        case TABLEVIEW_TAG_NoAppoint + 200:
-//        {
-//            [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
-//            cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
-//
-//        }
-//            break;
-//        case TABLEVIEW_TAG_Appointed + 200:
-//        {
-//            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
-//            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
-//        }
-//            break;
-//        case TABLEVIEW_TAG_WanCheng + 200:
-//        {
-//            [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
-//            cell.actionButton.hidden = NO;
-//            cell.actionButton.actionType = ORDERACTIONTYPE_Comment;
-//            
-//            //代表已评价
-//            if ([aModel.is_comment intValue] == 0) {
-//                cell.actionButton.hidden = NO;
-//            }else
-//            {
-//                cell.actionButton.hidden = YES;
-//            }
-//            
-//            cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
-//            [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
-//        }
-//            break;
-//        case TABLEVIEW_TAG_TuiHuan + 200:
-//        {
-//            [cell.commentButton setTitle:text forState:UIControlStateNormal];
-//        }
-//            break;
-//        default:
-//            break;
-//    }
-//    
+    
+    [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
     [cell.commentButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
         
     return cell;

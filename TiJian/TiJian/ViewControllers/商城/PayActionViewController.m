@@ -20,10 +20,10 @@
     int _validateTime;//验证支付次数
     NSTimer *_validateTimer;//计时器
     MBProgressHUD *_loading;
-    
     YJYRequstManager *_request;
-    
 }
+@property(nonatomic,assign)BOOL needAppoint;//需要前去预约
+
 
 @end
 
@@ -119,6 +119,11 @@
         DDLOG(@"支付结果确认 %@",result);
         // 0和1的情况下,服务端已经收到支付宝异步通知
         int pay = [result[@"pay"]intValue];
+        
+        //是否需要前去预约
+        BOOL enable_appoint = [result[@"enable_appoint"]boolValue];
+        
+        weakSelf.needAppoint = enable_appoint;
         
         if (pay == 1) {
             
@@ -399,8 +404,8 @@
     result.orderNum = self.orderNum;
     result.sumPrice = self.sumPrice;
     result.payResultType = resultType;
-    result.noAppointNum = self.noAppointNum;//未预约个数
     result.erroInfo = erroInfo;
+    result.needAppoint = self.needAppoint;//是否前去预约
     if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
        [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
         [self.lastViewController.navigationController pushViewController:result animated:YES];

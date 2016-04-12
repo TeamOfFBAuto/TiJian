@@ -121,12 +121,6 @@
         //设置预约相关view
         [self setYuyueViewWithModel:model];
     }
-    
-    
-    
-    
-
-
 }
 
 //返回单元格高度 订单详情界面传来的model为空
@@ -184,7 +178,7 @@
         UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, CGRectGetMaxY(label_p_name.frame)+5, DEVICE_WIDTH - 30, 15)];
         priceLabel.font = [UIFont systemFontOfSize:13];
         priceLabel.textColor = [UIColor orangeColor];
-        priceLabel.text = [NSString stringWithFormat:@"¥:%@",model.current_price];
+        priceLabel.text = [NSString stringWithFormat:@"¥%@",model.current_price];
         [self.addProductView addSubview:priceLabel];
         height_p += 20;
         

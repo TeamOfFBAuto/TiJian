@@ -277,14 +277,10 @@
 
 - (void)actionForNotification:(NSNotification *)notification
 {
-    NSLog(@"擦擦擦擦擦擦擦1");
-
     //个性化定制
     if ([notification.name isEqualToString:NOTIFICATION_PersonalCustomization_SUCCESS]) {
         
         [self getCustomizationResult];
-        NSLog(@"擦擦擦擦擦擦擦2");
-
     }
 }
 

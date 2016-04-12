@@ -18,6 +18,6 @@
 //@property(nonatomic,assign)BOOL isPaySuccess;//是否支付成
 @property(nonatomic,retain)NSString *erroInfo;//失败原因
 @property(nonatomic,assign)PAY_RESULT_TYPE payResultType;//支付结果
-@property(nonatomic,assign)int noAppointNum;//未预约个数
+@property(nonatomic,assign)BOOL needAppoint;//需要前去预约
 
 @end

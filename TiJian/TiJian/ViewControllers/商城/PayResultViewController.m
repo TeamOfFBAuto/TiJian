@@ -70,7 +70,7 @@
         
         NSString *title;
         SEL selector;
-        if (_noAppointNum > 0) {
+        if (_needAppoint > 0) {
             
             title = @"前去预约";
             selector = @selector(clickToAppoint);
