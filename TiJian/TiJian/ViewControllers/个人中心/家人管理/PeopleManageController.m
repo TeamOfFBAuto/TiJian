@@ -229,7 +229,7 @@
         }
     }
     if (userArray.count) {
-        [self replaceUserArray:userArray noAppointNum:noAppointNum updateBlock:updateBlock];
+        [self replaceUserArray:userArray noAppointNum:noAppointNum updateBlock:nil];
     }
 }
 
@@ -263,6 +263,7 @@
     _tempSelectedArray = [NSArray arrayWithArray:tempIds];
     _tempSelectedUserArray = [NSArray arrayWithArray:tempUsers];
     _noAppointNum = noAppointNum + (int)userArray.count;
+
     [_table reloadData];
 }
 
@@ -676,7 +677,6 @@
     
     NSString *text = [NSString stringWithFormat:@"共可约%d人,已选%d人",_noAppointNum,selectNum];
     
-    NSLog(@"NONO");
     [LTools alertText:text viewController:self];
     
     return NO;
