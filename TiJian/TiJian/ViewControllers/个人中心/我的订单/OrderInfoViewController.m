@@ -475,6 +475,12 @@
             {
                 text1 = @"已预约";
             }
+            text2 = @"再次购买";
+            
+            //1的时候可以退款
+            if ([_orderModel.enable_refund intValue] == 1) {
+                text3 = @"申请退款";
+            }
         }
     }
     
