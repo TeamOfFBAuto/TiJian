@@ -1928,7 +1928,6 @@
         [view removeFromSuperview];
     }
     
-    
     cell.isConfirmCell = YES;
     
     NSArray *arr = _theData[indexPath.section];
@@ -1941,8 +1940,8 @@
             ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
             if (self.voucherId) {//绑定体检人信息的代金券跳转过来的
                 [cc selectCenterUserInfo:self.user_voucher productModel:model updateBlock:^(NSDictionary *params) {
-                    ProductModel *newProductModel = [params objectForKey:@"productModel"];
-                    [bself getTheHospitalWithProductModel:theProduct newProductModel:newProductModel];
+                    //此处返回的是productmodel     [params objectForKey:@"productModel"];
+                    [_tab reloadData];
                     
                 }];
             }else{
@@ -1953,12 +1952,11 @@
                     have_num += model.usersArray.count;
                 }
                 no_num = [theProduct.product_num intValue] - have_num;//剩余可预约人数
-                
                 cc.lastViewController = bself;
             
-                @WeakObj(self);
                 [cc selectCenterAndPeopleWithHospitalArray:theProduct.hospitalArray productId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
-                    [Weakself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
+                    //返回的是hospital数组 [params objectForKey:@"hospital"];
+                    [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
                     
                 }];
             }
@@ -1976,17 +1974,11 @@
                 num += hospital.usersArray.count;
             }
             num = [theProduct.product_num intValue] - num;//剩余人数
-            
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
-                
                 NSArray *userArray = [params arrayValueForKey:@"userInfo"];
                 theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
                 [_tab reloadData];
-                
-                
             }];
-            
-
             [bself.navigationController pushViewController:people animated:YES];
             
         }else if (theType == CellClickedBlockType_changeHostpital){//更改分院
@@ -2011,11 +2003,6 @@
 //更改体检分院
 -(void)changeHospital:(HospitalModel*)theHospital toHospital:(HospitalModel*)changedHospital productModel:(ProductModel*)theProductModel{
     
-//    for (HospitalModel *model in theProductModel.hospitalArray) {
-//        if ([model.exam_center_id integerValue] == [theHospital.exam_center_id integerValue] && [model.date isEqualToString:theHospital.date]) {
-//            
-//        }
-//    }
     if (![theHospital isKindOfClass:[HospitalModel class]]) {
         return;
     }
@@ -2025,41 +2012,7 @@
     [_tab reloadData];
 }
 
-
-
-////选择完时间分院后的回调
-//-(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params
-//                                             index:(NSIndexPath*)theIndex{
-//    if (!params ||
-//        ![params isKindOfClass:[NSDictionary class]]) {
-//        return;
-//    }
-//    
-//    NSLog(@"%@",params);
-//    NSArray *userInfoArray = [params arrayValueForKey:@"userInfo"];
-//    HospitalModel *hospital = [params objectForKey:@"hospital"];
-//    hospital.usersArray = [NSMutableArray arrayWithArray:userInfoArray];
-//    
-//    
-//    NSArray *arr = _theData[theIndex.section];
-//    ProductModel *model = arr[theIndex.row];
-//    
-//    if (!model.hospitalArray) {
-//        model.hospitalArray = [NSMutableArray arrayWithCapacity:1];
-//        [model.hospitalArray addObject:hospital];
-//    }else{
-//        [model.hospitalArray addObject:hospital];
-//    }
-//    
-//    [_tab reloadData];
-//}
-
-/**
- *  选择完时间分院后的回调 //update by lcw
- *
- *  @return
- */
-
+//选择完时间分院人后的回调
 -(void)chooseHospitalAndDateAndPersonFinishWithDic:(NSDictionary *)params
                                              index:(NSIndexPath*)theIndex{
     if (!params ||
@@ -2078,22 +2031,7 @@
 }
 
 
-//绑定体检人信息的代金券选择分院后的回调
--(void)getTheHospitalWithProductModel:(ProductModel *)theModel newProductModel:(ProductModel*)newModel{
-    [_tab reloadData];
-}
-
-
-
-
-/**
- *  单品详情直接预约
- *  add by lcw
- *
- *  @param productModel  套餐model
- *  @param hospital  分院model
- *  @param userArray 体检人信息model
- */
+//单品详情直接预约
 - (void)appointWithProductModel:(ProductModel *)productModel
                        hospital:(HospitalModel *)hospital
                   userArray:(NSArray *)userArray
