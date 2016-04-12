@@ -159,16 +159,20 @@
         label_p_name.textColor = [UIColor blackColor];
         
         //加项包描述
-        NSArray *package_project = model.package_project;
-        NSString *keyword = [package_project componentsJoinedByString:@"、"];
-        keyword = [NSString stringWithFormat:@"(%@)",keyword];
+        if (model.package_project.count>0) {
+            NSArray *package_project = model.package_project;
+            NSString *keyword = [package_project componentsJoinedByString:@"、"];
+            keyword = [NSString stringWithFormat:@"(%@)",keyword];
+            
+            NSString *index_str = [NSString stringWithFormat:@"%d",i+1];
+            NSString *textVal = [NSString stringWithFormat:@"%@、%@%@",index_str,model.product_name,keyword];
+            NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:textVal];
+            [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(index_str.length+1+model.product_name.length, keyword.length)];
+            label_p_name.attributedText = aaa;
+        }else{
+            label_p_name.text = model.product_name;
+        }
         
-        NSString *index_str = [NSString stringWithFormat:@"%d",i+1];
-        NSString *textVal = [NSString stringWithFormat:@"%@、%@%@",index_str,model.product_name,keyword];
-        NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:textVal];
-        [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(index_str.length+1+model.product_name.length, keyword.length)];
-        
-        label_p_name.attributedText = aaa;
         
         [label_p_name setMatchedFrame4LabelWithOrigin:CGPointMake(15, 30 + height_p) width:DEVICE_WIDTH - 30];
         height_p += (label_p_name.frame.size.height + 5);
