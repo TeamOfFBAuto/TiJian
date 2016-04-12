@@ -234,6 +234,7 @@
     [_pushView qingkongshaixuanBtnClicked];
     _pushView.gender = YES;
     [_pushView.tab1 reloadData];
+    self.searchTf.text = theWord;
     self.theSearchWorld = self.searchTf.text;
     [_table showRefreshHeader:YES];
     

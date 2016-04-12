@@ -265,6 +265,8 @@
     
     self.searchTf.text = theWord;
     
+    self.searchTf.text = nil;
+    
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.theSearchWorld = theWord;
     [self.navigationController pushViewController:cc animated:YES];
@@ -440,7 +442,8 @@
             [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         }
         
-         [_table reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithT]];
+//         [_table reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithT]];
+        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
         
     } failBlock:^(NSDictionary *result) {
@@ -496,7 +499,8 @@
         
         _table.tableFooterView = nil;
         
-        [_table reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithT]];
+//        [_table reloadData:_StoreProductListArray pageSize:5 noDataView:[self resultViewWithT]];
+        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
         
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
@@ -610,7 +614,6 @@
     
     if (state == 0) {//常态
         
-//        [_myNavcRightBtn setTitle:@"分院" forState:UIControlStateNormal];
         [_myNavcRightBtn setTitle:nil forState:UIControlStateNormal];
         [_myNavcRightBtn setImage:[UIImage imageNamed:@"fenyuan_storehome.png"] forState:UIControlStateNormal];
         
@@ -632,6 +635,7 @@
         }
         [self.view addGestureRecognizer:_panGestureRecognizer];
         
+        self.searchTf.text = nil;
         
     }else if (state == 1){//编辑状态
         [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
@@ -651,7 +655,6 @@
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width-30, 30)];
         
         [self.navigationController.navigationBar bringSubviewToFront:_searchView];
-        
         
         [self.view removeGestureRecognizer:_panGestureRecognizer];
     }
@@ -735,7 +738,6 @@
         NSDictionary *dic = classData[i];
         UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
         [bankuaiView addSubview:view];
-        view.backgroundColor = RGBCOLOR_ONE;
         
         
         //图片

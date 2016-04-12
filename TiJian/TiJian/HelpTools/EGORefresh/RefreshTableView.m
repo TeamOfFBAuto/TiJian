@@ -206,20 +206,20 @@
  *  @param pageSize   每页个数
  *  @param noDataView 自定义没有数据时view
  */
-//- (void)reloadData:(NSArray *)data
-//          pageSize:(int)pageSize
-//        CustomNoDataView:(UIView *)noDataView
-//{
-//    BOOL isHaveMore = (data.count < pageSize || data.count == 0) ? NO : YES;//每页实际请求条数 与 每页条数
-//    self.isHaveMoreData = isHaveMore;
-//    
-//    if (self.isReloadData) {
-//        
-//        [self.dataArray removeAllObjects];
-//    }
-//    [self.dataArray addObjectsFromArray:data];
-//    [self finishReloadDataWithCustomView:noDataView pageSize:pageSize];
-//}
+- (void)reloadData:(NSArray *)data
+          pageSize:(int)pageSize
+        CustomNoDataView:(UIView *)noDataView
+{
+    BOOL isHaveMore = (data.count < pageSize || data.count == 0) ? NO : YES;//每页实际请求条数 与 每页条数
+    self.isHaveMoreData = isHaveMore;
+    
+    if (self.isReloadData) {
+        
+        [self.dataArray removeAllObjects];
+    }
+    [self.dataArray addObjectsFromArray:data];
+    [self finishReloadDataWithCustomView:noDataView pageSize:pageSize];
+}
 
 
 //完成数据加载

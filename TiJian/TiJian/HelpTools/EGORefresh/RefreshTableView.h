@@ -100,6 +100,10 @@ typedef void(^OBSERVERBLOCK)(NSString *keyPath,NSDictionary *change);
 - (void)reloadData:(NSArray *)data isHaveMore:(BOOL)isHave;
 - (void)reloadData:(NSArray *)data pageSize:(int)pageSize;//根据pageSize判断是否有更多
 - (void)reloadDataWithNoFinishReloading:(NSArray *)data isHaveMore:(BOOL)isHave;//控制dataArray 不做界面刷新
+//自定义没数据的view
+- (void)reloadData:(NSArray *)data
+          pageSize:(int)pageSize
+  CustomNoDataView:(UIView *)noDataView;
 
 /**
  *  成功加载数据reload 
