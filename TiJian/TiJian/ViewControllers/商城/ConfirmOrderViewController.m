@@ -1951,6 +1951,7 @@
                 cc.lastViewController = bself;
             
                 [cc selectCenterAndPeopleWithHospitalArray:theProduct.hospitalArray productId:theProduct.product_id gender:[theProduct.gender_id intValue] noAppointNum:no_num updateBlock:^(NSDictionary *params) {
+                    
                     //返回的是hospital数组 [params objectForKey:@"hospital"];
                     [bself chooseHospitalAndDateAndPersonFinishWithDic:params index:indexPath];
                     

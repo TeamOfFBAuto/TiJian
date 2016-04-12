@@ -229,7 +229,7 @@
         }
     }
     if (userArray.count) {
-        [self replaceUserArray:userArray noAppointNum:noAppointNum updateBlock:nil];
+        [self replaceUserArray:userArray noAppointNum:noAppointNum updateBlock:updateBlock];
     }
 }
 
