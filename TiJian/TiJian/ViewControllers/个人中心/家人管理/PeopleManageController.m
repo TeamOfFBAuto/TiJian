@@ -389,6 +389,8 @@
             
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             [params safeSetValue:hospitalsArray forKey:@"hospital"];//分院数组
+            [params safeSetValue:temp forKey:@"userInfo"];//体检人数组
+
             
             //回调值
             if (self.updateParamsBlock) {

@@ -1322,25 +1322,45 @@
     
     NSMutableDictionary *jiaxiangbaoDic = [NSMutableDictionary dictionary];
     
-    for (NSArray *arr in _theData) {
-        for (ProductModel *oneModel in arr) {
-            if (oneModel.is_append.intValue == 1) {//加项包
-                if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
-                    NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
-                    [theArr addObject:oneModel.product_id];
-                    [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
-                }else{//没有
-                    NSArray *oneArr = @[oneModel.product_id];
-                    [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
-                }
-                
-            }else{
-                [product_ids_arr addObject:oneModel.product_id];
-                [product_nums_arr addObject:oneModel.product_num];
+//    for (NSArray *arr in _theData) {
+//        for (ProductModel *oneModel in arr) {
+//            if (oneModel.is_append.intValue == 1) {//加项包
+//                if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
+//                    NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
+//                    [theArr addObject:oneModel.product_id];
+//                    [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
+//                }else{//没有
+//                    NSArray *oneArr = @[oneModel.product_id];
+//                    [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
+//                }
+//                
+//            }else{
+//                [product_ids_arr addObject:oneModel.product_id];
+//                [product_nums_arr addObject:oneModel.product_num];
+//            }
+//            
+//        }
+//    }
+    
+    
+    for (ProductModel *oneModel in self.dataArray) {
+        if (oneModel.is_append.intValue == 1) {//加项包
+            if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
+                NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
+                [theArr addObject:oneModel.product_id];
+                [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
+            }else{//没有
+                NSArray *oneArr = @[oneModel.product_id];
+                [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
             }
             
+        }else{
+            [product_ids_arr addObject:oneModel.product_id];
+            [product_nums_arr addObject:oneModel.product_num];
         }
     }
+    
+    
     
     NSLog(@"%@",product_ids_arr);
     NSString *product_ids_str = [product_ids_arr componentsJoinedByString:@","];
@@ -1931,9 +1951,8 @@
                 for (HospitalModel*model in theProduct.hospitalArray) {
                     have_num += model.usersArray.count;
                 }
+                no_num = [theProduct.product_num intValue] - have_num;//剩余可预约人数
                 
-#pragma mark - //此处未预约个数貌似在选人的时候做了总数的用处=======================================
-                no_num = [theProduct.product_num intValue] - have_num;//未预约个数
                 cc.lastViewController = bself;
             
                 @WeakObj(self);
@@ -1955,10 +1974,9 @@
             for (HospitalModel *hospital in theProduct.hospitalArray) {
                 num += hospital.usersArray.count;
             }
-            num = [theProduct.product_num intValue] - num;
+            num = [theProduct.product_num intValue] - num;//剩余人数
             
             [people replaceUserArray:theHospital.usersArray noAppointNum:num updateBlock:^(NSDictionary *params) {
-#pragma mark - //此处返回的是hospitlModel=======================================
                 
                 NSArray *userArray = [params arrayValueForKey:@"userInfo"];
                 theHospital.usersArray = [NSMutableArray arrayWithArray:userArray];
