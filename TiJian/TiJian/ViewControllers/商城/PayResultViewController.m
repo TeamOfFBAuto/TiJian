@@ -9,6 +9,7 @@
 #import "PayResultViewController.h"
 #import "OrderInfoViewController.h"
 #import "OrderProductListController.h"
+#import "AppointmentViewController.h"
 
 @interface PayResultViewController ()
 
@@ -39,7 +40,15 @@
         if (_payResultType == PAY_RESULT_TYPE_Success) {
             
             imageView.image = [UIImage imageNamed:@"zhifuchenggong"];
-            text = [NSString stringWithFormat:@"您成功付款%@元",price];
+            
+            if (_needAppoint) { //需要前去预约
+                
+                text = [NSString stringWithFormat:@"您成功付款%@元",price];
+
+            }else
+            {
+                text = [NSString stringWithFormat:@"您成功付款%@元,预约已完成!",price];
+            }
 
         }else
         {
@@ -51,8 +60,6 @@
         NSAttributedString *string = [LTools attributedString:text keyword:price color:DEFAULT_TEXTCOLOR];
         [label1 setAttributedText:string];
         imageView.centerX = DEVICE_WIDTH / 2.f;
-
-        
         
         text = [NSString stringWithFormat:@"订单编号:%@",self.orderNum];
         UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(0, label1.bottom + 7, DEVICE_WIDTH, 14) title:text font:13 align:NSTextAlignmentCenter textColor:[UIColor colorWithHexString:@"959595"]];
@@ -70,14 +77,14 @@
         
         NSString *title;
         SEL selector;
-        if (_needAppoint > 0) {
+        if (_needAppoint) {
             
             title = @"前去预约";
             selector = @selector(clickToAppoint);
         }else
         {
-            title = @"返回首页";
-            selector = @selector(clickToShopping:);
+            title = @"查看预约";
+            selector = @selector(clickToMyAppointment:);
         }
         
         //继续购买
@@ -167,6 +174,29 @@
     UITabBarController *root = (UITabBarController *)ROOTVIEWCONTROLLER;
     if ([root isKindOfClass:[UITabBarController class]]) {
         root.selectedIndex = 1;
+    }
+}
+
+/**
+ *  前去个人中心-我的预约
+ *
+ *  @param btn
+ */
+- (void)clickToMyAppointment:(UIButton *)btn
+{
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    
+    UITabBarController *root = (UITabBarController *)ROOTVIEWCONTROLLER;
+    if ([root isKindOfClass:[UITabBarController class]]) {
+        root.selectedIndex = 2;
+        
+        LNavigationController *naviagationVc = [root.viewControllers objectAtIndex:2];
+        if (naviagationVc && [naviagationVc isKindOfClass:[UINavigationController class]]) {
+            //@"我的预约";
+            AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
+            m_order.hidesBottomBarWhenPushed = YES;
+            [naviagationVc pushViewController:m_order animated:YES];
+        }
     }
 }
 

@@ -414,10 +414,28 @@
         
         if (refund_status == 1 || refund_status == 2) {
             text1 = @"退款中";
+            
+            //已付款
+            BOOL is_appoint = [_orderModel.is_appoint boolValue];
+            if (is_appoint) {
+                text2 = @"前去预约";
+            }else
+            {
+                text2 = @"已预约";
+            }
+
         }else if (refund_status == 3){
             text1 = @"退款成功";
         }else if (refund_status == 4 || refund_status == 5){
             text1 = @"退款失败";
+            //已付款
+            BOOL is_appoint = [_orderModel.is_appoint boolValue];
+            if (is_appoint) {
+                text2 = @"前去预约";
+            }else
+            {
+                text2 = @"已预约";
+            }
         }
         
     }else
