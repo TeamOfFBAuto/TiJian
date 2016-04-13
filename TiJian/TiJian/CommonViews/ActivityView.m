@@ -217,7 +217,6 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
     NSInteger index = scrollView.contentOffset.x/CGRectGetWidth(self.scrollView.frame);
-    NSLog(@"index %ld",index);
     self.pageControl.currentPage = index;
     _currentPage = index;
 }

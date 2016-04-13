@@ -8,7 +8,6 @@
 
 #import "RecommendMedicalCheckController.h"
 #import "GProductCellTableViewCell.h"
-#import "GproductDetailViewController.h"
 #import "BrandRecommendController.h"
 #import "ProjectModel.h"
 #import "ProductModel.h"

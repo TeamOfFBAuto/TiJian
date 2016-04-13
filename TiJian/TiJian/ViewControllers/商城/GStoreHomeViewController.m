@@ -11,7 +11,6 @@
 #import "RefreshTableView.h"
 #import "CycleAdvModel.h"
 #import "GoneClassListViewController.h"
-#import "GproductDetailViewController.h"
 #import "GProductCellTableViewCell.h"
 #import "PhysicalTestResultController.h"
 #import "PersonalCustomViewController.h"
@@ -1130,9 +1129,9 @@
                 
             }else if ([amodel.redirect_type intValue] == 0){//应用内
                 if ([amodel.adv_type_val intValue] == 1) {//套餐 单品详情
-                    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-                    cc.productId = amodel.theme_id;
-                    [bself.navigationController pushViewController:cc animated:YES];
+                    
+                    [MiddleTools pushToProductDetailWithProductId:amodel.theme_id viewController:bself extendParams:nil];
+                    
                 }else if ([amodel.adv_type_val intValue] == 2){//企业预约首页
                     
                 }
@@ -1319,12 +1318,9 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    
     StoreHomeOneBrandModel *model_b = _table.dataArray[indexPath.section];
     ProductModel *aModel = model_b.list[indexPath.row];
-    cc.productId = aModel.product_id;
-    [self.navigationController pushViewController:cc animated:YES];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{

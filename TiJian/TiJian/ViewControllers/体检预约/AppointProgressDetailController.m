@@ -8,7 +8,7 @@
 
 #import "AppointProgressDetailController.h"
 
-@interface AppointProgressDetailController ()<UITableViewDataSource,UITableViewDelegate>
+@interface AppointProgressDetailController ()<UITableViewDelegate>
 {
     UITableView *_table;
     NSDictionary *_finished_info;//进度详情

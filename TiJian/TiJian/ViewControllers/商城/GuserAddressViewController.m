@@ -185,20 +185,4 @@
 }
 
 
-
-- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    NSLog(@"%s",__FUNCTION__);
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    
-}
-
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    NSLog(@"%s",__FUNCTION__);
-}
-
-
-
-
 @end

@@ -222,16 +222,4 @@
 }
 
 
-
-- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
-    NSLog(@"%s",__FUNCTION__);
-}
-
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    NSLog(@"%s",__FUNCTION__);
-}
-
-
-
-
 @end

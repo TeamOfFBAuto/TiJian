@@ -558,11 +558,6 @@
     return [OrderCell heightForAddress:aModel.address];
 }
 
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView
-{
-    
-}
-
 #pragma - mark UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

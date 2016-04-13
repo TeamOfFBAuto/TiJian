@@ -59,7 +59,7 @@
     if (![LTools NetworkReachable]) {
         
         
-        NSString *erroInfo = @"网络不可用";
+        NSString *erroInfo = @"网络不可用,请检查网络";
         NSDictionary *result = @{Erro_Info: erroInfo,
                                  Erro_Code:[NSString stringWithFormat:@"%d",Erro_NetworkUnReachable]};
         failBlock(result);
@@ -195,13 +195,12 @@
     NSData *data = operation.responseData;
     if (data.length == 0){
         
-        NSDictionary *failDic = @{Erro_Info:@"获取服务器数据异常",
+        NSDictionary *failDic = @{Erro_Info:Alert_ServerErroInfo,
                                   Erro_Code:NSStringFromInt(Erro_ServerException)};
         
         failBlock(failDic);
         
-        DDLOG(@"服务器返回数据异常:%@",operation.responseString);
-        DDLOG_CURRENT_METHOD;
+        DDLOG(@"%@:%@",Alert_ServerErroInfo,operation.responseString);
 
         return;
     }
@@ -234,7 +233,7 @@
             {
                 DDLOG(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
                 
-                erroInfo = erroInfo ? : @"获取数据异常";
+                erroInfo = erroInfo ? : Alert_ServerErroInfo;
                 NSDictionary *result = @{Erro_Info: erroInfo,
                                          Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 failBlock(result);
@@ -275,7 +274,7 @@
             break;
         case 3840:
             
-            errInfo = @"获取数据异常";
+            errInfo = Alert_ServerErroInfo;
             break;
         default:
             break;

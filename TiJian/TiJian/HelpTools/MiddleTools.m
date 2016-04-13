@@ -11,6 +11,7 @@
 #import "OrderModel.h"
 #import "ProductModel.h"
 #import "WebviewController.h"//内置浏览器
+#import "GproductDetailViewController.h"//单品详情
 
 @implementation MiddleTools
 
@@ -97,6 +98,22 @@
     web.moreInfo = moreInfo;
     web.hidesBottomBarWhenPushed = hiddenBottom;
     [viewController.navigationController pushViewController:web animated:YES];
+}
+
+/**
+ *  跳转至单品详情
+ *
+ *  @param productId      id
+ *  @param viewController
+ *  @param prams 增加拓张性
+ */
++ (void)pushToProductDetailWithProductId:(NSString *)productId
+                           viewController:(UIViewController *)viewController
+                                   extendParams:(NSDictionary *)extendParams
+{
+    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+    cc.productId = productId;
+    [viewController.navigationController pushViewController:cc animated:YES];
 }
 
 @end

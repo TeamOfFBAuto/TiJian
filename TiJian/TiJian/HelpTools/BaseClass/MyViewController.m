@@ -107,6 +107,9 @@
 - (void)controlTopButtonWithScrollView:(UIScrollView *)scrollView
 {
     self.scrollView = scrollView;
+    if (!_topButton) {
+        self.topButton.bottom = scrollView.bottom - 40 - 20;
+    }
     
     UIScrollView *scroll = scrollView;
     

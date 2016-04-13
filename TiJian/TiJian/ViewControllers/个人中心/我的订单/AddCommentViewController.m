@@ -8,7 +8,6 @@
 
 #import "AddCommentViewController.h"
 #import "AddCommentDetailViewController.h"
-#import "GproductDetailViewController.h"
 
 @interface AddCommentViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -155,10 +154,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *model = _dataArray[indexPath.row];
-    cc.productId = model.product_id;
-    [self.navigationController pushViewController:cc animated:YES];
+    [MiddleTools pushToProductDetailWithProductId:model.product_id viewController:self extendParams:nil];
 }
 
 

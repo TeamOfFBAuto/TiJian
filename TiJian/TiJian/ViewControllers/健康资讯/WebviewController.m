@@ -9,7 +9,6 @@
 #import "WebviewController.h"
 #import "UIWebView+AFNetworking.h"
 #import "ArticleListController.h"
-#import "GproductDetailViewController.h"//单品详情
 
 @interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate>
 {
@@ -125,9 +124,7 @@
         NSArray *arr = [relativeUrl componentsSeparatedByString:@":"];
         if (arr.count > 1) {
             NSString *productId = [arr lastObject];
-            GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-            cc.productId = productId;
-            [self.navigationController pushViewController:cc animated:YES];
+            [MiddleTools pushToProductDetailWithProductId:productId viewController:self extendParams:nil];
             
             return NO;
         }

@@ -67,4 +67,15 @@ typedef NS_ENUM(NSInteger ,SourceType) {
                            moreInfo:(BOOL)moreInfo
                        hiddenBottom:(BOOL)hiddenBottom;
 
+/**
+ *  跳转至单品详情
+ *
+ *  @param productId      id
+ *  @param viewController
+ *  @param extendParams 增加拓张性
+ */
++ (void)pushToProductDetailWithProductId:(NSString *)productId
+                          viewController:(UIViewController *)viewController
+                                   extendParams:(NSDictionary *)extendParams;
+
 @end

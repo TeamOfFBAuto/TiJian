@@ -829,15 +829,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if ([self productsSection:indexPath.section]) {
-//        
-//        if ([self productIndexPath:indexPath]) {
-//            
-//            ShopModel *shopModel = _shop_arr[indexPath.section - 1];
-//            ProductModel *aModel = [shopModel.productsArray objectAtIndex:indexPath.row];
-//            [MiddleTools pushToProductDetailWithId:aModel.product_id fromViewController:self lastNavigationHidden:NO hiddenBottom:NO];
-//        }
-//    }
+    if ([self productsSection:indexPath.section]) {
+        
+        if ([self productIndexPath:indexPath]) {
+            
+            BrandModel *b_model = _dataArray[indexPath.section];
+            ProductModel *aModel = [b_model.productsArray objectAtIndex:indexPath.row];
+            [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
+            
+        }
+    }
 
 }
 

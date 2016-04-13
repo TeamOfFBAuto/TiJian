@@ -459,7 +459,7 @@
         [self getDaijinquanNum];
         [self getYouhuiquanNum];
         [self createAreaPickView];
-        [self creatTabFooterViewWithUseState:nil];
+        [self creatTabFooterViewWithUseState:NO];
         [_tab reloadData];
         
     } failBlock:^(NSDictionary *result) {

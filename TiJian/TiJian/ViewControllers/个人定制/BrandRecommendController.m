@@ -10,7 +10,6 @@
 #import "BrandRecomendCell.h"
 #import "ConfirmOrderViewController.h"
 #import "ProductModel.h"
-#import "GproductDetailViewController.h"
 
 @interface BrandRecommendController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -158,9 +157,7 @@
  */
 - (void)pushToSetmealDetailWithId:(NSString *)productId
 {
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    cc.productId = productId;
-    [self.navigationController pushViewController:cc animated:YES];
+    [MiddleTools pushToProductDetailWithProductId:productId viewController:self extendParams:nil];
 }
 
 - (void)clickToPay:(UIButton *)btn

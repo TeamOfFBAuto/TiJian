@@ -7,7 +7,6 @@
 //
 
 #import "HospitalDetailViewController.h"
-#import "GproductDetailViewController.h"
 #import "MapViewController.h"
 #import "LPhotoBrowser.h"
 #import "ProductModel.h"
@@ -389,9 +388,7 @@
 {
     int index = (int)btn.tag - 100;
     ProductModel *aModel = _recommendArray[index];
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    cc.productId = aModel.product_id;
-    [self.navigationController pushViewController:cc animated:YES];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
 }
 
 - (void)clickToMap

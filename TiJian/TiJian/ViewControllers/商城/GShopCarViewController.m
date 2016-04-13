@@ -798,9 +798,7 @@
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     cc.isShopCarPush = YES;
     cc.productId = model.product_id;
-    
     [self.navigationController pushViewController:cc animated:YES];
-    
     
 }
 

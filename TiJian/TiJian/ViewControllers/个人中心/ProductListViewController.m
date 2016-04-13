@@ -8,7 +8,6 @@
 
 #import "ProductListViewController.h"
 #import "GProductCellTableViewCell.h"
-#import "GproductDetailViewController.h"
 
 @interface ProductListViewController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -127,14 +126,17 @@
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    ProductModel *model = _table.dataArray[indexPath.row];
-    cc.productId = model.product_id;
-    [self.navigationController pushViewController:cc animated:YES];
+    ProductModel *aModel = _table.dataArray[indexPath.row];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     return [GProductCellTableViewCell getCellHight];
+}
+
+-(void)refreshScrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self controlTopButtonWithScrollView:scrollView];
 }
 
 #pragma - mark UITableViewDataSource

@@ -52,7 +52,7 @@
 {
     [super viewWillAppear:animated];
     _isClick = YES;
-    [self setNavigationItemTitleView];
+//    [self setNavigationItemTitleView];
     
     [self notifyUpdateUnreadMessageCount];
     
@@ -62,7 +62,7 @@
     [super viewDidAppear:animated];
     //showConnectingStatusOnNavigatorBar设置为YES时，需要重写setNavigationItemTitleView函数来显示已连接时的标题。
     self.showConnectingStatusOnNavigatorBar = YES;
-    [super updateConnectionStatusOnNavigatorBar];
+//    [super updateConnectionStatusOnNavigatorBar];
 }
 
 - (void)didReceiveMemoryWarning {

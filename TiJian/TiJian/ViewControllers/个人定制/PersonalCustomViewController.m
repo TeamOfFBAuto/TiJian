@@ -1129,7 +1129,7 @@
         [self addSortArrayWithQuestionId:questionId extension:YES];
     }
     
-    _questionId = [NSString stringWithFormat:@"%@_%ld",Q_Extension,questionId];
+    _questionId = [NSString stringWithFormat:@"%@_%ld",Q_Extension,(long)questionId];
     
     DDLOG(@"extension questionId: %@",_questionId);
     

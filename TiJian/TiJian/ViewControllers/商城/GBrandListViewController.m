@@ -16,7 +16,6 @@
 #import "GmyFootViewController.h"
 #import "GProductCellTableViewCell.h"
 #import "GoneClassListViewController.h"
-#import "GproductDetailViewController.h"
 #import "GTranslucentSideBar.h"
 #import "GPushView.h"
 #import "GBrandHomeViewController.h"
@@ -575,12 +574,9 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-    
     StoreHomeOneBrandModel *model_b = _rTab.dataArray[indexPath.section];
     ProductModel *aModel = model_b.list[indexPath.row];
-    cc.productId = aModel.product_id;
-    [self.navigationController pushViewController:cc animated:YES];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
 }
 
 

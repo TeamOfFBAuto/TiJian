@@ -476,11 +476,6 @@
     return 60.f;
 }
 
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView
-{
-    
-}
-
 -(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
 {
     return 5.f;

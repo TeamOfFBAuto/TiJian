@@ -11,7 +11,6 @@
 #import "RefreshTableView.h"
 #import "CycleAdvModel.h"
 #import "GoneClassListViewController.h"
-#import "GproductDetailViewController.h"
 #import "GProductCellTableViewCell.h"
 #import "PhysicalTestResultController.h"
 #import "PersonalCustomViewController.h"

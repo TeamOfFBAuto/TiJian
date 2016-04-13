@@ -9,7 +9,6 @@
 #import "GmyFootViewController.h"
 #import "ProductModel.h"
 #import "GProductCellTableViewCell.h"
-#import "GproductDetailViewController.h"
 #import "GCustomSearchViewController.h"
 #import "GUpToolView.h"
 
@@ -283,17 +282,9 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     
-    GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     ProductModel *model = _rtab.dataArray[indexPath.row];
-    cc.productId = model.product_id;
-    [self.navigationController pushViewController:cc animated:YES];
-    
-    
+    [MiddleTools pushToProductDetailWithProductId:model.product_id viewController:self extendParams:nil];
 }
-
-- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-}
-
 
 #pragma mark - 网络请求
 

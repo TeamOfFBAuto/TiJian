@@ -459,10 +459,10 @@
     NSLog(@"didAddAnnotationViews");
     
     //声明解析时对坐标数据的位置区域的筛选，包括经度和纬度的最小值和最大值
-    CLLocationDegrees minLat;
-    CLLocationDegrees maxLat;
-    CLLocationDegrees minLon;
-    CLLocationDegrees maxLon;
+//    CLLocationDegrees minLat;
+//    CLLocationDegrees maxLat;
+//    CLLocationDegrees minLon;
+//    CLLocationDegrees maxLon;
     
 //    CLLocationCoordinate2D user = _mapView.
     

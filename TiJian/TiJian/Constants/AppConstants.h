@@ -42,7 +42,7 @@
 //start
 #ifdef DEBUG
 
-#define DDLOG( s , ...) NSLog( @"%@(%d):<%@> %@",NSStringFromClass([self class]),__LINE__,NSStringFromSelector(_cmd),[NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#define DDLOG( s , ...) NSLog( @"%@(%d):<%@> %@",[[NSString stringWithUTF8String:__FILE__] lastPathComponent],__LINE__,NSStringFromSelector(_cmd),[NSString stringWithFormat:(s), ##__VA_ARGS__] )
 //#define DDLOG( s , ...) NSLog( @"<%@:(%d)> %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 #define DDLOG_CURRENT_METHOD NSLog(@"%@-%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd))
 
@@ -85,9 +85,6 @@
 //秒杀相关描述语
 #define MIAOSHAO_END_TEXT @"秒杀已结束"
 #define MIAOSHAO_PRE_TEXT @"秒杀结束倒计时:"
-
-#define Alert_ServerErroInfo @"后台小哥开小差了,请稍后再试!"//服务端报错提醒
-
 
 //分页网络请求
 #define G_PER_PAGE 20
