@@ -591,10 +591,22 @@
     
     NSString *theString;
     
+    
+    int cityId = 0;
+    int procinceId = 0;
+    
+    
     if ([[dic stringValueForKey:@"province"]isEqualToString:@"北京市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"上海市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"天津市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"重庆市"]) {
         theString = [dic stringValueForKey:@"province"];
+        
+        procinceId = [GMAPI cityIdForName:theString];
+        cityId = 0;
+        
     }else{
         theString = [dic stringValueForKey:@"city"];
+        
+        procinceId =[GMAPI cityIdForName:[dic stringValueForKey:@"province"]];
+        cityId = [GMAPI cityIdForName:[dic stringValueForKey:@"city"]];
     }
     
     self.nowLocationBtn_cityid = [GMAPI cityIdForName:theString];
@@ -608,9 +620,33 @@
     
     
     self.nowLocationBtn_c.userInteractionEnabled = YES;
-    
-    
     [self.nowLocationBtn_c addTarget:self action:@selector(nowLocationBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    //如果首页正在定位时点进来的话 更新位置
+    if ([self.delegate.leftLabel.text isEqualToString:@"正在定位..."]) {
+        
+        if ([LTools isEmpty:theString]) {
+            self.delegate.leftLabel.text = @"北京市";
+            NSDictionary *cachDic = @{
+                                      @"province":[NSString stringWithFormat:@"%d",1000],
+                                      @"city":[NSString stringWithFormat:@"%d",1005]
+                                      };
+            [GMAPI cache:cachDic ForKey:USERLocation];
+        }else{
+            self.delegate.leftLabel.text = theString;
+            NSDictionary *cachDic = @{
+                                      @"province":[NSString stringWithFormat:@"%d",procinceId],
+                                      @"city":[NSString stringWithFormat:@"%d",cityId]
+                                      };
+            [GMAPI cache:cachDic ForKey:USERLocation];
+        }
+    }
+    
+    
+    
+    
+    
     
 }
 
