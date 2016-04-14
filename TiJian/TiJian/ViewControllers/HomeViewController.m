@@ -140,9 +140,7 @@
     
     //获取健康咨询
     [self getHealthArticlelist];
-    
-    //未读活动
-//    [self getUnreadActivityNum];
+
     
     //定位相关
     [self creatNavcLeftLabel];
@@ -488,7 +486,10 @@
     }
     
     @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
+                                                   api:api parameters:params
+                                 constructingBodyBlock:nil
+                                            completion:^(NSDictionary *result) {
         
         int num = [result[@"num"]intValue];
         int show = [result[@"show"]intValue];
@@ -521,7 +522,11 @@
 {
     NSDictionary *params = @{@"page":@"1",@"per_page":@"1"};
     __weak typeof(self)weakSelf = self;
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:HEALTH_ACTICAL_LIST parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
+                                                   api:HEALTH_ACTICAL_LIST
+                                            parameters:params
+                                 constructingBodyBlock:nil
+                                            completion:^(NSDictionary *result) {
         
         NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
         [weakSelf setHealthViewWithModel:[temp lastObject]];

@@ -22,7 +22,6 @@
     CGFloat _recommentTop;//推荐部分y坐标
 }
 
-
 @end
 
 @implementation HospitalDetailViewController

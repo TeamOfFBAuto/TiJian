@@ -49,8 +49,6 @@
     
     sleep(1);
     
-    DDLOG(@"asdhkajdkasjkjkladsjkdjl");
-    
     //友盟统计
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
     [MobClick setLogEnabled:YES];

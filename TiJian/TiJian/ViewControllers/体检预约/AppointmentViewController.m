@@ -515,7 +515,7 @@
     if ([checkuper_info isKindOfClass:[NSDictionary class]]) {
         
         NSString *idcard = [checkuper_info objectForKey:@"id_card"];
-        NSString *name = checkuper_info[@"user_name"];
+        NSString *name = checkuper_info[@"family_user_name"];
         if (idcard && name) {
             user = [[UserInfo alloc]init];
             user.id_card = idcard;
@@ -525,6 +525,7 @@
             user.gender = NSStringFromInt([checkuper_info[@"gender"] intValue]);
             user.mobile = checkuper_info[@"mobile"];
         }
+
     }
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
