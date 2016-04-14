@@ -525,7 +525,6 @@
             user.gender = NSStringFromInt([checkuper_info[@"gender"] intValue]);
             user.mobile = checkuper_info[@"mobile"];
         }
-
     }
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
