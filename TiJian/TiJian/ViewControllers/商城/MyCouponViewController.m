@@ -427,7 +427,10 @@
         
         int p_nums = 0;
         for (ProductModel *model in self.delegate.dataArray) {
-            p_nums += [model.product_num intValue];
+            if (model.is_append.intValue != 1) {
+                p_nums += [model.product_num intValue];
+            }
+            
         }
         
         

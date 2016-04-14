@@ -47,6 +47,9 @@
 @property(nonatomic,assign)int disable_use_reason;//不能使用原因    1=>已经使用过， 2=>过期
 @property(nonatomic,strong)NSString *vouchers_price;//代金券金额
 @property(nonatomic,strong)NSString *company_name;//代金券公司名
+@property(nonatomic,strong)NSString *company_id;//公司id
+
+@property(nonatomic,strong)NSDictionary *checkuper_info;//代金券绑定的体检人信息
 
 
 

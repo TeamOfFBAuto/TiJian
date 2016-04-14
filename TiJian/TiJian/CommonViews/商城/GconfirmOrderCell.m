@@ -170,7 +170,7 @@
             [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(index_str.length+1+model.product_name.length, keyword.length)];
             label_p_name.attributedText = aaa;
         }else{
-            label_p_name.text = model.product_name;
+            label_p_name.text = [NSString stringWithFormat:@"%d、%@",i+1,model.product_name];
         }
         
         

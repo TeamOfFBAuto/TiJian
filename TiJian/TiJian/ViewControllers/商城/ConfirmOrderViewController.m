@@ -554,7 +554,9 @@
     int p_nums = 0;
     for (ProductModel *model in self.dataArray) {
         [dic setValue:@"1" forKey:model.brand_id];
-        p_nums += [model.product_num intValue];
+        if (model.is_append.intValue != 1) {
+            p_nums += [model.product_num intValue];
+        }
     }
     brand_ids_Array = [dic allKeys];
     NSString *brand_ids_str = [brand_ids_Array componentsJoinedByString:@","];
@@ -573,6 +575,7 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
+    
     [_request requestWithMethod:YJYRequstMethodGet api:url parameters:parame constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSDictionary *listDic = [result dictionaryValueForKey:@"list"];
         //可用
@@ -1296,6 +1299,13 @@
     
 }
 
+-(void)setUserSelectDaijinquanArray:(NSArray *)userSelectDaijinquanArray{
+    _userSelectDaijinquanArray = userSelectDaijinquanArray;
+    [_tab reloadData];
+}
+
+
+
 
 //获取开关按钮的值
 -(void)getValue:(UISwitch*)sender{
@@ -1928,15 +1938,55 @@
     
     NSArray *arr = _theData[indexPath.section];
     ProductModel *model = arr[indexPath.row];
+    
+    //判断用户选择的代金券里是否有限定体检人信息的代金券
+    BOOL haveLimitState = NO;
+    UserInfo *userModel_limit;
+    for (CouponModel *couponModel in self.userSelectDaijinquanArray) {
+        if ([couponModel.checkuper_info isKindOfClass:[NSDictionary class]]) {
+            if (couponModel.company_id && [couponModel.checkuper_info allKeys].count>0) {
+                haveLimitState = YES;
+                userModel_limit = [[UserInfo alloc]initWithDictionary:couponModel.checkuper_info];
+                for (HospitalModel *model_hos in model.hospitalArray) {
+                    model_hos.usersArray = [NSMutableArray arrayWithObjects:userModel_limit, nil];
+                }
+                if (model.hospitalArray.count>0) {
+                    [GMAPI showAutoHiddenMBProgressWithText:@"该代金券已绑定体检人" addToView:self.view];
+                }
+                
+            }
+        }
+        
+    }
+    if (haveLimitState) {
+        model.isLimitUserInfo = YES;
+    }else{
+        model.isLimitUserInfo = NO;
+    }
+    
     [cell loadCustomViewWithModel:model];
     __weak typeof (self)bself = self;
     
     [cell setCellClickedBlock:^(CellClickedBlockType theType, ProductModel *theProduct, HospitalModel *theHospital, UserInfo *theUser) {
         if (theType == CellClickedBlockType_yuyue) {//添加预约时间、分院
             ChooseHopitalController *cc = [[ChooseHopitalController alloc]init];
-            if (self.voucherId) {//绑定体检人信息的代金券跳转过来的
-                [cc selectCenterUserInfo:self.user_voucher productModel:model updateBlock:^(NSDictionary *params) {
+            
+
+            
+            NSLog(@"%@",self.user_voucher);
+            NSLog(@"%@",self.voucherId);
+            
+            if (theProduct.isLimitUserInfo) {//绑定体检人信息
+                UserInfo *userInfo;
+                for (CouponModel *model_coupon in self.userSelectDaijinquanArray) {
+                    if (model_coupon.company_id) {
+                        userInfo = [[UserInfo alloc]initWithDictionary:model_coupon.checkuper_info];
+                    }
+                }
+                
+                [cc selectCenterUserInfo:userInfo productModel:model updateBlock:^(NSDictionary *params) {
                     //此处返回的是productmodel     [params objectForKey:@"productModel"];
+                    
                     [_tab reloadData];
                     
                 }];

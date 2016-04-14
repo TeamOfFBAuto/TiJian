@@ -80,7 +80,7 @@
 
 @property(nonatomic,retain)NSNumber *is_append;//是否是加项
 
-@property(nonatomic,assign)BOOL isLimitUserInfo;
+@property(nonatomic,assign)BOOL isLimitUserInfo;//是否限定体检人
 
 
 @property(nonatomic,strong)NSMutableArray *hospitalArray;//分院数组 里面装HopitalModel
