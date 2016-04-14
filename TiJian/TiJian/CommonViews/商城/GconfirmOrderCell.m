@@ -465,6 +465,7 @@
     
 }
 
+
 //更改体检人
 -(void)cLabelClickedToChooseUser:(UITapGestureRecognizer*)sender{
     GLabel *label = (GLabel*)sender.view;
