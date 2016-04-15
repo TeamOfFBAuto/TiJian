@@ -334,6 +334,12 @@
             }
         }
         
+        if ([self.theProductModel.is_favor intValue] == 1) {//已收藏
+            _shoucang_btn.selected = YES;
+        }else{
+            _shoucang_btn.selected = NO;
+        }
+        
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
         for (NSDictionary *dic in self.theProductModel.coupon_list) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
