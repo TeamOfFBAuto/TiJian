@@ -196,20 +196,22 @@
         //品牌名称
         UILabel *brandNameLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         brandNameLabel.textColor = [UIColor blackColor];
-        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",self.delegate.theProductModel.brand_name];
+        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",[LTools isEmpty:self.delegate.theProductModel.brand_name]?@"":self.delegate.theProductModel.brand_name];
         [cView addSubview:brandNameLabel];
         
         //适用性别
         UILabel *genderLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         NSString *attributedText1 = @"适用性别：";
-        NSString *attributedText2;
+        NSString *attributedText2 = @"";
         if ([self.delegate.theProductModel.gender_id intValue] == 1) {//男
             attributedText2 = @"[仅供男性使用]";
         }else if ([self.delegate.theProductModel.gender_id intValue] == 2){//女
             attributedText2 = @"[仅供女性使用]";
-        }else{
+        }else if ([self.delegate.theProductModel.gender_id intValue] == 99){
             attributedText2 = @"[男女不限]";
         }
+        
+        
         
         NSAttributedString *attributedText4 = [LTools attributedString:[NSString stringWithFormat:@"%@%@",attributedText1,attributedText2] keyword:attributedText2 color:RGBCOLOR(224, 103, 20)];
         [genderLabel setAttributedText:attributedText4];
@@ -258,7 +260,6 @@
 
         
         //适用地区
-        
         UILabel *city_titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         city_titleLabel.text = @"适用地区:";
         [cView addSubview:city_titleLabel];

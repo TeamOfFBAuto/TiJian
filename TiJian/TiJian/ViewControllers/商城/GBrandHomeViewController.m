@@ -556,9 +556,8 @@
         _request = [YJYRequstManager shareInstance];
     }
     
-    NSDictionary *dic = @{
-                          @"brand_id":self.brand_id
-                          };
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    [dic safeSetString:self.brand_id forKey:@"brand_id"];
     
     [_request requestWithMethod:YJYRequstMethodGet api:StoreHomeDetail parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [_tabHeaderView reloadViewWithBrandDic:result classDic:nil];
@@ -598,13 +597,15 @@
         
         
     }else{
-        dic = @{
-                @"province_id":[GMAPI getCurrentProvinceId],
-                @"city_id":[GMAPI getCurrentCityId],
-                @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":NSStringFromInt(PAGESIZE_MID),
-                @"brand_id":self.brand_id
-                };
+        
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithCapacity:1];
+        [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+        [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic safeSetString:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+        [temp_dic safeSetString:self.brand_id forKey:@"brand_id"];
+        
+        dic = temp_dic;
         
     }
     

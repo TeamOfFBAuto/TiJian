@@ -304,7 +304,7 @@
 }
 
 
-//套餐详情
+//套餐详情和看了又看
 -(void)getProductDetail{
     
     NSDictionary *parameters;
@@ -348,7 +348,6 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
 }
 
@@ -358,8 +357,6 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    
-    
     
     NSString *theP_id;
     NSString *theC_id;
@@ -380,8 +377,6 @@
         theP_id = [GMAPI getCurrentProvinceId];
         theC_id = [GMAPI getCurrentCityId];
     }
-    
-    
     
     NSDictionary *dic = @{
                           @"brand_id":self.theProductModel.brand_id,
@@ -459,32 +454,14 @@
             [array addObject:model];
         }
         _productCommentArray = array;
+        [_tab reloadData];
         
     } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
     }];
     
 }
 
-
-#pragma mark - 网络请求完成
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
-    if ([keyPath isEqualToString:@"contentSize"]) {
-        return;
-    }
-    NSNumber *num = [change objectForKey:@"new"];
-    if ([num intValue] == 5) {
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
-        [self creatTabOfProductDetail];
-        [self creatHiddenView];
-        [self creatDownView];
-        [self creatUpToolView];
-    }
-    
-}
 
 
 #pragma mark - 界面数据更新
@@ -525,7 +502,6 @@
         
         
     } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
 }
@@ -566,7 +542,6 @@
         }
         
     } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
     [self updateShopCarNum];
@@ -821,7 +796,6 @@
                           @"product_id":self.theProductModel.product_id,
                           @"authcode":[UserInfo getAuthkey]
                           };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     NSString *api;
     if (type) {//已收藏
@@ -870,10 +844,14 @@
 
 //跳转品牌店
 -(void)goToBrandStoreHomeVc{
-    GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
-    cc.brand_name = self.theProductModel.brand_name;
-    cc.brand_id = self.theProductModel.brand_id;
-    [self.navigationController pushViewController:cc animated:YES];
+    
+    if (![LTools isEmpty:self.theProductModel.brand_id]) {
+        GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
+        cc.brand_name = self.theProductModel.brand_name;
+        cc.brand_id = self.theProductModel.brand_id;
+        [self.navigationController pushViewController:cc animated:YES];
+    }
+    
 }
 
 
