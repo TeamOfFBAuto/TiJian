@@ -493,7 +493,7 @@
 + (BOOL) isEmpty:(NSString *) str {
     
     if (![str isKindOfClass:[NSString class]]) {
-        return NO;
+        return YES;
     }
     
     if (!str) {

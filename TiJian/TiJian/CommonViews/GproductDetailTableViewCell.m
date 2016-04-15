@@ -43,15 +43,12 @@
         if (theindexPath.row == 0) {
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
-            
-            
             __weak typeof (self)bself = self;
             [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 
                 if (bself.delegate) {
                     bself.delegate.gouwucheProductImage = image;
                 }
-                
                 
             }];
             [self.contentView addSubview:imv];
@@ -61,7 +58,7 @@
             //商品名
             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(imv.frame)+15, DEVICE_WIDTH - 20, 0)];
             titleLabel.font = [UIFont systemFontOfSize:14];
-            titleLabel.text = [NSString stringWithFormat:@"%@ %@",self.delegate.theProductModel.brand_name,self.delegate.theProductModel.setmeal_name];
+            titleLabel.text = [NSString stringWithFormat:@"%@ %@",[LTools isEmpty:self.delegate.theProductModel.brand_name]?@"":self.delegate.theProductModel.brand_name,[LTools isEmpty:self.delegate.theProductModel.setmeal_name]?@"":self.delegate.theProductModel.setmeal_name];
             [titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(10, CGRectGetMaxY(imv.frame)+15) width:DEVICE_WIDTH - 20];
             [self.contentView addSubview:titleLabel];
             height += titleLabel.frame.size.height+15;
@@ -86,16 +83,20 @@
             }
             
             
+            if ([LTools isEmpty:xianjia] || [LTools isEmpty:yuanjia]) {
+                
+            }else{
+                NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
+                NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
+                [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
+                [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, xianjia.length+1)];
+                
+                [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+                [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+                [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
+                priceLabel.attributedText = aaa;
+            }
             
-            NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
-            NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
-            [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
-            [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, xianjia.length+1)];
-            
-            [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-            [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
-            priceLabel.attributedText = aaa;
             [self.contentView addSubview:priceLabel];
             height += priceLabel.frame.size.height+12;
             
