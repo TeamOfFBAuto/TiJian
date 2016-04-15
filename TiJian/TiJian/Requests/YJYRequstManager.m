@@ -119,9 +119,15 @@
             [url appendString:param];
         }
         
-        DDLOG(@"urlString --- %@",baseUrl);
-        DDLOG(@"params --- %@",paramsDic);
-        DDLOG(@"url---:%@",url);
+        if (method == YJYRequstMethodGet)
+        {
+            DDLOG(@"Method:get url:%@",url);
+            
+        }else if (method == YJYRequstMethodPost)
+        {
+            DDLOG(@"Method:post url:%@",baseUrl);
+            DDLOG(@"post params:%@",paramsDic);
+        }
         
         if (method == YJYRequstMethodGet) {
             

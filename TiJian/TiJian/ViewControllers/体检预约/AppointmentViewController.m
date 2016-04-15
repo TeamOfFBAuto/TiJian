@@ -31,6 +31,7 @@
     NSArray *_no_expired;//未过期
     NSArray *_finished;//已体检
     int _currentPage;//当前页面
+    NSString *_companyName;//公司名字
 }
 @property(nonatomic,retain)UIScrollView *scroll;
 @property(nonatomic,retain)UIView *allNoDataView;//全部没有数据view
@@ -361,6 +362,16 @@
             self.allNoDataView = nil;
         }
         
+        _companyName = nil;
+        /**
+         *  获取公司名字,单个人只可能有一个公司套餐或者代金卷
+         */
+        ProductModel *p_model = [_company lastObject];
+            NSDictionary *company_info = p_model.company_info;
+            if ([company_info isKindOfClass:[NSDictionary class]]) {
+                _companyName = company_info[@"company_name"];
+            }
+        
         [[self tableViewWithIndex:index] finishReloadingData];
         
     }
@@ -677,9 +688,14 @@
         
         UIView *head = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 40.f)];
         head.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
-        NSString *title = section == 0 ? @"公司购买套餐" : @"个人购买套餐";
+        
+        if (_companyName== nil) {
+            _companyName = @"公司购买套餐";
+        }
+        
+        NSString *title = @"套餐";
         if (section == 0) {
-            title = @"公司购买套餐";
+            title = _companyName;
         }else if (section == 1){
             title = @"个人购买套餐";
         }else if (section == 2){
@@ -689,7 +705,7 @@
         }else if (section == 4){
             title = @"已体检";
         }
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 120, 40) title:title font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"989898"]];
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH - 30, 40) title:title font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"989898"]];
         [head addSubview:label];
         return head;
     }
