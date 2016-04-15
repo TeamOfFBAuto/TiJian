@@ -44,7 +44,7 @@
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/470])];
             
             __weak typeof (self)bself = self;
-            [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [imv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 
                 if (bself.delegate) {
                     bself.delegate.gouwucheProductImage = image;
@@ -163,7 +163,7 @@
         height += brandNameView.frame.size.height;
         
         UIImageView *logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 20, 20)];
-        [logoImv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.brand_logo] placeholderImage:nil];
+        [logoImv l_setImageWithURL:[NSURL URLWithString:self.delegate.theProductModel.brand_logo] placeholderImage:DEFAULT_HEADIMAGE];
         logoImv.layer.cornerRadius = 10;
         [brandNameView addSubview:logoImv];
         
