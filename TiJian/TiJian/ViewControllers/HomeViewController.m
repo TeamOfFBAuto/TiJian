@@ -30,6 +30,8 @@
 {
     NSArray *_activityArray;//活动列表
     int _unreadActivityNum;//未读活动总数
+    
+    NSDictionary *_needChangeLocationDic;//需要更改的用户定位信息
 }
 
 @property(nonatomic,retain)UIView *healthView;//背景view
@@ -169,52 +171,65 @@
 
 #pragma mark - 定位相关 gm - start
 
-//获取本地存储的位置信息
+//开启定位 如果定位城市和用户左上角选择城市不同的话 提示是否修改
 -(void)getLocalLocation
 {
-    if ([GMAPI cacheForKey:USERLocation]) {
-        NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
-        NSString *str;
-        if ([[dic stringValueForKey:@"city"]intValue] == 0) {
-            int theId = [[dic stringValueForKey:@"province"]intValue];
-            str = [GMAPI cityNameForId:theId];
-        }else{
-            int theId = [[dic stringValueForKey:@"city"]intValue];
-            
-            str = [GMAPI getCityNameOf4CityWithCityId:theId];
-            
-        }
-        self.leftLabel.text = str;
-        
+    //每次启动软件都会定位
+    [self getjingweidu];
 
-        [self getUnreadActivityNum];//获取未读消息
-        
-    }else{
-        
-        [self getjingweidu];
-        
-    }
+//    if ([GMAPI cacheForKey:USERLocation]) {
+//        NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
+//        NSString *str;
+//        if ([[dic stringValueForKey:@"city"]intValue] == 0) {
+//            int theId = [[dic stringValueForKey:@"province"]intValue];
+//            str = [GMAPI cityNameForId:theId];
+//        }else{
+//            int theId = [[dic stringValueForKey:@"city"]intValue];
+//            
+//            str = [GMAPI getCityNameOf4CityWithCityId:theId];
+//            
+//        }
+//        self.leftLabel.text = str;
+//        
+//        [self getUnreadActivityNum];//获取未读消息
+//        
+//    }else{
+//        
+//        [self getjingweidu];
+//        
+//    }
 }
 
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {
-        
-        
-    }else if (buttonIndex == 1){
-        
-        if (IOS8_OR_LATER) {
+    
+    if (alertView.tag == 25) {//切换定位城市的alerView
+        if (buttonIndex == 0) {
             
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString]];
-        }else
-        {
-            NSString *title = [NSString stringWithFormat:@"定位服务开启"];
-            NSString *mes = [NSString stringWithFormat:@"请在系统设置中开启定位服务\n设置->隐私->定位服务->%@",[LTools getAppName]];
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:mes delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [alert show];
+        }else if (buttonIndex == 1){
+            NSDictionary *cachDic = _needChangeLocationDic;
+            [GMAPI cache:cachDic ForKey:USERLocation];
+            [self updateLeftUpLocationStr];
+        }
+        
+        
+    }else{
+        if (buttonIndex == 0) {
+        }else if (buttonIndex == 1){
+            if (IOS8_OR_LATER) {
+                
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+            }else
+            {
+                NSString *title = [NSString stringWithFormat:@"定位服务开启"];
+                NSString *mes = [NSString stringWithFormat:@"请在系统设置中开启定位服务\n设置->隐私->定位服务->%@",[LTools getAppName]];
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:mes delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                [alert show];
+            }
         }
     }
+    
 }
 
 
@@ -231,37 +246,15 @@
             [weakSelf theLocationDictionary:dic];
         }];
         
-    }else
-    {
-//        //上次提醒时间
-//        NSDate *date = [LTools objectForKey:@"home_location_time"];
-//        //和现在时间比较
-//        NSInteger interval = [date daysBetweenDate:[NSDate date]];
-//        DDLOG(@"上次提醒间隔天数:%ld",interval);
-//        
-//        //设置7天一提醒
-//        if (interval >= 7 || !date) {
+    }else{
+
             NSString *title = [NSString stringWithFormat:@"打开\"定位服务\"来允许\"%@\"确定您的位置",[LTools getAppName]];
             NSString *mes = nil;
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:mes delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
             [alert show];
-//        }
     }
 }
-    
-    
-//    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-//    if (kCLAuthorizationStatusRestricted == status) {
-//        NSLog(@"kCLAuthorizationStatusRestricted 开启定位失败");
-//        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"开启定位失败" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-//        [al show];
-//        return;
-//    }else if (kCLAuthorizationStatusDenied == status){
-//        NSLog(@"请允许河马医生使用定位服务");
-//        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"请允许河马医生使用定位服务" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-//        [al show];
-//        return;
-//    }
+
 
 - (void)theLocationDictionary:(NSDictionary *)dic{
     
@@ -276,7 +269,6 @@
     
     int cityId = 0;
     int procinceId = 0;
-    
     if ([[dic stringValueForKey:@"province"]isEqualToString:@"北京市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"上海市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"天津市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"重庆市"]) {
         theString = [dic stringValueForKey:@"province"];
         procinceId = [GMAPI cityIdForName:theString];
@@ -288,27 +280,84 @@
     }
     
     
-    if ([LTools isEmpty:theString]) {
-        self.leftLabel.text = @"北京市";
-        NSDictionary *cachDic = @{
-                                  @"province":[NSString stringWithFormat:@"%d",1000],
-                                  @"city":[NSString stringWithFormat:@"%d",1005]
-                                  };
-        [GMAPI cache:cachDic ForKey:USERLocation];
-    }else{
-        self.leftLabel.text = theString;
-        NSDictionary *cachDic = @{
-                                  @"province":[NSString stringWithFormat:@"%d",procinceId],
-                                  @"city":[NSString stringWithFormat:@"%d",cityId]
-                                  };
-        [GMAPI cache:cachDic ForKey:USERLocation];
+    
+//    NSDictionary *lastDic = [GMAPI cacheForKey:USERLocation];
+//    NSString *str;//存储的地区
+//    if ([[lastDic stringValueForKey:@"city"]intValue] == 0) {
+//        int theId = [[lastDic stringValueForKey:@"province"]intValue];
+//        str = [GMAPI cityNameForId:theId];
+//    }else{
+//        int theId = [[lastDic stringValueForKey:@"city"]intValue];
+//        str = [GMAPI getCityNameOf4CityWithCityId:theId];
+//        
+//    }
+
+    
+    if ([LTools isEmpty:theString]) {//定位失败
+        NSDictionary *lastDic = [GMAPI cacheForKey:USERLocation];//上次存储的位置信息
+        if (lastDic) {//本地存储的有地区信息
+            NSString *str;//存储的地区
+            if ([[lastDic stringValueForKey:@"city"]intValue] == 0) {
+                int theId = [[lastDic stringValueForKey:@"province"]intValue];
+                str = [GMAPI cityNameForId:theId];
+            }else{
+                int theId = [[lastDic stringValueForKey:@"city"]intValue];
+                str = [GMAPI getCityNameOf4CityWithCityId:theId];
+            }
+            self.leftLabel.text = str;
+        }else{
+            [GMAPI showAutoHiddenMBProgressWithText:@"定位失败，默认为北京" addToView:self.view];
+            self.leftLabel.text = @"北京市";
+            NSDictionary *cachDic = @{
+                                      @"province":[NSString stringWithFormat:@"%d",1000],
+                                      @"city":[NSString stringWithFormat:@"%d",1005]
+                                      };
+            [GMAPI cache:cachDic ForKey:USERLocation];
+        }
+        
+    }else{//定位成功
+        
+        NSDictionary *lastDic = [GMAPI cacheForKey:USERLocation];//上次存储的位置信息
+        if (lastDic) {//本地存储的有地区信息
+            NSString *str;//存储的地区
+            if ([[lastDic stringValueForKey:@"city"]intValue] == 0) {
+                int theId = [[lastDic stringValueForKey:@"province"]intValue];
+                str = [GMAPI cityNameForId:theId];
+            }else{
+                int theId = [[lastDic stringValueForKey:@"city"]intValue];
+                str = [GMAPI getCityNameOf4CityWithCityId:theId];
+            }
+            
+            if ([str isEqualToString:theString]) {//存储的城市和定位城市相同
+                
+            }else{
+                UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"是否切换到定位城市" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+                al.tag = 25;
+                al.delegate = self;
+                [al show];
+                NSDictionary *cachDic = @{
+                                          @"province":[NSString stringWithFormat:@"%d",procinceId],
+                                          @"city":[NSString stringWithFormat:@"%d",cityId]
+                                          };
+                _needChangeLocationDic = cachDic;
+                
+                
+            }
+        }else{//没有存储地区信息
+            self.leftLabel.text = theString;
+            NSDictionary *cachDic = @{
+                                      @"province":[NSString stringWithFormat:@"%d",procinceId],
+                                      @"city":[NSString stringWithFormat:@"%d",cityId]
+                                      };
+            [GMAPI cache:cachDic ForKey:USERLocation];
+        }
+        
+        
     }
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
     
 }
-
-
 
 
 //创建navigation左边显示label
