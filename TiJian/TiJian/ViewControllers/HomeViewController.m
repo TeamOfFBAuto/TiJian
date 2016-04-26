@@ -40,6 +40,7 @@
 {
     NSArray *_activityArray;//活动列表
     int _unreadActivityNum;//未读活动总数
+    NSDictionary *_needChangeLocationDic;//需要更改的用户定位信息
     UIScrollView *_bgScrollView;//整个界面主容器
     RefreshTableView *_table;
     NSArray *_doctorList;//医生列表数据
