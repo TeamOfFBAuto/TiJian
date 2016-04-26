@@ -16,4 +16,8 @@
 @property(nonatomic,assign)BOOL moreInfo;//是否显示更多
 @property(nonatomic,retain)NSString *navigationTitle;//标题
 
+@property(nonatomic,assign)BOOL guaHao;//是否是对接挂号网
+@property(nonatomic,assign)int type;//对接type 1~14  20为医生详情
+@property(nonatomic,retain)NSString *detail_url;//type为20时需要此参数
+
 @end

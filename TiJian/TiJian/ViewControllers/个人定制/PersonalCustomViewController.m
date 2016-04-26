@@ -435,11 +435,11 @@
     }else if ([_questionId intValue] == 4) //体重
     {
         
-        CGFloat weight = [[_questionDictionary objectForKey:Q_WEIGHT] floatValue];
-        CGFloat height = [[_questionDictionary objectForKey:Q_HEIGHT] floatValue];
-        
-        DDLOG(@"result %@",_questionDictionary);
-        DDLOG(@"BMI : %.2f",BMI(weight, height));
+//        CGFloat weight = [[_questionDictionary objectForKey:Q_WEIGHT] floatValue];
+//        CGFloat height = [[_questionDictionary objectForKey:Q_HEIGHT] floatValue];
+//        
+//        DDLOG(@"result %@",_questionDictionary);
+//        DDLOG(@"BMI : %.2f",BMI(weight, height));
         
         //需要切换组合
         //第一个问题组合不能确定组合id,问题一样也不能保证组合id一样

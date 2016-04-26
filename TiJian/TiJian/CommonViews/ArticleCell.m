@@ -24,14 +24,15 @@
         self.iconImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 12.5, 120, 75)];
 //        _iconImageView.backgroundColor = DEFAULT_TEXTCOLOR;
         [self.contentView addSubview:_iconImageView];
+        [_iconImageView addCornerRadius:5.f];
         //title
         CGFloat left = _iconImageView.right + 10;
-        self.titleLable = [[UILabel alloc]initWithFrame:CGRectMake(left, _iconImageView.top * 2, DEVICE_WIDTH - left - 10, 30) title:nil font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
-        _titleLable.numberOfLines = 2;
-        _titleLable.lineBreakMode = NSLineBreakByCharWrapping;
+        self.titleLable = [[UILabel alloc]initWithFrame:CGRectMake(left, _iconImageView.top, DEVICE_WIDTH - left - 10, 30) title:nil font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
         [self.contentView addSubview:_titleLable];
         //subtitle
-        self.subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLable.left, _titleLable.bottom + 5, _titleLable.width, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
+        self.subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLable.left, _titleLable.bottom + 5, _titleLable.width, 30) title:nil font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
+        _subTitleLabel.numberOfLines = 2;
+        _subTitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.contentView addSubview:self.subTitleLabel];
         //时间
         CGFloat width = 150;

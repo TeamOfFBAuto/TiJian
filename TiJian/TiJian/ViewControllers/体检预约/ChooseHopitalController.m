@@ -236,6 +236,7 @@ typedef enum {
         
     } failBlock:^(NSDictionary *result) {
         
+        [LTools showMBProgressWithText:Alert_ServerErroInfo_Inner addToView:weakSelf.view];
 
     }];
 }

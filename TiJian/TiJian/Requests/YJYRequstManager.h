@@ -17,6 +17,7 @@
 #define Erro_Info @"msg" //错误信息
 #define Erro_Code @"errorcode" //错误code
 #define Alert_ServerErroInfo @"后台小哥开小差了,请稍后再试!"//服务端报错提醒
+#define Alert_ServerErroInfo_Inner @"小河马有情绪,请稍后再试!"//服务端小于2000的错误
 
 
 #define Erro_NetworkUnReachable 9999 //网络不可用

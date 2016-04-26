@@ -15,7 +15,8 @@ typedef enum{
     PEOPLEACTIONTYPE_SELECT_APPOINT, //选择并提交预约
     PEOPLEACTIONTYPE_SELECT_Single, //仅选择一个体检人信息
     PEOPLEACTIONTYPE_SELECT_Mul, //选择多个体检人
-    PEOPLEACTIONTYPE_NOPAYAPPOINT //不支付去预约
+    PEOPLEACTIONTYPE_NOPAYAPPOINT, //不支付去预约
+    PEOPLEACTIONTYPE_GuaHao //先选择家属联系人，然后去转诊预约
 }PEOPLEACTIONTYPE;
 
 @interface PeopleManageController : MyViewController

@@ -137,5 +137,36 @@ typedef enum{
 //pic: 封面图(可能为空)
 
 
+////挂号网相关接口
+////1、预约 get
+////target配置：
+//typedef enum {
+//    /**
+//     *  1、预约挂号
+//     */
+//    GuhaoActionType_guaHao = 1,//1     预约挂号
+//    /**
+//     *  2、转诊预约
+//     */
+//    GuhaoActionType_zhuanZhen = 2,//2     转诊预约
+//    /**
+//     *  3、健康顾问团
+//     */
+//    GuhaoActionType_ = 3,//3     健康顾问团
+//    GuhaoActionType_appoint = 4,//4     公立医院主治医生
+//    GuhaoActionType_appoint = 5,//5     公立医院权威专家
+//    GuhaoActionType_appoint = 6,//6     我的问诊
+//    GuhaoActionType_appoint = 7,//7     我的预约
+//    GuhaoActionType_appoint = 8,//8     我的转诊
+//    GuhaoActionType_appoint = 9,//9     我的关注
+//    GuhaoActionType_appoint = 10,//10    家庭联系人
+//    GuhaoActionType_appoint = 11,//11    家庭病例
+//    GuhaoActionType_appoint = 12,//12    我的申请
+//    GuhaoActionType_appoint = 13,//13    医生随访
+//    GuhaoActionType_appoint = 14,//14    购药订单
+//
+//}GuhaoActionType;
+
+
 
 #endif

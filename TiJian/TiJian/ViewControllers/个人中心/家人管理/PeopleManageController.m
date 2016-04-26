@@ -68,6 +68,9 @@
               _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
               _actionType == PEOPLEACTIONTYPE_SELECT_Mul){
         self.myTitle = @"选择体检人";
+    }else if (_actionType == PEOPLEACTIONTYPE_GuaHao)
+    {
+        self.myTitle = @"选择就诊人";
     }
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
@@ -95,7 +98,8 @@
     
     if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
         _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
-        _actionType == PEOPLEACTIONTYPE_SELECT_Mul) {
+        _actionType == PEOPLEACTIONTYPE_SELECT_Mul ||
+        _actionType == PEOPLEACTIONTYPE_GuaHao) {
         UIView *view = [self tableFooterView];
         [self.view addSubview:view];
         view.top = DEVICE_HEIGHT - view.height - 64;
@@ -304,7 +308,8 @@
     } failBlock:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
+        [LTools showMBProgressWithText:Alert_ServerErroInfo_Inner addToView:weakSelf.view];
+
     }];
 }
 
@@ -403,13 +408,15 @@
                 [self.navigationController popViewControllerAnimated:YES];
             }
             
-        }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT) //选择直接预约
+        }
+        else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT) //选择直接预约
         {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
             alert.tag = kTag_Appoint;
             [alert show];
             
-        }else if (_actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT)
+        }
+        else if (_actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT)
         {
             //选择的体检人
             NSMutableArray *temp = [NSMutableArray arrayWithArray:_selectedUserArray];
@@ -444,8 +451,17 @@
             [cc appointWithProductModel:productModel hospital:hospital userArray:temp];
             [self.navigationController pushViewController:cc animated:YES];
         }
+        else if (_actionType == PEOPLEACTIONTYPE_GuaHao)
+        {
+            //挂号网选择家属联系人
+            DDLOG(@"去挂号网 转诊预约");
+            if (self.updateParamsBlock) {
+                self.updateParamsBlock(nil);
+            }
+        }
         
-    }else{
+    }
+    else{
         
         [LTools showMBProgressWithText:@"请选择体检人" addToView:self.view];
         
@@ -507,13 +523,10 @@
                 _selectedIcon.hidden = NO;
                 _isMyselfSelected = YES;
                 
-                //选择成功回调
-                NSLog(@"选择体检人成功");
                 
                 UserInfo *user = [UserInfo userInfoForCache];
                 
                 [self selectPeople:user myself:YES];
-                
                 
             }else
             {
@@ -523,11 +536,11 @@
             }
         }
         
-    }
-    //选择并预约
+    }    //选择并预约
     else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
              _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
-             _actionType == PEOPLEACTIONTYPE_SELECT_Mul){
+             _actionType == PEOPLEACTIONTYPE_SELECT_Mul ||
+             _actionType == PEOPLEACTIONTYPE_GuaHao){
         
         if (_isMyselfSelected) {
             
@@ -756,6 +769,10 @@
     if (self.actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
         self.actionType == PEOPLEACTIONTYPE_SELECT_Mul) {
         [sureBtn setTitle:@"确认选择体检人" forState:UIControlStateNormal];
+    }else if (_actionType == PEOPLEACTIONTYPE_GuaHao)
+    {
+        [sureBtn setTitle:@"确认选择就诊人" forState:UIControlStateNormal];
+
     }else
     {
         [sureBtn setTitle:@"确认预约" forState:UIControlStateNormal];
@@ -894,13 +911,12 @@
             [tableView reloadData];
             
             //选择成功回调
-            NSLog(@"选择体检人成功");
-            
             [self selectPeople:aModel myself:NO];
             
         }else if (_actionType == PEOPLEACTIONTYPE_SELECT_APPOINT ||
                   _actionType == PEOPLEACTIONTYPE_NOPAYAPPOINT ||
-                  _actionType == PEOPLEACTIONTYPE_SELECT_Mul){
+                  _actionType == PEOPLEACTIONTYPE_SELECT_Mul ||
+                  _actionType == PEOPLEACTIONTYPE_GuaHao){
             
             if ([_selectedArray containsObject:uid]) {
                 [_selectedArray removeObject:uid];

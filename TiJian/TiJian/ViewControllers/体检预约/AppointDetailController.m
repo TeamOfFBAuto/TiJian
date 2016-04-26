@@ -28,7 +28,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.myTitle = @"预约详情";
-//    self.rightImage = [UIImage imageNamed:@"personal_yuyue_xiugai"];
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     [self netWorkForList];

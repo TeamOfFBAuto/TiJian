@@ -65,6 +65,32 @@
     return self;
 }
 
+/**
+ *  创建refreshTableView
+ *
+ *  @param refreshHeaderHidden 是否隐藏头部
+ */
+- (id)initWithFrame:(CGRect)frame
+              style:(UITableViewStyle)theStyle
+refreshHeaderHidden:(BOOL)refreshHeaderHidden
+{
+    self = [super initWithFrame:frame style:theStyle];
+    if (self) {
+        // Initialization code
+        
+        self.hiddenLoadMoreWhenNoData = YES;//当没有更多数据时,默认隐藏底部view
+        self.neverShowLoadMore = NO;//默认显示加载更多
+        self.pageNum = 1;
+        self.dataArray = [NSMutableArray array];
+        if (!refreshHeaderHidden) {
+            [self createHeaderView];
+        }
+        self.backgroundColor = [UIColor clearColor];
+        self.delegate = self;
+    }
+    return self;
+}
+
 -(id)initWithFrame:(CGRect)frame
          superView:(UIView *)superView
 {
@@ -200,7 +226,7 @@
 }
 
 /**
- *  成功加载数据reload
+ *  成功加载数据reload（高度由外部控制）
  *
  *  @param data       每次请求数据
  *  @param pageSize   每页个数
@@ -387,6 +413,27 @@
     self.isHaveMoreData = NO;
     
     [self finishReloadDataWithView:view pageSize:pageSize];
+}
+
+/**
+ *  请求数据失败 显示自定义view(高度由外部控制)
+ *
+ *  @param view
+ */
+- (void)loadFailWithCustomView:(UIView *)view
+                pageSize:(int)pageSize
+{
+    if (self.isLoadMoreData) {
+        self.pageNum --;
+        
+        if (self.pageNum < 1) {
+            self.pageNum = 1;
+        }
+    }
+    
+    self.isHaveMoreData = NO;
+    
+    [self finishReloadDataWithCustomView:view pageSize:pageSize];
 }
 
 

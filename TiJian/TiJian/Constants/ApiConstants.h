@@ -427,5 +427,38 @@
 //4.删除报告 get 方式 authcode\report_id
 #define REPORT_DEL @"/index.php?d=api&c=report&m=del_report"
 
+//========================================================
+
+#pragma - mark 挂号网对接
+
+//挂号网相关接口
+//1、预约 get
+//target配置：
+//1     预约挂号
+//2     转诊预约
+//3     健康顾问团
+//4     公立医院主治医生
+//5     公立医院权威专家
+//6     我的问诊
+//7     我的预约
+//8     我的转诊
+//9     我的关注
+//10    家庭联系人
+//11    家庭病例
+//12    我的申请
+//13    医生随访
+//14    购药订单
+
+//1、参数:authcode 必传 target 用户动作标号 必传  例:预约挂号传递 1
+#define Guahao_Appoint @"/index.php?d=api&c=register&m=appoint"
+
+//2、专家问诊医生列表
+#define Guahao_doctorlist @"/index.php?d=api&c=register&m=doctor_lis1t"
+
+//3、医生跳转链接 //get 方式authcode 必填、detail_url医生列表中的detail_url
+
+#define Guahao_doctorDetail @"/index.php?d=api&c=register&m=doctor_url"
+
+
 
 #endif

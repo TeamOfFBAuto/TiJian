@@ -20,6 +20,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import <AVFoundation/AVMediaFormat.h>
+#import "WebviewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 {
@@ -345,6 +346,22 @@
     return _loginView;
 }
 
+#pragma - mark 挂号对接处理
+/**
+ *  点击跳转至挂号网对接
+ *
+ *  @param btn
+ */
+- (void)clickToGuaHaoType:(int)type
+{
+    WebviewController *web = [[WebviewController alloc]init];
+    web.guaHao = YES;
+    web.type = type;
+    web.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:web animated:YES];
+    
+}
+
 #pragma - mark 事件处理
 /**
  *  更新登录状态
@@ -541,44 +558,86 @@
         
         if (indexPath.row == 0) {
             
-            //@"我的订单";
-            OrderViewController *order = [[OrderViewController alloc]init];
-            order.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:order animated:YES];
+            //@"体检预约";
+            AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
+            m_order.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:m_order animated:YES];
             
         }else if (indexPath.row == 1){
             
-            //@"我的购物车";
+           //@"体检订单";
+            OrderViewController *order = [[OrderViewController alloc]init];
+            order.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:order animated:YES];
+
+            
+        }else if (indexPath.row == 2){
+            
+            //@"体检钱包";
+            MyWalletViewController *cc = [[MyWalletViewController alloc]init];
+            cc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:cc animated:YES];
+            
+        }else if (indexPath.row == 3){
+            
+            //@"体检购物车";
             GShopCarViewController *shop = [[GShopCarViewController alloc]init];
             shop.isPersonalCenterPush = YES;
             shop.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:shop animated:YES];
             
-        }else if (indexPath.row == 2){
+        }else if (indexPath.row == 4){
             
-            //@"我的预约";
-            AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
-            m_order.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:m_order animated:YES];
-        }
-    }else if (indexPath.section == 1){
-        
-        if (indexPath.row == 0) {
-            
-            //@"我的钱包";
-            
-            MyWalletViewController *cc = [[MyWalletViewController alloc]init];
-            cc.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:cc animated:YES];
-            
-            
-        }else if (indexPath.row == 1){
-            
-            //@"我的收藏";
+            //@"体检套餐收藏";
             ProductListViewController *list = [[ProductListViewController alloc]init];
             list.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:list animated:YES];
         }
+        
+    }else if (indexPath.section == 1){
+        
+        //target配置：
+        //1     预约挂号
+        //2     转诊预约
+        //3     健康顾问团
+        //4     公立医院主治医生
+        //5     公立医院权威专家
+        //6     我的问诊
+        //7     我的预约
+        //8     我的转诊
+        //9     我的关注
+        //10    家庭联系人
+        //11    家庭病例
+        //12    我的申请
+        //13    医生随访
+        //14    购药订单
+        
+        if (indexPath.row == 0) {
+            
+            //@"挂号问诊";
+            [self clickToGuaHaoType:6];
+            
+        }else if (indexPath.row == 1){
+            
+            //@"挂号转诊";
+            [self clickToGuaHaoType:8];
+            
+        }else if (indexPath.row == 2){
+            
+            //@"挂号预约";
+            [self clickToGuaHaoType:7];
+
+        }else if (indexPath.row == 3){
+            
+            //@"挂号申请";
+            [self clickToGuaHaoType:12];
+
+        }else if (indexPath.row == 4){
+            
+            //@"医生随访";
+            [self clickToGuaHaoType:13];
+        }
+        
     }else if (indexPath.section == 2){
         
         if (indexPath.row == 0) {
@@ -587,17 +646,17 @@
             PeopleManageController *p_manage = [[PeopleManageController alloc]init];
             p_manage.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:p_manage animated:YES];
-        }
-    }else if (indexPath.section == 3){
-        
-        if (indexPath.row == 0) {
+            
+        }else if (indexPath.row == 1) {
             
             //@"设置";
             SettingsViewController *settings = [[SettingsViewController alloc]init];
             settings.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:settings animated:YES];
         }
+        
     }
+
 }
 
 #pragma - mark UITableViewDataSource<NSObject>
@@ -607,18 +666,19 @@
     
     if (section == 0) {
         
-        return 3;
+        return 5;
     }else if (section == 1){
         
-        return 2;
+        return 5;
     }else if (section == 2){
         
-        return 1;
-    }else if (section == 3){
-        
-        return 1;
+        return 2;
     }
     return 0;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -633,61 +693,79 @@
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:14];
-//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
     if (indexPath.section == 0) {
         
         if (indexPath.row == 0) {
             
-            cell.textLabel.text = @"我的订单";
-            cell.imageView.image = [UIImage imageNamed:@"personal_dingdan"];
-            
+            cell.textLabel.text = @"体检预约";
+            cell.imageView.image = [UIImage imageNamed:@"personal_tijianyuyue"];
+
         }else if (indexPath.row == 1){
             
-            cell.textLabel.text = @"我的购物车";
-            cell.imageView.image = [UIImage imageNamed:@"personal_gouwuche"];
+            cell.textLabel.text = @"体检订单";
+            cell.imageView.image = [UIImage imageNamed:@"personal_tijiandingdan"];
+            
             
         }else if (indexPath.row == 2){
             
-            cell.textLabel.text = @"我的预约";
-            cell.imageView.image = [UIImage imageNamed:@"personal_yuyue"];
+            cell.textLabel.text = @"体检钱包";
+            cell.imageView.image = [UIImage imageNamed:@"personal_tijianqianbao"];
+            
+        }else if (indexPath.row == 3){
+            
+            cell.textLabel.text = @"体检购物车";
+            cell.imageView.image = [UIImage imageNamed:@"personal_tijiangouwuche"];
+        }else if (indexPath.row == 4){
+            
+            cell.textLabel.text = @"体检套餐收藏";
+            cell.imageView.image = [UIImage imageNamed:@"personal_tijianshoucang"];
         }
+        
     }else if (indexPath.section == 1){
         
         if (indexPath.row == 0) {
             
-            cell.textLabel.text = @"我的钱包";
-            cell.imageView.image = [UIImage imageNamed:@"personal_qianbao"];
+            cell.textLabel.text = @"挂号问诊";
+            cell.imageView.image = [UIImage imageNamed:@"personal_guahaowenzhen"];
             
         }else if (indexPath.row == 1){
             
-            cell.textLabel.text = @"我的收藏";
-            cell.imageView.image = [UIImage imageNamed:@"personal_shoucang"];
+            cell.textLabel.text = @"挂号转诊";
+            cell.imageView.image = [UIImage imageNamed:@"personal_guanhaozhuanzhen"];
+            
+            
+        }else if (indexPath.row == 2){
+            
+            cell.textLabel.text = @"挂号预约";
+            cell.imageView.image = [UIImage imageNamed:@"personal_guahaoyuyue"];
+            
+        }else if (indexPath.row == 3){
+            
+            cell.textLabel.text = @"挂号申请";
+            cell.imageView.image = [UIImage imageNamed:@"personal_guanhaoshengqing"];
+            
+        }else if (indexPath.row == 4){
+            
+            cell.textLabel.text = @"医生随访";
+            cell.imageView.image = [UIImage imageNamed:@"personal_suifang"];
         }
+        
     }else if (indexPath.section == 2){
         
         if (indexPath.row == 0) {
             
             cell.textLabel.text = @"家人管理";
-            cell.imageView.image = [UIImage imageNamed:@"personal_jiaren"];
-        }
-    }else if (indexPath.section == 3){
-        
-        if (indexPath.row == 0) {
+            cell.imageView.image = [UIImage imageNamed:@"personal_jiarenguanli"];
+        }else if (indexPath.row == 1) {
             
             cell.textLabel.text = @"设置";
-            cell.imageView.image = [UIImage imageNamed:@"personal_shezhi"];
+            cell.imageView.image = [UIImage imageNamed:@"personal_settings"];
         }
+
     }
     
-    
     return cell;
-}
-
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 4;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
