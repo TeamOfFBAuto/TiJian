@@ -34,7 +34,7 @@
 
 #define kTagDoctor 300 //专家
 #define kTagRefreshDoctorlist 400 //刷新专家列表
-#define kTagRefreshHealthInfolist 401 //刷新健康咨询列表
+#define kTagRefreshHealthInfolist 410 //刷新健康咨询列表
 
 @interface HomeViewController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -97,10 +97,10 @@
     [self prepareRefreshTableView];
     [self prepareViewsVersionThree];
 
-    //获取健康咨询
-    [self getHealthArticlelist];
     //获取医生列表
     [self getDoctorList];
+    //获取健康咨询
+    [self getHealthArticlelist];
 
     //定位相关
     [self creatNavcLeftLabel];
@@ -406,9 +406,137 @@
     
 }
 
+#pragma mark - 网络请求
 
-#pragma mark - 定位相关 gm - end
+/**
+ *  获取活动列表
+ *
+ *  @param
+ */
+- (void)getActivity
+{
+    NSString *api = Get_Activity_list;
+    
+    NSDictionary *params = nil;
+    NSString *authey = [UserInfo getAuthkey];
+    if (authey.length > 0) {
+        params = @{@"authcode":authey};
+    }
+    
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *list = result[@"activity"];
+        NSArray *temp = [ActivityModel modelsFromArray:list];
+        _activityArray = [NSArray arrayWithArray:temp];
+        if (_activityArray.count) {
+            
+            [Weakself.activityView show];
+        }else
+        {
+            [LTools showMBProgressWithText:@"精彩活动敬请期待！" addToView:Weakself.view];
+        }
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
 
+/**
+ *  获取未读活动数量
+ *
+ *  @param
+ */
+- (void)getUnreadActivityNum
+{
+    
+    NSString *api = Get_Show_activity;
+    
+    NSDictionary *params = nil;
+    NSString *authey = [UserInfo getAuthkey];
+    if (authey.length > 0) {
+        params = @{@"authcode":authey};
+    }
+    
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
+                                                   api:api parameters:params
+                                 constructingBodyBlock:nil
+                                            completion:^(NSDictionary *result) {
+                                                
+                                                int num = [result[@"num"]intValue];
+                                                int show = [result[@"show"]intValue];
+                                                _unreadActivityNum = num;
+                                                Weakself.right_button.hidden =  show == 1 ? NO : YES;//打开活动按钮
+                                                Weakself.redPoint.hidden = num > 0 ? NO : YES;
+                                                
+                                                //存储最新的msgId,用于判断是否需要自动弹出
+                                                
+                                                //上次的
+                                                NSInteger lastActivityId = [[LTools objectForKey:USER_READED_NEWESTMSGID]integerValue];
+                                                NSString *latest_activity_id = result[@"latest_activity_id"];
+                                                //说明有比上次更新的活动
+                                                if ([latest_activity_id integerValue] > lastActivityId) {
+                                                    
+                                                    [LTools setObject:latest_activity_id forKey:USER_READED_NEWESTMSGID];
+                                                    
+                                                    [Weakself getActivity];
+                                                }
+                                                
+                                            } failBlock:^(NSDictionary *result) {
+                                                
+                                            }];
+}
+
+/**
+ *  获取咨询文章
+ */
+- (void)getHealthArticlelist
+{
+    NSDictionary *params = @{@"page":NSStringFromInt(_table.pageNum),@"per_page":@"5"};
+    @WeakObj(_table);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
+                                                   api:HEALTH_ACTICAL_LIST
+                                            parameters:params
+                                 constructingBodyBlock:nil
+                                            completion:^(NSDictionary *result)
+     {
+         NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
+         UIView *resultView = [self resultViewWithFrame:_doctorScroll.bounds title:@"没有获取到健康资讯数据！" tag:kTagRefreshHealthInfolist];
+         [Weak_table reloadData:temp pageSize:5 CustomNoDataView:resultView];
+         [self loadHealthInfoStartState:NO];
+         
+         
+     } failBlock:^(NSDictionary *result) {
+         [Weak_table loadFailWithCustomView:[self resultViewWithFrame:_doctorScroll.bounds title:result[RESULT_INFO] tag:kTagRefreshHealthInfolist] pageSize:5];
+         [self loadHealthInfoStartState:NO];
+         
+     }];
+}
+
+/**
+ *  获取专家医生列表
+ */
+- (void)getDoctorList
+{
+    NSDictionary *params = @{@"page":NSStringFromInt(_table.pageNum),@"per_page":@"5"};
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
+                                                   api:Guahao_doctorlist
+                                            parameters:params
+                                 constructingBodyBlock:nil
+                                            completion:^(NSDictionary *result)
+     {
+         [Weakself createDoctorViewWithResult:result];
+         [self loadDoctorListStartState:NO];
+         
+     } failBlock:^(NSDictionary *result) {
+         
+         [Weakself createDoctorViewWithResult:result];
+         [self loadDoctorListStartState:NO];
+         
+     }];
+}
 
 #pragma mark - 视图创建
 
@@ -969,18 +1097,19 @@
  */
 - (void)createDoctorViewWithResult:(NSDictionary *)result
 {
+    [self removeDoctorlistResultView];
+
     int erroCode = [result[RESULT_CODE]intValue];
     if (erroCode == 0) {
         NSArray *temp = [DoctorModel modelsFromArray:result[@"doctor_list"]];
         if (temp.count == 0) {
             
             NSString *errInfo = @"没有获取到可用专家医生";
+            DDLOG(@"%@",errInfo);
             UIView *view = [self resultViewWithFrame:_doctorScroll.bounds title:errInfo tag:kTagRefreshDoctorlist];
             [_doctorScroll addSubview:view];
             return;
         }
-        
-        [self removedoctorlistResultView];
         
         _doctorList = [NSArray arrayWithArray:temp];
         int sum = (int)_doctorList.count;
@@ -1012,7 +1141,7 @@
                           title:(NSString *)title
                             tag:(int)tag
 {
-    DDLOG(@"---------;;;;");
+    DDLOG(@"--------- tag:%d",tag);
     UIView *view = [[UIView alloc]initWithFrame:_doctorScroll.bounds];
     
     UIView *contentView = [[UIView alloc]initWithFrame:view.bounds];
@@ -1034,7 +1163,7 @@
     indicator.hidden = YES;
     indicator.color = DEFAULT_TEXTCOLOR_TITLE;
     indicator.tag = tag + 2;
-    indicator.backgroundColor = [UIColor orangeColor];
+    
     return view;
 }
 
@@ -1073,7 +1202,6 @@
 {
     UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[_doctorScroll viewWithTag:kTagRefreshDoctorlist + 2];
     UIView *refreshView = (UIView *)[_doctorScroll viewWithTag:kTagRefreshDoctorlist + 1];
-    DDLOG(@"--->%@",indicator);
     if (start) {
         
         [indicator startAnimating];
@@ -1088,7 +1216,7 @@
     }
 }
 
-- (void)removedoctorlistResultView
+- (void)removeDoctorlistResultView
 {
     UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[_doctorScroll viewWithTag:kTagRefreshDoctorlist + 2];
     if (indicator) {
@@ -1173,138 +1301,6 @@
     return _redPoint;
 }
 
-#pragma - mark 网络请求
-
-/**
- *  获取活动列表
- *
- *  @param
- */
-- (void)getActivity
-{
-    NSString *api = Get_Activity_list;
-    
-    NSDictionary *params = nil;
-    NSString *authey = [UserInfo getAuthkey];
-    if (authey.length > 0) {
-        params = @{@"authcode":authey};
-    }
-    
-     @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        NSArray *list = result[@"activity"];
-        NSArray *temp = [ActivityModel modelsFromArray:list];
-        _activityArray = [NSArray arrayWithArray:temp];
-        if (_activityArray.count) {
-            
-            [Weakself.activityView show];
-        }else
-        {
-            [LTools showMBProgressWithText:@"精彩活动敬请期待！" addToView:Weakself.view];
-        }
-        
-    } failBlock:^(NSDictionary *result) {
-        
-    }];
-}
-
-/**
- *  获取未读活动数量
- *
- *  @param
- */
-- (void)getUnreadActivityNum
-{
-    
-    NSString *api = Get_Show_activity;
-    
-    NSDictionary *params = nil;
-    NSString *authey = [UserInfo getAuthkey];
-    if (authey.length > 0) {
-        params = @{@"authcode":authey};
-    }
-    
-    @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
-                                                   api:api parameters:params
-                                 constructingBodyBlock:nil
-                                            completion:^(NSDictionary *result) {
-        
-        int num = [result[@"num"]intValue];
-        int show = [result[@"show"]intValue];
-        _unreadActivityNum = num;
-        Weakself.right_button.hidden =  show == 1 ? NO : YES;//打开活动按钮
-        Weakself.redPoint.hidden = num > 0 ? NO : YES;
-
-        //存储最新的msgId,用于判断是否需要自动弹出
-        
-        //上次的
-        NSInteger lastActivityId = [[LTools objectForKey:USER_READED_NEWESTMSGID]integerValue];
-        NSString *latest_activity_id = result[@"latest_activity_id"];
-        //说明有比上次更新的活动
-        if ([latest_activity_id integerValue] > lastActivityId) {
-            
-            [LTools setObject:latest_activity_id forKey:USER_READED_NEWESTMSGID];
-
-            [Weakself getActivity];
-        }
-        
-    } failBlock:^(NSDictionary *result) {
-        
-    }];
-}
-
-/**
- *  获取咨询文章
- */
-- (void)getHealthArticlelist
-{
-    NSDictionary *params = @{@"page":NSStringFromInt(_table.pageNum),@"per_page":@"5"};
-     @WeakObj(_table);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
-                                                   api:HEALTH_ACTICAL_LIST
-                                            parameters:params
-                                 constructingBodyBlock:nil
-                                            completion:^(NSDictionary *result)
-    {
-        NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
-        [Weak_table reloadData:temp pageSize:5 CustomNoDataView:[self resultViewWithFrame:_doctorScroll.bounds title:@"没有获取到健康资讯数据！" tag:kTagRefreshHealthInfolist]];
-        [self loadHealthInfoStartState:NO];
-
-        
-    } failBlock:^(NSDictionary *result) {
-        [Weak_table loadFailWithCustomView:[self resultViewWithFrame:_doctorScroll.bounds title:result[RESULT_INFO] tag:kTagRefreshHealthInfolist] pageSize:5];
-        [self loadHealthInfoStartState:NO];
-
-    }];
-}
-
-/**
- *  获取专家医生列表
- */
-- (void)getDoctorList
-{
-    NSDictionary *params = @{@"page11":NSStringFromInt(_table.pageNum),@"per_page":@"5"};
-    @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet
-                                                   api:Guahao_doctorlist
-                                            parameters:params
-                                 constructingBodyBlock:nil
-                                            completion:^(NSDictionary *result)
-     {
-         [Weakself createDoctorViewWithResult:result];
-         [self loadDoctorListStartState:NO];
-
-         DDLOG(@"neeeeeee");
-     } failBlock:^(NSDictionary *result) {
-         
-         [Weakself createDoctorViewWithResult:result];
-         [self loadDoctorListStartState:NO];
-         DDLOG(@"neeeeeee2");
-
-     }];
-}
 
 /**
  *  健康资讯赋值

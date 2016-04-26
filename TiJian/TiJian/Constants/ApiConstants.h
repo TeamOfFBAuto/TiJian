@@ -453,7 +453,7 @@
 #define Guahao_Appoint @"/index.php?d=api&c=register&m=appoint"
 
 //2、专家问诊医生列表
-#define Guahao_doctorlist @"/index.php?d=api&c=register&m=doctor_lis1t"
+#define Guahao_doctorlist @"/index.php?d=api&c=register&m=doctor_list"
 
 //3、医生跳转链接 //get 方式authcode 必填、detail_url医生列表中的detail_url
 
