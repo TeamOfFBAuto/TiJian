@@ -149,7 +149,7 @@
     [self netWorkForMsgNum];
     
     //更新坐标
-    [self startDingweiWithBlock:nil];
+//    [self startDingweiWithBlock:nil];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
