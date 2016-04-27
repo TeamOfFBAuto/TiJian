@@ -98,7 +98,11 @@
     [self prepareViewsVersionThree];
 
     //获取医生列表
+    UIView *view = [self resultViewWithFrame:_doctorScroll.bounds title:nil tag:kTagRefreshDoctorlist];
+    [_doctorScroll addSubview:view];
+    [self loadDoctorListStartState:YES];
     [self getDoctorList];
+    
     //获取健康咨询
     [self getHealthArticlelist];
 
@@ -1361,22 +1365,12 @@
     {
         //看专家：转诊预约 target 2 需要先选择家属联系人
         
-        
-        PeopleManageController *people = [[PeopleManageController alloc]init];
-        people.actionType = PEOPLEACTIONTYPE_GuaHao;
-        people.noAppointNum = 1;
-        people.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:people animated:YES];
-        
-        __weak typeof(self)weakSelf = self;
-        people.updateParamsBlock = ^(NSDictionary *params){
-            
-//            UserInfo *user = params[@"result"];
-//            BOOL myself = [params[@"myself"]boolValue];
-            
-            [weakSelf clickToGuaHaoType:2];
-
-        };
+         @WeakObj(self);
+        [LoginManager isLogin:self loginBlock:^(BOOL success) {
+            if (success) {
+                [Weakself pushToVipAppoint];
+            }
+        }];
         
         
     }else if (tag == kTagZhuanJiaWenZhen)
@@ -1554,9 +1548,26 @@
  */
 - (void)clickToGuaHaoType:(int)type
 {
+    
+    [LoginManager isLogin:self loginBlock:^(BOOL success) {
+        if (success) {
+            [self pushToGuaHaoType:type familyuid:nil];
+        }
+    }];
+}
+
+/**
+ *  点击跳转至挂号网对接
+ *
+ *  @param btn
+ */
+- (void)pushToGuaHaoType:(int)type
+               familyuid:(NSString *)familyuid
+{
     WebviewController *web = [[WebviewController alloc]init];
     web.guaHao = YES;
     web.type = type;
+    web.familyuid = familyuid;
     web.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:web animated:YES];
 }
@@ -1586,6 +1597,26 @@
     web.detail_url = dModel.detail_url;
     web.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:web animated:YES];
+}
+
+/**
+ *  跳转至转诊预约(VIP)
+ */
+- (void)pushToVipAppoint
+{
+    PeopleManageController *people = [[PeopleManageController alloc]init];
+    people.actionType = PEOPLEACTIONTYPE_GuaHao;
+    people.noAppointNum = 1;
+    people.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:people animated:YES];
+    
+    __weak typeof(self)weakSelf = self;
+    people.updateParamsBlock = ^(NSDictionary *params){
+        
+        NSString *familyuid = params[@"familyuid"];
+        [weakSelf pushToGuaHaoType:2 familyuid:familyuid];
+        
+    };
 }
 
 #pragma mark - 代理

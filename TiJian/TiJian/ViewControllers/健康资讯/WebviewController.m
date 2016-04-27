@@ -12,6 +12,7 @@
 #import "EditUserInfoViewController.h"
 #import "NJKWebViewProgressView.h"
 #import "NJKWebViewProgress.h"
+#import "AddPeopleViewController.h"
 
 @interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate,NJKWebViewProgressDelegate>
 {
@@ -94,7 +95,8 @@
                 break;
             case 4:
                 // title = @"公立医院主治医生";
-                title = @"免费咨询";
+//                title = @"免费咨询";
+                title = @"咨询台";
                 break;
             case 5:
                 title = @"公立医院权威专家"; 
@@ -282,6 +284,23 @@
     [self.navigationController pushViewController:edit animated:YES];
 }
 
+- (void)editOtherPeople
+{
+    AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
+    add.actionStyle = ACTIONSTYLE_DETTAILT;
+//    add.userModel = aModel;
+//    __weak typeof(_table)weakTable = _table;
+    
+    [add setUpdateParamsBlock:^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+//        [weakTable showRefreshHeader:YES];
+    }];
+    
+    [self.navigationController pushViewController:add animated:YES];
+
+}
+
 -(void)leftButtonTap:(UIButton *)sender
 {
     if (_webView.canGoBack) {
@@ -416,8 +435,12 @@
     if (authcode == nil) {
         return;
     }
-    NSDictionary *params = @{@"authcode":authcode,
-                             @"target":NSStringFromInt(type)};
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetString:authcode forKey:@"authcode"];
+    [params safeSetString:NSStringFromInt(type) forKey:@"target"];
+    [params safeSetString:self.familyuid forKey:@"family_uid"];
+
     NSString *api = Guahao_Appoint;
     __weak typeof(self)weakSelf = self;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -481,6 +504,14 @@
         {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:@"去修改", nil];
             alert.tag = 100;
+            [alert show];
+            
+//            返回响应码：1030, '转诊预约最大数量只能是3次'
+        }
+            break;
+        case 1030://'转诊预约最大数量只能是3次'
+        {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
             [alert show];
         }
             break;

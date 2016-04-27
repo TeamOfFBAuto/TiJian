@@ -455,8 +455,20 @@
         {
             //挂号网选择家属联系人
             DDLOG(@"去挂号网 转诊预约");
+            
+            NSString *familyuid = @"0";
+            if (_isMyselfSelected) {
+                familyuid = @"0";
+            }else
+            {
+                int count = (int)_selectedArray.count;
+                if (count > 0) {
+                    familyuid = [_selectedArray lastObject];
+                }
+            }
+            NSDictionary *param = @{@"familyuid":familyuid};
             if (self.updateParamsBlock) {
-                self.updateParamsBlock(nil);
+                self.updateParamsBlock(param);
             }
         }
         

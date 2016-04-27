@@ -648,7 +648,14 @@
                 NSString *M =@"F";
                 NSString *JYM =@"10X98765432";
                 M = [JYM substringWithRange:NSMakeRange(Y,1)];// 判断校验位
-                if ([M isEqualToString:[value substringWithRange:NSMakeRange(17,1)]]) {
+                
+                NSString *temp = [value substringWithRange:NSMakeRange(17,1)];
+                //小写字母x判断
+                if ([temp isEqualToString:@"x"]) {
+                    temp = [temp uppercaseString];//转换为大写
+                }
+                
+                if ([M isEqualToString:temp]) {
                     return YES;// 检测ID的校验位
                 }else {
                     return NO;

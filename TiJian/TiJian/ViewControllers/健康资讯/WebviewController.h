@@ -19,5 +19,6 @@
 @property(nonatomic,assign)BOOL guaHao;//是否是对接挂号网
 @property(nonatomic,assign)int type;//对接type 1~14  20为医生详情
 @property(nonatomic,retain)NSString *detail_url;//type为20时需要此参数
+@property(nonatomic,retain)NSString *familyuid;//type为2时,转诊预约（VIP）需要此参数
 
 @end
