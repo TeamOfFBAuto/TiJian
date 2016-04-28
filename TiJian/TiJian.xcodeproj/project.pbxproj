@@ -288,6 +288,9 @@
 		13C867C21C40FC25002DF5CA /* LogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C867C11C40FC25002DF5CA /* LogView.m */; };
 		13C97F2E1BF98A5200C66691 /* yuyue_daijinquan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */; };
 		13C97F311BF9B54700C66691 /* AppointModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C97F301BF9B54700C66691 /* AppointModel.m */; };
+		13CA06CB1CD1D8960040A9A1 /* VipAppointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CA06CA1CD1D8960040A9A1 /* VipAppointViewController.m */; };
+		13CA06D21CD1EF700040A9A1 /* vip_select2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13CA06D11CD1EF700040A9A1 /* vip_select2@2x.png */; };
+		13CA06D41CD1EF860040A9A1 /* vip_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13CA06D31CD1EF860040A9A1 /* vip_bg@2x.png */; };
 		13CCAF681BD8DC6400BF9AA8 /* BaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */; };
 		13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCAF6B1BD8DCB100BF9AA8 /* QuestionModel.m */; };
 		13D119A41C27A3920042EB6D /* RefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D119A31C27A3920042EB6D /* RefreshFooterView.m */; };
@@ -973,6 +976,10 @@
 		13C97F2D1BF98A5200C66691 /* yuyue_daijinquan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_daijinquan@2x.png"; sourceTree = "<group>"; };
 		13C97F2F1BF9B54700C66691 /* AppointModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointModel.h; sourceTree = "<group>"; };
 		13C97F301BF9B54700C66691 /* AppointModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointModel.m; sourceTree = "<group>"; };
+		13CA06C91CD1D8960040A9A1 /* VipAppointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VipAppointViewController.h; sourceTree = "<group>"; };
+		13CA06CA1CD1D8960040A9A1 /* VipAppointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VipAppointViewController.m; sourceTree = "<group>"; };
+		13CA06D11CD1EF700040A9A1 /* vip_select2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_select2@2x.png"; sourceTree = "<group>"; };
+		13CA06D31CD1EF860040A9A1 /* vip_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_bg@2x.png"; sourceTree = "<group>"; };
 		13CCAF661BD8DC6400BF9AA8 /* BaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseModel.h; sourceTree = "<group>"; };
 		13CCAF671BD8DC6400BF9AA8 /* BaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseModel.m; sourceTree = "<group>"; };
 		13CCAF6A1BD8DCB100BF9AA8 /* QuestionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionModel.h; sourceTree = "<group>"; };
@@ -1794,6 +1801,7 @@
 		1324B6A01BD766E600FB47A9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				13CA06C81CD1D87A0040A9A1 /* 挂号 */,
 				131EC60B1C576CE60008F517 /* 体检分院 */,
 				1385D38C1C3B74B1006DE304 /* 消息中心 */,
 				137780A71C11839300677363 /* 体检报告 */,
@@ -1873,6 +1881,7 @@
 		1324B6AC1BD7742F00FB47A9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				13CA06CC1CD1DFFE0040A9A1 /* 转诊预约 */,
 				1385D3961C3BD639006DE304 /* 消息中心 */,
 				1362765B1C12D3370077C75D /* 体检报告 */,
 				13B07A0F1C06DB5500742AF7 /* 我的订单 */,
@@ -2149,6 +2158,24 @@
 				13BE40111CC763A3007EE6BB /* NJKWebViewProgressView.m */,
 			);
 			path = NJKWebViewProgress;
+			sourceTree = "<group>";
+		};
+		13CA06C81CD1D87A0040A9A1 /* 挂号 */ = {
+			isa = PBXGroup;
+			children = (
+				13CA06C91CD1D8960040A9A1 /* VipAppointViewController.h */,
+				13CA06CA1CD1D8960040A9A1 /* VipAppointViewController.m */,
+			);
+			path = "挂号";
+			sourceTree = "<group>";
+		};
+		13CA06CC1CD1DFFE0040A9A1 /* 转诊预约 */ = {
+			isa = PBXGroup;
+			children = (
+				13CA06D31CD1EF860040A9A1 /* vip_bg@2x.png */,
+				13CA06D11CD1EF700040A9A1 /* vip_select2@2x.png */,
+			);
+			path = "转诊预约";
 			sourceTree = "<group>";
 		};
 		13CCAF691BD8DC7C00BF9AA8 /* CommonModels */ = {
@@ -3348,6 +3375,7 @@
 				131EC6261C5904F00008F517 /* selected_small_normal@2x.png in Resources */,
 				139333DE1BE0DF3E00B4628B /* 2_m_2@2x.png in Resources */,
 				E3D8AE4B1BF6203F003AE2E3 /* jiangquan_yiguoqi@2x.png in Resources */,
+				13CA06D41CD1EF860040A9A1 /* vip_bg@2x.png in Resources */,
 				139333F41BE0DF3E00B4628B /* 8_2@2x.png in Resources */,
 				1303C2D81BE9BEA600700847 /* tuichu@2x.png in Resources */,
 				139333C41BE0DF3E00B4628B /* 22_2@2x.png in Resources */,
@@ -3531,6 +3559,7 @@
 				139333D91BE0DF3E00B4628B /* 28_2@2x.png in Resources */,
 				13F1F3D11BBA9A4B00885D31 /* mapapi.bundle in Resources */,
 				1303C3671BEB0D7100700847 /* homepage_b@2x.png in Resources */,
+				13CA06D21CD1EF700040A9A1 /* vip_select2@2x.png in Resources */,
 				13D6DA8E1C48C6A90091FCFE /* extension_33_2.png in Resources */,
 				1303C36C1BEB0D7100700847 /* personal_g@2x.png in Resources */,
 				13F8C5B91C05AA7E004C3FC7 /* compose_pic_add@2x.png in Resources */,
@@ -3865,6 +3894,7 @@
 				1320F27D1C32325E008E5B05 /* ChooseHopitalController.m in Sources */,
 				13F8C5B51C05AA7E004C3FC7 /* PhotoAlbumManager.m in Sources */,
 				E3C4DBEC1C45D40700A29259 /* GCustomSearchViewController.m in Sources */,
+				13CA06CB1CD1D8960040A9A1 /* VipAppointViewController.m in Sources */,
 				13E6173F1C1584E700E370E5 /* UIImageView+ProgressView.m in Sources */,
 				E3F364C01BE7044F00C34A0B /* GoneClassListViewController.m in Sources */,
 				1385D39F1C3BDD36006DE304 /* ActivityCell.m in Sources */,

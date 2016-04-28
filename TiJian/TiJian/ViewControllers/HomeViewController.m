@@ -16,6 +16,7 @@
 #import "WebviewController.h"
 #import "ArticleModel.h"
 #import "LocationChooseViewController.h"//定位地区选择vc
+#import "VipAppointViewController.h"//转诊预约
 #import "PeopleManageController.h"
 #import "ActivityView.h"//活动view
 #import "ActivityModel.h"
@@ -1561,19 +1562,23 @@
  */
 - (void)pushToVipAppoint
 {
-    PeopleManageController *people = [[PeopleManageController alloc]init];
-    people.actionType = PEOPLEACTIONTYPE_GuaHao;
-    people.noAppointNum = 1;
-    people.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:people animated:YES];
+//    PeopleManageController *people = [[PeopleManageController alloc]init];
+//    people.actionType = PEOPLEACTIONTYPE_GuaHao;
+//    people.noAppointNum = 1;
+//    people.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:people animated:YES];
+//    
+//    __weak typeof(self)weakSelf = self;
+//    people.updateParamsBlock = ^(NSDictionary *params){
+//        
+//        NSString *familyuid = params[@"familyuid"];
+//        [weakSelf pushToGuaHaoType:2 familyuid:familyuid];
+//        
+//    };
     
-    __weak typeof(self)weakSelf = self;
-    people.updateParamsBlock = ^(NSDictionary *params){
-        
-        NSString *familyuid = params[@"familyuid"];
-        [weakSelf pushToGuaHaoType:2 familyuid:familyuid];
-        
-    };
+    VipAppointViewController *vip = [[VipAppointViewController alloc]init];
+    vip.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vip animated:YES];
 }
 
 #pragma mark - 代理
