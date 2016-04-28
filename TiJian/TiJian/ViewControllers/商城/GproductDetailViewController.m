@@ -53,6 +53,9 @@
     GUpToolView *_upToolView;//顶部工具栏
     UIView *_downToolBlackView;//顶部工具栏出现后的下面透明黑色view
     BOOL _toolShow;
+    
+    
+    UILabel *_xiangmutLabel;//项目详情的套餐名称
 }
 
 @end
@@ -327,6 +330,10 @@
         NSDictionary *dic = [result dictionaryValueForKey:@"data"];
         
         self.theProductModel = [[ProductModel alloc]initWithDictionary:dic];
+        
+        if (_xiangmutLabel){
+            _xiangmutLabel.text = self.theProductModel.setmeal_name;
+        }
         
         if (self.VoucherId) {
             if (self.user_voucher) {
@@ -1096,13 +1103,13 @@
             [imv setImage:[UIImage imageNamed:@"tijianxiangmu1.png"]];
             [titleView addSubview:imv];
             
-            UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(imv.frame)+10, 0, titleView.frame.size.width - 10 - imv.frame.size.width - 5 - 5, titleView.frame.size.height)];
-            tLabel.font = [UIFont systemFontOfSize:15];
-            tLabel.textColor = [UIColor blackColor];
-            tLabel.numberOfLines = 2.f;
-            tLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-            tLabel.text = self.theProductModel.setmeal_name;
-            [titleView addSubview:tLabel];
+            _xiangmutLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(imv.frame)+10, 0, titleView.frame.size.width - 10 - imv.frame.size.width - 5 - 5, titleView.frame.size.height)];
+            _xiangmutLabel.font = [UIFont systemFontOfSize:15];
+            _xiangmutLabel.textColor = [UIColor blackColor];
+            _xiangmutLabel.numberOfLines = 2.f;
+            _xiangmutLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            _xiangmutLabel.text = self.theProductModel.setmeal_name;
+            [titleView addSubview:_xiangmutLabel];
             
             UIView *blueView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(titleView.frame), DEVICE_WIDTH, [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/60])];
             blueView.backgroundColor = RGBCOLOR(222, 245, 255);
