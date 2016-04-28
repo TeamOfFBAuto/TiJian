@@ -8,6 +8,7 @@
 
 #import "VipAppointViewController.h"
 #import "WebviewController.h"
+#import "AddPeopleViewController.h"
 
 @interface VipAppointViewController ()<RefreshDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 {
@@ -18,6 +19,7 @@
 
 @property(nonatomic,retain)RefreshTableView *table;
 @property(nonatomic,retain)UIView *sliderBgView;
+@property(nonatomic,retain)UIView *footerView;
 @property(nonatomic,retain)UIActivityIndicatorView *indicator;
 
 @end
@@ -46,6 +48,8 @@
     sender.centerX = imageView.width / 2.f;
     [sender addTarget:self action:@selector(clickToSelectPeople:) forControlEvents:UIControlEventTouchUpInside];
     
+    [self.view addSubview:self.sliderBgView];
+    
     //初始化值
     _sliderOpen = NO;
 }
@@ -56,6 +60,36 @@
 }
 
 #pragma mark - 视图创建
+
+-(UIView *)footerView
+{
+    if (!_footerView) {
+
+        CGFloat width = DEVICE_WIDTH * 2 / 5.f;
+        _footerView = [[UIView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH, self.sliderBgView.height - 150, width,150)];
+        _footerView.backgroundColor = [UIColor whiteColor];
+        
+        UIButton *add = [UIButton buttonWithType:UIButtonTypeCustom];
+        [add setTitle:@"添加就诊人" forState:UIControlStateNormal];
+        add.frame = CGRectMake(20, _footerView.height - 80 - 30 - 20, width - 40, 20);
+        [add addCornerRadius:10];
+        add.backgroundColor = DEFAULT_TEXTCOLOR;
+        [add.titleLabel setFont:[UIFont systemFontOfSize:12]];
+        [add addTarget:self action:@selector(clickToAddPeople) forControlEvents:UIControlEventTouchUpInside];
+        [_footerView addSubview:add];
+        
+        UIButton *cancel = [UIButton buttonWithType:UIButtonTypeCustom];
+        [cancel setTitle:@"取消" forState:UIControlStateNormal];
+        cancel.frame = CGRectMake(20, add.bottom + 15, width - 40, 20);
+        [cancel addCornerRadius:10];
+        cancel.backgroundColor = [UIColor lightGrayColor];
+        [cancel.titleLabel setFont:[UIFont systemFontOfSize:12]];
+        [cancel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [cancel addTarget:self action:@selector(hiddeSliderView) forControlEvents:UIControlEventTouchUpInside];
+        [_footerView addSubview:cancel];
+    }
+    return _footerView;
+}
 
 -(UIActivityIndicatorView *)indicator
 {
@@ -71,8 +105,13 @@
 {
     if (!_sliderBgView) {
         _sliderBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-        _sliderBgView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
+        _sliderBgView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
         [self.view addSubview:_sliderBgView];
+        
+        [_sliderBgView addSubview:self.table];
+        [_sliderBgView addSubview:self.footerView];
+        
+        _sliderBgView.alpha = 0.f;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddeSliderView)];
         tap.delegate = self;
         [_sliderBgView addGestureRecognizer:tap];
@@ -84,16 +123,23 @@
 {
     if (!_table) {
         CGFloat width = DEVICE_WIDTH * 2 / 5.f;
-        _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH, 0, width, self.sliderBgView.height) style:UITableViewStylePlain refreshHeaderHidden:YES];
+        _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH, 0, width, self.sliderBgView.height - 150) style:UITableViewStylePlain refreshHeaderHidden:YES];
         _table.refreshDelegate = self;
         _table.backgroundColor = [UIColor whiteColor];
         _table.dataSource = self;
         [self.sliderBgView addSubview:_table];
         _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        
+        
+        UIView *header = [[UIView alloc]initWithFrame:CGRectMake(0, 0, width, 66)];
+        _table.tableHeaderView = header;
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 33, width, 33) font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor] title:@"选择就诊人"];
+        label.backgroundColor = DEFAULT_TEXTCOLOR;
+        [header addSubview:label];
     }
     
     [_table addSubview:self.indicator];
-    
     return _table;
 }
 
@@ -127,10 +173,12 @@
         
         if (selected) {
             Weakself.table.left = DEVICE_WIDTH * 3 / 5.f;
+            Weakself.footerView.left = DEVICE_WIDTH * 3 / 5.f;
             Weakself.sliderBgView.alpha = 1;
         }else
         {
             Weakself.table.left = DEVICE_WIDTH;
+            Weakself.footerView.left = DEVICE_WIDTH;
             Weakself.sliderBgView.alpha = 0;
         }
     }];
@@ -160,6 +208,22 @@
     web.familyuid = familyuid;
     web.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:web animated:YES];
+}
+
+- (void)clickToAddPeople
+{
+    AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
+
+     @WeakObj(self);
+     @WeakObj(_table);
+    [add setUpdateParamsBlock:^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+        Weak_table.isReloadData = YES;
+        [Weakself getFamily];
+    }];
+    
+    [self.navigationController pushViewController:add animated:YES];
 }
 
 #pragma mark - 网络请求
@@ -242,15 +306,15 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.textLabel.font = [UIFont systemFontOfSize:14];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     UserInfo *aModel = _table.dataArray[indexPath.row];
     
     NSString *name = aModel.family_user_name;
-    NSString *alia = aModel.appellation;
+//    NSString *alia = aModel.appellation;
+//    NSString *temp = [NSString stringWithFormat:@"(%@)%@",alia,name];
     
-    NSString *temp = [NSString stringWithFormat:@"(%@)%@",alia,name];
-    
-    cell.textLabel.text = temp;
+    cell.textLabel.text = name;
     
     return cell;
 }
