@@ -13,7 +13,8 @@ typedef enum
     MyViewControllerLeftbuttonTypeBack = 0,//返回按钮
     MyViewControllerLeftbuttonTypeOther,//自定义image
     MyViewControllerLeftbuttonTypeText ,//文字
-    MyViewControllerLeftbuttonTypeNull //无返回按钮
+    MyViewControllerLeftbuttonTypeNull, //无返回按钮
+    MyViewControllerLeftbuttonTypeDouble //左侧两个
 
 }MyViewControllerLeftbuttonType;
 
@@ -42,7 +43,10 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 }
 @property(nonatomic,strong)NSString * rightString;//navigationbar right button text
 @property(nonatomic,strong)NSString * leftString;//navigationbar left button text
+@property(nonatomic,strong)NSString * leftString2;//navigationbar left button text
 @property(nonatomic,strong)NSString * leftImageName;
+@property(nonatomic,strong)NSString * leftImageName2;
+
 @property(nonatomic,strong)NSString * rightImageName;//图片名字
 @property(nonatomic,strong)UIImage * rightImage;//image
 

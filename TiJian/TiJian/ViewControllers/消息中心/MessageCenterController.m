@@ -339,7 +339,6 @@
     
     int index = tag - 100;
     if (![self refreshTableForIndex:index].isHaveLoaded) {
-        NSLog(@"请求数据 %d",index);
         [[self refreshTableForIndex:index] showRefreshHeader:YES];
     }
 }

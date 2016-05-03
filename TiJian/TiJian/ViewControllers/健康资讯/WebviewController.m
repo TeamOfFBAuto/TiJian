@@ -80,6 +80,15 @@
     if (self.guaHao) {
         
         [self networkForForGuahaoType:self.type];//挂号
+        
+        self.leftImageName = @"back";
+        self.leftString2 = @"关闭";
+        self.rightImageName = @"ios7_refresh4139.png";
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeDouble WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+        
+        //导航栏左侧
+        
+        
                NSString *title = @"";
         switch (self.type) {
             case 1:
@@ -147,52 +156,7 @@
         self.myTitle = self.navigationTitle ? :  @"健康资讯";
 
     }
-    
-//    /**
-//     底部工具条
-//     */
-//    UIView *toolview=[[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT- 65 - 49, DEVICE_WIDTH, 49)];
-//    toolview.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"ios7_webviewbar.png"]];
-//    [self.view addSubview:toolview];
-//    
-//    NSArray *array_imgname=[NSArray arrayWithObjects:@"ios7_goback4032.png",@"ios7_goahead4032.png",@"ios7_refresh4139.png", nil];
-//    for (int i = 0; i < 3; i ++) {
-//        UIImage *img = [UIImage imageNamed:[array_imgname objectAtIndex:i]];
-//        UIButton *tool_Button = [[UIButton alloc]initWithFrame:CGRectMake(10 + i * 70, (49 - 18)/2.f, 20 , 18)];
-//        tool_Button.tag = 99 + i;
-//        [tool_Button setBackgroundImage:img forState:UIControlStateNormal];
-//        [tool_Button addTarget:self action:@selector(dobuttontool:) forControlEvents:UIControlEventTouchUpInside];
-//        [toolview addSubview:tool_Button];
-//        
-//    }
-//    //line
-//    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.5)];
-//    line.backgroundColor = DEFAULT_LINECOLOR;
-//    [toolview addSubview:line];
-    
 }
-
-//-(void)dobuttontool:(UIButton *)sender{
-//    switch (sender.tag) {
-//        case 99:
-//            [_webView goBack];
-//            break;
-//        case 100:
-//            [_webView goForward];
-//            break;
-//        case 101:
-//        {
-//            [_webView reload];
-//        }
-//            break;
-//            
-//            
-//        default:
-//            break;
-//    }
-//}
-
-
 //- (void)test:(CGFloat)x
 //{
 //    if (x >= 1.0) {
@@ -284,23 +248,6 @@
     [self.navigationController pushViewController:edit animated:YES];
 }
 
-- (void)editOtherPeople
-{
-    AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
-    add.actionStyle = ACTIONSTYLE_DETTAILT;
-//    add.userModel = aModel;
-//    __weak typeof(_table)weakTable = _table;
-    
-    [add setUpdateParamsBlock:^(NSDictionary *params){
-        
-        NSLog(@"params %@",params);
-//        [weakTable showRefreshHeader:YES];
-    }];
-    
-    [self.navigationController pushViewController:add animated:YES];
-
-}
-
 -(void)leftButtonTap:(UIButton *)sender
 {
     if (_webView.canGoBack) {
@@ -331,7 +278,6 @@
 -(void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
     [_progressView setProgress:progress animated:YES];
-    
     DDLOG(@"progress %f",progress);
 }
 

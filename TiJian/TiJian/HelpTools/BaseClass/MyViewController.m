@@ -21,8 +21,10 @@
 @property(nonatomic,strong)UIButton *topButton;//置顶按钮
 @property(nonatomic,retain)UIScrollView *scrollView;
 @property(nonatomic,retain)UIButton *leftButton;
+@property(nonatomic,retain)UIButton *leftButton2;
 @property(nonatomic,retain)UIBarButtonItem *rightButtonItem;//右
 @property(nonatomic,retain)UIBarButtonItem *leftButtonItem;//左
+@property(nonatomic,retain)UIBarButtonItem *leftButtonItem2;//左2
 
 @end
 
@@ -211,6 +213,25 @@
     }else if (theType == MyViewControllerLeftbuttonTypeNull)
     {
         self.navigationItem.leftBarButtonItems = nil;
+    }else if (theType == MyViewControllerLeftbuttonTypeDouble)
+    {
+        if (self.leftString) {
+            [self.leftButton setTitle:self.leftString forState:UIControlStateNormal];
+        }
+       
+        if (self.leftImageName) {
+            [self.leftButton setImage:[UIImage imageNamed:self.leftImageName] forState:UIControlStateNormal];
+        }
+        
+        if (self.leftString2) {
+            [self.leftButton2 setTitle:self.leftString2 forState:UIControlStateNormal];
+        }
+        
+        if (self.leftImageName2) {
+            [self.leftButton2 setImage:[UIImage imageNamed:self.leftImageName2] forState:UIControlStateNormal];
+        }
+        
+        self.navigationItem.leftBarButtonItems = @[self.leftButtonItem,self.leftButtonItem2];
     }
     
     
@@ -294,6 +315,14 @@
     return _leftButtonItem;
 }
 
+-(UIBarButtonItem *)leftButtonItem2
+{
+    if (!_leftButtonItem2) {
+        _leftButtonItem2 = [[UIBarButtonItem alloc]initWithCustomView:self.leftButton2];
+    }
+    return _leftButtonItem2;
+}
+
 -(UIButton *)right_button
 {
     if (!_right_button) {
@@ -323,6 +352,20 @@
     return _leftButton;
 }
 
+-(UIButton *)leftButton2
+{
+    if (!_leftButton2) {
+        
+        UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
+        [button_back addTarget:self action:@selector(leftButtonTap2:) forControlEvents:UIControlEventTouchUpInside];
+//        [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
+        [button_back setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        _leftButton2 = button_back;
+    }
+    return _leftButton2;
+}
+
 #pragma mark - 事件处理method
 
 -(void)rightButtonTap:(UIButton *)sender
@@ -331,6 +374,11 @@
 }
 
 -(void)leftButtonTap:(UIButton *)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)leftButtonTap2:(UIButton *)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
 }

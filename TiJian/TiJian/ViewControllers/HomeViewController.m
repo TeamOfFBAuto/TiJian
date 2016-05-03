@@ -513,289 +513,289 @@
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
-- (void)prepareViewsVersionOne
-{
-    UIScrollView *bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 48 - 64)];
-    [self.view addSubview:bgScroll];
-    _bgScrollView = bgScroll;
-    
-    CGFloat width_sum = DEVICE_WIDTH - 10 * 2;
-    
-    UIImage *image = [UIImage imageNamed:@"homepage_1"];
-    
-    CGFloat radio = image.size.height / image.size.width;
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(pushToPersonalCustom) forControlEvents:UIControlEventTouchUpInside];
-    [bgScroll addSubview:btn];
-    CGFloat width = width_sum;
-    CGFloat height = width *radio;
-    btn.frame = CGRectMake(10, 0, width, height);
-    
-    NSArray *images = @[[UIImage imageNamed:@"homepage_2"],
-                        [UIImage imageNamed:@"homepage_3"],
-                        [UIImage imageNamed:@"homepage_4"]];
-    
-    
-    CGFloat bottom = btn.bottom;
-    for (int i = 0; i < 3; i ++) {
-        
-        UIImage *image = images[i];
-        radio = image.size.height / image.size.width;//高/宽
-        CGFloat width_small = (DEVICE_WIDTH - 10 * 4) / 3.f;
-        CGFloat height_small = radio * width_small;
-        
-        UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn1 setBackgroundImage:image forState:UIControlStateNormal];
-        [btn1 addTarget:self action:@selector(clickToPush:) forControlEvents:UIControlEventTouchUpInside];
-        btn1.frame = CGRectMake(10 + (width_small + 10) * i, btn.bottom + 10, width_small, height_small);
-        [bgScroll addSubview:btn1];
-        
-        btn1.tag = 100 + i;
-        bottom = btn1.bottom;
-    }
-    
-    //健康信息
-    UIView *view_health = [[UIView alloc]initWithFrame:CGRectMake(10, bottom + 15, DEVICE_WIDTH - 20, 77.5)];
-    view_health.backgroundColor = [UIColor whiteColor];
-    [bgScroll addSubview:view_health];
-    [view_health addTaget:self action:@selector(clickToPush:) tag:kTagHealth];
-    view_health.hidden = YES;//默认隐藏
-    self.healthView = view_health;
-    
-    //图标
-    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(20, 13.5, 50, 50)];
-    [icon addRoundCorner];
-    icon.backgroundColor = DEFAULT_TEXTCOLOR;
-    [view_health addSubview:icon];
-    self.icon_health = icon;
-    
-    //标题
-    CGFloat left = icon.right + 10;
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, 25, DEVICE_WIDTH - left - 20, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [view_health addSubview:titleLabel];
-    self.title_health = titleLabel;
-    
-    UILabel *subLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, titleLabel.bottom + 8, DEVICE_WIDTH - left - 20, 12) title:nil font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [view_health addSubview:subLabel];
-    self.subTitle_health = subLabel;
-    
-    bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, view_health.bottom + 15);
-    
-    
-    
-        //挂号网对接测试
-        //1~14
-        NSArray *items = @[@"预约挂号",
-                           @"转诊预约",
-                           @"健康顾问团",
-                           @"公立医院主治医生",
-                           @"公立医院权威专家",
-                           @"我的问诊",
-                           @"我的预约",
-                           @"我的转诊",
-                           @"我的关注",
-                           @"家庭联系人",
-                           @"家庭病例",
-                           @"我的申请",
-                           @"医生随访",
-                           @"购药订单"];
-    
-        int count = (int)items.count;
-        CGFloat width_btn = (DEVICE_WIDTH- 20) / 3.f ;
-        for (int i = 0; i < count; i ++) {
-    
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [btn setTitle:items[i] forState:UIControlStateNormal];
-            [bgScroll addSubview:btn];
-            [btn setTintColor:DEFAULT_TEXTCOLOR_TITLE];
-            btn.frame = CGRectMake(5 + (i % 3) * (width_btn + 5), view_health.bottom + 10 + 50 * (i / 3), width_btn, 45);
-            btn.backgroundColor = DEFAULT_TEXTCOLOR;
-            btn.titleLabel.font = [UIFont systemFontOfSize:12];
-            bottom = btn.bottom;
-            btn.tag = 500 + i + 1;//从1开始
-            [btn addTarget:self action:@selector(clickToGuaHao:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, bottom + 15);
-}
-
-- (void)prepareViewsVersionTwo
-{
-    UIScrollView *bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 48 - 64)];
-    [self.view addSubview:bgScroll];
-    _bgScrollView = bgScroll;
-    
-    CGFloat width_sum = DEVICE_WIDTH;
-    UIImage *image = [UIImage imageNamed:@"homepage_gexinghua"];
-    
-    CGFloat radio = image.size.height / image.size.width;
-    
-    //个性定制
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(pushToPersonalCustom) forControlEvents:UIControlEventTouchUpInside];
-    [bgScroll addSubview:btn];
-    CGFloat width = width_sum;
-    CGFloat height = width *radio;
-    btn.frame = CGRectMake(0, 0, width, height);
-    
-    //体检预约、体检商城入口
-    
-    NSArray *images = @[[UIImage imageNamed:@"homepage_tijianyuyue"],
-                        [UIImage imageNamed:@"homepage_shangcheng"]];
-    NSArray *titles = @[@" 体检预约",@" 体检商城"];
-    NSArray *titles_sub = @[@"足不出户 快速预约",@"体检套餐 任你挑选"];
-    
-    CGFloat bottom = btn.bottom;
-    for (int i = 0; i < images.count; i ++) {
-        
-        CGFloat width_small = DEVICE_WIDTH / 2.f;
-        CGFloat height_small = width_small / 2.f;
-        
-        UIButton *classBtn = [self classViewFrame:CGRectMake((width_small + 0.5) * i, btn.bottom + 10, width_small, height_small)
-                                            image:images[i]
-                                            title:titles[i]
-                                         subTitle:titles_sub[i]
-                                         imageTop:25
-                                         titleDis:5
-                                              tag:100 + i];
-        [bgScroll addSubview:classBtn];
-        
-        if (i == 0) {
-            //line
-            UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(classBtn.right, classBtn.top, 0.5, classBtn.height)];
-            line.backgroundColor = DEFAULT_LINECOLOR;
-            [bgScroll addSubview:line];
-        }
-        
-        bottom = classBtn.bottom;
-        
-    }
-    //预约商城底部line
-    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, bottom, DEVICE_WIDTH, 0.5)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [bgScroll addSubview:line];
-    
-    //挂号部分 就医服务
-    UIView *view_guhao = [[UIView alloc]initWithFrame:CGRectMake(0, bottom + 10, DEVICE_WIDTH, 150.f)];
-    view_guhao.backgroundColor = [UIColor whiteColor];
-    [bgScroll addSubview:view_guhao];
-    
-    //标题
-    UILabel *textLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH - 30, 40) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"就医服务"];
-    [view_guhao addSubview:textLabel];
-    
-    //标题底下line
-    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, 0.5)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [view_guhao addSubview:line];
-    
-    //=====免费咨询、在线问诊、预约挂号、精准预约
-//    CGFloat radio_w_h = 140.f / 110.f;//宽比高
-    CGFloat radio_section1 = 5.f/13.f;//第一部分宽度比例
-//    CGFloat radio_section2 = 8.f/13.f;//第二部分宽度比例
-    
-    //免费咨询
-    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn1 addTarget:self action:@selector(clickToPush:) forControlEvents:UIControlEventTouchUpInside];
-    btn1.frame = CGRectMake(0, line.bottom, DEVICE_WIDTH * radio_section1, view_guhao.height - line.bottom - 0.5);
-    btn1.backgroundColor = [UIColor whiteColor];
-    btn1.tag = kTagGuahao;
-    [view_guhao addSubview:btn1];
-    
-    UIButton *btn_image = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn_image setImage:[UIImage imageNamed:@"homepage_mianfeizixun"] forState:UIControlStateNormal];
-    [btn1 addSubview:btn_image];
-    btn_image.frame = CGRectMake(0, 22, btn1.width, 25);
-    btn_image.userInteractionEnabled = NO;
-    [btn1 addSubview:btn_image];
-    
-    UILabel *textLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(0, btn_image.bottom + 12, btn_image.width, 15) font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE title:@"免费咨询"];
-    [btn1 addSubview:textLabel1];
-    UILabel *textLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(0, textLabel1.bottom + 3, btn_image.width, 13) font:12 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"解决您的困惑"];
-    [btn1 addSubview:textLabel2];
-    
-    
-    
-    //竖分割line
-    line = [[UIImageView alloc]initWithFrame:CGRectMake(btn1.right, btn1.top, 0.5, btn1.height)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [view_guhao addSubview:line];
-    
-    //在线问诊、预约挂号、精准预约
-    images = @[[UIImage imageNamed:@"homepage__zaixianwenzhen"],
-               [UIImage imageNamed:@"homepage_yuyueguahao"],
-               [UIImage imageNamed:@"homepage_jingzhunyuyue"]];
-    titles = @[@" 在线问诊",@" 预约挂号",@" 精准预约"];
-    titles_sub = @[@"问题在这里解答",@"看病不用排队",@"找到好医生"];
-    
-    UIButton *tempBtn;
-    for (int i = 0; i < 3; i ++) {
-        
-        CGRect frame = CGRectZero;
-        if (i == 0) {
-            frame = CGRectMake(line.right, line.top, DEVICE_WIDTH - line.right, line.height/2.f);
-            //line
-            UIView *line_s = [[UIImageView alloc]initWithFrame:CGRectMake(line.right, line.top + line.height/2.f, DEVICE_WIDTH - line.right, 0.5)];
-            line_s.backgroundColor = DEFAULT_LINECOLOR;
-            [view_guhao addSubview:line_s];
-            
-        }else if (i == 1)
-        {
-            frame = CGRectMake(line.right, tempBtn.bottom + 0.5, tempBtn.width/2.f, tempBtn.height - 0.5);
-            //line
-            UIView *line_s = [[UIImageView alloc]initWithFrame:CGRectMake(line.right + tempBtn.width/2.f, tempBtn.bottom + 0.5, 0.5, tempBtn.height - 0.5)];
-            line_s.backgroundColor = DEFAULT_LINECOLOR;
-            [view_guhao addSubview:line_s];
-        }else
-        {
-            frame = CGRectMake(tempBtn.right + 0.5, tempBtn.top, tempBtn.width - 0.5, tempBtn.height);
-        }
-        UIButton *classBtn = [self classViewFrame:frame
-                                            image:images[i]
-                                            title:titles[i]
-                                         subTitle:titles_sub[i]
-                                         imageTop:6
-                                         titleDis:3
-                                              tag:kTagGuahao + i + 1];
-        [view_guhao addSubview:classBtn];
-        tempBtn = classBtn;
-
-    }
-    
-    //底部line
-    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, view_guhao.height - 0.5, DEVICE_WIDTH, 0.5)];
-    line.backgroundColor = DEFAULT_LINECOLOR;
-    [view_guhao addSubview:line];
-    
-    //健康信息
-    UIView *view_health = [[UIView alloc]initWithFrame:CGRectMake(0, view_guhao.bottom + 10, DEVICE_WIDTH, 80.f)];
-    view_health.backgroundColor = [UIColor whiteColor];
-    [bgScroll addSubview:view_health];
-    [view_health addTaget:self action:@selector(clickToPush:) tag:kTagHealth];
-    view_health.hidden = YES;//默认隐藏
-    self.healthView = view_health;
-    
-    //图标
-    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 90, 60)];
-    [icon addRoundCorner];
-    icon.backgroundColor = DEFAULT_TEXTCOLOR;
-    [view_health addSubview:icon];
-    [icon addCornerRadius:4.f];
-    self.icon_health = icon;
-    
-    //标题
-    CGFloat left = icon.right + 10;
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, 25, DEVICE_WIDTH - left - 20, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [view_health addSubview:titleLabel];
-    self.title_health = titleLabel;
-    
-    UILabel *subLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, titleLabel.bottom + 8, DEVICE_WIDTH - left - 20, 12) title:nil font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
-    [view_health addSubview:subLabel];
-    self.subTitle_health = subLabel;
-    
-    bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, view_health.bottom + 15);
-}
+//- (void)prepareViewsVersionOne
+//{
+//    UIScrollView *bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 48 - 64)];
+//    [self.view addSubview:bgScroll];
+//    _bgScrollView = bgScroll;
+//    
+//    CGFloat width_sum = DEVICE_WIDTH - 10 * 2;
+//    
+//    UIImage *image = [UIImage imageNamed:@"homepage_1"];
+//    
+//    CGFloat radio = image.size.height / image.size.width;
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btn setBackgroundImage:image forState:UIControlStateNormal];
+//    [btn addTarget:self action:@selector(pushToPersonalCustom) forControlEvents:UIControlEventTouchUpInside];
+//    [bgScroll addSubview:btn];
+//    CGFloat width = width_sum;
+//    CGFloat height = width *radio;
+//    btn.frame = CGRectMake(10, 0, width, height);
+//    
+//    NSArray *images = @[[UIImage imageNamed:@"homepage_2"],
+//                        [UIImage imageNamed:@"homepage_3"],
+//                        [UIImage imageNamed:@"homepage_4"]];
+//    
+//    
+//    CGFloat bottom = btn.bottom;
+//    for (int i = 0; i < 3; i ++) {
+//        
+//        UIImage *image = images[i];
+//        radio = image.size.height / image.size.width;//高/宽
+//        CGFloat width_small = (DEVICE_WIDTH - 10 * 4) / 3.f;
+//        CGFloat height_small = radio * width_small;
+//        
+//        UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [btn1 setBackgroundImage:image forState:UIControlStateNormal];
+//        [btn1 addTarget:self action:@selector(clickToPush:) forControlEvents:UIControlEventTouchUpInside];
+//        btn1.frame = CGRectMake(10 + (width_small + 10) * i, btn.bottom + 10, width_small, height_small);
+//        [bgScroll addSubview:btn1];
+//        
+//        btn1.tag = 100 + i;
+//        bottom = btn1.bottom;
+//    }
+//    
+//    //健康信息
+//    UIView *view_health = [[UIView alloc]initWithFrame:CGRectMake(10, bottom + 15, DEVICE_WIDTH - 20, 77.5)];
+//    view_health.backgroundColor = [UIColor whiteColor];
+//    [bgScroll addSubview:view_health];
+//    [view_health addTaget:self action:@selector(clickToPush:) tag:kTagHealth];
+//    view_health.hidden = YES;//默认隐藏
+//    self.healthView = view_health;
+//    
+//    //图标
+//    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(20, 13.5, 50, 50)];
+//    [icon addRoundCorner];
+//    icon.backgroundColor = DEFAULT_TEXTCOLOR;
+//    [view_health addSubview:icon];
+//    self.icon_health = icon;
+//    
+//    //标题
+//    CGFloat left = icon.right + 10;
+//    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, 25, DEVICE_WIDTH - left - 20, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+//    [view_health addSubview:titleLabel];
+//    self.title_health = titleLabel;
+//    
+//    UILabel *subLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, titleLabel.bottom + 8, DEVICE_WIDTH - left - 20, 12) title:nil font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+//    [view_health addSubview:subLabel];
+//    self.subTitle_health = subLabel;
+//    
+//    bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, view_health.bottom + 15);
+//    
+//    
+//    
+//        //挂号网对接测试
+//        //1~14
+//        NSArray *items = @[@"预约挂号",
+//                           @"转诊预约",
+//                           @"健康顾问团",
+//                           @"公立医院主治医生",
+//                           @"公立医院权威专家",
+//                           @"我的问诊",
+//                           @"我的预约",
+//                           @"我的转诊",
+//                           @"我的关注",
+//                           @"家庭联系人",
+//                           @"家庭病例",
+//                           @"我的申请",
+//                           @"医生随访",
+//                           @"购药订单"];
+//    
+//        int count = (int)items.count;
+//        CGFloat width_btn = (DEVICE_WIDTH- 20) / 3.f ;
+//        for (int i = 0; i < count; i ++) {
+//    
+//            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            [btn setTitle:items[i] forState:UIControlStateNormal];
+//            [bgScroll addSubview:btn];
+//            [btn setTintColor:DEFAULT_TEXTCOLOR_TITLE];
+//            btn.frame = CGRectMake(5 + (i % 3) * (width_btn + 5), view_health.bottom + 10 + 50 * (i / 3), width_btn, 45);
+//            btn.backgroundColor = DEFAULT_TEXTCOLOR;
+//            btn.titleLabel.font = [UIFont systemFontOfSize:12];
+//            bottom = btn.bottom;
+//            btn.tag = 500 + i + 1;//从1开始
+//            [btn addTarget:self action:@selector(clickToGuaHao:) forControlEvents:UIControlEventTouchUpInside];
+//        }
+//        bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, bottom + 15);
+//}
+//
+//- (void)prepareViewsVersionTwo
+//{
+//    UIScrollView *bgScroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 48 - 64)];
+//    [self.view addSubview:bgScroll];
+//    _bgScrollView = bgScroll;
+//    
+//    CGFloat width_sum = DEVICE_WIDTH;
+//    UIImage *image = [UIImage imageNamed:@"homepage_gexinghua"];
+//    
+//    CGFloat radio = image.size.height / image.size.width;
+//    
+//    //个性定制
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btn setBackgroundImage:image forState:UIControlStateNormal];
+//    [btn addTarget:self action:@selector(pushToPersonalCustom) forControlEvents:UIControlEventTouchUpInside];
+//    [bgScroll addSubview:btn];
+//    CGFloat width = width_sum;
+//    CGFloat height = width *radio;
+//    btn.frame = CGRectMake(0, 0, width, height);
+//    
+//    //体检预约、体检商城入口
+//    
+//    NSArray *images = @[[UIImage imageNamed:@"homepage_tijianyuyue"],
+//                        [UIImage imageNamed:@"homepage_shangcheng"]];
+//    NSArray *titles = @[@" 体检预约",@" 体检商城"];
+//    NSArray *titles_sub = @[@"足不出户 快速预约",@"体检套餐 任你挑选"];
+//    
+//    CGFloat bottom = btn.bottom;
+//    for (int i = 0; i < images.count; i ++) {
+//        
+//        CGFloat width_small = DEVICE_WIDTH / 2.f;
+//        CGFloat height_small = width_small / 2.f;
+//        
+//        UIButton *classBtn = [self classViewFrame:CGRectMake((width_small + 0.5) * i, btn.bottom + 10, width_small, height_small)
+//                                            image:images[i]
+//                                            title:titles[i]
+//                                         subTitle:titles_sub[i]
+//                                         imageTop:25
+//                                         titleDis:5
+//                                              tag:100 + i];
+//        [bgScroll addSubview:classBtn];
+//        
+//        if (i == 0) {
+//            //line
+//            UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(classBtn.right, classBtn.top, 0.5, classBtn.height)];
+//            line.backgroundColor = DEFAULT_LINECOLOR;
+//            [bgScroll addSubview:line];
+//        }
+//        
+//        bottom = classBtn.bottom;
+//        
+//    }
+//    //预约商城底部line
+//    UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, bottom, DEVICE_WIDTH, 0.5)];
+//    line.backgroundColor = DEFAULT_LINECOLOR;
+//    [bgScroll addSubview:line];
+//    
+//    //挂号部分 就医服务
+//    UIView *view_guhao = [[UIView alloc]initWithFrame:CGRectMake(0, bottom + 10, DEVICE_WIDTH, 150.f)];
+//    view_guhao.backgroundColor = [UIColor whiteColor];
+//    [bgScroll addSubview:view_guhao];
+//    
+//    //标题
+//    UILabel *textLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH - 30, 40) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"就医服务"];
+//    [view_guhao addSubview:textLabel];
+//    
+//    //标题底下line
+//    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, 0.5)];
+//    line.backgroundColor = DEFAULT_LINECOLOR;
+//    [view_guhao addSubview:line];
+//    
+//    //=====免费咨询、在线问诊、预约挂号、精准预约
+////    CGFloat radio_w_h = 140.f / 110.f;//宽比高
+//    CGFloat radio_section1 = 5.f/13.f;//第一部分宽度比例
+////    CGFloat radio_section2 = 8.f/13.f;//第二部分宽度比例
+//    
+//    //免费咨询
+//    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btn1 addTarget:self action:@selector(clickToPush:) forControlEvents:UIControlEventTouchUpInside];
+//    btn1.frame = CGRectMake(0, line.bottom, DEVICE_WIDTH * radio_section1, view_guhao.height - line.bottom - 0.5);
+//    btn1.backgroundColor = [UIColor whiteColor];
+//    btn1.tag = kTagGuahao;
+//    [view_guhao addSubview:btn1];
+//    
+//    UIButton *btn_image = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btn_image setImage:[UIImage imageNamed:@"homepage_mianfeizixun"] forState:UIControlStateNormal];
+//    [btn1 addSubview:btn_image];
+//    btn_image.frame = CGRectMake(0, 22, btn1.width, 25);
+//    btn_image.userInteractionEnabled = NO;
+//    [btn1 addSubview:btn_image];
+//    
+//    UILabel *textLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(0, btn_image.bottom + 12, btn_image.width, 15) font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE title:@"免费咨询"];
+//    [btn1 addSubview:textLabel1];
+//    UILabel *textLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(0, textLabel1.bottom + 3, btn_image.width, 13) font:12 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"解决您的困惑"];
+//    [btn1 addSubview:textLabel2];
+//    
+//    
+//    
+//    //竖分割line
+//    line = [[UIImageView alloc]initWithFrame:CGRectMake(btn1.right, btn1.top, 0.5, btn1.height)];
+//    line.backgroundColor = DEFAULT_LINECOLOR;
+//    [view_guhao addSubview:line];
+//    
+//    //在线问诊、预约挂号、精准预约
+//    images = @[[UIImage imageNamed:@"homepage__zaixianwenzhen"],
+//               [UIImage imageNamed:@"homepage_yuyueguahao"],
+//               [UIImage imageNamed:@"homepage_jingzhunyuyue"]];
+//    titles = @[@" 在线问诊",@" 预约挂号",@" 精准预约"];
+//    titles_sub = @[@"问题在这里解答",@"看病不用排队",@"找到好医生"];
+//    
+//    UIButton *tempBtn;
+//    for (int i = 0; i < 3; i ++) {
+//        
+//        CGRect frame = CGRectZero;
+//        if (i == 0) {
+//            frame = CGRectMake(line.right, line.top, DEVICE_WIDTH - line.right, line.height/2.f);
+//            //line
+//            UIView *line_s = [[UIImageView alloc]initWithFrame:CGRectMake(line.right, line.top + line.height/2.f, DEVICE_WIDTH - line.right, 0.5)];
+//            line_s.backgroundColor = DEFAULT_LINECOLOR;
+//            [view_guhao addSubview:line_s];
+//            
+//        }else if (i == 1)
+//        {
+//            frame = CGRectMake(line.right, tempBtn.bottom + 0.5, tempBtn.width/2.f, tempBtn.height - 0.5);
+//            //line
+//            UIView *line_s = [[UIImageView alloc]initWithFrame:CGRectMake(line.right + tempBtn.width/2.f, tempBtn.bottom + 0.5, 0.5, tempBtn.height - 0.5)];
+//            line_s.backgroundColor = DEFAULT_LINECOLOR;
+//            [view_guhao addSubview:line_s];
+//        }else
+//        {
+//            frame = CGRectMake(tempBtn.right + 0.5, tempBtn.top, tempBtn.width - 0.5, tempBtn.height);
+//        }
+//        UIButton *classBtn = [self classViewFrame:frame
+//                                            image:images[i]
+//                                            title:titles[i]
+//                                         subTitle:titles_sub[i]
+//                                         imageTop:6
+//                                         titleDis:3
+//                                              tag:kTagGuahao + i + 1];
+//        [view_guhao addSubview:classBtn];
+//        tempBtn = classBtn;
+//
+//    }
+//    
+//    //底部line
+//    line = [[UIImageView alloc]initWithFrame:CGRectMake(0, view_guhao.height - 0.5, DEVICE_WIDTH, 0.5)];
+//    line.backgroundColor = DEFAULT_LINECOLOR;
+//    [view_guhao addSubview:line];
+//    
+//    //健康信息
+//    UIView *view_health = [[UIView alloc]initWithFrame:CGRectMake(0, view_guhao.bottom + 10, DEVICE_WIDTH, 80.f)];
+//    view_health.backgroundColor = [UIColor whiteColor];
+//    [bgScroll addSubview:view_health];
+//    [view_health addTaget:self action:@selector(clickToPush:) tag:kTagHealth];
+//    view_health.hidden = YES;//默认隐藏
+//    self.healthView = view_health;
+//    
+//    //图标
+//    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 90, 60)];
+//    [icon addRoundCorner];
+//    icon.backgroundColor = DEFAULT_TEXTCOLOR;
+//    [view_health addSubview:icon];
+//    [icon addCornerRadius:4.f];
+//    self.icon_health = icon;
+//    
+//    //标题
+//    CGFloat left = icon.right + 10;
+//    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, 25, DEVICE_WIDTH - left - 20, 14) title:nil font:13 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+//    [view_health addSubview:titleLabel];
+//    self.title_health = titleLabel;
+//    
+//    UILabel *subLabel = [[UILabel alloc]initWithFrame:CGRectMake(left, titleLabel.bottom + 8, DEVICE_WIDTH - left - 20, 12) title:nil font:11 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+//    [view_health addSubview:subLabel];
+//    self.subTitle_health = subLabel;
+//    
+//    bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, view_health.bottom + 15);
+//}
 
 - (void)prepareViewsVersionThree
 {

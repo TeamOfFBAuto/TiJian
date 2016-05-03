@@ -468,7 +468,6 @@
     }
     
     if (![self tableViewWithIndex:index].isHaveLoaded) {
-        NSLog(@"请求数据 %d",index);
         [[self tableViewWithIndex:index] showRefreshHeader:YES];
     }
 }

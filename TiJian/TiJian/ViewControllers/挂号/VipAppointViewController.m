@@ -71,8 +71,8 @@
         
         UIButton *add = [UIButton buttonWithType:UIButtonTypeCustom];
         [add setTitle:@"添加就诊人" forState:UIControlStateNormal];
-        add.frame = CGRectMake(20, _footerView.height - 80 - 30 - 20, width - 40, 20);
-        [add addCornerRadius:10];
+        add.frame = CGRectMake(20, _footerView.height - 80 - 30 - 30 - 5, width - 40, 30);
+        [add addCornerRadius:15];
         add.backgroundColor = DEFAULT_TEXTCOLOR;
         [add.titleLabel setFont:[UIFont systemFontOfSize:12]];
         [add addTarget:self action:@selector(clickToAddPeople) forControlEvents:UIControlEventTouchUpInside];
@@ -80,8 +80,8 @@
         
         UIButton *cancel = [UIButton buttonWithType:UIButtonTypeCustom];
         [cancel setTitle:@"取消" forState:UIControlStateNormal];
-        cancel.frame = CGRectMake(20, add.bottom + 15, width - 40, 20);
-        [cancel addCornerRadius:10];
+        cancel.frame = CGRectMake(20, add.bottom + 15 + 10, width - 40, 30);
+        [cancel addCornerRadius:15];
         cancel.backgroundColor = [UIColor lightGrayColor];
         [cancel.titleLabel setFont:[UIFont systemFontOfSize:12]];
         [cancel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -240,7 +240,15 @@
         NSArray *temp = [UserInfo modelsFromArray:result[@"family_list"]];
         UserInfo *selfUser = [UserInfo userInfoForCache];
         selfUser.appellation = @"本人";
-        selfUser.family_user_name = selfUser.real_name;
+        
+        NSString *name = @"本人";
+        if ([LTools isEmpty:selfUser.real_name]) {
+            name = selfUser.user_name;
+        }else
+        {
+            name = selfUser.real_name;
+        }
+        selfUser.family_user_name = name;
         
         NSMutableArray *arr = [NSMutableArray arrayWithObject:selfUser];
         [arr addObjectsFromArray:temp];
