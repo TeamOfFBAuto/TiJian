@@ -576,6 +576,18 @@
         
     }];
     
+    NSDictionary *liulanliangDic = @{
+                          @"brand_id":self.brand_id
+                          };
+    [_request requestWithMethod:YJYRequstMethodGet api:BrandStoreLiulanliangNumAdd parameters:liulanliangDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        DDLOG(@"品牌店浏览量+1");
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+    
     
 }
 

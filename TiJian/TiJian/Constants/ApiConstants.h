@@ -70,6 +70,9 @@
 //商品浏览量+1
 #define StoreProductLiulanNumAdd @"/index.php?d=api&c=statistic&m=add_product_view"
 
+//店铺浏览量+1
+#define BrandStoreLiulanliangNumAdd @"/index.php?d=api&c=setmeal&m=add_brand_view"
+
 //套餐下体检项目列表
 #define StoreProdectProjectList @"/index.php?d=api&c=setmeal&m=setmeal_project_list"
 
