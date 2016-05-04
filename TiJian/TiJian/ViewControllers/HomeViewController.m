@@ -924,7 +924,7 @@
     [bgScroll addSubview:view_zhuanjia];
     
     //标题
-    textLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH - 30, 40) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"专家问诊"];
+    textLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, DEVICE_WIDTH - 15, 40) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:@"专家问诊"];
     [view_zhuanjia addSubview:textLabel];
     [textLabel addTaget:self action:@selector(clickToPush:) tag:kTagZhuanJiaWenZhen];
 

@@ -4001,8 +4001,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4025,7 +4025,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
+				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4036,8 +4036,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chaowei Li (D8TKB68L88)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chaowei Li (D8TKB68L88)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4060,7 +4060,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "69ab88b0-1ae0-4961-9f07-e09bb936dcfc";
+				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;

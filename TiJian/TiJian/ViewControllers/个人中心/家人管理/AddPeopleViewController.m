@@ -33,6 +33,16 @@
     _items = @[@"姓名:",@"称谓:",@"身份证号:",@"性别:",@"年龄:",@"手机号:"];
 
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
+    
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table.delegate = self;
+    _table.dataSource = self;
+    [self.view addSubview:_table];
+    _table.backgroundColor = [UIColor clearColor];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(resetState)];
+    [_table addGestureRecognizer:tap];
+    
     if (self.actionStyle == ACTIONSTYLE_ADD) {
         
         _contentArray = [NSMutableArray arrayWithArray:@[@"请填写与身份证一致的姓名",@"请填写",@"请认真填写",@"请选择",@"请选择",@"请填写"]];
@@ -46,17 +56,18 @@
         _contentArray = [NSMutableArray arrayWithArray:@[self.userModel.family_user_name ? : @"请填写与身份证一致的姓名",self.userModel.appellation ? : @"请填写",self.userModel.id_card ? : @"请认真填写",gender,self.userModel.age ? : @"请选择",self.userModel.mobile ? : @"请填写"]];
         
         self.rightString = @"提交";
+        
+    }else if (self.actionStyle == ACTIONSTYLE_DetailByFamily_uid){
+        
+//        NSString *gender = [self.userModel.gender intValue] == 1 ? @"男" : @"女";
+//        _sex = [self.userModel.gender intValue];//性别 1男2女
+//        _age = [self.userModel.age intValue];//年龄
+//        _contentArray = [NSMutableArray arrayWithArray:@[self.userModel.family_user_name ? : @"请填写与身份证一致的姓名",self.userModel.appellation ? : @"请填写",self.userModel.id_card ? : @"请认真填写",gender,self.userModel.age ? : @"请选择",self.userModel.mobile ? : @"请填写"]];
+        
+        self.rightString = @"提交";
+        [self networkForFamilyUserInfo];
     }
     
-    
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
-    _table.delegate = self;
-    _table.dataSource = self;
-    [self.view addSubview:_table];
-    _table.backgroundColor = [UIColor clearColor];
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(resetState)];
-    [_table addGestureRecognizer:tap];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,7 +75,41 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma - mark 数据处理
+
+- (void)parseFamilyInfoWithResult:(NSDictionary *)result
+{
+    UserInfo *userInfo = [[UserInfo alloc]initWithDictionary:result[@"family_info"]];
+    NSString *gender = [userInfo.gender intValue] == 1 ? @"男" : @"女";
+    _sex = [userInfo.gender intValue];//性别 1男2女
+    _age = [userInfo.age intValue];//年龄
+    _contentArray = [NSMutableArray arrayWithArray:@[userInfo.family_user_name ? : @"请填写与身份证一致的姓名",userInfo.appellation ? : @"请填写",userInfo.id_card ? : @"请认真填写",gender,userInfo.age ? : @"请选择",userInfo.mobile ? : @"请填写"]];
+    [_table reloadData];
+}
+
 #pragma - mark 网络请求
+
+/**
+ *  获取家人详情
+ */
+- (void)networkForFamilyUserInfo
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    NSString *authcode = [UserInfo getAuthkey];
+    [param safeSetString:authcode forKey:@"authcode"];
+    [param safeSetString:self.family_uid forKey:@"family_uid"];
+     @WeakObj(self);
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:GET_Family_info parameters:param constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        DDLOG(@"result %@",result);
+        [Weakself parseFamilyInfoWithResult:result];
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+    } failBlock:^(NSDictionary *result) {
+        DDLOG(@"result %@",result);
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+
+    }];
+}
 
 - (void)addFamily
 {
@@ -230,7 +275,8 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
-    if (self.actionStyle == ACTIONSTYLE_DETTAILT) {
+    if (self.actionStyle == ACTIONSTYLE_DETTAILT ||
+        self.actionStyle == ACTIONSTYLE_DetailByFamily_uid) {
         //提交修改结果
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定提交修改信息" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];

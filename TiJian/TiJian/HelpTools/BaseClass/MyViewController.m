@@ -361,6 +361,7 @@
 //        [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
         [button_back setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [button_back.titleLabel setFont:[UIFont systemFontOfSize:14]];
         _leftButton2 = button_back;
     }
     return _leftButton2;
