@@ -19,6 +19,8 @@
 //    UIView *_progressview;
     NJKWebViewProgressView *_progressView;
     NJKWebViewProgress *_progressProxy;
+    NSString *_targetFamilyUid;
+    NSString *_targetUid;
 }
 
 @property(nonatomic,retain)UIWebView *webView;
@@ -248,6 +250,25 @@
     [self.navigationController pushViewController:edit animated:YES];
 }
 
+/**
+ *  编辑家人信息
+ */
+- (void)editOtherPeople
+{
+    AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
+    add.actionStyle = ACTIONSTYLE_DetailByFamily_uid;
+    add.family_uid = _targetFamilyUid;
+    [add setUpdateParamsBlock:^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+        //        [weakTable showRefreshHeader:YES];
+    }];
+    
+    [self.navigationController pushViewController:add animated:YES];
+    
+}
+
+
 -(void)leftButtonTap:(UIButton *)sender
 {
     if (_webView.canGoBack) {
@@ -267,10 +288,18 @@
     }
     
     if (buttonIndex == 1) {
+        
         if (alertView.tag >= 100) {
             
             [self addFailView];
-            [self clickToEditUserInfoIsFull:YES];
+            
+            if ([_targetFamilyUid integerValue] > 0) {
+                
+                [self editOtherPeople];
+            }else
+            {
+                [self clickToEditUserInfoIsFull:YES];
+            }
         }
     }
 }
@@ -393,7 +422,6 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
         [weakSelf parseGuaHaoResult:result];
         
     } failBlock:^(NSDictionary *result) {
@@ -409,6 +437,8 @@
 - (void)parseGuaHaoResult:(NSDictionary *)result
 {
     int errcode = [result[@"errorcode"]intValue];
+    _targetFamilyUid = result[@"family_uid"];
+    _targetUid = result[@"uid"];
     NSString *msg = result[@"msg"];
     switch (errcode) {
         case 0://成功

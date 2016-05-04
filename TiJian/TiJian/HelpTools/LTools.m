@@ -1588,4 +1588,95 @@
 }
 
 
+//根据身份证号获取生日(18位身份证 7-14为出生日期)
+-(NSString *)birthdayStrFromIdCard:(NSString *)numberStr
+{
+    NSMutableString *result = [NSMutableString stringWithCapacity:0];
+    NSString *year = nil;
+    NSString *month = nil;
+    
+    BOOL isAllNumber = YES;
+    NSString *day = nil;
+    
+    if([numberStr length] < 14)
+        return result;
+    
+    /**
+     *  15位身份证号码
+     */
+    if ([numberStr length] == 15) {
+        
+        //**截取前12位
+        NSString *fontNumer = [numberStr substringWithRange:NSMakeRange(0, 11)];
+        
+        //**检测前12位否全都是数字;
+        const char *str = [fontNumer UTF8String];
+        const char *p = str;
+        while (*p!='\0') {
+            if(!(*p>='0'&&*p<='9'))
+                isAllNumber = NO;
+            p++;
+        }
+        if(!isAllNumber)
+            return result;
+        
+        year = [NSString stringWithFormat:@"19%@",[numberStr substringWithRange:NSMakeRange(6, 2)]];
+        month = [numberStr substringWithRange:NSMakeRange(8, 2)];
+        day = [numberStr substringWithRange:NSMakeRange(10,2)];
+    }else if ([numberStr length] == 18)
+    {
+        //**截取前14位
+        NSString *fontNumer = [numberStr substringWithRange:NSMakeRange(0, 13)];
+        
+        //**检测前14位否全都是数字;
+        const char *str = [fontNumer UTF8String];
+        const char *p = str;
+        while (*p!='\0') {
+            if(!(*p>='0'&&*p<='9'))
+                isAllNumber = NO;
+            p++;
+        }
+        if(!isAllNumber)
+            return result;
+        
+        year = [numberStr substringWithRange:NSMakeRange(6, 4)];
+        month = [numberStr substringWithRange:NSMakeRange(10, 2)];
+        day = [numberStr substringWithRange:NSMakeRange(12,2)];
+    }
+    
+    [result appendString:year];
+    [result appendString:@"-"];
+    [result appendString:month];
+    [result appendString:@"-"];
+    [result appendString:day];
+    return result;
+}
+//根据身份证号性别
+-(NSString *)getIdCardSex:(NSString *)numberStr
+{
+    int sexInt=[[numberStr substringWithRange:NSMakeRange(16,1)] intValue];
+    
+    if(sexInt % 2 != 0)
+    {
+        return @"1";
+    }
+    else
+    {
+        return @"2";
+    }
+}
+//根据省份证号获取年龄
+-(NSString *)getIdentityCardAge:(NSString *)numberStr
+{
+    NSDateFormatter *formatterTow = [[NSDateFormatter alloc]init];
+    [formatterTow setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *bsyDate = [formatterTow dateFromString:[self birthdayStrFromIdCard:numberStr]];
+    
+    NSTimeInterval dateDiff = [bsyDate timeIntervalSinceNow];
+    
+    int age = trunc(dateDiff/(60*60*24))/365;
+    
+    return [NSString stringWithFormat:@"%d",-age];
+}
+
 @end

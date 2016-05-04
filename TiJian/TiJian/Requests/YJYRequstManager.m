@@ -229,8 +229,8 @@
             if (erroCode >= EnableErroLogCode) {
                 
 
-                NSDictionary *result = @{Erro_Info:erroInfo,
-                                         Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
+//                NSDictionary *result = @{Erro_Info:erroInfo,
+//                                         Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 failBlock(result);
                 
                 [Weakself showErroInfo:erroInfo];
@@ -239,9 +239,13 @@
             {
                 DDLOG(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
                 
-                erroInfo = erroInfo ? : Alert_ServerErroInfo;
-                NSDictionary *result = @{Erro_Info: erroInfo,
-                                         Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
+//                erroInfo = erroInfo ? : Alert_ServerErroInfo;
+//                NSDictionary *result = @{Erro_Info: erroInfo,
+//                                         Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
+                NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:result];
+                if (!erroInfo) {
+                    [params safeSetString:Alert_ServerErroInfo forKey:erroInfo];
+                }
                 failBlock(result);
             }
         }

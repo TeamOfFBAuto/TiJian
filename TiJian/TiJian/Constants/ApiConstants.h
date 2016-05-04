@@ -116,8 +116,11 @@
 //根据id获取用户信息 (参数: uid authcode)
 #define GET_USERINFO_WITHID @"/index.php?d=api&c=user&m=get_user_info"
 
+//21_1、获取我的家人详情 get参数调取参数：authcode\family_uid
+#define GET_Family_info @"/index.php?d=api&c=user&m=get_family_info"
+
 //只根据用户id获取用户信息
-#define GET_USERINFO_ONLY_USERID @"/index.php?d=api&c=user&m=get_user_info_by_uid"
+#define GET_USERINFO_ONLY_USERID @"/index.php?d=api&c=user&m=get_user_by_uid"
 
 //单品 - 添加收藏 (参数:product_id、authcode)
 #define HOME_PRODUCT_COLLECT_ADD @"/?d=api&c=products&m=favor"
