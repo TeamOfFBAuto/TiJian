@@ -803,7 +803,18 @@
     if (index == 1 || (index == 0 && (indexPath.section == 0 || indexPath.section == 1)) ){
         
         AppointmentCell *cell;
-        ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
+        ProductModel *aModel;
+        if (indexPath.section == 0) {
+            if (indexPath.row < _company.count) {
+                aModel = _company[indexPath.row];
+            }
+        }else
+        {
+            if (indexPath.row < _personal.count) {
+                
+                aModel = _personal[indexPath.row];
+            }
+        }
         if ([aModel.type intValue] == 2) { //代金券
             
             static NSString *identifier = @"AppointmentCell2";

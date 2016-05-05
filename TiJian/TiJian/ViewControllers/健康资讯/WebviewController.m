@@ -102,7 +102,8 @@
                 break;
             case 3:
                 //title = @"健康顾问团";
-                title = @"在线问诊";
+//                title = @"在线问诊";
+                title = @"家庭医生";
                 break;
             case 4:
                 // title = @"公立医院主治医生";

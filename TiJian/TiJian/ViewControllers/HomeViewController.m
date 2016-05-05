@@ -1337,50 +1337,50 @@
         [self clickToGuaHaoType:5];
     }
     
-    else
-    {
-        int index = tag - kTagGuahao;
-        int type_guanhao = 0;
-        switch (index) {
-            case 0:
-            {
-                //免费咨询 对应 公立医院主治医生
-                type_guanhao = 4;
-            }
-                break;
-            case 1:
-            {
-                //在线问诊 对应 健康顾问团
-                type_guanhao = 3;
-
-            }
-                break;
-            case 2:
-            {
-                //预约挂号
-                type_guanhao = 1;
-            }
-                break;
-            case 3:
-            {
-                //精准预约 对应 转诊预约
-                type_guanhao = 2;
-
-            }
-                break;
-            default:
-            {
-                return;
-            }
-                break;
-        }
-        __weak typeof(self)weakSelf = self;
-        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-            if (success) {
-                [weakSelf clickToGuaHaoType:type_guanhao];
-            }
-        }];
-    }
+//    else
+//    {
+//        int index = tag - kTagGuahao;
+//        int type_guanhao = 0;
+//        switch (index) {
+//            case 0:
+//            {
+//                //免费咨询 对应 公立医院主治医生
+//                type_guanhao = 4;
+//            }
+//                break;
+//            case 1:
+//            {
+//                //在线问诊 对应 健康顾问团
+//                type_guanhao = 3;
+//
+//            }
+//                break;
+//            case 2:
+//            {
+//                //预约挂号
+//                type_guanhao = 1;
+//            }
+//                break;
+//            case 3:
+//            {
+//                //精准预约 对应 转诊预约
+//                type_guanhao = 2;
+//
+//            }
+//                break;
+//            default:
+//            {
+//                return;
+//            }
+//                break;
+//        }
+//        __weak typeof(self)weakSelf = self;
+//        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
+//            if (success) {
+//                [weakSelf clickToGuaHaoType:type_guanhao];
+//            }
+//        }];
+//    }
 }
 
 

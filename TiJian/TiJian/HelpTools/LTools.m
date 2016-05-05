@@ -830,6 +830,9 @@
 +(NSString *)timeString:(NSString *)placetime
              withFormat:(NSString *)format
 {
+    if (!placetime) {
+        return nil;
+    }
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];

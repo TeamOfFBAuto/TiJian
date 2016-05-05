@@ -124,7 +124,7 @@
             self.redPoint.hidden = YES;
         }
         
-        NSLog(@"mine未读消息 %d",newNum);
+        DDLOG(@"mine未读消息 %d",newNum);
         
     }
 }
@@ -629,13 +629,13 @@
 
         }else if (indexPath.row == 3){
             
-            //@"挂号申请";
-            [self clickToGuaHaoType:12];
+            //@"挂号申请"12; 修改为我的关注 target:9
+            [self clickToGuaHaoType:9];
 
         }else if (indexPath.row == 4){
             
-            //@"医生随访";
-            [self clickToGuaHaoType:13];
+            //@"医生随访"; 修改为 健康顾问团 target:3
+            [self clickToGuaHaoType:3];
         }
         
     }else if (indexPath.section == 2){
@@ -742,12 +742,12 @@
             
         }else if (indexPath.row == 3){
             
-            cell.textLabel.text = @"挂号申请";
+            cell.textLabel.text = @"我的关注";
             cell.imageView.image = [UIImage imageNamed:@"personal_guanhaoshengqing"];
             
         }else if (indexPath.row == 4){
             
-            cell.textLabel.text = @"医生随访";
+            cell.textLabel.text = @"家庭医生";
             cell.imageView.image = [UIImage imageNamed:@"personal_suifang"];
         }
         
