@@ -537,7 +537,7 @@
             _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
         }
         [self.view addGestureRecognizer:_panGestureRecognizer];
-        self.searchTf.text = nil;
+        
         
     }else if (state == 1){//编辑状态
         [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
@@ -1041,6 +1041,7 @@
         [self pushToFenyuan];
     }else if (_editState == 1){//编辑态 取消搜索
         [self changeSearchViewAndKuangFrameAndTfWithState:0];
+        self.searchTf.text = nil;
     }
     
     
