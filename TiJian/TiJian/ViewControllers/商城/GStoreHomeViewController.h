@@ -14,17 +14,16 @@
 @interface GStoreHomeViewController : MyViewController
 
 @property(nonatomic,strong)UITextField *searchTf;//搜索栏输入框;
-
 @property(nonatomic,strong)NSArray *brand_city_list;
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;//筛选view
-@property(nonatomic,strong)NSDictionary *shaixuanDic;
-@property(nonatomic,assign)BOOL haveChooseGender;
+@property(nonatomic,strong)NSDictionary *shaixuanDic;//筛选条件集合
+@property(nonatomic,assign)BOOL haveChooseGender;//是否选择性别
 
+//点击键盘的搜索按钮
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot;
-
+//设置导航栏透明度
 -(void)setEffectViewAlpha:(CGFloat)theAlpha;
-
-
+//选择城市后回调
 -(void)afterChangeCityUpdateTableWithCstr:(NSString *)cStr Pstr:(NSString *)pStr;
 
 @end
