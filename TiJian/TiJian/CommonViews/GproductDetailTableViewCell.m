@@ -184,19 +184,20 @@
         
         
         //主要参数
-        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(fen_lin.frame)+10, 60, 15)];
-        tLabel.font = [UIFont systemFontOfSize:14];
-        tLabel.text = @"主要参数";
-        [self.contentView addSubview:tLabel];
-        height += tLabel.frame.size.height+10;
+//        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(fen_lin.frame)+10, 60, 15)];
+//        tLabel.font = [UIFont systemFontOfSize:14];
+//        tLabel.text = @"主要参数";
+//        [self.contentView addSubview:tLabel];
+//        height += tLabel.frame.size.height+10;
     
-        UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(tLabel.frame)+5, DEVICE_WIDTH-20, 50)];
+//        UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(tLabel.frame)+5, DEVICE_WIDTH-20, 50)];
+        UIView *cView = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(fen_lin.frame)+5, DEVICE_WIDTH-20, 50)];
         [self.contentView addSubview:cView];
         
         //品牌名称
         UILabel *brandNameLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         brandNameLabel.textColor = [UIColor blackColor];
-        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",[LTools isEmpty:self.delegate.theProductModel.brand_name]?@"":self.delegate.theProductModel.brand_name];
+//        brandNameLabel.text = [NSString stringWithFormat:@"品牌名称:  %@",[LTools isEmpty:self.delegate.theProductModel.brand_name]?@"":self.delegate.theProductModel.brand_name];
         [cView addSubview:brandNameLabel];
         
         //适用性别
@@ -216,7 +217,6 @@
         NSAttributedString *attributedText4 = [LTools attributedString:[NSString stringWithFormat:@"%@%@",attributedText1,attributedText2] keyword:attributedText2 color:RGBCOLOR(224, 103, 20)];
         [genderLabel setAttributedText:attributedText4];
         [cView addSubview:genderLabel];
-        
         
         
         //适合人群

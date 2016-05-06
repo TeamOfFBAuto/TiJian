@@ -1059,7 +1059,7 @@
     if (tableView.tag == 1000) {
         
     }else if (tableView.tag == 1001){
-        
+        height = 44;
     }
     
     return height;
@@ -1071,7 +1071,20 @@
     if (tableView.tag == 1000) {
         
     }else if (tableView.tag == 1001){
+        [view setFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
+//        view.backgroundColor = [UIColor orangeColor];
+        UILabel *tishiLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH-20, 44)];
+        tishiLabel.textAlignment = NSTextAlignmentCenter;
+        tishiLabel.numberOfLines = 2;
+        if (DEVICE_WIDTH>320) {
+            tishiLabel.font = [UIFont boldSystemFontOfSize:11];
+        }else{
+            tishiLabel.font = [UIFont boldSystemFontOfSize:10];
+        }
         
+        tishiLabel.textColor = DEFAULT_TEXTCOLOR;
+        tishiLabel.text = @"注：因各地区科室和设备设置不同，体检项目会略有不同，请悉知!";
+        [view addSubview:tishiLabel];
     }
     return view;
 }
