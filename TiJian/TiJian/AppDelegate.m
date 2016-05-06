@@ -466,7 +466,6 @@
                 break;
             default:
                 DDLOG(@"支付失败， retcode=%d",resp.errCode);
-                
                 errInfo = @"微信支付失败";
                 break;
         }
