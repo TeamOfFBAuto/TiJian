@@ -29,6 +29,8 @@
 #import "GBrandHomeViewController.h"
 #import "GTranslucentSideBar.h"
 #import "GPushView.h"
+#import "GView.h"//分类自定义view
+#import "WebviewController.h"
 
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
@@ -147,6 +149,7 @@
     _editState = 0;
     
     [self creatTableView];
+    [self creatRefreshHeader];
     [self setupNavigation];
     [self creatDownBtnView];
     [self creatMysearchView];
@@ -297,6 +300,8 @@
         _StoreCycleAdvDic = result;
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         [GMAPI cache:_StoreCycleAdvDic ForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
+        _table.tableHeaderView = nil;
+        [self creatRefreshHeader];
         
     } failBlock:^(NSDictionary *result) {
         NSLog(@"%s",__FUNCTION__);
@@ -476,19 +481,19 @@
 
 
 
-//三个网络请求完成
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"contentSize"]) {
-        return;
-    }
-    NSNumber *num = [change objectForKey:@"new"];
-    if ([num intValue] == 3) {
-        [self creatRefreshHeader];
-    }
-    
-}
+////三个网络请求完成
+//-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+//    if ([keyPath isEqualToString:@"contentSize"]) {
+//        return;
+//    }
+//    NSNumber *num = [change objectForKey:@"new"];
+//    if ([num intValue] == 3) {
+//        [self creatRefreshHeader];
+//    }
+//    
+//}
 
-//分类图片点击
+//分类图片点击 网络获取的分类信息
 -(void)classImvClicked:(UIImageView*)sender{
     NSLog(@"%s",__FUNCTION__);
     NSLog(@"%ld",(long)sender.tag);
@@ -586,15 +591,15 @@
 //创建refresh头部
 -(void)creatRefreshHeader{
     //数据数组
-    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
+//    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
     
-    //共几行
-    int hang = (int)classData.count/2;
-    if (hang<classData.count/2.0) {
-        hang+=1;
-    };
-    //每行几列
-    int lie = 2;
+//    //共几行
+//    int hang = (int)classData.count/2;
+//    if (hang<classData.count/2.0) {
+//        hang+=1;
+//    };
+//    //每行几列
+//    int lie = 2;
     
     if (!self.theTopView) {
         self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -607,7 +612,7 @@
                                           0,
                                           DEVICE_WIDTH,
                                           [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
-                                          +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
+                                          +DEVICE_WIDTH*430/750//分类版块高度
                                           +5
                                           +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
                                           +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
@@ -617,33 +622,67 @@
     [self creatUpCycleScrollView];
     
     //设置版块
-    UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
-    bankuaiView.backgroundColor = [UIColor whiteColor];
+    UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, DEVICE_WIDTH*430/750)];
+    bankuaiView.backgroundColor = RGBCOLOR(220, 221, 223);
     [self.theTopView addSubview:bankuaiView];
     
-    //宽
-    CGFloat kk = DEVICE_WIDTH*0.5;
-    //高
-    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+    //企业体检
+    GView *classView1 = [[GView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH*0.5-0.5, (DEVICE_WIDTH*0.5-0.5)*255/375) tag:10 type:ClassViewType_qiyetijian];
+    classView1.titleLabel_black.text = @"企业体检";
+    classView1.titleLabel_gray.text = @"全面体检奢华享受";
+    [bankuaiView addSubview:classView1];
+    [classView1 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView1.tag];
     
-    for (int i = 0; i<classData.count; i++) {
-        
-        NSDictionary *dic = classData[i];
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
-        [bankuaiView addSubview:view];
-        
-        
-        //图片
-        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
-        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-        [view addSubview:imv];
-        
-        int imvTag = i+10;
-        
-        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
-        
-        
+    //早期防癌
+    GView *classView2 = [[GView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * 0.5, 0, DEVICE_WIDTH * 0.5, classView1.frame.size.height * 0.5) tag:11 type:ClassViewType_youshang];
+    classView2.titleLabel_black.text = @"早期防癌";
+    classView2.titleLabel_gray.text = @"预防比治疗更重要";
+    [bankuaiView addSubview:classView2];
+    [classView2 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView2.tag];
+    
+    //心脑血管
+    GView *classView3 = [[GView alloc]initWithFrame:CGRectMake(classView2.frame.origin.x, CGRectGetMaxY(classView2.frame)+0.5, classView2.frame.size.width, classView2.frame.size.height-0.5) tag:12 type:ClassViewType_youshang];
+    classView3.titleLabel_black.text = @"心脑血管";
+    classView3.titleLabel_gray.text = @"及时发现很重要";
+    [bankuaiView addSubview:classView3];
+    [classView3 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView3.tag];
+    
+    //关爱老人 职场白领 精英男士 都市丽人
+    NSArray *littleClassNameArray = @[@"关爱老人",@"职场白领",@"精英男士",@"都市丽人"];
+    for (int i = 0; i<4; i++) {
+        GView *classView = [[GView alloc]initWithFrame:CGRectMake(i*(DEVICE_WIDTH * 0.25), CGRectGetMaxY(classView3.frame)+0.5, DEVICE_WIDTH*0.25-0.5, bankuaiView.frame.size.height - classView1.frame.size.height) tag:13+i type:ClassViewType_smallfenlei];
+        classView.titleLabel_black.text = littleClassNameArray[i];
+        classView.backgroundColor = [UIColor whiteColor];
+        [bankuaiView addSubview:classView];
+        [classView addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView.tag];
     }
+    
+    
+    
+    
+//    //宽
+//    CGFloat kk = DEVICE_WIDTH*0.5;
+//    //高
+//    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+//    
+//    for (int i = 0; i<classData.count; i++) {
+//        
+//        NSDictionary *dic = classData[i];
+//        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
+//        [bankuaiView addSubview:view];
+//        
+//        
+//        //图片
+//        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
+//        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+//        [view addSubview:imv];
+//        
+//        int imvTag = i+10;
+//        
+//        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
+//        
+//        
+//    }
     
     UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
                                                                            CGRectGetMaxY(bankuaiView.frame)+5,
@@ -675,28 +714,28 @@
 //创建refresh头部
 -(void)creatRefreshHeader_cache{
     //数据数组
-    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
+//    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
     
-    //共几行
-    int hang = (int)classData.count/2;
-    if (hang<classData.count/2.0) {
-        hang+=1;
-    };
-    //每行几列
-    int lie = 2;
-    
-    if (!self.theTopView) {
-        self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
-        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
-        
-    }
+//    //共几行
+//    int hang = (int)classData.count/2;
+//    if (hang<classData.count/2.0) {
+//        hang+=1;
+//    };
+//    //每行几列
+//    int lie = 2;
+//    
+//    if (!self.theTopView) {
+//        self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
+//        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
+//        
+//    }
     
     //refresh头部
     [self.theTopView setFrame:CGRectMake(0,
                                          0,
                                          DEVICE_WIDTH,
                                          [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
-                                         +hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280]//分类版块高度
+                                         +DEVICE_WIDTH*430/750//分类版块高度
                                          +5
                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
@@ -707,31 +746,59 @@
     [self creatUpCycleScrollView];
     
     //设置版块
-    UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, hang*[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/280])];
-    bankuaiView.backgroundColor = [UIColor whiteColor];
+    UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, DEVICE_WIDTH*430/750)];
+    bankuaiView.backgroundColor = RGBCOLOR(220, 221, 223);
     [self.theTopView addSubview:bankuaiView];
     
-    //宽
-    CGFloat kk = DEVICE_WIDTH*0.5;
-    //高
-    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+    //企业体检
+    GView *classView1 = [[GView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH*0.5-0.5, (DEVICE_WIDTH*0.5-0.5)*255/375) tag:10 type:ClassViewType_qiyetijian];
+    classView1.titleLabel_black.text = @"企业体检";
+    classView1.titleLabel_gray.text = @"全面体检奢华享受";
+    [bankuaiView addSubview:classView1];
+    [classView1 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView1.tag];
     
-    for (int i = 0; i<classData.count; i++) {
-        NSDictionary *dic = classData[i];
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
-        [bankuaiView addSubview:view];
-        view.backgroundColor = RGBCOLOR_ONE;
-        
-        //图片
-        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
-        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-        [view addSubview:imv];
-        
-        int imvTag = i+10;
-        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
-        
-        
+    //早期防癌
+    GView *classView2 = [[GView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * 0.5, 0, DEVICE_WIDTH * 0.5, classView1.frame.size.height * 0.5) tag:11 type:ClassViewType_youshang];
+    classView2.titleLabel_black.text = @"早期防癌";
+    classView2.titleLabel_gray.text = @"预防比治疗更重要";
+    [bankuaiView addSubview:classView2];
+    
+    //心脑血管
+    GView *classView3 = [[GView alloc]initWithFrame:CGRectMake(classView2.frame.origin.x, CGRectGetMaxY(classView2.frame)+0.5, classView2.frame.size.width, classView2.frame.size.height-0.5) tag:12 type:ClassViewType_youshang];
+    classView3.titleLabel_black.text = @"心脑血管";
+    classView3.titleLabel_gray.text = @"及时发现很重要";
+    [bankuaiView addSubview:classView3];
+    
+    //关爱老人 职场白领 精英男士 都市丽人
+    NSArray *littleClassNameArray = @[@"关爱老人",@"职场白领",@"精英男士",@"都市丽人"];
+    for (int i = 0; i<4; i++) {
+        GView *classView = [[GView alloc]initWithFrame:CGRectMake(i*(DEVICE_WIDTH * 0.25), CGRectGetMaxY(classView3.frame)+0.5, DEVICE_WIDTH*0.25-0.5, bankuaiView.frame.size.height - classView1.frame.size.height) tag:13+i type:ClassViewType_smallfenlei];
+        classView.titleLabel_black.text = littleClassNameArray[i];
+        classView.backgroundColor = [UIColor whiteColor];
+        [bankuaiView addSubview:classView];
     }
+    
+//    //宽
+//    CGFloat kk = DEVICE_WIDTH*0.5;
+//    //高
+//    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
+//    
+//    for (int i = 0; i<classData.count; i++) {
+//        NSDictionary *dic = classData[i];
+//        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
+//        [bankuaiView addSubview:view];
+//        view.backgroundColor = RGBCOLOR_ONE;
+//        
+//        //图片
+//        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
+//        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
+//        [view addSubview:imv];
+//        
+//        int imvTag = i+10;
+//        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
+//        
+//        
+//    }
     
     UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
                                                                            CGRectGetMaxY(bankuaiView.frame)+5,
@@ -935,7 +1002,6 @@
     [self.view addSubview:_table];
     [self loadCache];
     
-    
     [_table refreshNewData];
     
     
@@ -944,11 +1010,9 @@
 //创建循环滚动广告图
 -(void)creatUpCycleScrollView{
     
-    
     self.upAdvArray = [NSMutableArray arrayWithCapacity:1];
     
     NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
-    
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:1];
     
     if (advertisements_data.count > 0) {
@@ -1021,6 +1085,55 @@
 
 
 #pragma mark - 点击方法
+
+-(void)classGviewClicked:(UITapGestureRecognizer*)sender{
+    
+    if (sender.view.tag == 10) {//企业体检
+        //
+        WebviewController *cc = [[WebviewController alloc]init];
+        cc.webUrl = @"http://www.hippodr.com/index.php?d=wap&c=company_consult&m=consult";
+        cc.navigationTitle = @"企业体检";
+        [self.navigationController pushViewController:cc animated:YES];
+    }else{
+        
+        GBrandListViewController *cc = [[GBrandListViewController alloc]init];
+        
+//        if ([[dic stringValueForKey:@"gender"] intValue] == 1 || [[dic stringValueForKey:@"gender"] intValue] == 2) {
+//            cc.haveChooseGender = NO;
+//        }else if ([[dic stringValueForKey:@"gender"] intValue] == 99){
+//            cc.haveChooseGender = YES;
+//        }
+//        [self.navigationController pushViewController:cc animated:YES];
+        
+        if (sender.view.tag == 11){//早期防癌
+            cc.class_Id = @"3";
+            cc.className = @"早期防癌";
+        }else if (sender.view.tag == 12){//心脑血管
+            cc.class_Id = @"5";
+            cc.className = @"心脑血管";
+        }else if (sender.view.tag == 13){//关爱老人
+            cc.class_Id = @"1";
+            cc.className = @"关爱老人";
+        }else if (sender.view.tag == 14){//职场白领
+            cc.class_Id = @"2";
+            cc.className = @"职场白领";
+        }else if (sender.view.tag == 15){//精英男士
+            cc.class_Id = @"6";
+            cc.className = @"精英男士";
+        }else if (sender.view.tag == 16){//都市丽人
+            cc.class_Id = @"4";
+            cc.className = @"都市丽人";
+        }
+        
+        [self.navigationController pushViewController:cc animated:YES];
+        
+    }
+    
+    
+    
+    
+}
+
 
 -(void)viewForHeaderClicked:(UIButton*)sender{
     NSInteger index = sender.tag - 20000;
