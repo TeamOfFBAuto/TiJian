@@ -22,7 +22,6 @@
         
         if (theType == ClassViewType_qiyetijian) {//企业体检
             self.logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 40)];
-            self.logoImv.backgroundColor = [UIColor orangeColor];
             self.logoImv.center = self.center;
             CGPoint center = self.center;
             center.y -= 10;
@@ -37,7 +36,7 @@
             
             self.titleLabel_gray = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLabel_black.frame), frame.size.width, 15)];
             self.titleLabel_gray.textColor = [UIColor grayColor];
-            self.titleLabel_gray.font = [UIFont systemFontOfSize:14];
+            self.titleLabel_gray.font = [UIFont systemFontOfSize:12];
             self.titleLabel_gray.textAlignment = NSTextAlignmentCenter;
             [self addSubview:self.titleLabel_gray];
             
@@ -56,23 +55,21 @@
             self.titleLabel_black.center = p;
             
             self.titleLabel_gray = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLabel_black.frame), backView.frame.size.width, 15)];
-            self.titleLabel_gray.font = [UIFont systemFontOfSize:14];
+            self.titleLabel_gray.font = [UIFont systemFontOfSize:12];
             self.titleLabel_gray.textColor = [UIColor grayColor];
             self.titleLabel_gray.textAlignment = NSTextAlignmentCenter;
             [backView addSubview:self.titleLabel_gray];
             
             self.logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(backView.right, backView.frame.size.height*0.5-15, 30, 30)];
-            self.logoImv.backgroundColor = [UIColor purpleColor];
             [self addSubview:self.logoImv];
             
         }else if (theType == ClassViewType_smallfenlei){//小分类
             self.logoImv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width*0.5-15, self.frame.size.height*0.5-15-10, 30, 30)];
-            self.logoImv.backgroundColor = [UIColor orangeColor];
             [self addSubview:self.logoImv];
             
-            self.titleLabel_black = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.logoImv.frame)+10, frame.size.width, 15)];
+            self.titleLabel_black = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.logoImv.frame)+7, frame.size.width, 15)];
             self.titleLabel_black.textColor = [UIColor blackColor];
-            self.titleLabel_black.font = [UIFont systemFontOfSize:14];
+            self.titleLabel_black.font = [UIFont systemFontOfSize:13];
             self.titleLabel_black.textAlignment = NSTextAlignmentCenter;
             [self addSubview:self.titleLabel_black];
             

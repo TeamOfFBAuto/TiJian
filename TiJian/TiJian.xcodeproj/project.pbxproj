@@ -420,6 +420,14 @@
 		13FFBFCF1C0D504B0077DD29 /* SimpleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFBFCD1C0D504B0077DD29 /* SimpleMessageCell.m */; };
 		82877FD86175F18F86C41D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E9949F3A6967C2DBC3922E /* libPods.a */; };
 		E304A2441CBA567B00F9319C /* GLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E304A2431CBA567B00F9319C /* GLabel.m */; };
+		E306F4B31CE32D74003EE0C6 /* sh_dushiliren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4AC1CE32D74003EE0C6 /* sh_dushiliren@2x.png */; };
+		E306F4B41CE32D74003EE0C6 /* sh_fangai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4AD1CE32D74003EE0C6 /* sh_fangai@2x.png */; };
+		E306F4B51CE32D74003EE0C6 /* sh_guanailaoren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4AE1CE32D74003EE0C6 /* sh_guanailaoren@2x.png */; };
+		E306F4B61CE32D74003EE0C6 /* sh_jingyingnanshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4AF1CE32D74003EE0C6 /* sh_jingyingnanshi@2x.png */; };
+		E306F4B71CE32D74003EE0C6 /* sh_qiyetijian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4B01CE32D74003EE0C6 /* sh_qiyetijian@2x.png */; };
+		E306F4B81CE32D74003EE0C6 /* sh_xinnaoxueguan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4B11CE32D74003EE0C6 /* sh_xinnaoxueguan@2x.png */; };
+		E306F4B91CE32D74003EE0C6 /* sh_zhichangbailing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4B21CE32D74003EE0C6 /* sh_zhichangbailing@2x.png */; };
+		E306F4BD1CE34013003EE0C6 /* fenyuan_storehome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E306F4BC1CE34013003EE0C6 /* fenyuan_storehome@2x.png */; };
 		E30888571C4E47E800C6A8DD /* shoucangjia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */; };
 		E30FE3961C3CCCE9001CF9BA /* UINavigationBar+Appearance.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE38F1C3CCCE9001CF9BA /* UINavigationBar+Appearance.m */; };
 		E30FE3971C3CCCE9001CF9BA /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3911C3CCCE9001CF9BA /* UIView+Utils.m */; };
@@ -582,7 +590,6 @@
 		E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F364C21BE747BE00C34A0B /* GproductDetailViewController.m */; };
 		E3FEFA5E1C59E9300024AE0E /* GBrandHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */; };
 		E3FEFA631C5B44710024AE0E /* GBrandTabHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FEFA621C5B44710024AE0E /* GBrandTabHeaderView.m */; };
-		E3FEFA651C5B69EC0024AE0E /* fenyuan_storehome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3FEFA641C5B69EC0024AE0E /* fenyuan_storehome@2x.png */; };
 		E3FEFA691C5B6C550024AE0E /* back_storehome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3FEFA681C5B6C550024AE0E /* back_storehome@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -1251,6 +1258,14 @@
 		DB95854DE0BAFDCE29C8EB79 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E304A2421CBA567B00F9319C /* GLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLabel.h; sourceTree = "<group>"; };
 		E304A2431CBA567B00F9319C /* GLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLabel.m; sourceTree = "<group>"; };
+		E306F4AC1CE32D74003EE0C6 /* sh_dushiliren@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_dushiliren@2x.png"; sourceTree = "<group>"; };
+		E306F4AD1CE32D74003EE0C6 /* sh_fangai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_fangai@2x.png"; sourceTree = "<group>"; };
+		E306F4AE1CE32D74003EE0C6 /* sh_guanailaoren@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_guanailaoren@2x.png"; sourceTree = "<group>"; };
+		E306F4AF1CE32D74003EE0C6 /* sh_jingyingnanshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_jingyingnanshi@2x.png"; sourceTree = "<group>"; };
+		E306F4B01CE32D74003EE0C6 /* sh_qiyetijian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_qiyetijian@2x.png"; sourceTree = "<group>"; };
+		E306F4B11CE32D74003EE0C6 /* sh_xinnaoxueguan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_xinnaoxueguan@2x.png"; sourceTree = "<group>"; };
+		E306F4B21CE32D74003EE0C6 /* sh_zhichangbailing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sh_zhichangbailing@2x.png"; sourceTree = "<group>"; };
+		E306F4BC1CE34013003EE0C6 /* fenyuan_storehome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fenyuan_storehome@2x.png"; sourceTree = "<group>"; };
 		E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoucangjia@2x.png"; sourceTree = "<group>"; };
 		E30FE38C1C3CCCE9001CF9BA /* DLConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLConst.h; sourceTree = "<group>"; };
 		E30FE38D1C3CCCE9001CF9BA /* DLNavigationEffectKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNavigationEffectKit.h; sourceTree = "<group>"; };
@@ -1482,7 +1497,6 @@
 		E3FEFA5D1C59E9300024AE0E /* GBrandHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandHomeViewController.m; sourceTree = "<group>"; };
 		E3FEFA611C5B44710024AE0E /* GBrandTabHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBrandTabHeaderView.h; sourceTree = "<group>"; };
 		E3FEFA621C5B44710024AE0E /* GBrandTabHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBrandTabHeaderView.m; sourceTree = "<group>"; };
-		E3FEFA641C5B69EC0024AE0E /* fenyuan_storehome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fenyuan_storehome@2x.png"; sourceTree = "<group>"; };
 		E3FEFA681C5B6C550024AE0E /* back_storehome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_storehome@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -3035,6 +3049,14 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E306F4BC1CE34013003EE0C6 /* fenyuan_storehome@2x.png */,
+				E306F4AC1CE32D74003EE0C6 /* sh_dushiliren@2x.png */,
+				E306F4AD1CE32D74003EE0C6 /* sh_fangai@2x.png */,
+				E306F4AE1CE32D74003EE0C6 /* sh_guanailaoren@2x.png */,
+				E306F4AF1CE32D74003EE0C6 /* sh_jingyingnanshi@2x.png */,
+				E306F4B01CE32D74003EE0C6 /* sh_qiyetijian@2x.png */,
+				E306F4B11CE32D74003EE0C6 /* sh_xinnaoxueguan@2x.png */,
+				E306F4B21CE32D74003EE0C6 /* sh_zhichangbailing@2x.png */,
 				E34F766E1CB65524002C2B46 /* confirmorderadd@2x.png */,
 				E3F1B3AC1C896AB2007E258B /* yuyue_pd@2x.png */,
 				E3BFACD11C5F5B8900F97E73 /* order_jiaxiangbao@2x.png */,
@@ -3043,7 +3065,6 @@
 				E3BFACC61C5F157A00F97E73 /* pricejiantou_down@2x.png */,
 				E3BFACC71C5F157A00F97E73 /* pricejiantou_up@2x.png */,
 				E3FEFA681C5B6C550024AE0E /* back_storehome@2x.png */,
-				E3FEFA641C5B69EC0024AE0E /* fenyuan_storehome@2x.png */,
 				E388EC9B1C51085600C3E6E1 /* storehomeNodatatixing@2x.png */,
 				E3E487E61C4FCE2D0081B4B2 /* shaixuan_white@2x.png */,
 				E30888561C4E47E800C6A8DD /* shoucangjia@2x.png */,
@@ -3280,10 +3301,12 @@
 				133FB5CF1C43AD3C002A2DDE /* homepage_close@2x.png in Resources */,
 				E3D8AE4C1BF6203F003AE2E3 /* youhui_lingqu@2x.png in Resources */,
 				139333E31BE0DF3E00B4628B /* 2_w_2@2x.png in Resources */,
+				E306F4BD1CE34013003EE0C6 /* fenyuan_storehome@2x.png in Resources */,
 				13D6DA901C48C6A90091FCFE /* extension_34_2.png in Resources */,
 				1362765F1C12D3370077C75D /* report_zhaopian@2x.png in Resources */,
 				13D6DA8B1C48C6A90091FCFE /* extension_32_3.png in Resources */,
 				139333D31BE0DF3E00B4628B /* 26_3@2x.png in Resources */,
+				E306F4B91CE32D74003EE0C6 /* sh_zhichangbailing@2x.png in Resources */,
 				139333E81BE0DF3E00B4628B /* 3_m_2_6fcbe7@2x.png in Resources */,
 				139333A91BE0DF3E00B4628B /* 13_2@2x.png in Resources */,
 				139333BC1BE0DF3E00B4628B /* 1_1_bg@2x.png in Resources */,
@@ -3307,6 +3330,7 @@
 				13B07A211C071A4200742AF7 /* order_chat@2x.png in Resources */,
 				E3BFACC81C5F157A00F97E73 /* pricejiantou_down@2x.png in Resources */,
 				131A177F1BF34BAF00B12D2F /* yuyue_xuxian@2x.png in Resources */,
+				E306F4B41CE32D74003EE0C6 /* sh_fangai@2x.png in Resources */,
 				139333F11BE0DF3E00B4628B /* 7_1@2x.png in Resources */,
 				1303C3531BEB0D7100700847 /* personal_qianbao_jifen@2x.png in Resources */,
 				139333A61BE0DF3E00B4628B /* 12_2@2x.png in Resources */,
@@ -3320,9 +3344,9 @@
 				1303C2D71BE9BEA600700847 /* tuichu_w@2x.png in Resources */,
 				E352F91B1C0B91680037E4AE /* shoucang_pd@2x.png in Resources */,
 				1303C3541BEB0D7100700847 /* personal_qianbao_youhuiquan@2x.png in Resources */,
+				E306F4B61CE32D74003EE0C6 /* sh_jingyingnanshi@2x.png in Resources */,
 				E388EC9C1C51085600C3E6E1 /* storehomeNodatatixing@2x.png in Resources */,
 				139333AB1BE0DF3E00B4628B /* 14_2@2x.png in Resources */,
-				E3FEFA651C5B69EC0024AE0E /* fenyuan_storehome@2x.png in Resources */,
 				130D2E2F1BFDF2DC002E301F /* UMSLoginViewController.xib in Resources */,
 				E385510A1C0AF73700CE23E7 /* daijinquan@2x.png in Resources */,
 				13F9D1271C2FB06800993738 /* imageFail@2x.png in Resources */,
@@ -3388,6 +3412,7 @@
 				139333AD1BE0DF3E00B4628B /* 15_2@2x.png in Resources */,
 				E3E6C3611BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png in Resources */,
 				E3D8AE501BF6203F003AE2E3 /* youhuiquan_r@2x.png in Resources */,
+				E306F4B71CE32D74003EE0C6 /* sh_qiyetijian@2x.png in Resources */,
 				1303C3711BEB0D7200700847 /* fenyuan@2x.png in Resources */,
 				136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */,
 				139333A51BE0DF3E00B4628B /* 12_1@2x.png in Resources */,
@@ -3450,7 +3475,9 @@
 				139333B81BE0DF3E00B4628B /* 18_4@2x.png in Resources */,
 				139333EE1BE0DF3E00B4628B /* 5_2@2x.png in Resources */,
 				139333DB1BE0DF3E00B4628B /* 29_2@2x.png in Resources */,
+				E306F4B31CE32D74003EE0C6 /* sh_dushiliren@2x.png in Resources */,
 				13D6DA891C48C6A90091FCFE /* extension_32_1.png in Resources */,
+				E306F4B51CE32D74003EE0C6 /* sh_guanailaoren@2x.png in Resources */,
 				13F5F0E31C083A410045B5FA /* xuanzhong_no@2x.png in Resources */,
 				139333D81BE0DF3E00B4628B /* 28_1@2x.png in Resources */,
 				13F8C57B1C058611004C3FC7 /* OrderCell.xib in Resources */,
@@ -3542,6 +3569,7 @@
 				1350C6E01CCDF29B00677E07 /* homepage_shangcheng@2x.png in Resources */,
 				E3A679C41C16DEAC00309ECD /* nan_saixuan@2x.png in Resources */,
 				1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */,
+				E306F4B81CE32D74003EE0C6 /* sh_xinnaoxueguan@2x.png in Resources */,
 				E3796D0F1BFB37CD004B63F7 /* shopping_cart_address_add@2x.png in Resources */,
 				135E3D491C9BEA7000B5F0FD /* feedback_tianjia@2x.png in Resources */,
 				13E2D8741CC8C58100A684D7 /* personal_tijiandingdan@2x.png in Resources */,
@@ -4007,8 +4035,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -4033,7 +4059,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				PROVISIONING_PROFILE = "";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
@@ -4045,8 +4070,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -4071,7 +4094,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				PROVISIONING_PROFILE = "";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};

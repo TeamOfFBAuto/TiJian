@@ -858,13 +858,8 @@
 }
 
 -(void)qingkongshaixuanBtnClicked{
-    
-    
-    
     NSString *defaultCityName;
-    
     NSString *defaultCityId;
-    
     if (_locationDic) {
         defaultCityId = [_defaultShaixuanDic stringValueForKey:@"city_id"];
     }else{

@@ -75,7 +75,17 @@
     
     [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
-
+    
+    if (self.shaixuanDic) {
+        if (![LTools isEmpty:[self.shaixuanDic stringValueForKey:@"category_id"]]) {
+            self.category_id = [[self.shaixuanDic stringValueForKey:@"category_id"]intValue];
+        }
+        if (![LTools isEmpty:[self.shaixuanDic stringValueForKey:@"brand_id"]]) {
+            self.brand_id = [self.shaixuanDic stringValueForKey:@"brand_id"];
+        }
+    }
+    
+    
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
     _backBlackView.alpha = 0.5;
@@ -231,9 +241,11 @@
         
     }
     
-    [_pushView qingkongshaixuanBtnClicked];
-    _pushView.gender = YES;
-    [_pushView.tab1 reloadData];
+//    //清空筛选
+//    [_pushView qingkongshaixuanBtnClicked];
+//    _pushView.gender = YES;
+//    [_pushView.tab1 reloadData];
+    
     self.searchTf.text = theWord;
     self.theSearchWorld = self.searchTf.text;
     [_table showRefreshHeader:YES];
@@ -330,7 +342,13 @@
 
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic{
-    self.shaixuanDic = dic;
+    if (self.category_id>0) {//有分类id
+        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [tmpDic safeSetString:NSStringFromInt(self.category_id) forKey:@"category_id"];
+        self.shaixuanDic = (NSDictionary *)tmpDic;
+    }else{
+        self.shaixuanDic = dic;
+    }
     [_table showRefreshHeader:YES];
 }
 

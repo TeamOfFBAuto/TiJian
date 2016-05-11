@@ -764,7 +764,14 @@
 }
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic{
-    self.shaixuanDic = dic;
+    
+    if (self.class_Id) {
+        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [tmpDic safeSetString:self.class_Id forKey:@"category_id"];
+        self.shaixuanDic = (NSDictionary*)tmpDic;
+    }else{
+        self.shaixuanDic = dic;
+    }
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.isShowShaixuanData = YES;

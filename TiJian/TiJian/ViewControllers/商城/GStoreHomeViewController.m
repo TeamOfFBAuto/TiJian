@@ -34,9 +34,7 @@
 
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
-    
     LBannerView *_bannerView;//轮播图
-    
     
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_adv;
@@ -46,10 +44,7 @@
     
     RefreshTableView *_table;
     
-    int _count;//网络请求个数
-    
     NSDictionary *_StoreCycleAdvDic;//轮播图dic
-    NSDictionary *_StoreProductClassDic;
     NSMutableArray *_StoreProductListArray;//tableview数据源
     NSMutableArray *_StoreProductListArray_cache;//缓存数据源
     
@@ -63,7 +58,6 @@
     NSArray *_hotSearchArray;//热门搜索
     UIBarButtonItem *_rightItem1;
     UIView *_kuangView;
-    
     
     //购物车数量
     AFHTTPRequestOperation *_request_GetShopCarNum;
@@ -105,7 +99,6 @@
     _table.dataSource = nil;
     _table.refreshDelegate = nil;
     _table = nil;
-    [self removeObserver:self forKeyPath:@"_count"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -125,38 +118,36 @@
     }
     
     [super viewWillDisappear:animated];
-    [self hiddenNavigationBar:NO animated:animated];
+    
+    [self hiddenNavigationBar:NO animated:animated];//不隐藏NavigationBar
+    
+    //还原下拉刷新之前的状态栏状态
+    [[UIApplication sharedApplication] setStatusBarHidden:FALSE];
+    self.currentNavigationBar.alpha = 1;
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    //添加通知
+    [self setNotification];
+    
+    //初始化搜索状态
+    [self setStateOfSearchIdentifier];
+    
+    //视图创建
+    [self creatShaixuanBackBlackView];//只创建筛选界面下方的黑色透明view不添加到self.view上
+    [self hiddenNavigationBar:YES animated:YES];//隐藏NavigationBar
+    [self setupNavigation];//创建自定义navigation
+    [self creatTableView];//创建RefreshTabelview
+    [self creatRefreshHeader];//创建refresh头部
+    [self creatDownBtnView];//创建下层四个按钮view
+    [self creatMysearchView];//创建搜索界面
+    [self creatRightTranslucentSideBar];//创建筛选侧滑栏
     
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeText WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
-    _backBlackView.backgroundColor = [UIColor blackColor];
-    _backBlackView.alpha = 0.5;
-    
-    [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    [self hiddenNavigationBar:YES animated:YES];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
-    
-    _editState = 0;
-    
-    [self creatTableView];
-    [self creatRefreshHeader];
-    [self setupNavigation];
-    [self creatDownBtnView];
-    [self creatMysearchView];
-    [self prepareBrandListWithLocation];
-    [self getHotSearch];
-    [self getshopcarNum];//购物车数量
-    [self creatRightTranslucentSideBar];
     
 }
 
@@ -165,410 +156,27 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-#pragma mark - UITextFieldDelegate
-- (void)textFieldDidBeginEditing:(UITextField *)textField{
-    NSLog(@"%s",__FUNCTION__);
-    _mySearchView.hidden = NO;
-    _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
-    
-    [_theCustomSearchView.tab reloadData];
-    
-    [self changeSearchViewAndKuangFrameAndTfWithState:1];
-    
-    UIView *effectView = self.currentNavigationBar.effectContainerView;
-    if (effectView) {
-        UIView *alphaView = [effectView viewWithTag:10000];
-        alphaView.alpha = 1;
-    }
-    
+#pragma mark - 初始化状态标识符
+//初始化搜索状态
+-(void)setStateOfSearchIdentifier{
+    _editState = 0;
 }
 
-
--(void)textFieldDidEndEditing:(UITextField *)textField{
-    
-    UIView *effectView = self.currentNavigationBar.effectContainerView;
-    if (effectView) {
-        UIView *alphaView = [effectView viewWithTag:10000];
-        CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
-        alpha = MIN(alpha, 1);
-        alphaView.alpha = alpha;
-
-    }
+#pragma mark - 添加通知
+-(void)setNotification{
+    //更新购物车
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateShopCarNum) name:NOTIFICATION_UPDATE_TO_CART object:nil];
+    //登录成功
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateIsFavorAndShopCarNum) name:NOTIFICATION_LOGIN object:nil];
 }
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    
-    if (![LTools isEmpty:self.searchTf.text]) {
-        [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
-    }
-    
-    return YES;
-}
-
-
-
-
-
--(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
-    
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
-    
-    [_searchTf resignFirstResponder];
-    _mySearchView.hidden = YES;
-    UIView *effectView = self.currentNavigationBar.effectContainerView;
-    if (effectView) {
-        UIView *alphaView = [effectView viewWithTag:10000];
-        if (_table.contentOffset.y > 64) {
-            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
-            alpha = MIN(alpha, 1);
-            alphaView.alpha = alpha;
-        }else{
-            alphaView.alpha = 0;
-        }
-    }
-    
-    if (!isHot) {
-        if (![LTools isEmpty:self.searchTf.text]) {
-            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
-        }
-        
-    }
-    
-    self.searchTf.text = theWord;
-    self.searchTf.text = nil;
-    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-    cc.theSearchWorld = theWord;
-    [self.navigationController pushViewController:cc animated:YES];
-    
-    
-}
-
-
-#pragma mark - 返回上个界面
--(void)gogoback{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-
-#pragma mark - 缓存
--(void)loadCache{
-    _StoreCycleAdvDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
-    _StoreProductClassDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreProductClassDic"];
-    
-    NSDictionary *storeProductListDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreProductListDic"];
-    
-    if (storeProductListDic && _StoreProductClassDic && _StoreCycleAdvDic) {
-        //精品推荐数据
-        _StoreProductListArray_cache = [NSMutableArray arrayWithCapacity:1];
-        NSArray *data = [storeProductListDic arrayValueForKey:@"data"];
-        for (NSDictionary *dic in data) {
-            NSArray *list = [dic arrayValueForKey:@"list"];
-            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
-            for (NSDictionary *dic in list) {
-                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-                [model_listArray addObject:model];
-            }
-            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
-            model_b.list = model_listArray;
-            [_StoreProductListArray_cache addObject:model_b];
-        }
-        
-        [self creatRefreshHeader_cache];
-        
-    }
-}
-
-#pragma mark - 请求网络数据
-
--(void)prepareNetData{
-    if (!_request) {
-        _request = [YJYRequstManager shareInstance];
-    }
-    
-    _count = 0;
-    
-    if (_isShaixuan) {
-        //首页精品推荐
-        [self prepareProductsWithDic:self.shaixuanDic];
-        _isShaixuan = NO;
-        return;
-    }
-    
-    //轮播图
-    _request_adv = [_request requestWithMethod:YJYRequstMethodGet api:StoreCycleAdv parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _StoreCycleAdvDic = result;
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        [GMAPI cache:_StoreCycleAdvDic ForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
-        _table.tableHeaderView = nil;
-        [self creatRefreshHeader];
-        
-    } failBlock:^(NSDictionary *result) {
-        NSLog(@"%s",__FUNCTION__);
-        
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-
-    }];
-    
-    //商城套餐分类
-    _request_ProductClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _StoreProductClassDic = result;
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        [GMAPI cache:_StoreProductClassDic ForKey:@"GStoreHomeVc_StoreProductClassDic"];
-        
-    } failBlock:^(NSDictionary *result) {
-        
-    }];
-    
-    //首页精品推荐
-    [self prepareProductsWithDic:self.shaixuanDic];
-    
-    
-}
-
-//热门搜索
--(void)getHotSearch{
-    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _hotSearchArray = [result arrayValueForKey:@"list"];
-        _theCustomSearchView.hotSearch = _hotSearchArray;
-        [_theCustomSearchView.tab reloadData];
-    } failBlock:^(NSDictionary *result) {
-        
-    }];
-}
-
-
-
-//首页精品推荐
--(void)prepareProductsWithDic:(NSDictionary *)theDic{
-    NSDictionary *dic;
-    if (theDic) {
-        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic safeSetString:NSStringFromInt(5) forKey:@"per_page"];
-        [temp_dic safeSetString:@"2" forKey:@"show_type"];
-        dic = temp_dic;
-    }else{
-        dic = @{
-                @"province_id":[GMAPI getCurrentProvinceId],
-                @"city_id":[GMAPI getCurrentCityId],
-                @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":NSStringFromInt(5)
-                };
-        
-    }
-    
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *data = [result arrayValueForKey:@"data"];
-        
-        for (NSDictionary *dic in data) {
-            NSArray *list = [dic arrayValueForKey:@"list"];
-            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
-            for (NSDictionary *dic in list) {
-                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-                [model_listArray addObject:model];
-            }
-            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
-            model_b.list = model_listArray;
-            [_StoreProductListArray addObject:model_b];
-        }
-        
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        
-        if (_table.pageNum == 1) {
-            [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
-        }
-        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
-        
-    } failBlock:^(NSDictionary *result) {
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-    }];
-}
-
-
-//选择完地区之后请求首页精品推荐
--(void)gotoPrepareProductsWithDic:(NSDictionary *)theDic{
-    NSDictionary *dic;
-    if (theDic) {
-        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic setObject:NSStringFromInt(5) forKey:@"per_page"];
-        [temp_dic setObject:@"2" forKey:@"show_type"];
-        dic = temp_dic;
-    }else{
-        dic = @{
-                @"province_id":[GMAPI getCurrentProvinceId],
-                @"city_id":[GMAPI getCurrentCityId],
-                @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":[NSString stringWithFormat:@"%d",5]
-                };
-        
-    }
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *data = [result arrayValueForKey:@"data"];
-        for (NSDictionary *dic in data) {
-            NSArray *list = [dic arrayValueForKey:@"list"];
-            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
-            for (NSDictionary *dic in list) {
-                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-                [model_listArray addObject:model];
-            }
-            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
-            model_b.list = model_listArray;
-            [_StoreProductListArray addObject:model_b];
-        }
-        
-        _table.tableFooterView = nil;
-        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
-        [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
-        
-    } failBlock:^(NSDictionary *result) {
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-    }];
-}
-
-
-
-//获取购物车数量
--(void)getshopcarNum{
-    if ([LoginViewController isLogin]) {
-        [self getShopcarNumWithLoginSuccess];
-    }else{
-        
-    }
-}
-
-//获取购物车数量
--(void)getShopcarNumWithLoginSuccess{
-    NSDictionary *dic = @{
-                          @"authcode":[UserInfo getAuthkey]
-                          };
-    _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        _shopCarDic = result;
-        _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
-        if (_shopCarNumLabel) {
-            
-            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
-            
-            [self updateShopCarNumAndFrame];
-        }
-        
-    } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
-}
-
-
-//根据城市查询品牌列表
--(void)prepareBrandListWithLocation{
-    
-    if (!_request) {
-        _request = [YJYRequstManager shareInstance];
-    }
-    [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        NSArray *arr = [result arrayValueForKey:@"data"];
-        self.brand_city_list = [NSArray arrayWithArray:arr];
-        
-    } failBlock:^(NSDictionary *result) {
-        
-    }];
-}
-
-
-
-////三个网络请求完成
-//-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-//    if ([keyPath isEqualToString:@"contentSize"]) {
-//        return;
-//    }
-//    NSNumber *num = [change objectForKey:@"new"];
-//    if ([num intValue] == 3) {
-//        [self creatRefreshHeader];
-//    }
-//    
-//}
-
-//分类图片点击 网络获取的分类信息
--(void)classImvClicked:(UIImageView*)sender{
-    NSLog(@"%s",__FUNCTION__);
-    NSLog(@"%ld",(long)sender.tag);
-    //数据数组
-    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
-    NSDictionary *dic = classData[sender.tag - 10];
-    
-    GBrandListViewController *cc = [[GBrandListViewController alloc]init];
-    cc.class_Id = [dic stringValueForKey:@"category_id"];
-    cc.className = [dic stringValueForKey:@"name"];
-    if ([[dic stringValueForKey:@"gender"] intValue] == 1 || [[dic stringValueForKey:@"gender"] intValue] == 2) {
-        cc.haveChooseGender = NO;
-    }else if ([[dic stringValueForKey:@"gender"] intValue] == 99){
-        cc.haveChooseGender = YES;
-    }
-    [self.navigationController pushViewController:cc animated:YES];
-}
-
-
-#pragma mark - 改变searchTf和框的大小
-/**
- *  改变searchTf和框的大小
- *
- *  @param state 1 编辑状态 0常态
- */
--(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
-    _editState = state;
-    if (state == 0) {//常态
-        [_myNavcRightBtn setTitle:nil forState:UIControlStateNormal];
-        [_myNavcRightBtn setImage:[UIImage imageNamed:@"fenyuan_storehome.png"] forState:UIControlStateNormal];
-        
-        UIView *effectView = self.currentNavigationBar.effectContainerView;
-        if (effectView) {
-            for (UIView *view in effectView.subviews) {
-                if (view.tag == 10000) {
-                     view.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:0.8];
-                }
-            }
-        };
-        
-        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 90, 30)];
-        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width, 30)];
-        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
-
-        if (!_panGestureRecognizer) {
-            _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-        }
-        [self.view addGestureRecognizer:_panGestureRecognizer];
-        
-        
-    }else if (state == 1){//编辑状态
-        [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
-        [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
-        
-        UIView *effectView = self.currentNavigationBar.effectContainerView;
-        if (effectView) {
-            for (UIView *view in effectView.subviews) {
-                if (view.tag == 10000) {
-                    view.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:1];
-                }
-            }
-        };
-        
-        [_searchView setWidth:DEVICE_WIDTH - 60];
-        [_kuangView setWidth:_searchView.frame.size.width];
-        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width-30, 30)];
-        
-        [self.navigationController.navigationBar bringSubviewToFront:_searchView];
-        
-        [self.view removeGestureRecognizer:_panGestureRecognizer];
-    }
-}
-
 
 #pragma mark - 视图创建
+//创建筛选界面下方的黑色透明view
+-(void)creatShaixuanBackBlackView{
+    _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+    _backBlackView.backgroundColor = [UIColor blackColor];
+    _backBlackView.alpha = 0.5;
+}
 
 //创建侧滑栏
 -(void)creatRightTranslucentSideBar{
@@ -590,145 +198,12 @@
 
 //创建refresh头部
 -(void)creatRefreshHeader{
-    //数据数组
-//    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
-    
-//    //共几行
-//    int hang = (int)classData.count/2;
-//    if (hang<classData.count/2.0) {
-//        hang+=1;
-//    };
-//    //每行几列
-//    int lie = 2;
     
     if (!self.theTopView) {
         self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
         self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
         
     }
-    
-    //refresh头部
-    [self.theTopView setFrame:CGRectMake(0,
-                                          0,
-                                          DEVICE_WIDTH,
-                                          [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
-                                          +DEVICE_WIDTH*430/750//分类版块高度
-                                          +5
-                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
-                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
-                                          )];
-    
-    //设置轮播图
-    [self creatUpCycleScrollView];
-    
-    //设置版块
-    UIView *bankuaiView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_bannerView.frame), DEVICE_WIDTH, DEVICE_WIDTH*430/750)];
-    bankuaiView.backgroundColor = RGBCOLOR(220, 221, 223);
-    [self.theTopView addSubview:bankuaiView];
-    
-    //企业体检
-    GView *classView1 = [[GView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH*0.5-0.5, (DEVICE_WIDTH*0.5-0.5)*255/375) tag:10 type:ClassViewType_qiyetijian];
-    classView1.titleLabel_black.text = @"企业体检";
-    classView1.titleLabel_gray.text = @"全面体检奢华享受";
-    [bankuaiView addSubview:classView1];
-    [classView1 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView1.tag];
-    
-    //早期防癌
-    GView *classView2 = [[GView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * 0.5, 0, DEVICE_WIDTH * 0.5, classView1.frame.size.height * 0.5) tag:11 type:ClassViewType_youshang];
-    classView2.titleLabel_black.text = @"早期防癌";
-    classView2.titleLabel_gray.text = @"预防比治疗更重要";
-    [bankuaiView addSubview:classView2];
-    [classView2 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView2.tag];
-    
-    //心脑血管
-    GView *classView3 = [[GView alloc]initWithFrame:CGRectMake(classView2.frame.origin.x, CGRectGetMaxY(classView2.frame)+0.5, classView2.frame.size.width, classView2.frame.size.height-0.5) tag:12 type:ClassViewType_youshang];
-    classView3.titleLabel_black.text = @"心脑血管";
-    classView3.titleLabel_gray.text = @"及时发现很重要";
-    [bankuaiView addSubview:classView3];
-    [classView3 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView3.tag];
-    
-    //关爱老人 职场白领 精英男士 都市丽人
-    NSArray *littleClassNameArray = @[@"关爱老人",@"职场白领",@"精英男士",@"都市丽人"];
-    for (int i = 0; i<4; i++) {
-        GView *classView = [[GView alloc]initWithFrame:CGRectMake(i*(DEVICE_WIDTH * 0.25), CGRectGetMaxY(classView3.frame)+0.5, DEVICE_WIDTH*0.25-0.5, bankuaiView.frame.size.height - classView1.frame.size.height) tag:13+i type:ClassViewType_smallfenlei];
-        classView.titleLabel_black.text = littleClassNameArray[i];
-        classView.backgroundColor = [UIColor whiteColor];
-        [bankuaiView addSubview:classView];
-        [classView addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView.tag];
-    }
-    
-    
-    
-    
-//    //宽
-//    CGFloat kk = DEVICE_WIDTH*0.5;
-//    //高
-//    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
-//    
-//    for (int i = 0; i<classData.count; i++) {
-//        
-//        NSDictionary *dic = classData[i];
-//        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
-//        [bankuaiView addSubview:view];
-//        
-//        
-//        //图片
-//        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
-//        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-//        [view addSubview:imv];
-//        
-//        int imvTag = i+10;
-//        
-//        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
-//        
-//        
-//    }
-    
-    UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
-                                                                           CGRectGetMaxY(bankuaiView.frame)+5,
-                                                                           DEVICE_WIDTH,
-                                                                           [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]
-                                                                           )];
-    [dingzhiImv setImage:[UIImage imageNamed:@"gexingdingzhi.png"]];
-    [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
-    [self.theTopView addSubview:dingzhiImv];
-    
-    //设置精品推荐
-    UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
-                                                                     CGRectGetMaxY(dingzhiImv.frame),
-                                                                     DEVICE_WIDTH,
-                                                                     [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-    jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
-    [self.theTopView addSubview:jingpintuijian];
-    UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
-    ttl.font = [UIFont systemFontOfSize:15];
-    [jingpintuijian addSubview:ttl];
-    ttl.text = @"精品推荐";
-    ttl.textColor = [UIColor blackColor];
-    
-    _table.tableHeaderView = self.theTopView;
-    
-}
-
-
-//创建refresh头部
--(void)creatRefreshHeader_cache{
-    //数据数组
-//    NSArray *classData = [_StoreProductClassDic arrayValueForKey:@"data"];
-    
-//    //共几行
-//    int hang = (int)classData.count/2;
-//    if (hang<classData.count/2.0) {
-//        hang+=1;
-//    };
-//    //每行几列
-//    int lie = 2;
-//    
-//    if (!self.theTopView) {
-//        self.theTopView = [[UIView alloc]initWithFrame:CGRectZero];
-//        self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
-//        
-//    }
     
     //refresh头部
     [self.theTopView setFrame:CGRectMake(0,
@@ -741,7 +216,6 @@
                                          +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
                                          )];
     
-    
     //设置轮播图
     [self creatUpCycleScrollView];
     
@@ -752,6 +226,7 @@
     
     //企业体检
     GView *classView1 = [[GView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH*0.5-0.5, (DEVICE_WIDTH*0.5-0.5)*255/375) tag:10 type:ClassViewType_qiyetijian];
+    [classView1.logoImv setImage:[UIImage imageNamed:@"sh_qiyetijian.png"]];
     classView1.titleLabel_black.text = @"企业体检";
     classView1.titleLabel_gray.text = @"全面体检奢华享受";
     [bankuaiView addSubview:classView1];
@@ -759,46 +234,33 @@
     
     //早期防癌
     GView *classView2 = [[GView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * 0.5, 0, DEVICE_WIDTH * 0.5, classView1.frame.size.height * 0.5) tag:11 type:ClassViewType_youshang];
+    [classView2.logoImv setImage:[UIImage imageNamed:@"sh_fangai.png"]];
     classView2.titleLabel_black.text = @"早期防癌";
     classView2.titleLabel_gray.text = @"预防比治疗更重要";
     [bankuaiView addSubview:classView2];
+    [classView2 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView2.tag];
     
     //心脑血管
     GView *classView3 = [[GView alloc]initWithFrame:CGRectMake(classView2.frame.origin.x, CGRectGetMaxY(classView2.frame)+0.5, classView2.frame.size.width, classView2.frame.size.height-0.5) tag:12 type:ClassViewType_youshang];
+    [classView3.logoImv setImage:[UIImage imageNamed:@"sh_xinnaoxueguan.png"]];
     classView3.titleLabel_black.text = @"心脑血管";
     classView3.titleLabel_gray.text = @"及时发现很重要";
     [bankuaiView addSubview:classView3];
+    [classView3 addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView3.tag];
     
     //关爱老人 职场白领 精英男士 都市丽人
     NSArray *littleClassNameArray = @[@"关爱老人",@"职场白领",@"精英男士",@"都市丽人"];
+    NSArray *logoImNameArray = @[@"sh_guanailaoren.png",@"sh_zhichangbailing.png",@"sh_jingyingnanshi.png",@"sh_dushiliren.png"];
     for (int i = 0; i<4; i++) {
         GView *classView = [[GView alloc]initWithFrame:CGRectMake(i*(DEVICE_WIDTH * 0.25), CGRectGetMaxY(classView3.frame)+0.5, DEVICE_WIDTH*0.25-0.5, bankuaiView.frame.size.height - classView1.frame.size.height) tag:13+i type:ClassViewType_smallfenlei];
+        NSString *logoImvStr = logoImNameArray[i];
+        [classView.logoImv setImage:[UIImage imageNamed:logoImvStr]];
         classView.titleLabel_black.text = littleClassNameArray[i];
         classView.backgroundColor = [UIColor whiteColor];
         [bankuaiView addSubview:classView];
+        [classView addTapGestureTaget:self action:@selector(classGviewClicked:) imageViewTag:classView.tag];
     }
     
-//    //宽
-//    CGFloat kk = DEVICE_WIDTH*0.5;
-//    //高
-//    CGFloat hh = [GMAPI scaleWithHeight:0 width:kk theWHscale:375.0/280];
-//    
-//    for (int i = 0; i<classData.count; i++) {
-//        NSDictionary *dic = classData[i];
-//        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(i%lie*kk, i/lie*hh, kk, hh)];
-//        [bankuaiView addSubview:view];
-//        view.backgroundColor = RGBCOLOR_ONE;
-//        
-//        //图片
-//        UIImageView *imv = [[UIImageView alloc]initWithFrame:view.bounds];
-//        [imv l_setImageWithURL:[NSURL URLWithString:[dic stringValueForKey:@"cover_pic"]] placeholderImage:nil];
-//        [view addSubview:imv];
-//        
-//        int imvTag = i+10;
-//        [imv addTaget:self action:@selector(classImvClicked:) tag:imvTag];
-//        
-//        
-//    }
     
     UIImageView *dingzhiImv = [[UIImageView alloc]initWithFrame:CGRectMake(0,
                                                                            CGRectGetMaxY(bankuaiView.frame)+5,
@@ -809,11 +271,7 @@
     [dingzhiImv addTaget:self action:@selector(pushToPersonalCustom) tag:0];
     [self.theTopView addSubview:dingzhiImv];
     
-    
-    
-    
     //设置精品推荐
-    
     UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
                                                                      CGRectGetMaxY(dingzhiImv.frame),
                                                                      DEVICE_WIDTH,
@@ -828,13 +286,7 @@
     
     _table.tableHeaderView = self.theTopView;
     
-    
 }
-
-
-
-
-
 
 //创建自定义navigation
 - (void)setupNavigation{
@@ -929,7 +381,7 @@
         [bself searchBtnClickedWithStr:theStr isHotSearch:NO];
     }];
     [_mySearchView addSubview:_theCustomSearchView];
-   
+    
 }
 
 
@@ -988,10 +440,6 @@
     
 }
 
-
-
-
-
 //创建tabelview
 -(void)creatTableView{
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50) style:UITableViewStyleGrouped];
@@ -1015,73 +463,439 @@
     NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:1];
     
-    if (advertisements_data.count > 0) {
-        
-        for (NSDictionary *dic in advertisements_data) {
-            CycleAdvModel *model = [[CycleAdvModel alloc]initWithDictionary:dic];
-            [self.upAdvArray addObject:model];
-        }
-        
-        
-        for (CycleAdvModel *model in self.upAdvArray) {
-            [urls addObject:model.img_url];
-        }
-        
-        
-        NSMutableArray *views = [NSMutableArray arrayWithCapacity:urls.count];
-        for (int i = 0; i < urls.count; i ++) {
+    if (_StoreCycleAdvDic) {//有轮播图缓存
+        if (advertisements_data.count > 0) {
             
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 468/750.0*DEVICE_WIDTH)];
-            [imageView l_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil];
-            [views addObject:imageView];
-            
-        }
-
-        _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 468/750.0*DEVICE_WIDTH)];
-        [_bannerView setContentViews:views];
-        [_bannerView showPageControl];
-        [_bannerView setBackgroundColor:DEFAULT_VIEW_BACKGROUNDCOLOR];
-        
-        __weak typeof(self)bself = self;
-        [_bannerView setTapActionBlock:^(NSInteger index) {
-            NSLog(@"--tap index %ld",(long)index);
-            
-            if (index >= bself.upAdvArray.count) {
-                return ;
+            for (NSDictionary *dic in advertisements_data) {
+                CycleAdvModel *model = [[CycleAdvModel alloc]initWithDictionary:dic];
+                [self.upAdvArray addObject:model];
             }
             
-            CycleAdvModel *amodel = bself.upAdvArray[index];
-            if ([amodel.redirect_type intValue] == 1) {//外链
+            
+            for (CycleAdvModel *model in self.upAdvArray) {
+                [urls addObject:model.img_url];
+            }
+            
+            
+            NSMutableArray *views = [NSMutableArray arrayWithCapacity:urls.count];
+            for (int i = 0; i < urls.count; i ++) {
                 
-                [MiddleTools pushToWebFromViewController:bself weburl:amodel.redirect_url title:nil moreInfo:NO hiddenBottom:YES];
+                UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 468/750.0*DEVICE_WIDTH)];
+                [imageView l_setImageWithURL:[NSURL URLWithString:urls[i]] placeholderImage:nil];
+                [views addObject:imageView];
                 
-            }else if ([amodel.redirect_type intValue] == 0){//应用内
-                if ([amodel.adv_type_val intValue] == 1) {//套餐 单品详情
+            }
+            
+            _bannerView = [[LBannerView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 468/750.0*DEVICE_WIDTH)];
+            [_bannerView setContentViews:views];
+            [_bannerView showPageControl];
+            [_bannerView setBackgroundColor:DEFAULT_VIEW_BACKGROUNDCOLOR];
+            
+            __weak typeof(self)bself = self;
+            [_bannerView setTapActionBlock:^(NSInteger index) {
+                NSLog(@"--tap index %ld",(long)index);
+                
+                if (index >= bself.upAdvArray.count) {
+                    return ;
+                }
+                
+                CycleAdvModel *amodel = bself.upAdvArray[index];
+                if ([amodel.redirect_type intValue] == 1) {//外链
                     
-                    [MiddleTools pushToProductDetailWithProductId:amodel.theme_id viewController:bself extendParams:nil];
+                    [MiddleTools pushToWebFromViewController:bself weburl:amodel.redirect_url title:nil moreInfo:NO hiddenBottom:YES];
                     
-                }else if ([amodel.adv_type_val intValue] == 2){//企业预约首页
+                }else if ([amodel.redirect_type intValue] == 0){//应用内
+                    if ([amodel.adv_type_val intValue] == 1) {//套餐 单品详情
+                        
+                        [MiddleTools pushToProductDetailWithProductId:amodel.theme_id viewController:bself extendParams:nil];
+                        
+                    }else if ([amodel.adv_type_val intValue] == 2){//企业预约首页
+                        
+                    }
                     
                 }
                 
-            }
+            }];
             
-        }];
-        
-        [_bannerView setAutomicScrollingDuration:3];
-        
-        [self.theTopView addSubview:_bannerView];
+            [_bannerView setAutomicScrollingDuration:3];
+            
+            [self.theTopView addSubview:_bannerView];
+        }else{
+            [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
+            CGFloat height = self.theTopView.frame.size.height;
+            height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
+            [self.theTopView setHeight:height];
+            _table.tableHeaderView = self.theTopView;
+        }
     }else{
         
-        [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
+    }
+    
+    
+}
+
+
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSLog(@"%s",__FUNCTION__);
+    _mySearchView.hidden = NO;
+    _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
+    
+    [_theCustomSearchView.tab reloadData];
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        alphaView.alpha = 1;
+    }
+    
+}
+
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
+        alpha = MIN(alpha, 1);
+        alphaView.alpha = alpha;
+
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    if (![LTools isEmpty:self.searchTf.text]) {
+        [self searchBtnClickedWithStr:self.searchTf.text isHotSearch:NO];
+    }
+    
+    return YES;
+}
+
+
+
+
+
+-(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    
+    [_searchTf resignFirstResponder];
+    _mySearchView.hidden = YES;
+    UIView *effectView = self.currentNavigationBar.effectContainerView;
+    if (effectView) {
+        UIView *alphaView = [effectView viewWithTag:10000];
+        if (_table.contentOffset.y > 64) {
+            CGFloat alpha = (_table.contentOffset.y -64)/200.0f;
+            alpha = MIN(alpha, 1);
+            alphaView.alpha = alpha;
+        }else{
+            alphaView.alpha = 0;
+        }
+    }
+    
+    if (!isHot) {
+        if (![LTools isEmpty:self.searchTf.text]) {
+            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
+        }
         
-        CGFloat height = self.theTopView.frame.size.height;
-        height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
-        [self.theTopView setHeight:height];
-        _table.tableHeaderView = self.theTopView;
+    }
+    
+    self.searchTf.text = theWord;
+    self.searchTf.text = nil;
+    GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.theSearchWorld = theWord;
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    
+}
+
+
+#pragma mark - 返回上个界面
+-(void)gogoback{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma mark - 缓存
+-(void)loadCache{
+    _StoreCycleAdvDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
+    
+    NSDictionary *storeProductListDic = [GMAPI cacheForKey:@"GStoreHomeVc_StoreProductListDic"];
+    
+    if (storeProductListDic && _StoreCycleAdvDic) {
+        //精品推荐数据
+        _StoreProductListArray_cache = [NSMutableArray arrayWithCapacity:1];
+        NSArray *data = [storeProductListDic arrayValueForKey:@"data"];
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray_cache addObject:model_b];
+        }
+        
+        [self creatRefreshHeader];
         
     }
 }
+
+#pragma mark - 请求网络数据
+
+-(void)prepareNetData{
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    
+    if (_isShaixuan) {
+        //首页精品推荐
+        [self prepareProductsWithDic:self.shaixuanDic];
+        _isShaixuan = NO;
+        return;
+    }
+    
+    //根据城市查询品牌列表
+    [self prepareBrandListWithLocation];
+    //获取热门搜索
+    [self getHotSearch];
+    //购物车数量
+    [self getshopcarNum];
+    //轮播图
+    [self getAdvCycleNetData];
+    //首页精品推荐
+    [self prepareProductsWithDic:self.shaixuanDic];
+}
+
+//轮播图
+-(void)getAdvCycleNetData{
+    //轮播图
+    _request_adv = [_request requestWithMethod:YJYRequstMethodGet api:StoreCycleAdv parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _StoreCycleAdvDic = result;
+        [GMAPI cache:_StoreCycleAdvDic ForKey:@"GStoreHomeVc_StoreCycleAdvDic"];
+        _table.tableHeaderView = nil;
+        [self creatRefreshHeader];
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+}
+
+
+//获取热门搜索
+-(void)getHotSearch{
+    _request_hotSearch = [_request requestWithMethod:YJYRequstMethodGet api:ProductHotSearch parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _hotSearchArray = [result arrayValueForKey:@"list"];
+        _theCustomSearchView.hotSearch = _hotSearchArray;
+        [_theCustomSearchView.tab reloadData];
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+}
+
+
+
+//首页精品推荐
+-(void)prepareProductsWithDic:(NSDictionary *)theDic{
+    NSDictionary *dic;
+    if (theDic) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic safeSetString:NSStringFromInt(5) forKey:@"per_page"];
+        [temp_dic safeSetString:@"2" forKey:@"show_type"];
+        dic = temp_dic;
+    }else{
+        dic = @{
+                @"province_id":[GMAPI getCurrentProvinceId],
+                @"city_id":[GMAPI getCurrentCityId],
+                @"page":NSStringFromInt(_table.pageNum),
+                @"per_page":NSStringFromInt(5)
+                };
+        
+    }
+    
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *data = [result arrayValueForKey:@"data"];
+        
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray addObject:model_b];
+        }
+        
+        
+        if (_table.pageNum == 1) {
+            [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
+        }
+        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+}
+
+
+//选择完地区之后请求首页精品推荐
+-(void)gotoPrepareProductsWithDic:(NSDictionary *)theDic{
+    NSDictionary *dic;
+    if (theDic) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
+        [temp_dic setObject:NSStringFromInt(5) forKey:@"per_page"];
+        [temp_dic setObject:@"2" forKey:@"show_type"];
+        dic = temp_dic;
+    }else{
+        dic = @{
+                @"province_id":[GMAPI getCurrentProvinceId],
+                @"city_id":[GMAPI getCurrentCityId],
+                @"page":NSStringFromInt(_table.pageNum),
+                @"per_page":[NSString stringWithFormat:@"%d",5]
+                };
+        
+    }
+    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
+        NSArray *data = [result arrayValueForKey:@"data"];
+        for (NSDictionary *dic in data) {
+            NSArray *list = [dic arrayValueForKey:@"list"];
+            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
+            for (NSDictionary *dic in list) {
+                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
+                [model_listArray addObject:model];
+            }
+            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
+            model_b.list = model_listArray;
+            [_StoreProductListArray addObject:model_b];
+        }
+        
+        _table.tableFooterView = nil;
+        [_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[self resultViewWithT]];
+        [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+}
+
+
+
+//获取购物车数量
+-(void)getshopcarNum{
+    if ([LoginViewController isLogin]) {
+        [self getShopcarNumWithLoginSuccess];
+    }else{
+        
+    }
+}
+
+//获取购物车数量
+-(void)getShopcarNumWithLoginSuccess{
+    NSDictionary *dic = @{
+                          @"authcode":[UserInfo getAuthkey]
+                          };
+    _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _shopCarDic = result;
+        _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+        if (_shopCarNumLabel) {
+            
+            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
+            
+            [self updateShopCarNumAndFrame];
+        }
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+}
+
+
+//根据城市查询品牌列表
+-(void)prepareBrandListWithLocation{
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSArray *arr = [result arrayValueForKey:@"data"];
+        self.brand_city_list = [NSArray arrayWithArray:arr];
+        
+    } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
+    }];
+}
+
+
+#pragma mark - 改变searchTf和框的大小
+/**
+ *  改变searchTf和框的大小
+ *
+ *  @param state 1 编辑状态 0常态
+ */
+-(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
+    _editState = state;
+    if (state == 0) {//常态
+        [_myNavcRightBtn setTitle:nil forState:UIControlStateNormal];
+        [_myNavcRightBtn setImage:[UIImage imageNamed:@"fenyuan_storehome.png"] forState:UIControlStateNormal];
+        
+        UIView *effectView = self.currentNavigationBar.effectContainerView;
+        if (effectView) {
+            for (UIView *view in effectView.subviews) {
+                if (view.tag == 10000) {
+                     view.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:0.8];
+                }
+            }
+        };
+        
+        [_searchView setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 90, 30)];
+        [_kuangView setFrame:CGRectMake(0, 0, _searchView.frame.size.width, 30)];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
+
+        if (!_panGestureRecognizer) {
+            _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        }
+        [self.view addGestureRecognizer:_panGestureRecognizer];
+        
+        
+    }else if (state == 1){//编辑状态
+        [_myNavcRightBtn setImage:nil forState:UIControlStateNormal];
+        [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
+        
+        UIView *effectView = self.currentNavigationBar.effectContainerView;
+        if (effectView) {
+            for (UIView *view in effectView.subviews) {
+                if (view.tag == 10000) {
+                    view.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:1];
+                }
+            }
+        };
+        
+        [_searchView setWidth:DEVICE_WIDTH - 60];
+        [_kuangView setWidth:_searchView.frame.size.width];
+        [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width-30, 30)];
+        
+        [self.navigationController.navigationBar bringSubviewToFront:_searchView];
+        
+        [self.view removeGestureRecognizer:_panGestureRecognizer];
+    }
+}
+
 
 
 #pragma mark - 点击方法
@@ -1089,7 +903,6 @@
 -(void)classGviewClicked:(UITapGestureRecognizer*)sender{
     
     if (sender.view.tag == 10) {//企业体检
-        //
         WebviewController *cc = [[WebviewController alloc]init];
         cc.webUrl = @"http://www.hippodr.com/index.php?d=wap&c=company_consult&m=consult";
         cc.navigationTitle = @"企业体检";
@@ -1097,13 +910,6 @@
     }else{
         
         GBrandListViewController *cc = [[GBrandListViewController alloc]init];
-        
-//        if ([[dic stringValueForKey:@"gender"] intValue] == 1 || [[dic stringValueForKey:@"gender"] intValue] == 2) {
-//            cc.haveChooseGender = NO;
-//        }else if ([[dic stringValueForKey:@"gender"] intValue] == 99){
-//            cc.haveChooseGender = YES;
-//        }
-//        [self.navigationController pushViewController:cc animated:YES];
         
         if (sender.view.tag == 11){//早期防癌
             cc.class_Id = @"3";
@@ -1126,29 +932,21 @@
         }
         
         [self.navigationController pushViewController:cc animated:YES];
-        
     }
-    
-    
-    
-    
 }
 
 
 -(void)viewForHeaderClicked:(UIButton*)sender{
     NSInteger index = sender.tag - 20000;
     StoreHomeOneBrandModel *model_b = _table.dataArray[index];
-    
     GBrandHomeViewController *cc = [[GBrandHomeViewController alloc]init];
     cc.brand_id = model_b.brand_id;
     cc.brand_name = model_b.brand_name;
     [self.navigationController pushViewController:cc animated:YES];
-    
 }
 
 
 -(void)myNavcRightBtnClicked{
-    
     
     if (_editState == 0) {//常态 跳转分院
         [self pushToFenyuan];
@@ -1157,8 +955,6 @@
         self.searchTf.text = nil;
     }
     
-    
-//    [_rightItem2Label removeFromSuperview];
     [_searchTf resignFirstResponder];
     _mySearchView.hidden = YES;
     UIView *effectView = self.currentNavigationBar.effectContainerView;
@@ -1176,7 +972,6 @@
 
 //跳转分院
 -(void)pushToFenyuan{
-    
     HospitalViewController *hospital = [[HospitalViewController alloc]init];
     [self.navigationController pushViewController:hospital animated:YES];
 }
@@ -1280,6 +1075,23 @@
     }
     
     [self controlTopButtonWithScrollView:scrollView];
+    
+    NSLog(@"%f",scrollView.contentOffset.y);
+    
+    if (scrollView.contentOffset.y<-10) {
+        [[UIApplication sharedApplication] setStatusBarHidden:TRUE withAnimation:UIStatusBarAnimationSlide];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.currentNavigationBar.alpha = 0;
+        }];
+        
+        
+    }else{
+        [[UIApplication sharedApplication] setStatusBarHidden:FALSE withAnimation:UIStatusBarAnimationSlide];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.currentNavigationBar.alpha = 1;
+        }];
+    }
+    
     
 }
 
