@@ -68,7 +68,6 @@
 		1303C3771BEB0D7200700847 /* tijianren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3431BEB0D7100700847 /* tijianren@2x.png */; };
 		1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */; };
 		1303C37C1BEB432900700847 /* PersonalCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1303C37B1BEB432900700847 /* PersonalCenterController.m */; };
-		130609051C3E1291004489A5 /* libPushSDK-1.8.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 130609041C3E1291004489A5 /* libPushSDK-1.8.8.a */; };
 		130609071C3E12B0004489A5 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 130609061C3E12B0004489A5 /* CFNetwork.framework */; };
 		130609091C3E12BB004489A5 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 130609081C3E12BB004489A5 /* CoreFoundation.framework */; };
 		1306090B1C3E12E2004489A5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1306090A1C3E12E2004489A5 /* Foundation.framework */; };
@@ -76,6 +75,7 @@
 		1306090F1C3E1302004489A5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1306090E1C3E1302004489A5 /* libz.tbd */; };
 		130609111C3E13E4004489A5 /* PushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 130609101C3E13E4004489A5 /* PushConfig.plist */; };
 		130609141C3E3A3C004489A5 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 130609131C3E3A3C004489A5 /* MessageModel.m */; };
+		130AE0A91CE2E114008E3257 /* jpush-ios-2.1.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */; };
 		130D2E011BFC7229002E301F /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E001BFC7229002E301F /* MapViewController.m */; };
 		130D2E031BFC7332002E301F /* gpin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E021BFC7332002E301F /* gpin@2x.png */; };
 		130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E051BFDBF30002E301F /* UpdateUserInfoController.m */; };
@@ -685,8 +685,6 @@
 		1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tijianren_duo@2x.png"; sourceTree = "<group>"; };
 		1303C37A1BEB432900700847 /* PersonalCenterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalCenterController.h; sourceTree = "<group>"; };
 		1303C37B1BEB432900700847 /* PersonalCenterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCenterController.m; sourceTree = "<group>"; };
-		130609031C3E1291004489A5 /* APService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APService.h; sourceTree = "<group>"; };
-		130609041C3E1291004489A5 /* libPushSDK-1.8.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPushSDK-1.8.8.a"; sourceTree = "<group>"; };
 		130609061C3E12B0004489A5 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		130609081C3E12BB004489A5 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		1306090A1C3E12E2004489A5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -695,6 +693,8 @@
 		130609101C3E13E4004489A5 /* PushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PushConfig.plist; sourceTree = "<group>"; };
 		130609121C3E3A3C004489A5 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		130609131C3E3A3C004489A5 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "jpush-ios-2.1.6.a"; sourceTree = "<group>"; };
+		130AE0A81CE2E114008E3257 /* JPUSHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPUSHService.h; sourceTree = "<group>"; };
 		130D2DFF1BFC7229002E301F /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		130D2E001BFC7229002E301F /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		130D2E021BFC7332002E301F /* gpin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gpin@2x.png"; sourceTree = "<group>"; };
@@ -1508,6 +1508,7 @@
 				1306090F1C3E1302004489A5 /* libz.tbd in Frameworks */,
 				E352F9071C0B7D540037E4AE /* Security.framework in Frameworks */,
 				1306090D1C3E12EC004489A5 /* UIKit.framework in Frameworks */,
+				130AE0A91CE2E114008E3257 /* jpush-ios-2.1.6.a in Frameworks */,
 				1306090B1C3E12E2004489A5 /* Foundation.framework in Frameworks */,
 				130609091C3E12BB004489A5 /* CoreFoundation.framework in Frameworks */,
 				130609071C3E12B0004489A5 /* CFNetwork.framework in Frameworks */,
@@ -1518,7 +1519,6 @@
 				E352F9031C0B7D400037E4AE /* SystemConfiguration.framework in Frameworks */,
 				E352F9011C0B7D370037E4AE /* OpenGLES.framework in Frameworks */,
 				E352F8FF1C0B7D2E0037E4AE /* QuartzCore.framework in Frameworks */,
-				130609051C3E1291004489A5 /* libPushSDK-1.8.8.a in Frameworks */,
 				E352F8FD1C0B7D240037E4AE /* CoreLocation.framework in Frameworks */,
 				13F1F3EA1BBA9A4B00885D31 /* libSocialQQ.a in Frameworks */,
 				13F1F3EB1BBA9A4B00885D31 /* TencentOpenAPI.framework in Frameworks */,
@@ -1695,8 +1695,8 @@
 		130609021C3E1291004489A5 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				130609031C3E1291004489A5 /* APService.h */,
-				130609041C3E1291004489A5 /* libPushSDK-1.8.8.a */,
+				130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */,
+				130AE0A81CE2E114008E3257 /* JPUSHService.h */,
 				130609101C3E13E4004489A5 /* PushConfig.plist */,
 			);
 			path = lib;

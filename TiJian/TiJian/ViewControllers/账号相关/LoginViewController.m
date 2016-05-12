@@ -12,7 +12,8 @@
 #import "UserInfo.h"
 //#import "WXApi.h"
 #import "LTools.h"
-#import "APService.h"//JPush推送
+//#import "APService.h"//JPush推送
+#import "JPUSHService.h" //JPush推送
 
 @interface LoginViewController ()
 
@@ -367,7 +368,7 @@
     NSMutableDictionary *Mut_params = [NSMutableDictionary dictionaryWithDictionary:params];
     
     //JPush registerid
-    NSString *registration_id = [APService registrationID];
+    NSString *registration_id = [JPUSHService registrationID];
     if (registration_id && registration_id.length > 0) {
         
         [Mut_params setObject:registration_id forKey:@"registration_id"];

@@ -14,7 +14,8 @@
 #import "SimpleMessage.h"
 #import "UMSocial.h"
 #import "MobClick.h"
-#import "APService.h"//极光
+//#import "APService.h"//极光
+#import "JPUSHService.h"//version 2.1.5
 #import "ReportDetailController.h"//报告详情
 #import "OrderInfoViewController.h"//订单详情
 #import "WebviewController.h"//web
@@ -74,26 +75,53 @@
     //初始化融云SDK。
     [self startRongCloud];
     
+    /**
+     * 统计推送打开率1 融云
+     */
+    [[RCIMClient sharedRCIMClient] recordLaunchOptionsEvent:launchOptions];
+    
     //检查版本
     [self checkVersion];
     
+    //================================= JPUSH =========================================
     //JPush Required
+//    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+//        //可以添加自定义categories
+//        [APService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+//                                                       UIUserNotificationTypeSound |
+//                                                       UIUserNotificationTypeAlert)
+//                                           categories:nil];
+//    } else {
+//        //categories 必须为nil
+//        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+//                                                       UIRemoteNotificationTypeSound |
+//                                                       UIRemoteNotificationTypeAlert)
+//                                           categories:nil];
+//    }
+//    
+//    // Required
+//    [APService setupWithOption:launchOptions];
+    
+    
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
         //可以添加自定义categories
-        [APService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
-                                                       UIUserNotificationTypeSound |
-                                                       UIUserNotificationTypeAlert)
-                                           categories:nil];
+        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                          UIUserNotificationTypeSound |
+                                                          UIUserNotificationTypeAlert)
+                                              categories:nil];
     } else {
         //categories 必须为nil
-        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                       UIRemoteNotificationTypeSound |
-                                                       UIRemoteNotificationTypeAlert)
-                                           categories:nil];
+        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                          UIRemoteNotificationTypeSound |
+                                                          UIRemoteNotificationTypeAlert)
+                                              categories:nil];
     }
     
-    // Required
-    [APService setupWithOption:launchOptions];
+    //如不需要使用IDFA，advertisingIdentifier 可为nil
+    [JPUSHService setupWithOption:launchOptions appKey:JPushAppkey
+                          channel:JPushChannel
+                 apsForProduction:[NSStringFromInt(JPushIsProduction) boolValue]
+            advertisingIdentifier:nil];
     
     //UIApplicationLaunchOptionsRemoteNotificationKey,判断是通过推送消息启动的
     
@@ -101,16 +129,8 @@
     if (userInfo)
     {
         DDLOG(@"didFinishLaunch : userInfo %@",userInfo);
-//        [self pushToMessageDetailWithResult:userInfo ignoreRongcloud:YES];
-        
-//        [[LogView logInstance]addLog:@"didFinishLaunch"];
     }
-    
-    /**
-     * 统计推送打开率1 融云
-     */
-    [[RCIMClient sharedRCIMClient] recordLaunchOptionsEvent:launchOptions];
-    
+
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidSetupNotification:) name:kJPFNetworkDidSetupNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidCloseNotification:) name:kJPFNetworkDidCloseNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidRegisterNotification:) name:kJPFNetworkDidRegisterNotification object:nil];
@@ -147,9 +167,6 @@
     
     //获取未读消息num
     [self netWorkForMsgNum];
-    
-    //更新坐标
-//    [self startDingweiWithBlock:nil];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -180,7 +197,8 @@
     [[RCIMClient sharedRCIMClient] setDeviceToken:token];
     
     //JPush Required
-    [APService registerDeviceToken:deviceToken];
+//    [APService registerDeviceToken:deviceToken];
+    [JPUSHService registerDeviceToken:deviceToken];
     
     //本地记录
     [LTools setObject:token forKey:USER_DEVICE_TOKEN];
@@ -190,13 +208,14 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     DDLOG(@"本地通知%@",notification.userInfo);
+    
+    [JPUSHService showLocalNotificationAtFront:notification identifierKey:nil];
+    
     //在此获取rongcloud本地通知消息
     /**
      * 统计推送打开率3
      */
     [[RCIMClient sharedRCIMClient] recordLocalNotificationEvent:notification];
-    
-//    [[LogView logInstance]addLog:@"LocalNotification"];
     
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateInactive){
@@ -237,7 +256,7 @@
 {
     //JPush
     // IOS 7 Support Required
-    [APService handleRemoteNotification:userInfo];
+    [JPUSHService handleRemoteNotification:userInfo];
     
     // update unread number
     [LTools updateTabbarUnreadMessageNumber];
@@ -246,7 +265,6 @@
      * 统计推送打开率2
      */
     [[RCIMClient sharedRCIMClient] recordRemoteNotificationEvent:userInfo];
-    
     
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateInactive){
@@ -855,7 +873,7 @@
     if (authkey.length == 0) {
         return;
     }
-    NSString *registration_id = [APService registrationID];
+    NSString *registration_id = [JPUSHService registrationID];
     if (!registration_id || registration_id.length == 0) {
         registration_id = @"JPush";
     }

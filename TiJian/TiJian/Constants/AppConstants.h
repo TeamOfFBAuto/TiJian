@@ -136,10 +136,8 @@
 
 //百度地图
 #define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
-
 //百度地图 企业版
 #define BAIDUMAP_APPKEY_Enterprise @"s0BroqlD9hCgwm67lOwrzy3K" //com.medical.hemaEnterprise
-
 
 //融云
 //1、开发环境
@@ -152,12 +150,18 @@
 
 //融云客服 1.0
 #define SERVICE_ID @"KEFU1448965696367"
-
 //融云客服 2.0 开发
 //#define SERVICE_ID_2 @"KEFU144894028332333"
-
 //正式
 #define SERVICE_ID_2 @"KEFU145261606391628"
+
+//是否开启所有日志
+#define EnableErroLogCode 2000  //n代表显示大于n的所有错误信息 发布时改为2000
+
+//JPush环境配置
+#define JPushIsProduction 1 //是否是生成环境 1为是 0为否
+#define JPushAppkey @"d191338077d6b2157afe2bf7"
+#define JPushChannel @"AppStore" //发布渠道
 
 //==========================待注册
 
@@ -170,12 +174,11 @@
 #define QQAPPKEY @"m7DlzFpxeDxRBULc"
 
 //微信
-#define WXAPPID @"wx47f54e431de32846" //衣加衣
+#define WXAPPID @"wx47f54e431de32846" //衣加衣改为河马医生 商家检查 吉瑞嘉
 #define WXAPPSECRET @"a71699732e3bef01aefdaf324e2f522c"
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
 
-//是否开启所有日志
-#define EnableErroLogCode 2000  //n代表显示大于n的所有错误信息 发布时改为2000
+
 
 
 #endif
