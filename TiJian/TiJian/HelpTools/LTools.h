@@ -297,10 +297,22 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (NSString*)showIntervalTimeWithTimestamp:(NSString*)myTime
                                 withFormat:(NSString *)format;
 
+
 +(NSString*)timestamp:(NSString*)myTime;
 
 
 + (NSString *)currentTime;
+
+/**
+ *  字符串格式转换NSDate
+ *
+ *  @param string 2016-05-13
+ *  @param format @"yyyy-MM-dd"
+ *
+ *  @return
+ */
++ (NSDate *)dateFromString:(NSString *)string
+                withFormat:(NSString *)format;
 
 /**
  *  是否需要更新
@@ -523,5 +535,34 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (void)animationToBigger:(UIView *)annimationView
                  duration:(CGFloat)duration
                    scacle:(CGFloat)scacle;
+
+#pragma mark - 身份证信息处理
+
+/**
+ *  根据身份证号获取性别,18位(17位代表性别)15位(15位代表性别)奇数为男,偶数为女。
+ *
+ *  @param numberStr
+ *
+ *  @return Gender
+ */
++ (Gender)getIdCardSex:(NSString *)numberStr;
+
+/**
+ *  根据省份证号获取年龄
+ *
+ *  @param numberStr
+ *
+ *  @return
+ */
++(NSString *)getIdCardAge:(NSString *)numberStr;
+
+/**
+ *  根据身份证号获取生日(18位身份证 7-14为出生日期)
+ *
+ *  @param numberStr
+ *
+ *  @return
+ */
++ (NSString *)getIdCardbirthday:(NSString *)numberStr;
 
 @end

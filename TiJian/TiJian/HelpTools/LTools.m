@@ -1012,6 +1012,25 @@
 }
 
 /**
+ *  字符串格式转换NSDate
+ *
+ *  @param string 2016-05-13
+ *  @param format @"yyyy-MM-dd"
+ *
+ *  @return
+ */
++ (NSDate *)dateFromString:(NSString *)string
+                withFormat:(NSString *)format
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    if (!format) {
+        format = @"yyyy-MM-dd";
+    }
+    formatter.dateFormat = format;
+    return [formatter dateFromString:string];
+}
+
+/**
  *  是否需要更新
  *
  *  @param hours      时间间隔
@@ -1591,8 +1610,15 @@
 }
 
 
-//根据身份证号获取生日(18位身份证 7-14为出生日期)
--(NSString *)birthdayStrFromIdCard:(NSString *)numberStr
+#pragma mark - 身份证信息处理
+/**
+ *  根据身份证号获取生日(18位身份证 7-14为出生日期)
+ *
+ *  @param numberStr
+ *
+ *  @return
+ */
++ (NSString *)getIdCardbirthday:(NSString *)numberStr
 {
     NSMutableString *result = [NSMutableString stringWithCapacity:0];
     NSString *year = nil;
@@ -1654,26 +1680,51 @@
     [result appendString:day];
     return result;
 }
-//根据身份证号性别
--(NSString *)getIdCardSex:(NSString *)numberStr
+
+/**
+ *  根据身份证号获取性别,18位(17位代表性别)15位(15位代表性别)奇数为男,偶数为女。
+ *
+ *  @param numberStr
+ *
+ *  @return Gender
+ */
++(Gender)getIdCardSex:(NSString *)numberStr
 {
-    int sexInt=[[numberStr substringWithRange:NSMakeRange(16,1)] intValue];
+    int length = (int)[numberStr length];
     
-    if(sexInt % 2 != 0)
+    int sexInt = 1;
+    
+    if (length == 15)
     {
-        return @"1";
+        sexInt=[[numberStr substringWithRange:NSMakeRange(14,1)] intValue];
+    }else if (length == 18) {
+        
+        sexInt=[[numberStr substringWithRange:NSMakeRange(16,1)] intValue];
+    }
+    
+    if(sexInt % 2 == 0) //偶数为女
+    {
+        return Gender_Girl;//女
     }
     else
     {
-        return @"2";
+        return Gender_Boy;//男
     }
+    
+    return Gender_NO;
 }
-//根据省份证号获取年龄
--(NSString *)getIdentityCardAge:(NSString *)numberStr
+/**
+ *  根据省份证号获取年龄
+ *
+ *  @param numberStr
+ *
+ *  @return
+ */
++(NSString *)getIdCardAge:(NSString *)numberStr
 {
     NSDateFormatter *formatterTow = [[NSDateFormatter alloc]init];
-    [formatterTow setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *bsyDate = [formatterTow dateFromString:[self birthdayStrFromIdCard:numberStr]];
+    [formatterTow setDateFormat:@"yyyy-MM-dd"];
+    NSDate *bsyDate = [formatterTow dateFromString:[LTools getIdCardbirthday:numberStr]];
     
     NSTimeInterval dateDiff = [bsyDate timeIntervalSinceNow];
     

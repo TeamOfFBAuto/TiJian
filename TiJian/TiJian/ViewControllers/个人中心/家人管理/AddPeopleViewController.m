@@ -58,12 +58,6 @@
         self.rightString = @"提交";
         
     }else if (self.actionStyle == ACTIONSTYLE_DetailByFamily_uid){
-        
-//        NSString *gender = [self.userModel.gender intValue] == 1 ? @"男" : @"女";
-//        _sex = [self.userModel.gender intValue];//性别 1男2女
-//        _age = [self.userModel.age intValue];//年龄
-//        _contentArray = [NSMutableArray arrayWithArray:@[self.userModel.family_user_name ? : @"请填写与身份证一致的姓名",self.userModel.appellation ? : @"请填写",self.userModel.id_card ? : @"请认真填写",gender,self.userModel.age ? : @"请选择",self.userModel.mobile ? : @"请填写"]];
-        
         self.rightString = @"提交";
         [self networkForFamilyUserInfo];
     }
@@ -120,8 +114,8 @@
     NSString *family_user_name = [self textFieldWithTag:100].text;
     NSString *appellation = [self textFieldWithTag:101].text;
     NSString *id_card = [self textFieldWithTag:102].text;
-    NSString *genderString = [_contentArray objectAtIndex:3];
-    NSString *sexString = [_contentArray objectAtIndex:4];
+    NSString *genderString = [self textFieldWithTag:103].text;//性别
+    NSString *ageString = [self textFieldWithTag:104].text;//年龄
 
     int gender = _sex;
     int age = _age;
@@ -147,14 +141,14 @@
     
     if ([LTools isEmpty:genderString]) {
         
-        [LTools alertText:@"请认真选择年龄" viewController:self];
+        [LTools alertText:@"请选择性别" viewController:self];
         return;
     }
     
-    if ([LTools isEmpty:sexString]) {
+    if ([LTools isEmpty:ageString]) {
         
-        [LTools alertText:@"请认真选择性别" viewController:self];
-
+        [LTools alertText:@"请认真选择年龄" viewController:self];
+        return;
     }
     
     
@@ -242,6 +236,15 @@
     _pickeView.dataSource = self;
     [_pickerBgView addSubview:_pickeView];
     
+//    - (void)selectRow:(NSInteger)row inComponent:(NSInteger)component animated:(BOOL)animated
+    NSString *age = [self textFieldWithTag:104].text;
+    if (![LTools isEmpty:age]) {
+        [_pickeView selectRow:[age intValue] - 1 inComponent:0 animated:NO];
+    }else
+    {
+        [_pickeView selectRow:26 - 1 inComponent:0 animated:NO];
+    }
+    
     //取消按钮
     UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     quxiaoBtn.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -316,7 +319,6 @@
  */
 - (void)scrollTableViewWithTextField:(UITextField *)textField
 {
-    
     if (iPhone6PLUS) { // 6plus 不需要滚动
         
         return;
@@ -324,7 +326,7 @@
     
     CGPoint origin = textField.frame.origin;
     CGPoint point = [textField.superview convertPoint:origin toView:_table];
-    NSLog(@"textFieldy %f  %f",point.y,_table.contentOffset.y);
+
     float navBarHeight = self.navigationController.navigationBar.frame.size.height;
     CGPoint offset = _table.contentOffset;
     
@@ -380,9 +382,9 @@
     int age = (int)[_pickeView selectedRowInComponent:0] + 1;
     _age = age;
     [_contentArray replaceObjectAtIndex:4 withObject:NSStringFromInt(age)];
+    [self textFieldWithTag:104].text = NSStringFromInt(age);
     [_table reloadData];
 }
-
 
 #pragma mark UIPickerViewDataSource
 
@@ -424,11 +426,13 @@
         _sex = 1;
         
         [_contentArray replaceObjectAtIndex:3 withObject:@"男"];
+        [self textFieldWithTag:103].text = @"男";
         
     }else if(buttonIndex == 1){
         //女
         _sex = 2;
         [_contentArray replaceObjectAtIndex:3 withObject:@"女"];
+        [self textFieldWithTag:103].text = @"女";
 
     }
     [_table reloadData];
@@ -467,12 +471,14 @@
     cell.textLabel.text = _items[indexPath.section];
     cell.textLabel.textColor = [UIColor colorWithHexString:@"323232"];
     
-//    if (self.actionStyle == ACTIONSTYLE_ADD) {
     
-        NSString *text = _contentArray[indexPath.section];
+    NSString *text = _contentArray[indexPath.section];
     
     if (self.actionStyle == ACTIONSTYLE_ADD) {
         
+        
+        NSArray *placeholderArr = @[@"请填写与身份证一致的姓名",@"请填写",@"请认真填写",@"请选择",@"请选择",@"请填写"];
+        text = placeholderArr[indexPath.section];
         [cell.tf_right setAttributedPlaceholder:[LTools attributedString:text keyword:text color:[UIColor colorWithHexString:@"b0b0b0"]]];
 
     }else
@@ -489,16 +495,6 @@
     {
         cell.tf_right.keyboardType = UIKeyboardTypeDefault;
     }
-        
-//    }else if (self.actionStyle == ACTIONSTYLE_DETTAILT) {
-//        
-//        NSString *text = _contentArray[indexPath.section];
-//
-//        cell.tf_right.hidden = YES;
-//        cell.detailTextLabel.text = text;
-//        cell.detailTextLabel.font = [UIFont systemFontOfSize:15];
-//        cell.detailTextLabel.textColor = [UIColor colorWithHexString:@"323232"];
-//    }
     
     return cell;
 }
@@ -549,7 +545,29 @@
     
     if (textField.text.length > 0) {
         [_contentArray replaceObjectAtIndex:index withObject:textField.text];
-
+        //102 身份证
+        DDLOG(@"--idcard:%@",textField.text);
+        if (textField.tag == 102) {
+            NSString *idCard = textField.text;
+            Gender gender = [LTools getIdCardSex:idCard];
+            NSString *age = [LTools getIdCardAge:idCard];
+            
+            NSString *genderString = [self textFieldWithTag:103].text;//性别
+            NSString *ageString = [self textFieldWithTag:104].text;//年龄
+            
+            if ([LTools isEmpty:genderString]) {
+                NSString *sex = gender == Gender_Girl ? @"女":@"男";
+                [self textFieldWithTag:103].text = sex;
+                [_contentArray replaceObjectAtIndex:3 withObject:sex];
+                _sex = gender == Gender_Girl ? 2 : 1; //1男 2女
+            }
+            
+            if ([LTools isEmpty:ageString]) {
+                [self textFieldWithTag:104].text = age;
+                [_contentArray replaceObjectAtIndex:4 withObject:age];
+                _age = [age intValue];
+            }
+        }
     }
 }
 
@@ -598,11 +616,21 @@
         [tf becomeFirstResponder];
     }else
     {
-        NSLog(@"完成 提交");
         [self addFamily];
     }
     
     return YES;
 }
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
+{
+    //身份证号
+//    if (textField.tag == 102) {
+//        <#statements#>
+//    }
+    
+    return YES;
+}
+
 
 @end

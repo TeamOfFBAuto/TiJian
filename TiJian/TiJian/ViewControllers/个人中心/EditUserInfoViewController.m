@@ -130,7 +130,6 @@
 - (void)netWorkForUpdateUserType:(UPDATEINFOTYPE)type
                            param:(NSString *)param
 {
-    
     //    post参数调取
     //    参数：
     //    user_name 昵称
@@ -249,6 +248,7 @@
         edit.content = _userInfo.user_name;
     }
     
+     @WeakObj(self);
     edit.updateBlock = ^(NSString *text){
         
         if (type == UPDATEINFOTYPE_REALNAME) {
@@ -258,6 +258,7 @@
         }else if (type == UPDATEINFOTYPE_IDCARD){
             
             _userInfo.id_card = text;
+            [Weakself updateUserInfoWithIdCard:text];
             
         }else if (type == UPDATEINFOTYPE_USERNAME){
             _userInfo.user_name = text;
@@ -267,6 +268,29 @@
         NSLog(@"text:%@",text);
     };
     [self.navigationController pushViewController:edit animated:YES];
+}
+
+- (void)updateUserInfoWithIdCard:(NSString *)idCard
+{
+    Gender gender = [LTools getIdCardSex:idCard];
+    NSString *age = [LTools getIdCardAge:idCard];
+    NSString *birthday = [LTools getIdCardbirthday:idCard];
+    
+    if ([LTools isEmpty:_userInfo.age] || [_userInfo.age intValue] == 0) {
+        [self netWorkForUpdateUserType:UPDATEINFOTYPE_AGE param:age];
+    }
+    
+    if ([LTools isEmpty:_userInfo.birthday]) {
+        
+        [self netWorkForUpdateUserType:UPDATEINFOTYPE_BIRTHDAY param:birthday];
+    }
+    
+    if ([LTools isEmpty:_userInfo.gender]) {
+        
+        NSString *sex = gender == Gender_Boy ? @"1" : @"2";
+        [self netWorkForUpdateUserType:UPDATEINFOTYPE_GENDER param:sex];//男
+    }
+    
 }
 
 - (void)clickToUpdateBirthday
@@ -282,6 +306,14 @@
         NSLog(@"dateBlock %@",dateString);
         
     }];
+    
+    
+    NSString *birthday =  [NSString stringWithFormat:@"%@",_userInfo.birthday];
+    if ([LTools isEmpty:birthday]) {
+        birthday = @"1990-01-01";
+    }
+    NSDate *date = [LTools dateFromString:birthday withFormat:@"yyyy-MM-dd"];
+    [_datePicker setInitDate:date];
 }
 
 /**
@@ -425,7 +457,7 @@
         [cell.contentView addSubview:arrow];
         
         //detail
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 200 - 35, 0, 200, 50) title:nil font:15 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 200 - 35, 0, 200, 50) title:nil font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
         [cell.contentView addSubview:label];
         label.tag = 100;
     }
@@ -439,6 +471,11 @@
     if (indexPath.row == 0) {
         
         detail = _userInfo.real_name;
+        
+        if ([LTools isEmpty:detail]) {
+            
+            detail = @"请与身份证上姓名保持一致";
+        }
         
     }else if (indexPath.row == 1) {
         
@@ -461,8 +498,12 @@
         
     }else if (indexPath.row == 4){
         
-//        detail = [_userInfo.birthday intValue] > 0 ? [LTools timeString:_userInfo.birthday withFormat:@"YYYY.MM.dd"] : @"未填写";
         detail = [NSString stringWithFormat:@"%@",_userInfo.birthday];
+        
+        if ([LTools isEmpty:detail]) {
+            detail = @"未选择";
+        }
+        
     }else if (indexPath.row == 5){
         
         if ([LTools isValidateIDCard:_userInfo.id_card]) {
@@ -478,7 +519,7 @@
             detail = _userInfo.mobile;
         }else
         {
-            detail = @"未填写";
+            detail = @"请认真填写";
         }
         
     }
@@ -584,6 +625,12 @@
     _pickeView.delegate = self;
     _pickeView.dataSource = self;
     [_pickerBgView addSubview:_pickeView];
+    
+    int age = [_userInfo.age intValue];
+    if (age == 0) {
+        age = 26;
+    }
+    [_pickeView selectRow:age - 1 inComponent:0 animated:NO];
     
     //取消按钮
     UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];

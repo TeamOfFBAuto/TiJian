@@ -23,6 +23,14 @@ typedef void(^DateBlock)(ACTIONTYPE type, NSString *dateString);
     UIDatePicker *datePicker;
 }
 
+/**
+ *  设置显示日期
+ *
+ *  @param date
+ *  @param animated
+ */
+- (void)setInitDate:(NSDate *)date;
+
 - (void)showDateBlock:(DateBlock)aBlock;
 
 @end

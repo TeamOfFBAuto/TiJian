@@ -49,6 +49,22 @@
     [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     
     sleep(1);
+//    
+//    NSString *idcard1 = @"513328198003065937";
+//    NSString *idcard2 = @"11010419750315334X";
+//    NSString *idcard15 = @"370802940221002";
+//    
+//    NSArray *ids = @[idcard1,idcard2,idcard15];
+//    
+//    for (NSString *idd in ids) {
+//        if ([LTools getIdCardSex:idd] == Gender_Girl) {
+//            NSLog(@"%@性别:女 年龄:%@",idd,[LTools getIdCardAge:idd]);
+//        }else
+//        {
+//            NSLog(@"%@性别:男 年龄:%@",idd,[LTools getIdCardAge:idd]);
+//        }
+//    }
+
     
     //友盟统计
     [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];

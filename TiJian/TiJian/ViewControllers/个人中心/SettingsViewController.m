@@ -39,7 +39,7 @@
     self.myTitle = @"设置";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    _titlesArr = @[@"手机号",@"修改密码",@"关于我们",@"意见反馈"];
+    _titlesArr = @[@"手机号",@"修改密码",@"意见反馈",@"鼓励评价",@"关于我们"];
     
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.delegate = self;
@@ -177,16 +177,21 @@
         UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - 7, (55-7-15)/2.f, 7, 14)];
         arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];
         [cell.contentView addSubview:arrow];
+        arrow.tag = 100;
     }
-    
+    UIImageView *arrow = (UIImageView *)[cell.contentView viewWithTag:100];
     if (indexPath.row == 0) {
-        
         //手机号
-        self.phoneLabel.frame = CGRectMake(DEVICE_WIDTH - 30 - 100, 0, 100, 50);
+        self.phoneLabel.frame = CGRectMake(DEVICE_WIDTH - 100 - 7, 0, 100, 50);
         [cell.contentView addSubview:_phoneLabel];
         _phoneLabel.text = [UserInfo userInfoForCache].mobile;
         _phoneLabel.font = [UIFont systemFontOfSize:14];
         _phoneLabel.textColor = [UIColor colorWithHexString:@"646464"];
+        
+        arrow.hidden = YES;
+    }else
+    {
+        arrow.hidden = NO;
     }
     
     cell.textLabel.font = [UIFont systemFontOfSize:15.f];
@@ -244,14 +249,24 @@
             break;
         case 2:
         {
-            AboutUsController *about = [[AboutUsController alloc]init];
-            [self.navigationController pushViewController:about animated:YES];
+            FeedBackViewController *feedback = [[FeedBackViewController alloc]init];
+            [self.navigationController pushViewController:feedback animated:YES];
         }
             break;
         case 3:
         {
-            FeedBackViewController *feedback = [[FeedBackViewController alloc]init];
-            [self.navigationController pushViewController:feedback animated:YES];
+            //去评价
+            NSString *url = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@",AppStore_Appid];
+            if( ([[[UIDevice currentDevice] systemVersion] doubleValue]>=7.0)){
+                url = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/us/app/id%@?mt=8",AppStore_Appid];
+            }
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+        }
+            break;
+        case 4:
+        {
+            AboutUsController *about = [[AboutUsController alloc]init];
+            [self.navigationController pushViewController:about animated:YES];
         }
             break;
             

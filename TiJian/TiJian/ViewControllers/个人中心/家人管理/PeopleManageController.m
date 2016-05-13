@@ -148,6 +148,8 @@
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         [weakTable.dataArray removeObjectAtIndex:index];
+        _isEdit = NO;
+        _numLabel.text = [NSString stringWithFormat:@"%d位",(int)weakTable.dataArray.count];
         [weakTable reloadData];
         
     } failBlock:^(NSDictionary *result) {
