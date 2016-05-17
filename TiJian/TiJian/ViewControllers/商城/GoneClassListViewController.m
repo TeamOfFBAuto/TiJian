@@ -19,18 +19,18 @@
 
 @interface GoneClassListViewController ()<RefreshDelegate,UITableViewDataSource,GTranslucentSideBarDelegate,UITableViewDelegate,UITextFieldDelegate,GpushViewDelegate,GsearchViewDelegate>
 {
-    RefreshTableView *_table;
-    YJYRequstManager *_request;
+    RefreshTableView *_table;//主tableview
+    GPushView *_pushView;//筛选view
+    
+    YJYRequstManager *_request;//网络请求
     AFHTTPRequestOperation *_request_ProductOneClass;
     AFHTTPRequestOperation *_request_BrandListWithLocation;
+    AFHTTPRequestOperation *_request_hotSearch;
     
-    NSMutableArray *_productOneClassArray;
+    NSMutableArray *_productOneClassArray;//商品列表
     int _count;//网络请求个数
     UIView *_backBlackView;//筛选界面下面的黑色透明view
     UIButton *_filterButton;//筛选按钮
-    
-    
-    GPushView *_pushView;//筛选view
     
     //搜索框相关
     UIView *_searchView;
@@ -40,7 +40,6 @@
     UIView *_mySearchView;//点击搜索盖上的搜索浮层
     GSearchView *_theCustomSearchView;//自定义搜索view
     int _searchState;
-    AFHTTPRequestOperation *_request_hotSearch;
     NSArray *_hotSearchArray;//热门搜索
     
     //轻扫手势
@@ -50,7 +49,6 @@
 }
 
 @property (nonatomic, strong) GTranslucentSideBar *rightSideBar;
-
 
 @end
 
@@ -66,8 +64,6 @@
     [_request removeOperation:_request_ProductOneClass];
     [self removeObserver:self forKeyPath:@"_count"];
 }
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -109,16 +105,12 @@
 }
 
 #pragma mark - 视图创建
-
-
 //创建搜索界面
 -(void)creatMysearchView{
-    
     _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     _mySearchView.backgroundColor = [UIColor whiteColor];
     _mySearchView.hidden = YES;
     [self.view addSubview:_mySearchView];
-    
     
     _theCustomSearchView = [[GSearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _mySearchView.frame.size.height)];
     _theCustomSearchView.delegate = self;
@@ -167,16 +159,12 @@
     self.searchTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_kuangView addSubview:self.searchTf];
     
-    
-    
     [self changeSearchViewAndKuangFrameAndTfWithState:0];
     
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
     UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
     [spaceButtonItem setWidth:-15];
     self.currentNavigationItem.rightBarButtonItems = @[spaceButtonItem,_rightItem1];
-    
-    
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -189,8 +177,6 @@
     [self setEffectViewAlpha:1];
     
 }
-
-
 
 -(void)creatTableView{
     _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
@@ -210,11 +196,7 @@
     self.rightSideBar.sideBarWidth = DEVICE_WIDTH*670.0/750;
     self.rightSideBar.translucentStyle = UIBarStyleBlack;
     self.rightSideBar.tag = 1;
-    
-    // Add PanGesture to Show SideBar by PanGesture
-//    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-//    [self.view addGestureRecognizer:_panGestureRecognizer];
-    
+
     //避免滑动返回手势与此冲突
     [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
 
@@ -225,8 +207,6 @@
 }
 
 #pragma mark - 逻辑处理
-
-
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
     
     [self changeSearchViewAndKuangFrameAndTfWithState:0];
@@ -240,16 +220,11 @@
         }
         
     }
-    
-//    //清空筛选
-//    [_pushView qingkongshaixuanBtnClicked];
-//    _pushView.gender = YES;
-//    [_pushView.tab1 reloadData];
+
     
     self.searchTf.text = theWord;
     self.theSearchWorld = self.searchTf.text;
     [_table showRefreshHeader:YES];
-    
     
 }
 
@@ -358,13 +333,7 @@
     [self.rightSideBar dismiss];
 }
 
-
-
-
-
 -(void)clickToFilter:(UIButton *)sender{
-    
-    
     [self.rightSideBar show];
 }
 
@@ -379,10 +348,8 @@
 #pragma mark - CDRTranslucentSideBarDelegate
 - (void)sideBar:(GTranslucentSideBar *)sideBar didAppear:(BOOL)animated
 {
-    
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did appear");
-        
     }
 }
 
@@ -390,7 +357,6 @@
 {
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will appear");
-        
         [self.navigationController.view addSubview:_backBlackView];
         
     }
