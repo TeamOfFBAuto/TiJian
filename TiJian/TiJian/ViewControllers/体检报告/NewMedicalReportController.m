@@ -11,6 +11,7 @@
 #import "AddReportViewController.h"
 #import "ReportDetailController.h"
 #import "ArticleListController.h"
+#import "QueryReportController.h"//查询报告
 #import "ArticleModel.h"
 
 @interface NewMedicalReportController ()<RefreshDelegate,UITableViewDataSource,UIAlertViewDelegate>
@@ -121,16 +122,27 @@
         _loginView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 142)];
         _loginView.backgroundColor = [UIColor whiteColor];
         
-        //登录按钮
-        UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        loginBtn.backgroundColor = DEFAULT_TEXTCOLOR;
-        loginBtn.frame = CGRectMake((DEVICE_WIDTH - 90)/2.f, 32, 90, 90);
-        [_loginView addSubview:loginBtn];
-        [loginBtn setImage:[UIImage imageNamed:@"report_tianjiabaogao"] forState:UIControlStateNormal];
-        [loginBtn.titleLabel setFont:[UIFont systemFontOfSize:18]];
-        [loginBtn addTarget:self action:@selector(clickToUploadReport) forControlEvents:UIControlEventTouchUpInside];
-        [loginBtn addRoundCorner];
-        
+        NSArray *images = @[[UIImage imageNamed:@"report_daoru"],
+                            [UIImage imageNamed:@"report_tianjiabaogao"]];
+        for (int i = 0; i < 2; i ++) {
+            //登录按钮
+            UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            loginBtn.backgroundColor = DEFAULT_TEXTCOLOR;
+            loginBtn.frame = CGRectMake(0, 32, 90, 90);
+            [_loginView addSubview:loginBtn];
+            [loginBtn setImage:images[i] forState:UIControlStateNormal];
+            [loginBtn.titleLabel setFont:[UIFont systemFontOfSize:18]];
+            
+            if (i == 0) {
+                [loginBtn addTarget:self action:@selector(clickToQueryReport:) forControlEvents:UIControlEventTouchUpInside];
+            }else if (i == 1){
+                [loginBtn addTarget:self action:@selector(clickToUploadReport) forControlEvents:UIControlEventTouchUpInside];
+            }
+            
+            [loginBtn addRoundCorner];
+            
+            loginBtn.centerX = (DEVICE_WIDTH / 4) * (i * 2 + 1);
+        }
     }
     return _loginView;
 }
@@ -355,6 +367,22 @@
             AddReportViewController *add = [[AddReportViewController alloc]init];
             add.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:add animated:YES];
+        }
+    }];
+}
+
+/**
+ *  查询报告
+ *
+ *  @param sender
+ */
+- (void)clickToQueryReport:(UIButton *)sender
+{
+    [LoginManager isLogin:self loginBlock:^(BOOL success) {
+        if (success) {
+            QueryReportController *query = [[QueryReportController alloc]init];
+            query.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:query animated:YES];
         }
     }];
 }

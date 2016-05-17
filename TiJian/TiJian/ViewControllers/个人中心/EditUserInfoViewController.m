@@ -639,8 +639,8 @@
     [quxiaoBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     quxiaoBtn.frame = CGRectMake(10, 5, 60, 30);
     [quxiaoBtn addTarget:self action:@selector(clickToCancel:) forControlEvents:UIControlEventTouchUpInside];
-    [quxiaoBtn setBorderWidth:1 borderColor:DEFAULT_TEXTCOLOR];
-    [quxiaoBtn addCornerRadius:3.f];
+//    [quxiaoBtn setBorderWidth:1 borderColor:DEFAULT_TEXTCOLOR];
+//    [quxiaoBtn addCornerRadius:3.f];
     
     //确定按钮
     UIButton *quedingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -648,8 +648,8 @@
     [quedingBtn setTitle:@"确定" forState:UIControlStateNormal];
     [quedingBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     quedingBtn.frame = CGRectMake(DEVICE_WIDTH - 70, 5, 60, 30);
-    [quedingBtn setBorderWidth:1 borderColor:DEFAULT_TEXTCOLOR];
-    [quedingBtn addCornerRadius:3.f];
+//    [quedingBtn setBorderWidth:1 borderColor:DEFAULT_TEXTCOLOR];
+//    [quedingBtn addCornerRadius:3.f];
     [quedingBtn addTarget:self action:@selector(clickToSure:) forControlEvents:UIControlEventTouchUpInside];
     
     [_pickerBgView addSubview:quedingBtn];

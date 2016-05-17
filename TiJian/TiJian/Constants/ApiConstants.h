@@ -30,6 +30,9 @@
 //隐私说明
 #define URL_YINSISHUOMING @"/data/privacy.html"
 
+//体检报告查询账号密码说
+#define URL_ReportAccount @"/data/report_account.html"
+
 
 //商城首页轮播图
 #define StoreCycleAdv @"/index.php?d=api&c=adver&m=adver_list"
@@ -427,11 +430,20 @@
 //2.报告详情 authcode\report_id\page\per_page
 #define REPORT_DETAIL @"/index.php?d=api&c=report&m=report_detail"
 
-//3.添加报告 post authcode\family_uid\checkup_time family_uid和is_myself任意传一个 体检时间
+//3.添加报告
+//post 方式
+//参数：authcode type 1表示普通上传 2表示输入账号密码查询（上传）
+//1、 family_uid和myself任意传一个 或另一个传0  myself权重高
+//checkup_time  体检时间(如：2015-12-05)
+//图片
+//2、brand_id、account_no、password成功返回url
 #define REPORT_ADD @"/index.php?d=api&c=report&m=add_report"
 
 //4.删除报告 get 方式 authcode\report_id
 #define REPORT_DEL @"/index.php?d=api&c=report&m=del_report"
+
+//报告支持的品牌
+#define Report_center @"/index.php?d=api&c=report&m=get_report_center"
 
 //========================================================
 

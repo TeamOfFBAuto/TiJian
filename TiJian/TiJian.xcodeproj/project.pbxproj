@@ -412,6 +412,9 @@
 		13F9D12A1C2FB06800993738 /* LPhotoBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D1161C2FB06800993738 /* LPhotoBrowserView.m */; };
 		13F9D12B1C2FB06800993738 /* LPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D1191C2FB06800993738 /* LPhotoModel.m */; };
 		13F9D12C1C2FB06800993738 /* LPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D11B1C2FB06800993738 /* LPhotoView.m */; };
+		13FC32E31CE9B1700073539D /* report_daoru@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FC32E21CE9B1700073539D /* report_daoru@2x.png */; };
+		13FC32E61CE9B84C0073539D /* QueryReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FC32E51CE9B84C0073539D /* QueryReportController.m */; };
+		13FC32E91CE9C64D0073539D /* LPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FC32E81CE9C64D0073539D /* LPickerView.m */; };
 		13FCD6A11BFAD6BD005AE05B /* AppointDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */; };
 		13FCD6A51BFAD935005AE05B /* yuyue_wenhao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */; };
 		13FCD6A81BFB316C005AE05B /* AppointUpdateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCD6A71BFB316C005AE05B /* AppointUpdateController.m */; };
@@ -1242,6 +1245,11 @@
 		13F9D1191C2FB06800993738 /* LPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPhotoModel.m; sourceTree = "<group>"; };
 		13F9D11A1C2FB06800993738 /* LPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPhotoView.h; sourceTree = "<group>"; };
 		13F9D11B1C2FB06800993738 /* LPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPhotoView.m; sourceTree = "<group>"; };
+		13FC32E21CE9B1700073539D /* report_daoru@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_daoru@2x.png"; sourceTree = "<group>"; };
+		13FC32E41CE9B84C0073539D /* QueryReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryReportController.h; sourceTree = "<group>"; };
+		13FC32E51CE9B84C0073539D /* QueryReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueryReportController.m; sourceTree = "<group>"; };
+		13FC32E71CE9C64D0073539D /* LPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPickerView.h; sourceTree = "<group>"; };
+		13FC32E81CE9C64D0073539D /* LPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPickerView.m; sourceTree = "<group>"; };
 		13FCD69F1BFAD6BD005AE05B /* AppointDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointDetailController.h; sourceTree = "<group>"; };
 		13FCD6A01BFAD6BD005AE05B /* AppointDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointDetailController.m; sourceTree = "<group>"; };
 		13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yuyue_wenhao@2x.png"; sourceTree = "<group>"; };
@@ -1834,6 +1842,8 @@
 				13F8C5761C0585F1004C3FC7 /* 我的订单 */,
 				130D2E071BFDC0FE002E301F /* LDatePicker.h */,
 				130D2E081BFDC0FE002E301F /* LDatePicker.m */,
+				13FC32E71CE9C64D0073539D /* LPickerView.h */,
+				13FC32E81CE9C64D0073539D /* LPickerView.m */,
 				E3796D271BFB3CB6004B63F7 /* 商城 */,
 				E3D8AE311BF61CAC003AE2E3 /* ButtonProperty.h */,
 				E3D8AE321BF61CAC003AE2E3 /* ButtonProperty.m */,
@@ -1941,6 +1951,7 @@
 		1362765B1C12D3370077C75D /* 体检报告 */ = {
 			isa = PBXGroup;
 			children = (
+				13FC32E21CE9B1700073539D /* report_daoru@2x.png */,
 				1378ED421C3D0D6C00A40582 /* report_tianjiabaogao@2x.png */,
 				1316DF231C2AAB4C00864949 /* report_tianjia@2x.png */,
 				1362765C1C12D3370077C75D /* report_paizhao@2x.png */,
@@ -1963,6 +1974,8 @@
 			children = (
 				1378ED3F1C3CF24E00A40582 /* NewMedicalReportController.h */,
 				1378ED401C3CF24E00A40582 /* NewMedicalReportController.m */,
+				13FC32E41CE9B84C0073539D /* QueryReportController.h */,
+				13FC32E51CE9B84C0073539D /* QueryReportController.m */,
 				137780A81C1183AD00677363 /* MedicalReportController.h */,
 				137780A91C1183AD00677363 /* MedicalReportController.m */,
 				137780B01C119CF800677363 /* AddReportViewController.h */,
@@ -3277,6 +3290,7 @@
 				131C118E1BF04BF100629938 /* user_fanhui@2x.png in Resources */,
 				139333EC1BE0DF3E00B4628B /* 4_2_e8bf78@2x.png in Resources */,
 				E352F91E1C0C419A0037E4AE /* coupon_feitongyong@2x.png in Resources */,
+				13FC32E31CE9B1700073539D /* report_daoru@2x.png in Resources */,
 				13F1F3CD1BBA9A4B00885D31 /* AlipaySDK.bundle in Resources */,
 				E359F7011C27C4DA005CB719 /* shaixuan@2x.png in Resources */,
 				13426BAF1BE7482B00979279 /* hema.sqlite in Resources */,
@@ -3675,6 +3689,7 @@
 				13F242291BF5D589002C9D81 /* BasicTableViewCell.m in Sources */,
 				13020A711C0454B5006FC365 /* FeedBackViewController.m in Sources */,
 				13F1F39B1BBA9A4B00885D31 /* UIButton+Additions.m in Sources */,
+				13FC32E61CE9B84C0073539D /* QueryReportController.m in Sources */,
 				E3EE361B1BEA0EE50089A89C /* GTranslucentSideBar.m in Sources */,
 				E3EE36001BE8B2240089A89C /* GproductDetailTableViewCell.m in Sources */,
 				E3D8AE211BF5E7E1003AE2E3 /* GproductCommentView.m in Sources */,
@@ -3745,6 +3760,7 @@
 				13F8C5811C05A9C8004C3FC7 /* AddCommentDetailViewController.m in Sources */,
 				137780B21C119CF800677363 /* AddReportViewController.m in Sources */,
 				136276621C12F37D0077C75D /* ReportDetailController.m in Sources */,
+				13FC32E91CE9C64D0073539D /* LPickerView.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
 				E30FE39C1C3E56DF001CF9BA /* GSearchView.m in Sources */,
 				13F9D1291C2FB06800993738 /* LPhotoBrowser.m in Sources */,

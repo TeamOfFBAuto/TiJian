@@ -489,9 +489,18 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         
         LPhotoModel *photo = [[LPhotoModel alloc]init];
         
-        UIImage *originalImage = [UIImage imageWithContentsOfFile:msg.imageUrl];
-        photo.image = originalImage;
-        photo.thumbImage = msg.thumbnailImage;
+        NSString *imageUrl = msg.imageUrl;
+        
+        if ([imageUrl hasPrefix:@"http://"] ||
+            [imageUrl hasPrefix:@"https://"]) {
+            
+            photo.thumbImage = msg.thumbnailImage;
+            photo.imageUrl = msg.imageUrl;
+        }else
+        {
+            UIImage *originalImage = [UIImage imageWithContentsOfFile:msg.imageUrl];
+            photo.image = originalImage;
+        }
         
         [temp addObject:photo];
         
