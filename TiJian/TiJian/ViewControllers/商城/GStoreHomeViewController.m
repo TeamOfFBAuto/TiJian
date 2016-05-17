@@ -914,21 +914,27 @@
         if (sender.view.tag == 11){//早期防癌
             cc.class_Id = @"3";
             cc.className = @"早期防癌";
+            cc.haveChooseGender = YES;
         }else if (sender.view.tag == 12){//心脑血管
             cc.class_Id = @"5";
             cc.className = @"心脑血管";
+            cc.haveChooseGender = YES;
         }else if (sender.view.tag == 13){//关爱老人
             cc.class_Id = @"1";
             cc.className = @"关爱老人";
+            cc.haveChooseGender = YES;
         }else if (sender.view.tag == 14){//职场白领
             cc.class_Id = @"2";
             cc.className = @"职场白领";
+            cc.haveChooseGender = YES;
         }else if (sender.view.tag == 15){//精英男士
             cc.class_Id = @"6";
             cc.className = @"精英男士";
+            cc.haveChooseGender = NO;
         }else if (sender.view.tag == 16){//都市丽人
             cc.class_Id = @"4";
             cc.className = @"都市丽人";
+            cc.haveChooseGender = NO;
         }
         
         [self.navigationController pushViewController:cc animated:YES];

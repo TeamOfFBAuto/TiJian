@@ -100,6 +100,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.haveChooseGender = YES;//筛选条件添加性别
+    
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
     _backBlackView.alpha = 0.5;
@@ -286,7 +288,15 @@
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.brand_id = self.brand_id;
     cc.brand_name = self.brand_name;
-    cc.category_id = [[dic stringValueForKey:@"category_id"]intValue];
+    int categoryid = [[dic stringValueForKey:@"category_id"]intValue];
+    cc.category_id = categoryid;
+    
+    if (categoryid == 6 || categoryid == 4) {// 6:精英男士 4:都市丽人
+        cc.haveChooseGender = NO;
+    }else{
+        cc.haveChooseGender = YES;
+    }
+    
     [self.navigationController pushViewController:cc animated:YES];
     
 }
@@ -439,7 +449,6 @@
     
     //避免滑动返回手势与此冲突
     [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
-    
     _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender isHaveShaixuanDic:self.shaixuanDic];
     _pushView.delegate = self;
     [self.rightSideBar setContentViewInSideBar:_pushView];
@@ -959,6 +968,7 @@
     cc.brand_name = self.brand_name;
     cc.theSearchWorld = theWord;
     [self.navigationController pushViewController:cc animated:YES];
+    self.searchTf.text = nil;
     
 }
 
@@ -1012,8 +1022,11 @@
 #pragma mark - 代理方法
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic{
-    self.shaixuanDic = dic;
-    [_table showRefreshHeader:YES];
+    BrandSearchViewController *cc = [[BrandSearchViewController alloc]init];
+    cc.brand_id = self.brand_id;
+    cc.brand_name = self.brand_name;
+    cc.shaixuanDic = dic;
+    [self.navigationController pushViewController:cc animated:YES];
 }
 
 -(void)therightSideBarDismiss{

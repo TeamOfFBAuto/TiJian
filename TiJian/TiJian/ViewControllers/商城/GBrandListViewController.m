@@ -774,6 +774,7 @@
     }
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.haveChooseGender = self.haveChooseGender;
     cc.isShowShaixuanData = YES;
     cc.shaixuanDic = self.shaixuanDic;
     [self.navigationController pushViewController:cc animated:YES];
