@@ -147,7 +147,7 @@
                         [Weakzoom setProgress:radio];
                     }
                     
-                    NSLog(@"percent %f",radio);
+                    DDLOG(@"percent %f",radio);
                 });
                 
                 

@@ -19,6 +19,7 @@
     NSArray *_itemsArray;
     NSString *_brandId;//选择的品牌id
     NSString *_brandName;//选择的品牌
+    BOOL _isEdited;//是否编辑过
 }
 
 @property(nonatomic,retain)MBProgressHUD *loading;
@@ -66,6 +67,7 @@
                 ![LTools isEmpty:brandId]) {
                 tf.text = brandName;
                 _brandId = brandId;
+                _brandName = brandName;
             }
         }
         //账号
@@ -126,12 +128,6 @@
 - (NSString *)getNewestBrandId
 {
     return [LTools objectForKey:Cache_brandId_newest];
-}
-
-- (NSString *)brandId
-{
-    NSString *brandName = [LTools objectForKey:Cache_brandId];
-    return brandName;
 }
 
 - (NSString *)getBrandNameWithBrandId:(NSString *)brandId
@@ -288,10 +284,17 @@
     _brandId = _itemsArray[row][@"brand_id"];//选中的品牌id
     _brandName = title;
     
+    //被编辑过了,新编辑的内容优先级最高
+    if (_isEdited) {
+        return;
+    }
+    
     //缓存数据
     NSString *account = [self getAccountWithBrandId:_brandId];
     if (![LTools isEmpty:account]) {
+        
         [self textFieldWithTag:101].text = account;
+
     }else
     {
         [self textFieldWithTag:101].text = nil;
@@ -440,5 +443,16 @@
     }
     return YES;
 }
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
+{
+    //账号
+    if (textField.tag == 101) {
+        
+        _isEdited = YES;//被编辑过,权限高
+    }
+    return YES;
+}
+
 
 @end
