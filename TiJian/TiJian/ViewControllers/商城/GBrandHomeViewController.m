@@ -225,17 +225,6 @@
         return;
     }
     
-    if (!_request) {
-        _request = [YJYRequstManager shareInstance];
-    }
-      [_request requestWithMethod:YJYRequstMethodGet api:BrandList_oneClass parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        NSArray *arr = [result arrayValueForKey:@"data"];
-        self.brand_city_list = [NSArray arrayWithArray:arr];
-        
-    } failBlock:^(NSDictionary *result) {
-        
-    }];
 }
 
 

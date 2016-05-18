@@ -6,7 +6,7 @@
 //  Copyright © 2015年 lcw. All rights reserved.
 //
 
-//搜索结果页
+//搜索筛选页
 
 #import "MyViewController.h"
 

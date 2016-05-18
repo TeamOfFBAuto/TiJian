@@ -7,7 +7,7 @@
 //
 
 
-//按品牌分类的viewcontroller
+//点击分类跳转的vc 列表形式按品牌分类的vc 
 
 #import "MyViewController.h"
 

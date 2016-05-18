@@ -705,6 +705,11 @@
         NSArray *arr = [result arrayValueForKey:@"data"];
         self.brand_city_list = [NSArray arrayWithArray:arr];
         
+        if (_pushView) {
+            _pushView.tab4.tableFooterView = nil;
+            [_pushView.tab4 reloadData];
+        }
+        
     } failBlock:^(NSDictionary *result) {
         
     }];

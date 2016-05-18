@@ -20,11 +20,16 @@
 
 -(void)therightSideBarDismiss;
 
+//请求品牌信息
+-(void)prepareBrandListWithLocation;
+
 @end
 
 @interface GPushView : UIView<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 
 @property(nonatomic,strong)GcustomNavcView *navigationView;//上面navigationview
+
+@property(nonatomic,retain)UIView *noBrandView;//没有获取到品牌信息的提示view
 
 /**
  *  主筛选

@@ -610,6 +610,12 @@
         self.brand_city_list = [NSArray arrayWithArray:arr];
         [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
+        if (_pushView) {
+            _pushView.tab4.tableFooterView = nil;
+            [_pushView.tab4 reloadData];
+        }
+        
+        
     } failBlock:^(NSDictionary *result) {
         
     }];

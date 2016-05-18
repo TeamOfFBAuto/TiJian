@@ -25,5 +25,6 @@
 -(void)setEffectViewAlpha:(CGFloat)theAlpha;
 //选择城市后回调
 -(void)afterChangeCityUpdateTableWithCstr:(NSString *)cStr Pstr:(NSString *)pStr;
-
+//根据城市获取品牌信息
+-(void)prepareBrandListWithLocation;
 @end

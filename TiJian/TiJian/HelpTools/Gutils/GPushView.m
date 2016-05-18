@@ -42,6 +42,10 @@
     //定位相关
     NSDictionary *_locationDic;
     
+    
+    //网络请求失败 无品牌数据时的提示view
+    ResultView *_resultView;
+    
 }
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender isHaveShaixuanDic:(NSDictionary *)theDic{
     self = [super initWithFrame:frame];
@@ -208,10 +212,6 @@
     
     self.userChooseCity = defaultCityName;
     
-    
-    
-    
-    
     //主筛选
     self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
     self.tab1.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -313,11 +313,6 @@
     
 }
 
-
-
-
-
-
 //创建价格选择的tabelHeader 显示默认全部
 -(void)creatTab3Header{
     
@@ -349,10 +344,6 @@
         [_tab3Header addSubview:_defaultPriceImv];
     }
     [_defaultPriceImv setImage:[UIImage imageNamed:@"duihao.png"]];
-    
-    
-    
-    
     
     [self setDefaultPriceImvHidden];
     
@@ -641,24 +632,7 @@
         
         [self.tab1 reloadData];
     }
-    
-    
-    
-    
-    
-    
-//    if ([GMAPI isPureNum:self.tf_low.text] && [GMAPI isPureNum:self.tf_high.text]) {
-//        
-//        if ([self.tf_low.text floatValue] <= [self.tf_high.text floatValue]) {
-//            
-//        }
-//        
-//    }else{
-//        [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的价格区间" addToView:self];
-//    }
-
-    
-    
+   
 }
 
 
@@ -717,7 +691,15 @@
     }else if (tableView.tag == 3){//价格选择
         num = _priceArray.count;
     }else if (tableView.tag == 4){//体检品牌
-        num = self.delegate.brand_city_list.count+1;
+        
+        if (self.delegate.brand_city_list.count == 0) {//没有获取到品牌信息
+            num = 0;
+            if (!self.noBrandView) {
+                [self creatNoBrandView];
+            }
+        }else{
+            num = self.delegate.brand_city_list.count+1;
+        }
     }
     return num;
 }
@@ -1157,17 +1139,11 @@
         tLabel.text = cities[indexPath.row][@"city"];
         [cell.contentView addSubview:tLabel];
         
-        
-        
         if ([self.userChooseCity isEqualToString:tLabel.text]) {
             UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
             [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
             [cell.contentView addSubview:mark_imv];
         }
-        
-        
-        
-        
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(30, 43.5, DEVICE_WIDTH-30, 0.5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -1284,13 +1260,11 @@
         NSString *cityStr = cities[indexPath.row][@"city"];
         self.userChooseCity = cityStr;
         [self.tab2 reloadData];
-//        [self reloadTab2Header];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         [self hiddenTab:self.tab2];
         [self.tab1 reloadData];
         
     }else if (tableView.tag == 3){//价格
-        
         
         for (int i = 0; i<10; i++) {
             _isMark_price[i] = 0;
@@ -1302,8 +1276,6 @@
         [self.tf_low resignFirstResponder];
         self.tf_low.text = nil;
         self.tf_high.text = nil;
-        
-        
         
         self.userChoosePrice = _priceArray[indexPath.row];
         
@@ -1320,10 +1292,9 @@
         
         [self setDefaultPriceImvHidden];
         
-        
         [self.tf_low resignFirstResponder];
         [self.tf_high resignFirstResponder];
-        
+
         [self hiddenTab:self.tab3];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         [self.tab1 reloadData];
@@ -1332,7 +1303,6 @@
         
         
     }else if (tableView.tag == 4){//体检品牌
-        
         
         if (indexPath.row == 0) {
             self.userChoosePinpai = @"全部";
@@ -1433,12 +1403,45 @@
         _locationCityLabel.text = theString;
     }
     
-    
-    
-    
 }
 
 
+#pragma mark - 创建品牌无数据默认view
+-(void)creatNoBrandView{
+    self.noBrandView = [self resultView];
+    self.tab4.tableFooterView = self.noBrandView;
+}
+
+-(ResultView *)resultView
+{
+    NSString *content;
+    NSString *btnTitle = @"重新加载";
+    
+    _resultView = [[ResultView alloc]initWithNoBrandImage:[UIImage imageNamed:@"hema_heart.png"]
+                                                           title:@"加载品牌信息失败" content:content
+                                                           width:self.frame.size.width];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 200, 36);
+    [btn addCornerRadius:5.f];
+    btn.backgroundColor = DEFAULT_TEXTCOLOR;
+    [btn setTitle:btnTitle forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [btn addTarget:self action:@selector(requestBrandInfo) forControlEvents:UIControlEventTouchUpInside];
+    [_resultView setBottomView:btn];
+    return _resultView;
+}
+
+
+-(void)requestBrandInfo{
+    NSLog(@"%s",__FUNCTION__);
+    
+    [_resultView.activityIndicationVeiw startAnimating];
+    
+    [self.delegate prepareBrandListWithLocation];
+    
+}
 
 
 @end

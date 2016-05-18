@@ -18,6 +18,8 @@
 @property(nonatomic,retain)NSString *title;
 @property(nonatomic,retain)NSString *content;
 
+@property(nonatomic,strong)UIActivityIndicatorView *activityIndicationVeiw;//重新加载品牌信息的菊花
+
 /**
  *  页面结果view
  *
@@ -30,5 +32,22 @@
 -(instancetype)initWithImage:(UIImage *)image
                        title:(NSString *)title
                      content:(NSString *)content;
+
+
+
+/**
+ *  筛选页面结果无数据view
+ *
+ *  @param image   显示图标(可不填)
+ *  @param title   标题(可不填)
+ *  @param content 正文(可不填)
+ *
+ *  @return
+ */
+-(instancetype)initWithNoBrandImage:(UIImage *)image
+                       title:(NSString *)title
+                     content:(NSString *)content
+                              width:(CGFloat)theWidth;
+
 
 @end
