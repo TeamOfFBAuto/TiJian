@@ -414,6 +414,13 @@
             return;
         }
         UserInfo *user = _table.dataArray[indexPath.row];
+        int type = [user.type intValue];
+        if (type == 2) {
+            
+            NSString *url = [NSString stringWithFormat:@"%@",user.url];
+            [MiddleTools pushToWebFromViewController:self weburl:url title:@"体检报告" moreInfo:NO hiddenBottom:YES];
+            return;
+        }
         ReportDetailController *detail = [[ReportDetailController alloc]init];
         detail.reportId = user.report_id;
         detail.hidesBottomBarWhenPushed = YES;

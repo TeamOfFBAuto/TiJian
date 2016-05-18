@@ -8,11 +8,12 @@
 
 #import "LPickerView.h"
 
-@interface LPickerView ()<UIPickerViewDelegate,UIPickerViewDataSource>
+@interface LPickerView ()<UIPickerViewDelegate,UIPickerViewDataSource,UIGestureRecognizerDelegate>
 {
     UIView *_pickerBgView;
     UIPickerView *_pickerView;
 }
+@property(nonatomic,retain)UIView *failView;
 
 @end
 
@@ -26,6 +27,7 @@
     if (self) {
         self.alpha = 0.f;//默认初始
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clickToCancel:)];
+        tap.delegate = self;
         [self addGestureRecognizer:tap];
         
         _pickerBlock = pickerBlock;
@@ -50,15 +52,6 @@
         _pickerView.delegate = delegate ? : self;
         _pickerView.dataSource = dataSource ? : self;
         [_pickerBgView addSubview:_pickerView];
-        
-        //    //    - (void)selectRow:(NSInteger)row inComponent:(NSInteger)component animated:(BOOL)animated
-        //    NSString *age = [self textFieldWithTag:104].text;
-        //    if (![LTools isEmpty:age]) {
-        //        [_pickeView selectRow:[age intValue] - 1 inComponent:0 animated:NO];
-        //    }else
-        //    {
-        //        [_pickeView selectRow:26 - 1 inComponent:0 animated:NO];
-        //    }
         
         //取消按钮
         UIButton *quxiaoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -86,6 +79,56 @@
     return self;
 }
 
+#pragma mark - 视图创建
+
+- (UIView *)failView
+{
+    if (!_failView) {
+        _failView = [self resultViewWithTitle:@"没有获取到品牌信息" tag:100];
+        _failView.backgroundColor = [UIColor whiteColor];
+    }
+    return _failView;
+}
+
+/**
+ *  医生列表、健康咨询列表 异常情况处理页面
+ *
+ *  @param frame
+ *  @param title
+ *  @param tag
+ *
+ *  @return
+ */
+- (UIView *)resultViewWithTitle:(NSString *)title
+                            tag:(int)tag
+{
+    UIView *view = [[UIView alloc]initWithFrame:_pickerView.frame];
+    
+    UIButton *contentView = [UIButton buttonWithType:UIButtonTypeCustom];
+    [contentView addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventTouchUpInside];
+    contentView.frame = CGRectMake(0, 0, _pickerView.width, 20 + 25 + 10);
+    contentView.tag = tag + 1;
+    [view addSubview:contentView];
+    
+    contentView.centerY = view.height / 2.f;
+
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0,DEVICE_WIDTH, 20) font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:title];
+    [contentView addSubview:label];
+    
+    UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom + 10, 25, 25)];
+    icon.image = [UIImage imageNamed:@"refresh"];
+    [contentView addSubview:icon];
+    icon.centerX = view.width / 2.f;
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]initWithFrame:view.bounds];
+    [view addSubview:indicator];
+    indicator.hidden = YES;
+    indicator.color = DEFAULT_TEXTCOLOR_TITLE;
+    indicator.tag = tag + 2;
+    
+    return view;
+}
+
 #pragma mark -  事件处理
 
 /**
@@ -93,7 +136,54 @@
  */
 - (void)reloadAllComponents
 {
+    [self loadStartState:NO];
+    
+    if (_failView) {
+        [_failView removeFromSuperview];
+    }
     [_pickerView reloadAllComponents];
+}
+
+- (void)loadFailWithMsg:(NSString *)msg
+{
+    [self loadStartState:NO];
+    [_pickerBgView addSubview:self.failView];
+}
+
+/**
+ *  刷新数据
+ */
+- (void)refreshData
+{
+    [self loadStartState:YES];
+    if (_pickerBlock) {
+        _pickerBlock(ACTIONTYPE_Refresh, 0,0);
+    }
+}
+
+/**
+ *  控制开始和结束
+ *
+ *  @param start
+ */
+- (void)loadStartState:(BOOL)start
+{
+    UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[_failView viewWithTag:102];
+    UIView *refreshView = (UIView *)[_failView viewWithTag:101];
+    if (start) {
+        
+        [indicator startAnimating];
+        indicator.hidden = NO;
+        refreshView.hidden = YES;
+        DDLOG(@"start");
+        
+    }else
+    {
+        [indicator stopAnimating];
+        indicator.hidden = YES;
+        refreshView.hidden = NO;
+        DDLOG(@"end");
+    }
 }
 
 /**
@@ -130,7 +220,23 @@
     [self pickerViewShow:NO];
     if (_pickerBlock) {
         _pickerBlock(ACTIONTYPE_SURE,  (int)[_pickerView selectedRowInComponent:0],0);
-    }}
+    }
+}
+
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    
+    //UIPickerTableView
+    if ([touch.view isKindOfClass:[UIButton class]] ||
+        [NSStringFromClass(touch.view.class) isEqualToString:@"UIPickerTableView"]){
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
 
 #pragma mark UIPickerViewDataSource
 

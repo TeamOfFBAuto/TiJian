@@ -28,7 +28,7 @@
 @property(nonatomic,retain)NSString *mobile;
 @property(nonatomic,retain)NSString *dateline;
 @property(nonatomic,retain)NSString *state;
-@property(nonatomic,retain)NSString *type;
+@property(nonatomic,retain)NSString *type;//1普通 2查询报告
 @property(nonatomic,retain)NSString *photo;
 
 @property(nonatomic,retain)NSString *avatar;//头像

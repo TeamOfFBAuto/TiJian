@@ -8,15 +8,20 @@
 
 #import "QueryReportController.h"
 #import "LPickerView.h"
+#define Cache_brandName @"cache_brandname" //缓存品牌名
+#define Cache_brandId @"cache_brandid" //缓存品牌id
+#define Cache_account @"cache_account" //缓存账号
+#define Cache_brandId_newest @"cache_brandid_newest" //缓存品牌id最近的一个
 
 @interface QueryReportController ()<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
     LPickerView *_pickerView;
     NSArray *_itemsArray;
     NSString *_brandId;//选择的品牌id
-    MBProgressHUD *_loading;
+    NSString *_brandName;//选择的品牌
 }
-//@property(nonatomic,strong)UIView *backPickView;//地区选择pickerView后面的背景view
+
+@property(nonatomic,retain)MBProgressHUD *loading;
 
 @end
 
@@ -52,10 +57,25 @@
         if (i == 2) {
             tf.secureTextEntry = YES;
         }
+        //品牌
+        if (i == 0) {
+            
+            NSString *brandName = [self getBrandNameWithBrandId:[self getNewestBrandId]];
+            NSString *brandId = [self getNewestBrandId];
+            if (![LTools isEmpty:brandName] &&
+                ![LTools isEmpty:brandId]) {
+                tf.text = brandName;
+                _brandId = brandId;
+            }
+        }
         //账号
         if (i == 1) {
             tf.returnKeyType = UIReturnKeyNext;
             tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+            NSString *account = [self getAccountWithBrandId:[self getNewestBrandId]];
+            if (![LTools isEmpty:account]) {
+                tf.text = account;
+            }
         }
         //密码
         else if (i == 2)
@@ -80,36 +100,116 @@
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(loginBtn.left, loginBtn.bottom + 13, loginBtn.width, 14) font:13 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR title:@"不清楚账号、密码？"];
     [label addTaget:self action:@selector(clickToConfused:) tag:0];
     [self.view addSubview:label];
-    
-    _loading = [LTools MBProgressWithText:@"努力加载中..." addToView:self.view];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - 视图创建
+
+-(MBProgressHUD *)loading
+{
+    if (!_loading) {
+        _loading = [LTools MBProgressWithText:@"努力加载中..." addToView:self.view];
+    }
+    [self.view addSubview:_loading];
+    return _loading;
+}
+
+#pragma mark - 数据处理
+
+//---------- get
+
+//最新的brandid
+- (NSString *)getNewestBrandId
+{
+    return [LTools objectForKey:Cache_brandId_newest];
+}
+
+- (NSString *)brandId
+{
+    NSString *brandName = [LTools objectForKey:Cache_brandId];
+    return brandName;
+}
+
+- (NSString *)getBrandNameWithBrandId:(NSString *)brandId
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_brandName,brandId];
+    NSString *brandName = [LTools objectForKey:key];
+    return brandName;
+}
+
+- (NSString *)getAccountWithBrandId:(NSString *)brandId
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_account,brandId];
+    NSString *account = [LTools objectForKey:key];
+    return account;
+}
+
+//---------- set
+
+- (void)setBrandName:(NSString *)brandName
+         withBrandId:(NSString *)brandId
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_brandName,brandId];
+    [LTools setObject:brandName forKey:key];
+}
+
+- (void)setAccount:(NSString *)account
+       withBrandId:(NSString *)brandId
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_account,brandId];
+    [LTools setObject:account forKey:key];
+}
+
 #pragma mark - 网络请求
 
 - (void)netWorkForBrandList
 {
     NSString *api = Report_center;
-//    __weak typeof(self)weakSelf = self;
     
-     @WeakObj(_pickerView);
+     @WeakObj(self);
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         NSArray *list = result[@"list"];
-        _itemsArray = [NSArray arrayWithArray:list];
-        
-        if (Weak_pickerView) {
-            [Weak_pickerView reloadAllComponents];
-        }
+        [Weakself updateBrandList:list];
         
     } failBlock:^(NSDictionary *result) {
         
         NSLog(@"fail result %@",result);
-        
+        [_pickerView loadFailWithMsg:@""];
+
     }];
+}
+
+/**
+ *  更新品牌列表
+ *
+ *  @param list
+ */
+- (void)updateBrandList:(NSArray *)list
+{
+    _itemsArray = [NSArray arrayWithArray:list];
+    if (_pickerView) {
+        [_pickerView reloadAllComponents];
+        
+        //设置显示位置
+        NSString *selectBrandId = [self getNewestBrandId];
+        if (![LTools isEmpty:selectBrandId]) {
+            
+            if (_itemsArray.count > 0) {
+                
+                for (int i = 0; i < _itemsArray.count; i ++) {
+                    int brandid = [_itemsArray[i][@"brand_id"] intValue];
+                    if ([selectBrandId intValue] == brandid) {
+                        [_pickerView selectrow:i component:0 animated:NO];
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -123,6 +223,11 @@
                     accountNo:(NSString *)accountNo
                      password:(NSString *)password{
     
+    //本地缓存
+    [LTools setObject:brandId forKey:Cache_brandId_newest];
+    [self setAccount:accountNo withBrandId:brandId];
+    [self setBrandName:_brandName withBrandId:brandId];
+    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params safeSetString:[UserInfo getAuthkey] forKey:@"authcode"];
     [params safeSetString:brandId forKey:@"brand_id"];
@@ -131,27 +236,20 @@
     [params safeSetString:@"2" forKey:@"type"];// 2 表示输入账号密码查询（上传）
 
      @WeakObj(self);
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [_loading show:YES];
+    [self.loading show:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:REPORT_ADD parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [_loading hide:YES];
-        NSLog(@"success %@",result);
         
         if ([result[RESULT_CODE] intValue] == 0) {
             
             NSString *url = result[@"url"];
             [MiddleTools pushToWebFromViewController:Weakself weburl:url title:@"体检报告" moreInfo:NO hiddenBottom:NO];
         }
-        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_REPORT_ADD_SUCCESS object:nil];//通知更新报告列表
         
     } failBlock:^(NSDictionary *result) {
         [_loading hide:YES];
-//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        NSString *msg = result[Erro_Info];
-        [LTools showMBProgressWithText:msg addToView:Weakself.view];
-        
     }];
 }
 
@@ -159,8 +257,6 @@
 {
     return [self.view viewWithTag:tag];
 }
-
-#pragma mark - 视图创建
 
 #pragma mark - 年龄选择器
 
@@ -172,10 +268,16 @@
         _pickerView = [[LPickerView alloc]initWithDelegate:self delegate:self pickerBlock:^(ACTIONTYPE type, int row, int component) {
             if (type == ACTIONTYPE_SURE) {
                 [Weakself selectBrandWithRow:row];
+            }else if (type == ACTIONTYPE_Refresh)
+            {
+                [Weakself netWorkForBrandList];
             }
         }];
     }
     
+    if (_itemsArray.count > 0) {
+        [self updateBrandList:_itemsArray];
+    }
     [_pickerView pickerViewShow:YES];
 }
 
@@ -184,7 +286,16 @@
     NSString *title = _itemsArray[row][@"brand_name"];
     [self textFieldWithTag:100].text = title;
     _brandId = _itemsArray[row][@"brand_id"];//选中的品牌id
-
+    _brandName = title;
+    
+    //缓存数据
+    NSString *account = [self getAccountWithBrandId:_brandId];
+    if (![LTools isEmpty:account]) {
+        [self textFieldWithTag:101].text = account;
+    }else
+    {
+        [self textFieldWithTag:101].text = nil;
+    }
 }
 
 #pragma mark UIPickerViewDataSource
@@ -306,8 +417,11 @@
             [tf resignFirstResponder];
         }
     }
-
         [self selectBrand];
+        if (_itemsArray.count == 0) {
+            [self netWorkForBrandList];
+        }
+        
         
         return NO;
     }

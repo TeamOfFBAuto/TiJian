@@ -873,11 +873,12 @@
    
     
     //在线问诊、预约挂号、精准预约
-    images = @[[UIImage imageNamed:@"homepage_zixuntai"],
+    images = @[[UIImage imageNamed:@"homepage_kanzhuanjia"],
                [UIImage imageNamed:@"homepage_yueguahao"],
-               [UIImage imageNamed:@"homepage_kanzhuanjia"]];
-    titles = @[@"咨询台",@"约挂号",@"看专家"];
-    NSArray *titles_sub = @[@"公立医院 免费问诊",@"足不出户 挂号看病",@"全国专家 快速预约"];
+               [UIImage imageNamed:@"homepage_zixuntai"]
+               ];
+    titles = @[@"专家号",@"普通号",@"咨询台"];
+    NSArray *titles_sub = @[@"全国专家 快速预约",@"足不出户 挂号看病",@"公立医院 免费问诊"];
     CGFloat width_section = (DEVICE_WIDTH - 1) / 3.f;
     CGFloat top = line.bottom;
     for (int i = 0; i < 3; i ++) {
@@ -888,11 +889,11 @@
         btn1.backgroundColor = [UIColor whiteColor];
         [view_guhao addSubview:btn1];
         if (i == 0) {
-            btn1.tag = kTagZiXun;
+            btn1.tag = kTagKanZhuanJia;
         }else if (i == 1){
             btn1.tag = kTagYueGuaHao;
         }else if (i == 2){
-            btn1.tag = kTagKanZhuanJia;
+            btn1.tag = kTagZiXun;
         }
         
         UIButton *btn_image = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1103,7 +1104,6 @@
                           title:(NSString *)title
                             tag:(int)tag
 {
-    DDLOG(@"--------- tag:%d",tag);
     UIView *view = [[UIView alloc]initWithFrame:_doctorScroll.bounds];
     
     UIView *contentView = [[UIView alloc]initWithFrame:view.bounds];
@@ -1558,24 +1558,10 @@
 }
 
 /**
- *  跳转至转诊预约(VIP)
+ *  跳转至转诊预约(VIP) 专家号
  */
 - (void)pushToVipAppoint
 {
-//    PeopleManageController *people = [[PeopleManageController alloc]init];
-//    people.actionType = PEOPLEACTIONTYPE_GuaHao;
-//    people.noAppointNum = 1;
-//    people.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:people animated:YES];
-//    
-//    __weak typeof(self)weakSelf = self;
-//    people.updateParamsBlock = ^(NSDictionary *params){
-//        
-//        NSString *familyuid = params[@"familyuid"];
-//        [weakSelf pushToGuaHaoType:2 familyuid:familyuid];
-//        
-//    };
-    
     VipAppointViewController *vip = [[VipAppointViewController alloc]init];
     vip.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:vip animated:YES];

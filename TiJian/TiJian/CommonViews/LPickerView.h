@@ -11,6 +11,7 @@
 typedef enum {
     ACTIONTYPE_NORMAL = 0,//滚动
     ACTIONTYPE_SURE, //确定
+    ACTIONTYPE_Refresh, //刷新数据
     ACTIONTYPE_CANCEL //取消
 }ACTIONTYPE;
 
@@ -31,6 +32,12 @@ typedef void(^LPickerBlock)(ACTIONTYPE type, int row ,int component);
  *  刷新数据
  */
 - (void)reloadAllComponents;
+/**
+ *  加载数据为空或者失败
+ *
+ *  @param msg 显示内容
+ */
+- (void)loadFailWithMsg:(NSString *)msg;
 
 /**
  *  设置显示row component
