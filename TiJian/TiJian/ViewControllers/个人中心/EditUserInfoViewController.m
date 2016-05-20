@@ -103,9 +103,9 @@
     [infoView addTaget:self action:@selector(clickToChangeUserHeadImage) tag:0];
     
     //title
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 60) title:@"头       像" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 80, 60) title:@"头       像" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
     [infoView addSubview:title];
-    
+//    title.backgroundColor = [UIColor orangeColor];
     //箭头
     UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 35, 0, 35, 60)];
     arrow.image = [UIImage imageNamed:@"personal_jiantou_r"];

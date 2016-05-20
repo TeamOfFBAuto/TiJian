@@ -49,28 +49,20 @@
     [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     
     sleep(1);
-//    
-//    NSString *idcard1 = @"513328198003065937";
-//    NSString *idcard2 = @"11010419750315334X";
-//    NSString *idcard15 = @"370802940221002";
-//    
-//    NSArray *ids = @[idcard1,idcard2,idcard15];
-//    
-//    for (NSString *idd in ids) {
-//        if ([LTools getIdCardSex:idd] == Gender_Girl) {
-//            NSLog(@"%@性别:女 年龄:%@",idd,[LTools getIdCardAge:idd]);
-//        }else
-//        {
-//            NSLog(@"%@性别:男 年龄:%@",idd,[LTools getIdCardAge:idd]);
-//        }
-//    }
-
+    
+    NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     
     //友盟统计
-    [MobClick startWithAppkey:UmengAppkey reportPolicy:BATCH channelId:nil];
+    UMConfigInstance.appKey = UmengAppkey;
+    UMConfigInstance.channelId = @"";
+    UMConfigInstance.eSType = E_UM_NORMAL; // 仅适用于游戏场景
+    UMConfigInstance.ePolicy = BATCH;
+    [MobClick startWithConfigure:UMConfigInstance];
+    
+#ifdef DEBUG
     [MobClick setLogEnabled:YES];
-    
-    
+#endif
+        
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
@@ -81,8 +73,7 @@
     
     
     //微信支付
-    NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-    NSString *name = [NSString stringWithFormat:@"河马%@",version];
+    NSString *name = [NSString stringWithFormat:@"海马医生%@",version];
     [WXApi registerApp:WXAPPID withDescription:name];
     
     //百度地图
@@ -101,23 +92,6 @@
     
     //================================= JPUSH =========================================
     //JPush Required
-//    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-//        //可以添加自定义categories
-//        [APService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
-//                                                       UIUserNotificationTypeSound |
-//                                                       UIUserNotificationTypeAlert)
-//                                           categories:nil];
-//    } else {
-//        //categories 必须为nil
-//        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-//                                                       UIRemoteNotificationTypeSound |
-//                                                       UIRemoteNotificationTypeAlert)
-//                                           categories:nil];
-//    }
-//    
-//    // Required
-//    [APService setupWithOption:launchOptions];
-    
     
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
         //可以添加自定义categories
@@ -725,13 +699,13 @@
     
     if ([userId isEqualToString:SERVICE_ID_2]) {
         
-        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"河马医生" portrait:@""];
+        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"海马医生" portrait:@""];
         return completion(userInfo);        
     }
     
     if ([userId isEqualToString:SERVICE_ID]) {
         
-        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"河马医生" portrait:@""];
+        RCUserInfo *userInfo = [[RCUserInfo alloc]initWithUserId:userId name:@"海马医生" portrait:@""];
         return completion(userInfo);
     }
 

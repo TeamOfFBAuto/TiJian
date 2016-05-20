@@ -516,7 +516,7 @@
             questionId = [self swapQuestionIdAtIndex:index forGroupId:nextGroupId];
             
             if (!questionId) {
-                [LTools showMBProgressWithText:@"抱歉您的情况已超出河马认知范围!" addToView:self.view];
+                [LTools showMBProgressWithText:@"抱歉您的情况已超出海马认知范围!" addToView:self.view];
                 return;
             }
             

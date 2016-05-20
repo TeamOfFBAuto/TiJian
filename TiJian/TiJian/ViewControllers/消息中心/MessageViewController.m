@@ -89,7 +89,7 @@
             RCDChatViewController *_conversationVC = [[RCDChatViewController alloc]init];
             _conversationVC.conversationType = model.conversationType;
             _conversationVC.targetId = model.targetId;
-            _conversationVC.chatTitle = @"河马客服";
+            _conversationVC.chatTitle = @"海马客服";
             _conversationVC.title = model.conversationTitle;
             _conversationVC.conversation = model;
             _conversationVC.unReadMessage = model.unreadMessageCount;

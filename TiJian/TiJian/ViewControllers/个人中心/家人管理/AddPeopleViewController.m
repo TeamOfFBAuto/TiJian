@@ -549,6 +549,11 @@
         DDLOG(@"--idcard:%@",textField.text);
         if (textField.tag == 102) {
             NSString *idCard = textField.text;
+            if (idCard.length != 15 && [idCard length] != 18) {
+                return;
+            }
+            
+            
             Gender gender = [LTools getIdCardSex:idCard];
             NSString *age = [LTools getIdCardAge:idCard];
             

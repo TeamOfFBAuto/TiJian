@@ -68,7 +68,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"河马医生"];
+    [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"海马医生"];
 }
 
 - (void)viewDidLoad {
@@ -1143,14 +1143,14 @@
         [indicator startAnimating];
         indicator.hidden = NO;
         refreshView.hidden = YES;
-        DDLOG(@"start");
+//        DDLOG(@"start");
         
     }else
     {
         [indicator stopAnimating];
         indicator.hidden = YES;
         refreshView.hidden = NO;
-        DDLOG(@"end");
+//        DDLOG(@"end");
 
     }
 }

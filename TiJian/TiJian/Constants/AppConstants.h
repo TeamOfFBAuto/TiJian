@@ -129,7 +129,7 @@
 
 //***************************** 三方平台appkey **********************************
 
-#define AppStore_Appid @"1065404194"//appStore 河马医生
+#define AppStore_Appid @"1065404194"//appStore 海马医生
 
 //友盟
 #define UmengAppkey @"562455d167e58ede5000b699"//正式 umeng后 mobile@jiruijia.com
@@ -163,18 +163,18 @@
 #define JPushAppkey @"d191338077d6b2157afe2bf7"
 #define JPushChannel @"AppStore" //发布渠道
 
-//==========================待注册
+//========================== 海马医生
 
-//sina
-#define SinaAppKey @"2480371284"
-#define SinaAppSecret @"d0ff7ad37ad8014b207c2a1eced4fdd0"
+//sina SZK
+#define SinaAppKey @"2127298190"
+#define SinaAppSecret @"0c0ba054bfabec2b2cb3dc0cef811eb6"
 
-//QQ
-#define QQAPPID @"1104757360" //tencent1104757360 十六进制:QQ41d94270; 生成方法:NSString *str = [ [NSString alloc] initWithFormat:@"%x",1104757360];
-#define QQAPPKEY @"m7DlzFpxeDxRBULc"
+//QQ 吉瑞嘉
+#define QQAPPID @"1105131459" //tencent1105131459 十六进制:QQ41def7c3; 生成方法:NSString *str = [ [NSString alloc] initWithFormat:@"%x",1105131459];
+#define QQAPPKEY @"9bXYfymSVFxpSKgp"
 
-//微信
-#define WXAPPID @"wx47f54e431de32846" //衣加衣改为河马医生 商家检查 吉瑞嘉
+//微信 吉瑞嘉
+#define WXAPPID @"wx47f54e431de32846" //衣加衣改为海马医生 商家检查 吉瑞嘉
 #define WXAPPSECRET @"a71699732e3bef01aefdaf324e2f522c"
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
 

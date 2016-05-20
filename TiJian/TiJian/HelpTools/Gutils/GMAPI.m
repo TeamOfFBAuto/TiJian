@@ -96,8 +96,6 @@
     //执行SQL语句
     int result = sqlite3_prepare_v2(db, "select * from area where name = ?", -1, &stmt, nil);
     
-    NSLog(@"All subcities result = %d %@",result,cityName);
-    
     if (result == SQLITE_OK) {
         
         sqlite3_bind_text(stmt, 1, [cityName UTF8String], -1, nil);
@@ -123,7 +121,7 @@
     //执行SQL语句
     int result = sqlite3_prepare_v2(db, "select * from area where id = ?", -1, &stmt, nil);
     
-    NSLog(@"All subcities result = %d %d",result,cityId);
+//    NSLog(@"All subcities result = %d %d",result,cityId);
     
     if (result == SQLITE_OK) {
         

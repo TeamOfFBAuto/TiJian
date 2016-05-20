@@ -43,7 +43,7 @@
                     hiddenBottom:(BOOL)hiddenBottom
 {
     RCDChatViewController *chatService = [[RCDChatViewController alloc] init];
-    chatService.chatTitle = @"河马客服";
+    chatService.chatTitle = @"海马客服";
     
 //    //1.0
 //    chatService.targetId = SERVICE_ID;

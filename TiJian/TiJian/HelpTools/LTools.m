@@ -1627,7 +1627,7 @@
     BOOL isAllNumber = YES;
     NSString *day = nil;
     
-    if([numberStr length] < 14)
+    if([numberStr length] != 15 && [numberStr length] !=18)
         return result;
     
     /**
