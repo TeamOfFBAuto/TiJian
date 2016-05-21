@@ -63,7 +63,6 @@
 		1303C3721BEB0D7200700847 /* gouwudai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C33E1BEB0D7100700847 /* gouwudai@2x.png */; };
 		1303C3731BEB0D7200700847 /* guanbi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C33F1BEB0D7100700847 /* guanbi@2x.png */; };
 		1303C3741BEB0D7200700847 /* guanbianniu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3401BEB0D7100700847 /* guanbianniu@2x.png */; };
-		1303C3751BEB0D7200700847 /* hema@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3411BEB0D7100700847 /* hema@2x.png */; };
 		1303C3761BEB0D7200700847 /* jiantou@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3421BEB0D7100700847 /* jiantou@2x.png */; };
 		1303C3771BEB0D7200700847 /* tijianren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3431BEB0D7100700847 /* tijianren@2x.png */; };
 		1303C3781BEB0D7200700847 /* tijianren_duo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */; };
@@ -76,6 +75,7 @@
 		130609111C3E13E4004489A5 /* PushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 130609101C3E13E4004489A5 /* PushConfig.plist */; };
 		130609141C3E3A3C004489A5 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 130609131C3E3A3C004489A5 /* MessageModel.m */; };
 		130AE0A91CE2E114008E3257 /* jpush-ios-2.1.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */; };
+		130CF06E1CF0729E009EFB59 /* hema@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130CF06D1CF0729E009EFB59 /* hema@2x.png */; };
 		130D2E011BFC7229002E301F /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E001BFC7229002E301F /* MapViewController.m */; };
 		130D2E031BFC7332002E301F /* gpin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E021BFC7332002E301F /* gpin@2x.png */; };
 		130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E051BFDBF30002E301F /* UpdateUserInfoController.m */; };
@@ -685,7 +685,6 @@
 		1303C33E1BEB0D7100700847 /* gouwudai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gouwudai@2x.png"; sourceTree = "<group>"; };
 		1303C33F1BEB0D7100700847 /* guanbi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guanbi@2x.png"; sourceTree = "<group>"; };
 		1303C3401BEB0D7100700847 /* guanbianniu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guanbianniu@2x.png"; sourceTree = "<group>"; };
-		1303C3411BEB0D7100700847 /* hema@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema@2x.png"; sourceTree = "<group>"; };
 		1303C3421BEB0D7100700847 /* jiantou@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jiantou@2x.png"; sourceTree = "<group>"; };
 		1303C3431BEB0D7100700847 /* tijianren@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tijianren@2x.png"; sourceTree = "<group>"; };
 		1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tijianren_duo@2x.png"; sourceTree = "<group>"; };
@@ -701,6 +700,7 @@
 		130609131C3E3A3C004489A5 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
 		130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "jpush-ios-2.1.6.a"; sourceTree = "<group>"; };
 		130AE0A81CE2E114008E3257 /* JPUSHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPUSHService.h; sourceTree = "<group>"; };
+		130CF06D1CF0729E009EFB59 /* hema@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema@2x.png"; sourceTree = "<group>"; };
 		130D2DFF1BFC7229002E301F /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		130D2E001BFC7229002E301F /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		130D2E021BFC7332002E301F /* gpin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gpin@2x.png"; sourceTree = "<group>"; };
@@ -1676,7 +1676,6 @@
 				1303C33E1BEB0D7100700847 /* gouwudai@2x.png */,
 				1303C33F1BEB0D7100700847 /* guanbi@2x.png */,
 				1303C3401BEB0D7100700847 /* guanbianniu@2x.png */,
-				1303C3411BEB0D7100700847 /* hema@2x.png */,
 				1303C3421BEB0D7100700847 /* jiantou@2x.png */,
 				1303C3431BEB0D7100700847 /* tijianren@2x.png */,
 				1303C3441BEB0D7100700847 /* tijianren_duo@2x.png */,
@@ -1990,6 +1989,7 @@
 				13148E451CCF089D00829628 /* refresh@2x.png */,
 				1301A24D1C292C180041FF8D /* baocun@2x.png */,
 				134822D41BEC795200EA2E06 /* default_hema@2x.png */,
+				130CF06D1CF0729E009EFB59 /* hema@2x.png */,
 				137780AB1C1188BE00677363 /* hema_heart@2x.png */,
 				130D2E021BFC7332002E301F /* gpin@2x.png */,
 				135E3D481C9BEA7000B5F0FD /* feedback_tianjia@2x.png */,
@@ -3512,7 +3512,6 @@
 				139333A11BE0DF3E00B4628B /* 10_1@2x.png in Resources */,
 				13E2D8721CC8C58100A684D7 /* personal_settings@2x.png in Resources */,
 				131A17791BF33B7900B12D2F /* dingzhi@2x.png in Resources */,
-				1303C3751BEB0D7200700847 /* hema@2x.png in Resources */,
 				139333AE1BE0DF3E00B4628B /* 16_1@2x.png in Resources */,
 				E3796D1E1BFB389E004B63F7 /* shopping_cart_icon@2x.png in Resources */,
 				13F1F3DC1BBA9A4B00885D31 /* SVProgressHUD.bundle in Resources */,
@@ -3653,6 +3652,7 @@
 				139333DA1BE0DF3E00B4628B /* 29_1@2x.png in Resources */,
 				131483011CEF0FEF00D04305 /* WeiboSDK.bundle in Resources */,
 				1350C6DE1CCDF29B00677E07 /* homepage_banner@2x.png in Resources */,
+				130CF06E1CF0729E009EFB59 /* hema@2x.png in Resources */,
 				139333A21BE0DF3E00B4628B /* 10_2@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
