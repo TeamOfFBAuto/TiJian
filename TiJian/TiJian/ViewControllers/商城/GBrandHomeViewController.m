@@ -1004,7 +1004,6 @@
         
         [self.navigationController.view addSubview:_backBlackView];
         
-        _pushView.tempDic = self.shaixuanDic;
         
     }
 }
@@ -1017,7 +1016,11 @@
         [_backBlackView removeFromSuperview];
         if (!_pushView.isRightBtnClicked) {
             [_pushView leftBtnClicked];
+           
+        }else
+        {
             _pushView.isRightBtnClicked = NO;
+            
         }
     }
     

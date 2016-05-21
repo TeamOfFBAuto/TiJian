@@ -52,6 +52,8 @@
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender isHaveShaixuanDic:(NSDictionary *)theDic{
     self = [super initWithFrame:frame];
     
+    self.isRightBtnClicked = NO;
+    
     self.selectDic = [NSMutableDictionary dictionaryWithDictionary:theDic];
     
     self.tempDic = theDic;
@@ -450,6 +452,7 @@
         
         self.selectDic = nil;
         self.selectDic = [NSMutableDictionary dictionaryWithDictionary:self.tempDic];//把备份的数据还原
+        self.delegate.shaixuanDic = (NSDictionary*)self.selectDic;
         self.tf_high.text = nil;
         self.tf_low.text = nil;
         
@@ -484,12 +487,15 @@
  */
 -(void)rightBtnClicked:(UIButton*)sender{
     if (sender.tag == -11) {//主筛选界面侧边栏消失
-
+        self.isRightBtnClicked = YES;
+        self.tempDic = nil;
+        self.tempDic = [NSDictionary dictionaryWithDictionary:(NSDictionary*)self.selectDic];
+        
         [self.delegate shaixuanFinishWithDic:self.selectDic];
         
         [self.delegate therightSideBarDismiss];
         
-        self.isRightBtnClicked = YES;
+        
         
     }else if (sender.tag == -12){//选择地区 返回到主筛选界面
     }else if (sender.tag == -13){//选择价格 返回到主筛选界面

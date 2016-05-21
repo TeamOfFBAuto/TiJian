@@ -1487,7 +1487,10 @@
         [_backBlackView removeFromSuperview];
         if (!_pushView.isRightBtnClicked) {
             [_pushView leftBtnClicked];
+        }else
+        {
             _pushView.isRightBtnClicked = NO;
+
         }
     }
 }
