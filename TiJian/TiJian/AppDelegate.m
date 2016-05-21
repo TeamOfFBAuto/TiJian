@@ -75,7 +75,6 @@
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
     
-    
     //微信支付
     NSString *name = [NSString stringWithFormat:@"海马医生%@",version];
     [WXApi registerApp:WXAPPID withDescription:name];
