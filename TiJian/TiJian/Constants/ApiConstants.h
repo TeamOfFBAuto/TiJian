@@ -11,8 +11,7 @@
 #ifndef WJXC_ApiConstants_h
 #define WJXC_ApiConstants_h
 
-#define SERVER_URL @"http://123.57.56.167:85" //域名地址
-//#define SERVER_URL @"http://www.hippodr.com" //海马医生域名
+#define SERVER_URL @"http://www.hippodr.com" //海马医生域名
 
 //体检须知
 #define URL_TIJIANXUZHI @"/data/checkup_notice.html"

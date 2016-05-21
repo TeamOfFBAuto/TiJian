@@ -67,11 +67,36 @@ static int seconds = 60;//计时60s
     [self creatDownInfoView];
     
     [self changeTheUpViewStateWithNum:1];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)textFieldChange:(NSNotification *)notify
+{
+    NSString *notifyName = notify.name;
+    if ([notifyName isEqualToString:UITextFieldTextDidChangeNotification]) {
+        
+        UITextField *textField = notify.object;
+        if (textField == self.phoneTF) {
+            
+            NSString *text = textField.text;
+            if (text && [LTools isValidateMobile:text]) {
+                
+                getYanzhengmaBtn.userInteractionEnabled = YES;
+                getYanzhengmaBtn.alpha = 1.f;
+            }else
+            {
+                getYanzhengmaBtn.userInteractionEnabled = NO;
+                getYanzhengmaBtn.alpha = 0.5f;
+            }
+        }
+
+    }
 }
 
 #pragma mark - 网络请求
@@ -654,19 +679,6 @@ static int seconds = 60;//计时60s
         if (temp.length > 1) {
             
             temp = [temp substringWithRange:NSMakeRange(0, temp.length - 2)];
-        }
-    }
-    
-    if (textField == self.phoneTF) {
-        
-        if ([LTools isValidateMobile:temp]) {
-            
-            getYanzhengmaBtn.userInteractionEnabled = YES;
-            getYanzhengmaBtn.alpha = 1.f;
-        }else
-        {
-            getYanzhengmaBtn.userInteractionEnabled = NO;
-            getYanzhengmaBtn.alpha = 0.5f;
         }
     }
     

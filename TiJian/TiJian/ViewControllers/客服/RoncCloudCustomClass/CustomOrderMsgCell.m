@@ -63,23 +63,37 @@
     [att addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:13] range:NSMakeRange(0, key.length)];
     [self.titleLabel setAttributedText:att];
     
-    
-    key = @"商品金额:";
+    key = @"实付金额:";
     NSString *realPrice = [NSString stringWithFormat:@"¥%.2f",[aModel.real_price floatValue]];
-    NSString *totalPrice = [NSString stringWithFormat:@"¥%.2f ",[aModel.total_fee floatValue]];
-    NSString *text = [NSString stringWithFormat:@"%@ %@   %@",key,realPrice,totalPrice];
+    NSString *text = [NSString stringWithFormat:@"%@ %@",key,realPrice];
     
     NSRange realPriceRange = [text rangeOfString:realPrice];
-    NSRange totalPriceRange = [text rangeOfString:totalPrice];
-
+    
     NSMutableAttributedString *priceAttString = [[NSMutableAttributedString alloc]initWithString:text];
-    [priceAttString addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:totalPriceRange];
     //加粗
     [priceAttString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:13] range:NSMakeRange(0, key.length)];
     [priceAttString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, key.length)];
     
     [priceAttString addAttribute:NSForegroundColorAttributeName value:DEFAULT_TEXTCOLOR_ORANGE range:realPriceRange];
     [self.priceLabel setAttributedText:priceAttString];
+    
+    
+//    key = @"商品金额:";
+//    NSString *realPrice = [NSString stringWithFormat:@"¥%.2f",[aModel.real_price floatValue]];
+//    NSString *totalPrice = [NSString stringWithFormat:@"¥%.2f ",[aModel.total_fee floatValue]];
+//    NSString *text = [NSString stringWithFormat:@"%@ %@   %@",key,realPrice,totalPrice];
+//    
+//    NSRange realPriceRange = [text rangeOfString:realPrice];
+//    NSRange totalPriceRange = [text rangeOfString:totalPrice];
+//
+//    NSMutableAttributedString *priceAttString = [[NSMutableAttributedString alloc]initWithString:text];
+//    [priceAttString addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:totalPriceRange];
+//    //加粗
+//    [priceAttString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:13] range:NSMakeRange(0, key.length)];
+//    [priceAttString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, key.length)];
+//    
+//    [priceAttString addAttribute:NSForegroundColorAttributeName value:DEFAULT_TEXTCOLOR_ORANGE range:realPriceRange];
+//    [self.priceLabel setAttributedText:priceAttString];
 }
 
 @end

@@ -14,7 +14,6 @@
 #import "SimpleMessage.h"
 #import "UMSocial.h"
 #import "MobClick.h"
-//#import "APService.h"//极光
 #import "JPUSHService.h"//version 2.1.5
 #import "ReportDetailController.h"//报告详情
 #import "OrderInfoViewController.h"//订单详情
@@ -22,6 +21,7 @@
 #import "AppointDetailController.h"//预约
 #import "LogView.h"
 //#import <Bugtags/Bugtags.h>//bugtags
+#import <JSPatch/JSPatch.h> //在线修复bug
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆

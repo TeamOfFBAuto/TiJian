@@ -64,13 +64,6 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
-//    {
-//        [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics: UIBarMetricsDefault];
-//        [self.leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
-//        _navigationTitle.textColor = DEFAULT_TEXTCOLOR;
-//    }
 }
 
 -(void)viewDidLoad
@@ -96,13 +89,7 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     _myTitleLabel.font = [UIFont systemFontOfSize:17];
     self.navigationItem.titleView = _myTitleLabel;
     _navigationTitle = _myTitleLabel;
-    
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
-//    {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
-//        [button_back setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
-//        _myTitleLabel.textColor = [UIColor whiteColor];//白色字体
-//    }
+
     
     [self.pluginBoardView removeItemAtIndex:2];
     
