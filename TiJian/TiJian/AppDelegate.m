@@ -62,6 +62,10 @@
 #ifdef DEBUG
     [MobClick setLogEnabled:YES];
 #endif
+    
+    //JSPatch
+    [JSPatch startWithAppKey:JSPatchAppKey];
+    [JSPatch sync];
         
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
@@ -187,7 +191,7 @@
     [[RCIMClient sharedRCIMClient] setDeviceToken:token];
     
     //JPush Required
-//    [APService registerDeviceToken:deviceToken];
+    
     [JPUSHService registerDeviceToken:deviceToken];
     
     //本地记录

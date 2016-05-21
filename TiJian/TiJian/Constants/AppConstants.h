@@ -122,7 +122,6 @@
 #define USER_DEVICE_TOKEN @"DEVICE_TOKEN"
 #define USER_RONGCLOUD_TOKEN @"RongCloudToken" //融云token
 
-
 #define USER_UPDATEHEADIMAGE_STATE @"updateHeadImage"//更新用户头像
 #define USER_NEWHEADIMAGE @"newHeadImage"//新头像
 
@@ -133,6 +132,9 @@
 
 //友盟
 #define UmengAppkey @"562455d167e58ede5000b699"//正式 umeng后 mobile@jiruijia.com
+
+//JSPatch
+#define JSPatchAppKey @"6b423a27b6ba3cf4"
 
 //百度地图
 #define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema
