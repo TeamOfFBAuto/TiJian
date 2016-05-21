@@ -194,8 +194,9 @@
         
         self.contentLabel.text = theModel.brand_name;
         NSString *a = [GMAPI timechangeYMD:theModel.use_start_time];
-        NSString *b = [GMAPI timechangeMD:theModel.use_end_time];
-        self.useTimeLabel.text = [NSString stringWithFormat:@"使用期限:%@-%@",a,b];
+        NSString *b = [GMAPI timechangeYMD:theModel.use_end_time];
+        self.useTimeLabel.numberOfLines = 2;
+        self.useTimeLabel.text = [NSString stringWithFormat:@"使用期限:%@ ~ %@",a,b];
         
         UIImage *aImage = [LTools imageForCoupeColorId:theModel.color];
         [self.couponImv setImage:aImage];
@@ -221,6 +222,7 @@
         }else if (type == 4){
             self.contentLabel.text = @"新人优惠券";
             title = [NSString stringWithFormat:@"￥%@",theModel.newer_money];
+            self.useTimeLabel.text = [NSString stringWithFormat:@"使用期限:长期有效"];
         }
         
         //优惠标题

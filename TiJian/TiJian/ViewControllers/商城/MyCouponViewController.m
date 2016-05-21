@@ -63,7 +63,7 @@
     }
     
     
-    self.rightString = @"使用说明";
+    self.rightString = @"使用规则";
     
     
     

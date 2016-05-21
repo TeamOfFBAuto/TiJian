@@ -68,15 +68,16 @@
     UIView *tabHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 150)];
     tabHeaderView.backgroundColor = [UIColor whiteColor];
     
-    UILabel *jifenGuizeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 12 - 45, 0, 45, 30)];
+    UILabel *jifenGuizeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 12 - 70, 0, 70, 30)];
     [jifenGuizeLabel addTaget:self action:@selector(jifenGuizeLabelClicked) tag:0];
     jifenGuizeLabel.font = [UIFont systemFontOfSize:11];
     jifenGuizeLabel.textAlignment = NSTextAlignmentRight;
     jifenGuizeLabel.textColor = [UIColor grayColor];
-    jifenGuizeLabel.text = @"积分规则";
+    jifenGuizeLabel.text = @"积分使用规则";
     [tabHeaderView addSubview:jifenGuizeLabel];
     UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(jifenGuizeLabel.frame.origin.x-10, jifenGuizeLabel.frame.size.height*0.5-5, 10, 10)];
     [imv setImage:[UIImage imageNamed:@"yuyue_wenhao.png"]];
+    [imv addTaget:self action:@selector(jifenGuizeLabelClicked) tag:0];
     [tabHeaderView addSubview:imv];
     
     UIView *yuanView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];

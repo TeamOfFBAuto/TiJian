@@ -22,10 +22,6 @@
     
     NSArray *_priceArray;//价格区间
     
-    int _isMark_price[10];
-    int _isMark_brand[200];
-    
-    
     UIView *_tab3Header;//价格选择的tabHeader
     
     UIImageView *_defaultPriceImv;
@@ -37,8 +33,6 @@
     UIView *_shouView;//用于收键盘的点击view
     
     
-    NSDictionary *_defaultShaixuanDic;//上个界面传过来的筛选条件
-    
     //定位相关
     NSDictionary *_locationDic;
     
@@ -46,32 +40,31 @@
     //网络请求失败 无品牌数据时的提示view
     ResultView *_resultView;
     
+    NSDictionary *_defaultShaixuanDic;
+    
+    
+    NSArray *_GenderTitleArray;
+    
+    
 }
+
+
 -(id)initWithFrame:(CGRect)frame gender:(BOOL)theGender isHaveShaixuanDic:(NSDictionary *)theDic{
     self = [super initWithFrame:frame];
     
-    _defaultShaixuanDic = theDic;
+    self.selectDic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+    
+    self.tempDic = theDic;
     
     //数据部分
-    self.gender = theGender;
-    _tab1TitleDataArray = @[@"城市",@"价格",@"体检品牌"];
+    self.isGender = theGender;
+    _GenderTitleArray = @[@"全部",@"男",@"女"];
     
-    self.userChoosePinpai = @"全部";
-    self.userChoosePrice = @"全部";
+    _tab1TitleDataArray = @[@"城市",@"价格",@"体检品牌"];
     
     for (int i = 0; i<35; i++) {
         _isopen[i] = 0;
     }
-    
-    
-    for (int i = 0; i<10; i++) {
-        _isMark_price[i] = 0;
-    }
-    
-    for (int i = 0; i<200; i++) {
-        _isMark_brand[i] = 0;
-    }
-    _isMark_brand[0] = 1;
     
     _orig_tab_contentOffset = CGSizeMake(0, 0);
     
@@ -88,68 +81,114 @@
     //创建视图
     [self creatNavcView];
     [self creatTab];
-    
-    //地区
-    NSString *defaultCityName;
-    NSString *defaultCityId;
-    if ([_defaultShaixuanDic stringValueForKey:@"city_id"]) {
-        defaultCityId = [_defaultShaixuanDic stringValueForKey:@"city_id"];
-    }else{
-        defaultCityId = [GMAPI getCurrentCityId];
-    }
-    if ([defaultCityId intValue] == 0) {
-        NSString *defaultPid = [GMAPI getCurrentProvinceId];
-        defaultCityName = [GMAPI cityNameForId:[defaultPid intValue]];
-    }else{
-        defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
-    }
-    self.userChooseCity = defaultCityName;
-    
-    //品牌
-    if ([[_defaultShaixuanDic stringValueForKey:@"brand_id"]intValue]>0) {
-        self.userChoosePinpai = [_defaultShaixuanDic stringValueForKey:@"self.userChoosePinpai"];
-        self.userChoosePinpai_id = [_defaultShaixuanDic stringValueForKey:@"brand_id"];
-    }
     [self.tab4 reloadData];
     [self.tab1 reloadData];
-    
-    
-    
-    //价格
-    if ([_defaultShaixuanDic stringValueForKey:@"high_price"]) {
-        self.userChoosePrice_high = [_defaultShaixuanDic stringValueForKey:@"high_price"];
-    }
-    
-    if ([_defaultShaixuanDic stringValueForKey:@"low_price"]) {
-        self.userChoosePrice_low = [_defaultShaixuanDic stringValueForKey:@"low_price"];
-    }
-    
-    if ([self.userChoosePrice_low intValue]>0 && [self.userChoosePrice_high intValue]>0) {
-        self.userChoosePrice = [NSString stringWithFormat:@"%@ - %@",self.userChoosePrice_low,self.userChoosePrice_high];
-    }else if ([self.userChoosePrice_low intValue]>0){
-        self.userChoosePrice = [NSString stringWithFormat:@"%@以上",self.userChoosePrice_low];
-    }else if ([self.userChoosePrice_high intValue]>0){
-        self.userChoosePrice = [NSString stringWithFormat:@"%@以下",self.userChoosePrice_high];
-    }
-    
-    for (int i = 0; i<_priceArray.count; i++) {
-        NSString *str = _priceArray[i];
-        if ([str isEqualToString:self.userChoosePrice]) {
-            for (int j = 0; j<10; j++) {
-                _isMark_price[j] = 0;
-            }
-            _isMark_price[i] = 1;
-        }
-    }
     [self creatTab3Header];
     [self.tab3 reloadData];
-    
-    
-    
-    
-    
-    
+
     return self;
+}
+
+
+#pragma mark - 数据源取值添加值操作
+//get
+-(NSString *)getValueForKey:(NSString *)key
+{
+    NSString *result = @"全部";
+    if ([key isEqualToString:Dic_gender]) {//性别
+        NSString *gender = self.selectDic[key];
+        if ([gender intValue] == Gender_Boy) {
+            result = @"男";
+        }else if ([gender intValue] == Gender_Girl)
+        {
+            result = @"女";
+        }
+    }else if ([key isEqualToString:Dic_city_name]){//城市
+        NSString *cityId = [self.selectDic stringValueForKey:Dic_city_id];
+        if ([LTools isEmpty:cityId]) {
+            result = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
+            if ([LTools isEmpty:result]) {
+                result = @"北京市";
+            }
+        }else{
+            result = [GMAPI getCityNameOf4CityWithCityId:[cityId intValue]];
+        }
+        
+    }else if ([key isEqualToString:Dic_price]){//价格
+        NSString *high_price = [self.selectDic stringValueForKey:Dic_high_price];
+        NSString *low_price = [self.selectDic stringValueForKey:Dic_low_price];
+        
+        if ([low_price intValue]>=0 && [high_price intValue]>0) {//全有
+            result = [NSString stringWithFormat:@"%@ - %@",low_price,high_price];
+        }else if ([low_price intValue]>0){//有low
+            result = [NSString stringWithFormat:@"%@以上",low_price];
+        }else if ([high_price intValue]>0){//有high
+            result = [NSString stringWithFormat:@"%@以下",high_price];
+        }
+    }else if ([key isEqualToString:Dic_brand_name]){//品牌
+        NSString *brandName = [self.selectDic stringValueForKey:Dic_brand_name];
+        if (![LTools isEmpty:brandName]) {
+            result = brandName;
+        }
+    }
+    
+    return result;
+}
+//set
+-(void)setSelectDicValue:(NSString *)value theKey:(NSString *)key{
+    
+    if ([key isEqualToString:Dic_gender]) {//性别
+        if ([value isEqualToString:@"0"]) {
+            value = @"99";
+        }
+        [self.selectDic safeSetString:value forKey:key];
+    }else if ([key isEqualToString:Dic_city_name]){//城市
+        NSString *city_name = value;
+        NSString *city_id = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:city_name]];
+        NSString *province_id = [GMAPI getProvineIdWithCityId:[city_id intValue]];
+        [self.selectDic safeSetString:city_id forKey:Dic_city_id];
+        [self.selectDic safeSetString:province_id forKey:Dic_province_id];
+        
+    }else if ([key isEqualToString:Dic_price]){//价钱
+        NSString *price = value;
+        NSString *low_price;
+        NSString *high_price;
+        
+        if ([price isEqualToString:@"全部"]) {
+            [self.selectDic removeObjectForKey:Dic_low_price];
+            [self.selectDic removeObjectForKey:Dic_high_price];
+        }else if ([price hasSuffix:@"以上"]){
+            NSMutableString *p_m = [NSMutableString stringWithFormat:@"%@",price];
+            [p_m replaceOccurrencesOfString:@"以上" withString:@"" options:0 range:NSMakeRange(0, p_m.length)];
+            low_price = (NSString*)p_m;
+            [self.selectDic removeObjectForKey:Dic_high_price];
+            [self.selectDic safeSetString:low_price forKey:Dic_low_price];
+        }else if ([price hasSuffix:@"以下"]){
+            NSMutableString *p_m = [NSMutableString stringWithFormat:@"%@",price];
+            [p_m replaceOccurrencesOfString:@"以下" withString:@"" options:0 range:NSMakeRange(0, p_m.length)];
+            low_price = (NSString*)p_m;
+            [self.selectDic removeObjectForKey:Dic_low_price];
+            [self.selectDic safeSetString:high_price forKey:Dic_high_price];
+        }else{
+            NSArray *paa = [price componentsSeparatedByString:@" - "];
+            low_price = paa[0];
+            high_price = paa[1];
+            [self.selectDic safeSetString:low_price forKey:Dic_low_price];
+            [self.selectDic safeSetString:high_price forKey:Dic_high_price];
+        }
+        
+        
+    }else if ([key isEqualToString:Dic_brand_name]){//品牌名
+        NSString *brand_Name = value;
+        if ([brand_Name isEqualToString:@"全部"]) {
+            [self.selectDic removeObjectForKey:Dic_brand_id];
+        }
+        [self.selectDic safeSetString:brand_Name forKey:Dic_brand_name];
+        
+    }else if ([key isEqualToString:Dic_brand_id]){//品牌id
+        NSString *brand_id = value;
+        [self.selectDic safeSetString:brand_id forKey:Dic_brand_id];
+    }
 }
 
 
@@ -210,7 +249,6 @@
         defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
     }
     
-    self.userChooseCity = defaultCityName;
     
     //主筛选
     self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
@@ -291,7 +329,6 @@
         return;
     }
     
-    self.userChooseCity = _locationCityLabel.text;
     [self.tab2 reloadData];
     [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     [self hiddenTab:self.tab2];
@@ -345,7 +382,7 @@
     }
     [_defaultPriceImv setImage:[UIImage imageNamed:@"duihao.png"]];
     
-    [self setDefaultPriceImvHidden];
+    [self setDefaultPriceImvShow];
     
 }
 
@@ -353,17 +390,14 @@
 
 #pragma mark - 逻辑处理
 
-
+//价格
 -(void)tab3HeaderClicked{
-    for (int i = 0; i<10; i++) {
-        _isMark_price[i] = 0;
-    }
-    self.userChoosePrice = @"全部";
-    self.userChoosePrice_high = nil;
-    self.userChoosePrice_low = nil;
+
+    [self setSelectDicValue:@"全部" theKey:Dic_price];
+    
     self.tf_high.text = nil;
     self.tf_low.text = nil;
-    [self setDefaultPriceImvHidden];
+    [self setDefaultPriceImvShow];
     [self.tab3 reloadData];
     [self hiddenTab:self.tab3];
     [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
@@ -372,17 +406,34 @@
 
 
 /**
- *  设置默认价格后面的对勾是否显示
+ *  设置默认价格后面的对勾隐藏
  */
 -(void)setDefaultPriceImvHidden{
-    BOOL hidden = NO;
-    for (int i = 0; i<10; i++) {
-        if (_isMark_price[i]) {
-            hidden = YES;
-        }
-    }
+
+    _defaultPriceImv.hidden = YES;
+}
+
+/**
+ *  设置默认价格后面的对勾显示
+ */
+-(void)setDefaultPriceImvShow{
+    _defaultPriceImv.hidden = NO;
+}
+
+
+
+-(void)leftBtnClicked{
     
-    _defaultPriceImv.hidden = hidden;
+    self.selectDic = nil;
+    self.selectDic = [NSMutableDictionary dictionaryWithDictionary:self.tempDic];//把备份的数据还原
+    self.tf_high.text = nil;
+    self.tf_low.text = nil;
+    
+    [self.tab1 reloadData];
+    [self.tab2 reloadData];
+    [self.tab3 reloadData];
+    [self.tab4 reloadData];
+    
 }
 
 
@@ -396,6 +447,17 @@
     
     if (sender.tag == -1) {//主筛选界面侧边栏消失
         [self.delegate therightSideBarDismiss];
+        
+        self.selectDic = nil;
+        self.selectDic = [NSMutableDictionary dictionaryWithDictionary:self.tempDic];//把备份的数据还原
+        self.tf_high.text = nil;
+        self.tf_low.text = nil;
+        
+        [self.tab1 reloadData];
+        [self.tab2 reloadData];
+        [self.tab3 reloadData];
+        [self.tab4 reloadData];
+        
     }else if (sender.tag == -2){//选择地区 返回到主筛选界面
         [self hiddenTab:self.tab2];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
@@ -422,90 +484,16 @@
  */
 -(void)rightBtnClicked:(UIButton*)sender{
     if (sender.tag == -11) {//主筛选界面侧边栏消失
-        
-        NSLog(@"%@",self.userChooseCity);
-        NSLog(@"%@",self.userChoosePinpai);
-        NSLog(@"%@",self.userChoosePinpai_id);
-        NSLog(@"%@",self.userChoosePrice);
-        NSLog(@"%@",self.userChoosePrice_high);
-        NSLog(@"%@",self.userChoosePrice_low);
-        
-        
-        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
-        
-        //地区选择
-        if (self.userChooseCity) {
-            int cityId = [GMAPI cityIdForName:self.userChooseCity];
-            NSString *province_id = [GMAPI getProvineIdWithCityId:cityId];
-            [dic setValue:province_id forKey:@"province_id"];
-            [dic setValue:[NSString stringWithFormat:@"%d",cityId] forKey:@"city_id"];
-            
-        }
-        
-        
-        //品牌选择
-        if (self.userChoosePinpai_id) {
-            [dic setValue:self.userChoosePinpai_id forKey:@"brand_id"];
-            [dic setValue:self.userChoosePinpai forKey:@"self.userChoosePinpai"];
-        }
-        
-        //价格选择
-        if (self.userChoosePrice) {
-            
-            if (![LTools isEmpty:self.userChoosePrice_low]) {
-                [dic setValue:self.userChoosePrice_low forKey:@"low_price"];
-            }
-            
-            
-            
-            if (![LTools isEmpty:@"self.userChoosePrice_high"]) {
-                [dic setValue:self.userChoosePrice_high forKey:@"high_price"];
-            }
-        }
-        
-        
-        //性别选择
-        NSString *gender = nil;
-        for (int i = 0; i<3; i++) {
-            UIButton *btn = _genderBtnArray[i];
-            if (btn.selected) {
-                if (i == 1) {
-                    gender = @"2";
-                }else if (i == 2){
-                    gender = @"1";
-                }
-            }
-        }
-        
-        if (gender) {
-            [dic setValue:gender forKey:@"gender"];
-        }
-        
-        
-        
-        
-        [self.delegate shaixuanFinishWithDic:dic];
+
+        [self.delegate shaixuanFinishWithDic:self.selectDic];
         
         [self.delegate therightSideBarDismiss];
         
-        
+        self.isRightBtnClicked = YES;
         
     }else if (sender.tag == -12){//选择地区 返回到主筛选界面
-//        [self hiddenTab:self.tab2];
-//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }else if (sender.tag == -13){//选择价格 返回到主筛选界面
-        
-//        [self.tf_low resignFirstResponder];
-//        [self.tf_high resignFirstResponder];
-//        
-//        [self hiddenTab:self.tab3];
-//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
-//        [self.tab1 reloadData];
-        
     }else if (sender.tag == -14){//选择品牌 返回到主筛选界面
-//        [self hiddenTab:self.tab4];
-//        [self.tab1 reloadData];
-//        [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
     }
 }
 
@@ -549,6 +537,11 @@
     
     NSLog(@"%@",sender.titleLabel.text);
     
+    //存储到selectDic
+    NSString *genderStr = sender.titleLabel.text;
+    int flag = (int)[_GenderTitleArray indexOfObject:genderStr];
+    [self setSelectDicValue:[NSString stringWithFormat:@"%d",flag] theKey:Dic_gender];
+    
 }
 
 
@@ -558,31 +551,20 @@
     NSString *str_low = self.tf_low.text;
     NSString *str_high = self.tf_high.text;
     
-    if ([str_low floatValue]>0) {//有最低价
-        
-    }
     
-    if ([str_high floatValue]>0) {//有最高价
-        
-    }
-    
-    
-    if ([str_low floatValue]>0 && [str_high floatValue]>0) {//最高价 最低价都有
+    if (![LTools isEmpty:str_low] && ![LTools isEmpty:str_high]) {//最高价 最低价都有
         if ([str_high floatValue]<[str_low floatValue]) {
             [GMAPI showAutoHiddenMBProgressWithText:@"请输入正确的价格区间" addToView:self];
         }else{
-            for (int i = 0; i<10; i++) {
-                _isMark_price[i] = 0;
-            }
             
             [self.tf_high resignFirstResponder];
             [self.tf_low resignFirstResponder];
             
-            _defaultPriceImv.hidden = YES;
+            [self setDefaultPriceImvHidden];
             
-            self.userChoosePrice = [NSString stringWithFormat:@"%@-%@",self.tf_low.text,self.tf_high.text];
-            self.userChoosePrice_low = self.tf_low.text;
-            self.userChoosePrice_high = self.tf_high.text;
+            NSString *price = [NSString stringWithFormat:@"%@ - %@",self.tf_low.text,self.tf_high.text];
+            
+            [self setSelectDicValue:price theKey:Dic_price];
             
             [self.tab3 reloadData];
             [self hiddenTab:self.tab3];
@@ -590,19 +572,16 @@
             
             [self.tab1 reloadData];
         }
-    }else if ([str_low floatValue]>0){//有最低价
-        for (int i = 0; i<10; i++) {
-            _isMark_price[i] = 0;
-        }
+    }else if (![LTools isEmpty:str_low]){//有最低价
+
         
         [self.tf_high resignFirstResponder];
         [self.tf_low resignFirstResponder];
         
-        _defaultPriceImv.hidden = YES;
+        [self setDefaultPriceImvHidden];
         
-        self.userChoosePrice = [NSString stringWithFormat:@"%@以上",self.tf_low.text];
-        self.userChoosePrice_low = self.tf_low.text;
-        self.userChoosePrice_high = self.tf_high.text;
+        NSString *price = [NSString stringWithFormat:@"%@以上",self.tf_low.text];
+        [self setSelectDicValue:price theKey:Dic_price];
         
         [self.tab3 reloadData];
         [self hiddenTab:self.tab3];
@@ -612,19 +591,16 @@
         
         
         
-    }else if ([str_high floatValue]>0){//有最高价
-        for (int i = 0; i<10; i++) {
-            _isMark_price[i] = 0;
-        }
+    }else if (![LTools isEmpty:str_high]){//有最高价
+
         
         [self.tf_high resignFirstResponder];
         [self.tf_low resignFirstResponder];
         
         _defaultPriceImv.hidden = YES;
         
-        self.userChoosePrice = [NSString stringWithFormat:@"%@以下",self.tf_high.text];
-        self.userChoosePrice_low = self.tf_low.text;
-        self.userChoosePrice_high = self.tf_high.text;
+        NSString *price = [NSString stringWithFormat:@"%@以下",self.tf_high.text];
+        [self setSelectDicValue:price theKey:Dic_price];
         
         [self.tab3 reloadData];
         [self hiddenTab:self.tab3];
@@ -672,7 +648,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
     if (tableView.tag == 1) {//主筛选
-        if (self.gender) {
+        if (self.isGender) {
             num = 4;
         }else{
             num = 3;
@@ -722,15 +698,14 @@
         
         if ([provinceStr isEqualToString:@"北京市"] || [provinceStr isEqualToString:@"上海市"] || [provinceStr isEqualToString:@"天津市"] || [provinceStr isEqualToString:@"重庆市"]){
             
-            if ([self.userChooseCity isEqualToString:provinceStr]) {
+            NSString *cityName = [self getValueForKey:Dic_city_name];
+            if ([cityName isEqualToString:provinceStr]) {
                 UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
                 [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
                 [view addSubview:mark_imv];
             }
-            
-            
+ 
         }else{
-            
             UIButton *jiantouBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [jiantouBtn setFrame:CGRectMake(self.frame.size.width-44, 0, 44, 44)];
             jiantouBtn.userInteractionEnabled = NO;
@@ -775,9 +750,11 @@
         
         //最低价
         if (!self.tf_low) {
-            self.tf_low = [[UITextField alloc]initWithFrame:tf_low_backView.bounds];
-        }else{
+            self.tf_low = [[UITextField alloc]init];
+            [self.tf_low setFrame:tf_low_backView.bounds];
             
+        }else{
+            [self.tf_low setFrame:tf_low_backView.bounds];
         }
         
         self.tf_low.textAlignment = NSTextAlignmentCenter;
@@ -798,7 +775,10 @@
         
         //最高价
         if (!self.tf_high) {
-            self.tf_high = [[UITextField alloc]initWithFrame:tf_low_backView.bounds];
+            self.tf_high = [[UITextField alloc]init];
+            [self.tf_high setFrame:tf_low_backView.bounds];
+        }else{
+            [self.tf_high setFrame:tf_low_backView.bounds];
         }
         
         self.tf_high.textAlignment = NSTextAlignmentCenter;
@@ -840,58 +820,15 @@
 }
 
 -(void)qingkongshaixuanBtnClicked{
-    NSString *defaultCityName;
-    NSString *defaultCityId;
-    if (_locationDic) {
-        defaultCityId = [_defaultShaixuanDic stringValueForKey:@"city_id"];
-    }else{
-        defaultCityId = [GMAPI getCurrentCityId];
-    }
-    
-    if ([defaultCityId intValue] == 0) {
-        NSString *defaultPid = [GMAPI getCurrentProvinceId];
-        defaultCityName = [GMAPI cityNameForId:[defaultPid intValue]];
-    }else{
-        defaultCityName = [GMAPI getCityNameOf4CityWithCityId:[defaultCityId intValue]];
-    }
-    
-    
-    self.userChooseCity = defaultCityName;
-    
-    self.userChoosePinpai = @"全部";
-    
-    NSMutableDictionary *tmpDic = [NSMutableDictionary dictionaryWithDictionary:_defaultShaixuanDic];
-    [tmpDic setObject:@"99" forKey:@"gender"];
-    _defaultShaixuanDic = tmpDic;
-    
-    self.userChoosePinpai_id = nil;
-    self.userChoosePrice = @"全部";
-    self.userChoosePrice_high = nil;
-    self.userChoosePrice_low = nil;
+
+    self.selectDic = nil;
     self.tf_low.text = nil;
     self.tf_high.text = nil;
-    _defaultPriceImv.hidden = NO;
-    
-    
-    
-    
-
-    
-    for (int i = 0; i < 10; i++) {
-        _isMark_price[i] = 0;
-    }
-    
-    for (int i = 0; i<200; i++) {
-        _isMark_brand[i] = 0;
-    }
-    _isMark_brand[0] = 1;
-    
     
     [self.tab1 reloadData];
     [self.tab2 reloadData];
     [self.tab3 reloadData];
     [self.tab4 reloadData];
-    self.delegate.shaixuanDic = nil;
 }
 
 
@@ -902,27 +839,17 @@
     int aa = _isopen[sender.tag-10];
     
     if (tt == 0 || tt == 1 || tt == 2 || tt == 3) {//4个直辖市
-        
-        
-        
-        
         NSDictionary *dic = _areaData[tt];
-        NSString *provinceName = [dic stringValueForKey:@"State"];
-        self.userChooseCity = provinceName;
+        NSString *city_Name = [dic stringValueForKey:@"State"];
+        
+        [self setSelectDicValue:city_Name theKey:Dic_city_name];
         
         [self.tab2 reloadData];
-//        [self reloadTab2Header];
-        
         [self hiddenTab:self.tab2];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
-        
-        
         [self.tab1 reloadData];
-        
         return;
-        
     }
-    
     
     if (aa == 0) {
         _isopen[sender.tag-10] = 1;
@@ -931,7 +858,6 @@
     }
     
     [self.tab2 reloadData];
-//    [self reloadTab2Header];
 }
 
 
@@ -961,7 +887,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat height = 0;
     if (tableView.tag == 1) {//主筛选
-        if (indexPath.row == 0 && self.gender){
+        if (indexPath.row == 0 && self.isGender){
             height = [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/125];//性别
         }else{
             height = [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/90];
@@ -989,7 +915,7 @@
             [view removeFromSuperview];
         }
         
-        if (self.gender){//有性别
+        if (self.isGender){//有性别
             if (indexPath.row == 0) {
                 UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, [GMAPI scaleWithHeight:0 width:self.frame.size.width theWHscale:670.0/125])];
                 titleLabel.text = @"性别";
@@ -1003,8 +929,6 @@
                 CGFloat btnW = (cView.frame.size.width - 5*2)/3;
                 CGFloat btnH = [GMAPI scaleWithHeight:0 width:btnW theWHscale:166.0/60];
                 
-                NSArray *titleArray = @[@"全部",@"女",@"男"];
-                
                 _genderBtnArray = [NSMutableArray arrayWithCapacity:3];
                 
                 for (int i = 0; i<3; i++) {
@@ -1012,7 +936,7 @@
                     [btn setFrame:CGRectMake(i*(btnW+jianju), (cView.frame.size.height - btnH)*0.5, btnW, btnH)];
                     btn.layer.cornerRadius = 3;
                     btn.titleLabel.font = [UIFont systemFontOfSize:13];
-                    [btn setTitle:titleArray[i] forState:UIControlStateNormal];
+                    [btn setTitle:_GenderTitleArray[i] forState:UIControlStateNormal];
                     [btn addTarget:self action:@selector(genderBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                     if (i == 0) {
                         btn.layer.borderWidth = 0.5;
@@ -1022,9 +946,9 @@
                         btn.layer.borderWidth = 0.5;
 
                         if (i == 1) {
-                            [btn setImage:[UIImage imageNamed:@"nv_saixuan"] forState:UIControlStateNormal];
-                        }else{
                             [btn setImage:[UIImage imageNamed:@"nan_saixuan.png"] forState:UIControlStateNormal];
+                        }else{
+                            [btn setImage:[UIImage imageNamed:@"nv_saixuan.png"] forState:UIControlStateNormal];
                         }
                         [btn setTitleColor:RGBCOLOR(77, 78, 79) forState:UIControlStateNormal];
                         [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
@@ -1036,14 +960,9 @@
                 }
                 
                 int flag = 0;
-                if ([[_defaultShaixuanDic stringValueForKey:@"gender"] intValue] == 1) {//男
-                    flag = 2;
-                }else if ([[_defaultShaixuanDic stringValueForKey:@"gender"] intValue] == 2){//女
-                    flag = 1;
-                }else if ([[_defaultShaixuanDic stringValueForKey:@"gender"] intValue] == 99){//全部
-                    flag = 0;
-                }
-                
+                NSString *sex = [self getValueForKey:Dic_gender];
+                flag = (int)[_GenderTitleArray indexOfObject:sex];
+
                 UIButton *btn = _genderBtnArray[flag];
                 [self genderBtnClicked:btn];
                 
@@ -1061,13 +980,21 @@
                 UILabel *cLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(titleLabel.frame)+5, 0, self.frame.size.width - titleLabel.frame.size.width - 15 - 5 - 30, titleLabel.frame.size.height)];
                 cLabel.textAlignment = NSTextAlignmentRight;
                 cLabel.font = [UIFont systemFontOfSize:13];
-                if (indexPath.row == 1) {
-                    cLabel.text = self.userChooseCity;
-                }else if (indexPath.row == 2){
-                    cLabel.text = self.userChoosePrice ? self.userChoosePrice : @"全部" ;
-                }else if (indexPath.row == 3){
-                    cLabel.text = self.userChoosePinpai ? self.userChoosePinpai : @"全部" ;;
+
+                if (indexPath.row == 1) {//城市
+                    NSString *result = [self getValueForKey:Dic_city_name];
+                    cLabel.text = result;
+                    
+                }else if (indexPath.row == 2){//价钱
+
+                    cLabel.text = [self getValueForKey:Dic_price];
+                    
+                }else if (indexPath.row == 3){//品牌
+                    
+                    cLabel.text = [self getValueForKey:Dic_brand_name];
+                    
                 }
+
                 
                 [cell.contentView addSubview:cLabel];
                 
@@ -1094,17 +1021,17 @@
             cLabel.font = [UIFont systemFontOfSize:13];
             cLabel.textAlignment = NSTextAlignmentRight;
             
-            if (indexPath.row == 0) {
-                NSString *cityName = [GMAPI getCityNameOf4CityWithCityId:[[GMAPI getCurrentCityId] intValue]];
-                if ([LTools isEmpty:cityName]) {
-                    cityName = @"北京市";
-                }
-                cLabel.text = self.userChooseCity ? self.userChooseCity: cityName;
-            }else if (indexPath.row == 1){
-                cLabel.text = self.userChoosePrice;
-            }else if (indexPath.row == 2){
-                cLabel.text = self.userChoosePinpai;
+        
+            if (indexPath.row == 0) {//城市
+                cLabel.text = [self getValueForKey:Dic_city_name];
+                
+            }else if (indexPath.row == 1){//价钱
+                cLabel.text = [self getValueForKey:Dic_price];
+                
+            }else if (indexPath.row == 2){//品牌
+                cLabel.text = [self getValueForKey:Dic_brand_name];
             }
+
             
             [cell.contentView addSubview:cLabel];
             
@@ -1139,11 +1066,14 @@
         tLabel.text = cities[indexPath.row][@"city"];
         [cell.contentView addSubview:tLabel];
         
-        if ([self.userChooseCity isEqualToString:tLabel.text]) {
+        
+        NSString *cityName = [self getValueForKey:Dic_city_name];
+        if ([tLabel.text isEqualToString:cityName]) {
             UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
             [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
             [cell.contentView addSubview:mark_imv];
         }
+        
         
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(30, 43.5, DEVICE_WIDTH-30, 0.5)];
         line.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -1169,12 +1099,66 @@
         line.backgroundColor = RGBCOLOR(234, 235, 236);
         [cell.contentView addSubview:line];
         
-        if ([cell.textLabel.text isEqualToString:self.userChoosePrice]) {
-            UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
-            [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
-            [cell.contentView addSubview:mark_imv];
+        NSString *price = [self getValueForKey:Dic_price];
+        if ([price isEqualToString:@"全部"]) {
+            [self setDefaultPriceImvShow];
+        }else{
+            
+            if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_low_price]] && ![LTools isEmpty:[self.selectDic stringValueForKey:Dic_high_price]]) {//是选择的价钱 和 低价高价都填写
+                if ([cell.textLabel.text isEqualToString:price]) {//是选择的价钱
+                    UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+                    [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+                    [cell.contentView addSubview:mark_imv];
+                    [self setDefaultPriceImvHidden];
+                }else{
+                    [self setDefaultPriceImvHidden];
+                    if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_low_price]]) {
+                        if (!self.tf_low) {
+                            self.tf_low = [[UITextField alloc]init];
+                        }
+                        self.tf_low.text = [self.selectDic stringValueForKey:Dic_low_price];
+                    }
+                    if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_high_price]]) {
+                        if (!self.tf_high) {
+                            self.tf_high = [[UITextField alloc]init];
+                        }
+                        self.tf_high.text = [self.selectDic stringValueForKey:Dic_high_price];
+                    }
+                }
+            }else if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_low_price]] && [self.selectDic stringValueForKey:Dic_high_price] && [[self.selectDic stringValueForKey:Dic_low_price] isEqualToString:@"2000"]){//选择的 2000以上
+                if ([cell.textLabel.text isEqualToString:price]) {
+                    UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
+                    [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
+                    [cell.contentView addSubview:mark_imv];
+                    [self setDefaultPriceImvHidden];
+                    if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_low_price]]) {
+                        if (!self.tf_low) {
+                            self.tf_low = [[UITextField alloc]init];
+                        }
+                        self.tf_low.text = [self.selectDic stringValueForKey:Dic_low_price];
+                    }
+                }
+            }else{//自己填写的
+                
+                [self setDefaultPriceImvHidden];
+                if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_low_price]]) {
+                    if (!self.tf_low) {
+                        self.tf_low = [[UITextField alloc]init];
+                    }
+                    self.tf_low.text = [self.selectDic stringValueForKey:Dic_low_price];
+                    
+                }
+                if (![LTools isEmpty:[self.selectDic stringValueForKey:Dic_high_price]]) {
+                    if (!self.tf_high) {
+                        self.tf_high = [[UITextField alloc]init];
+                    }
+                    self.tf_high.text = [self.selectDic stringValueForKey:Dic_high_price];
+                }
+                
+            }
+            
+            
         }
-        
         
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -1199,27 +1183,22 @@
             cell.textLabel.text = [dic stringValueForKey:@"brand_name"];
         }
         
-        
-        
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 43.5, self.frame.size.width, 0.5)];
         line.backgroundColor = RGBCOLOR(234, 235, 236);
         [cell.contentView addSubview:line];
         
-        
-        if ([self.userChoosePinpai isEqualToString:cell.textLabel.text]) {
+        NSString *brandName = [self getValueForKey:Dic_brand_name];
+        if ([cell.textLabel.text isEqualToString:brandName]) {
             UIImageView *mark_imv = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width - 30, 15, 15, 15)];
             [mark_imv setImage:[UIImage imageNamed:@"duihao.png"]];
             [cell.contentView addSubview:mark_imv];
         }
-        
-        
-        
+
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         return cell;
         
     }
-    
     
     return [[UITableViewCell alloc]init];
 }
@@ -1231,7 +1210,7 @@
         
         self.navc_rightBtn.hidden = YES;
         
-        if (self.gender) {
+        if (self.isGender) {
             if (indexPath.row == 1) {//城市
                 [self showTab:self.tab2];
                 [self setNavcLeftBtnTag:-2 image:[UIImage imageNamed:@"back.png"] leftTitle:nil midTitle:@"城市" rightBtnTag:-12];
@@ -1258,7 +1237,9 @@
         
         NSArray * cities = _areaData[indexPath.section][@"Cities"];
         NSString *cityStr = cities[indexPath.row][@"city"];
-        self.userChooseCity = cityStr;
+        
+        [self setSelectDicValue:cityStr theKey:Dic_city_name];
+        
         [self.tab2 reloadData];
         [self setNavcLeftBtnTag:-1 image:nil leftTitle:@"取消" midTitle:@"筛选" rightBtnTag:-11];
         [self hiddenTab:self.tab2];
@@ -1266,27 +1247,18 @@
         
     }else if (tableView.tag == 3){//价格
         
-        for (int i = 0; i<10; i++) {
-            _isMark_price[i] = 0;
-        }
-        
-        _isMark_price[indexPath.row] = 1;
+
         
         [self.tf_high resignFirstResponder];
         [self.tf_low resignFirstResponder];
         self.tf_low.text = nil;
         self.tf_high.text = nil;
         
-        self.userChoosePrice = _priceArray[indexPath.row];
         
-        if ([self.userChoosePrice isEqualToString:@"2000以上"]) {
-            self.userChoosePrice_low = @"2000";
-            self.userChoosePrice_high = nil;
-        }else{
-            NSArray *paa = [self.userChoosePrice componentsSeparatedByString:@" - "];
-            self.userChoosePrice_low = paa[0];
-            self.userChoosePrice_high = paa[1];
-        }
+        NSString *price = _priceArray[indexPath.row];
+        
+        [self setSelectDicValue:price theKey:Dic_price];
+
         
         [self.tab3 reloadData];
         
@@ -1305,20 +1277,17 @@
     }else if (tableView.tag == 4){//体检品牌
         
         if (indexPath.row == 0) {
-            self.userChoosePinpai = @"全部";
-            self.userChoosePinpai_id = nil;
+            NSString *brand_Name = @"全部";
+            [self setSelectDicValue:brand_Name theKey:Dic_brand_name];
         }else{
             NSDictionary *dic = self.delegate.brand_city_list[indexPath.row - 1];
-            self.userChoosePinpai = [dic stringValueForKey:@"brand_name"];
-            self.userChoosePinpai_id = [dic stringValueForKey:@"brand_id"];
+            NSString *brand_id = [dic stringValueForKey:@"brand_id"];
+            NSString *brand_name = [dic stringValueForKey:@"brand_name"];
+            
+            [self setSelectDicValue:brand_id theKey:Dic_brand_id];
+            [self setSelectDicValue:brand_name theKey:Dic_brand_name];
+            
         }
-        
-        
-        for (int i = 0; i<200; i++) {
-            _isMark_brand[i] = 0;
-        }
-        
-        _isMark_brand[indexPath.row] = 1;
         
         [self.tab4 reloadData];
         
@@ -1326,8 +1295,6 @@
         [self hiddenTab:self.tab4];
         [self.tab1 reloadData];
         
-        
-
     }
     
 }

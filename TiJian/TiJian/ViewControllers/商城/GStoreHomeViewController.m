@@ -420,17 +420,14 @@
             _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
             _shopCarNumLabel.textColor = RGBCOLOR(242, 120, 47);
             _shopCarNumLabel.backgroundColor = [UIColor whiteColor];
-            _shopCarNumLabel.layer.cornerRadius = 7;
+            _shopCarNumLabel.layer.cornerRadius = 5;
             _shopCarNumLabel.layer.borderColor = [[UIColor whiteColor]CGColor];
             _shopCarNumLabel.layer.borderWidth = 0.5f;
             _shopCarNumLabel.layer.masksToBounds = YES;
-            _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
+            _shopCarNumLabel.font = [UIFont systemFontOfSize:8];
             _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
             _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
-            
             [oneBtn addSubview:_shopCarNumLabel];
-            
-            
         }
         
     }
@@ -814,8 +811,14 @@
         _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
         if (_shopCarNumLabel) {
             
-            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
-            
+            int num = [[NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]]intValue];
+            NSString *num_str;
+            if (num >= 100) {
+                num_str = @"99+";
+            }else{
+                num_str = [NSString stringWithFormat:@"%d",num];
+            }
+            _shopCarNumLabel.text = num_str;
             [self updateShopCarNumAndFrame];
         }
         
@@ -1315,14 +1318,19 @@
       _request_GetShopCarNum = [_request requestWithMethod:YJYRequstMethodGet api:GET_SHOPPINGCAR_NUM parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         _shopCarDic = result;
-        
-        if (_shopCarNumLabel) {
-            
-            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
-            _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
-            
-            [self updateShopCarNumAndFrame];
-        }
+          
+          if (_shopCarNumLabel) {
+              
+              int num = [[NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]]intValue];
+              NSString *num_str;
+              if (num >= 100) {
+                  num_str = @"99+";
+              }else{
+                  num_str = [NSString stringWithFormat:@"%d",num];
+              }
+              _shopCarNumLabel.text = num_str;
+              [self updateShopCarNumAndFrame];
+          }
         
         
         
@@ -1345,10 +1353,14 @@
         _shopCarNumLabel.hidden = YES;
     }else{
         _shopCarNumLabel.hidden = NO;
-        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
-        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
         UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
-        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with-20, -2, with+5, 15)];
+        if (![LTools isEmpty:_shopCarNumLabel.text]) {
+            if ([_shopCarNumLabel.text intValue]<10) {
+                [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - 45, 5, 10, 10)];
+            }else{
+                [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - 48, 5, 18, 10)];
+            }
+        }
         
     }
     
@@ -1462,6 +1474,8 @@
         
         [self.navigationController.view addSubview:_backBlackView];
         
+        _pushView.tempDic = self.shaixuanDic;
+        
     }
 }
 
@@ -1471,6 +1485,10 @@
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did disappear");
         [_backBlackView removeFromSuperview];
+        if (!_pushView.isRightBtnClicked) {
+            [_pushView leftBtnClicked];
+            _pushView.isRightBtnClicked = NO;
+        }
     }
 }
 

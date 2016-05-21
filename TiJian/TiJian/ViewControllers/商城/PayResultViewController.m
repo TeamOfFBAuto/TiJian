@@ -149,6 +149,7 @@
 {
     OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
     orderInfo.order_id = self.orderId;
+    orderInfo.isPayResultVcPush = YES;
     [self.navigationController pushViewController:orderInfo animated:YES];
 }
 

@@ -79,6 +79,7 @@
         if (![LTools isEmpty:[self.shaixuanDic stringValueForKey:@"brand_id"]]) {
             self.brand_id = [self.shaixuanDic stringValueForKey:@"brand_id"];
         }
+
     }
     
     
@@ -94,6 +95,7 @@
     [self creatMysearchView];
     [self getHotSearch];
     [self creatRightTranslucentSideBar];
+    //网络请求
     [self prepareBrandListWithLocation];
     
     
@@ -359,6 +361,8 @@
         NSLog(@"Right SideBar will appear");
         [self.navigationController.view addSubview:_backBlackView];
         
+        _pushView.tempDic = self.shaixuanDic;
+        
     }
 }
 
@@ -368,7 +372,12 @@
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did disappear");
         [_backBlackView removeFromSuperview];
+        if (!_pushView.isRightBtnClicked) {
+            [_pushView leftBtnClicked];
+            _pushView.isRightBtnClicked = NO;
+        }
     }
+    
 }
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated
@@ -407,7 +416,12 @@
         }
         
         if (self.brand_id) {
-            [temp_dic setObject:self.brand_id forKey:@"brand_id"];
+            if ([[temp_dic stringValueForKey:@"brand_id"]intValue] != [self.brand_id intValue]) {
+                [temp_dic safeSetString:[temp_dic stringValueForKey:@"brand_id"] forKey:@"brand_id"];
+            }else{
+                [temp_dic setObject:self.brand_id forKey:@"brand_id"];
+            }
+            
             dic = temp_dic;
         }
         if (self.category_id) {
@@ -536,7 +550,7 @@
     
     
     NSMutableDictionary *m_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    [m_dic setValue:self.theSearchWorld forKey:@"keywords"];
+    [m_dic safeSetString:self.theSearchWorld forKey:@"keywords"];
     
     _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:m_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -587,19 +601,19 @@
     }
     
     
-    //商城首页品牌跳转 单品详情页品牌跳转
-    if ([self.brand_id intValue] > 0) {
-        //过滤掉其他品牌
-        if ([LTools isEmpty:self.brand_name]) {
-            self.brandName = @"其他品牌";
-        }
-        NSDictionary *dic = @{@"brand_id":self.brand_id,
-                              @"brand_name":self.brand_name
-                              };
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-        self.brand_city_list = @[dic];
-        return;
-    }
+//    //商城首页品牌跳转 单品详情页品牌跳转
+//    if ([self.brand_id intValue] > 0) {
+//        //过滤掉其他品牌
+//        if ([LTools isEmpty:self.brand_name]) {
+//            self.brand_name = @"其他品牌";
+//        }
+//        NSDictionary *dic = @{@"brand_id":self.brand_id,
+//                              @"brand_name":self.brand_name
+//                              };
+//        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
+//        self.brand_city_list = @[dic];
+//        return;
+//    }
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
@@ -644,12 +658,12 @@
     [_request removeOperation:_request_ProductOneClass];
     
     
-    if (self.brand_id && self.category_id) {
-        NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
-        [temp safeSetString:self.brand_id forKey:@"brand_id"];
-        [temp safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
-        self.shaixuanDic = temp;
-    }
+//    if (self.brand_id && self.category_id) {
+//        NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
+//        [temp safeSetString:self.brand_id forKey:@"brand_id"];
+//        [temp safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
+//        self.shaixuanDic = temp;
+//    }
     
     
     if (self.theSearchWorld) {

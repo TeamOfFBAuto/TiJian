@@ -56,7 +56,7 @@
 //获取热门搜索
 #define ProductHotSearch @"/index.php?d=api&c=setmeal&m=hot_search"
 
-//根据城市查询品牌列表
+//获取筛选品牌列表
 #define BrandList_oneClass @"/index.php?d=api&c=setmeal&m=brand_city_list"
 
 //获取我的足迹

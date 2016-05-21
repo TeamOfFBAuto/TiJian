@@ -11,6 +11,21 @@
 @class GoneClassListViewController;
 @class GBrandListViewController;
 
+//key
+#define Dic_gender @"gender"
+
+#define Dic_city_id @"city_id"
+#define Dic_city_name @"city_name"
+#define Dic_province_id @"province_id"
+
+#define Dic_price @"price"
+#define Dic_high_price @"high_price"
+#define Dic_low_price @"low_price"
+
+#define Dic_brand_name @"brand_name"
+#define Dic_brand_id @"brand_id"
+
+
 @protocol GpushViewDelegate <NSObject>
 
 @property(nonatomic,strong)NSArray *brand_city_list;
@@ -30,6 +45,8 @@
 @property(nonatomic,strong)GcustomNavcView *navigationView;//上面navigationview
 
 @property(nonatomic,retain)UIView *noBrandView;//没有获取到品牌信息的提示view
+
+@property(nonatomic,assign)BOOL isRightBtnClicked;
 
 /**
  *  主筛选
@@ -63,26 +80,19 @@
  */
 @property(nonatomic,strong)UIButton *navc_rightBtn;
 
-/**
- *  城市选择
- */
-@property(nonatomic,strong)NSString *userChooseCity;
-/**
- *  价钱选择
- */
-@property(nonatomic,strong)NSString *userChoosePrice;
-@property(nonatomic,strong)NSString *userChoosePrice_low;
-@property(nonatomic,strong)NSString *userChoosePrice_high;
-/**
- *  品牌选择
- */
-@property(nonatomic,strong)NSString *userChoosePinpai;
-@property(nonatomic,strong)NSString *userChoosePinpai_id;
+
+//数据相关
+@property(nonatomic,strong)NSMutableDictionary *selectDic;//cellforrow取值
+@property(nonatomic,strong)NSDictionary *tempDic;//存储初始值 只在开始时备份(把tempDic = select)和最后点击取消时(select = tempDic)改变
+
+
+
+
 
 /**
  *  有没有性别选项
  */
-@property(nonatomic,assign)BOOL gender;
+@property(nonatomic,assign)BOOL isGender;
 
 /**
  *  代理
@@ -116,6 +126,10 @@
  *  清空筛选条件
  */
 -(void)qingkongshaixuanBtnClicked;
+
+
+-(void)leftBtnClicked:(UIButton*)sender;//点击取消关闭页面
+-(void)leftBtnClicked;//手势滑动返回 关闭页面
 
 
 @end

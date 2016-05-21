@@ -13,6 +13,7 @@
 #import "ButtonProperty.h"
 #import "CouponModel.h"
 #import "ProductModel.h"
+#import "UILabel+GautoMatchedText.h"
 
 @implementation GproductDetailTableViewCell
 
@@ -97,7 +98,27 @@
                 priceLabel.attributedText = aaa;
             }
             
+            CGFloat width = [priceLabel getTextWidth];
+            [priceLabel setWidth:width];
             [self.contentView addSubview:priceLabel];
+            
+            //销量
+            UILabel *saleNumLabel = [[UILabel alloc]initWithFrame:CGRectMake(priceLabel.right+5, priceLabel.frame.origin.y, 0, priceLabel.frame.size.height)];
+            saleNumLabel.textAlignment = NSTextAlignmentCenter;
+            saleNumLabel.textColor = [UIColor whiteColor];
+            saleNumLabel.font = [UIFont systemFontOfSize:12];
+            saleNumLabel.backgroundColor = DEFAULT_TEXTCOLOR;
+            [self.contentView addSubview:saleNumLabel];
+            
+            NSString *saleNum = self.delegate.theProductModel.sale_num;
+            if ([LTools isEmpty:saleNum] || [saleNum intValue] == 0) {
+                saleNumLabel.hidden = YES;
+            }else{
+                saleNumLabel.text = [NSString stringWithFormat:@"已售:%@",saleNum];
+                CGFloat ww =  [saleNumLabel getTextWidth]+5;
+                [saleNumLabel setWidth:ww];
+            }
+            
             height += priceLabel.frame.size.height+12;
             
             UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(priceLabel.frame)+15, DEVICE_WIDTH, 5)];

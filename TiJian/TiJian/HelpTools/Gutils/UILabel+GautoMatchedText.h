@@ -18,5 +18,6 @@
 
 -(CGFloat)getTextWidth;
 
+-(CGRect)matchedrectWithHeight:(CGFloat)height;
 
 @end

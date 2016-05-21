@@ -170,7 +170,7 @@
             if (![dic objectForKey:model.brand_id]) {
                 NSMutableArray * arr = [NSMutableArray arrayWithCapacity:1];
                 [arr addObject:model];
-                [dic setValue:arr forKey:model.brand_id];
+                [dic safeSetValue:arr forKey:model.brand_id];
             }else{
                 NSMutableArray *arr = [dic objectForKey:model.brand_id];
                 [arr addObject:model];
@@ -553,7 +553,7 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
     int p_nums = 0;
     for (ProductModel *model in self.dataArray) {
-        [dic setValue:@"1" forKey:model.brand_id];
+        [dic safeSetString:@"1" forKey:model.brand_id];
         if (model.is_append.intValue != 1) {
             p_nums += [model.product_num intValue];
         }
@@ -568,7 +568,7 @@
                                                                                   }];
     if (p_nums == 1) {
         for (ProductModel *model in self.dataArray) {
-            [parame setValue:model.product_id forKey:@"product_id"];
+            [parame safeSetString:model.product_id forKey:@"product_id"];
         }
     }
     
@@ -1288,7 +1288,7 @@
     NSArray *brand_ids_Array = [NSMutableArray arrayWithCapacity:1];
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
     for (ProductModel *model in self.dataArray) {
-        [dic setValue:@"1" forKey:model.brand_id];
+        [dic safeSetString:@"1" forKey:model.brand_id];
     }
     
     brand_ids_Array = [dic allKeys];
@@ -1354,10 +1354,10 @@
             if ([jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id].count>0) {//有
                 NSMutableArray *theArr = [NSMutableArray arrayWithArray:[jiaxiangbaoDic arrayValueForKey:oneModel.main_product_id]];
                 [theArr addObject:oneModel.product_id];
-                [jiaxiangbaoDic setValue:theArr forKey:oneModel.main_product_id];
+                [jiaxiangbaoDic safeSetValue:theArr forKey:oneModel.main_product_id];
             }else{//没有
                 NSArray *oneArr = @[oneModel.product_id];
-                [jiaxiangbaoDic setValue:oneArr forKey:oneModel.main_product_id];
+                [jiaxiangbaoDic safeSetValue:oneArr forKey:oneModel.main_product_id];
             }
             
         }else{
@@ -1398,7 +1398,7 @@
         }
         
         NSString *append_setmeal_str = [jxb_final componentsJoinedByString:@"|"];
-        [dic setValue:append_setmeal_str forKey:@"append_setmeal"];
+        [dic safeSetString:append_setmeal_str forKey:@"append_setmeal"];
         
     }
     
@@ -1412,7 +1412,7 @@
     
     //订单备注
     if (_liuyantf.text.length>0) {
-        [dic setValue:_liuyantf.text forKey:@"order_note"];//留言
+        [dic safeSetString:_liuyantf.text forKey:@"order_note"];//留言
     }
     
     

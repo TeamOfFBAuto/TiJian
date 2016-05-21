@@ -8,7 +8,7 @@
 
 
 
-//首页点击右上角左侧进入的vc 选择城市
+//首页点击左上角进入的vc 选择城市
 
 #import "MyViewController.h"
 @class HomeViewController;

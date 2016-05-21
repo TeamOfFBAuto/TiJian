@@ -155,12 +155,21 @@
         
         _shopCarDic = result;
         _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
+        
         if (_shopCarNumLabel) {
             
-            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
-            
+            int num = [[NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]]intValue];
+            NSString *num_str;
+            if (num >= 100) {
+                num_str = @"99+";
+            }else{
+                num_str = [NSString stringWithFormat:@"%d",num];
+            }
+            _shopCarNumLabel.text = num_str;
             [self updateShopCarNumAndFrame];
         }
+        
+        
         
         
     } failBlock:^(NSDictionary *result) {
@@ -174,12 +183,17 @@
         _shopCarNumLabel.hidden = YES;
     }else{
         _shopCarNumLabel.hidden = NO;
-        [_shopCarNumLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, 0) height:11 limitMaxWidth:45];
-        CGFloat with = _shopCarNumLabel.frame.size.width + 5;
         UIButton *oneBtn = (UIButton*)[_downView viewWithTag:103];
-        [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - with-20, -2, with+5, 15)];
+        if (![LTools isEmpty:_shopCarNumLabel.text]) {
+            if ([_shopCarNumLabel.text intValue]<10) {
+                [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - 45, 5, 10, 10)];
+            }else{
+                [_shopCarNumLabel setFrame:CGRectMake(oneBtn.bounds.size.width - 48, 5, 18, 10)];
+            }
+        }
         
     }
+    
     
 }
 
@@ -195,11 +209,17 @@
         
         if (_shopCarNumLabel) {
             
-            _shopCarNumLabel.text = [NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]];
-            _gouwucheNum = [_shopCarDic intValueForKey:@"num"];
-            
+            int num = [[NSString stringWithFormat:@"%d",[_shopCarDic intValueForKey:@"num"]]intValue];
+            NSString *num_str;
+            if (num >= 100) {
+                num_str = @"99+";
+            }else{
+                num_str = [NSString stringWithFormat:@"%d",num];
+            }
+            _shopCarNumLabel.text = num_str;
             [self updateShopCarNumAndFrame];
         }
+        
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -351,17 +371,14 @@
             _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
             _shopCarNumLabel.textColor = RGBCOLOR(242, 120, 47);
             _shopCarNumLabel.backgroundColor = [UIColor whiteColor];
-            _shopCarNumLabel.layer.cornerRadius = 7;
+            _shopCarNumLabel.layer.cornerRadius = 5;
             _shopCarNumLabel.layer.borderColor = [[UIColor whiteColor]CGColor];
             _shopCarNumLabel.layer.borderWidth = 0.5f;
             _shopCarNumLabel.layer.masksToBounds = YES;
-            _shopCarNumLabel.font = [UIFont systemFontOfSize:11];
+            _shopCarNumLabel.font = [UIFont systemFontOfSize:8];
             _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
             _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
-            
             [oneBtn addSubview:_shopCarNumLabel];
-            
-            
         }
         
     }
@@ -440,6 +457,7 @@
     [_panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
     _pushView = [[GPushView alloc]initWithFrame:CGRectMake(0, 0, self.rightSideBar.sideBarWidth, self.rightSideBar.view.frame.size.height)gender:self.haveChooseGender isHaveShaixuanDic:self.shaixuanDic];
     _pushView.delegate = self;
+    _pushView.tab4.tableFooterView = nil;
     [self.rightSideBar setContentViewInSideBar:_pushView];
     
 }
@@ -626,17 +644,17 @@
     for (UIButton *btn in _tabHeaderView.fourBtnArray) {
         if (btn.selected) {
             if (btn.tag == 10) {//推荐
-                [tempDic setValue:@"recommend" forKey:@"order_field"];
+                [tempDic safeSetString:@"recommend" forKey:@"order_field"];
             }else if (btn.tag == 11){//热销
-                [tempDic setValue:@"sale_num" forKey:@"order_field"];
+                [tempDic safeSetString:@"sale_num" forKey:@"order_field"];
             }else if (btn.tag == 12){//新品
-                [tempDic setValue:@"new_product" forKey:@"order_field"];
+                [tempDic safeSetString:@"new_product" forKey:@"order_field"];
             }else if (btn.tag == 13){//价格
-                [tempDic setValue:@"sale_price" forKey:@"order_field"];
+                [tempDic safeSetString:@"sale_price" forKey:@"order_field"];
                 if (_priceState) {
-                    [tempDic setValue:@"asc" forKey:@"order_direct"];//升序
+                    [tempDic safeSetString:@"asc" forKey:@"order_direct"];//升序
                 }else{
-                    [tempDic setValue:@"desc" forKey:@"order_direct"];//降序
+                    [tempDic safeSetString:@"desc" forKey:@"order_direct"];//降序
                 }
                 
             }
@@ -986,6 +1004,8 @@
         
         [self.navigationController.view addSubview:_backBlackView];
         
+        _pushView.tempDic = self.shaixuanDic;
+        
     }
 }
 
@@ -995,7 +1015,13 @@
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did disappear");
         [_backBlackView removeFromSuperview];
+        if (!_pushView.isRightBtnClicked) {
+            [_pushView leftBtnClicked];
+            _pushView.isRightBtnClicked = NO;
+        }
     }
+    
+    
 }
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated

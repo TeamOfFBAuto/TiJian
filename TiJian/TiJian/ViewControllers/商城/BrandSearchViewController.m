@@ -385,16 +385,23 @@
         
         [self.navigationController.view addSubview:_backBlackView];
         
+        _pushView.tempDic = self.shaixuanDic;
+        
     }
 }
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar didDisappear:(BOOL)animated
 {
-    
+
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar did disappear");
         [_backBlackView removeFromSuperview];
+        if (!_pushView.isRightBtnClicked) {
+            [_pushView leftBtnClicked];
+            _pushView.isRightBtnClicked = NO;
+        }
     }
+    
 }
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated

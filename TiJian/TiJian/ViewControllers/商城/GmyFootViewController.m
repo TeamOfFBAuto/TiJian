@@ -322,11 +322,11 @@
             NSMutableArray *arr = [m_dic objectForKey:model.track_time];
             if (arr.count>0) {
                 [arr addObject:model];
-                [m_dic setValue:arr forKey:model.track_time];
+                [m_dic safeSetValue:arr forKey:model.track_time];
             }else{
                 NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
                 [arr addObject:model];
-                [m_dic setValue:arr forKey:model.track_time];
+                [m_dic safeSetValue:arr forKey:model.track_time];
             }
         }
         

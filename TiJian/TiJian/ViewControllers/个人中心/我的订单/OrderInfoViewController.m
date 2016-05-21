@@ -704,9 +704,20 @@
             
             [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_HANDLE_ORDER parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
                 NSLog(@"result取消订单 %@",result);
+                if (self.isPayResultVcPush) {
+                    self.cancelOrderSuccess = YES;
+                    
+                    NSInteger count = weakSelf.navigationController.viewControllers.count;
+                    UIViewController *theVc = weakSelf.navigationController.viewControllers[count-4];
+                    NSLog(@"%@",theVc);
+                    NSLog(@"%@",weakSelf.navigationController.viewControllers);
+                    [weakSelf.navigationController popToViewController:weakSelf.navigationController.viewControllers[count-4] animated:YES];
+                }else{
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_CANCEL object:nil];
+                    [weakSelf.navigationController popViewControllerAnimated:YES];
+                }
                 
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_CANCEL object:nil];
-                [weakSelf.navigationController popViewControllerAnimated:YES];
+                
 
             } failBlock:^(NSDictionary *result) {
                 
