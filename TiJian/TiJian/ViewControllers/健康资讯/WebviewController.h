@@ -21,4 +21,6 @@
 @property(nonatomic,retain)NSString *detail_url;//type为20时需要此参数
 @property(nonatomic,retain)NSString *familyuid;//type为2时,转诊预约（VIP）需要此参数
 
+@property(nonatomic,retain)NSDictionary *extensionParams;//拓展参数
+
 @end

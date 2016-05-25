@@ -111,12 +111,15 @@
 //创建上放工具栏
 -(void)creatUpToolView{
     
-    _upToolView = [[GUpToolView alloc]initWithFrame:CGRectZero count:3];
-    [self.view addSubview:_upToolView];
-    __weak typeof (self)bself = self;
-    [_upToolView setUpToolViewBlock:^(NSInteger index) {
-        [bself upToolBtnClicked:index];
+    NSArray *titles = @[@"足迹",@"分享",@"首页"];
+    NSArray *images = @[[UIImage imageNamed:@"uptool_zuji"],
+                        [UIImage imageNamed:@"share3"],
+                        [UIImage imageNamed:@"homepage_g"]];
+     @WeakObj(self);
+    _upToolView = [[GUpToolView alloc]initWithTitles:titles images:images toolViewBlock:^(NSInteger index) {
+        [Weakself upToolBtnClicked:index];
     }];
+    [self.view addSubview:_upToolView];
 }
 
 
@@ -129,7 +132,6 @@
     _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tab];
 }
-
 
 
 //创建下方工具栏
@@ -589,18 +591,20 @@
     
     if (_toolShow) {
         
+        if (!_downToolBlackView) {
+            _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+            _downToolBlackView.backgroundColor = [UIColor blackColor];
+            _downToolBlackView.alpha = 0;
+//            [self.view addSubview:_downToolBlackView];
+            [self.view insertSubview:_downToolBlackView belowSubview:_upToolView];
+            [_downToolBlackView addTapGestureTaget:self action:@selector(upToolShou) imageViewTag:0];
+        }
+        _downToolBlackView.hidden = NO;
         [UIView animateWithDuration:0.2 animations:^{
             [_upToolView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
+            _downToolBlackView.alpha = 0.6;
         } completion:^(BOOL finished) {
-            if (!_downToolBlackView) {
-                _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, DEVICE_HEIGHT)];
-                _downToolBlackView.backgroundColor = [UIColor blackColor];
-                _downToolBlackView.alpha = 0.6;
-                [self.view addSubview:_downToolBlackView];
-                
-                [_downToolBlackView addTapGestureTaget:self action:@selector(upToolShou) imageViewTag:0];
-            }
-            _downToolBlackView.hidden = NO;
+            
         }];
         
         
@@ -609,7 +613,8 @@
             _downToolBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, DEVICE_WIDTH, DEVICE_HEIGHT)];
             _downToolBlackView.backgroundColor = [UIColor blackColor];
             _downToolBlackView.alpha = 0.6;
-            [self.view addSubview:_downToolBlackView];
+//            [self.view addSubview:_downToolBlackView];
+            [self.view insertSubview:_downToolBlackView belowSubview:_upToolView];
         }
         _downToolBlackView.hidden = YES;
         
@@ -657,7 +662,7 @@
 
 //工具栏按钮点击
 -(void)upToolBtnClicked:(NSInteger)index{
-    if (index == 10) {//足迹
+    if (index == 0) {//足迹
         if ([LoginViewController isLogin]) {
             GmyFootViewController *cc = [[GmyFootViewController alloc]init];
             [self.navigationController pushViewController:cc animated:YES];
@@ -667,19 +672,23 @@
                     GmyFootViewController *cc = [[GmyFootViewController alloc]init];
                     [self.navigationController pushViewController:cc animated:YES];
                 }
-                
             }];
         }
         
-    }else if (index == 11){//搜索
-        GCustomSearchViewController *cc = [[GCustomSearchViewController alloc]init];
-        [self.navigationController pushViewController:cc animated:YES];
-    }else if (index == 12){//首页
+    }else if (index == 1){//搜索 改为 分享
+//        GCustomSearchViewController *cc = [[GCustomSearchViewController alloc]init];
+//        [self.navigationController pushViewController:cc animated:YES];
+        
+        NSString *title = [NSString stringWithFormat:@"%@ %@",[LTools isEmpty:self.theProductModel.brand_name]?@"":self.theProductModel.brand_name,[LTools isEmpty:self.theProductModel.setmeal_name]?@"":self.theProductModel.setmeal_name];
+        NSString *imageUrl = _theProductModel.cover_pic;
+        NSString *content = @"我在海马医生发现了一件不错的体检套餐,赶快来看看吧。";
+        NSString *linkUrl = _theProductModel.share_url;
+        [[MiddleTools shareInstance]shareFromViewController:self withImageUrl:imageUrl  shareTitle:title shareContent:content linkUrl:linkUrl];
+        
+    }else if (index == 2){//首页
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
-
-
 
 //下方按钮点击
 -(void)downBtnClicked:(UIButton *)sender{

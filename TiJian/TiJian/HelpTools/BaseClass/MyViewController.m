@@ -23,6 +23,7 @@
 @property(nonatomic,retain)UIButton *leftButton;
 @property(nonatomic,retain)UIButton *leftButton2;
 @property(nonatomic,retain)UIBarButtonItem *rightButtonItem;//右
+@property(nonatomic,retain)UIBarButtonItem *rightButtonItem2;//右2
 @property(nonatomic,retain)UIBarButtonItem *leftButtonItem;//左
 @property(nonatomic,retain)UIBarButtonItem *leftButtonItem2;//左2
 
@@ -256,6 +257,28 @@
         self.right_button.frame = CGRectMake(0, 0, rightImage.size.width, rightImage.size.height);
         self.navigationItem.rightBarButtonItems = @[self.rightButtonItem];
         
+    }
+    else if (rightType == MyViewControllerRightbuttonTypeDouble)
+    {
+        UIImage * rightImage;
+        if (self.rightImageName) {
+            
+            rightImage = [UIImage imageNamed:_rightImageName];
+        }
+        
+        if (self.rightImage) {
+            rightImage = self.rightImage;
+        }
+        
+        if (self.rightImage2) {
+            [self.right_button2 setImage:self.rightImage2 forState:UIControlStateNormal];
+        }
+        
+        [self.right_button setImage:rightImage forState:UIControlStateNormal];
+        self.right_button.frame = CGRectMake(0, 0, rightImage.size.width, rightImage.size.height);
+        
+        self.navigationItem.rightBarButtonItems = @[self.rightButtonItem,self.rightButtonItem2];
+        
     }else if (theType == MyViewControllerLeftbuttonTypeNull)
     {
         self.navigationItem.rightBarButtonItem = nil;
@@ -307,6 +330,15 @@
     return _rightButtonItem;
 }
 
+-(UIBarButtonItem *)rightButtonItem2
+{
+    if (!_rightButtonItem2) {
+        
+        _rightButtonItem2 =[[UIBarButtonItem alloc]initWithCustomView:self.right_button2];
+    }
+    return _rightButtonItem2;
+}
+
 -(UIBarButtonItem *)leftButtonItem
 {
     if (!_leftButtonItem) {
@@ -334,8 +366,26 @@
         _right_button.titleLabel.font = [UIFont systemFontOfSize:15];
         [_right_button setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
         [_right_button addTarget:self action:@selector(rightButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+//        _right_button.backgroundColor = [UIColor redColor];
     }
     return _right_button;
+}
+
+-(UIButton *)right_button2
+{
+    if (!_right_button2) {
+        _right_button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+        _right_button2.frame = CGRectMake(0,0,60,44);
+        _right_button2.titleLabel.textAlignment = NSTextAlignmentRight;
+        [_right_button2 setTitle:@"" forState:UIControlStateNormal];
+        [_right_button2 setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+        _right_button2.titleLabel.font = [UIFont systemFontOfSize:15];
+        [_right_button2 setTitleColor:DEFAULT_TEXTCOLOR forState:UIControlStateNormal];
+        [_right_button2 addTarget:self action:@selector(rightButtonTap2:) forControlEvents:UIControlEventTouchUpInside];
+//        _right_button2.backgroundColor = [UIColor orangeColor];
+
+    }
+    return _right_button2;
 }
 
 -(UIButton *)leftButton
@@ -370,6 +420,11 @@
 #pragma mark - 事件处理method
 
 -(void)rightButtonTap:(UIButton *)sender
+{
+    
+}
+
+-(void)rightButtonTap2:(UIButton *)sender
 {
     
 }

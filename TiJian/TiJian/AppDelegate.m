@@ -22,6 +22,10 @@
 #import "LogView.h"
 //#import <Bugtags/Bugtags.h>//bugtags
 #import <JSPatch/JSPatch.h> //在线修复bug
+#import "UMSocial.h"
+#import "UMSocialQQHandler.h"
+#import "UMSocialWechatHandler.h"
+#import "UMSocialSinaSSOHandler.h"
 
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
@@ -50,18 +54,12 @@
     
     sleep(1);
     
+//    [self testNetwork];
+    
     NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     
-    //友盟统计
-    UMConfigInstance.appKey = UmengAppkey;
-    UMConfigInstance.channelId = @"";
-    UMConfigInstance.eSType = E_UM_NORMAL; // 仅适用于游戏场景
-    UMConfigInstance.ePolicy = BATCH;
-    [MobClick startWithConfigure:UMConfigInstance];
-    
-#ifdef DEBUG
-    [MobClick setLogEnabled:YES];
-#endif
+    //友盟
+    [self umengSocial];
     
     //JSPatch
     [JSPatch startWithAppKey:JSPatchAppKey];
@@ -160,6 +158,9 @@
     
     //获取未读消息num
     [self netWorkForMsgNum];
+    
+    //这里处理新浪微博SSO授权进入新浪微博客户端后进入后台，再返回原来应用
+    [UMSocialSnsService  applicationDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -284,6 +285,46 @@
     }
 }
 
+#pragma mark - 友盟相关
+
+- (void)umengSocial
+{
+    //友盟统计
+    UMConfigInstance.appKey = UmengAppkey;
+    UMConfigInstance.channelId = @"";
+    UMConfigInstance.eSType = E_UM_NORMAL; // 仅适用于游戏场景
+    UMConfigInstance.ePolicy = BATCH;
+    [MobClick startWithConfigure:UMConfigInstance];
+    
+#ifdef DEBUG
+    [MobClick setLogEnabled:YES];
+#endif
+    [MobClick setLogEnabled:YES];
+    //使用友盟统计
+    
+    [UMSocialData setAppKey:UmengAppkey];
+    
+    //打开调试log的开关
+    [UMSocialData openLog:NO];
+    
+    //打开新浪微博的SSO开关，设置新浪微博回调地址，这里必须要和你在新浪微博后台设置的回调地址一致。需要 #import "UMSocialSinaSSOHandler.h"
+    [UMSocialSinaSSOHandler openNewSinaSSOWithAppKey:SinaAppKey secret:SinaAppSecret RedirectURL:RedirectUrl];
+    
+    //设置分享到QQ空间的应用Id，和分享url 链接
+    [UMSocialQQHandler setQQWithAppId:QQAPPID appKey:QQAPPKEY url:AppDownloadUrl];
+    
+    //设置支持没有客户端情况下使用SSO授权
+    [UMSocialQQHandler setSupportWebView:YES];
+    
+    //设置微信AppId，设置分享url，默认使用友盟的网址
+    [UMSocialWechatHandler setWXAppId:WXAPPID appSecret:WXAPPSECRET url:AppDownloadUrl];
+    
+    NSArray *snsNames = @[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToQzone,UMShareToQQ];
+    //UMShareToSina
+    [UMSocialConfig hiddenNotInstallPlatforms:snsNames];
+    
+}
+
 
 #pragma mark - 通知处理
 
@@ -404,35 +445,37 @@
     
     DDLOG(@"openURL------ %@",url);
     
-    //当支付宝客户端在操作时,商户 app 进程在后台被结束,只能通过这个 block 输出支付 结果。
-    
-    //如果极简开发包不可用,会跳转支付宝钱包进行支付,需要将支付宝钱包的支付结果回传给开 发包
-    if ([url.host isEqualToString:@"safepay"]) {
-        [[AlipaySDK defaultService] processOrderWithPaymentResult:url
-                                                  standbyCallback:^(NSDictionary *resultDic) {
-                                                      
-                                                      DDLOG(@"ali result = %@",resultDic);
-                                                      
-                                                      
-                                                  }]; }
-    
-    if ([url.host isEqualToString:@"platformapi"]){//支付宝钱包快登授权返回 authCode
-        [[AlipaySDK defaultService] processAuthResult:url standbyCallback:^(NSDictionary *resultDic) {
-            
-            DDLOG(@"ali result = %@",resultDic);
-            
-        }];
-    }
-    
-    //来自微信
-    if ([url.host isEqualToString:@"pay"]) {
+    BOOL result = [UMSocialSnsService handleOpenURL:url];
+    if (result == FALSE) {
+        //调用其他SDK，例如支付宝SDK等
         
-        return  [WXApi handleOpenURL:url delegate:self];
+        //当支付宝客户端在操作时,商户 app 进程在后台被结束,只能通过这个 block 输出支付 结果。
+        
+        //如果极简开发包不可用,会跳转支付宝钱包进行支付,需要将支付宝钱包的支付结果回传给开 发包
+        if ([url.host isEqualToString:@"safepay"]) {
+            [[AlipaySDK defaultService] processOrderWithPaymentResult:url
+                                                      standbyCallback:^(NSDictionary *resultDic) {
+                                                          
+                                                          DDLOG(@"ali result = %@",resultDic);
+                                                          
+                                                          
+                                                      }]; }
+        
+        if ([url.host isEqualToString:@"platformapi"]){//支付宝钱包快登授权返回 authCode
+            [[AlipaySDK defaultService] processAuthResult:url standbyCallback:^(NSDictionary *resultDic) {
+                
+                DDLOG(@"ali result = %@",resultDic);
+                
+            }];
+        }
+        
+        //来自微信
+        if ([url.host isEqualToString:@"pay"]) {
+            
+            return  [WXApi handleOpenURL:url delegate:self];
+        }
     }
-    
-//    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
-    
-    return YES;
+    return result;
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
@@ -1021,6 +1064,94 @@
     }
     [unVc pushViewController:targetViewController animated:YES];
 }
+
+
+
+#pragma mark - go健康接口测试
+
+//- (void)testNetwork
+//{
+////    http://121.40.167.147:3005/v1/productions?appId=gjk001061?&nonceStr=09DS2LSDKFSF6CQ2502SI8ZNMTM67VS&sign=D1A831FA8945B84C15D041AC3EA556C9
+//    
+//    NSString *server = @"http://121.40.167.147:3005/v1/productions?appId=gjk001061";
+//    
+//    //①对参数按照key=value的格式,并按照参数名ASCII字典序排序如下
+//    NSString *stringA = @"appId=gjk001061&nonceStr=09DS2LSDKAAA6CQ2502SI8ZNMTM99VS";
+//    
+//    //②拼接API密钥(appSecret)
+//    NSString *stringSignTemp = [NSString stringWithFormat:@"%@&key=3b3f2a13cc7b59830ca819c38e7f294897b3978465d38a8b675b6a2a9474d50e",stringA];
+//    
+//    //③进行MD5运算,再将得到的字符串所有字符转换为大写,得到sign值signValue
+//    stringSignTemp = [LTools md5:stringSignTemp];
+//    
+//    NSString *sign = [stringSignTemp uppercaseString];//转大写
+//    
+//    NSString *api = [NSString stringWithFormat:@"%@",server];
+//    
+//    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:api]];
+//    
+//    NSDictionary *params = @{@"nonceStr":@"09DS2LSDKAAA6CQ2502SI8ZNMTM99VS",
+//                             @"sign":sign};
+//    
+//    __weak typeof(self)weakSelf = self;
+//    
+//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+//        NSLog(@"success result %@",result);
+//        
+//        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
+//        //        [weakTable reloadData:temp pageSize:10];
+//        
+//    } failBlock:^(NSDictionary *result) {
+//        
+//        NSLog(@"fail result %@",result);
+//        NSLog(@"%@",result[@"msg"]);
+//        
+//    }];
+//}
+
+
+- (void)testNetwork
+{
+    //    http://121.40.167.147:3005/v1/productions?appId=gjk001061?&nonceStr=09DS2LSDKFSF6CQ2502SI8ZNMTM67VS&sign=D1A831FA8945B84C15D041AC3EA556C9
+    
+    NSString *nonceStr = @"";
+    NSString *appid = @"gjk001061";
+    NSString *appSecret = @"3b3f2a13cc7b59830ca819c38e7f294897b3978465d38a8b675b6a2a9474d50e";
+    
+    //①对参数按照key=value的格式,并按照参数名ASCII字典序排序如下
+    NSString *stringA = @"appId=gjk001061&nonceStr=09DS2LSDKAAA6CQ2502SI8ZNMTM99VS";
+    
+    //②拼接API密钥(appSecret)
+    NSString *stringSignTemp = [NSString stringWithFormat:@"%@&key=3b3f2a13cc7b59830ca819c38e7f294897b3978465d38a8b675b6a2a9474d50e",stringA];
+    
+    //③进行MD5运算,再将得到的字符串所有字符转换为大写,得到sign值signValue
+    stringSignTemp = [LTools md5:stringSignTemp];
+    
+    NSString *sign = [stringSignTemp uppercaseString];//转大写
+    
+    NSString *server = @"http://121.40.167.147:3005/v1/productions";
+    NSString *api = [NSString stringWithFormat:@"%@?appId=%@&nonceStr=%@&sign=%@",server,@"gjk001061",@"09DS2LSDKAAA6CQ2502SI8ZNMTM99VS",sign];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:api]];
+    
+    NSDictionary *params = @{CUSTOM_REQUEST:request};
+    
+    __weak typeof(self)weakSelf = self;
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodCustom api:nil parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        
+        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
+        //        [weakTable reloadData:temp pageSize:10];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        NSLog(@"%@",result[@"msg"]);
+        
+    }];
+}
+
 
 
 @end

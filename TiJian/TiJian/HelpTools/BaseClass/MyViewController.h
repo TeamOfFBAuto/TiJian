@@ -23,7 +23,8 @@ typedef enum
 {
     MyViewControllerRightbuttonTypeNull = 0,//空
     MyViewControllerRightbuttonTypeText ,//文字
-    MyViewControllerRightbuttonTypeOther //图片
+    MyViewControllerRightbuttonTypeOther, //图片
+    MyViewControllerRightbuttonTypeDouble //右侧两个按钮
     
 }MyViewControllerRightbuttonType;
 
@@ -49,6 +50,8 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @property(nonatomic,strong)NSString * rightImageName;//图片名字
 @property(nonatomic,strong)UIImage * rightImage;//image
+@property(nonatomic,strong)UIImage * rightImage2;//image 右1
+
 
 @property(nonatomic,copy)UpdateParamsBlock updateParamsBlock;//用户视图间数据回调
 @property(nonatomic,assign)BOOL lastPageNavigationHidden;//上一级是否隐藏navigationBar
@@ -58,6 +61,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 @property(nonatomic,retain)UIView *resultView;//结果view
 
 @property(nonatomic,strong)UIButton *right_button;//右边文字button
+@property(nonatomic,strong)UIButton *right_button2;//右边button,左1
 
 
 -(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType WithRightButtonType:(MyViewControllerRightbuttonType)rightType;
@@ -75,6 +79,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 -(void)leftButtonTap:(UIButton *)sender;
 
 -(void)rightButtonTap:(UIButton *)sender;
+-(void)rightButtonTap2:(UIButton *)sender;
 
 
 @end

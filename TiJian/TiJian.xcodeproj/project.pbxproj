@@ -103,6 +103,8 @@
 		131483091CEF268F00D04305 /* JSPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 131483081CEF268F00D04305 /* JSPatch.framework */; };
 		1314830B1CEF26AD00D04305 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1314830A1CEF26AD00D04305 /* JavaScriptCore.framework */; };
 		13148E461CCF089D00829628 /* refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13148E451CCF089D00829628 /* refresh@2x.png */; };
+		131529751CF551EA001A2705 /* share3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131529741CF551EA001A2705 /* share3@2x.png */; };
+		131529791CF58F8B001A2705 /* icon180.png in Resources */ = {isa = PBXBuildFile; fileRef = 131529781CF58F8B001A2705 /* icon180.png */; };
 		1316DF241C2AAB4C00864949 /* report_tianjia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1316DF231C2AAB4C00864949 /* report_tianjia@2x.png */; };
 		131A176F1BF1D20E00B12D2F /* RightTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */; };
 		131A17761BF3309800B12D2F /* CompanyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 131A17751BF3309800B12D2F /* CompanyCell.m */; };
@@ -760,6 +762,8 @@
 		131483081CEF268F00D04305 /* JSPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JSPatch.framework; sourceTree = "<group>"; };
 		1314830A1CEF26AD00D04305 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		13148E451CCF089D00829628 /* refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh@2x.png"; sourceTree = "<group>"; };
+		131529741CF551EA001A2705 /* share3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share3@2x.png"; sourceTree = "<group>"; };
+		131529781CF58F8B001A2705 /* icon180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon180.png; sourceTree = "<group>"; };
 		1316DF231C2AAB4C00864949 /* report_tianjia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_tianjia@2x.png"; sourceTree = "<group>"; };
 		131A176D1BF1D20E00B12D2F /* RightTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightTextFieldCell.h; sourceTree = "<group>"; };
 		131A176E1BF1D20E00B12D2F /* RightTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightTextFieldCell.m; sourceTree = "<group>"; };
@@ -1995,6 +1999,8 @@
 				135E3D481C9BEA7000B5F0FD /* feedback_tianjia@2x.png */,
 				13F9D10C1C2FAD1300993738 /* home_button_top@2x.png */,
 				E359F7021C27F8D1005CB719 /* gouwuche-kong@2x.png */,
+				131529741CF551EA001A2705 /* share3@2x.png */,
+				131529781CF58F8B001A2705 /* icon180.png */,
 				139333441BE0DF3E00B4628B /* 个性定制 */,
 			);
 			path = Images;
@@ -3446,6 +3452,7 @@
 				E390A94F1C28FB4600C76DEA /* roundgray@2x.png in Resources */,
 				E3D8AE4F1BF6203F003AE2E3 /* youhuiquan_g@2x.png in Resources */,
 				E3D8AE511BF6203F003AE2E3 /* youhuiquan_y@2x.png in Resources */,
+				131529791CF58F8B001A2705 /* icon180.png in Resources */,
 				1301A24E1C292C180041FF8D /* baocun@2x.png in Resources */,
 				1303C35C1BEB0D7100700847 /* personal_youhuiquan_yishiyong@2x.png in Resources */,
 				13F8C5711C0563FB004C3FC7 /* 19_3@2x.png in Resources */,
@@ -3527,6 +3534,7 @@
 				E352F9191C0B91680037E4AE /* kefu_pd@2x.png in Resources */,
 				E3796D211BFB389E004B63F7 /* shoppingcart_normal@2x.png in Resources */,
 				E390A94B1C28FA6B00C76DEA /* storehome_gouwuche@2x.png in Resources */,
+				131529751CF551EA001A2705 /* share3@2x.png in Resources */,
 				131482FC1CEF0FEF00D04305 /* UMSnsAccountViewController.xib in Resources */,
 				139333B11BE0DF3E00B4628B /* 16_4@2x.png in Resources */,
 				13F2421A1BF4925A002C9D81 /* yuyue_jiantou_up@2x.png in Resources */,
@@ -4016,8 +4024,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -4039,7 +4047,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "fc142d0f-f2d7-44c0-baa4-7730e41a5f01";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4061,8 +4069,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -4077,7 +4085,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "fc142d0f-f2d7-44c0-baa4-7730e41a5f01";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4115,7 +4123,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "29f760da-52c6-4bd4-9e18-15a34e3c4d44";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4152,7 +4160,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "29f760da-52c6-4bd4-9e18-15a34e3c4d44";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;
@@ -4161,12 +4169,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				INFOPLIST_FILE = TiJianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "fc142d0f-f2d7-44c0-baa4-7730e41a5f01";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TiJian.app/TiJian";
 			};
 			name = Debug;
@@ -4175,13 +4183,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				INFOPLIST_FILE = TiJianTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "fc142d0f-f2d7-44c0-baa4-7730e41a5f01";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TiJian.app/TiJian";
 			};
 			name = Release;
@@ -4189,13 +4197,13 @@
 		13F1F2961BBA78EE00885D31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				INFOPLIST_FILE = TiJianUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "fc142d0f-f2d7-44c0-baa4-7730e41a5f01";
 				TEST_TARGET_NAME = TiJian;
 				USES_XCTRUNNER = YES;
 			};
@@ -4204,13 +4212,13 @@
 		13F1F2971BBA78EE00885D31 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				INFOPLIST_FILE = TiJianUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
+				PROVISIONING_PROFILE = "fc142d0f-f2d7-44c0-baa4-7730e41a5f01";
 				TEST_TARGET_NAME = TiJian;
 				USES_XCTRUNNER = YES;
 			};

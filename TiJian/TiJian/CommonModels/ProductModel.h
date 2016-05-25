@@ -68,7 +68,6 @@
 @property(nonatomic,strong)NSString *coupon_id;
 @property(nonatomic,strong)NSString *uc_id;//代金券coupon_id升级-----后台用于获取绑定用户性别
 @property(nonatomic,strong)NSString *vouchers_price;//代金券金额
-//@property(nonatomic,strong)NSString *description;
 @property(nonatomic,strong)NSString *deadline;
 @property(nonatomic,strong)NSString *product_total_num;
 @property(nonatomic,strong)NSString *product_price;
@@ -95,6 +94,7 @@
 @property(nonatomic,retain)NSString *package_name;
 
 //详情web链接
-@property(nonatomic,retain)NSString *info_url;//详情web链接
+@property(nonatomic,retain)NSString *info_url;//详情web链接 客服用
+@property(nonatomic,strong)NSString *share_url;//分享wap页 分享用
 
 @end

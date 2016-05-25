@@ -19,22 +19,16 @@
 
 //BunleIdentifier
 #define AppBunleIdentifier [[NSBundle mainBundle] bundleIdentifier]
-
 //系统9.0之后
 #define IOS9_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"9.0"] != NSOrderedAscending )
-
 //系统8.0之后
 #define IOS8_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"8.0"] != NSOrderedAscending )
-
 //系统7.0之后
 #define IOS7_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"7.0"] != NSOrderedAscending )
 
 #define iPhone4 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
-
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
-
 #define iPhone6PLUS ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) : NO)
-
 #define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 
 //==============================打印类、方法
@@ -106,8 +100,13 @@
 #define USER_READED_NEWESTMSGID @"readedNewestMsgId"//存储上次最新的活动id,用于判断是否需要自动打开活动轮播页
 
 #define USERCOMMONLYUSEDADDRESS @"USERCOMMONLYUSEDADDRESS"//用户常用地址
-
 #define USERCOMMONLYUSEDSEARCHWORD @"USERCOMMONLYUSEDSEARCHWORD"//用户常用搜索
+
+//分享相关
+#define Share_title @"shareTitle" //分享标题
+#define Share_imageUrl @"shareImageUrl" //分享图片地址
+#define Share_content @"shareContent" //分享摘要
+
 
 //两个登陆标识
 #define LOGIN_SERVER_STATE @"user_login_state" //服务器 no是未登陆  yes是已登陆
@@ -129,6 +128,8 @@
 //***************************** 三方平台appkey **********************************
 
 #define AppStore_Appid @"1065404194"//appStore 海马医生
+
+#define AppDownloadUrl @"http://a.app.qq.com/o/simple.jsp?pkgname=com.medical.app"//应用宝下载地址,可自动跳转至appStore
 
 //友盟
 #define UmengAppkey @"562455d167e58ede5000b699"//正式 umeng后 mobile@jiruijia.com

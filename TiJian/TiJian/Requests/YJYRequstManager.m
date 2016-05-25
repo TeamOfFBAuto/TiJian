@@ -77,7 +77,7 @@
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript", nil];
     // 设置超时时间
     [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
-    manager.requestSerializer.timeoutInterval = 10.f;
+    manager.requestSerializer.timeoutInterval = 15.f;
     [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
     
     AFHTTPRequestOperation *requestOpertation;
@@ -271,7 +271,7 @@
     //隐藏菊花
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
-    DDLOG(@"failure %@",operation.responseString);
+    DDLOG(@"failure:%@ Url:%@",operation.responseString,operation.request.URL);
     NSString *errInfo = @"网络有问题,请检查网络";
     switch (error.code) {
         case NSURLErrorNotConnectedToInternet:

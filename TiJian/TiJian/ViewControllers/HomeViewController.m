@@ -1439,7 +1439,7 @@
  */
 - (void)pushToHealthNews
 {
-    [MiddleTools pushToWebFromViewController:self weburl:self.articleModel.url title:nil moreInfo:YES hiddenBottom:YES];
+    [MiddleTools pushToWebFromViewController:self weburl:self.articleModel.url title:nil moreInfo:NO hiddenBottom:YES];
 }
 /**
  *  资讯列表
@@ -1579,11 +1579,20 @@
 {
     [self getHealthArticlelist];
 }
+
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     ArticleModel *article = _table.dataArray[indexPath.row];
-    [MiddleTools pushToWebFromViewController:self weburl:article.url title:nil moreInfo:YES hiddenBottom:YES];
+    
+    NSString *shareImageUrl = article.cover_pic;
+    NSString *shareTitle = article.title;
+    NSString *shareContent = article.summary;
+    NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
+                             Share_title:shareTitle,
+                             Share_content:shareContent};
+    [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES];
 }
+
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     return 76.f;

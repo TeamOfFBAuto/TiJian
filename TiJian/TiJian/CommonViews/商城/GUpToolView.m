@@ -26,6 +26,47 @@
     return self;
 }
 
+-(id)initWithTitles:(NSArray *)titles
+            images:(NSArray *)images
+     toolViewBlock:(upToolViewBlock)upToolViewBlock
+{
+    self = [super initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
+    if (self) {
+        
+        [self setFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
+        self.backgroundColor = [UIColor whiteColor];
+        
+        NSArray *titleArray = titles;
+        NSArray *imageArray = images;
+        _upToolViewBlock2 = upToolViewBlock;
+        
+        int count = (int)titles.count;
+        
+        if (count > 4) {
+            
+            count = 4;
+            DDLOG(@"目前最多支持 4个");
+        }
+        
+        for (int i = 0; i < count; i ++) {
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            CGFloat w = DEVICE_WIDTH / count;
+            [btn setTitleColor:RGBCOLOR(152, 153, 154) forState:UIControlStateNormal];
+            btn.titleLabel.font = [UIFont systemFontOfSize:12];
+            btn.tag = 20 + i;
+            [btn setFrame:CGRectMake(i*w, 0, w, 50)];
+            [self addSubview:btn];
+            [btn setTitle:titleArray[i] forState:UIControlStateNormal];
+            [btn setImage:imageArray[i] forState:UIControlStateNormal];
+            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -25, -25, 0)];
+            [btn setImageEdgeInsets:UIEdgeInsetsMake(5, 18, 25, 0)];
+            [btn addTarget:self action:@selector(upToolBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+    
+    return self;
+}
+
 
 -(void)creat4Btn{
     [self setFrame:CGRectMake(0, -50, DEVICE_WIDTH, 50)];
@@ -103,9 +144,20 @@
     _upToolViewBlock = upToolViewBlock;
 }
 
+-(void)setUpToolViewBlock2:(upToolViewBlock)upToolViewBlock2
+{
+    _upToolViewBlock2 = upToolViewBlock2;
+}
 
 -(void)upToolBtnClicked:(UIButton*)sender{
-    self.upToolViewBlock(sender.tag);
+    if (_upToolViewBlock) {
+        self.upToolViewBlock(sender.tag);
+    }
+    
+    //只传递 第几个,不传递tag值
+    if (_upToolViewBlock2) {
+        _upToolViewBlock2(sender.tag - 20);
+    }
 }
 
 

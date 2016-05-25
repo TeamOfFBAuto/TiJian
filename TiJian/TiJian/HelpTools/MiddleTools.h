@@ -28,6 +28,8 @@ typedef NS_ENUM(NSInteger ,SourceType) {
 
 @interface MiddleTools : NSObject
 
++ (id)shareInstance;
+
 /**
  *  开启客服聊天
  *
@@ -58,12 +60,27 @@ typedef NS_ENUM(NSInteger ,SourceType) {
  *  @param viewController
  *  @param weburl         访问地址url
  *  @param title          标题
- *  @param moreInfo       是否显示右上角更多按钮
+ *  @param moreInfo       右侧是否显示两个按钮
  *  @param hiddenBottom   隐藏底部tabbar
  */
 + (void)pushToWebFromViewController:(UIViewController *)viewController
                              weburl:(NSString *)weburl
                               title:(NSString *)title
+                           moreInfo:(BOOL)moreInfo
+                       hiddenBottom:(BOOL)hiddenBottom;
+
+/**
+ *  内置浏览器
+ *
+ *  @param viewController
+ *  @param weburl         访问地址url
+ *  @param extensionParams  根据需要拓展参数
+ *  @param moreInfo       右侧是否显示两个按钮
+ *  @param hiddenBottom   隐藏底部tabbar
+ */
++ (void)pushToWebFromViewController:(UIViewController *)viewController
+                             weburl:(NSString *)weburl
+                    extensionParams:(NSDictionary *)extensionParams
                            moreInfo:(BOOL)moreInfo
                        hiddenBottom:(BOOL)hiddenBottom;
 
@@ -77,5 +94,38 @@ typedef NS_ENUM(NSInteger ,SourceType) {
 + (void)pushToProductDetailWithProductId:(NSString *)productId
                           viewController:(UIViewController *)viewController
                                    extendParams:(NSDictionary *)extendParams;
+
+#pragma mark - 分享
+
+/**
+ *  分享 图片链接url
+ *
+ *  @param controller
+ *  @param shareImageUrl  分享图片链接url
+ *  @param shareTitle   标题
+ *  @param shareContent 摘要
+ *  @param linkUrl      链接
+ */
+
+-(void)shareFromViewController:(UIViewController *)controller
+                  withImageUrl:(NSString *)shareImageUrl
+                    shareTitle:(NSString *)shareTitle
+                  shareContent:(NSString *)shareContent
+                       linkUrl:(NSString *)linkUrl;
+/**
+ *  分享 UIImage
+ *
+ *  @param controller
+ *  @param shareImage   分享UIImage对象
+ *  @param shareTitle   标题
+ *  @param shareContent 摘要
+ *  @param linkUrl      链接
+ */
+- (void)shareFromViewController:(UIViewController *)controller
+                      withImage:(UIImage *)shareImage
+                     shareTitle:(NSString *)shareTitle
+                   shareContent:(NSString *)shareContent
+                        linkUrl:(NSString *)linkUrl;
+
 
 @end

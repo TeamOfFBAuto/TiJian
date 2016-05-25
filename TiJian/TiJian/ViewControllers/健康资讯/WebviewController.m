@@ -13,14 +13,19 @@
 #import "NJKWebViewProgressView.h"
 #import "NJKWebViewProgress.h"
 #import "AddPeopleViewController.h"
+#import "UMSocial.h"
 
-@interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate,NJKWebViewProgressDelegate>
+@interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate,NJKWebViewProgressDelegate,UMSocialUIDelegate>
 {
 //    UIView *_progressview;
     NJKWebViewProgressView *_progressView;
     NJKWebViewProgress *_progressProxy;
     NSString *_targetFamilyUid;
     NSString *_targetUid;
+    
+    NSString *_shareUrl;
+    NSString *_shareContent;
+    NSString *_shareTitle;
 }
 
 @property(nonatomic,retain)UIWebView *webView;
@@ -50,8 +55,9 @@
     // Do any additional setup after loading the view.
     
     if (self.moreInfo) {
-        self.rightImageName = @"article_more";
-        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+        self.rightImage = [UIImage imageNamed:@"ios7_refresh4139"];
+        self.rightImage2 = [UIImage imageNamed:@"share3"];
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeDouble];
     }else
     {
         self.rightImageName = @"ios7_refresh4139.png";
@@ -232,13 +238,18 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
-    if (self.moreInfo) {
-        ArticleListController *article = [[ArticleListController alloc]init];
-        [self.navigationController pushViewController:article animated:YES];
-    }else
-    {
+//    if (self.moreInfo) {
+//        ArticleListController *article = [[ArticleListController alloc]init];
+//        [self.navigationController pushViewController:article animated:YES];
+//    }else
+//    {
         [_webView reload];
-    }
+//    }
+}
+
+-(void)rightButtonTap2:(UIButton *)sender
+{
+    [[MiddleTools shareInstance]shareFromViewController:self withImageUrl:self.extensionParams[Share_imageUrl]  shareTitle:self.extensionParams[Share_title] shareContent:self.extensionParams[Share_content] linkUrl:self.webUrl];
 }
 
 /**
@@ -346,6 +357,14 @@
     if (self.updateParamsBlock) {
         self.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});//加载完成
     }
+    
+//    NSString *title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+//
+//    _shareTitle = title;
+//    
+//    NSString *imageUrl = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('img')[0].getAttribute('src')"];
+//    
+//    NSLog(@"image %@ %@",title,imageUrl);
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
 {

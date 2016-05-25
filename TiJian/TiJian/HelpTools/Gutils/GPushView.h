@@ -31,6 +31,7 @@
 @property(nonatomic,strong)NSArray *brand_city_list;
 @property(nonatomic,strong)NSDictionary *shaixuanDic;
 
+@optional
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic;
 
 -(void)therightSideBarDismiss;
