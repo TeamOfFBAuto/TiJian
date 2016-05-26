@@ -98,7 +98,7 @@
     NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
                              Share_title:shareTitle,
                              Share_content:shareContent};
-    [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES];
+    [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:nil];
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {

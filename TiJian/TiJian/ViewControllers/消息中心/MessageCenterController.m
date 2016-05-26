@@ -38,7 +38,8 @@
     self.myTitle = @"消息中心";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    NSArray *titles = @[@"通知",@"客服",@"活动"];
+//    NSArray *titles = @[@"通知",@"客服",@"活动"];
+    NSArray *titles = @[@"通知",@"客服"];
     int count = (int)titles.count;
     CGFloat left = 30.f;
     CGFloat width = (DEVICE_WIDTH - left * 2) / count;
@@ -132,7 +133,7 @@
     [self controlSelectedButtonTag:100];
     
     //活动未读数量
-    [self getUnreadActivityNum];
+//    [self getUnreadActivityNum];
     
 }
 
@@ -444,18 +445,22 @@
     }
     //活动详情
     else if (tableView.tag == TableView_tag_Activity){
+        
         MessageModel *aModel = tableView.dataArray[indexPath.row];
-        WebviewController *web = [[WebviewController alloc]init];
-        web.webUrl = aModel.url;
-        web.navigationTitle = @"活动详情";
-         @WeakObj(self);
-        web.updateParamsBlock = ^(NSDictionary *params){
+        NSString *shareImageUrl = aModel.pic;
+        NSString *shareTitle = aModel.title;
+        NSString *shareContent = aModel.summary;
+        NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
+                                 Share_title:shareTitle,
+                                 Share_content:shareContent};
+        @WeakObj(self);
+        [MiddleTools pushToWebFromViewController:self weburl:aModel.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:^(NSDictionary *params) {
+            //更新未读状态
             //更新未读状态
             if ([params[@"result"]boolValue]) {
                 [Weakself updateActivityStatusWithMsgId:aModel.msg_id];
             }
-        };
-        [self.navigationController pushViewController:web animated:YES];
+        }];
     }
 }
 

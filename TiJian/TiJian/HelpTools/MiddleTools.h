@@ -77,12 +77,15 @@ typedef NS_ENUM(NSInteger ,SourceType) {
  *  @param extensionParams  根据需要拓展参数
  *  @param moreInfo       右侧是否显示两个按钮
  *  @param hiddenBottom   隐藏底部tabbar
+ *  @param updateParamsBlock   方便数据回调block
+ *  @param
  */
 + (void)pushToWebFromViewController:(UIViewController *)viewController
                              weburl:(NSString *)weburl
                     extensionParams:(NSDictionary *)extensionParams
                            moreInfo:(BOOL)moreInfo
-                       hiddenBottom:(BOOL)hiddenBottom;
+                       hiddenBottom:(BOOL)hiddenBottom
+                  updateParamsBlock:(UpdateParamsBlock)updateParamsBlock;
 
 /**
  *  跳转至单品详情

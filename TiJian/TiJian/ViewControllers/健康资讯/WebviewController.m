@@ -65,7 +65,6 @@
     }
     
     self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-//    self.webView.delegate = self;
     self.webView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [self.view addSubview:_webView];
     self.webView.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag; // 当拖动时移除键盘
@@ -95,8 +94,6 @@
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeDouble WithRightButtonType:MyViewControllerRightbuttonTypeOther];
         
         //导航栏左侧
-        
-        
                NSString *title = @"";
         switch (self.type) {
             case 1:
@@ -163,7 +160,11 @@
     {
         [self netWorkForUrl:self.webUrl];
         self.myTitle = self.navigationTitle ? :  @"健康资讯";
-
+        
+        NSString *title = self.extensionParams[Share_title];
+        if (![LTools isEmpty:title]) {
+            self.myTitle = title;
+        }
     }
 }
 //- (void)test:(CGFloat)x
@@ -335,11 +336,12 @@
     //单品链接
     if ([relativeUrl rangeOfString:@"product_id"].length > 0) {
         
-        NSArray *arr = [relativeUrl componentsSeparatedByString:@":"];
+        NSArray *arr = [relativeUrl componentsSeparatedByString:@"product_id:"];
         if (arr.count > 1) {
             NSString *productId = [arr lastObject];
-            [MiddleTools pushToProductDetailWithProductId:productId viewController:self extendParams:nil];
-            
+            if (![LTools isEmpty:productId]) {
+                [MiddleTools pushToProductDetailWithProductId:productId viewController:self extendParams:nil];
+            }
             return NO;
         }
     }

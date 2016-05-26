@@ -133,17 +133,21 @@
  *  @param extensionParams  根据需要拓展参数
  *  @param moreInfo       右侧是否显示两个按钮
  *  @param hiddenBottom   隐藏底部tabbar
+ *  @param updateParamsBlock   方便数据回调block
+ *  @param
  */
 + (void)pushToWebFromViewController:(UIViewController *)viewController
                              weburl:(NSString *)weburl
                     extensionParams:(NSDictionary *)extensionParams
                            moreInfo:(BOOL)moreInfo
                        hiddenBottom:(BOOL)hiddenBottom
+                updateParamsBlock:(UpdateParamsBlock)updateParamsBlock
 {
     WebviewController *web = [[WebviewController alloc]init];
     web.webUrl = weburl;
     web.extensionParams = extensionParams;
     web.moreInfo = moreInfo;
+    web.updateParamsBlock = updateParamsBlock;
     web.hidesBottomBarWhenPushed = hiddenBottom;
     [viewController.navigationController pushViewController:web animated:YES];
 }
@@ -222,6 +226,9 @@
     _shareTitle = shareTitle;
     _shareContent = shareContent;
     _shareUrl = linkUrl;
+    if ([LTools isEmpty:linkUrl]) {
+        _shareUrl = AppDownloadUrl;
+    }
     
     NSArray *snsNames = @[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToQQ,UMShareToQzone,UMShareToSina];
     //调用快速分享接口

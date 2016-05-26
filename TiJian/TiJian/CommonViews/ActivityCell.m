@@ -113,6 +113,7 @@
     return height;
 }
 
+
 -(void)setCellWithModel:(MessageModel *)aModel
 {
     
@@ -142,7 +143,9 @@
         dis = 14.f;
     }
     self.coverImageView.height = height;
-    [self.coverImageView l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
+    [self.coverImageView sd_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
+    self.coverImageView.contentMode = UIViewContentModeCenter;
+    _coverImageView.clipsToBounds = YES;
     
     _contentLabel.top = self.coverImageView.bottom + dis;
     
@@ -160,5 +163,186 @@
     _bgView.height = _toolView.bottom;
 
 }
+
+#pragma mark - 固定宽度和 比例16:10
+///**
+// *  计算cell高度
+// *
+// *  @param existImage 是否存在封面
+// *  @param content    摘要
+// *
+// *  @return
+// */
+//+ (CGFloat)heightForCellWithImage:(BOOL)existImage
+//                          content:(NSString *)content
+//{
+//    CGFloat radio = 8.f/5.f;
+//
+//    CGFloat width = DEVICE_WIDTH - 20 - 20;
+//
+//    //时间top:25 bottom:15 height:20、标题 height:35
+//    CGFloat height = 25 + 20 + 15 + 35;
+//    //封面 摘要封面间距 14
+//    if (existImage) {
+//        height += width / radio;
+//        height += 14.;
+//    }
+//    //摘要 bottom:11
+//    CGFloat height_content = [LTools heightForText:content width:width font:13.f];
+//    height += height_content;
+//    //底部查看详情 高:31  与摘间距11
+//    height += 31;
+//    height += 11;
+//
+//    NSLog(@"---%f",height);
+//    return height;
+//}
+
+
+//-(void)setCellWithModel:(MessageModel *)aModel
+//{
+//
+//    self.timeLabel.text = [LTools showIntervalTimeWithTimestamp:aModel.send_time withFormat:@"yyyy年MM月dd日"];
+//
+//    self.titleLabel.text = aModel.title;
+//    NSString *content = aModel.content;
+//    self.contentLabel.text = content;
+//    CGFloat width = DEVICE_WIDTH - 20 - 20;
+//    CGFloat height_content = [LTools heightForText:content width:width font:13.f];
+//    self.contentLabel.height = height_content;
+//
+//    BOOL existImage;
+//    if (aModel.pic && [aModel.pic hasPrefix:@"http"]) {
+//        existImage = YES;
+//    }
+//
+//    CGFloat radio = 8.f/5.f;
+//
+//    //时间top:25 bottom:15 height:20、标题 height:35
+//    CGFloat height = 0.f;
+//    //封面 摘要封面间距 14
+//    CGFloat dis = 0.f;
+//    if (existImage) {
+//
+//        height = width / radio;
+//        dis = 14.f;
+//    }
+//    self.coverImageView.height = height;
+//    [self.coverImageView l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
+//
+//    _contentLabel.top = self.coverImageView.bottom + dis;
+//
+//    self.toolView.top = _contentLabel.bottom + 11;
+//    //未读
+//    if ([aModel.is_read intValue] == 1) {
+//        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+//        self.contentLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+//    }else if ([aModel.is_read intValue] == 2){
+//        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
+//        self.contentLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
+//    }
+//
+//    //调整背景高度
+//    _bgView.height = _toolView.bottom;
+//
+//}
+
+#pragma mark - 固定高度方式
+/**
+ *  图片固定高度 适应宽度
+ *
+ *  @param aModel
+ */
+//-(void)setCellWithModel:(MessageModel *)aModel
+//{
+//
+//    self.timeLabel.text = [LTools showIntervalTimeWithTimestamp:aModel.send_time withFormat:@"yyyy年MM月dd日"];
+//
+//    self.titleLabel.text = aModel.title;
+//    NSString *content = aModel.content;
+//
+//    self.contentLabel.text = content;
+//    CGFloat width = DEVICE_WIDTH - 20 - 20;
+//    CGFloat radio = 8.f/5.f;
+//    CGFloat height_const = width / radio;//固定高度
+//    self.coverImageView.height = height_const;
+//
+//    CGFloat height_content = [LTools heightForText:content width:width font:13.f];
+//    self.contentLabel.height = height_content;
+//
+//    BOOL existImage;
+//    if (aModel.pic && [aModel.pic hasPrefix:@"http"]) {
+//        existImage = YES;
+//    }
+//
+//    //时间top:25 bottom:15 height:20、标题 height:35
+//    //封面 摘要封面间距 14
+//
+//    radio = [aModel.pic_width floatValue] / [aModel.pic_height floatValue];
+//    CGFloat needWidth = 0.f;
+//    CGFloat dis = 0.f;
+//    if (existImage) {
+//
+//        needWidth = radio * height_const;
+//        dis = 14.f;
+//    }
+//
+//    self.coverImageView.width = needWidth;
+//    self.coverImageView.centerX = width/2.f;
+//
+//    [self.coverImageView l_setImageWithURL:[NSURL URLWithString:aModel.pic] placeholderImage:DEFAULT_HEADIMAGE];
+//
+//    _contentLabel.top = self.coverImageView.bottom + dis;
+//
+//    self.toolView.top = _contentLabel.bottom + 11;
+//    //未读
+//    if ([aModel.is_read intValue] == 1) {
+//        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+//        self.contentLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+//    }else if ([aModel.is_read intValue] == 2){
+//        self.titleLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
+//        self.contentLabel.textColor = DEFAULT_TEXTCOLOR_TITLE_THIRD;
+//    }
+//
+//    //调整背景高度
+//    _bgView.height = _toolView.bottom;
+//
+//}
+
+/**
+ *  计算cell高度 图片固定高度 适应宽度
+ *
+ *  @param existImage 是否存在封面
+ *  @param content    摘要
+ *
+ *  @return
+ */
+//+ (CGFloat)heightForCellWithImage:(BOOL)existImage
+//                          content:(NSString *)content
+//{
+//    CGFloat radio = 8.f/5.f;
+//
+//    CGFloat width = DEVICE_WIDTH - 20 - 20;
+//
+//    //时间top:25 bottom:15 height:20、标题 height:35
+//    CGFloat height = 25 + 20 + 15 + 35;
+//    //封面 摘要封面间距 14
+//    if (existImage) {
+//
+//        CGFloat height_const = width / radio;//固定高度
+//
+//        height += height_const;
+//        height += 14.;
+//    }
+//    //摘要 bottom:11
+//    CGFloat height_content = [LTools heightForText:content width:width font:13.f];
+//    height += height_content;
+//    //底部查看详情 高:31  与摘间距11
+//    height += 31;
+//    height += 11;
+//
+//    NSLog(@"---%f",height);
+//    return height;
+//}
 
 @end

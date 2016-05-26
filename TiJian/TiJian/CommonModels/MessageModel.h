@@ -15,6 +15,7 @@
 @property(nonatomic,retain)NSString *msg_id;
 @property(nonatomic,retain)NSString *title;
 @property(nonatomic,retain)NSString *content;
+@property(nonatomic,retain)NSString *summary;//摘要
 @property(nonatomic,retain)NSString *type;
 //1、客服消息2、体检提醒消息（提前一天通知） theme_id: 预约详情id
 //3、活动消息

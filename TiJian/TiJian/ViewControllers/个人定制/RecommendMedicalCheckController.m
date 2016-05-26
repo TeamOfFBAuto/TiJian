@@ -23,6 +23,7 @@
     NSString *_result_id;//个性化定制结果id
     NSString *_extention_result_id;//拓展问题结果id
     NSString *_info_url;//详细解读
+    NSString *_share_url;//分享地址
 }
 
 @end
@@ -40,12 +41,11 @@
     // Do any additional setup after loading the view.
     
     self.myTitle = @"专家鉴定";
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    self.rightImage = [UIImage imageNamed:@"share3"];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         
     [self getCustomizationResult];
-    
-//    [self createViewsWithDesc:@"ajdalsjdkasjdkl"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -185,6 +185,12 @@
     [MiddleTools pushToWebFromViewController:self weburl:url title:@"专家详细解读" moreInfo:NO hiddenBottom:NO];
 }
 
+-(void)rightButtonTap:(UIButton *)sender
+{
+    //分享
+    [[MiddleTools shareInstance]shareFromViewController:self withImage:[UIImage imageNamed:@"homepage_banner@2x"]  shareTitle:@"个性化体检，体检从此人人不同" shareContent:@"不错的个性化定制体检,你也快来试试吧！" linkUrl:_share_url ? : @""];
+}
+
 #pragma - mark 网络请求
 /**
  *  同步个性化定制结果
@@ -272,7 +278,7 @@
     NSString *combination_desc = data[@"combination_desc"];//简单解读
     NSArray *attention_project_data = data[@"attention_project_data"];
     _info_url = data[@"info_url"];//详细解读
-    
+    _share_url = data[@"share_url"];//分享地址
     [self createViewsWithDesc:combination_desc];
 
     //推荐套餐

@@ -1224,19 +1224,23 @@
             if (style == ActionStyle_Select) {
                 
                 ActivityModel *aModel = _activityArray[index];
-                WebviewController *web = [[WebviewController alloc]init];
-                web.webUrl = aModel.url;
-                web.navigationTitle = @"活动详情";
-                web.hidesBottomBarWhenPushed = YES;
+                
+                NSString *shareImageUrl = aModel.cover_pic;
+                NSString *shareTitle = aModel.title;
+                NSString *shareContent = aModel.summary;
+                NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
+                                         Share_title:shareTitle,
+                                         Share_content:shareContent};
                 @WeakObj(self);
-                web.updateParamsBlock = ^(NSDictionary *params){
+
+                [MiddleTools pushToWebFromViewController:self weburl:aModel.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:^(NSDictionary *params) {
                     //更新未读状态
                     if ([params[@"result"]boolValue]) {
                         
                         [Weakself getUnreadActivityNum];
                     }
-                };
-                [self.navigationController pushViewController:web animated:YES];
+                }];
+
             }
         }];
     }
@@ -1590,7 +1594,7 @@
     NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
                              Share_title:shareTitle,
                              Share_content:shareContent};
-    [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES];
+    [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:nil];
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
