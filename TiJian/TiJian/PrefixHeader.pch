@@ -41,12 +41,9 @@
 #import "FMDB.h" //数据库三方类
 #import "JSONKit.h"
 #import <RongIMKit/RongIMKit.h> //融云
-//
-////umeng相关
-//#import "MobClick.h"
-//#import "UMSocialWechatHandler.h"
-//#import "UMSocialQQHandler.h"
-//#import "UMSocialSinaHandler.h"
+
+//umeng相关
+#import "MobClick.h"
 
 #import "LoginViewController.h"
 #import "UserInfo.h"

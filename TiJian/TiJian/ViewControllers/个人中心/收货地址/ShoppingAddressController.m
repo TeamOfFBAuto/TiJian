@@ -142,6 +142,10 @@
  */
 - (void)deleteAddress:(int)index
 {
+    if (index >= _table.dataArray.count) {
+        [_table refreshNewData];//刷新数据
+        return;
+    }
     __weak AddressModel *aModel = [_table.dataArray objectAtIndex:index];
 
     __weak typeof(_table)weakTable = _table;

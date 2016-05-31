@@ -402,26 +402,24 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     
-    NSDictionary *dic;
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     
     NSString *url;
     
-    if (self.type == GCouponType_youhuiquan) {//查看优惠券
+    if (self.type == GCouponType_youhuiquan)//查看优惠券
+    {
         url = USER_MYYOUHUIQUANLIST;
-        dic = @{
-                @"authcode":[UserInfo getAuthkey]
-                };
+        [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
+        
     }else if (self.type == GCouponType_use_youhuiquan){//使用优惠券
         url = ORDER_GETYOUHUIQUANLIST;
-        dic = @{
-                @"authcode":[UserInfo getAuthkey],
-                @"coupon":self.coupon
-                };
+        [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
+        [dic safeSetValue:self.coupon forKey:@"coupon"];
+        
     }else if (self.type == GCouponType_daijinquan){//查看代金券
         url = USER_MYDAIJINQUANLIST;
-        dic = @{
-                @"authcode":[UserInfo getAuthkey]
-                };
+        [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
+
     }else if (self.type == GCouponType_use_daijinquan){//使用代金券
         url = ORDER_GETDAIJIQUANLIST;
         
@@ -433,31 +431,33 @@
             
         }
         
+        [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
+        [dic safeSetValue:self.brand_ids forKey:@"brand_ids"];
+        [dic safeSetValue:[NSString stringWithFormat:@"%d",p_nums] forKey:@"product_num"];
         
-        dic = @{
-                @"authcode":[UserInfo getAuthkey],
-                @"brand_ids":self.brand_ids,
-                @"product_num":[NSString stringWithFormat:@"%d",p_nums]
-                };
-        
+//        dic = @{
+//                @"authcode":[UserInfo getAuthkey],
+//                @"brand_ids":self.brand_ids,
+//                @"product_num":[NSString stringWithFormat:@"%d",p_nums]
+//                };
+//        
         
         if (p_nums == 1) {
             for (ProductModel *model in self.delegate.dataArray) {
-                dic = @{
-                        @"authcode":[UserInfo getAuthkey],
-                        @"brand_ids":self.brand_ids,
-                        @"product_num":[NSString stringWithFormat:@"%d",p_nums],
-                        @"product_id":model.product_id
-                        };
+//                dic = @{
+//                        @"authcode":[UserInfo getAuthkey],
+//                        @"brand_ids":self.brand_ids,
+//                        @"product_num":[NSString stringWithFormat:@"%d",p_nums],
+//                        @"product_id":model.product_id
+//                        };
+                [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
+                [dic safeSetValue:self.brand_ids forKey:@"brand_ids"];
+                [dic safeSetValue:[NSString stringWithFormat:@"%d",p_nums] forKey:@"product_num"];
+                [dic safeSetValue:model.product_id forKey:@"product_id"];
             }
             
         }
-        
-        
-        
     }
-    
-    
     
     
     if (!_requst) {
@@ -496,25 +496,33 @@
         //可用-通用
         for (NSDictionary *dic in enableDic_common_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            [tab0_tongyongArray addObject:model];
+            if (model) {
+                [tab0_tongyongArray addObject:model];
+            }
         }
         
         //可用-非通用
         for (NSDictionary *dic in enableDic_uncommon_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            [tab0_feitongyongArray addObject:model];
+            if (model) {
+                [tab0_feitongyongArray addObject:model];
+            }
         }
         
         //不可用-通用
         for (NSDictionary *dic in disableDic_common_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            [tab1_tongyongArray addObject:model];
+            if (model) {
+                [tab1_tongyongArray addObject:model];
+            }
         }
         
         //不可用-非通用
         for (NSDictionary *dic in disableDic_uncommon_Array) {
             CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            [tab1_feitongyongArray addObject:model];
+            if (model) {
+                [tab1_feitongyongArray addObject:model];
+            }
         }
    
 
@@ -587,8 +595,6 @@
                 
                 _tab0.tableFooterView = view;
             }
-            
-            
         }
         
         
@@ -601,20 +607,17 @@
         
     }];
     
-    
-    
-    
-    
 }
 
 
 
--(void)useBtnClicked{
+-(void)useBtnClicked
+{
     if (self.type == GCouponType_use_youhuiquan) {//使用优惠券
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
         for (NSArray *ar in _tab0Array) {
             for (CouponModel *model in ar) {
-                if (model.isUsed) {
+                if (model && model.isUsed) {
                     [arr addObject:model];
                 }
             }
@@ -624,7 +627,7 @@
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:1];
         for (NSArray *ar in _tab0Array) {
             for (CouponModel *model in ar) {
-                if (model.isUsed) {
+                if (model && model.isUsed) {
                     [arr addObject:model];
                 }
             }

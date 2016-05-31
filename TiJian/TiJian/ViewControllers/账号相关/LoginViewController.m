@@ -305,25 +305,30 @@
            mobile:(NSString *)mobile
 {
     NSString *type;
+    NSString *provider = @"";
     switch (loginType) {
         case Login_Normal:
         {
             type = @"normal";
+            provider = @"";
         }
             break;
         case Login_Sweibo:
         {
             type = @"s_weibo";
+            provider = @"WB";
         }
             break;
         case Login_QQ:
         {
             type = @"qq";
+            provider = @"QQ";
         }
             break;
         case Login_Weixin:
         {
            type = @"weixin";
+            provider = @"WX";
         }
             break;
             
@@ -403,6 +408,10 @@
         [weakSelf performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.2];
         
         [weakSelf loginResultIsSuccess:YES];
+        
+        //友盟账号统计
+        NSString *uid = user.uid;
+        [MobClick profileSignInWithPUID:uid provider:provider];
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

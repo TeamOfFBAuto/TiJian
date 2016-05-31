@@ -69,6 +69,14 @@
     [super viewWillAppear:animated];
     
     [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"海马医生"];
+    
+    [MobClick beginLogPageView:@"HomeViewController"];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:@"HomeViewController"];
 }
 
 - (void)viewDidLoad {
@@ -1415,6 +1423,11 @@
  */
 - (void)pushToPhysicaResult
 {
+    //友盟统计
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:@"首页" forKey:@"fromPage"];
+    [[MiddleTools shareInstance]umengEvent:@"Customization" attributes:dic number:[NSNumber numberWithInt:1]];
+    
     //先判断是否个性化定制过
     BOOL isOver = [UserInfo getCustomState];
     if (isOver) {
@@ -1434,11 +1447,21 @@
 /**
  *  商城
  */
--(void)pushToShangCheng{
+-(void)pushToShangCheng
+{
+    NSString *mobile = [UserInfo userInfoForCache].mobile;
+    NSString *name = [UserInfo userInfoForCache].real_name;
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:@"HomeViewController" forKey:@"style"];
+    [dic safeSetValue:mobile forKey:@"mobile"];
+    [dic safeSetValue:name forKey:@"name"];
+    [[MiddleTools shareInstance]umengEvent:@"Store_home" attributes:dic number:[NSNumber numberWithInt:1]];
+    
     GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];
     cc.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:cc animated:YES];
 }
+
 
 /**
  *  健康资讯

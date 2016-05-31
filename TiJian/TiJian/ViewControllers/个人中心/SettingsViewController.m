@@ -105,7 +105,9 @@
     [LTools setObject:nil forKey:USER_RONGCLOUD_TOKEN];
     
     [self cleanUserInfo];
-
+    
+    //关闭友盟账号统计
+    [MobClick profileSignOff];
 }
 
 /**

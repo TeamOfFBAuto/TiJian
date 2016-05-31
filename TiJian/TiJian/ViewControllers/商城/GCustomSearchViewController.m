@@ -13,7 +13,6 @@
 #import "GoneClassListViewController.h"
 #import "GProductCellTableViewCell.h"
 #import "PhysicalTestResultController.h"
-#import "PersonalCustomViewController.h"
 
 #import "LBannerView.h"
 #import "UIImageView+WebCache.h"

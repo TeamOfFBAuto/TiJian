@@ -488,8 +488,13 @@
 }
 - (void)clickToCustomization:(PropertyButton *)sender
 {
+    //友盟统计
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:@"体检预约页" forKey:@"fromPage"];
+    [[MiddleTools shareInstance]umengEvent:@"Customization" attributes:dic number:[NSNumber numberWithInt:1]];
     
     ProductModel *aModel = [sender isKindOfClass:[PropertyButton class]] ? sender.aModel : nil;
+    
     //先判断是否个性化定制过
     BOOL isOver = [UserInfo getCustomState];
     if (isOver) {
@@ -579,16 +584,27 @@
     if (index == 0 || index == 1) {
         
         ProductModel *aModel;
+        int index_row = (int)indexPath.row;
         if (indexPath.section == 0) {
-            aModel = _company[indexPath.row];
+            if (index_row < _company.count) {
+                aModel = _company[index_row];
+            }
         }else if (indexPath.section == 1){
-            aModel = _personal[indexPath.row];
+            if (index_row < _personal.count) {
+                aModel = _personal[index_row];
+            }
         }else if (indexPath.section == 2){
-            aModel = _no_expired[indexPath.row];
+            if (index_row < _no_expired.count) {
+                aModel = _no_expired[index_row];
+            }
         }else if (indexPath.section == 3){
-            aModel = _expired[indexPath.row];
+            if (index_row < _expired.count) {
+                aModel = _expired[index_row];
+            }
         }else if (indexPath.section == 4){
-            aModel = _finished[indexPath.row];
+            if (index_row < _finished.count) {
+                aModel = _finished[index_row];
+            }
         }
         
         if ([aModel isKindOfClass:[ProductModel class]] &&
@@ -626,11 +642,17 @@
             AppointModel *aModel;
             BOOL progress = NO;
             if (indexPath.section == 2){
-                aModel = _no_expired[indexPath.row];
+                if (index_row < _no_expired.count) {
+                    aModel = _no_expired[index_row];
+                }
             }else if (indexPath.section == 3){
-                aModel = _expired[indexPath.row];
+                if (index_row < _expired.count) {
+                    aModel = _expired[index_row];
+                }
             }else if (indexPath.section == 4){
-                aModel = _finished[indexPath.row];
+                if (index_row < _finished.count) {
+                    aModel = _finished[index_row];
+                }
                 progress = YES;
             }
             if (progress) {
@@ -672,8 +694,19 @@
         {
             return 60.f;
         }
+        ProductModel *aModel;
+        if (indexPath.section == 0) {
+            if (indexPath.row < _company.count) {
+                aModel = _company[indexPath.row];
+            }
+            
+        }else
+        {
+            if (indexPath.row < _personal.count) {
+                aModel = _personal[indexPath.row];
+            }
+        }
         
-        ProductModel *aModel = indexPath.section == 0 ? _company[indexPath.row] : _personal[indexPath.row];
         return [AppointmentCell heightForCellWithType:[aModel.type intValue]];
     }
     
@@ -802,8 +835,8 @@
     
     if (index == 1 || (index == 0 && (indexPath.section == 0 || indexPath.section == 1)) ){
         
-        AppointmentCell *cell;
-        ProductModel *aModel;
+        AppointmentCell *cell = nil;
+        ProductModel *aModel = nil;
         if (indexPath.section == 0) {
             if (indexPath.row < _company.count) {
                 aModel = _company[indexPath.row];
@@ -839,13 +872,20 @@
         
         cell.contentView.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         if (indexPath.section == 0) {
-            
-            [cell setCellWithModel:_company[indexPath.row]];
+            if (indexPath.row < _company.count) {
+                aModel = _company[indexPath.row];
+            }
         }else
         {
-            [cell setCellWithModel:_personal[indexPath.row]];
+            if (indexPath.row < _personal.count) {
+                
+                aModel = _personal[indexPath.row];
+            }
         }
+        
+        [cell setCellWithModel:aModel];
         
         return cell;
     }
@@ -886,15 +926,25 @@
     if (index == 0) {
         //全部里面 未过期、已过期
         if (indexPath.section == 2) {
-            aModel = _no_expired[indexPath.row];
+            if (indexPath.row < _no_expired.count) {
+                aModel = _no_expired[indexPath.row];
+            }
+            
         }else if (indexPath.section == 3){
-            aModel = _expired[indexPath.row];
+            if (indexPath.row < _expired.count) {
+                aModel = _expired[indexPath.row];
+            }
+            
         }else if (indexPath.section == 4){
-            aModel = _finished[indexPath.row];
+            if (indexPath.row < _finished.count) {
+                aModel = _finished[indexPath.row];
+            }
         }
     }else
     {
-        aModel = table.dataArray[indexPath.row];
+        if (indexPath.row < table.dataArray.count) {
+            aModel = table.dataArray[indexPath.row];
+        }
     }
     NSString *name = aModel.user_name;
     NSString *text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,aModel.user_name];

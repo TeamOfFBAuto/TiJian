@@ -167,6 +167,7 @@
 		136ABCE01C8EB41900F2B834 /* AppointProgressDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */; };
 		136ABCE31C8FF3F300F2B834 /* appointProgresscircle_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */; };
 		136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */; };
+		1374B3891CFD40610010CDE7 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 1374B3881CFD40610010CDE7 /* main.js */; };
 		137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780A91C1183AD00677363 /* MedicalReportController.m */; };
 		137780AC1C1188BE00677363 /* hema_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137780AB1C1188BE00677363 /* hema_heart@2x.png */; };
 		137780AF1C118A3200677363 /* ResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780AE1C118A3200677363 /* ResultView.m */; };
@@ -857,6 +858,7 @@
 		136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointProgressDetailController.m; sourceTree = "<group>"; };
 		136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_1@2x.png"; sourceTree = "<group>"; };
 		136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_2@2x.png"; sourceTree = "<group>"; };
+		1374B3881CFD40610010CDE7 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		137780A81C1183AD00677363 /* MedicalReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalReportController.h; sourceTree = "<group>"; };
 		137780A91C1183AD00677363 /* MedicalReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalReportController.m; sourceTree = "<group>"; };
 		137780AB1C1188BE00677363 /* hema_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema_heart@2x.png"; sourceTree = "<group>"; };
@@ -2402,6 +2404,7 @@
 		13F1F2641BBA78ED00885D31 /* TiJian */ = {
 			isa = PBXGroup;
 			children = (
+				1374B3881CFD40610010CDE7 /* main.js */,
 				13F1F2981BBA99B800885D31 /* PrefixHeader.pch */,
 				1391FC5E1BBBB112005E06A8 /* Requests */,
 				1324B6AC1BD7742F00FB47A9 /* Images */,
@@ -3485,6 +3488,7 @@
 				13E2D86E1CC8C58100A684D7 /* personal_guahaoyuyue@2x.png in Resources */,
 				13D6DAA21C48C6A90091FCFE /* extension_36_8.png in Resources */,
 				1303C35A1BEB0D7100700847 /* personal_youhuiquan_y@2x.png in Resources */,
+				1374B3891CFD40610010CDE7 /* main.js in Resources */,
 				139333C51BE0DF3E00B4628B /* 22_3@2x.png in Resources */,
 				13D6DA911C48C6A90091FCFE /* extension_34_3.png in Resources */,
 				13E2D8781CC8C58100A684D7 /* personal_tijianyuyue@2x.png in Resources */,

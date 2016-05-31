@@ -106,6 +106,7 @@
     [super viewWillAppear:animated];
     [self hiddenNavigationBar:YES animated:animated];
     _isPresenting = NO;
+    [MobClick beginLogPageView:@"GStoreHomeViewController"];
 }
 
 
@@ -118,6 +119,7 @@
     }
     
     [super viewWillDisappear:animated];
+    [MobClick endLogPageView:@"GStoreHomeViewController"];
     
     [self hiddenNavigationBar:NO animated:animated];//不隐藏NavigationBar
     
@@ -1292,6 +1294,11 @@
  */
 - (void)pushToPhysicaResult
 {
+    //友盟统计
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:@"商城首页" forKey:@"fromPage"];
+    [[MiddleTools shareInstance]umengEvent:@"Customization" attributes:dic number:[NSNumber numberWithInt:1]];
+    
     //先判断是否个性化定制过
     BOOL isOver = [UserInfo getCustomState];
     if (isOver) {

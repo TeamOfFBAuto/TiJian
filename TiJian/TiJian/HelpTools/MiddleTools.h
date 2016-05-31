@@ -131,4 +131,14 @@ typedef NS_ENUM(NSInteger ,SourceType) {
                         linkUrl:(NSString *)linkUrl;
 
 
+/**
+ *  友盟统计
+ *
+ *  @param eventId
+ *  @param attributes
+ *  @param number
+ */
+-(void)umengEvent:(NSString *)eventId attributes:(NSDictionary *)attributes number:(NSNumber *)number;
+
+
 @end

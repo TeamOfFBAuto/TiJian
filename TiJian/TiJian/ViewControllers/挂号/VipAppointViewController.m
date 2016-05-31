@@ -12,8 +12,6 @@
 
 @interface VipAppointViewController ()<RefreshDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 {
-//    RefreshTableView *_table;
-//    UIView *_sliderBgView;//右侧选择体检人view
     BOOL _sliderOpen;
 }
 
@@ -103,15 +101,16 @@
 
 -(UIView *)sliderBgView
 {
-    if (!_sliderBgView) {
+    if (!_sliderBgView)
+    {
         _sliderBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
         _sliderBgView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+        _sliderBgView.alpha = 0.f;
         [self.view addSubview:_sliderBgView];
         
         [_sliderBgView addSubview:self.table];
         [_sliderBgView addSubview:self.footerView];
         
-        _sliderBgView.alpha = 0.f;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddeSliderView)];
         tap.delegate = self;
         [_sliderBgView addGestureRecognizer:tap];

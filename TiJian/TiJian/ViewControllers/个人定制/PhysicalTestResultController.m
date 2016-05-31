@@ -270,6 +270,11 @@
         _isAddedObserver = YES;
     }
     
+    //友盟统计
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:@"个性化结果页" forKey:@"fromPage"];
+    [[MiddleTools shareInstance]umengEvent:@"Customization" attributes:dic number:[NSNumber numberWithInt:1]];
+    
     PersonalCustomViewController *custom = [[PersonalCustomViewController alloc]init];
     custom.lastViewController = self;
     [self.navigationController pushViewController:custom animated:YES];
