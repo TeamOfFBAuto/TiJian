@@ -341,7 +341,7 @@
     _editState = 0;
     _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:_searchView];
     
-    UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:      UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     [spaceButtonItem setWidth:-10];
     
     _myNavcRightBtn = [UIButton buttonWithType:UIButtonTypeCustom];

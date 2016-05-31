@@ -19,8 +19,7 @@
     
     NSMutableArray *_dataArray;
     
-    UIView *_tmpview;
-    
+    UIView *_tabHeaderView;//定位城市 最近访问 热门城市
     
     NSMutableArray *_provinceArray;
     NSMutableArray *_citiesArray;
@@ -46,33 +45,18 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"选择城市";
 
-    
-    
-    
-    
-    
     //收键盘
     UIControl *ccc = [[UIControl alloc]initWithFrame:self.view.bounds];
     [ccc addTarget:self action:@selector(gShou) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:ccc];
     
-    
-    
-    
     for (int i=0; i<500; i++) {
         _isOpen[i]=0;
     }
-    
-    
-    
-    
+
+    [self creatTab];
     [self getHotCity];
-    
-    
-    
-    
-    
-    
+   
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,11 +75,15 @@
     
     [_request requestWithMethod:YJYRequstMethodGet api:GET_HOTCITY parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         _hotCityArray = [result arrayValueForKey:@"list"];
-        _tmpview = [self creatHotCityView];
-        [self creatTab];
+        _tabHeaderView = [self creatTabHeaderView];
+        _tabelView.tableHeaderView = _tabHeaderView;
+        [_tabelView reloadData];
+        
     } failBlock:^(NSDictionary *result) {
-        _tmpview = [self creatHotCityView];
-        [self creatTab];
+        _tabHeaderView = [self creatTabHeaderView];
+        _tabelView.tableHeaderView = _tabHeaderView;
+        [_tabelView reloadData];
+        
     }];
     
     
@@ -285,11 +273,9 @@
 
 
 
-
-
-
 #pragma mark - 视图创建
--(UIView*)creatHotCityView{
+//创建tableHeaderView
+-(UIView*)creatTabHeaderView{
     
     CGFloat height = 0.0f;
     
@@ -404,9 +390,7 @@
     hotCityView_c.backgroundColor = [UIColor whiteColor];
     [view addSubview:hotCityView_c];
     
-    
     NSInteger totle = _hotCityArray.count;
-    
     
     CGFloat hotCityHight = 0;
     
@@ -498,11 +482,10 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
+//创建tableview
 -(void)creatTab{
     NSString *path = [[NSBundle mainBundle]pathForResource:@"garea" ofType:@"plist"];
     NSArray *arr = [NSArray arrayWithContentsOfFile:path];
-    
     
     _provinceArray = [NSMutableArray arrayWithCapacity:1];//省份数组
     _citiesArray = [NSMutableArray arrayWithCapacity:1];
@@ -512,7 +495,6 @@
             continue;
         }
         [_provinceArray addObject:province];
-        
         
         NSArray *cityArray = [dic arrayValueForKey:@"Cities"];
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
@@ -527,22 +509,13 @@
         [_citiesArray addObject:array];
         
     }
-    
-    
-    
-    
-    
-    
-    
+
     _tabelView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
-    
     _tabelView.delegate = self;
     _tabelView.dataSource = self;
     [self.view addSubview:_tabelView];
-    
     _tabelView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    _tabelView.tableHeaderView = _tmpview;
+    _tabelView.tableHeaderView = _tabHeaderView;
     
 }
 
@@ -550,13 +523,6 @@
 -(void)gShou{
     [_searchTextField resignFirstResponder];
 }
-
-
-
-
-
-
-
 
 
 #pragma mark - 获取经纬度

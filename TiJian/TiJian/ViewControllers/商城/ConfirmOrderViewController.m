@@ -80,6 +80,7 @@
     UILabel *_enabledNum_vouchers_label;//可用代金券数量label
     
     NSString *_user_score;//用户积分
+    BOOL _isUseScore;
     
     CGPoint _orig_tab_contentOffset;
 
@@ -114,7 +115,7 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"确认订单";
     
-    
+    _isUseScore = NO;
     //个性化定制过来的只有一个主套餐
     NSMutableArray *addProductArray = [NSMutableArray arrayWithCapacity:1];
     ProductModel *mainProduct;
@@ -357,32 +358,41 @@
     
     if ([_user_score intValue] != 0) {//使用积分
         //积分
-        CGFloat jifen = 0;
+//        CGFloat jifen = 0;
         
         NSInteger maxAbleUseScore = [_user_score integerValue];
         _keyongJifen = ((_price_total - youhuiquan - daijinquan)*100) > maxAbleUseScore ? maxAbleUseScore : ((_price_total - youhuiquan - daijinquan)*100);
         
         _jifenMiaoshuLabel.text = [NSString stringWithFormat:@"共%ld积分,可用%ld积分,抵%.2f元",(long)maxAbleUseScore,(long)_keyongJifen,_keyongJifen/100.0];
         
+//        //判断是否使用积分
+//        if ([GMAPI isPureInt:_useScoreTf.text]) {
+//            if ([_useScoreTf.text integerValue]> _keyongJifen) {
+//                jifen = _keyongJifen;
+//                _useScoreTf.text = [NSString stringWithFormat:@"%ld",(long)_keyongJifen];
+//                _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",_keyongJifen/100.0];
+//            }else{
+//                jifen = [_useScoreTf.text integerValue];
+//            }
+//            
+//            _fanal_usedScore = jifen;
+//        }else{
+//            if ([LTools isEmpty:_useScoreTf.text]) {
+//                _fanal_usedScore = 0;
+//            }else{
+//                _fanal_usedScore = -10;
+//            }
+//            
+//        }
         
-        if ([GMAPI isPureInt:_useScoreTf.text]) {
-            if ([_useScoreTf.text integerValue]> _keyongJifen) {
-                jifen = _keyongJifen;
-                _useScoreTf.text = [NSString stringWithFormat:@"%ld",(long)_keyongJifen];
-                _realScore_dijia.text = [NSString stringWithFormat:@"抵%.2f元",_keyongJifen/100.0];
-            }else{
-                jifen = [_useScoreTf.text integerValue];
-            }
-            
-            _fanal_usedScore = jifen;
-        }else{
-            if ([LTools isEmpty:_useScoreTf.text]) {
-                _fanal_usedScore = 0;
-            }else{
-                _fanal_usedScore = -10;
-            }
-            
+        
+        _fanal_usedScore = 0;
+        
+        //判断是否使用积分
+        if (_isUseScore) {//使用积分
+            _fanal_usedScore = _keyongJifen;
         }
+        
         
         
     }else{
@@ -688,6 +698,10 @@
 - (void)clickToSure:(UIButton *)sender
 {
     _kuaidiChooseLabel.textColor = [UIColor blackColor];
+    
+    NSInteger index = [_pickeView selectedRowInComponent:0];
+    _userChooseKuaidiStr = _kuaidiDataArray[index];
+    
     _kuaidiChooseLabel.text = _userChooseKuaidiStr;
     [self areaHidden];
 
@@ -721,7 +735,6 @@
     if (component == 0) {
         NSString *str = _kuaidiDataArray[row];
         
-        _userChooseKuaidiStr = str;
         return str;
     } 
     return 0;
@@ -746,6 +759,12 @@
 
 //创建 更新 tabFooterView
 -(void)creatTabFooterViewWithUseState:(BOOL)state{
+    
+    for (UIView *view in _tabFooterView.subviews) {
+        [view removeFromSuperview];
+    }
+    
+    
     if ([_user_score integerValue] != 0) {//有积分
         state = YES;
     }else{
@@ -969,67 +988,82 @@
     
     
     //开关按钮
-//    UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, _jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
-//    switchView.onTintColor = RGBCOLOR(237, 108, 22);
-//    [switchView setOn:state];
-//    [jifenView addSubview:switchView];
-//    
-//    [switchView addTarget:self action:@selector(getValue:) forControlEvents:UIControlEventValueChanged];
+    UISwitch *switchView = [[UISwitch alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 60, _jifenMiaoshuLabel.frame.origin.y+5, 50, 44)];
+    switchView.onTintColor = RGBCOLOR(237, 108, 22);
+    if (!state) {
+        switchView.hidden = YES;
+    }else{
+        switchView.hidden = NO;
+    }
+    
+    [switchView setOn:_isUseScore];
+    
+    [jifenView addSubview:switchView];
+
+    [switchView addTarget:self action:@selector(getValue:) forControlEvents:UIControlEventValueChanged];
     
     //最后一条分割线
     UIView *lastLine;
-    if (state) {//使用积分
-        //第6条分割线
-        UIView *line6 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(jifenView.frame), DEVICE_WIDTH, 1)];
-        line6.backgroundColor = RGBCOLOR(244, 245, 246);
-        [_tabFooterView addSubview:line6];
-        
-        //使用积分
-        UIView *useJifenView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line6.frame), DEVICE_WIDTH, 44)];
-        useJifenView.backgroundColor = [UIColor whiteColor];
-        [_tabFooterView addSubview:useJifenView];
-        
-        UILabel *lb1 = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 40, 44)];
-        lb1.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
-        lb1.font = [UIFont systemFontOfSize:14];
-        lb1.text = @"使用";
-        [useJifenView addSubview:lb1];
-        
-        _useScoreTf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb1.frame)+10, 10, 100, 24)];
-        _useScoreTf.keyboardType = UIKeyboardTypeNumberPad;
-        _useScoreTf.tag = 10001;
-        _useScoreTf.font = [UIFont systemFontOfSize:15];
-        _useScoreTf.textAlignment = NSTextAlignmentCenter;
-        _useScoreTf.delegate = self;
-        _useScoreTf.layer.borderWidth = 0.5;
-        _useScoreTf.layer.cornerRadius = 2;
-        _useScoreTf.layer.borderColor = [[UIColor grayColor]CGColor];
-        [useJifenView addSubview:_useScoreTf];
-        
-        UILabel *lb2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_useScoreTf.frame)+10, 0, 40, 44)];
-        lb2.text = @"积分,";
-        lb2.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
-        lb2.font = [UIFont systemFontOfSize:15];
-        [useJifenView addSubview:lb2];
-        
-        _realScore_dijia= [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb2.frame), 0, 100, 44)];
-        _realScore_dijia.textColor = RGBCOLOR(240, 109, 23);
-        _realScore_dijia.font = [UIFont systemFontOfSize:15];
-        _realScore_dijia.text = @"抵0.00元";
-        [useJifenView addSubview:_realScore_dijia];
-        
-        //第7条分割线
-        UIView *line7 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(useJifenView.frame), DEVICE_WIDTH, 5)];
-        line7.backgroundColor = RGBCOLOR(244, 245, 246);
-        [_tabFooterView addSubview:line7];
-        lastLine = line7;
-        
-    }else{//不使用积分
-        lastLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(jifenView.frame), DEVICE_WIDTH, 5)];
-        lastLine.backgroundColor = RGBCOLOR(244, 245, 246);
-        [_tabFooterView addSubview:lastLine];
-    }
+//    if (state) {//使用积分
+//        //第6条分割线
+//        UIView *line6 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(jifenView.frame), DEVICE_WIDTH, 1)];
+//        line6.backgroundColor = RGBCOLOR(244, 245, 246);
+//        [_tabFooterView addSubview:line6];
+//        
+//        //使用积分
+//        UIView *useJifenView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(line6.frame), DEVICE_WIDTH, 44)];
+//        useJifenView.backgroundColor = [UIColor whiteColor];
+//        [_tabFooterView addSubview:useJifenView];
+//        
+//        UILabel *lb1 = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 40, 44)];
+//        lb1.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
+//        lb1.font = [UIFont systemFontOfSize:14];
+//        lb1.text = @"使用";
+//        [useJifenView addSubview:lb1];
+//        
+//        _useScoreTf = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb1.frame)+10, 10, 100, 24)];
+//        _useScoreTf.keyboardType = UIKeyboardTypeNumberPad;
+//        _useScoreTf.tag = 10001;
+//        _useScoreTf.font = [UIFont systemFontOfSize:15];
+//        _useScoreTf.textAlignment = NSTextAlignmentCenter;
+//        _useScoreTf.delegate = self;
+//        _useScoreTf.layer.borderWidth = 0.5;
+//        _useScoreTf.layer.cornerRadius = 2;
+//        _useScoreTf.layer.borderColor = [[UIColor grayColor]CGColor];
+//        [useJifenView addSubview:_useScoreTf];
+//        
+//        UILabel *lb2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(_useScoreTf.frame)+10, 0, 40, 44)];
+//        lb2.text = @"积分,";
+//        lb2.textColor = DEFAULT_TEXTCOLOR_TITLE_SUB;
+//        lb2.font = [UIFont systemFontOfSize:15];
+//        [useJifenView addSubview:lb2];
+//        
+//        _realScore_dijia= [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(lb2.frame), 0, 100, 44)];
+//        _realScore_dijia.textColor = RGBCOLOR(240, 109, 23);
+//        _realScore_dijia.font = [UIFont systemFontOfSize:15];
+//        _realScore_dijia.text = @"抵0.00元";
+//        [useJifenView addSubview:_realScore_dijia];
+//        
+//        //第7条分割线
+//        UIView *line7 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(useJifenView.frame), DEVICE_WIDTH, 5)];
+//        line7.backgroundColor = RGBCOLOR(244, 245, 246);
+//        [_tabFooterView addSubview:line7];
+//        lastLine = line7;
+//        
+//    }else{//不使用积分
+//        lastLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(jifenView.frame), DEVICE_WIDTH, 5)];
+//        lastLine.backgroundColor = RGBCOLOR(244, 245, 246);
+//        [_tabFooterView addSubview:lastLine];
+//    }
 
+    
+    
+    lastLine = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(jifenView.frame), DEVICE_WIDTH, 5)];
+    lastLine.backgroundColor = RGBCOLOR(244, 245, 246);
+    [_tabFooterView addSubview:lastLine];
+    
+    
+    
     //商品金额 运费 优惠券 代金券 积分 统计view
     _theNewbilityView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(lastLine.frame), DEVICE_WIDTH, 140)];
     [_tabFooterView addSubview:_theNewbilityView];
@@ -1310,9 +1344,9 @@
 //获取开关按钮的值
 -(void)getValue:(UISwitch*)sender{
     
-//    _isUseScore = sender.isOn;
+    _isUseScore = sender.isOn;
     
-    [self creatTabFooterViewWithUseState:sender.isOn];
+    [self creatTabFooterViewWithUseState:NO];
     
 }
 
@@ -1460,7 +1494,8 @@
             [dic safeSetValue:@"1" forKey:@"require_post"];
         }
     }else{
-        [GMAPI showAutoHiddenMBProgressWithText:@"请选择快递方式" addToView:self.view];
+//        [GMAPI showAutoHiddenMBProgressWithText:@"请选择快递方式" addToView:self.view];
+        [self kuaidiViewClicked];
         return;
     }
     
