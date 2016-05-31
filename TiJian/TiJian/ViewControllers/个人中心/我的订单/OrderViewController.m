@@ -415,7 +415,7 @@
         
     }else if (actionType == ORDERACTIONTYPE_Pay){
         //支付
-        [self pushToPayPageWithOrderId:aModel.order_id orderNum:aModel.order_no sumPrice:[aModel.total_fee floatValue] payStyle:[aModel.pay_type intValue]];
+        [self pushToPayPageWithOrderId:aModel.order_id orderNum:aModel.order_no sumPrice:[aModel.real_price floatValue] payStyle:[aModel.pay_type intValue]];
     }
 }
 

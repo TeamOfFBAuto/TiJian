@@ -333,7 +333,7 @@
     PayActionViewController *pay = [[PayActionViewController alloc]init];
     pay.orderId = orderId;
     pay.orderNum = orderNum;
-    pay.sumPrice = [_orderModel.total_fee floatValue];
+    pay.sumPrice = [_orderModel.real_price floatValue];
     pay.payStyle = [_orderModel.pay_type intValue];//支付类型
     pay.lastViewController = self.lastViewController;
 //    pay.hidesBottomBarWhenPushed = YES;
@@ -609,7 +609,7 @@
     //存放所有标题
     NSMutableArray *titles = [NSMutableArray arrayWithObjects:@"商品金额",@"运费", nil];
     
-    //实付款
+    //实际未优惠价格
     NSString *price = [NSString stringWithFormat:@"￥%.2f",[_orderModel.total_fee floatValue]];
     //运费
     NSString *expressFee = [NSString stringWithFormat:@"免运费"];

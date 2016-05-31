@@ -2,19 +2,49 @@
  * Created by lcw on 16/5/31.
  */
 
-defineClass('OrderInfoViewController',{
-            pushToPayPageWithOrderId:function(orderId,orderNum){
-            
-            console.log("JSPatch 123456pppp");
-
+//订单详情页->支付页 显示价格total_fee改为real_price
+defineClass('OrderInfoViewController', [ ], { pushToPayPageWithOrderId_orderNum:function(orderId,orderNum) {
             
             var pay = require('PayActionViewController').alloc().init();
-            pay.orderId() = orderId;
-            pay.orderNum() = orderNum;
-            var price = self.valueForKey("_orderModel");
-            pay.sumPrice() = price.real_price().floatValue();
-            pay.payStyle() = price.payStyle().intValue();
-            pay.lastViewController() = self.lastViewController();
-            self.navigationController().pushViewController(pay,YES);
+            //setter
+            pay.setOrderId(orderId);
+            pay.setOrderNum(orderNum);
+            
+            require('OrderModel')
+            var model = self.valueForKey("_orderModel");
+            
+            var real_price = model.valueForKey("real_price");
+            pay.setSumPrice(real_price);
+            
+            var style = model.valueForKey("pay_type");
+            pay.setPayStyle(style);
+            
+            pay.setLastViewController(self.lastViewController());
+            
+            self.navigationController().pushViewController_animated(pay,true);
+            
+            } })
+
+
+//订单列表-> 显示价格total_fee改为real_price
+
+defineClass('OrderViewController', [ ], { clickToAction:function(sender) {
+            
+            var actionTyp = sender.valueForKey("actionType");
+            
+            if(actionTyp == 1) {
+            
+            var mode = sender.valueForKey("aModel");
+            var orderId = mode.valueForKey("order_id");
+            var orderNu = mode.valueForKey("order_no");
+            var sumPri = mode.valueForKey("real_price");
+            var paySty = mode.valueForKey("pay_type");
+
+             self.pushToPayPageWithOrderId_orderNum_sumPrice_payStyle(orderId,orderNu,sumPri,paySty);
+            
+            }else
+            {
+             self.ORIGclickToAction(sender);
             }
-})
+            
+            }})
