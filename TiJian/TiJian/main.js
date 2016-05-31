@@ -9,13 +9,10 @@ defineClass('OrderInfoViewController', [ ], { pushToPayPageWithOrderId_orderNum:
             //setter
             pay.setOrderId(orderId);
             pay.setOrderNum(orderNum);
-            
             require('OrderModel')
             var model = self.valueForKey("_orderModel");
-            
             var real_price = model.valueForKey("real_price");
             pay.setSumPrice(real_price);
-            
             var style = model.valueForKey("pay_type");
             pay.setPayStyle(style);
             
@@ -48,3 +45,25 @@ defineClass('OrderViewController', [ ], { clickToAction:function(sender) {
             }
             
             }})
+
+defineClass('GPushView', [ ], {
+            
+            qingkongshaixuanBtnClicked: function() {
+            
+            console.log("xxxxx");
+            require('NSMutableDictionary');
+            self.setSelectDic(null);
+            self.setSelectDic(NSMutableDictionary.dictionaryWithCapacity(1));
+            self.tf_low().setText(null);
+            self.tf_high().setText(null);
+            
+            self.tab1().reloadData();
+            self.tab2().reloadData();
+            self.tab3().reloadData();
+            self.tab4().reloadData();
+            
+            }
+        
+        
+            })
+
