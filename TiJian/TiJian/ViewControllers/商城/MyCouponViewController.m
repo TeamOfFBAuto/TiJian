@@ -618,11 +618,11 @@
         for (NSArray *ar in _tab0Array) {
             for (CouponModel *model in ar) {
                 if (model && model.isUsed) {
-                    if ([model.type intValue] == 4) {
-                        model.type = @"1";
-                        model.full_money = @"0";
-                        model.minus_money = model.newer_money;
-                    }
+//                    if ([model.type intValue] == 4) {
+//                        model.type = @"1";
+//                        model.full_money = @"0";
+//                        model.minus_money = model.newer_money;
+//                    }
                     [arr addObject:model];
                 }
             }
