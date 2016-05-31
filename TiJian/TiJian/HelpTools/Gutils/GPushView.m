@@ -828,6 +828,7 @@
 -(void)qingkongshaixuanBtnClicked{
 
     self.selectDic = nil;
+    self.selectDic = [NSMutableDictionary dictionaryWithCapacity:1];
     self.tf_low.text = nil;
     self.tf_high.text = nil;
     
