@@ -108,13 +108,14 @@ defineClass('MyCouponViewController', [ ], {useBtnClicked:function() {
         }
 
         self.delegate().setUserSelectYouhuiquanArray(tempArr);
+        self.delegate().jisuanPrice();
+        self.navigationController().popViewControllerAnimated(YES);
     }else
     {
         self.ORIGuseBtnClicked();
     }
 
-    self.delegate().jisuanPrice();
-    self.navigationController().popViewControllerAnimated(YES);
+    
     
 }})
 
