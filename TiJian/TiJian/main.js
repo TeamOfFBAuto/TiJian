@@ -23,7 +23,6 @@ defineClass('OrderInfoViewController', [ ], { pushToPayPageWithOrderId_orderNum:
 } })
 
 
-
 //订单列表-> 显示价格total_fee改为real_price
 defineClass('OrderViewController', [ ], { clickToAction:function(sender) {
             
