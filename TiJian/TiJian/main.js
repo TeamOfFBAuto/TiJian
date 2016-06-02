@@ -63,8 +63,6 @@ defineClass('GPushView', [ ], {
 //优惠劵->新人优惠劵特殊处理 type = 4在选择使用时修改为type = 1,满减处理
 defineClass('MyCouponViewController', [ ], {useBtnClicked:function() {
 
-    console.log("优惠劵1");
-
     if (self.type() == 2) {
         require('NSMutableArray');
         require('CouponModel');
@@ -73,27 +71,19 @@ defineClass('MyCouponViewController', [ ], {useBtnClicked:function() {
         var tempArr;
         var tab0Array = self.valueForKey("_tab0Array");
 
-        console.log(tab0Array);
         var count = tab0Array.count();
-        console.log(count);
         for (var i = 0; i < count; i++) {
 
             var arr2 = tab0Array.objectAtIndex(i);
-            console.log(arr2);
 
             var count2 = arr2.count();
-            console.log(count2);
 
             for (var j = 0; j < count2; j++) {
 
                 var model = arr2.objectAtIndex(j);
-                console.log(model);
                 var isUsed = model.isUsed();
-                console.log("isUsed:" + isUsed);
                 if (isUsed){
                     var type = model.type().intValue();
-                    console.log("type:" +  type);
-
                     if (type = 4){
                         model.setType("1");
                         model.setFull_money("0");
@@ -101,7 +91,6 @@ defineClass('MyCouponViewController', [ ], {useBtnClicked:function() {
                     }
                     tempArr = arr.toJS()
                     tempArr.push(model);
-                    console.log(tempArr);
                 }
             }
 

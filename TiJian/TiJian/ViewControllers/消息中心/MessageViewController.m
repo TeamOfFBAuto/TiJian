@@ -17,6 +17,20 @@
 
 @implementation MessageViewController
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
+    _isClick = YES;
+    [self notifyUpdateUnreadMessageCount];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:NSStringFromClass([self class])];
+}
+
 - (void)viewDidLoad {
     
     [self setConversationPortraitSize:CGSizeMake(35, 30)];
@@ -48,15 +62,6 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    _isClick = YES;
-//    [self setNavigationItemTitleView];
-    
-    [self notifyUpdateUnreadMessageCount];
-    
-}
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];

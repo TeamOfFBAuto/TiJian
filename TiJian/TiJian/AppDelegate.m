@@ -68,26 +68,6 @@
     //JSPatch develope
     [JSPatch testScriptInBundle];
     
-    [JSPatch setupLogger:^(NSString * lo) {
-        NSLog(@"JSPatch %@",lo);
-    }];
-    
-    [JSPatch setupCallback:^(JPCallbackType type, NSDictionary *data, NSError *error) {
-        
-        NSLog(@"JSPatch %@ %@", data, error);
-        switch (type) {
-            case JPCallbackTypeUpdate: {
-                NSLog(@"JSPatch updated %@ %@", data, error);
-                break;
-            }
-            case JPCallbackTypeRunScript: {
-                NSLog(@"JSPatch run script %@ %@", data, error);
-                break;
-            }
-            default:
-                break;
-        }
-    }];
         
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];

@@ -52,6 +52,9 @@
     [super viewWillAppear:animated];
     
     [_mapView viewWillAppear];
+    
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -64,6 +67,8 @@
     //代理置空
     _mapView.delegate = nil;
     _locService.delegate = nil;
+    [MobClick endLogPageView:NSStringFromClass([self class])];
+
 }
 
 

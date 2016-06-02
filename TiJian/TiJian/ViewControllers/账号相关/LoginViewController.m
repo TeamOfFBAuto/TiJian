@@ -41,7 +41,8 @@
     }
     
     [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"登录"];
-    
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
+
     //微信未安装或者不支持
 //    if (![WXApi isWXAppInstalled] || ![WXApi isWXAppSupportApi]) {
 //        
@@ -52,6 +53,12 @@
 //        self.thirdLoginView.hidden = NO;
 //        self.thirdLoginView2.hidden = YES;
 //    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
 

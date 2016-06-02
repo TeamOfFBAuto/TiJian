@@ -276,7 +276,13 @@
             unvc.tabBarItem.badgeValue = nil;
         }else
         {
-            unvc.tabBarItem.badgeValue = NSStringFromInt(sum - msgNum);//tabbar上个数暂时不显示 活动未读数据
+            int temp = sum - msgNum;
+            if (temp <= 0) {
+                unvc.tabBarItem.badgeValue = nil;
+            }else
+            {
+                unvc.tabBarItem.badgeValue = NSStringFromInt(sum - msgNum);//tabbar上个数暂时不显示 活动未读数据
+            }
         }
         
         [UIApplication sharedApplication].applicationIconBadgeNumber = sum;
