@@ -34,6 +34,35 @@
 
 @implementation MyCouponViewController
 
+//-(void)viewWillDisappear:(BOOL)animated{
+//    [super viewWillDisappear:animated];
+//    //代理置空，否则会闪退
+////    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+////        self.navigationController.interactivePopGestureRecognizer.delegate = nil;
+////    }
+//    
+//    //scrollView 和 系统手势冲突问题
+////    [_scroll.panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
+//    
+//}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:NSStringFromClass([self class])];
+}
+
+
+
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -435,21 +464,11 @@
         [dic safeSetValue:self.brand_ids forKey:@"brand_ids"];
         [dic safeSetValue:[NSString stringWithFormat:@"%d",p_nums] forKey:@"product_num"];
         
-//        dic = @{
-//                @"authcode":[UserInfo getAuthkey],
-//                @"brand_ids":self.brand_ids,
-//                @"product_num":[NSString stringWithFormat:@"%d",p_nums]
-//                };
-//        
+       
         
         if (p_nums == 1) {
             for (ProductModel *model in self.delegate.dataArray) {
-//                dic = @{
-//                        @"authcode":[UserInfo getAuthkey],
-//                        @"brand_ids":self.brand_ids,
-//                        @"product_num":[NSString stringWithFormat:@"%d",p_nums],
-//                        @"product_id":model.product_id
-//                        };
+
                 [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
                 [dic safeSetValue:self.brand_ids forKey:@"brand_ids"];
                 [dic safeSetValue:[NSString stringWithFormat:@"%d",p_nums] forKey:@"product_num"];
@@ -526,23 +545,6 @@
         }
    
 
-//        //接口没分组
-//        for (NSDictionary *dic in list) {
-//            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-//            if (model.enable_use) {//可用
-//                if (model.brand_id) {//非通用
-//                    [tab0_feitongyongArray addObject:model];
-//                }else{//通用
-//                    [tab0_tongyongArray addObject:model];
-//                }
-//            }else{//不可用
-//                if (model.brand_id) {//非通用
-//                    [tab1_feitongyongArray addObject:model];
-//                }else{//通用
-//                    [tab1_tongyongArray addObject:model];
-//                }
-//            }
-//        }
        
         if (tab0_tongyongArray.count>0) {
             [_tab0Array addObject:tab0_tongyongArray];
@@ -580,11 +582,7 @@
                 
                 
                 
-//                if (self.userChooseDaijinquanArray.count>0 || self.userChooseYouhuiquanArray.count>0) {
-//                    _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
-//                }else{
-//                    _use_btn.backgroundColor = RGBCOLOR(235, 236, 238);
-//                }
+
                 
                 _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
                 
@@ -618,11 +616,11 @@
         for (NSArray *ar in _tab0Array) {
             for (CouponModel *model in ar) {
                 if (model && model.isUsed) {
-//                    if ([model.type intValue] == 4) {
-//                        model.type = @"1";
-//                        model.full_money = @"0";
-//                        model.minus_money = model.newer_money;
-//                    }
+                    if ([model.type intValue] == 4) {
+                        model.type = @"1";
+                        model.full_money = @"0";
+                        model.minus_money = model.newer_money;
+                    }
                     [arr addObject:model];
                 }
             }

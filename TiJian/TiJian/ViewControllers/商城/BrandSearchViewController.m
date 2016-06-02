@@ -42,6 +42,19 @@
 
 @implementation BrandSearchViewController
 
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:NSStringFromClass([self class])];
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -380,6 +393,8 @@
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willAppear:(BOOL)animated
 {
+    
+    [MobClick beginLogPageView:@"GpushView"];
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will appear");
         
@@ -409,6 +424,8 @@
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated
 {
+    
+    [MobClick endLogPageView:@"GpushView"];
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will disappear");
         

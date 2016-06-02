@@ -60,22 +60,29 @@
     
 }
 
+
+
+
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self hiddenNavigationBar:YES animated:animated];
-    
     if (_theCustomSearchView) {
         [_theCustomSearchView.tab reloadData];
     }
-    
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self hiddenNavigationBar:NO animated:animated];
+    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
+
+
+
+
 
 
 - (void)viewDidLoad {

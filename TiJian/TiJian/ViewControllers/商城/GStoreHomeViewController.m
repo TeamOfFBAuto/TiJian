@@ -101,15 +101,22 @@
     _table = nil;
 }
 
+
+
+
+
+
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     [self hiddenNavigationBar:YES animated:animated];
     _isPresenting = NO;
     [MobClick beginLogPageView:@"GStoreHomeViewController"];
+    
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
-
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     //模态
@@ -119,14 +126,19 @@
     }
     
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:@"GStoreHomeViewController"];
+    
     
     [self hiddenNavigationBar:NO animated:animated];//不隐藏NavigationBar
-    
     //还原下拉刷新之前的状态栏状态
     [[UIApplication sharedApplication] setStatusBarHidden:FALSE];
     self.currentNavigationBar.alpha = 1;
+    
+    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
+
+
+
+
 
 
 - (void)viewDidLoad {
@@ -1476,6 +1488,8 @@
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willAppear:(BOOL)animated
 {
+    [MobClick beginLogPageView:@"GpushView"];
+    
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will appear");
         
@@ -1484,6 +1498,8 @@
         _pushView.tempDic = self.shaixuanDic;
         
     }
+    
+    
 }
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar didDisappear:(BOOL)animated
@@ -1504,6 +1520,10 @@
 
 - (void)sideBar:(GTranslucentSideBar *)sideBar willDisappear:(BOOL)animated
 {
+    
+    
+     [MobClick endLogPageView:@"GpushView"];
+    
     if (sideBar.tag == 1) {
         NSLog(@"Right SideBar will disappear");
         

@@ -64,20 +64,21 @@
 {
     NSDictionary *_locationDic;
 }
--(void)viewWillAppear:(BOOL)animated
+
+
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"海马医生"];
-    
-    [MobClick beginLogPageView:@"HomeViewController"];
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
-
--(void)viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:@"HomeViewController"];
+    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
