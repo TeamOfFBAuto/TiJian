@@ -18,6 +18,7 @@
 #import "LocationChooseViewController.h"//定位地区选择vc
 #import "VipAppointViewController.h"//转诊预约
 #import "PeopleManageController.h"
+#import "GoHealthProductlistController.h"//GO健康
 #import "ActivityView.h"//活动view
 #import "ActivityModel.h"
 #import "DoctorModel.h"//对接专家医生model
@@ -211,9 +212,7 @@
     //定位完再请求活动
     [self getUnreadActivityNum];
     
-    NSLog(@"%@",dic);
     _locationDic = dic;
-    NSLog(@"%@",_locationDic);
     
     NSString *theString;
     
@@ -1352,51 +1351,6 @@
         //专家问诊： 公立医院权威专家  target 5
         [self clickToGuaHaoType:5];
     }
-    
-//    else
-//    {
-//        int index = tag - kTagGuahao;
-//        int type_guanhao = 0;
-//        switch (index) {
-//            case 0:
-//            {
-//                //免费咨询 对应 公立医院主治医生
-//                type_guanhao = 4;
-//            }
-//                break;
-//            case 1:
-//            {
-//                //在线问诊 对应 健康顾问团
-//                type_guanhao = 3;
-//
-//            }
-//                break;
-//            case 2:
-//            {
-//                //预约挂号
-//                type_guanhao = 1;
-//            }
-//                break;
-//            case 3:
-//            {
-//                //精准预约 对应 转诊预约
-//                type_guanhao = 2;
-//
-//            }
-//                break;
-//            default:
-//            {
-//                return;
-//            }
-//                break;
-//        }
-//        __weak typeof(self)weakSelf = self;
-//        [LoginViewController isLogin:self loginBlock:^(BOOL success) {
-//            if (success) {
-//                [weakSelf clickToGuaHaoType:type_guanhao];
-//            }
-//        }];
-//    }
 }
 
 
@@ -1491,7 +1445,8 @@
         
     [LoginViewController isLogin:self loginBlock:^(BOOL success) {
         if (success) {
-            [weakSelf loginToAppoint];
+//            [weakSelf loginToAppoint];
+            [weakSelf clickToGoHealth];
         }
     }];
 }
@@ -1596,6 +1551,18 @@
     VipAppointViewController *vip = [[VipAppointViewController alloc]init];
     vip.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:vip animated:YES];
+}
+
+#pragma mark - GO健康
+
+/**
+ *  GO健康
+ */
+- (void)clickToGoHealth
+{
+    GoHealthProductlistController *goHealth = [[GoHealthProductlistController alloc]init];
+    goHealth.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:goHealth animated:YES];
 }
 
 #pragma mark - 代理

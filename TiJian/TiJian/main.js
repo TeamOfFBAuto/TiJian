@@ -108,7 +108,20 @@ defineClass('MyCouponViewController', [ ], {useBtnClicked:function() {
     
 }})
 
+//+ (BOOL)isValidateIDCard:(NSString *)value
+//重写身份证号验证
+defineClass('LTools', [ ], {
 
+},{ isValidateIDCard:function(value)
+{
+    console.log("验证身份证");
+    var num = value.length();
+    if (num == 15 || num == 18)
+    {
+        return true;
+    }
+    return false;
+}})
 
 
 

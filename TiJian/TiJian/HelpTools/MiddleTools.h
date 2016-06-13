@@ -131,6 +131,7 @@ typedef NS_ENUM(NSInteger ,SourceType) {
                         linkUrl:(NSString *)linkUrl;
 
 
+#pragma mark - 友盟统计
 /**
  *  友盟统计
  *
@@ -140,5 +141,15 @@ typedef NS_ENUM(NSInteger ,SourceType) {
  */
 -(void)umengEvent:(NSString *)eventId attributes:(NSDictionary *)attributes number:(NSNumber *)number;
 
+
+#pragma mark - 对接Go健康
+/**
+ *  go健康对接签名
+ *
+ *  @param params 需要的参数
+ *
+ *  @return
+ */
++ (NSString *)goHealthSignWithParams:(NSDictionary *)params;
 
 @end

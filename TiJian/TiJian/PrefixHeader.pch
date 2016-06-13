@@ -18,6 +18,7 @@
 #import "ColorConstants.h"//颜色
 #import "ImageConstants.h"//图片
 #import "ApiConstants.h"//接口
+#import "ThirdApiConstants.h"//三方对接接口
 
 #import "MyViewController.h"//viewController基类
 #import "LNavigationController.h"//滑动返回

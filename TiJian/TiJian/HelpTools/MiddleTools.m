@@ -287,4 +287,45 @@
 }
 
 
+#pragma mark go健康对接签名算法
+
+/**
+ *  go健康对接签名
+ *
+ *  @param params 需要的参数
+ *
+ *  @return
+ */
++ (NSString *)goHealthSignWithParams:(NSDictionary *)params
+{
+    //①对参数按照key=value的格式,并按照参数名ASCII字典序排序如下
+    //按字典升序
+    NSArray *allkeys = [params allKeys];
+    NSArray *tempKeys = [allkeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [obj1 compare:obj2 options:NSNumericSearch];
+    }];
+    NSLog(@"tempKeys %@",tempKeys);
+    
+    //key=value的格式拼接
+    NSString *tempKey = [tempKeys firstObject];
+    NSString *tempValue = params[tempKey];
+    NSMutableString *url = [NSMutableString stringWithFormat:@"%@=%@",tempKey,tempValue];
+    for (int i = 1 ; i < tempKeys.count; i ++) {
+        tempKey = tempKeys[i];
+        tempValue = params[tempKey];
+        NSString *param = [NSString stringWithFormat:@"&%@=%@",tempKey,tempValue];
+        [url appendString:param];
+    }
+    NSLog(@"url:%@",url);
+    
+    //②拼接API密钥(appSecret)
+    NSString *stringSignTemp = [NSString stringWithFormat:@"%@&key=%@",url,GoHealthAppSecret];
+    
+    //③进行MD5运算,再将得到的字符串所有字符转换为大写,得到sign值signValue
+    stringSignTemp = [LTools md5:stringSignTemp];
+    NSString *sign = [stringSignTemp uppercaseString];//转大写
+    
+    return sign;
+}
+
 @end

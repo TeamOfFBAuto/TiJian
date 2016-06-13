@@ -50,7 +50,7 @@
 //    _aWebview.dataDetectorTypes = UIDataDetectorTypeNone;
     
     NSArray *titles = @[@"客服电话",@"联系邮箱",@"海马医生"];
-    NSArray *contents = @[@"4006279589",@"mobile@jiruijia.com",@"海马医生是一款私人定制健康体检和健康管理的移动应用,实现团体及个人健康体检个性化定制、在线预约、报告深度解读、在线咨询和就医服务(医生问诊、就医挂号、专家预约)。"];
+    NSArray *contents = @[HaiMa_service,@"mobile@jiruijia.com",@"海马医生是一款私人定制健康体检和健康管理的移动应用,实现团体及个人健康体检个性化定制、在线预约、报告深度解读、在线咨询和就医服务(医生问诊、就医挂号、专家预约)。"];
     
     for (int i = 0 ; i < titles.count; i ++) {
         

@@ -848,10 +848,10 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    NSDictionary *dic = @{
-                          @"product_id":self.theProductModel.product_id,
-                          @"authcode":[UserInfo getAuthkey]
-                          };
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:self.theProductModel.product_id forKey:@"product_id"];
+    [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];
     
     NSString *api;
     if (type) {//已收藏

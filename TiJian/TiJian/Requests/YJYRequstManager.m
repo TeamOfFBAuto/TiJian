@@ -58,7 +58,6 @@
     //判断网络是否可用
     if (![LTools NetworkReachable]) {
         
-        
         NSString *erroInfo = @"网络不可用,请检查网络";
         NSDictionary *result = @{Erro_Info: erroInfo,
                                  Erro_Code:[NSString stringWithFormat:@"%d",Erro_NetworkUnReachable]};
@@ -70,7 +69,13 @@
     //显示菊花
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    NSString *baseUrl = [SERVER_URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *serverUrl = SERVER_URL;
+    
+    if (method == YJYRequstMethodGet_goHealth ||
+        method == YJYRequstMethodPost_goHealth)
+    {
+        serverUrl = GoHealthServerUrl;
+    }
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
@@ -107,11 +112,11 @@
         
     }else
     {
-        baseUrl = [NSString stringWithFormat:@"%@%@",SERVER_URL,apiString];
+        serverUrl = [NSString stringWithFormat:@"%@%@",serverUrl,apiString];
         
         NSArray *allkeys = [paramsDic allKeys];
         
-        NSMutableString *url = [NSMutableString stringWithString:baseUrl];
+        NSMutableString *url = [NSMutableString stringWithString:serverUrl];
         
         for (NSString *key in allkeys) {
             
@@ -119,19 +124,22 @@
             [url appendString:param];
         }
         
-        if (method == YJYRequstMethodGet)
+        if (method == YJYRequstMethodGet ||
+            method == YJYRequstMethodGet_goHealth)
         {
             DDLOG(@"Method:get url:%@",url);
             
-        }else if (method == YJYRequstMethodPost)
+        }else if (method == YJYRequstMethodPost ||
+                  method == YJYRequstMethodPost_goHealth)
         {
-            DDLOG(@"Method:post url:%@",baseUrl);
+            DDLOG(@"Method:post url:%@",serverUrl);
             DDLOG(@"post params:%@",paramsDic);
         }
         
-        if (method == YJYRequstMethodGet) {
+        if (method == YJYRequstMethodGet ||
+            method == YJYRequstMethodGet_goHealth) {
             
-            requestOpertation = [manager GET:baseUrl parameters:paramsDic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            requestOpertation = [manager GET:serverUrl parameters:paramsDic success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
                 [weakSelf successOperation:operation completion:completionBlock failBlock:failBlock];
                 
@@ -140,12 +148,13 @@
                 [weakSelf failureOperation:operation error:error failtBlock:failBlock];
             }];
             
-        }else if (method == YJYRequstMethodPost){
+        }else if (method == YJYRequstMethodPost ||
+                  method == YJYRequstMethodPost_goHealth){
             
             if (constructingBlock) {
                 
                 
-                requestOpertation = [manager POST:baseUrl parameters:paramsDic
+                requestOpertation = [manager POST:serverUrl parameters:paramsDic
                                      
                           constructingBodyWithBlock:constructingBlock
                                      
@@ -161,7 +170,7 @@
                                             }];
             }else
             {
-                requestOpertation = [manager POST:baseUrl parameters:paramsDic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                requestOpertation = [manager POST:serverUrl parameters:paramsDic success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     
                     [weakSelf successOperation:operation completion:completionBlock failBlock:failBlock];
                     
@@ -175,6 +184,18 @@
         }
 
     }
+    
+    // operation userInfo处理
+    NSDictionary *tempUserInfo = @{@"method":NSStringFromInt(method)};
+    NSDictionary *userInfo = requestOpertation.userInfo;
+    NSMutableDictionary *newUserInfo;
+    if (userInfo) {
+        newUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+    }else
+    {
+        newUserInfo = [NSMutableDictionary dictionary];
+    }
+    requestOpertation.userInfo = [newUserInfo addObject:tempUserInfo];;
     
     [self addOperation:requestOpertation];
     
@@ -203,23 +224,31 @@
         
         NSDictionary *failDic = @{Erro_Info:Alert_ServerErroInfo,
                                   Erro_Code:NSStringFromInt(Erro_ServerException)};
-        
         failBlock(failDic);
-        
         DDLOG(@"%@:%@",Alert_ServerErroInfo,operation.responseString);
-
         return;
     }
-
     NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-    
-     @WeakObj(self);
-    if ([result isKindOfClass:[NSDictionary class]]) {
+    @WeakObj(self);
+    if ([result isKindOfClass:[NSDictionary class]])
+    {
+        YJYRequstMethod method = [operation.userInfo[@"method"] intValue];
+        int erroCode = 0;//错误code
+        int successCode = 0;//正确code
         
-        int erroCode = [[result objectForKey:@"errorcode"]intValue];
+        if (method == YJYRequstMethodGet_goHealth ||
+            method == YJYRequstMethodPost_goHealth) {
+            erroCode = [[result objectForKey:@"code"]intValue];
+            successCode = 200;
+        }else
+        {
+            erroCode = [[result objectForKey:@"errorcode"]intValue];
+            successCode = 0;
+        }
+        
         NSString *erroInfo = [result objectForKey:@"msg"];
         
-        if (erroCode == 0) { //无错误,请求数据成功
+        if (erroCode == successCode) { //无错误,请求数据成功
             
             completionBlock(result);
 
@@ -228,20 +257,13 @@
             //大于2000的可以正常提示错误,小于2000的为内部错误 参数错误等
             if (erroCode >= EnableErroLogCode) {
                 
-
-//                NSDictionary *result = @{Erro_Info:erroInfo,
-//                                         Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 failBlock(result);
-                
                 [Weakself showErroInfo:erroInfo];
                 
             }else
             {
                 DDLOG(@"errcode:%d erroInfo:%@",erroCode,erroInfo);
                 
-//                erroInfo = erroInfo ? : Alert_ServerErroInfo;
-//                NSDictionary *result = @{Erro_Info: erroInfo,
-//                                         Erro_Code:[NSString stringWithFormat:@"%d",erroCode]};
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:result];
                 if (!erroInfo) {
                     [params safeSetString:Alert_ServerErroInfo forKey:erroInfo];
@@ -283,7 +305,6 @@
             errInfo = @"网络连接超时";
             break;
         case 3840:
-            
             errInfo = Alert_ServerErroInfo;
             break;
         default:

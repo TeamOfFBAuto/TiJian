@@ -199,6 +199,9 @@
 #define Get_Activity_list @"/index.php?d=api&c=activity&m=activity_list"
 
 //2、获取是否有最新活动
+//show:判断是否需要显示活动入口
+//num:标识未读消息个数，大于0时显示红点
+//latest_activity_id：最新的活动id,用来判断是否需要自动弹出活动页
 #define Get_Show_activity @"/index.php?d=api&c=activity&m=show_activity"
 
 /******************商品相关接口*******************/

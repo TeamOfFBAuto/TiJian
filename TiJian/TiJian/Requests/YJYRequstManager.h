@@ -30,6 +30,8 @@ typedef enum {
     
     YJYRequstMethodGet = 0,//get请求
     YJYRequstMethodPost,  //post请求
+    YJYRequstMethodGet_goHealth,//go健康 get请求
+    YJYRequstMethodPost_goHealth,  //go健康 post请求
     YJYRequstMethodCustom //自定义请求
     
 }YJYRequstMethod;

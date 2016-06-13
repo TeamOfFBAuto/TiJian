@@ -54,30 +54,22 @@
     
     sleep(1);
     
-//    [self testNetwork];
-    
-    NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-    
-    //友盟
-    [self umengSocial];
-    
-    //JSPatch distribution
-//    [JSPatch startWithAppKey:JSPatchAppKey];
-//    [JSPatch sync];
-    
-    //JSPatch develope
-    [JSPatch testScriptInBundle];
-    
-        
     //注册上传头像通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadHeadImage) name:NOTIFICATION_UPDATEHEADIMAGE object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_UPDATEMSGNUM object:nil];
     
-    RootViewController *root = [[RootViewController alloc]init];
-    self.window.rootViewController = root;
+    //友盟
+    [self umengSocial];
+    
+    //JSPatch
+    [self JSPatch];
+    
+    //JPush
+    [self JPush:launchOptions];
     
     //微信支付
+    NSString *version = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     NSString *name = [NSString stringWithFormat:@"海马医生%@",version];
     [WXApi registerApp:WXAPPID withDescription:name];
     
@@ -94,48 +86,9 @@
     
     //检查版本
     [self checkVersion];
-    
-    //================================= JPUSH =========================================
-    //JPush Required
-    
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-        //可以添加自定义categories
-        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
-                                                          UIUserNotificationTypeSound |
-                                                          UIUserNotificationTypeAlert)
-                                              categories:nil];
-    } else {
-        //categories 必须为nil
-        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                          UIRemoteNotificationTypeSound |
-                                                          UIRemoteNotificationTypeAlert)
-                                              categories:nil];
-    }
-    
-    //如不需要使用IDFA，advertisingIdentifier 可为nil
-    [JPUSHService setupWithOption:launchOptions appKey:JPushAppkey
-                          channel:JPushChannel
-                 apsForProduction:[NSStringFromInt(JPushIsProduction) boolValue]
-            advertisingIdentifier:nil];
-    
-    //UIApplicationLaunchOptionsRemoteNotificationKey,判断是通过推送消息启动的
-    
-    NSDictionary *userInfo = [launchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
-    if (userInfo)
-    {
-        DDLOG(@"didFinishLaunch : userInfo %@",userInfo);
-    }
 
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidSetupNotification:) name:kJPFNetworkDidSetupNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidCloseNotification:) name:kJPFNetworkDidCloseNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidRegisterNotification:) name:kJPFNetworkDidRegisterNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidLoginNotification:) name:kJPFNetworkDidLoginNotification object:nil];
-    //非APNS消息
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidReceiveMessageNotification:) name:kJPFNetworkDidReceiveMessageNotification object:nil];
-    //错误提示
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForErrorNotification:) name:kJPFServiceErrorNotification object:nil];
-
-    
+    RootViewController *root = [[RootViewController alloc]init];
+    self.window.rootViewController = root;
     return YES;
 }
 
@@ -225,19 +178,11 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    DDLOG(@"hahah2");
-    DDLOG_CURRENT_METHOD;
-    
     [self actionForApplication:application notificationUserInfo:userInfo];
-    
-//    [[LogView logInstance]addLog:@"RemoteNotification_short"];
-    
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
-//    [[LogView logInstance]addLog:@"RemoteNotification_long"];
-
     [self actionForApplication:application notificationUserInfo:userInfo];
     
     completionHandler(UIBackgroundFetchResultNewData);
@@ -289,6 +234,67 @@
     }
 }
 
+#pragma mark - JPush
+
+- (void)JPush:(NSDictionary *)launchOptions
+{
+    //================================= JPUSH =========================================
+    //JPush Required
+    
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        //可以添加自定义categories
+        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                          UIUserNotificationTypeSound |
+                                                          UIUserNotificationTypeAlert)
+                                              categories:nil];
+    } else {
+        //categories 必须为nil
+        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                          UIRemoteNotificationTypeSound |
+                                                          UIRemoteNotificationTypeAlert)
+                                              categories:nil];
+    }
+    
+    //如不需要使用IDFA，advertisingIdentifier 可为nil
+    [JPUSHService setupWithOption:launchOptions appKey:JPushAppkey
+                          channel:JPushChannel
+                 apsForProduction:[NSStringFromInt(JPushIsProduction) boolValue]
+            advertisingIdentifier:nil];
+    
+    //UIApplicationLaunchOptionsRemoteNotificationKey,判断是通过推送消息启动的
+    
+    NSDictionary *userInfo = [launchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
+    if (userInfo)
+    {
+        DDLOG(@"didFinishLaunch : userInfo %@",userInfo);
+    }
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidSetupNotification:) name:kJPFNetworkDidSetupNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidCloseNotification:) name:kJPFNetworkDidCloseNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidRegisterNotification:) name:kJPFNetworkDidRegisterNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidLoginNotification:) name:kJPFNetworkDidLoginNotification object:nil];
+    //非APNS消息
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForDidReceiveMessageNotification:) name:kJPFNetworkDidReceiveMessageNotification object:nil];
+    //错误提示
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForErrorNotification:) name:kJPFServiceErrorNotification object:nil];
+}
+
+#pragma mark - JSPatch
+
+- (void)JSPatch
+{
+    
+#ifdef DEBUG
+    //JSPatch develope
+    [JSPatch testScriptInBundle];
+#else
+    //JSPatch distribution
+    [JSPatch startWithAppKey:JSPatchAppKey];
+    [JSPatch sync];
+#endif
+    
+}
+
 #pragma mark - 友盟相关
 
 - (void)umengSocial
@@ -300,11 +306,12 @@
     UMConfigInstance.ePolicy = BATCH;
     [MobClick startWithConfigure:UMConfigInstance];
     
+    //使用友盟统计
 #ifdef DEBUG
     [MobClick setLogEnabled:YES];
+#else
+    [MobClick setLogEnabled:NO];
 #endif
-    [MobClick setLogEnabled:YES];
-    //使用友盟统计
     
     [UMSocialData setAppKey:UmengAppkey];
     
@@ -579,9 +586,7 @@
 #pragma - mark 定位Delegate
 
 - (void)theLocationDictionary:(NSDictionary *)dic{
-    
-    DDLOG(@"定位成功------>%@",dic);
-    
+        
     if (_locationBlock) {
         
         _locationBlock(dic);
@@ -592,8 +597,6 @@
 
 
 -(void)theLocationFaild:(NSDictionary *)dic{
-    
-    DDLOG(@"定位失败----->%@",dic);
     
     if (_locationBlock) {
         _locationBlock(dic);
@@ -989,16 +992,13 @@
             if (viewsCount == 1) {
                 hidden = YES;
             }
-            
             if ([unVc isKindOfClass:[UINavigationController class]]){
                 
                 UIViewController *viewController = unVc.visibleViewController;
                 if ([NSStringFromClass(viewController.class) isEqualToString:@"RCDChatViewController"]) {
-                    
                     return;
                 }
             }
-
             [MiddleTools pushToChatWithSourceType:SourceType_Normal fromViewController:unVc model:nil hiddenBottom:hidden];
             return;
         }
@@ -1060,7 +1060,6 @@
     }else if (type == MsgType_PEProgress){ //体检报告进度
         
         DDLOG(@"体检进度报告");
-        
     }
     
     if (viewsCount == 1) {
@@ -1070,87 +1069,27 @@
 }
 
 
-
 #pragma mark - go健康接口测试
-
-//- (void)testNetwork
-//{
-////    http://121.40.167.147:3005/v1/productions?appId=gjk001061?&nonceStr=09DS2LSDKFSF6CQ2502SI8ZNMTM67VS&sign=D1A831FA8945B84C15D041AC3EA556C9
-//    
-//    NSString *server = @"http://121.40.167.147:3005/v1/productions?appId=gjk001061";
-//    
-//    //①对参数按照key=value的格式,并按照参数名ASCII字典序排序如下
-//    NSString *stringA = @"appId=gjk001061&nonceStr=09DS2LSDKAAA6CQ2502SI8ZNMTM99VS";
-//    
-//    //②拼接API密钥(appSecret)
-//    NSString *stringSignTemp = [NSString stringWithFormat:@"%@&key=3b3f2a13cc7b59830ca819c38e7f294897b3978465d38a8b675b6a2a9474d50e",stringA];
-//    
-//    //③进行MD5运算,再将得到的字符串所有字符转换为大写,得到sign值signValue
-//    stringSignTemp = [LTools md5:stringSignTemp];
-//    
-//    NSString *sign = [stringSignTemp uppercaseString];//转大写
-//    
-//    NSString *api = [NSString stringWithFormat:@"%@",server];
-//    
-//    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:api]];
-//    
-//    NSDictionary *params = @{@"nonceStr":@"09DS2LSDKAAA6CQ2502SI8ZNMTM99VS",
-//                             @"sign":sign};
-//    
-//    __weak typeof(self)weakSelf = self;
-//    
-//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-//        NSLog(@"success result %@",result);
-//        
-//        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
-//        //        [weakTable reloadData:temp pageSize:10];
-//        
-//    } failBlock:^(NSDictionary *result) {
-//        
-//        NSLog(@"fail result %@",result);
-//        NSLog(@"%@",result[@"msg"]);
-//        
-//    }];
-//}
-
 
 - (void)testNetwork
 {
     //    http://121.40.167.147:3005/v1/productions?appId=gjk001061?&nonceStr=09DS2LSDKFSF6CQ2502SI8ZNMTM67VS&sign=D1A831FA8945B84C15D041AC3EA556C9
     
-    NSString *nonceStr = @"";
-    NSString *appid = @"gjk001061";
-    NSString *appSecret = @"3b3f2a13cc7b59830ca819c38e7f294897b3978465d38a8b675b6a2a9474d50e";
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetValue:NSStringFromInt(1) forKey:@"page"];//第几页
+    [params safeSetValue:NSStringFromInt(20) forKey:@"limit"];//每页数量
     
-    //①对参数按照key=value的格式,并按照参数名ASCII字典序排序如下
-    NSString *stringA = @"appId=gjk001061&nonceStr=09DS2LSDKAAA6CQ2502SI8ZNMTM99VS";
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
     
-    //②拼接API密钥(appSecret)
-    NSString *stringSignTemp = [NSString stringWithFormat:@"%@&key=3b3f2a13cc7b59830ca819c38e7f294897b3978465d38a8b675b6a2a9474d50e",stringA];
-    
-    //③进行MD5运算,再将得到的字符串所有字符转换为大写,得到sign值signValue
-    stringSignTemp = [LTools md5:stringSignTemp];
-    
-    NSString *sign = [stringSignTemp uppercaseString];//转大写
-    
-    NSString *server = @"http://121.40.167.147:3005/v1/productions";
-    NSString *api = [NSString stringWithFormat:@"%@?appId=%@&nonceStr=%@&sign=%@",server,@"gjk001061",@"09DS2LSDKAAA6CQ2502SI8ZNMTM99VS",sign];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:api]];
-    
-    NSDictionary *params = @{CUSTOM_REQUEST:request};
-    
-    __weak typeof(self)weakSelf = self;
-    
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodCustom api:nil parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"success result %@",result);
-        
-        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
-        //        [weakTable reloadData:temp pageSize:10];
-        
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_productionsList parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"goHealth success result %@",result);
     } failBlock:^(NSDictionary *result) {
         
-        NSLog(@"fail result %@",result);
+        NSLog(@"goHealth fail result %@",result);
         NSLog(@"%@",result[@"msg"]);
         
     }];

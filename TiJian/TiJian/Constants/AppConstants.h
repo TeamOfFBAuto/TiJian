@@ -181,6 +181,8 @@
 #define WXAPPSECRET @"a71699732e3bef01aefdaf324e2f522c"
 #define RedirectUrl @"http://sns.whalecloud.com/sina2/callback" //回调地址
 
+//海马客服电话
+#define HaiMa_service @"4006279589"
 
 
 

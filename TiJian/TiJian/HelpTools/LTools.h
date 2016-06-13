@@ -204,6 +204,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (CGFloat)fitWidth:(CGFloat)aWidth;
 
 /**
+ *  根据宽度等比例适配高度
+ *
+ *  @param x 6的高度
+ *
+ *  @return
+ */
++ (CGFloat)fitWithIPhone6:(CGFloat)x;
+
+/**
  *  根据6的屏幕计算比例高度
  *
  *  @param aWidth 6上的高
@@ -564,5 +573,14 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  *  @return
  */
 + (NSString *)getIdCardbirthday:(NSString *)numberStr;
+
+/**
+ *  获取num位随机字符串
+ *
+ *  @param num 位数
+ *
+ *  @return
+ */
++ (NSString *)randomNum:(int)num;
 
 @end

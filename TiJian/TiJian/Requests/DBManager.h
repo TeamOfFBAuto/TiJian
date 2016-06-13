@@ -15,6 +15,8 @@
     FMDatabase *_dataBase;
 }
 
+@property(nonatomic,retain)FMDatabase *goHealthDataBase;//go健康
+
 + (id)shareInstance;
 
 /**

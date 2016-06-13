@@ -39,10 +39,22 @@
 //        //创建 ShoppingCar表
 //        
 //        [_dataBase executeUpdate:@"CREATE TABLE IF NOT EXISTS ShoppingCar(uid text,product_name text,product_id int,product_num int,current_price text,add_time text,cover_pic text)"];
-        
-        [_dataBase close];
+//        [_dataBase close];
     }
     return self;
+}
+
+/**
+ *  goHealth
+ *
+ *  @return
+ */
+-(FMDatabase *)goHealthDataBase
+{
+    if (!_goHealthDataBase) {
+        _goHealthDataBase = [[FMDatabase alloc]initWithPath:[self getGoHealthDatabasePath]];
+    }
+    return _goHealthDataBase;
 }
 
 /**
@@ -56,6 +68,24 @@
     NSString *filePath = [documents stringByAppendingPathComponent:@"hema.sqlite"]; //将要存放位置
     NSLog(@"数据库路径 = %@",filePath);
     NSString *bundlePath = [[NSBundle mainBundle]pathForResource:@"hema" ofType:@"sqlite"];//bundle中位置
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:filePath]) {
+        [fm copyItemAtPath:bundlePath toPath:filePath error:nil]; //拷贝数据文件到document下
+    }
+    return filePath;
+}
+
+/**
+ *  获取goHealth数据库路径
+ *
+ *  @return
+ */
+-(NSString *)getGoHealthDatabasePath
+{
+    NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];//获取document路径
+    NSString *filePath = [documents stringByAppendingPathComponent:@"GoHealth.sqlite"]; //将要存放位置
+    NSLog(@"goHealth数据库路径 = %@",filePath);
+    NSString *bundlePath = [[NSBundle mainBundle]pathForResource:@"GoHealth" ofType:@"sqlite"];//bundle中位置
     NSFileManager *fm = [NSFileManager defaultManager];
     if (![fm fileExistsAtPath:filePath]) {
         [fm copyItemAtPath:bundlePath toPath:filePath error:nil]; //拷贝数据文件到document下
@@ -180,53 +210,6 @@
     }
 }
 
-
-////４。插入数据 到购物车
-//
-//-(void)insertProduct:(ProductModel *)aModel
-//{
-//    //插入数据库
-//    
-//    if ([_dataBase open]) {
-//        
-//        [_dataBase beginTransaction];
-//       
-//        //cart_pro_id int,uid text,product_name text,product_id int,product_num int,current_price text,add_time text
-//        
-//        NSString *uid = aModel.uid ? : @"";
-//        NSString *name = aModel.product_name ? : @"";
-//        NSString *productId = aModel.product_id ? : @"0";
-//        NSString *addTime = aModel.add_time ? : @"";
-////        NSString *num = aModel.product_num ? : @"0";
-//        NSString *price = aModel.current_price ? : @"0";
-//        NSString *cover_pic = aModel.cover_pic ? : @"";
-//        
-//        
-//        FMResultSet *rs = [_dataBase executeQuery:@"SELECT count(*) FROM ShoppingCar where product_id = ?",productId];
-//        
-//        int num = 0;
-//        while ([rs next]){
-//            
-//            num = [rs intForColumnIndex:0];
-//            
-//            NSLog(@"productId %@ existNum: %d",productId,num);
-//
-//        }
-//        
-//        //存在的话 +1 否则 插入新数据
-//        if (num > 0) {
-//            
-//            [_dataBase executeUpdate:@"update ShoppingCar set product_num = product_num + 1 where product_id = ?",[NSNumber numberWithInt:[productId intValue]]];
-//        }else
-//        {
-//            [_dataBase executeUpdate:@"insert into ShoppingCar (uid,product_name,product_id,current_price,add_time,cover_pic,product_num) values (?,?,?,?,?,?,?)",uid,name,[NSNumber numberWithInt:[productId intValue]],price,addTime,cover_pic,[NSNumber numberWithInt:1]];
-//        }
-//        
-//        [_dataBase commit];
-//        [_dataBase close];
-//    }
-//    
-//}
 
 /**
  *  单品数量 +1 或者 -1
@@ -753,5 +736,15 @@
     return nil;
 }
 
+
+#pragma mark - goHealth数据处理
+//CREATE TABLE "citylist" ("id" INTEGER PRIMARY KEY  NOT NULL , "name" TEXT, "state" INTEGER, "code" TEXT, "provinceId" INTEGER, "provinceName" TEXT)
+- (void)insertGoHealthCitylist:(NSDictionary *)cityResult
+{
+    
+    if ([self.goHealthDataBase open]) {
+        
+    }
+}
 
 @end
