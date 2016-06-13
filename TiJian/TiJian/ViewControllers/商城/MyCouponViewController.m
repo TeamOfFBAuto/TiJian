@@ -58,7 +58,10 @@
     [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
-
+- (void)dealloc
+{
+    NSLog(@"%s",__FUNCTION__);
+}
 
 
 
@@ -485,118 +488,8 @@
     [_requst requestWithMethod:YJYRequstMethodGet api:url parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSDictionary *listDic = [result dictionaryValueForKey:@"list"];
-        
-        //可用
-        NSDictionary *enableDic = [listDic dictionaryValueForKey:@"enable"];
-        //不可用
-        NSDictionary *disableDic = [listDic dictionaryValueForKey:@"disable"];
-       
-        //可用
-        _tab0Array = [NSMutableArray arrayWithCapacity:1];
-        NSMutableArray *tab0_tongyongArray = [NSMutableArray arrayWithCapacity:1];
-        NSMutableArray *tab0_feitongyongArray = [NSMutableArray arrayWithCapacity:1];
-        
-        //不可用
-        _tab1Array = [NSMutableArray arrayWithCapacity:1];
-        NSMutableArray *tab1_tongyongArray = [NSMutableArray arrayWithCapacity:1];
-        NSMutableArray *tab1_feitongyongArray = [NSMutableArray arrayWithCapacity:1];
-        
-        //可用里的通用
-        NSArray *enableDic_common_Array = [enableDic arrayValueForKey:@"common"];
-        //可用里的非通用
-        NSArray *enableDic_uncommon_Array = [enableDic arrayValueForKey:@"uncommon"];
-        
-        //不可用里的通用
-        NSArray *disableDic_common_Array = [disableDic arrayValueForKey:@"common"];
-        //不可用里的非通用
-        NSArray *disableDic_uncommon_Array = [disableDic arrayValueForKey:@"uncommon"];
-        
-        //dic转model
-        //可用-通用
-        for (NSDictionary *dic in enableDic_common_Array) {
-            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (model) {
-                [tab0_tongyongArray addObject:model];
-            }
-        }
-        
-        //可用-非通用
-        for (NSDictionary *dic in enableDic_uncommon_Array) {
-            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (model) {
-                [tab0_feitongyongArray addObject:model];
-            }
-        }
-        
-        //不可用-通用
-        for (NSDictionary *dic in disableDic_common_Array) {
-            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (model) {
-                [tab1_tongyongArray addObject:model];
-            }
-        }
-        
-        //不可用-非通用
-        for (NSDictionary *dic in disableDic_uncommon_Array) {
-            CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
-            if (model) {
-                [tab1_feitongyongArray addObject:model];
-            }
-        }
-   
-
-       
-        if (tab0_tongyongArray.count>0) {
-            [_tab0Array addObject:tab0_tongyongArray];
-        }
-        
-        if (tab0_feitongyongArray.count>0) {
-            [_tab0Array addObject:tab0_feitongyongArray];
-        }
-        
-        if (tab1_tongyongArray.count>0) {
-            [_tab1Array addObject:tab1_tongyongArray];
-        }
-        
-        if (tab1_feitongyongArray.count>0) {
-            [_tab1Array addObject:tab1_feitongyongArray];
-        }
-        
-        
-        [_tab0 reloadData];
-        [_tab1 reloadData];
-        
-        
-        
-        [self creatUpBtnAndDownScrollView];
-        
-        
-        if (_tab0Array.count>0) {
-            
-            if (self.type == GCouponType_use_daijinquan || self.type == GCouponType_use_youhuiquan) {
-                UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 55)];
-                
-                _use_btn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [_use_btn setFrame:CGRectMake(33, 10, DEVICE_WIDTH - 65, 40)];
-                _use_btn.layer.cornerRadius = 4;
-                
-                
-                
-
-                
-                _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
-                
-                _use_btn.titleLabel.font = [UIFont systemFontOfSize:15];
-                [_use_btn setTitle:@"确 定" forState:UIControlStateNormal];
-                [_use_btn addTarget:self action:@selector(useBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-                [view addSubview:_use_btn];
-                
-                _tab0.tableFooterView = view;
-            }
-        }
-        
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        __weak typeof (self)bself = self;
+        [bself requestFinishWithDic:listDic];
         
         
     } failBlock:^(NSDictionary *result) {
@@ -606,6 +499,123 @@
     }];
     
 }
+
+
+-(void)requestFinishWithDic:(NSDictionary *)listDic{
+    //可用
+    NSDictionary *enableDic = [listDic dictionaryValueForKey:@"enable"];
+    //不可用
+    NSDictionary *disableDic = [listDic dictionaryValueForKey:@"disable"];
+    
+    //可用
+    _tab0Array = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray *tab0_tongyongArray = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray *tab0_feitongyongArray = [NSMutableArray arrayWithCapacity:1];
+    
+    //不可用
+    _tab1Array = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray *tab1_tongyongArray = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray *tab1_feitongyongArray = [NSMutableArray arrayWithCapacity:1];
+    
+    //可用里的通用
+    NSArray *enableDic_common_Array = [enableDic arrayValueForKey:@"common"];
+    //可用里的非通用
+    NSArray *enableDic_uncommon_Array = [enableDic arrayValueForKey:@"uncommon"];
+    
+    //不可用里的通用
+    NSArray *disableDic_common_Array = [disableDic arrayValueForKey:@"common"];
+    //不可用里的非通用
+    NSArray *disableDic_uncommon_Array = [disableDic arrayValueForKey:@"uncommon"];
+    
+    //dic转model
+    //可用-通用
+    for (NSDictionary *dic in enableDic_common_Array) {
+        CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+        if (model) {
+            [tab0_tongyongArray addObject:model];
+        }
+    }
+    
+    //可用-非通用
+    for (NSDictionary *dic in enableDic_uncommon_Array) {
+        CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+        if (model) {
+            [tab0_feitongyongArray addObject:model];
+        }
+    }
+    
+    //不可用-通用
+    for (NSDictionary *dic in disableDic_common_Array) {
+        CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+        if (model) {
+            [tab1_tongyongArray addObject:model];
+        }
+    }
+    
+    //不可用-非通用
+    for (NSDictionary *dic in disableDic_uncommon_Array) {
+        CouponModel *model = [[CouponModel alloc]initWithDictionary:dic];
+        if (model) {
+            [tab1_feitongyongArray addObject:model];
+        }
+    }
+    
+    
+    
+    if (tab0_tongyongArray.count>0) {
+        [_tab0Array addObject:tab0_tongyongArray];
+    }
+    
+    if (tab0_feitongyongArray.count>0) {
+        [_tab0Array addObject:tab0_feitongyongArray];
+    }
+    
+    if (tab1_tongyongArray.count>0) {
+        [_tab1Array addObject:tab1_tongyongArray];
+    }
+    
+    if (tab1_feitongyongArray.count>0) {
+        [_tab1Array addObject:tab1_feitongyongArray];
+    }
+    
+    
+    [_tab0 reloadData];
+    [_tab1 reloadData];
+    
+    
+    
+    [self creatUpBtnAndDownScrollView];
+    
+    
+    if (_tab0Array.count>0) {
+        
+        if (self.type == GCouponType_use_daijinquan || self.type == GCouponType_use_youhuiquan) {
+            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 55)];
+            
+            _use_btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_use_btn setFrame:CGRectMake(33, 10, DEVICE_WIDTH - 65, 40)];
+            _use_btn.layer.cornerRadius = 4;
+            
+            
+            
+            
+            
+            _use_btn.backgroundColor = RGBCOLOR(237, 108, 22);
+            
+            _use_btn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [_use_btn setTitle:@"确 定" forState:UIControlStateNormal];
+            [_use_btn addTarget:self action:@selector(useBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:_use_btn];
+            
+            _tab0.tableFooterView = view;
+        }
+    }
+    
+    
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+}
+
+
 
 
 //确定按钮

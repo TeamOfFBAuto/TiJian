@@ -137,10 +137,6 @@
 }
 
 
-
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -220,15 +216,15 @@
     }
     
     //refresh头部
-    [self.theTopView setFrame:CGRectMake(0,
-                                         0,
-                                         DEVICE_WIDTH,
-                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
-                                         +DEVICE_WIDTH*430/750//分类版块高度
-                                         +5
-                                         +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
-                                         +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
-                                         )];
+//    [self.theTopView setFrame:CGRectMake(0,
+//                                         0,
+//                                         DEVICE_WIDTH,
+//                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
+//                                         +DEVICE_WIDTH*430/750//分类版块高度
+//                                         +5
+//                                         +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
+//                                         +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
+//                                         )];
     
     //设置轮播图
     [self creatUpCycleScrollView];
@@ -297,6 +293,9 @@
     [jingpintuijian addSubview:ttl];
     ttl.text = @"精品推荐";
     ttl.textColor = [UIColor blackColor];
+    
+    [self.theTopView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, jingpintuijian.bottom)];
+    
     
     _table.tableHeaderView = self.theTopView;
     
@@ -474,8 +473,9 @@
     NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:1];
     
+    
     if (_StoreCycleAdvDic) {//有轮播图缓存
-        if (advertisements_data.count > 0) {
+        if (advertisements_data.count > 0) {//有轮播图
             
             for (NSDictionary *dic in advertisements_data) {
                 CycleAdvModel *model = [[CycleAdvModel alloc]initWithDictionary:dic];
@@ -531,15 +531,17 @@
             [_bannerView setAutomicScrollingDuration:3];
             
             [self.theTopView addSubview:_bannerView];
-        }else{
+        }else{//无轮播图
             [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
-            CGFloat height = self.theTopView.frame.size.height;
-            height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
-            [self.theTopView setHeight:height];
-            _table.tableHeaderView = self.theTopView;
+            _bannerView = [[LBannerView alloc] initWithFrame:CGRectZero];
+//            CGFloat height = self.theTopView.frame.size.height;
+//            height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
+//            [self.theTopView setHeight:height];
+//            _table.tableHeaderView = self.theTopView;
         }
     }else{
-        
+        [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
+        _bannerView = [[LBannerView alloc] initWithFrame:CGRectZero];
     }
     
     
@@ -1105,19 +1107,30 @@
     
     NSLog(@"%f",scrollView.contentOffset.y);
     
-    if (scrollView.contentOffset.y<-10) {
-        [[UIApplication sharedApplication] setStatusBarHidden:TRUE withAnimation:UIStatusBarAnimationSlide];
-        [UIView animateWithDuration:0.2 animations:^{
-            self.currentNavigationBar.alpha = 0;
-        }];
+    
+    if (_StoreCycleAdvDic) {
         
-        
-    }else{
-        [[UIApplication sharedApplication] setStatusBarHidden:FALSE withAnimation:UIStatusBarAnimationSlide];
-        [UIView animateWithDuration:0.2 animations:^{
-            self.currentNavigationBar.alpha = 1;
-        }];
+        NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
+        if (advertisements_data.count > 0) {//有轮播图
+            if (scrollView.contentOffset.y<-10) {
+                [[UIApplication sharedApplication] setStatusBarHidden:TRUE withAnimation:UIStatusBarAnimationSlide];
+                [UIView animateWithDuration:0.2 animations:^{
+                    self.currentNavigationBar.alpha = 0;
+                }];
+                
+            }else{
+                [[UIApplication sharedApplication] setStatusBarHidden:FALSE withAnimation:UIStatusBarAnimationSlide];
+                [UIView animateWithDuration:0.2 animations:^{
+                    self.currentNavigationBar.alpha = 1;
+                }];
+            }
+        }else{
+            
+        }
     }
+    
+    
+    
     
     
 }

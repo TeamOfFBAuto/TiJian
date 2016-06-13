@@ -10,6 +10,7 @@
 #import "UIWebView+AFNetworking.h"
 #import "MoreReportViewController.h"
 #import "LPhotoBrowser.h"
+#import "UIWebView+ToFile.h"
 
 @interface ReportDetailController ()<UIWebViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate>
 {
