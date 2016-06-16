@@ -264,6 +264,7 @@
     [temp safeSetString:[dic stringValueForKey:@"long"] forKey:@"long"];
     [temp safeSetString:result.addressDetail.province forKey:@"province"];
     [temp safeSetString:result.addressDetail.city forKey:@"city"];
+    [temp safeSetString:result.addressDetail.streetName forKey:@"streetName"];
     
     //更新记录用户坐标
     [UserInfo updateUserLontitude:[dic stringValueForKey:@"long"] latitude:[dic stringValueForKey:@"lat"]];
@@ -474,5 +475,8 @@
     
     return NO;
 }
+
+
+
 
 @end

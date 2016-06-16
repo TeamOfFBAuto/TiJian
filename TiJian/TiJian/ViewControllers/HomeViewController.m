@@ -38,7 +38,7 @@
 #define kTagRefreshDoctorlist 400 //刷新专家列表
 #define kTagRefreshHealthInfolist 410 //刷新健康咨询列表
 
-@interface HomeViewController ()<RefreshDelegate,UITableViewDataSource>
+@interface HomeViewController ()<RefreshDelegate,UITableViewDataSource,LocationChooseDelegate>
 {
     NSArray *_activityArray;//活动列表
     int _unreadActivityNum;//未读活动总数
@@ -335,11 +335,13 @@
 }
 
 
--(void)setLocationDataWithCityStr:(NSString *)city provinceStr:(NSString *)province{
-    self.leftLabel.text = city;
+#pragma mark -
+
+-(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince{
+    self.leftLabel.text = theCity;
     
-    NSString *pStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:province]];
-    NSString *cStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:city]];
+    NSString *pStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:theProvince]];
+    NSString *cStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:theCity]];
     
     if ([pStr isEqualToString:cStr]) {
         cStr = @"0";

@@ -10,6 +10,9 @@
 #import "HomeViewController.h"
 #import "GStoreHomeViewController.h"
 #define MY_MACRO_NAME ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+
+
+
 @interface LocationChooseViewController ()<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     UITextField *_searchTextField;
@@ -179,13 +182,9 @@
     
     NSString *provinceName = _provinceArray[indexPath.section];
     
-    if (self.delegate) {
-        [self.delegate setLocationDataWithCityStr:cityName provinceStr:provinceName];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
+        [self.delegate afterChooseCity:cityName province:provinceName];
     }
-    if (self.delegate1) {
-        [self.delegate1 afterChangeCityUpdateTableWithCstr:cityName Pstr:provinceName];
-    }
-    
     [self setuserCommonlyUsedCityWithStr:cityName];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -199,13 +198,10 @@
     
      NSString *str = _provinceArray[ges.view.tag - 10];
     
-    if (self.delegate) {
-        [self.delegate setLocationDataWithCityStr:str provinceStr:str];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
+        [self.delegate afterChooseCity:str province:str];
     }
-    if (self.delegate1) {
-        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:str];
-    }
-    
+   
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
     
@@ -462,12 +458,8 @@
     aaa = [aaa stringByAppendingString:@"00"];
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
-    if (self.delegate) {
-        [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
-    }
-    
-    if (self.delegate1) {
-        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:ppp];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
+        [self.delegate afterChooseCity:str province:ppp];
     }
     
     [self setuserCommonlyUsedCityWithStr:str];
@@ -483,11 +475,8 @@
     aaa = [aaa stringByAppendingString:@"00"];
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
-    if (self.delegate) {
-        [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
-    }
-    if (self.delegate1) {
-        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:ppp];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
+        [self.delegate afterChooseCity:str province:ppp];
     }
     
     [self setuserCommonlyUsedCityWithStr:str];
@@ -594,37 +583,36 @@
     }else{
         [self.nowLocationBtn_c setTitle:theString forState:UIControlStateNormal];
         [self.nowLocationBtn_c setWidth:85];
+        
     }
     
     
     self.nowLocationBtn_c.userInteractionEnabled = YES;
     [self.nowLocationBtn_c addTarget:self action:@selector(nowLocationBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    
-    //如果首页正在定位时点进来的话 更新位置
-    if ([self.delegate.leftLabel.text isEqualToString:@"正在定位..."]) {
-        
-        if ([LTools isEmpty:theString]) {
-            self.delegate.leftLabel.text = @"北京市";
-            NSDictionary *cachDic = @{
-                                      @"province":[NSString stringWithFormat:@"%d",1000],
-                                      @"city":[NSString stringWithFormat:@"%d",1005]
-                                      };
-            [GMAPI cache:cachDic ForKey:USERLocation];
-        }else{
-            self.delegate.leftLabel.text = theString;
-            NSDictionary *cachDic = @{
-                                      @"province":[NSString stringWithFormat:@"%d",procinceId],
-                                      @"city":[NSString stringWithFormat:@"%d",cityId]
-                                      };
-            [GMAPI cache:cachDic ForKey:USERLocation];
+ 
+    if ([self.delegate isKindOfClass:[HomeViewController class]]) {
+        //如果首页正在定位时点进来的话 更新位置
+        if ([self.delegate.leftLabel.text isEqualToString:@"正在定位..."]) {
+            
+            if ([LTools isEmpty:theString]) {
+                self.delegate.leftLabel.text = @"北京市";
+                NSDictionary *cachDic = @{
+                                          @"province":[NSString stringWithFormat:@"%d",1000],
+                                          @"city":[NSString stringWithFormat:@"%d",1005]
+                                          };
+                [GMAPI cache:cachDic ForKey:USERLocation];
+            }else{
+                self.delegate.leftLabel.text = theString;
+                NSDictionary *cachDic = @{
+                                          @"province":[NSString stringWithFormat:@"%d",procinceId],
+                                          @"city":[NSString stringWithFormat:@"%d",cityId]
+                                          };
+                [GMAPI cache:cachDic ForKey:USERLocation];
+            }
         }
     }
-    
-    
-    
-    
-    
+
     
 }
 
@@ -649,12 +637,8 @@
     NSString *ppp = [GMAPI cityNameForId:aa];
     [self setuserCommonlyUsedCityWithStr:str];
     
-    if (self.delegate) {
-        [self.delegate setLocationDataWithCityStr:str provinceStr:ppp];
-    }
-    
-    if (self.delegate1) {
-        [self.delegate1 afterChangeCityUpdateTableWithCstr:str Pstr:ppp];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
+        [self.delegate afterChooseCity:str province:ppp];
     }
     
     [self setuserCommonlyUsedCityWithStr:str];

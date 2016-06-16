@@ -11,8 +11,15 @@
 //首页点击左上角进入的vc 选择城市
 
 #import "MyViewController.h"
-@class HomeViewController;
-@class GStoreHomeViewController;
+
+@protocol LocationChooseDelegate <NSObject>
+
+@property(nonatomic,strong)UILabel *leftLabel;
+
+-(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince;
+
+@end
+
 
 @interface LocationChooseViewController : MyViewController
 
@@ -21,8 +28,11 @@
 
 @property(nonatomic,assign)int nowLocationBtn_cityid;
 
-@property(nonatomic,assign)HomeViewController *delegate;
 
-@property(nonatomic,assign)GStoreHomeViewController *delegate1;
+@property(nonatomic,assign)id<LocationChooseDelegate>delegate;
+
+//@property(nonatomic,assign)HomeViewController *delegate;
+//
+//@property(nonatomic,assign)GStoreHomeViewController *delegate1;
 
 @end

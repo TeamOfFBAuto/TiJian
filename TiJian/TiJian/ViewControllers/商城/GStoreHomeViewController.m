@@ -32,7 +32,7 @@
 #import "GView.h"//分类自定义view
 #import "WebviewController.h"
 
-@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
+@interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate,LocationChooseDelegate>
 {
     LBannerView *_bannerView;//轮播图
     
@@ -214,6 +214,11 @@
         self.theTopView.backgroundColor = RGBCOLOR(244, 245, 246);
         
     }
+    
+    for (UIView *view in self.theTopView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     
     //refresh头部
 //    [self.theTopView setFrame:CGRectMake(0,
@@ -1159,9 +1164,13 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
-    StoreHomeOneBrandModel *model_b = _table.dataArray[indexPath.section];
-    ProductModel *aModel = model_b.list[indexPath.row];
-    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
+//    StoreHomeOneBrandModel *model_b = _table.dataArray[indexPath.section];
+//    ProductModel *aModel = model_b.list[indexPath.row];
+//    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
+    
+    GoHealthAppointViewController *cc = [[GoHealthAppointViewController alloc]init];
+    [self.navigationController pushViewController:cc animated:YES];
+    
 }
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
@@ -1457,7 +1466,7 @@
 
 -(void)changeCityBtnClicked{
     LocationChooseViewController *cc = [[LocationChooseViewController alloc]init];
-    cc.delegate1 = self;
+    cc.delegate = self;
     [self.navigationController pushViewController:cc animated:YES];
     
     
@@ -1466,11 +1475,12 @@
 
 
 
-#pragma mark - 代理回调
--(void)afterChangeCityUpdateTableWithCstr:(NSString *)cStr Pstr:(NSString *)pStr{
+#pragma mark - LocationChooseDelegate
+
+-(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince{
     
-    NSString *provinceStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:pStr]];
-    NSString *cityStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:cStr]];
+    NSString *provinceStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:theProvince]];
+    NSString *cityStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:theCity]];
     
     if ([provinceStr isEqualToString:cityStr]) {
         cityStr = @"0";
@@ -1488,8 +1498,8 @@
     _table.pageNum = 1;
     _table.isReloadData = YES;
     [self gotoPrepareProductsWithDic:self.shaixuanDic];
-    
 }
+
 
 
 #pragma mark - Gesture Handler

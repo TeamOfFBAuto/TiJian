@@ -9,6 +9,7 @@
 
 //商城首页
 #import "MyViewController.h"
+#import "GoHealthAppointViewController.h"
 @class GTranslucentSideBar;
 
 @interface GStoreHomeViewController : MyViewController
@@ -24,7 +25,7 @@
 //设置导航栏透明度
 -(void)setEffectViewAlpha:(CGFloat)theAlpha;
 //选择城市后回调
--(void)afterChangeCityUpdateTableWithCstr:(NSString *)cStr Pstr:(NSString *)pStr;
+-(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince;
 //根据城市获取品牌信息
 -(void)prepareBrandListWithLocation;
 @end
