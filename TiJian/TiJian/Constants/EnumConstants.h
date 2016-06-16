@@ -142,6 +142,13 @@ typedef enum {
 }PayActionType;
 
 
+typedef enum {
+    ACTIONTYPE_NORMAL = 0,//滚动
+    ACTIONTYPE_SURE, //确定
+    ACTIONTYPE_Refresh, //刷新数据
+    ACTIONTYPE_CANCEL //取消
+}ACTIONTYPE;
+
 ////挂号网相关接口
 ////1、预约 get
 ////target配置：

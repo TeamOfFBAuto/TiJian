@@ -30,7 +30,6 @@
     
 //    [self netWorkForCityList];
     
-    [self netWorkForAvailableTime];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,56 +97,6 @@
 
 
 #pragma mark - 网络请求
-
-/**
- *  可预约时间
- */
-- (void)netWorkForAvailableTime
-{
-//    respTimeInDate	YES	Int	1	返回格式
-//    itemCodes	NO	String	10015, 10073	检测项目,id 以","分割
-//    	NO	String	1100000123,111000000	产品的idNumber, id 以","分割
-//    	NO	int	1948	城市Id
-//    	NO	int	1970	区县Id
-    
-    NSString *productionIds = @"";//产品的idNumber, id 以","分割
-    NSString *cityid = @"";//城市id
-    NSString *districtid = @"";//区县id
-    
-    NSString *nonceStr = [LTools randomNum:32];//随机字符串
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params safeSetValue:GoHealthAppId forKey:@"appId"];
-    [params safeSetValue:nonceStr forKey:@"nonceStr"];
-    [params safeSetValue:productionIds forKey:@"productionIds"];
-    [params safeSetValue:cityid forKey:@"cityId"];
-    [params safeSetValue:districtid forKey:@"districtId"];
-    
-    NSString *sign = [MiddleTools goHealthSignWithParams:params];
-    [params safeSetValue:sign forKey:@"sign"];
-    
-    @WeakObj(_table);
-     @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_book_dates parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        [Weakself parseBookTimeWithResult:result];
-        
-    } failBlock:^(NSDictionary *result) {
-        
-        NSLog(@"%@",result[@"msg"]);
-    }];
-}
-
-- (void)parseBookTimeWithResult:(NSDictionary *)result
-{
-    NSArray *dates = result[@"dates"];
-    NSArray *hours = result[@"hours"];
-//    ": [
-//    "2016-06-17 00:00:00 +0800",
-//    "2016-06-18 00:00:00 +0800",
-//    "2016-06-19 00:00:00 +0800"
-//    ],
-//    ""
-}
 
 - (void)netWorkForList
 {

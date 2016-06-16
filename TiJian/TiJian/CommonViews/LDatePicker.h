@@ -8,12 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum {
-    ACTIONTYPE_NORMAL = 0,//滚动
-    ACTIONTYPE_SURE, //确定
-    ACTIONTYPE_CANCEL //取消
-}ACTIONTYPE;
-
 typedef void(^DateBlock)(ACTIONTYPE type, NSString *dateString);
 
 @interface LDatePicker : UIView

@@ -12,6 +12,7 @@
 #import "GMAPI.h"
 #import "AddressModel.h"
 #import "LDatePicker.h"
+#import "LPickerView.h"
 //btn.tag [100 200)
 //view.tag [200 300)
 //textFild.tag [300 400)
@@ -23,7 +24,10 @@
     UIView *_upView;//体检人信息
     UIView *_downView;//联系人信息
     LDatePicker *_datePicker;//生日picker
+    LPickerView *_pickerView;//选择预约时间
 }
+@property(nonatomic,retain)LPickerView *pickerView;
+
 @end
 
 @implementation GoHealthAppointViewController
@@ -410,6 +414,7 @@
         
     }else if (sender.view.tag == 202){//时间
         
+        [self netWorkForAvailableTime];
     }
 }
 
@@ -497,7 +502,123 @@
     }
 }
 
+#pragma mark - 网络请求
 
+/**
+ *  可预约时间
+ */
+- (void)netWorkForAvailableTime
+{
+    //    respTimeInDate	YES	Int	1	返回格式
+    //    itemCodes	NO	String	10015, 10073	检测项目,id 以","分割
+    //    	NO	String	1100000123,111000000	产品的idNumber, id 以","分割
+    //    	NO	int	1948	城市Id
+    //    	NO	int	1970	区县Id
+    
+    NSString *productionIds = @"";//产品的idNumber, id 以","分割
+    NSString *cityid = @"";//城市id
+    NSString *districtid = @"";//区县id
+    
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetValue:productionIds forKey:@"productionIds"];
+    [params safeSetValue:cityid forKey:@"cityId"];
+    [params safeSetValue:districtid forKey:@"districtId"];
+    
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_book_dates parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [Weakself parseBookTimeWithResult:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"%@",result[@"msg"]);
+    }];
+}
 
+- (void)parseBookTimeWithResult:(NSDictionary *)result
+{
+    NSArray *dates = result[@"dates"];
+    NSArray *hours = result[@"hours"];
+    //    ": [
+    //    "2016-06-17 00:00:00 +0800",
+    //    "2016-06-18 00:00:00 +0800",
+    //    "2016-06-19 00:00:00 +0800"
+    //    ],
+    //    ""
+}
+
+- (void)selectBrand
+{
+    if (!_pickerView) {
+        
+        @WeakObj(self);
+        _pickerView = [[LPickerView alloc]initWithDelegate:self delegate:self pickerBlock:^(ACTIONTYPE type, int row, int component) {
+            if (type == ACTIONTYPE_SURE) {
+                
+                
+                
+            }else if (type == ACTIONTYPE_Refresh)
+            {
+                
+            }
+        }];
+    }
+    
+    [_pickerView pickerViewShow:YES];
+}
+
+#pragma mark UIPickerViewDataSource
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    return 3;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+    
+    return 10;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)componen{
+    
+    return [NSString stringWithFormat:@"%d",(int)row + 1];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    
+    NSLog(@"年龄%d",(int)row + 1);
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
+{
+    return 45.f;
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view __TVOS_PROHIBITED
+{
+    UIView *pickerCell = view;
+    if (!pickerCell) {
+        pickerCell = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, [UIScreen mainScreen].bounds.size.width, 45.0f}];
+        UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10, 25, 25)];
+        icon.backgroundColor = [UIColor orangeColor];
+        [pickerCell addSubview:icon];
+        icon.tag = 100;
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(icon.right + 10, 10, 200, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
+        [pickerCell addSubview:label];
+        label.tag = 101;
+    }
+    
+    UIImageView *icon = [pickerCell viewWithTag:100];
+    UILabel *label = [pickerCell viewWithTag:101];
+   
+    
+    return pickerCell;
+}
 
 @end

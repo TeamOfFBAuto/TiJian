@@ -8,13 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum {
-    ACTIONTYPE_NORMAL = 0,//滚动
-    ACTIONTYPE_SURE, //确定
-    ACTIONTYPE_Refresh, //刷新数据
-    ACTIONTYPE_CANCEL //取消
-}ACTIONTYPE;
-
 typedef void(^LPickerBlock)(ACTIONTYPE type, int row ,int component);
 
 @interface LPickerView : UIView
