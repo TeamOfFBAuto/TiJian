@@ -548,7 +548,7 @@
 
 #pragma mark - UITextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    NSLog(@"%s",__FUNCTION__);
+
     _mySearchView.hidden = NO;
     _theCustomSearchView.dataArray = [GMAPI cacheForKey:USERCOMMONLYUSEDSEARCHWORD];
     
@@ -1005,7 +1005,7 @@
 
 
 -(void)hotSearchBtnClicked:(UIButton *)sender{
-    NSLog(@"%d",(int)sender.tag);
+    DDLOG(@"%d",(int)sender.tag);
 }
 
 
@@ -1102,8 +1102,6 @@
     }
     
     [self controlTopButtonWithScrollView:scrollView];
-    
-    NSLog(@"%f",scrollView.contentOffset.y);
     
     if (scrollView.contentOffset.y<-10) {
         [[UIApplication sharedApplication] setStatusBarHidden:TRUE withAnimation:UIStatusBarAnimationSlide];

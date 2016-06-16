@@ -585,6 +585,9 @@
     int refund_status = 0;
     
     OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
+    cell.commentButton.aModel = aModel;
+    cell.actionButton.aModel = aModel;
+    
     [cell setCellWithModel:aModel];
     
     cell.indexPath = indexPath;
@@ -599,10 +602,6 @@
             }
         }];
     }
-    
-    cell.commentButton.aModel = aModel;
-    cell.actionButton.aModel = aModel;
-    
     refund_status = [aModel.refund_status intValue];
     
     //代表有退款状态
@@ -615,11 +614,7 @@
         }else if (refund_status == 4 || refund_status == 5){
             text = @"退款失败";
         }
-        
     }
-    
-//    PropertyButton *commentButton;//右边按钮
-//    PropertyButton *actionButton;//左边按钮
     
     cell.actionButton.hidden = YES;//默认左边隐藏
     

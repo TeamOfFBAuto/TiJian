@@ -20,4 +20,6 @@
 #define GoHealth_productionsDetail @"/v1/productions/%@" //产品详情
 #define GoHealth_citylist @"/v1/geos" //可用服务城市列表
 
+
+
 #endif /* ThirdApiConstants_h */

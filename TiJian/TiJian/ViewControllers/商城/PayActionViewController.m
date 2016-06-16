@@ -42,9 +42,6 @@
     [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -123,8 +120,14 @@
         _request = [YJYRequstManager shareInstance];
     }
     
+    //默认体检
+    NSString *api = ORDER_GET_ORDER_PAY;
+    // go健康相关支付
+    if (self.payActionType == PayActionType_goHealth) {
+        api = GoHealth_get_order_pay;
+    }
     
-    [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_PAY parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [_request requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         // 0 未支付 1 已支付 2 正在支付
         
         DDLOG(@"支付结果确认 %@",result);
@@ -195,7 +198,14 @@
         _request = [YJYRequstManager shareInstance];
     }
     
-    [_request requestWithMethod:YJYRequstMethodGet api:ORDER_GET_SIGN parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    //默认体检
+    NSString *api = ORDER_GET_SIGN;
+    // go健康相关支付
+    if (self.payActionType == PayActionType_goHealth) {
+        api = GoHealth_get_sign;
+    }
+    
+    [_request requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"获取签名信息 %@ %@",result,result[RESULT_INFO]);
         
         if ([signType isEqualToString:@"ali"]) {
@@ -417,9 +427,17 @@
     result.payResultType = resultType;
     result.erroInfo = erroInfo;
     result.needAppoint = self.needAppoint;//是否前去预约
-    if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
-       [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
-        [self.lastViewController.navigationController pushViewController:result animated:YES];
+//    if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
+//       [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
+//        [self.lastViewController.navigationController pushViewController:result animated:YES];
+//    }
+    
+    int num = (int)[self.navigationController viewControllers].count;
+    if (num > 2 && (resultType != PAY_RESULT_TYPE_Fail)) {  //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
+        UIViewController *lastViewController = self.navigationController.viewControllers[num - 2];
+        [lastViewController.navigationController popToViewController:lastViewController animated:NO];
+        [lastViewController.navigationController pushViewController:result animated:YES];
+        return;
     }
     [self.navigationController pushViewController:result animated:YES];
 }

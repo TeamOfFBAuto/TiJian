@@ -136,6 +136,11 @@ typedef enum{
 }MsgType;
 //pic: 封面图(可能为空)
 
+typedef enum {
+    PayActionType_default = 0,//默认 0 海马体检商城支付
+    PayActionType_goHealth// go健康相关支付
+}PayActionType;
+
 
 ////挂号网相关接口
 ////1、预约 get

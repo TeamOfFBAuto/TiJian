@@ -7,6 +7,8 @@
 //
 
 #import "GoHealthBugController.h"
+#import "PayActionViewController.h"
+#import "PayResultViewController.h"
 
 @interface GoHealthBugController ()<UITableViewDelegate,UITableViewDataSource>
 {
@@ -38,7 +40,7 @@
 
 - (void)prepareRefreshTableView
 {
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 49) style:UITableViewStylePlain];
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
@@ -47,19 +49,22 @@
     [self tableViewHeaderViewWithModel:self.productModel];
     
     //底部view
-    UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 49, DEVICE_WIDTH, 49)];
+    UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 49 - 64, DEVICE_WIDTH, 49)];
     footer.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
+    [self.view addSubview:footer];
     
-    UIButton *sender = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 75, (49 - 30)/ 2.f, 75, 30) buttonType:UIButtonTypeCustom normalTitle:@"确定" selectedTitle:nil target:self action:@selector(clickToSure:)];
+    UIButton *sender = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 80, 0, 80, 49) buttonType:UIButtonTypeCustom normalTitle:@"提交订单" selectedTitle:nil target:self action:@selector(clickToSure:)];
     [sender.titleLabel setFont:[UIFont systemFontOfSize:14]];
-    [sender setBackgroundColor:DEFAULT_TEXTCOLOR];
+    [sender setBackgroundColor:DEFAULT_TEXTCOLOR_ORANGE];
     [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [footer addSubview:sender];
 
-    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(sender.left - 50 - 150, 0, 150, 49) font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE title:nil];
+    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, 150, 49) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:nil];
     [footer addSubview:priceLabel];
+    _priceLabel = priceLabel;
     
-    NSString *title = @"";
+    //显示价格
+    [self updateSumPrice];
 }
 
 - (void)tableViewHeaderViewWithModel:(ThirdProductModel *)model
@@ -124,6 +129,7 @@
     [sender setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [sender.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [header addSubview:sender];
+    [sender addTarget:self action:@selector(clickToDetail:) forControlEvents:UIControlEventTouchUpInside];
     
     _table.tableHeaderView = header;
 
@@ -131,42 +137,152 @@
 
 #pragma mark - 网络请求
 
-- (void)netWorkForList
-{
-    NSDictionary *params = @{@"page":@"1",
-                             @"per_page":@"10"};;
-    NSString *api = nil;
+//提交订单
+-(void)confirmOrderBtnClicked{
     
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    
+    [dic safeSetValue:[UserInfo getAuthkey] forKey:@"authcode"];//authcode
+    
+    /**
+     *  商品数据处理
+     */
+    NSString *imageUrl = [self.productModel.pictures firstObject][@"thumb"];//套餐封面图片地址
+    int num = [_numLabel.text intValue];//商品数量
+    NSMutableDictionary *productInfo = [NSMutableDictionary dictionary];
+    [productInfo safeSetValue:self.productModel.id forKey:@"product_id"];
+    [productInfo safeSetValue:self.productModel.name forKey:@"product_name"];
+    [productInfo safeSetValue:imageUrl forKey:@"product_cover_url"];
+    [productInfo safeSetValue:self.productModel.discountPrice forKey:@"product_price"];
+    [productInfo safeSetInt:num forKey:@"product_num"];
+    
+    NSArray *products = @[productInfo];
+    NSString *product_infos = [LTools JSONStringWithObject:products];
+    
+    [dic safeSetValue:product_infos forKey:@"product_infos"];
+    CGFloat sumPrice = [self sumPrice];
+    [dic safeSetValue:[NSString stringWithFormat:@"%f",sumPrice] forKey:@"total_price"];//总价格
+    [dic safeSetValue:[NSString stringWithFormat:@"%f",sumPrice] forKey:@"real_price"];// 优惠后价格
+
     __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"success result %@",result);
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodPost api:GoHealth_submit_order parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
-        //        [weakTable reloadData:temp pageSize:10];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [weakSelf parseConfirmOrderSuccessResult:result];
         
     } failBlock:^(NSDictionary *result) {
-        
-        NSLog(@"fail result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
+        DDLOG(@"%@",result);
     }];
+    
+    
 }
 
 #pragma mark - 数据解析处理
+
+/**
+ *  处理GoHealth提交订单成功
+ *
+ *  @param result
+ */
+- (void)parseConfirmOrderSuccessResult:(NSDictionary *)result
+{
+    //提交订单成功
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_ORDER_COMMIT object:nil];
+    CGFloat sum = [self sumPrice];
+    
+    NSString *orderId = [result stringValueForKey:@"order_id"];
+    NSString *orderNum = [result stringValueForKey:@"order_no"];
+    
+    if (sum < 0.01) {
+        [self payResultSuccess:PAY_RESULT_TYPE_Success erroInfo:nil oderid:orderId sumPrice:sum orderNum:orderNum];
+    }else{
+        [self pushToPayPageWithOrderId:orderId orderNum:orderNum];
+    }
+}
+
+/**
+ *  计算总价
+ *
+ *  @return
+ */
+- (CGFloat)sumPrice
+{
+    CGFloat price = [self.productModel.discountPrice floatValue] * 100.f;
+    price /= 100.f;
+    CGFloat sum =  price * [_numLabel.text intValue];
+    return sum;
+}
 
 #pragma mark - 事件处理
 
 - (void)clickToSure:(UIButton *)sender
 {
-    
+    [self confirmOrderBtnClicked];
 }
+
+/**
+ *  跳转至支付页面
+ */
+- (void)pushToPayPageWithOrderId:(NSString *)orderId
+                        orderNum:(NSString *)orderNum
+{
+    CGFloat sum = [self.productModel.discountPrice floatValue] * [_numLabel.text intValue];
+    PayActionViewController *pay = [[PayActionViewController alloc]init];
+    pay.orderId = orderId;
+    pay.orderNum = orderNum;
+    pay.sumPrice = sum;
+    pay.lastViewController = self.lastViewController;
+    pay.payActionType = PayActionType_goHealth;
+    
+    int num = (int)[self.navigationController viewControllers].count;
+    if (num > 2) {
+        UIViewController *lastViewController = self.navigationController.viewControllers[num - 2];
+        [lastViewController.navigationController popToViewController:lastViewController animated:NO];
+        [lastViewController.navigationController pushViewController:pay animated:YES];
+        return;
+    }
+    [self.navigationController pushViewController:pay animated:YES];
+}
+
+/**
+ *  订单金额为0直接支付成功
+ */
+- (void)payResultSuccess:(PAY_RESULT_TYPE)resultType
+                erroInfo:(NSString *)erroInfo
+                  oderid:(NSString *)theOderId
+                sumPrice:(CGFloat)theSumPrice
+                orderNum:(NSString *)theOrderNum
+{
+    //更新购物车
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
+    
+    //支付成功通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_PAY_SUCCESS object:nil];
+    
+    PayResultViewController *result = [[PayResultViewController alloc]init];
+    result.orderId = theOderId;
+    result.orderNum = theOrderNum;
+    result.sumPrice = theSumPrice;
+    result.payResultType = resultType;
+    result.erroInfo = erroInfo;
+    result.payActionType = PayActionType_goHealth;
+    
+    if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
+        [self.lastViewController.navigationController popViewControllerAnimated:NO];
+        [self.lastViewController.navigationController pushViewController:result animated:YES];
+        return;
+    }
+    [self.navigationController pushViewController:result animated:YES];
+}
+
 
 - (void)clickToAdd:(UIButton *)sender
 {
     _numLabel.text = NSStringFromInt([_numLabel.text intValue] + 1);
+    //显示价格
+    [self updateSumPrice];
 }
 
 - (void)clickToReduce:(UIButton *)sender
@@ -174,12 +290,10 @@
     int num = [_numLabel.text intValue];
     if (num > 1) {
         num -= 1;
-    }else
-    {
-        
     }
     _numLabel.text = NSStringFromInt(num);
-
+    //显示价格
+    [self updateSumPrice];
 }
 
 /**
@@ -189,14 +303,24 @@
  */
 - (void)clickToDetail:(UIButton *)sender
 {
-    
+    sender.selected = !sender.selected;
+    if (sender.selected) {
+        _itemsArray = nil;
+    }else
+    {
+        _itemsArray = [NSArray arrayWithArray:self.productModel.items];
+    }
+    [_table reloadData];
 }
 
 - (void)updateSumPrice
 {
     CGFloat sum = [self.productModel.discountPrice floatValue] * [_numLabel.text intValue];
     
-    NSString *text = [NSString stringWithFormat:@"共"];
+    NSString *price = [NSString stringWithFormat:@"¥%.2f",sum];
+    NSString *text = [NSString stringWithFormat:@"实付款: %@",price];
+    NSAttributedString *string = [LTools attributedString:text keyword:price color:DEFAULT_TEXTCOLOR_ORANGE keywordFontSize:14];
+    [_priceLabel setAttributedText:string];
 }
 
 #pragma mark - 代理

@@ -9,11 +9,13 @@
 #import "GoHealthProductDetailController.h"
 #import "GoHealthBugController.h"
 #import "ThirdProductModel.h"
+#import "LPhotoBrowser.h"
 
 @interface GoHealthProductDetailController ()<UITableViewDelegate,UITableViewDataSource>
 {
     UITableView *_table;
     NSArray *_discriptionImages;//详情描述为图片
+    UIImageView *_coverImageView;//封面图片
     UIView *_selectCityView;//选择服务城市
     UILabel *_cityLabel;//选择城市label
     CGFloat _smallHeight;//可选城市一行高度
@@ -100,6 +102,8 @@
     [imageBgView addSubview:imageView];
     [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
     imageView.height = imageHeight;
+    _coverImageView = imageView;
+    [imageView addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:0];
     
     //底部
     CGFloat height = [LTools fitWithIPhone6:50];
@@ -241,15 +245,17 @@
     
     NSString *api = [NSString stringWithFormat:GoHealth_productionsDetail,self.productId];
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
      @WeakObj(self);
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [Weakself parseDataWithResult:result];
         
     } failBlock:^(NSDictionary *result) {
         
         //        NSLog(@"goHealth fail result %@",result);
         NSLog(@"%@",result[@"msg"]);
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
     }];
 }
 
@@ -366,6 +372,52 @@
     NSString *msg = [NSString stringWithFormat:@"是否拨打:%@客服电话",HaiMa_service];
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     [alert show];
+}
+
+/**
+ *  手势
+ *
+ *  @param sender 手势
+ */
+- (void)tapToBrowser:(UITapGestureRecognizer *)sender
+{
+    
+//    NSDictionary *pic = [model.pictures firstObject];
+//    CGFloat width = [pic[@"width"]floatValue];
+//    CGFloat imageHeight = [pic[@"height"]floatValue];
+//    if (imageHeight) {
+//        imageHeight = DEVICE_WIDTH * (width/imageHeight);
+//    }
+//    NSString *imageUrl = [model.pictures firstObject][@"thumb"];
+    
+    NSArray *img = _productModel.pictures;
+    
+    int count = (int)[img count];
+    
+    NSInteger initPage = 0;
+    
+    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
+        
+        NSMutableArray *temp = [NSMutableArray array];
+        
+        for (int i = 0; i < count; i ++) {
+            
+            //    NSString *imageUrl = [model.pictures firstObject][@"thumb"];
+            
+            NSDictionary *dic = img[i];
+            
+            UIImageView *imageView = _coverImageView;
+            LPhotoModel *photo = [[LPhotoModel alloc]init];
+            photo.imageUrl = dic[@"url"];
+            imageView = imageView;
+            photo.thumbImage = imageView.image;
+            photo.sourceImageView = imageView;
+            
+            [temp addObject:photo];
+        }
+        
+        return temp;
+    }];
 }
 
 #pragma - mark UIAlertViewDelegate <NSObject>

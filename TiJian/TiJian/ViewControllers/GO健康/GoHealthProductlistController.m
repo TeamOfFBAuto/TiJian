@@ -13,6 +13,7 @@
 @interface GoHealthProductlistController ()<RefreshDelegate,UITableViewDataSource>
 {
     RefreshTableView *_table;
+    UIButton *_stateButton;
 }
 
 @end
@@ -27,7 +28,7 @@
     
     [self prepareRefreshTableView];
     
-    [self netWorkForCityList];
+//    [self netWorkForCityList];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,6 +47,53 @@
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_table showRefreshHeader:YES];
 }
+
+-(ResultView *)resultViewWithType:(PageResultType)type
+                              msg:(NSString *)errMsg
+{
+    NSString *content;
+    NSString *btnTitle;
+    SEL selector = NULL;
+    if (type == PageResultType_requestFail) {
+        
+        content = errMsg ? : @"获取数据异常,点击重新加载";
+        btnTitle = @"重新加载";
+        selector = @selector(refreshData);
+        
+    }else if (type == PageResultType_nodata){
+        
+        content = errMsg ? : @"没有获取到您想要的内容";
+        btnTitle = @"重新加载";
+        selector = @selector(refreshData);
+    }
+    
+    if (_resultView) {
+        
+        [_resultView setContent:content];
+        [_stateButton setTitle:btnTitle forState:UIControlStateNormal];
+        return _resultView;
+    }
+    
+    _resultView = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"温馨提示"
+                                                  content:content];
+    
+    if (!_stateButton) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 140, 36);
+        [btn addCornerRadius:5.f];
+        btn.backgroundColor = DEFAULT_TEXTCOLOR;
+        [btn setTitle:btnTitle forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [btn addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+        [_resultView setBottomView:btn];
+        _stateButton = btn;
+    }
+    
+    return _resultView;
+}
+
 
 #pragma mark - 网络请求
 
@@ -70,13 +118,13 @@
         NSArray *productions = data[@"productions"];
         NSArray *tempArr = [ThirdProductModel modelsFromArray:productions];
         
-        [Weak_table reloadData:tempArr pageSize:10 noDataView:nil];
+        [Weak_table reloadData:tempArr pageSize:10 noDataView:[self resultViewWithType:PageResultType_nodata msg:nil]];
         
     } failBlock:^(NSDictionary *result) {
         
 //        NSLog(@"goHealth fail result %@",result);
         NSLog(@"%@",result[@"msg"]);
-        [Weak_table loadFailWithView:nil pageSize:10];
+        [Weak_table loadFailWithView:[self resultViewWithType:PageResultType_nodata msg:result[@"msg"]] pageSize:10];
     }];
 }
 
@@ -105,13 +153,13 @@
         NSArray *productions = data[@"productions"];
         NSArray *tempArr = [ThirdProductModel modelsFromArray:productions];
         
-        [Weak_table reloadData:tempArr pageSize:10 noDataView:nil];
+        [Weak_table reloadData:tempArr pageSize:10 noDataView:[self resultViewWithType:PageResultType_nodata msg:nil]];
         
     } failBlock:^(NSDictionary *result) {
         
         //        NSLog(@"goHealth fail result %@",result);
         NSLog(@"%@",result[@"msg"]);
-        [Weak_table loadFailWithView:nil pageSize:10];
+        [Weak_table loadFailWithView:[self resultViewWithType:PageResultType_nodata msg:result[@"msg"]] pageSize:10];
     }];
 }
 
@@ -123,6 +171,14 @@
 }
 
 #pragma mark - 事件处理
+
+/**
+ *  刷新数据
+ */
+- (void)refreshData
+{
+    [_table showRefreshHeader:YES];
+}
 
 #pragma mark - 代理
 

@@ -62,7 +62,8 @@
         NSDictionary *result = @{Erro_Info: erroInfo,
                                  Erro_Code:[NSString stringWithFormat:@"%d",Erro_NetworkUnReachable]};
         failBlock(result);
-        
+        [self showErroInfo:erroInfo];
+
         return nil;
     }
     

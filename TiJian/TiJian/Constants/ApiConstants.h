@@ -11,9 +11,9 @@
 #ifndef WJXC_ApiConstants_h
 #define WJXC_ApiConstants_h
 
-#define SERVER_URL @"http://www.hippodr.com" //海马医生域名
+//#define SERVER_URL @"http://www.hippodr.com" //海马医生域名
 
-//#define SERVER_URL @"http://182.92.106.193:88" //海马医生域名 测试服务器
+#define SERVER_URL @"http://182.92.106.193:88" //海马医生域名 测试服务器
 
 
 //体检须知
@@ -480,6 +480,18 @@
 //3、医生跳转链接 //get 方式authcode 必填、detail_url医生列表中的detail_url
 
 #define Guahao_doctorDetail @"/index.php?d=api&c=register&m=doctor_url"
+
+
+#pragma - mark Go健康对接
+
+//1、提交订单
+#define GoHealth_submit_order @"/index.php?d=api&c=go_order&m=submit_order"
+
+//2、获取支付宝或者微信签名 authcode:\order_id: 订单id\sign_type: ali或者weixin
+#define GoHealth_get_sign @"/index.php?d=api&c=go_order&m=get_sign"
+
+//3、验证订单支付状态 get 参数:authcode\order_id  订单id
+#define GoHealth_get_order_pay @"/index.php?d=api&c=go_order&m=get_order_pay"
 
 
 

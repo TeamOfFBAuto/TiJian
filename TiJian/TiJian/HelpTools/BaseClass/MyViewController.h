@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ResultView.h"
 typedef enum
 {
     MyViewControllerLeftbuttonTypeBack = 0,//返回按钮
@@ -40,7 +40,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @interface MyViewController : UIViewController
 {
-    UIView *_resultView;
+    ResultView *_resultView;
 }
 @property(nonatomic,strong)NSString * rightString;//navigationbar right button text
 @property(nonatomic,strong)NSString * leftString;//navigationbar left button text
