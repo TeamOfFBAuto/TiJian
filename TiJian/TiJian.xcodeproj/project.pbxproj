@@ -492,6 +492,7 @@
 		E352F91B1C0B91680037E4AE /* shoucang_pd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */; };
 		E352F91E1C0C419A0037E4AE /* coupon_feitongyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */; };
 		E352F91F1C0C419A0037E4AE /* coupon_tongyong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */; };
+		E355E6641D05B6A700D7B8C6 /* UIWebView+ToFile.m in Sources */ = {isa = PBXBuildFile; fileRef = E355E6631D05B6A700D7B8C6 /* UIWebView+ToFile.m */; };
 		E359ACA31BEC96EA00EF1527 /* GShopCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */; };
 		E359F7011C27C4DA005CB719 /* shaixuan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E359F7001C27C4DA005CB719 /* shaixuan@2x.png */; };
 		E359F7031C27F8D1005CB719 /* gouwuche-kong@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E359F7021C27F8D1005CB719 /* gouwuche-kong@2x.png */; };
@@ -1383,6 +1384,8 @@
 		E352F9171C0B91680037E4AE /* shoucang_pd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoucang_pd@2x.png"; sourceTree = "<group>"; };
 		E352F91C1C0C419A0037E4AE /* coupon_feitongyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coupon_feitongyong@2x.png"; sourceTree = "<group>"; };
 		E352F91D1C0C419A0037E4AE /* coupon_tongyong@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coupon_tongyong@2x.png"; sourceTree = "<group>"; };
+		E355E6621D05B6A700D7B8C6 /* UIWebView+ToFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+ToFile.h"; sourceTree = "<group>"; };
+		E355E6631D05B6A700D7B8C6 /* UIWebView+ToFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+ToFile.m"; sourceTree = "<group>"; };
 		E359ACA11BEC96EA00EF1527 /* GShopCarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GShopCarViewController.h; sourceTree = "<group>"; };
 		E359ACA21BEC96EA00EF1527 /* GShopCarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GShopCarViewController.m; sourceTree = "<group>"; };
 		E359F7001C27C4DA005CB719 /* shaixuan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shaixuan@2x.png"; sourceTree = "<group>"; };
@@ -3162,6 +3165,8 @@
 				E30FE39B1C3E56DF001CF9BA /* GSearchView.m */,
 				E304A2421CBA567B00F9319C /* GLabel.h */,
 				E304A2431CBA567B00F9319C /* GLabel.m */,
+				E355E6621D05B6A700D7B8C6 /* UIWebView+ToFile.h */,
+				E355E6631D05B6A700D7B8C6 /* UIWebView+ToFile.m */,
 			);
 			path = Gutils;
 			sourceTree = "<group>";
@@ -3960,6 +3965,7 @@
 				13F1F3DB1BBA9A4B00885D31 /* SVIndefiniteAnimatedView.m in Sources */,
 				13F1F39F1BBA9A4B00885D31 /* UIViewController+Addtions.m in Sources */,
 				13F1F3FE1BBA9C5E00885D31 /* UIColor+ConvertColor.m in Sources */,
+				E355E6641D05B6A700D7B8C6 /* UIWebView+ToFile.m in Sources */,
 				1324B69F1BD7499900FB47A9 /* RootViewController.m in Sources */,
 				1303C2DB1BE9F42D00700847 /* ProjectModel.m in Sources */,
 				131EC61D1C58F3670008F517 /* SetmealModel.m in Sources */,
