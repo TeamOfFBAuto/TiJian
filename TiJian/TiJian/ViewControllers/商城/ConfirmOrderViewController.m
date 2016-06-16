@@ -1803,10 +1803,6 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
-    
-    
-    
-    
     CGPoint origin = textField.frame.origin;
     CGPoint point = [textField.superview convertPoint:origin toView:_tab];
     float navBarHeight = self.navigationController.navigationBar.frame.size.height;
