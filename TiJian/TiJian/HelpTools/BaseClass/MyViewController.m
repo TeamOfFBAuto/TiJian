@@ -183,7 +183,7 @@
     _updateParamsBlock = updateParamsBlock;
 }
 
--(void)setResultView:(UIView *)resultView
+-(void)setResultView:(ResultView *)resultView
 {
     _resultView = resultView;
 }

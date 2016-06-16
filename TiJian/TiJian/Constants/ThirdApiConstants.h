@@ -19,6 +19,7 @@
 #define GoHealth_productionsList @"/v1/productions" //产品列表
 #define GoHealth_productionsDetail @"/v1/productions/%@" //产品详情
 #define GoHealth_citylist @"/v1/geos" //可用服务城市列表
+#define GoHealth_book_dates @"/v1/book_dates"//可预约时间
 
 
 
