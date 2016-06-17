@@ -81,6 +81,11 @@
 
 #pragma mark - 视图创建
 
+-(UIPickerView *)pickerView
+{
+    return _pickerView;
+}
+
 - (UIView *)failView
 {
     if (!_failView) {

@@ -19,20 +19,23 @@
 //textFild.tag [300 400)
 //label.tag [400 500)
 
-@interface GoHealthAppointViewController ()<UIScrollViewDelegate,UITextFieldDelegate>
+@interface GoHealthAppointViewController ()<UIScrollViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate>
+
 {
     UIScrollView *_mainScrollView;
     UIView *_upView;//体检人信息
     UIView *_downView;//联系人信息
     LDatePicker *_datePicker;//生日picker
     LPickerView *_pickerView;//选择预约时间
-    
+
     NSMutableArray *_textFieldArray;//textField数组
-    
     CGPoint _orig_mainscrollView_contentOffset;
     UIView *_shouView;
-    
     NSDictionary *_userSelectCityDic;
+
+    NSArray *_hours;//小时
+    NSArray *_dates;//日期到天
+    NSString *_selectDateString;//选择的时间
 }
 @property(nonatomic,retain)LPickerView *pickerView;
 
@@ -624,17 +627,22 @@
 
 - (void)parseBookTimeWithResult:(NSDictionary *)result
 {
+    result = result[@"data"];
     NSArray *dates = result[@"dates"];
     NSArray *hours = result[@"hours"];
+    _hours = [NSArray arrayWithArray:hours];
+    _dates = [NSArray arrayWithArray:dates];
     //    ": [
     //    "2016-06-17 00:00:00 +0800",
     //    "2016-06-18 00:00:00 +0800",
     //    "2016-06-19 00:00:00 +0800"
     //    ],
     //    ""
+    
+    [self selectBookdate];
 }
 
-- (void)selectBrand
+- (void)selectBookdate
 {
     if (!_pickerView) {
         
@@ -642,7 +650,7 @@
         _pickerView = [[LPickerView alloc]initWithDelegate:self delegate:self pickerBlock:^(ACTIONTYPE type, int row, int component) {
             if (type == ACTIONTYPE_SURE) {
                 
-                
+                [Weakself confirmDate];
                 
             }else if (type == ACTIONTYPE_Refresh)
             {
@@ -652,6 +660,30 @@
     }
     
     [_pickerView pickerViewShow:YES];
+    [_pickerView reloadAllComponents];
+}
+- (void)confirmDate
+{
+    UIPickerView *pickerView = _pickerView.pickerView;
+    NSString *date = _dates[[pickerView selectedRowInComponent:0]];
+    NSNumber *hour = _hours[[pickerView selectedRowInComponent:1]];
+    int minus = (int)[pickerView selectedRowInComponent:2];
+    
+    DDLOG(@"date:%@ hour:%@ minus:%d",date,hour,minus);
+    
+    NSDate *selectDate = [LTools dateFromString:date withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
+    date = [LTools timeDate:selectDate withFormat:@"yyyy-MM-dd"];
+    
+    NSString *test = [NSString stringWithFormat:@"%@ %@:%@:00 +0800",date,[self doubleString:[hour intValue]],[self doubleString:minus]];
+    _selectDateString = test;
+}
+
+- (NSString *)doubleString:(int)num
+{
+    if (num > 9) {
+        return [NSString stringWithFormat:@"%d",(int)num];
+    }
+    return [NSString stringWithFormat:@"0%d",(int)num];
 }
 
 #pragma mark UIPickerViewDataSource
@@ -662,12 +694,34 @@
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
     
-    return 10;
+    if (component == 0) {
+        return _dates.count;
+    }else if (component == 1){
+        return _hours.count;
+    }
+    return 60;
 }
 
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)componen{
-    
-    return [NSString stringWithFormat:@"%d",(int)row + 1];
+
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+    if (component == 0) {
+        
+        NSString *string = _dates[row];
+        
+        NSDate *date = [LTools dateFromString:string withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
+        
+        NSLog(@"string %@ date %@",string,date);
+        
+        return [NSString stringWithFormat:@"%@ %@",[LTools timeDate:date withFormat:@"MM/dd"],[LTools weekWithDate:date]];
+        
+    }else if (component == 1){
+        return [NSString stringWithFormat:@"%d点",[_hours[row] intValue]];
+    }
+    if (row > 9) {
+        return [NSString stringWithFormat:@"%d分",(int)row];
+    }
+    return [NSString stringWithFormat:@"0%d分",(int)row];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
@@ -675,32 +729,18 @@
     NSLog(@"年龄%d",(int)row + 1);
 }
 
-- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
+//- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
+//{
+//    return 45.f;
+//}
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
-    return 45.f;
+    if (component == 0) {
+        return 150.f;
+    }
+    return 80;
 }
 
-- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view __TVOS_PROHIBITED
-{
-    UIView *pickerCell = view;
-    if (!pickerCell) {
-        pickerCell = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, [UIScreen mainScreen].bounds.size.width, 45.0f}];
-        UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10, 25, 25)];
-        icon.backgroundColor = [UIColor orangeColor];
-        [pickerCell addSubview:icon];
-        icon.tag = 100;
-        
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(icon.right + 10, 10, 200, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
-        [pickerCell addSubview:label];
-        label.tag = 101;
-    }
-    
-    UIImageView *icon = [pickerCell viewWithTag:100];
-    UILabel *label = [pickerCell viewWithTag:101];
-   
-    
-    return pickerCell;
-}
 
 
 #pragma mark - UITextFieldDelegate
@@ -764,6 +804,29 @@
 }
 
 
+
+
+//- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view __TVOS_PROHIBITED
+//{
+//    UIView *pickerCell = view;
+//    if (!pickerCell) {
+//        pickerCell = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, [UIScreen mainScreen].bounds.size.width, 45.0f}];
+//        UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10, 25, 25)];
+//        icon.backgroundColor = [UIColor orangeColor];
+//        [pickerCell addSubview:icon];
+//        icon.tag = 100;
+//        
+//        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(icon.right + 10, 10, 200, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
+//        [pickerCell addSubview:label];
+//        label.tag = 101;
+//    }
+//    
+//    UIImageView *icon = [pickerCell viewWithTag:100];
+//    UILabel *label = [pickerCell viewWithTag:101];
+//   
+//    
+//    return pickerCell;
+//}
 
 
 @end
