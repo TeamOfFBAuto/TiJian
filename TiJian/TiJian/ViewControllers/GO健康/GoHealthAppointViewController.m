@@ -602,7 +602,9 @@
     //    	NO	int	1948	城市Id
     //    	NO	int	1970	区县Id
     
-    NSString *productionIds = @"";//产品的idNumber, id 以","分割
+    NSString *productionIds = self.productId;//产品的idNumber, id 以","分割
+    productionIds = @"1110010228793";
+    
     NSString *cityid = @"";//城市id
     NSString *districtid = @"";//区县id
     

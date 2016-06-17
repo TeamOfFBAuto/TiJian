@@ -85,6 +85,7 @@
 //    _progressview.backgroundColor = RGBCOLOR(0, 188, 22);
 //    [self.view addSubview:_progressview];
     
+    NSString *title = @"";
     if (self.guaHao) {
         
         [self networkForForGuahaoType:self.type];//挂号
@@ -95,7 +96,7 @@
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeDouble WithRightButtonType:MyViewControllerRightbuttonTypeOther];
         
         //导航栏左侧
-               NSString *title = @"";
+        
         switch (self.type) {
             case 1:
                 title = @"预约挂号";
@@ -166,7 +167,13 @@
         if (![LTools isEmpty:title]) {
             self.myTitle = title;
         }
+        
+        title = self.myTitle;
     }
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:title forKey:@"style"];
+    [[MiddleTools shareInstance]umengEvent:@"webViewController" attributes:dic number:[NSNumber numberWithInt:1]];
 }
 //- (void)test:(CGFloat)x
 //{

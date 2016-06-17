@@ -167,6 +167,11 @@ static int seconds = 60;//计时60s
     
     [self gShou];
     
+    if (![LTools isValidateMobile:self.phoneTF.text]) {
+        [LTools showMBProgressWithText:ALERT_ERRO_PHONE addToView:self.view];
+        return;
+    }
+    
     
     if ([LTools isEmpty:self.yanzhengmaTf.text]) {
         
