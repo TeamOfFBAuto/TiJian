@@ -556,6 +556,7 @@
 		E3C4DBF01C45DD5100A29259 /* uptool_zuji@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3C4DBEF1C45DD5100A29259 /* uptool_zuji@2x.png */; };
 		E3C4DBF21C45DD7A00A29259 /* uptool_homepage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3C4DBF11C45DD7A00A29259 /* uptool_homepage@2x.png */; };
 		E3C91D6B1D11622B00170DED /* GoHealthAddperson@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3C91D6A1D11622B00170DED /* GoHealthAddperson@2x.png */; };
+		E3C91D6E1D12A6C200170DED /* GoHealthChooseCityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C91D6D1D12A6C200170DED /* GoHealthChooseCityViewController.m */; };
 		E3CC5CB71C43BE8000BA517D /* GFapiaoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3CC5CB61C43BE8000BA517D /* GFapiaoViewController.m */; };
 		E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D0850B1BF0A48500279DFC /* GshopCarTableViewCell.m */; };
 		E3D8AE081BF49175003AE2E3 /* gexingdingzhi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3D8AE071BF49175003AE2E3 /* gexingdingzhi@2x.png */; };
@@ -1475,6 +1476,8 @@
 		E3C4DBEF1C45DD5100A29259 /* uptool_zuji@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uptool_zuji@2x.png"; sourceTree = "<group>"; };
 		E3C4DBF11C45DD7A00A29259 /* uptool_homepage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uptool_homepage@2x.png"; sourceTree = "<group>"; };
 		E3C91D6A1D11622B00170DED /* GoHealthAddperson@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GoHealthAddperson@2x.png"; sourceTree = "<group>"; };
+		E3C91D6C1D12A6C200170DED /* GoHealthChooseCityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoHealthChooseCityViewController.h; sourceTree = "<group>"; };
+		E3C91D6D1D12A6C200170DED /* GoHealthChooseCityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoHealthChooseCityViewController.m; sourceTree = "<group>"; };
 		E3CC5CB51C43BE8000BA517D /* GFapiaoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFapiaoViewController.h; sourceTree = "<group>"; };
 		E3CC5CB61C43BE8000BA517D /* GFapiaoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFapiaoViewController.m; sourceTree = "<group>"; };
 		E3D0850A1BF0A48500279DFC /* GshopCarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GshopCarTableViewCell.h; path = ../GshopCarTableViewCell.h; sourceTree = "<group>"; };
@@ -2759,6 +2762,8 @@
 				134206AA1D0D39ED008D2C4A /* GoHealthBugController.m */,
 				E3856F301D0E944300ABC197 /* GoHealthAppointViewController.h */,
 				E3856F311D0E944300ABC197 /* GoHealthAppointViewController.m */,
+				E3C91D6C1D12A6C200170DED /* GoHealthChooseCityViewController.h */,
+				E3C91D6D1D12A6C200170DED /* GoHealthChooseCityViewController.m */,
 			);
 			path = "GO健康";
 			sourceTree = "<group>";
@@ -3836,6 +3841,7 @@
 				13F1F39B1BBA9A4B00885D31 /* UIButton+Additions.m in Sources */,
 				13FC32E61CE9B84C0073539D /* QueryReportController.m in Sources */,
 				E3EE361B1BEA0EE50089A89C /* GTranslucentSideBar.m in Sources */,
+				E3C91D6E1D12A6C200170DED /* GoHealthChooseCityViewController.m in Sources */,
 				E3EE36001BE8B2240089A89C /* GproductDetailTableViewCell.m in Sources */,
 				E3D8AE211BF5E7E1003AE2E3 /* GproductCommentView.m in Sources */,
 				13F8C5B11C05AA7E004C3FC7 /* JKPhotoBrowser.m in Sources */,

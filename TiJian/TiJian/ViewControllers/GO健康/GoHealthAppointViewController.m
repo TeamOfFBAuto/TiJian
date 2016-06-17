@@ -13,18 +13,26 @@
 #import "AddressModel.h"
 #import "LDatePicker.h"
 #import "LPickerView.h"
+#import "GoHealthChooseCityViewController.h"
 //btn.tag [100 200)
 //view.tag [200 300)
 //textFild.tag [300 400)
 //label.tag [400 500)
 
-@interface GoHealthAppointViewController ()<UIScrollViewDelegate>
+@interface GoHealthAppointViewController ()<UIScrollViewDelegate,UITextFieldDelegate>
 {
     UIScrollView *_mainScrollView;
     UIView *_upView;//体检人信息
     UIView *_downView;//联系人信息
     LDatePicker *_datePicker;//生日picker
     LPickerView *_pickerView;//选择预约时间
+    
+    NSMutableArray *_textFieldArray;//textField数组
+    
+    CGPoint _orig_mainscrollView_contentOffset;
+    UIView *_shouView;
+    
+    NSDictionary *_userSelectCityDic;
 }
 @property(nonatomic,retain)LPickerView *pickerView;
 
@@ -38,6 +46,7 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"预约上门";
+    _textFieldArray = [NSMutableArray arrayWithCapacity:1];
     [self creatScrollView];
     [self creatUpView];
     [self creatDownView];
@@ -107,6 +116,8 @@
     [_upView addSubview:personNameView];
     UITextField *_personName_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 70, 40)];
     _personName_tf.placeholder = @"体检人姓名";
+    _personName_tf.delegate = self;
+    [_textFieldArray addObject:_personName_tf];
     _personName_tf.font = [UIFont systemFontOfSize:12];
     _personName_tf.tag = 300;
     [personNameView addSubview:_personName_tf];
@@ -120,6 +131,8 @@
     [_upView addSubview:personPhoneView];
     UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
     personPhone_tf.placeholder = @"体检人手机";
+    personPhone_tf.delegate = self;
+    [_textFieldArray addObject:personPhone_tf];
     personPhone_tf.font = [UIFont systemFontOfSize:12];
     personPhone_tf.tag = 301;
     [personPhoneView addSubview:personPhone_tf];
@@ -241,6 +254,8 @@
     
     UITextField *_personName_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 70, 40)];
     _personName_tf.placeholder = @"联系人姓名";
+    _personName_tf.delegate = self;
+    [_textFieldArray addObject:_personName_tf];
     _personName_tf.font = [UIFont systemFontOfSize:12];
     _personName_tf.tag = 302;
     [personNameView addSubview:_personName_tf];
@@ -255,6 +270,8 @@
     [_downView addSubview:personPhoneView];
     UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
     personPhone_tf.placeholder = @"联系人手机";
+    personPhone_tf.delegate = self;
+    [_textFieldArray addObject:personPhone_tf];
     personPhone_tf.font = [UIFont systemFontOfSize:12];
     personPhone_tf.tag = 303;
     [personPhoneView addSubview:personPhone_tf];
@@ -293,6 +310,8 @@
     UITextField *address_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
     address_tf.placeholder = @"请输入详细地址";
     address_tf.font = [UIFont systemFontOfSize:12];
+    address_tf.delegate = self;
+    [_textFieldArray addObject:address_tf];
     address_tf.tag = 304;
     [addressDetailView addSubview:address_tf];
     UIView *line_addr = [[UIView alloc]initWithFrame:CGRectMake(28, address_tf.bottom, DEVICE_WIDTH-28-28, 0.5)];
@@ -330,7 +349,7 @@
     [_mainScrollView addSubview:appointBtn];
     
     
-    [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, MAX(appointBtn.bottom, DEVICE_HEIGHT-64+15))];
+    [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, MAX(appointBtn.bottom + 15, DEVICE_HEIGHT-64+15))];
     
 }
 
@@ -373,6 +392,49 @@
 //立即预约按钮
 -(void)appointBtnClicked{
     NSLog(@"%s",__FUNCTION__);
+    
+    //体检人姓名
+    UITextField *personName_tf = (UITextField *)[self.view viewWithTag:300];
+    NSString *userName_tijian = personName_tf.text;
+    
+    //体检人手机
+    UITextField *personMoble_tf = (UITextField *)[self.view viewWithTag:301];
+    NSString *userPhone_tijian = personMoble_tf.text;
+    
+    //体检人性别
+    UIButton *manBtn = [_upView viewWithTag:100];
+    NSString *gender = @"2";//女
+    if (manBtn.selected) {
+        gender = @"1";
+    }
+    
+    //体检人生日
+    UILabel *personBirthLabel = (UILabel *)[self.view viewWithTag:400];
+    NSString *birthDate = personBirthLabel.text;
+    
+    //联系人姓名
+    UITextField *personName_tf_l = (UITextField *)[self.view viewWithTag:302];
+    NSString *userName_lianxi = personName_tf_l.text;
+    
+    //联系人电话
+    UITextField *personMoble_tf_l = (UITextField *)[self.view viewWithTag:303];
+    NSString *userPhone_lianxi = personMoble_tf_l.text;
+    
+    //体检人城市
+    NSString *cityName = [_userSelectCityDic stringValueForKey:@"cityName"];
+    NSString *cityId = [_userSelectCityDic stringValueForKey:@"cityId"];
+    NSString *districtName = [_userSelectCityDic stringValueForKey:@"districtName"];
+    NSString *districtId = [_userSelectCityDic stringValueForKey:@"districtId"];
+    
+    //体检人详细地址
+    UITextField *address_tf = (UITextField*)[self.view viewWithTag:304];
+    NSString *address_tijian = address_tf.text;
+    
+    //预约时间
+    UILabel *appointTime_label = [self.view viewWithTag:402];
+    NSString *userAppointTime = appointTime_label.text;
+    
+    
 }
 
 //按钮点击
@@ -411,7 +473,14 @@
     if (sender.view.tag == 200) {//生日
         [self clickToUpdateBirthday];
     }else if (sender.view.tag == 201){//城市
-        
+        GoHealthChooseCityViewController *cc = [[GoHealthChooseCityViewController alloc]init];
+        __weak typeof (self)bself = self;
+        [cc setUserSelectCityBlock:^(NSDictionary *userSelectCityDic) {
+            
+            [bself reloadViewWithData:(NSDictionary*)userSelectCityDic senderIdentifier:201];
+            
+        }];
+        [self.navigationController pushViewController:cc animated:YES];
     }else if (sender.view.tag == 202){//时间
         
         [self netWorkForAvailableTime];
@@ -442,8 +511,7 @@
 }
 
 
-
-//拿到数据后刷新界面
+#pragma mark - 拿到数据后刷新界面
 -(void)reloadViewWithData:(id)theRetureData senderIdentifier:(NSInteger)tag{
     if ([theRetureData isKindOfClass:[UserInfo class]]) {//选择人
         if (tag == 102) {//体检人
@@ -493,14 +561,27 @@
             personMoble_tf.text = user.mobile;
             
         }
-    }else if ([theRetureData isKindOfClass:[NSString class]]){
+    }else if ([theRetureData isKindOfClass:[NSString class]]){//生日
         if (tag == 200) {
             NSString *str = (NSString *)theRetureData;
             UILabel *personBirthLabel = (UILabel *)[self.view viewWithTag:400];
             personBirthLabel.text = str;
         }
+    }else if ([theRetureData isKindOfClass:[NSDictionary class]]){
+        if (tag == 201) {//选择城市
+            NSDictionary *dic = (NSDictionary *)theRetureData;
+            _userSelectCityDic = dic;
+            NSString *city = [dic stringValueForKey:@"districtName"];
+            NSString *province = [dic stringValueForKey:@"cityName"];
+            UILabel *personCityLabel = [(UILabel *)self.view viewWithTag:401];
+            personCityLabel.textColor = [UIColor blackColor];
+            personCityLabel.text = [NSString stringWithFormat:@"%@ %@",province,city];
+        }
     }
 }
+
+
+
 
 #pragma mark - 网络请求
 
@@ -620,5 +701,69 @@
     
     return pickerCell;
 }
+
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    
+    CGPoint origin = textField.frame.origin;
+    CGPoint point = [textField.superview convertPoint:origin toView:_mainScrollView];
+    float navBarHeight = self.navigationController.navigationBar.frame.size.height;
+    CGPoint offset = _mainScrollView.contentOffset;
+    // Adjust the below value as you need
+    
+    
+    offset.y = (point.y - navBarHeight - 150);
+    
+    if (iPhone4) {
+        offset.y = (point.y - navBarHeight - 50);
+    }
+    
+    offset.y = MAX(0, offset.y);
+    
+    _orig_mainscrollView_contentOffset = _mainScrollView.contentOffset;
+    
+    [_mainScrollView setContentOffset:offset animated:YES];
+    
+    
+    if (!_shouView) {
+        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+        [_shouView addGestureRecognizer:tap];
+        
+    }
+    
+    [self.view addSubview:_shouView];
+    
+    return YES;
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    UITextField *tf = [self.view viewWithTag:(textField.tag+1)];
+    [tf becomeFirstResponder];
+    return YES;
+}
+
+#pragma mark - 收键盘
+-(void)hiddenKeyBord{
+    
+    [_shouView removeFromSuperview];
+    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
+    for (UITextField *tf in _textFieldArray) {
+        [tf resignFirstResponder];
+    }
+}
+
+//设置时间右下角按键名称
+-(void)setTfKeyBoard{
+    for (UITextField *tf in _textFieldArray) {
+        tf.returnKeyType = UIReturnKeyNext;
+    }
+}
+
+
+
 
 @end
