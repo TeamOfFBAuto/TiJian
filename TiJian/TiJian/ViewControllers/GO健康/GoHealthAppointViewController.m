@@ -193,7 +193,7 @@
     personBirth_tLabel.textColor = [UIColor blackColor];
     personBirth_tLabel.text = @"生日";
     [personBirthView addSubview:personBirth_tLabel];
-    UILabel *personBirthLabel = [[UILabel alloc]initWithFrame:CGRectMake(personBirth_tLabel.right, 0,DEVICE_WIDTH - 40 - personBirth_tLabel.width - 40, 40)];
+    UILabel *personBirthLabel = [[UILabel alloc]initWithFrame:CGRectMake(personBirth_tLabel.right + + 100*DEVICE_WIDTH/750.0, 0,DEVICE_WIDTH - 40 - personBirth_tLabel.width - 40, 40)];
     personBirthLabel.font = [UIFont systemFontOfSize:12];
     personBirthLabel.textColor = [UIColor blackColor];
     personBirthLabel.tag = 400;
@@ -203,11 +203,7 @@
     [personBirth_jiantouBtn setImage:[UIImage imageNamed:@"qrdd_jiantou_big.png"] forState:UIControlStateNormal];
     personBirth_jiantouBtn.userInteractionEnabled = NO;
     [personBirthView addSubview:personBirth_jiantouBtn];
-    
-    
-    
-    
-    
+
     //分隔条
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, personBirthView.bottom, DEVICE_WIDTH, 13)];
     line.backgroundColor = RGBCOLOR(244, 245, 246);
@@ -327,14 +323,15 @@
     appointTimeView.tag = 202;
     [appointTimeView addTapGestureTaget:self action:@selector(theViewClicked:) imageViewTag:appointTimeView.tag];
     [_downView addSubview:appointTimeView];
-    UILabel *appointTime_label = [[UILabel alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 40, 40)];
-    appointTime_label.font = [UIFont systemFontOfSize:12];
-    appointTime_label.text = @"选择预约时间";
-    appointTime_label.textColor = RGBCOLOR(199, 199, 205);
-    appointTime_label.tag = 402;
-    [appointTimeView addSubview:appointTime_label];
+    UITextField *appointTime_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 40, 40)];
+    appointTime_tf.font = [UIFont systemFontOfSize:12];
+    appointTime_tf.placeholder = @"选择预约时间";
+//    appointTime_tf.textColor = RGBCOLOR(199, 199, 205);
+    appointTime_tf.enabled = NO;
+    appointTime_tf.tag = 402;
+    [appointTimeView addSubview:appointTime_tf];
     UIButton *appointTime_jiantou = [UIButton buttonWithType:UIButtonTypeCustom];
-    [appointTime_jiantou setFrame:CGRectMake(appointTime_label.right, 0, 16, 40)];
+    [appointTime_jiantou setFrame:CGRectMake(appointTime_tf.right, 0, 16, 40)];
     [appointTime_jiantou setImage:[UIImage imageNamed:@"qrdd_jiantou_big.png"] forState:UIControlStateNormal];
     appointTime_jiantou.userInteractionEnabled = NO;
     [appointTimeView addSubview:appointTime_jiantou];
@@ -366,6 +363,12 @@
     return _datePicker;
 }
 
+#pragma mark -
+
+- (UITextField *)textFieldWithTag:(int)tag
+{
+    return (UITextField *)[self.view viewWithTag:tag];
+}
 
 
 #pragma mark - 点击事件
@@ -674,16 +677,17 @@
     NSDate *selectDate = [LTools dateFromString:date withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
     date = [LTools timeDate:selectDate withFormat:@"yyyy-MM-dd"];
     
-    NSString *test = [NSString stringWithFormat:@"%@ %@:%@:00 +0800",date,[self doubleString:[hour intValue]],[self doubleString:minus]];
+    NSString *timeString = [NSString stringWithFormat:@"%@ %@:%@:00",date,[self doubleString:[hour intValue]],[self doubleString:minus]];
+    NSString *test = [NSString stringWithFormat:@"%@ +0800",timeString];
     _selectDateString = test;
+    DDLOG(@"test:%@",test);
+    
+    [self textFieldWithTag:402].text = timeString;
 }
 
 - (NSString *)doubleString:(int)num
 {
-    if (num > 9) {
-        return [NSString stringWithFormat:@"%d",(int)num];
-    }
-    return [NSString stringWithFormat:@"0%d",(int)num];
+    return [NSString stringWithFormat:@"%02d",(int)num];
 }
 
 #pragma mark UIPickerViewDataSource
@@ -702,8 +706,6 @@
     return 60;
 }
 
-
-
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     if (component == 0) {
         
@@ -711,17 +713,12 @@
         
         NSDate *date = [LTools dateFromString:string withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
         
-        NSLog(@"string %@ date %@",string,date);
-        
         return [NSString stringWithFormat:@"%@ %@",[LTools timeDate:date withFormat:@"MM/dd"],[LTools weekWithDate:date]];
         
     }else if (component == 1){
         return [NSString stringWithFormat:@"%d点",[_hours[row] intValue]];
     }
-    if (row > 9) {
-        return [NSString stringWithFormat:@"%d分",(int)row];
-    }
-    return [NSString stringWithFormat:@"0%d分",(int)row];
+    return [self doubleString:(int)row];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{

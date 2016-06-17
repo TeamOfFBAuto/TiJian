@@ -47,6 +47,7 @@
 
 @implementation AppDelegate
 
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
@@ -63,7 +64,7 @@
     [self umengSocial];
     
     //JSPatch
-    [self JSPatch];
+//    [self JSPatch];
     
     //JPush
     [self JPush:launchOptions];

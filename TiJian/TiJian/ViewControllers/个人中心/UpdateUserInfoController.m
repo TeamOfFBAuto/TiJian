@@ -70,6 +70,7 @@
 
 -(void)rightButtonTap:(UIButton *)sender
 {
+    [_textField resignFirstResponder];
     [self netWork];
 }
 
@@ -185,6 +186,16 @@
     [self netWork];
     
     return YES;
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSString *text = textField.text;
+    if (_updateType == UPDATEINFOTYPE_IDCARD)//修改身份证号
+    {
+        text = [LTools stringByRemoveUnavailableWithIdCard:text];
+    }
+    textField.text = text;
 }
 
 

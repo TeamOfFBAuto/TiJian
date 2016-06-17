@@ -1815,6 +1815,35 @@
 }
 
 
+/**
+ *  身份证号移除不必要字符0-9 x X
+ *
+ *  @param idCard
+ */
++ (NSString *)stringByRemoveUnavailableWithIdCard:(NSString *)idCard
+{
+    NSString *text = idCard;
+    
+    NSString *reg = @"[^0-9xX]";
+    NSString *newString = [text stringByReplacingOccurrencesOfString:reg withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [text length])];
+    
+    return newString;
+}
+
+/**
+ *  手机号移除不必要字符 0-9
+ *
+ *  @param idCard
+ */
++ (NSString *)stringByRemoveUnavailableWithPhone:(NSString *)phone
+{
+    NSString *text = phone;
+        NSString *reg = @"[^0-9]";
+    NSString *newString = [text stringByReplacingOccurrencesOfString:reg withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [text length])];
+    
+    return newString;
+}
+
 #pragma mark - 随机数
 
 /**

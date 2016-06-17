@@ -15,7 +15,7 @@
 //#import "APService.h"//JPush推送
 #import "JPUSHService.h" //JPush推送
 
-@interface LoginViewController ()
+@interface LoginViewController ()<UITextFieldDelegate>
 
 @end
 
@@ -427,6 +427,19 @@
     }];
     
 }
+
+#pragma mark - UITextFieldDelegate
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSString *text = textField.text;
+    if(textField == self.phoneTF)
+    {
+        text = [LTools stringByRemoveUnavailableWithPhone:text];
+    }
+    textField.text = text;
+}
+
 
 @end
 

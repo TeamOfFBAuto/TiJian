@@ -584,6 +584,20 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 + (NSString *)getIdCardbirthday:(NSString *)numberStr;
 
 /**
+ *  身份证号移除不必要字符0-9 x X
+ *
+ *  @param idCard
+ */
++ (NSString *)stringByRemoveUnavailableWithIdCard:(NSString *)idCard;
+
+/**
+ *  手机号移除不必要字符 0-9
+ *
+ *  @param idCard
+ */
++ (NSString *)stringByRemoveUnavailableWithPhone:(NSString *)phone;
+
+/**
  *  获取num位随机字符串
  *
  *  @param num 位数

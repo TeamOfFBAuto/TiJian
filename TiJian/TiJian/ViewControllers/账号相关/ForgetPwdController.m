@@ -385,4 +385,13 @@ static int seconds = 60;//计时60s
     return YES;
 }
 
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == self.phoneTF) {
+        NSString *text = textField.text;
+        text = [LTools stringByRemoveUnavailableWithPhone:text];
+        textField.text = text;
+    }
+}
+
 @end

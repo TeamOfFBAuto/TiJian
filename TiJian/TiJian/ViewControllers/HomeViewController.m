@@ -1407,12 +1407,12 @@
  */
 -(void)pushToShangCheng
 {
-    NSString *mobile = [UserInfo userInfoForCache].mobile;
-    NSString *name = [UserInfo userInfoForCache].real_name;
+//    NSString *mobile = [UserInfo userInfoForCache].mobile;
+//    NSString *name = [UserInfo userInfoForCache].real_name;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic safeSetValue:@"HomeViewController" forKey:@"style"];
-    [dic safeSetValue:mobile forKey:@"mobile"];
-    [dic safeSetValue:name forKey:@"name"];
+//    [dic safeSetValue:mobile forKey:@"mobile"];
+//    [dic safeSetValue:name forKey:@"name"];
     [[MiddleTools shareInstance]umengEvent:@"Store_home" attributes:dic number:[NSNumber numberWithInt:1]];
     
     GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];

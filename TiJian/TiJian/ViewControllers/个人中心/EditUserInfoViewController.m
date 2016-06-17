@@ -57,7 +57,7 @@
     }else
     {
         self.myTitle = @"我的账户";
-        //需啊哟显示 收货地址
+        //需要显示 收货地址
     }
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];

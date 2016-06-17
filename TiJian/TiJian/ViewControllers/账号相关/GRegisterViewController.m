@@ -86,6 +86,9 @@ static int seconds = 60;//计时60s
         if (textField == self.phoneTF) {
             
             NSString *text = textField.text;
+            text = [LTools stringByRemoveUnavailableWithPhone:text];
+            textField.text = text;
+            
             if (text && [LTools isValidateMobile:text]) {
                 
                 getYanzhengmaBtn.userInteractionEnabled = YES;
@@ -165,8 +168,13 @@ static int seconds = 60;//计时60s
     [self gShou];
     
     
-    if (![self.mimaTf.text isEqualToString:self.mima2Tf.text]) {
+    if ([LTools isEmpty:self.yanzhengmaTf.text]) {
         
+        [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
+        return;
+    }
+    
+    if (![self.mimaTf.text isEqualToString:self.mima2Tf.text]) {
         [LTools showMBProgressWithText:@"两次输入密码不一致" addToView:self.view];
         return;
     }
@@ -220,7 +228,7 @@ static int seconds = 60;//计时60s
     }];
 }
 
-#pragma mark - MyMeThod
+#pragma mark - 视图创建
 
 -(void)creatUpView{
     
@@ -236,15 +244,12 @@ static int seconds = 60;//计时60s
     [control addTarget:self action:@selector(gShou) forControlEvents:UIControlEventTouchUpInside];
     [self.upThreeStepView addSubview:control];
     
-    
     NSArray *titleArray = @[@"输入手机号",@"输入验证码",@"设置密码"];
     for (int i = 0; i<3; i++) {
         
         UIView *oneView = [[UIView alloc]initWithFrame:CGRectMake(jianju + i*(jianju+32), 20, 32, 32)];
         if (i == 0) {
             [oneView setFrame:CGRectMake(jianju - 10 + i*(jianju+32), 20, 32, 32)];
-            
-            
             UIImageView *fenge = [[UIImageView alloc]initWithFrame:CGRectMake(oneView.right, oneView.center.y, jianju + 10, 20)];
             fenge.image = [UIImage imageNamed:@"user_xuxian"];
             [self.upThreeStepView addSubview:fenge];
@@ -257,13 +262,12 @@ static int seconds = 60;//计时60s
             UIImageView *fenge = [[UIImageView alloc]initWithFrame:CGRectMake(oneView.right, oneView.center.y, jianju + 10, 20)];
             fenge.image = [UIImage imageNamed:@"user_xuxian"];
             [self.upThreeStepView addSubview:fenge];
-
         }
         oneView.layer.cornerRadius = 16;
         oneView.layer.borderWidth = 1;
         oneView.layer.borderColor = [[UIColor whiteColor]CGColor];
         oneView.layer.masksToBounds = YES;
-        oneView.backgroundColor = [UIColor clearColor];
+        oneView.backgroundColor = [UIColor orangeColor];
         [self.upThreeStepView addSubview:oneView];
         [_yuanViewArray addObject:oneView];
         
@@ -285,45 +289,21 @@ static int seconds = 60;//计时60s
         tLabel.center = ccter;
         [self.upThreeStepView addSubview:tLabel];
         [_downYuanTitleLabelArray addObject:tLabel];
+        
+        //用于点击 三个部分
+        UIButton *sender = [UIButton buttonWithType:UIButtonTypeCustom];
+        sender.backgroundColor = [UIColor clearColor];
+        sender.frame = CGRectMake(DEVICE_WIDTH / 3.f * i, 0, DEVICE_WIDTH / 3.f, _upThreeStepView.height);
+        [_upThreeStepView addSubview:sender];
+        [sender addTarget:self action:@selector(clickToChangeUpViewState:) forControlEvents:UIControlEventTouchUpInside];
+        sender.tag = 200 + i;
     }
     
 }
-
-
-//修改上方状态
--(void)changeTheUpViewStateWithNum:(int)theNum{
-    
-    //修改顶部
-    for (UILabel *lable in _numLabelArray) {
-        lable.textColor = [UIColor whiteColor];
-    }
-    
-    for (UIView *oneView in _yuanViewArray) {
-        oneView.backgroundColor = [UIColor clearColor];
-        oneView.layer.cornerRadius = 16;
-        oneView.layer.borderWidth = 1;
-        oneView.layer.borderColor = [[UIColor whiteColor]CGColor];
-        oneView.layer.masksToBounds = YES;
-    }
-    
-    for (UILabel *titleLabel in _downYuanTitleLabelArray) {
-        titleLabel.textColor = [UIColor colorWithHexString:@"d4eeff"];
-    }
-
-    UIView *oneView = _yuanViewArray[theNum - 1];
-    oneView.backgroundColor = [UIColor whiteColor];
-    oneView.layer.borderWidth = 0;
-    UILabel *numlabel = _numLabelArray[theNum - 1];
-    numlabel.textColor = DEFAULT_TEXTCOLOR;
-    UILabel *ttLabel = _downYuanTitleLabelArray[theNum - 1];
-    ttLabel.textColor = [UIColor whiteColor];
-
-}
-
 
 //创建下方信息填写view
 -(void)creatDownInfoView{
-
+    
     _downScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.upThreeStepView.frame), DEVICE_WIDTH, DEVICE_HEIGHT-64-self.upThreeStepView.frame.size.height)];
     _downScrollView.userInteractionEnabled = YES;
     [_downScrollView setContentSize:CGSizeMake(DEVICE_WIDTH*3, self.downInfoView.frame.size.height)];
@@ -392,7 +372,7 @@ static int seconds = 60;//计时60s
     self.yanzhengmaTf.delegate = self;
     self.yanzhengmaTf.textColor = [UIColor whiteColor];
     self.yanzhengmaTf.keyboardType = UIKeyboardTypeNumberPad;
-
+    
     [yanzhengmaView addSubview:self.yanzhengmaTf];
     NSString *y_text = @"请输入验证码";
     [self.yanzhengmaTf setAttributedPlaceholder:[LTools attributedString:y_text keyword:y_text color:[UIColor whiteColor]]];
@@ -402,7 +382,7 @@ static int seconds = 60;//计时60s
     self.codeLabel.backgroundColor = [UIColor colorWithHexString:@"6caae5"];
     self.codeLabel.textColor = [UIColor whiteColor];
     [self.codeLabel setTextAlignment:NSTextAlignmentCenter];
-//    self.codeLabel.text = @"59s";
+    //    self.codeLabel.text = @"59s";
     self.codeLabel.userInteractionEnabled = NO;
     [yanzhengmaView addSubview:self.codeLabel];
     //获取验证码
@@ -431,13 +411,12 @@ static int seconds = 60;//计时60s
     UIView *mimaView = [[UIView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * 2, top, DEVICE_WIDTH-20, 100)];
     mimaView.backgroundColor = [UIColor clearColor];
     
-//    UIView *fenge = [[UIView alloc]initWithFrame:CGRectMake(0, 49, mimaView.frame.size.width, 0.5)];
-//    fenge.backgroundColor = [UIColor whiteColor];
-//    [mimaView addSubview:fenge];
+    //    UIView *fenge = [[UIView alloc]initWithFrame:CGRectMake(0, 49, mimaView.frame.size.width, 0.5)];
+    //    fenge.backgroundColor = [UIColor whiteColor];
+    //    [mimaView addSubview:fenge];
     [_downScrollView addSubview:mimaView];
     
     for (int i = 0; i < 2; i++) {
-        
         
         UIView *mimaTf_view = [[UIView alloc]initWithFrame:CGRectMake(28, (40 + 20) * i, DEVICE_WIDTH - 28 * 2, 40)];
         mimaTf_view.backgroundColor = [UIColor colorWithHexString:@"5a8cbd"];
@@ -471,7 +450,7 @@ static int seconds = 60;//计时60s
             self.mima2Tf = pwd_tf;
             placeHolder = @"请再次输入密码";
             pwd_tf.returnKeyType = UIReturnKeyDone;
-
+            
         }
         [pwd_tf setAttributedPlaceholder:[LTools attributedString:placeHolder keyword:placeHolder color:[UIColor whiteColor]]];
     }
@@ -487,6 +466,58 @@ static int seconds = 60;//计时60s
     [_downScrollView addSubview:querenBtn];
     
 }
+
+#pragma mark - 事件处理
+
+- (void)clickToChangeUpViewState:(UIButton *)sender
+{
+    int index = (int)sender.tag - 200;
+    [self updateAllStateWithIndex:index];
+}
+
+/**
+ *  改变整个状态
+ *
+ *  @param index 0 1 2
+ */
+- (void)updateAllStateWithIndex:(int)index
+{
+    [self changeTheUpViewStateWithNum:index + 1];
+    [_downScrollView setContentOffset:CGPointMake((index) * DEVICE_WIDTH, 0) animated:YES];
+}
+
+//修改上方状态
+-(void)changeTheUpViewStateWithNum:(int)theNum{
+    
+    //修改顶部
+    for (UILabel *lable in _numLabelArray) {
+        lable.textColor = [UIColor whiteColor];
+    }
+    
+    for (UIView *oneView in _yuanViewArray) {
+        oneView.backgroundColor = [UIColor clearColor];
+        oneView.layer.cornerRadius = 16;
+        oneView.layer.borderWidth = 1;
+        oneView.layer.borderColor = [[UIColor whiteColor]CGColor];
+        oneView.layer.masksToBounds = YES;
+    }
+    
+    for (UILabel *titleLabel in _downYuanTitleLabelArray) {
+        titleLabel.textColor = [UIColor colorWithHexString:@"d4eeff"];
+    }
+
+    UIView *oneView = _yuanViewArray[theNum - 1];
+    oneView.backgroundColor = [UIColor whiteColor];
+    oneView.layer.borderWidth = 0;
+    UILabel *numlabel = _numLabelArray[theNum - 1];
+    numlabel.textColor = DEFAULT_TEXTCOLOR;
+    UILabel *ttLabel = _downYuanTitleLabelArray[theNum - 1];
+    ttLabel.textColor = [UIColor whiteColor];
+
+}
+
+
+
 
 //收键盘
 -(void)gShou{
@@ -507,9 +538,13 @@ static int seconds = 60;//计时60s
 //输入完验证码
 -(void)clickToNext{
     
-    int code = [self.yanzhengmaTf.text intValue];//填写的验证码
+    
+    [self gShou];
+    NSString *code = self.yanzhengmaTf.text ;//填写的验证码
+    code = [LTools stringByRemoveUnavailableWithPhone:code];
+    _yanzhengmaTf.text = code;
     //下一步
-    if (code == [_encryptcode intValue]) {
+    if (![LTools isEmpty:code]) {
         
         [self changeTheUpViewStateWithNum:3];
         [_downScrollView setContentOffset:CGPointMake(2 * DEVICE_WIDTH, 0) animated:YES];
@@ -519,6 +554,36 @@ static int seconds = 60;//计时60s
     }else{
         
         [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
+    }
+}
+
+
+////输入完验证码
+//-(void)clickToNext{
+//    
+//    int code = [self.yanzhengmaTf.text intValue];//填写的验证码
+//    //下一步
+//    if (code == [_encryptcode intValue]) {
+//        
+//        [self changeTheUpViewStateWithNum:3];
+//        [_downScrollView setContentOffset:CGPointMake(2 * DEVICE_WIDTH, 0) animated:YES];
+//        
+//        [self renewTimer];//停止计时器
+//        
+//    }else{
+//        
+//        [LTools showMBProgressWithText:ALERT_ERRO_SECURITYCODE addToView:self.view];
+//    }
+//}
+
+- (void)clickToClose {
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    //注册成功block
+    if (self.registerBlock) {
+        
+        self.registerBlock(self.phoneTF.text,self.mimaTf.text);
     }
 }
 
@@ -552,26 +617,6 @@ static int seconds = 60;//计时60s
         [LTools showMBProgressWithText:@"注册成功" addToView:self.view];
         
         [self performSelector:@selector(clickToClose) withObject:nil afterDelay:0.5];
-    }
-}
-
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {
-        
-        [self performSelector:@selector(clickToClose) withObject:nil afterDelay:0.5];
-    }
-}
-
-
-- (void)clickToClose {
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    
-    //注册成功block
-    if (self.registerBlock) {
-        
-        self.registerBlock(self.phoneTF.text,self.mimaTf.text);
     }
 }
 
@@ -616,6 +661,16 @@ static int seconds = 60;//计时60s
     _codeButton.hidden = NO;
     _codeLabel.hidden = YES;
     seconds = kSeconds;
+}
+
+#pragma mark - UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        
+        [self performSelector:@selector(clickToClose) withObject:nil afterDelay:0.5];
+    }
 }
 
 #pragma - mark UITextFileDelegate
@@ -686,5 +741,14 @@ static int seconds = 60;//计时60s
     return YES;
 }
 
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSString *temp = textField.text;
+    if (textField == self.phoneTF) {
+        temp = [LTools stringByRemoveUnavailableWithPhone:temp];
+        textField.text = temp;
+    }
+
+}
 
 @end

@@ -551,40 +551,52 @@
     [self scrollTableViewWithTextField:textField];
 }
 
+
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
     int index = (int)textField.tag - 100;
     
     if (textField.text.length > 0) {
-        [_contentArray replaceObjectAtIndex:index withObject:textField.text];
+       
+        NSString *text = textField.text;
         //102 身份证
         DDLOG(@"--idcard:%@",textField.text);
         if (textField.tag == 102) {
-            NSString *idCard = textField.text;
-            if (idCard.length != 15 && [idCard length] != 18) {
-                return;
+            
+            text = [LTools stringByRemoveUnavailableWithIdCard:text];//移除不必要
+            
+            //验证是身份证号才往下进行
+            if ([LTools isValidateIDCard:text])
+            {
+                Gender gender = [LTools getIdCardSex:text];
+                NSString *age = [LTools getIdCardAge:text];
+                
+                NSString *genderString = [self textFieldWithTag:103].text;//性别
+                NSString *ageString = [self textFieldWithTag:104].text;//年龄
+                
+                if ([LTools isEmpty:genderString]) {
+                    NSString *sex = gender == Gender_Girl ? @"女":@"男";
+                    [self textFieldWithTag:103].text = sex;
+                    [_contentArray replaceObjectAtIndex:3 withObject:sex];
+                    _sex = gender == Gender_Girl ? 2 : 1; //1男 2女
+                }
+                
+                if ([LTools isEmpty:ageString]) {
+                    [self textFieldWithTag:104].text = age;
+                    [_contentArray replaceObjectAtIndex:4 withObject:age];
+                    _age = [age intValue];
+                }
+
             }
             
-            
-            Gender gender = [LTools getIdCardSex:idCard];
-            NSString *age = [LTools getIdCardAge:idCard];
-            
-            NSString *genderString = [self textFieldWithTag:103].text;//性别
-            NSString *ageString = [self textFieldWithTag:104].text;//年龄
-            
-            if ([LTools isEmpty:genderString]) {
-                NSString *sex = gender == Gender_Girl ? @"女":@"男";
-                [self textFieldWithTag:103].text = sex;
-                [_contentArray replaceObjectAtIndex:3 withObject:sex];
-                _sex = gender == Gender_Girl ? 2 : 1; //1男 2女
-            }
-            
-            if ([LTools isEmpty:ageString]) {
-                [self textFieldWithTag:104].text = age;
-                [_contentArray replaceObjectAtIndex:4 withObject:age];
-                _age = [age intValue];
-            }
         }
+        else if(textField.tag == 105) //手机号
+        {
+            text = [LTools stringByRemoveUnavailableWithPhone:text];//手机号移除特殊字符
+        }
+        
+        textField.text = text;
+         [_contentArray replaceObjectAtIndex:index withObject:text];
     }
 }
 
@@ -641,9 +653,11 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
 {
-    //身份证号
+//    //身份证号
 //    if (textField.tag == 102) {
-//        <#statements#>
+//        
+//        NSString *text = textField.text;
+//         textField.text = [text  stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 //    }
     
     return YES;
