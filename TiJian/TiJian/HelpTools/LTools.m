@@ -1067,8 +1067,48 @@
     if (!format) {
         format = @"yyyy-MM-dd";
     }
+//    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"UTC"]];
     formatter.dateFormat = format;
     return [formatter dateFromString:string];
+}
+
+/**
+ *  获取星期几
+ *
+ *  @param date NSDate
+ *
+ *  @return
+ */
++ (NSString *)weekWithDate:(NSDate *)date
+{
+    int week = (int)[date fs_weekday];
+    switch (week) {
+        case 1:
+            return @"星期日";
+            break;
+        case 2:
+            return @"星期一";
+            break;
+        case 3:
+            return @"星期二";
+            break;
+        case 4:
+            return @"星期三";
+            break;
+        case 5:
+            return @"星期四";
+            break;
+        case 6:
+            return @"星期五";
+            break;
+        case 7:
+            return @"星期六";
+            break;
+       
+        default:
+            break;
+    }
+    return [LTools timeDate:date withFormat:@"yyyy-MM-dd"];
 }
 
 /**

@@ -15,6 +15,9 @@ typedef void(^LPickerBlock)(ACTIONTYPE type, int row ,int component);
     LPickerBlock _pickerBlock;
 }
 
+@property(nonatomic,readonly) UIPickerView *pickerView;
+
+
 -(instancetype)initWithDelegate:(id<UIPickerViewDataSource>)dataSource
                        delegate:(id<UIPickerViewDelegate>)delegate
                     pickerBlock:(LPickerBlock)pickerBlock;

@@ -324,6 +324,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
                 withFormat:(NSString *)format;
 
 /**
+ *  获取星期几
+ *
+ *  @param date NSDate
+ *
+ *  @return
+ */
++ (NSString *)weekWithDate:(NSDate *)date;
+
+/**
  *  是否需要更新
  *
  *  @param hours      时间间隔

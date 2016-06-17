@@ -146,7 +146,8 @@ typedef enum {
     ACTIONTYPE_NORMAL = 0,//滚动
     ACTIONTYPE_SURE, //确定
     ACTIONTYPE_Refresh, //刷新数据
-    ACTIONTYPE_CANCEL //取消
+    ACTIONTYPE_CANCEL, //取消
+    ACTIONTYPE_SURE_AllC //确定
 }ACTIONTYPE;
 
 ////挂号网相关接口
