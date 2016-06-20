@@ -31,9 +31,7 @@
     NSMutableArray *_textFieldArray;//textField数组
     CGPoint _orig_mainscrollView_contentOffset;
     
-    //收键盘view
-    UIView *_shouView;
-    UIView *_shouView1;
+    
     
     NSDictionary *_userSelectCityDic;
 
@@ -42,6 +40,8 @@
     NSString *_selectDateString;//选择的时间
     
     YJYRequstManager *_request;
+    
+    CGSize _mainScrollSize;
     
 }
 @property(nonatomic,retain)LPickerView *pickerView;
@@ -79,6 +79,9 @@
     _mainScrollView.delegate = self;
     _mainScrollView.backgroundColor = RGBCOLOR(244, 245, 246);
     [self.view addSubview:_mainScrollView];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+    [_mainScrollView addGestureRecognizer:tap];
     
 }
 
@@ -144,7 +147,7 @@
     //体检人手机
     UIView *personPhoneView = [[UIView alloc]initWithFrame:CGRectMake(0, personNameView.bottom, DEVICE_WIDTH, 40)];
     [_upView addSubview:personPhoneView];
-    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
+    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 70, 40)];
     personPhone_tf.placeholder = @"体检人手机";
     personPhone_tf.delegate = self;
     [_textFieldArray addObject:personPhone_tf];
@@ -279,7 +282,7 @@
     //联系人手机
     UIView *personPhoneView = [[UIView alloc]initWithFrame:CGRectMake(0, personNameView.bottom, DEVICE_WIDTH, 40)];
     [_downView addSubview:personPhoneView];
-    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
+    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 70, 40)];
     personPhone_tf.placeholder = @"联系人手机";
     personPhone_tf.delegate = self;
     [_textFieldArray addObject:personPhone_tf];
@@ -363,6 +366,7 @@
     
     [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, MAX(appointBtn.bottom + 15, DEVICE_HEIGHT-64+15))];
     
+    _mainScrollSize = _mainScrollView.contentSize;
 }
 
 
@@ -901,27 +905,8 @@
     
     [_mainScrollView setContentOffset:offset animated:YES];
     
+    [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, _mainScrollSize.height+offset.y+100)];
     
-    if (!_shouView && !_shouView1) {
-        
-        _shouView = [[UIView alloc]init];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
-//        _shouView.backgroundColor = [UIColor orangeColor];
-        [_shouView addGestureRecognizer:tap];
-        
-        _shouView1 = [[UIView alloc]init];
-        UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
-//        _shouView1.backgroundColor = [UIColor redColor];
-        [_shouView1 addGestureRecognizer:tap1];
-        
-        
-    }
-    
-    
-    [_shouView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, point.y)];
-    [_shouView1 setFrame:CGRectMake(0, point.y+textField.height, DEVICE_WIDTH, _mainScrollView.height - point.y - textField.height)];
-    [_mainScrollView addSubview:_shouView];
-    [_mainScrollView addSubview:_shouView1];
     return YES;
 }
 
@@ -934,10 +919,9 @@
 
 #pragma mark - 收键盘
 -(void)hiddenKeyBord{
-    
-    [_shouView removeFromSuperview];
-    [_shouView1 removeFromSuperview];
+
     [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
+    [_mainScrollView setContentSize:_mainScrollSize];
     for (UITextField *tf in _textFieldArray) {
         [tf resignFirstResponder];
     }
@@ -952,28 +936,6 @@
 
 
 
-
-//- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view __TVOS_PROHIBITED
-//{
-//    UIView *pickerCell = view;
-//    if (!pickerCell) {
-//        pickerCell = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, [UIScreen mainScreen].bounds.size.width, 45.0f}];
-//        UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10, 25, 25)];
-//        icon.backgroundColor = [UIColor orangeColor];
-//        [pickerCell addSubview:icon];
-//        icon.tag = 100;
-//        
-//        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(icon.right + 10, 10, 200, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
-//        [pickerCell addSubview:label];
-//        label.tag = 101;
-//    }
-//    
-//    UIImageView *icon = [pickerCell viewWithTag:100];
-//    UILabel *label = [pickerCell viewWithTag:101];
-//   
-//    
-//    return pickerCell;
-//}
 
 
 @end
