@@ -341,7 +341,6 @@
     UITextField *appointTime_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 40, 40)];
     appointTime_tf.font = [UIFont systemFontOfSize:12];
     appointTime_tf.placeholder = @"选择预约时间";
-//    appointTime_tf.textColor = RGBCOLOR(199, 199, 205);
     appointTime_tf.enabled = NO;
     appointTime_tf.tag = 402;
     [appointTimeView addSubview:appointTime_tf];
@@ -578,6 +577,7 @@
 -(void)theViewClicked:(UITapGestureRecognizer *)sender{
     NSLog(@"%ld",(long)sender.view.tag);
     if (sender.view.tag == 200) {//生日
+        [self hiddenKeyBord];
         [self clickToUpdateBirthday];
     }else if (sender.view.tag == 201){//城市
         GoHealthChooseCityViewController *cc = [[GoHealthChooseCityViewController alloc]init];
@@ -590,7 +590,7 @@
         }];
         [self.navigationController pushViewController:cc animated:YES];
     }else if (sender.view.tag == 202){//时间
-        
+        [self hiddenKeyBord];
         [self netWorkForAvailableTime];
     }
 }
@@ -905,23 +905,29 @@
     
     [_mainScrollView setContentOffset:offset animated:YES];
     
-    [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, _mainScrollSize.height+offset.y+100)];
+    [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, _mainScrollSize.height+offset.y)];
+    
+    
     
     return YES;
 }
 
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    UITextField *tf = [self.view viewWithTag:(textField.tag+1)];
-    [tf becomeFirstResponder];
+    if (textField.tag == 304) {
+        [self hiddenKeyBord];
+    }else{
+        UITextField *tf = [self.view viewWithTag:(textField.tag+1)];
+        [tf becomeFirstResponder];
+    }
+    
     return YES;
 }
 
 #pragma mark - 收键盘
 -(void)hiddenKeyBord{
-
-    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
     [_mainScrollView setContentSize:_mainScrollSize];
+    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
     for (UITextField *tf in _textFieldArray) {
         [tf resignFirstResponder];
     }
@@ -931,6 +937,12 @@
 -(void)setTfKeyBoard{
     for (UITextField *tf in _textFieldArray) {
         tf.returnKeyType = UIReturnKeyNext;
+        if (tf.tag == 301 || tf.tag == 303) {
+            tf.keyboardType = UIKeyboardTypeNumberPad;
+        }else if (tf.tag == 304){
+            tf.returnKeyType = UIReturnKeyDefault;
+        }
+        
     }
 }
 
