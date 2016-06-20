@@ -14,6 +14,8 @@ typedef void(^userSelectCityBlock)(NSDictionary *userSelectCityDic);
 
 @interface GoHealthChooseCityViewController : MyViewController
 
+@property(nonatomic,strong)NSString *productId;
+
 @property(nonatomic,copy)userSelectCityBlock userSelectCityBlock;
 
 -(void)setUserSelectCityBlock:(userSelectCityBlock)userSelectCityBlock;

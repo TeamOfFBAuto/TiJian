@@ -493,6 +493,8 @@
 //3、验证订单支付状态 get 参数:authcode\order_id  订单id
 #define GoHealth_get_order_pay @"/index.php?d=api&c=go_order&m=get_order_pay"
 
+//4、提交预约人信息
+#define GoHealth_upAppointUserInfo @"/index.php?d=api&c=go_order&m=make_appoint"
 
 
 #endif

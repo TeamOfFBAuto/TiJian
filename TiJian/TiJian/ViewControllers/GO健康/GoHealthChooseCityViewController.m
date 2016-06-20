@@ -61,6 +61,7 @@
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
     
+    
     __weak typeof (self)bself = self;
     
     [_request requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_citylist parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -134,18 +135,21 @@
     NSArray *geos = [cityDic arrayValueForKey:@"geos"];
     NSDictionary *districtDic = geos[indexPath.row];
     
-    
-    NSString *districtName = [districtDic stringValueForKey:@"name"];
-    NSString *districtId = [districtDic stringValueForKey:@"id"];
+    NSString *provinceName = [cityDic stringValueForKey:@"provinceName"];
+    NSString *provinceId = [cityDic stringValueForKey:@"provinceId"];
     NSString *cityName = [cityDic stringValueForKey:@"name"];
     NSString *cityId = [cityDic stringValueForKey:@"id"];
-    
+    NSString *districtName = [districtDic stringValueForKey:@"name"];
+    NSString *districtId = [districtDic stringValueForKey:@"id"];
     
     NSMutableDictionary *resultDic = [NSMutableDictionary dictionaryWithCapacity:1];
-    [resultDic safeSetString:districtName forKey:@"districtName"];
-    [resultDic safeSetString:districtId forKey:@"districtId"];
+    [resultDic safeSetString:provinceName forKey:@"provinceName"];
+    [resultDic safeSetString:provinceId forKey:@"provinceId"];
     [resultDic safeSetString:cityName forKey:@"cityName"];
     [resultDic safeSetString:cityId forKey:@"cityId"];
+    [resultDic safeSetString:districtName forKey:@"districtName"];
+    [resultDic safeSetString:districtId forKey:@"districtId"];
+    
     
     if (self.userSelectCityBlock) {
         self.userSelectCityBlock(resultDic);
@@ -300,7 +304,12 @@
     for (NSDictionary *dic in provinceArray) {
         NSArray *geos = [dic arrayValueForKey:@"geos"];
         for (NSDictionary *cityDic in geos) {
-            [_citiesArray addObject:cityDic];
+            NSMutableDictionary *city_p = [NSMutableDictionary dictionaryWithDictionary:cityDic];
+            NSString *provinceName = [dic stringValueForKey:@"name"];
+            NSString *provinceId = [dic stringValueForKey:@"id"];
+            [city_p safeSetString:provinceName forKey:@"provinceName"];
+            [city_p safeSetString:provinceId forKey:@"provinceId"];
+            [_citiesArray addObject:city_p];
         }
         
     }
