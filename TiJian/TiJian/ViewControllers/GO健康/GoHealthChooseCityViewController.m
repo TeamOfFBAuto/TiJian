@@ -60,6 +60,7 @@
     
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
+    [params safeSetString:self.productId forKey:@"productionIds"];
     
     
     __weak typeof (self)bself = self;

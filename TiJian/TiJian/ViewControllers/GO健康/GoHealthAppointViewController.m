@@ -931,7 +931,7 @@
     }
 }
 
-//设置时间右下角按键名称
+#pragma mark - 设置时间右下角按键名称
 -(void)setTfKeyBoard{
     for (UITextField *tf in _textFieldArray) {
         tf.returnKeyType = UIReturnKeyNext;

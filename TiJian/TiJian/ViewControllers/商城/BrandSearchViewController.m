@@ -523,17 +523,15 @@
     }
     
     
-    NSMutableDictionary *temp_dic;
+    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithCapacity:1];
     
-    if (self.shaixuanDic) {
-        temp_dic = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
+    if ([LTools isEmpty:[self.shaixuanDic stringValueForKey:@"city_id"]] && [self.shaixuanDic stringValueForKey:@"province_id"]) {
+        [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
     }else{
-        temp_dic = [NSMutableDictionary dictionaryWithCapacity:1];
+        temp_dic = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
     }
     
-   
-    [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
-    [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
     [temp_dic safeSetString:NSStringFromInt(_rTab.pageNum)forKey:@"page"];
     [temp_dic safeSetString:NSStringFromInt(PAGESIZE_SMALL) forKey:@"per_page"];
     [temp_dic safeSetString:self.brand_id forKey:@"brand_id"];
