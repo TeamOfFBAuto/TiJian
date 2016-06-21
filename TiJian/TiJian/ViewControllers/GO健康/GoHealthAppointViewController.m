@@ -30,12 +30,19 @@
 
     NSMutableArray *_textFieldArray;//textField数组
     CGPoint _orig_mainscrollView_contentOffset;
-    UIView *_shouView;
+    
+    
+    
     NSDictionary *_userSelectCityDic;
 
     NSArray *_hours;//小时
     NSArray *_dates;//日期到天
     NSString *_selectDateString;//选择的时间
+    
+    YJYRequstManager *_request;
+    
+    CGSize _mainScrollSize;
+    
 }
 @property(nonatomic,retain)LPickerView *pickerView;
 
@@ -49,11 +56,16 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"预约上门";
+    
+    self.orderId = @"33";
+    self.productId = @"1110009852737";
+    
     _textFieldArray = [NSMutableArray arrayWithCapacity:1];
     [self creatScrollView];
     [self creatUpView];
     [self creatDownView];
     [self creatBirthPicker];
+    [self setTfKeyBoard];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -67,6 +79,9 @@
     _mainScrollView.delegate = self;
     _mainScrollView.backgroundColor = RGBCOLOR(244, 245, 246);
     [self.view addSubview:_mainScrollView];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
+    [_mainScrollView addGestureRecognizer:tap];
     
 }
 
@@ -132,7 +147,7 @@
     //体检人手机
     UIView *personPhoneView = [[UIView alloc]initWithFrame:CGRectMake(0, personNameView.bottom, DEVICE_WIDTH, 40)];
     [_upView addSubview:personPhoneView];
-    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
+    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 70, 40)];
     personPhone_tf.placeholder = @"体检人手机";
     personPhone_tf.delegate = self;
     [_textFieldArray addObject:personPhone_tf];
@@ -267,7 +282,7 @@
     //联系人手机
     UIView *personPhoneView = [[UIView alloc]initWithFrame:CGRectMake(0, personNameView.bottom, DEVICE_WIDTH, 40)];
     [_downView addSubview:personPhoneView];
-    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 50, 40)];
+    UITextField *personPhone_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 70, 40)];
     personPhone_tf.placeholder = @"联系人手机";
     personPhone_tf.delegate = self;
     [_textFieldArray addObject:personPhone_tf];
@@ -326,7 +341,6 @@
     UITextField *appointTime_tf = [[UITextField alloc]initWithFrame:CGRectMake(40, 0, DEVICE_WIDTH - 40 - 40, 40)];
     appointTime_tf.font = [UIFont systemFontOfSize:12];
     appointTime_tf.placeholder = @"选择预约时间";
-//    appointTime_tf.textColor = RGBCOLOR(199, 199, 205);
     appointTime_tf.enabled = NO;
     appointTime_tf.tag = 402;
     [appointTimeView addSubview:appointTime_tf];
@@ -351,6 +365,7 @@
     
     [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, MAX(appointBtn.bottom + 15, DEVICE_HEIGHT-64+15))];
     
+    _mainScrollSize = _mainScrollView.contentSize;
 }
 
 
@@ -402,44 +417,129 @@
     //体检人姓名
     UITextField *personName_tf = (UITextField *)[self.view viewWithTag:300];
     NSString *userName_tijian = personName_tf.text;
+    if ([LTools isEmpty:userName_tijian]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写体检人信息" addToView:self.view];
+        return;
+    }
     
     //体检人手机
     UITextField *personMoble_tf = (UITextField *)[self.view viewWithTag:301];
     NSString *userPhone_tijian = personMoble_tf.text;
+    if ([LTools isEmpty:userPhone_tijian]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写体检人手机" addToView:self.view];
+        return;
+    }
     
     //体检人性别
     UIButton *manBtn = [_upView viewWithTag:100];
-    NSString *gender = @"2";//女
+    NSString *gender = @"1";//女
     if (manBtn.selected) {
-        gender = @"1";
+        gender = @"2";
     }
     
     //体检人生日
     UILabel *personBirthLabel = (UILabel *)[self.view viewWithTag:400];
     NSString *birthDate = personBirthLabel.text;
+    if ([LTools isEmpty:birthDate]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写体检人生日" addToView:self.view];
+        return;
+    }
+    
     
     //联系人姓名
     UITextField *personName_tf_l = (UITextField *)[self.view viewWithTag:302];
     NSString *userName_lianxi = personName_tf_l.text;
+    if ([LTools isEmpty:userName_lianxi]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写联系人姓名" addToView:self.view];
+        return;
+    }
     
-    //联系人电话
+    //联系人手机
     UITextField *personMoble_tf_l = (UITextField *)[self.view viewWithTag:303];
     NSString *userPhone_lianxi = personMoble_tf_l.text;
+    if ([LTools isEmpty:userPhone_lianxi]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写联系人手机" addToView:self.view];
+        return;
+    }
+    
     
     //体检人城市
+    NSString *provinceName = [_userSelectCityDic stringValueForKey:@"provinceName"];
+    int provinceId = [[_userSelectCityDic stringValueForKey:@"provinceId"] intValue];
     NSString *cityName = [_userSelectCityDic stringValueForKey:@"cityName"];
-    NSString *cityId = [_userSelectCityDic stringValueForKey:@"cityId"];
+    int cityId = [[_userSelectCityDic stringValueForKey:@"cityId"] intValue];
     NSString *districtName = [_userSelectCityDic stringValueForKey:@"districtName"];
-    NSString *districtId = [_userSelectCityDic stringValueForKey:@"districtId"];
+    int districtId = [[_userSelectCityDic stringValueForKey:@"districtId"] intValue];
+    if ([LTools isEmpty:cityName]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请选择城市" addToView:self.view];
+        return;
+    }
+    
     
     //体检人详细地址
     UITextField *address_tf = (UITextField*)[self.view viewWithTag:304];
     NSString *address_tijian = address_tf.text;
+    if ([LTools isEmpty:address_tijian]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请填写详细地址" addToView:self.view];
+        return;
+    }
     
     //预约时间
-    UILabel *appointTime_label = [self.view viewWithTag:402];
-    NSString *userAppointTime = appointTime_label.text;
+    NSString *userAppointTime = _selectDateString;
+    if ([LTools isEmpty:userAppointTime]) {
+        [GMAPI showAutoHiddenMBProgressWithText:@"请选择预约时间" addToView:self.view];
+        return;
+    }
+#pragma mark - 固定
+    //订单id
+    NSString *order_id = self.orderId;
+    //随机字符串
+    NSString *nonceStr = [LTools randomNum:32];
     
+    NSMutableDictionary *postDic = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    [postDic safeSetString:[UserInfo getAuthkey] forKey:@"authcode"];
+    [postDic safeSetString:order_id forKey:@"order_id"];//订单id
+    [postDic safeSetString:nonceStr forKey:@"nonceStr"];//随机字符串
+    [postDic safeSetString:userAppointTime forKey:@"bookTime"];//预约时间
+    
+    //联系人信息
+    NSMutableDictionary *contact = [NSMutableDictionary dictionaryWithCapacity:1];
+    [contact safeSetString:userName_lianxi forKey:@"name"];
+    [contact safeSetString:userPhone_lianxi forKey:@"phone"];
+    [postDic safeSetString:[LTools JSONStringWithObject:contact] forKey:@"contact"];
+    
+    //体检人信息
+    NSMutableDictionary *testees = [NSMutableDictionary dictionaryWithCapacity:1];
+    [testees safeSetString:userName_tijian forKey:@"name"];
+    [testees safeSetString:birthDate forKey:@"birthday"];
+    [testees safeSetInt:[gender intValue] forKey:@"gender"];
+    [testees safeSetString:userPhone_tijian forKey:@"phone"];
+    [testees safeSetInt:0 forKey:@"isInsurance"];
+#pragma mark - 固定
+    NSArray *productIds = @[self.productId];
+    NSString *productionIds = [productIds componentsJoinedByString:@","];
+    [testees safeSetString:productionIds forKey:@"productionIds"];
+    NSMutableArray *testeesArray = [NSMutableArray arrayWithCapacity:1];
+    [testeesArray addObject:testees];
+    [postDic safeSetString:[LTools JSONStringWithObject:testeesArray] forKey:@"testees"];
+    
+    
+    //地址
+    NSMutableDictionary *address = [NSMutableDictionary dictionaryWithCapacity:1];
+    [address safeSetInt:provinceId forKey:@"provinceId"];
+    [address safeSetString:provinceName forKey:@"provinceName"];
+    [address safeSetInt:cityId forKey:@"cityId"];
+    [address safeSetString:cityName forKey:@"cityName"];
+    [address safeSetInt:districtId forKey:@"districtId"];
+    [address safeSetString:districtName forKey:@"districtName"];
+    [address safeSetString:address_tijian forKey:@"address"];
+    [postDic safeSetString:[LTools JSONStringWithObject:address] forKey:@"address"];
+    
+    
+    
+    
+    [self appointInfoToServerWithDic:postDic];
     
 }
 
@@ -477,9 +577,11 @@
 -(void)theViewClicked:(UITapGestureRecognizer *)sender{
     NSLog(@"%ld",(long)sender.view.tag);
     if (sender.view.tag == 200) {//生日
+        [self hiddenKeyBord];
         [self clickToUpdateBirthday];
     }else if (sender.view.tag == 201){//城市
         GoHealthChooseCityViewController *cc = [[GoHealthChooseCityViewController alloc]init];
+        cc.productId = self.productId;
         __weak typeof (self)bself = self;
         [cc setUserSelectCityBlock:^(NSDictionary *userSelectCityDic) {
             
@@ -488,7 +590,7 @@
         }];
         [self.navigationController pushViewController:cc animated:YES];
     }else if (sender.view.tag == 202){//时间
-        
+        [self hiddenKeyBord];
         [self netWorkForAvailableTime];
     }
 }
@@ -582,6 +684,10 @@
             UILabel *personCityLabel = [(UILabel *)self.view viewWithTag:401];
             personCityLabel.textColor = [UIColor blackColor];
             personCityLabel.text = [NSString stringWithFormat:@"%@ %@",province,city];
+            //清空预约时间
+            UITextField *appointTime_tf = [self.view viewWithTag:402];
+            appointTime_tf.text = @"";
+            
         }
     }
 }
@@ -589,7 +695,7 @@
 
 
 
-#pragma mark - 网络请求
+#pragma mark - 网络相关
 
 /**
  *  可预约时间
@@ -605,8 +711,20 @@
     NSString *productionIds = self.productId;//产品的idNumber, id 以","分割
     productionIds = @"1110010228793";
     
+    
+    NSString *theCityId = [_userSelectCityDic stringValueForKey:@"cityId"];
+    NSString *theDistrictId = [_userSelectCityDic stringValueForKey:@"districtId"];
+    
     NSString *cityid = @"";//城市id
     NSString *districtid = @"";//区县id
+    
+    if (![LTools isEmpty:theCityId] && ![LTools isEmpty:theDistrictId]) {
+        cityid = theCityId;
+        districtid = theDistrictId;
+    }else{
+        [GMAPI showAutoHiddenMBProgressWithText:@"请先选择城市" addToView:self.view];
+        return;
+    }
     
     NSString *nonceStr = [LTools randomNum:32];//随机字符串
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -684,6 +802,28 @@
 {
     return [NSString stringWithFormat:@"%02d",(int)num];
 }
+
+
+//提交预约信息
+-(void)appointInfoToServerWithDic:(NSDictionary *)postDic{
+    
+    if (!_request) {
+        _request = [YJYRequstManager shareInstance];
+    }
+    
+    NSLog(@"%@",postDic);
+
+    [_request requestWithMethod:YJYRequstMethodPost api:GoHealth_upAppointUserInfo parameters:postDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        NSLog(@"%@",result);
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+    
+    
+}
+
 
 #pragma mark UIPickerViewDataSource
 
@@ -763,30 +903,28 @@
     
     [_mainScrollView setContentOffset:offset animated:YES];
     
+    [_mainScrollView setContentSize:CGSizeMake(DEVICE_WIDTH, _mainScrollSize.height+offset.y)];
     
-    if (!_shouView) {
-        _shouView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddenKeyBord)];
-        [_shouView addGestureRecognizer:tap];
-        
-    }
     
-    [self.view addSubview:_shouView];
     
     return YES;
 }
 
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    UITextField *tf = [self.view viewWithTag:(textField.tag+1)];
-    [tf becomeFirstResponder];
+    if (textField.tag == 304) {
+        [self hiddenKeyBord];
+    }else{
+        UITextField *tf = [self.view viewWithTag:(textField.tag+1)];
+        [tf becomeFirstResponder];
+    }
+    
     return YES;
 }
 
 #pragma mark - 收键盘
 -(void)hiddenKeyBord{
-    
-    [_shouView removeFromSuperview];
+    [_mainScrollView setContentSize:_mainScrollSize];
     [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
     for (UITextField *tf in _textFieldArray) {
         [tf resignFirstResponder];
@@ -797,33 +935,17 @@
 -(void)setTfKeyBoard{
     for (UITextField *tf in _textFieldArray) {
         tf.returnKeyType = UIReturnKeyNext;
+        if (tf.tag == 301 || tf.tag == 303) {
+            tf.keyboardType = UIKeyboardTypeNumberPad;
+        }else if (tf.tag == 304){
+            tf.returnKeyType = UIReturnKeyDefault;
+        }
+        
     }
 }
 
 
 
-
-//- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view __TVOS_PROHIBITED
-//{
-//    UIView *pickerCell = view;
-//    if (!pickerCell) {
-//        pickerCell = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, [UIScreen mainScreen].bounds.size.width, 45.0f}];
-//        UIImageView *icon = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10, 25, 25)];
-//        icon.backgroundColor = [UIColor orangeColor];
-//        [pickerCell addSubview:icon];
-//        icon.tag = 100;
-//        
-//        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(icon.right + 10, 10, 200, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
-//        [pickerCell addSubview:label];
-//        label.tag = 101;
-//    }
-//    
-//    UIImageView *icon = [pickerCell viewWithTag:100];
-//    UILabel *label = [pickerCell viewWithTag:101];
-//   
-//    
-//    return pickerCell;
-//}
 
 
 @end

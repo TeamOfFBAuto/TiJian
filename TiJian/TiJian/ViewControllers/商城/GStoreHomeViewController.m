@@ -219,16 +219,7 @@
     }
     
     
-    //refresh头部
-//    [self.theTopView setFrame:CGRectMake(0,
-//                                         0,
-//                                         DEVICE_WIDTH,
-//                                         [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468]//轮播图高度
-//                                         +DEVICE_WIDTH*430/750//分类版块高度
-//                                         +5
-//                                         +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/150]//个性化定制图高度
-//                                         +[GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80]//精品推荐标题
-//                                         )];
+
     
     //设置轮播图
     [self creatUpCycleScrollView];
@@ -1120,15 +1111,9 @@
     
     [self controlTopButtonWithScrollView:scrollView];
     
-    if (scrollView.contentOffset.y<-10) {
-        [[UIApplication sharedApplication] setStatusBarHidden:TRUE withAnimation:UIStatusBarAnimationSlide];
-        [UIView animateWithDuration:0.2 animations:^{
-            self.currentNavigationBar.alpha = 0;
-        }];
-    }
+    
     
     if (_StoreCycleAdvDic) {
-        
         NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
         if (advertisements_data.count > 0) {//有轮播图
             if (scrollView.contentOffset.y<-10) {
@@ -1146,6 +1131,8 @@
         }else{
             
         }
+    }else{
+        
     }
     
 }
