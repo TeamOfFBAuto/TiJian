@@ -979,7 +979,8 @@
         [tf resignFirstResponder];
     }
     [_mainScrollView setContentSize:_mainScrollSize];
-    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
+//    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
+    [_mainScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     
 }
 
