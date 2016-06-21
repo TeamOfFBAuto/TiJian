@@ -283,7 +283,7 @@
     
     NSString *authkey = [UserInfo getAuthkey];
     
-    //待预约
+    //全部
     if (table == [self tableViewWithIndex:0]) {
         
         api = GET_ALL_APPOINTS;

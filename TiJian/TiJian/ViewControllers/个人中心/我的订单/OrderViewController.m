@@ -18,6 +18,7 @@
 #import "ConfirmOrderViewController.h"//确认订单
 #import "GoHealthBugController.h" //go健康购买页面
 #import "ThirdProductModel.h" //三方产品model
+#import "GoHealthAppointViewController.h"//go健康预约
 
 #define kPadding_Pay 1000 //去支付
 #define kPadding_Refund 2000 //退款
@@ -193,69 +194,13 @@
         
     }else if ([notifyName isEqualToString:NOTIFICATION_APPOINT_SUCCESS])//体检预约成功
     {
-        [[self refreshTableForTitle:TableView_title_DaiFu]showRefreshHeader:YES];
+//        [[self refreshTableForTitle:TableView_title_DaiFu]showRefreshHeader:YES];
         [[self refreshTableForTitle:TableView_title_Payed]showRefreshHeader:YES];
     }
     
     [[self refreshTableForIndex:TABLEVIEW_TAG_All]showRefreshHeader:YES];//全部
 }
 
-///**
-// *  处理通知
-// *
-// *  @param notify
-// */
-//- (void)actionForNotify:(NSNotification *)notify
-//{
-//    DDLOG(@"%@ %@",notify.name,notify.userInfo);
-//    NSString *notifyName = notify.name;
-//    
-//    
-//    int indexOne = -1;
-//    int indexTwo = -1;
-//    if ([notifyName isEqualToString:NOTIFICATION_PAY_SUCCESS]) {//支付成功
-//        //支付成功 更新
-//        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
-//        indexTwo = TABLEVIEW_TAG_NoAppoint;//待预约
-//        
-//    }else if ([notifyName isEqualToString:NOTIFICATION_RECIEVE_CONFIRM]){//确认收货
-//        DDLOG(@"确认收货通知");
-//    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_CANCEL]){//取消订单
-//        //取消订单通知 只有待付款可以取消订单
-//        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
-//        
-//    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_DEL]){//删除订单
-//        
-//        //删除订单通知 完成的可以删除
-//        indexOne = TABLEVIEW_TAG_WanCheng;
-//        
-//    }else if ([notifyName isEqualToString:NOTIFICATION_TUIKUAN_SUCCESS]){//退款成功
-//        
-//        indexOne = TABLEVIEW_TAG_NoAppoint;//待付款
-//        indexTwo = TABLEVIEW_TAG_TuiHuan;//退货列表
-//        
-//    }else if ([notifyName isEqualToString:NOTIFICATION_ORDER_COMMIT]){//提交订单
-//        indexOne = TABLEVIEW_TAG_DaiFu;//待付款
-//        
-//    }else if ([notifyName isEqualToString:NOTIFICATION_COMMENTSUCCESS]){//评价晒单
-//        
-//        indexOne = TABLEVIEW_TAG_WanCheng;//完成
-//        
-//    }else if ([notifyName isEqualToString:NOTIFICATION_APPOINT_SUCCESS]){//体检预约成功
-//        
-//        indexOne = TABLEVIEW_TAG_NoAppoint;//待预约
-//        indexTwo = TABLEVIEW_TAG_Appointed;//已预约
-//    }
-//    
-//    if (indexOne >= 0) {
-//        [[self refreshTableForIndex:indexOne]showRefreshHeader:YES];
-//    }
-//    if (indexTwo >= 0) {
-//        [[self refreshTableForIndex:indexTwo]showRefreshHeader:YES];
-//    }
-//    
-//    [[self refreshTableForIndex:TABLEVIEW_TAG_All]showRefreshHeader:YES];//全部
-//}
 
 #pragma - mark 网络请求
 
@@ -424,16 +369,17 @@
         
     }else if (actionType == ORDERACTIONTYPE_Appoint){
         
-        OrderProductListController *list = [[OrderProductListController alloc]init];
-        list.orderId = aModel.order_id;
         if (type == 1)//海马
         {
+            OrderProductListController *list = [[OrderProductListController alloc]init];
+            list.orderId = aModel.order_id;
             list.platformType = PlatformType_default;
-        }else if (type == 2)
+            [self.navigationController pushViewController:list animated:YES];
+
+        }else if (type == 2)//go健康
         {
-            list.platformType = PlatformType_goHealth;
+            [self appointGoHealthWithModel:aModel];
         }
-        [self.navigationController pushViewController:list animated:YES];
         
     }else if (actionType == ORDERACTIONTYPE_Comment){
         //评价晒单
@@ -461,6 +407,40 @@
                               payStyle:[aModel.pay_type intValue]
                          payActionType:payActionType];
     }
+}
+
+
+/**
+ *  预约go健康
+ *
+ *  @param aModel
+ */
+- (void)appointGoHealthWithModel:(OrderModel *)aModel
+{
+    NSArray *products = aModel.products;
+    if (products.count == 1)//只有一个
+    {
+        NSDictionary *p_dic = [products firstObject];
+        if ([LTools isDictinary:p_dic])
+        {
+            NSString *product_num = p_dic[@"product_num"];
+            NSString *product_id = p_dic[@"product_id"];
+            NSString *product_name = p_dic[@"product_name"];
+            
+            if ([product_num intValue] == 1) {
+                GoHealthAppointViewController *goHealthAppoint = [[GoHealthAppointViewController alloc]init];
+                goHealthAppoint.orderId = aModel.order_id;
+                goHealthAppoint.productId = product_id;
+                goHealthAppoint.productName = product_name;
+                [self.navigationController pushViewController:goHealthAppoint animated:YES];
+                return;
+            }
+        }
+    }
+    OrderProductListController *list = [[OrderProductListController alloc]init];
+    list.orderId = aModel.order_id;
+    list.platformType = PlatformType_goHealth;
+    [self.navigationController pushViewController:list animated:YES];
 }
 
 /**

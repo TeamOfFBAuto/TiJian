@@ -18,6 +18,9 @@ typedef enum {
     STATETYPE_CLOSE //关闭
 }STATETYPE; //日历类型
 
+#define kTag_appointSuccess 200 //预约成功
+#define kTag_appoint 201 //是否确定预约体检
+
 @interface ChooseHopitalController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UIView *_calendar_bgView;
@@ -242,14 +245,14 @@ typedef enum {
 //    __weak typeof(_table)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
                 
-        [LTools showMBProgressWithText:@"恭喜您预约成功！" addToView:weakSelf.view];
-        [weakSelf performSelector:@selector(appointSuccess) withObject:nil afterDelay:0.5];
-        NSLog(@"预约成功 result");
+        [weakSelf appointSuccessWithResult:result];
         
     } failBlock:^(NSDictionary *result) {
         
-        [LTools showMBProgressWithText:Alert_ServerErroInfo_Inner addToView:weakSelf.view];
-
+        int erroCode = [result[RESULT_CODE]intValue];
+        if (erroCode < 2000) {
+            [LTools showMBProgressWithText:Alert_ServerErroInfo_Inner addToView:weakSelf.view];
+        }
     }];
 }
 
@@ -451,11 +454,18 @@ typedef enum {
 
 #pragma mark - 事件处理
 
-- (void)appointSuccess
+/**
+ *  预约成功
+ *
+ *  @param result
+ */
+- (void)appointSuccessWithResult:(NSDictionary *)result
 {
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-    [self.navigationController popViewControllerAnimated:YES];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:Alert_AppointSucess delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    alert.tag = kTag_appointSuccess;
+    [alert show];
 }
 
 - (void)parseDataWithResult:(NSDictionary *)result
@@ -569,6 +579,7 @@ typedef enum {
     if (_isCompanyAppoint) {
         
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定预约体检" delegate:self cancelButtonTitle:@"稍等" otherButtonTitles:@"确定", nil];
+        alert.tag = kTag_appoint;
         [alert show];
         
         return;
@@ -616,7 +627,16 @@ typedef enum {
 {
     if(buttonIndex == 1){
         
-        [self networkForMakeAppoint];//提交预约
+        if (alertView.tag == kTag_appoint) {
+            [self networkForMakeAppoint];//提交预约
+        }
+        
+    }else if (buttonIndex == 0)
+    {
+        if (alertView.tag == kTag_appointSuccess) {
+            //返回
+            [self leftButtonTap:nil];
+        }
     }
 }
 

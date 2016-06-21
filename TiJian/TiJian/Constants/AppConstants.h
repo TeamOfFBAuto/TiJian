@@ -76,6 +76,8 @@
 #define ALERT_ERRO_SECURITYCODE @"请输入有效验证码"
 #define ALERT_ERRO_FINDPWD @"两次密码不一致"
 
+#define Alert_AppointSucess @"预约成功,查看请前往”个人中心>体检预约“"
+
 //秒杀相关描述语
 #define MIAOSHAO_END_TEXT @"秒杀已结束"
 #define MIAOSHAO_PRE_TEXT @"秒杀结束倒计时:"

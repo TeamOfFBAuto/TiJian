@@ -17,6 +17,7 @@
 #define kTag_Appoint 200 //预约
 #define kTag_Delete 201 //去删除
 #define KTag_EditUserInfo 202 //去编辑个人信息
+#define kTag_Appoint_success 203 //预约成功
 
 @interface PeopleManageController ()<UITableViewDataSource,RefreshDelegate>
 {
@@ -314,26 +315,38 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:MAKE_APPOINT parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        
-        [LTools showMBProgressWithText:@"恭喜您预约成功！" addToView:weakSelf.view];
-        [weakSelf performSelector:@selector(appointSuccess) withObject:nil afterDelay:0.5];
-        NSLog(@"预约成功 result");
+        [weakSelf appointSuccessWithResult:result];
         
     } failBlock:^(NSDictionary *result) {
         
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
-        [LTools showMBProgressWithText:Alert_ServerErroInfo_Inner addToView:weakSelf.view];
-
+        int erroCode = [result[RESULT_CODE]intValue];
+        if (erroCode < 2000) {
+            [LTools showMBProgressWithText:Alert_ServerErroInfo_Inner addToView:weakSelf.view];
+        }
     }];
+}
+
+/**
+ *  预约成功
+ *
+ *  @param result
+ */
+- (void)appointSuccessWithResult:(NSDictionary *)result
+{
+    NSLog(@"%@",result);
+    //预约成功通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
+    
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:Alert_AppointSucess delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    alert.tag = kTag_Appoint_success;
+    [alert show];
 }
 
 #pragma - mark 事件处理
 
 - (void)appointSuccess
 {
-    //预约成功通知
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-
     if (self.lastViewController) {
         [self.navigationController popToViewController:self.lastViewController animated:YES];
         return;
@@ -879,6 +892,11 @@
         if (alertView.tag == kTag_Delete) {
             
             [self deleteFamily:_deleteIndex];
+        }
+    }else if (buttonIndex == 0){
+        
+        if (alertView.tag == kTag_Appoint_success) {
+            [self appointSuccess];
         }
     }
 }

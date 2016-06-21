@@ -10,6 +10,7 @@
 #import "ProductModel.h"
 #import "AppointmentCell.h"
 #import "ChooseHopitalController.h"
+#import "GoHealthAppointViewController.h"
 
 @interface OrderProductListController ()<RefreshDelegate,UITableViewDataSource>{
     
@@ -75,10 +76,9 @@
                              @"order_id":self.orderId};;
     NSString *api = GET_SETMEALS_BY_ORDER;
     
-//    GoHealth_get_order_info
     
     if (self.platformType == PlatformType_goHealth) {
-        api = GoHealth_get_order_info;
+        api = GoHealth_get_setmeals_by_order;
     }
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
@@ -128,30 +128,43 @@
         return;
     }
     
-    aModel.order_id = self.orderId;
-    
-    ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-    choose.gender = [aModel.gender intValue];
-    
-    //公司
-    if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
-        
-        NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
-        [choose companyAppointWithOrderId:aModel.order_id
-                               productId:aModel.product_id
-                               companyId:[NSString stringWithFormat:@"%@",aModel.company_id]
-                      order_checkuper_id:order_checkuper_id
-                            noAppointNum:[aModel.no_appointed_num intValue]
-                                  gender:[aModel.gender intValue]];
-    }else
+    if (self.platformType == PlatformType_default)
     {
-        [choose appointWithProductId:aModel.product_id
-                             orderId:aModel.order_id
-                        noAppointNum:[aModel.no_appointed_num intValue]];
-        choose.lastViewController = self;//需要选择体检人的时候需要传
+        aModel.order_id = self.orderId;
+        ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+        choose.gender = [aModel.gender intValue];
+        
+        //公司
+        if ([aModel.company_id intValue] > 0 && [aModel.order_checkuper_id intValue] > 0) {
+            
+            NSString *order_checkuper_id = [NSString stringWithFormat:@"%@",aModel.order_checkuper_id];
+            [choose companyAppointWithOrderId:aModel.order_id
+                                    productId:aModel.product_id
+                                    companyId:[NSString stringWithFormat:@"%@",aModel.company_id]
+                           order_checkuper_id:order_checkuper_id
+                                 noAppointNum:[aModel.no_appointed_num intValue]
+                                       gender:[aModel.gender intValue]];
+        }else
+        {
+            [choose appointWithProductId:aModel.product_id
+                                 orderId:aModel.order_id
+                            noAppointNum:[aModel.no_appointed_num intValue]];
+            choose.lastViewController = self;//需要选择体检人的时候需要传
+        }
+        
+        [self.navigationController pushViewController:choose animated:YES];
+        
+    }else if (self.platformType == PlatformType_goHealth) //go健康
+    {
+        NSString *product_id = aModel.product_id;
+        NSString *product_name = aModel.product_name;
+        
+        GoHealthAppointViewController *goHealthAppoint = [[GoHealthAppointViewController alloc]init];
+        goHealthAppoint.orderId = aModel.order_id;
+        goHealthAppoint.productId = product_id;
+        goHealthAppoint.productName = product_name;
+        [self.navigationController pushViewController:goHealthAppoint animated:YES];
     }
-    
-    [self.navigationController pushViewController:choose animated:YES];
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {

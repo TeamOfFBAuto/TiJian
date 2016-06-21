@@ -149,8 +149,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-
 #pragma - mark 事件处理
 /**
  *  查看订单
@@ -162,6 +160,7 @@
     OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
     orderInfo.order_id = self.orderId;
     orderInfo.isPayResultVcPush = YES;
+    orderInfo.platformType = self.payActionType;
     [self.navigationController pushViewController:orderInfo animated:YES];
 }
 
@@ -218,6 +217,7 @@
 {
     OrderProductListController *list = [[OrderProductListController alloc]init];
     list.orderId = self.orderId;
+    list.platformType = self.payActionType;
     [self.navigationController pushViewController:list animated:YES];
 }
 

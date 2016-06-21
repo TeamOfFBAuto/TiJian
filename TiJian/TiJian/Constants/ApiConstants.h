@@ -496,9 +496,11 @@
 //4、提交预约人信息
 #define GoHealth_upAppointUserInfo @"/index.php?d=api&c=go_order&m=make_appoint"
 
-//获取订单详情
+//6、获取订单详情
 #define GoHealth_get_order_info @"/index.php?d=api&c=go_order&m=get_order_info"
 
+//7、获取订单详情产品清单
+#define GoHealth_get_setmeals_by_order @"/index.php?d=api&c=go_order&m=get_setmeals_by_order"
 
 
 #endif

@@ -19,7 +19,7 @@
 //textFild.tag [300 400)
 //label.tag [400 500)
 
-@interface GoHealthAppointViewController ()<UIScrollViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate>
+@interface GoHealthAppointViewController ()<UIScrollViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate,UIAlertViewDelegate>
 
 {
     UIScrollView *_mainScrollView;
@@ -57,8 +57,8 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"预约上门";
     
-    self.orderId = @"33";
-    self.productId = @"1110009852737";
+//    self.orderId = @"33";
+//    self.productId = @"1110009852737";
     
     _textFieldArray = [NSMutableArray arrayWithCapacity:1];
     [self creatScrollView];
@@ -101,7 +101,7 @@
     productTitleLabel.textColor = [UIColor blackColor];
     productTitleLabel.backgroundColor = RGBCOLOR(244, 245, 246);
     productTitleLabel.font = [UIFont systemFontOfSize:15];
-    productTitleLabel.text = @"女性乐享健康体检套餐";
+    productTitleLabel.text = self.productName;
     productTitleLabel.tag = 403;
     [productView addSubview:productTitleLabel];
     
@@ -378,6 +378,27 @@
     return _datePicker;
 }
 
+- (void)selectBookdate
+{
+    if (!_pickerView) {
+        
+        @WeakObj(self);
+        _pickerView = [[LPickerView alloc]initWithDelegate:self delegate:self pickerBlock:^(ACTIONTYPE type, int row, int component) {
+            if (type == ACTIONTYPE_SURE) {
+                
+                [Weakself confirmDate];
+                
+            }else if (type == ACTIONTYPE_Refresh)
+            {
+                
+            }
+        }];
+    }
+    
+    [_pickerView pickerViewShow:YES];
+    [_pickerView reloadAllComponents];
+}
+
 #pragma mark -
 
 - (UITextField *)textFieldWithTag:(int)tag
@@ -386,7 +407,7 @@
 }
 
 
-#pragma mark - 点击事件
+#pragma mark - 事件处理
 
 -(void)hiddenTheKeyBord{
     NSLog(@"%s",__FUNCTION__);
@@ -490,7 +511,6 @@
         [GMAPI showAutoHiddenMBProgressWithText:@"请选择预约时间" addToView:self.view];
         return;
     }
-#pragma mark - 固定
     //订单id
     NSString *order_id = self.orderId;
     //随机字符串
@@ -515,8 +535,8 @@
     [testees safeSetString:birthDate forKey:@"birthday"];
     [testees safeSetInt:[gender intValue] forKey:@"gender"];
     [testees safeSetString:userPhone_tijian forKey:@"phone"];
-    [testees safeSetInt:0 forKey:@"isInsurance"];
-#pragma mark - 固定
+    [testees safeSetInt:0 forKey:@"isInsurance"];//保险默认都没有
+    
     NSArray *productIds = @[self.productId];
     NSString *productionIds = [productIds componentsJoinedByString:@","];
     [testees safeSetString:productionIds forKey:@"productionIds"];
@@ -535,9 +555,6 @@
     [address safeSetString:districtName forKey:@"districtName"];
     [address safeSetString:address_tijian forKey:@"address"];
     [postDic safeSetString:[LTools JSONStringWithObject:address] forKey:@"address"];
-    
-    
-    
     
     [self appointInfoToServerWithDic:postDic];
     
@@ -618,6 +635,37 @@
 
 }
 
+- (void)confirmDate
+{
+    UIPickerView *pickerView = _pickerView.pickerView;
+    NSDictionary *dateDic = _dates[[pickerView selectedRowInComponent:0]];
+    if (![LTools isDictinary:dateDic]) {
+        DDLOG(@"时间格式有问题");
+        [LTools showMBProgressWithText:@"没有获取到可用预约时间" addToView:self.view];
+        return;
+    }
+    NSString *date = dateDic[@"date"];
+    NSArray *hours = dateDic[@"hours"];
+    NSNumber *hour = hours[[pickerView selectedRowInComponent:1]];
+    int minus = (int)[pickerView selectedRowInComponent:2];
+    
+    DDLOG(@"date:%@ hour:%@ minus:%d",date,hour,minus);
+    
+    NSDate *selectDate = [LTools dateFromString:date withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
+    date = [LTools timeDate:selectDate withFormat:@"yyyy-MM-dd"];
+    
+    NSString *timeString = [NSString stringWithFormat:@"%@ %@:%@:00",date,[self doubleString:[hour intValue]],[self doubleString:minus]];
+    NSString *test = [NSString stringWithFormat:@"%@ +0800",timeString];
+    _selectDateString = test;
+    DDLOG(@"test:%@",test);
+    
+    [self textFieldWithTag:402].text = timeString;
+}
+
+- (NSString *)doubleString:(int)num
+{
+    return [NSString stringWithFormat:@"%02d",(int)num];
+}
 
 #pragma mark - 拿到数据后刷新界面
 -(void)reloadViewWithData:(id)theRetureData senderIdentifier:(NSInteger)tag{
@@ -709,8 +757,6 @@
     //    	NO	int	1970	区县Id
     
     NSString *productionIds = self.productId;//产品的idNumber, id 以","分割
-    productionIds = @"1110010228793";
-    
     
     NSString *theCityId = [_userSelectCityDic stringValueForKey:@"cityId"];
     NSString *theDistrictId = [_userSelectCityDic stringValueForKey:@"districtId"];
@@ -758,51 +804,6 @@
     [self selectBookdate];
 }
 
-- (void)selectBookdate
-{
-    if (!_pickerView) {
-        
-        @WeakObj(self);
-        _pickerView = [[LPickerView alloc]initWithDelegate:self delegate:self pickerBlock:^(ACTIONTYPE type, int row, int component) {
-            if (type == ACTIONTYPE_SURE) {
-                
-                [Weakself confirmDate];
-                
-            }else if (type == ACTIONTYPE_Refresh)
-            {
-                
-            }
-        }];
-    }
-    
-    [_pickerView pickerViewShow:YES];
-    [_pickerView reloadAllComponents];
-}
-- (void)confirmDate
-{
-    UIPickerView *pickerView = _pickerView.pickerView;
-    NSString *date = _dates[[pickerView selectedRowInComponent:0]];
-    NSNumber *hour = _hours[[pickerView selectedRowInComponent:1]];
-    int minus = (int)[pickerView selectedRowInComponent:2];
-    
-    DDLOG(@"date:%@ hour:%@ minus:%d",date,hour,minus);
-    
-    NSDate *selectDate = [LTools dateFromString:date withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
-    date = [LTools timeDate:selectDate withFormat:@"yyyy-MM-dd"];
-    
-    NSString *timeString = [NSString stringWithFormat:@"%@ %@:%@:00",date,[self doubleString:[hour intValue]],[self doubleString:minus]];
-    NSString *test = [NSString stringWithFormat:@"%@ +0800",timeString];
-    _selectDateString = test;
-    DDLOG(@"test:%@",test);
-    
-    [self textFieldWithTag:402].text = timeString;
-}
-
-- (NSString *)doubleString:(int)num
-{
-    return [NSString stringWithFormat:@"%02d",(int)num];
-}
-
 
 //提交预约信息
 -(void)appointInfoToServerWithDic:(NSDictionary *)postDic{
@@ -813,17 +814,41 @@
     
     NSLog(@"%@",postDic);
 
+     @WeakObj(self);
     [_request requestWithMethod:YJYRequstMethodPost api:GoHealth_upAppointUserInfo parameters:postDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSLog(@"%@",result);
+        [Weakself appointSuccessWithResult:result];
         
     } failBlock:^(NSDictionary *result) {
         
+        [LTools showMBProgressWithText:@"预约失败,请稍后再试" addToView:Weakself.view];
     }];
-    
-    
 }
 
+#pragma mark - 数据处理
+
+/**
+ *  预约成功
+ *
+ *  @param result
+ */
+- (void)appointSuccessWithResult:(NSDictionary *)result
+{
+    NSLog(@"%@",result);
+    //预约成功通知
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
+    
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:Alert_AppointSucess delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    [alert show];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    //返回
+    [self leftButtonTap:nil];
+}
 
 #pragma mark UIPickerViewDataSource
 
@@ -868,6 +893,31 @@
     }
 }
 
+//- (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component NS_AVAILABLE_IOS(6_0) __TVOS_PROHIBITED; // attributed title is favored if both methods are implemented
+//{
+//    NSString *string = @"";
+//    if (component == 0) {
+//        
+//        NSDictionary *dateDic = _dates[row];
+//        NSString *string = dateDic[@"date"];
+//        NSDate *date = [LTools dateFromString:string withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
+//        
+//        string = [NSString stringWithFormat:@"%@ %@",[LTools timeDate:date withFormat:@"MM/dd"],[LTools weekWithDate:date]];
+//        
+//    }else if (component == 1){
+//        
+//        NSDictionary *date = _dates[[pickerView selectedRowInComponent:0]];
+//        NSArray *hours = date[@"hours"];
+//        string = [NSString stringWithFormat:@"%d点",[hours[row] intValue]];
+//    }else
+//    {
+//        
+//        string = [self doubleString:(int)row];
+//    }
+//    
+//    return [LTools attributedString:string keyword:string color:DEFAULT_TEXTCOLOR_TITLE keywordFontSize:10];
+//}
+
 //- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
 //{
 //    return 45.f;
@@ -875,9 +925,9 @@
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
     if (component == 0) {
-        return 170.f;
+        return DEVICE_WIDTH / 2.f;
     }
-    return 50;
+    return DEVICE_WIDTH / 4.f;
 }
 
 #pragma mark - UITextFieldDelegate

@@ -327,7 +327,7 @@
             NSRange firstHalfRange = [result rangeAtIndex:0];
             if (firstHalfRange.length > 0) {
                 NSString *resultString1 = [string substringWithRange:firstHalfRange];
-                DDLOG(@"result ok = %@",resultString1);
+//                DDLOG(@"result ok = %@",resultString1);
                 [tempArr addObject:resultString1];
             }
         }
