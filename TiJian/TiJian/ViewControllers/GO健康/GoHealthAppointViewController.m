@@ -597,6 +597,7 @@
         [self hiddenKeyBord];
         [self clickToUpdateBirthday];
     }else if (sender.view.tag == 201){//城市
+        [self hiddenKeyBord];
         GoHealthChooseCityViewController *cc = [[GoHealthChooseCityViewController alloc]init];
         cc.productId = self.productId;
         __weak typeof (self)bself = self;
@@ -974,11 +975,12 @@
 
 #pragma mark - 收键盘
 -(void)hiddenKeyBord{
-    [_mainScrollView setContentSize:_mainScrollSize];
-    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
     for (UITextField *tf in _textFieldArray) {
         [tf resignFirstResponder];
     }
+    [_mainScrollView setContentSize:_mainScrollSize];
+    [_mainScrollView setContentOffset:_orig_mainscrollView_contentOffset animated:YES];
+    
 }
 
 #pragma mark - 设置时间右下角按键名称
