@@ -14,5 +14,6 @@
 @interface GoHealthBugController : MyViewController
 
 @property (nonatomic,retain)ThirdProductModel *productModel;
+@property (nonatomic,retain)NSString *productId;//产品id
 
 @end

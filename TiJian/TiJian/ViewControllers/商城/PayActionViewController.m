@@ -123,7 +123,7 @@
     //默认体检
     NSString *api = ORDER_GET_ORDER_PAY;
     // go健康相关支付
-    if (self.payActionType == PayActionType_goHealth) {
+    if (self.platformType == PlatformType_goHealth) {
         api = GoHealth_get_order_pay;
     }
     
@@ -201,7 +201,7 @@
     //默认体检
     NSString *api = ORDER_GET_SIGN;
     // go健康相关支付
-    if (self.payActionType == PayActionType_goHealth) {
+    if (self.platformType == PlatformType_goHealth) {
         api = GoHealth_get_sign;
     }
     

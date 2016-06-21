@@ -16,6 +16,7 @@
     UILabel *_numLabel;
     NSArray *_itemsArray;//体检项目
     UILabel *_priceLabel;
+    UIButton *_stateButton;
 }
 
 @end
@@ -28,7 +29,13 @@
     self.myTitle = @"结算";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    [self prepareRefreshTableView];
+    if (self.productModel)
+    {
+        [self prepareRefreshTableView];
+    }else if (self.productId)
+    {
+        [self netWorkForProductDetail];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -135,7 +142,118 @@
 
 }
 
+
+-(ResultView *)resultViewWithType:(PageResultType)type
+                              msg:(NSString *)errMsg
+{
+    NSString *content;
+    NSString *btnTitle;
+    SEL selector = NULL;
+    if (type == PageResultType_requestFail) {
+        
+        content = errMsg ? : @"获取数据异常,点击重新加载";
+        btnTitle = @"重新加载";
+        selector = @selector(refreshData);
+        
+    }else if (type == PageResultType_nodata){
+        
+        content = errMsg ? : @"没有获取到您想要的内容";
+        btnTitle = @"重新加载";
+        selector = @selector(refreshData);
+    }
+    
+    if (_resultView) {
+        
+        [_resultView setContent:content];
+        [_stateButton setTitle:btnTitle forState:UIControlStateNormal];
+        return _resultView;
+    }
+    
+    _resultView = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                             title:@"温馨提示"
+                                           content:content];
+    
+    if (!_stateButton) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 140, 36);
+        [btn addCornerRadius:5.f];
+        btn.backgroundColor = DEFAULT_TEXTCOLOR;
+        [btn setTitle:btnTitle forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [btn addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+        [_resultView setBottomView:btn];
+        _stateButton = btn;
+    }
+    
+    return _resultView;
+}
+
+/**
+ *  开始刷新数据
+ */
+- (void)refreshData
+{
+    [_resultView removeFromSuperview];
+    [self netWorkForProductDetail];
+}
+
+/**
+ *  完成数据加载
+ *
+ *  @param type   结果type
+ *  @param errMsg 错误信息
+ */
+- (void)finishLoadDataWithType:(PageResultType)type
+                           msg:(NSString *)errMsg
+{
+    _resultView = [self resultViewWithType:type msg:errMsg];
+    _resultView.centerY = (DEVICE_HEIGHT- 64) / 2.f;
+    [self.view addSubview:_resultView];
+}
+
 #pragma mark - 网络请求
+
+- (void)netWorkForProductDetail
+{
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetValue:@"wap" forKey:@"osType"];
+    
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+    NSString *api = [NSString stringWithFormat:GoHealth_productionsDetail,self.productId];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+        [Weakself parseDataWithResult:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"%@",result[@"msg"]);
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+        [Weakself finishLoadDataWithType:PageResultType_requestFail msg:result[@"msg"]];
+    }];
+}
+
+#pragma mark - 数据解析处理
+
+- (void)parseDataWithResult:(NSDictionary *)result
+{
+    NSDictionary *data = result[@"data"];
+    NSDictionary *production = data[@"production"];
+    
+    ThirdProductModel *model = [[ThirdProductModel alloc]initWithDictionary:production];
+    _productModel = model;
+    
+    [self prepareRefreshTableView];
+}
+
 
 //提交订单
 -(void)confirmOrderBtnClicked{
@@ -195,7 +313,7 @@
     NSString *orderId = [result stringValueForKey:@"order_id"];
     NSString *orderNum = [result stringValueForKey:@"order_no"];
     
-    if (sum < 0.01) {
+    if (sum < 0.001) {
         [self payResultSuccess:PAY_RESULT_TYPE_Success erroInfo:nil oderid:orderId sumPrice:sum orderNum:orderNum];
     }else{
         [self pushToPayPageWithOrderId:orderId orderNum:orderNum];
@@ -234,7 +352,7 @@
     pay.orderNum = orderNum;
     pay.sumPrice = sum;
     pay.lastViewController = self.lastViewController;
-    pay.payActionType = PayActionType_goHealth;
+    pay.platformType = PlatformType_goHealth;
     
     int num = (int)[self.navigationController viewControllers].count;
     if (num > 2) {
@@ -267,7 +385,7 @@
     result.sumPrice = theSumPrice;
     result.payResultType = resultType;
     result.erroInfo = erroInfo;
-    result.payActionType = PayActionType_goHealth;
+    result.payActionType = PlatformType_goHealth;
     
     if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
         [self.lastViewController.navigationController popViewControllerAnimated:NO];

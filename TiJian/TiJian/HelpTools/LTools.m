@@ -1600,6 +1600,20 @@
     return nil;
 }
 
+/**
+ *  解析jsonString to NSDictionary
+ *
+ *  @param JSONString
+ *
+ *  @return
+ */
++(NSDictionary *)parseJSONStringToNSDictionary:(NSString *)JSONString
+{
+    NSData *JSONData = [JSONString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *responseJSON = [NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingMutableLeaves error:nil];
+    return responseJSON;
+}
+
 #pragma - mark 图片处理相关
 
 #pragma mark 切图

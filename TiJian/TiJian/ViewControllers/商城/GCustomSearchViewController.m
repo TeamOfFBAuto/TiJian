@@ -23,9 +23,6 @@
 #import "DLNavigationEffectKit.h"
 
 #import "GSearchView.h"
-
-#import "RCDChatViewController.h"
-
 #import "ProductListViewController.h"
 
 @interface GCustomSearchViewController ()<UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate>

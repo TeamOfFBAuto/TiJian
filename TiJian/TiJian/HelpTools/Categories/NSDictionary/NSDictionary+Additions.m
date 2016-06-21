@@ -29,6 +29,9 @@
 
 -(void)safeSetValue:(id)value forKey:(NSString *)key
 {
+    if (key == nil) {
+        return;
+    }
     if (value != nil) {
         [self setValue:value forKey:key];//事实上value为nil时，会自动调用removeObjectForKey
     }
@@ -36,9 +39,7 @@
 
 -(void)safeSetString:(NSString*)string forKey:(NSString*)key;
 {
-    if (string != nil) {
-        [self setValue:string forKey:key];
-    }
+    [self safeSetValue:string forKey:key];
 }
 
 -(void)safeSetBool:(BOOL)i forKey:(NSString *)key

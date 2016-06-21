@@ -71,19 +71,19 @@
                                         <color key="textColor" red="0.92549019610000005" green="0.49019607840000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="KHs-vv-khl" customClass="PropertyButton">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KHs-vv-khl" customClass="PropertyButton">
                                         <rect key="frame" x="245" y="12" width="60" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <state key="normal" title="再次购买">
                                             <color key="titleColor" red="0.92549019610000005" green="0.49019607840000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="z6s-cg-Igy" customClass="PropertyButton">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z6s-cg-Igy" customClass="PropertyButton">
                                         <rect key="frame" x="172" y="12" width="60" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <state key="normal" title="评价晒单">
                                             <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -110,23 +110,24 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </subviews>
-                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
+                <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
             </tableViewCellContentView>
             <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
-                <outlet property="actionButton" destination="z6s-cg-Igy" id="XM7-Ot-J5L"/>
                 <outlet property="addTimeLabel" destination="vVf-zR-iD4" id="Qta-Kq-PXY"/>
                 <outlet property="addressLabel" destination="bIQ-cq-gee" id="5px-nl-ig3"/>
                 <outlet property="backView" destination="ZMF-Gd-Prx" id="k12-sY-lq3"/>
-                <outlet property="commentButton" destination="KHs-vv-khl" id="rmA-x6-I2P"/>
                 <outlet property="iconImageView" destination="2HK-I5-sfy" id="GX3-sI-VrV"/>
                 <outlet property="infoView" destination="CdI-bx-Ypq" id="9n9-Hw-Ltz"/>
+                <outlet property="leftButton" destination="z6s-cg-Igy" id="dNB-46-lsu"/>
                 <outlet property="numLabel" destination="oNm-pE-tIh" id="JQe-YR-6rq"/>
                 <outlet property="priceLabel" destination="Wlv-Lu-2ZQ" id="Kxr-pe-yz4"/>
                 <outlet property="realPriceLabel" destination="NSH-xm-WXY" id="Kun-iJ-l2r"/>
+                <outlet property="rightButton" destination="KHs-vv-khl" id="nzr-de-lI6"/>
                 <outlet property="titleLabel" destination="umk-MK-Sum" id="1ll-zw-5RO"/>
+                <outlet property="topLine" destination="mzk-p6-GlQ" id="Plw-z3-MOa"/>
             </connections>
-            <point key="canvasLocation" x="-1218" y="-13.5"/>
+            <point key="canvasLocation" x="-977" y="-12.5"/>
         </tableViewCell>
     </objects>
 </document>

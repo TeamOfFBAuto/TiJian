@@ -136,11 +136,41 @@ typedef enum{
 }MsgType;
 //pic: 封面图(可能为空)
 
-typedef enum {
-    PayActionType_default = 0,//默认 0 海马体检商城支付
-    PayActionType_goHealth// go健康相关支付
-}PayActionType;
+//typedef enum {
+//    PayActionType_default = 0,//默认 0 海马体检商城支付
+//    PayActionType_goHealth// go健康相关支付
+//}PayActionType;
 
+/**
+ *  开启客服来源类型
+ */
+typedef enum{
+    /**
+     *  来源自普通进入方式
+     */
+    SourceType_Normal = 0,
+    /**
+     *  来源自单品详情
+     */
+    SourceType_ProductDetail = 1,
+    /**
+     *  来源自订单详情
+     */
+    SourceType_Order,
+    /**
+     *  来源自单品详情
+     */
+    SourceType_ProductDetail_goHealth,
+    /**
+     *  来源自订单详情
+     */
+    SourceType_Order_goHealth
+}SourceType;
+
+typedef enum {
+    PlatformType_default = 0,//默认 0 海马相关
+    PlatformType_goHealth// go健康相关
+}PlatformType; //平台信息
 
 typedef enum {
     ACTIONTYPE_NORMAL = 0,//滚动

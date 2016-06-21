@@ -16,6 +16,8 @@
 #import "OrderProductListController.h"//订单的套餐列表
 #import "AddCommentViewController.h"
 #import "ConfirmOrderViewController.h"//确认订单
+#import "GoHealthBugController.h" //go健康购买页面
+#import "ThirdProductModel.h" //三方产品model
 
 #define kPadding_Pay 1000 //去支付
 #define kPadding_Refund 2000 //退款
@@ -293,10 +295,16 @@
     
     __weak typeof(RefreshTableView)*weakTable = table;
     NSString *api = ORDER_GET_MY_ORDERS;
+//    NSDictionary *params = @{@"authcode":authey,
+//                             @"status":status,
+//                             @"per_page":[NSNumber numberWithInt:10],
+//                             @"page":[NSNumber numberWithInt:weakTable.pageNum]};
+    
+    //对接Go健康 不需要分页 由接口控制
     NSDictionary *params = @{@"authcode":authey,
                              @"status":status,
-                             @"per_page":[NSNumber numberWithInt:10],
-                             @"page":[NSNumber numberWithInt:weakTable.pageNum]};
+                             @"level":[NSNumber numberWithInt:2]
+                             };
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -308,10 +316,10 @@
             [temp addObject:aModel];
         }
 
-        [weakTable reloadData:temp pageSize:10 noDataView:[self noDataView]];
+        [weakTable reloadData:temp pageSize:1000 noDataView:[self noDataView]];
         
     } failBlock:^(NSDictionary *result) {
-        [weakTable reloadData:nil pageSize:10 noDataView:[self noDataView]];
+        [weakTable reloadData:nil pageSize:1000 noDataView:[self noDataView]];
 
     }];
 
@@ -370,18 +378,31 @@
  */
 - (void)buyAgain:(OrderModel *)order
 {
-    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
-    for (NSDictionary *aDic in order.products) {
+    int type = [order.type intValue];
+    if (type == 2) { //go健康
         
-        ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
-        [temp addObject:aModel];
+        NSDictionary *p_dic = [order.products firstObject];
+        if (p_dic && [LTools isDictinary:p_dic]) {
+
+            GoHealthBugController *buy = [[GoHealthBugController alloc]init];
+            buy.productId = p_dic[@"product_id"];
+            [self.navigationController pushViewController:buy animated:YES];
+        }
+        
+    }else if (type == 1) //海马医生
+    {
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
+        for (NSDictionary *aDic in order.products) {
+            
+            ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
+            [temp addObject:aModel];
+        }
+        NSArray *productArr = temp;
+        ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
+        confirm.dataArray = productArr;
+        confirm.lastViewController = self;
+        [self.navigationController pushViewController:confirm animated:YES];
     }
-    NSArray *productArr = temp;
-    ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
-    confirm.dataArray = productArr;
-    confirm.lastViewController = self;
-    [self.navigationController pushViewController:confirm animated:YES];
-    
 }
 
 
@@ -395,6 +416,7 @@
     int actionType = sender.actionType;
     
     OrderModel *aModel = sender.aModel;
+    int type = [aModel.type intValue];//判断是海马订单、go健康订单
     
     if (actionType == ORDERACTIONTYPE_BuyAgain) {
         //再次购买
@@ -404,6 +426,13 @@
         
         OrderProductListController *list = [[OrderProductListController alloc]init];
         list.orderId = aModel.order_id;
+        if (type == 1)//海马
+        {
+            list.platformType = PlatformType_default;
+        }else if (type == 2)
+        {
+            list.platformType = PlatformType_goHealth;
+        }
         [self.navigationController pushViewController:list animated:YES];
         
     }else if (actionType == ORDERACTIONTYPE_Comment){
@@ -420,8 +449,17 @@
         [self.navigationController pushViewController:comment animated:YES];
         
     }else if (actionType == ORDERACTIONTYPE_Pay){
+        
+        PlatformType payActionType = PlatformType_default;//默认 0 海马体检商城
+        if (type == 2) {
+            payActionType = PlatformType_goHealth;//为2是go健康的订单
+        }
         //支付
-        [self pushToPayPageWithOrderId:aModel.order_id orderNum:aModel.order_no sumPrice:[aModel.real_price floatValue] payStyle:[aModel.pay_type intValue]];
+        [self pushToPayPageWithOrderId:aModel.order_id
+                              orderNum:aModel.order_no
+                              sumPrice:[aModel.real_price floatValue]
+                              payStyle:[aModel.pay_type intValue]
+                         payActionType:payActionType];
     }
 }
 
@@ -432,12 +470,14 @@
                         orderNum:(NSString *)orderNum
                         sumPrice:(CGFloat)sumPrice
                         payStyle:(int)payStyle
+                   payActionType:(PlatformType)payActionType
 {
     PayActionViewController *pay = [[PayActionViewController alloc]init];
     pay.orderId = orderId;
     pay.orderNum = orderNum;
     pay.sumPrice = sumPrice;
     pay.payStyle = payStyle;
+    pay.platformType = payActionType;
     pay.lastViewController = self;
     [self.navigationController pushViewController:pay animated:YES];
 }
@@ -551,8 +591,17 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     OrderModel *aModel = [((RefreshTableView *)tableView).dataArray objectAtIndex:indexPath.row];
-
     OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
+    
+    int type = [aModel.type intValue];
+    if (type == 1)//海马
+    {
+        orderInfo.platformType = PlatformType_default;
+    }else if (type == 2)
+    {
+        orderInfo.platformType = PlatformType_goHealth;
+    }
+    
     orderInfo.order_id = aModel.order_id;
     orderInfo.lastViewController = self;
     [self.navigationController pushViewController:orderInfo animated:YES];
@@ -580,13 +629,9 @@
     
     RefreshTableView *table = (RefreshTableView *)tableView;
     
-    NSString *text = @"";
-    
-    int refund_status = 0;
-    
     OrderModel *aModel = [table.dataArray objectAtIndex:indexPath.row];
-    cell.commentButton.aModel = aModel;
-    cell.actionButton.aModel = aModel;
+    cell.rightButton.aModel = aModel;
+    cell.leftButton.aModel = aModel;
     
     [cell setCellWithModel:aModel];
     
@@ -602,78 +647,87 @@
             }
         }];
     }
+    
+    NSString *leftText = @"";
+    int refund_status = 0;
+    PropertyButton *leftButton = cell.leftButton;
+    PropertyButton *rightButton = cell.rightButton;
+    
     refund_status = [aModel.refund_status intValue];
     
     //代表有退款状态
     if (refund_status > 0) {
         
         if (refund_status == 1 || refund_status == 2) {
-            text = @"退款中";
+            leftText = @"退款中";
         }else if (refund_status == 3){
-            text = @"退款成功";
+            leftText = @"退款成功";
         }else if (refund_status == 4 || refund_status == 5){
-            text = @"退款失败";
+            leftText = @"退款失败";
         }
     }
     
-    cell.actionButton.hidden = YES;//默认左边隐藏
+    cell.leftButton.hidden = YES;//默认左边隐藏
     
     NSString *title = table.tableTitle;
     if ([title isEqualToString:TableView_title_All]) { //全部
-        ORDERACTIONTYPE type = ORDERACTIONTYPE_Default;
+        
+        ORDERACTIONTYPE rightActionType = ORDERACTIONTYPE_Default;
         
         int status = [aModel.status intValue];
-        NSString *text1 = nil;
+        NSString *rightText = nil;
         if (status == 1) {
             //待支付
-            text1 = @"去支付";
-            type = ORDERACTIONTYPE_Pay;
+            rightText = @"去支付";
+            rightActionType = ORDERACTIONTYPE_Pay;
         }else if (status == 2){ // 新版本没有2
             //待预约
-            text1 = @"前去预约";
-            type = ORDERACTIONTYPE_Appoint;
+            rightText = @"前去预约";
+            rightActionType = ORDERACTIONTYPE_Appoint;
             
         }else if (status == 3){// 新版本没有3
             //已预约
-            text1 = @"再次购买";
-            type = ORDERACTIONTYPE_BuyAgain;
+            rightText = @"再次购买";
+            rightActionType = ORDERACTIONTYPE_BuyAgain;
         }
         else if (status == 4){
             //已完成
-            text1 = @"再次购买";
-            type = ORDERACTIONTYPE_BuyAgain;
+            rightText = @"再次购买";
+            rightActionType = ORDERACTIONTYPE_BuyAgain;
             
             //代表已评价
             if ([aModel.is_comment intValue] == 0) {
-                cell.actionButton.hidden = NO;
+                leftButton.hidden = NO;
+                leftButton.actionType = ORDERACTIONTYPE_Comment;
+                [leftButton setTitle:@"评价晒单" forState:UIControlStateNormal];
             }else
             {
-                cell.actionButton.hidden = YES;
+                cell.leftButton.hidden = YES;
             }
+            
         }else if (status == 5){
             
-            text1 = @"已取消";
-            type = ORDERACTIONTYPE_Default;
+            rightText = @"已取消";
+            rightActionType = ORDERACTIONTYPE_Default;
 
         }else if (status == 6){
-            text1 = @"已删除";
-            type = ORDERACTIONTYPE_Default;
+            rightText = @"已删除";
+            rightActionType = ORDERACTIONTYPE_Default;
             
         }else if (status == 7){
             //已付款
             BOOL is_appoint = [aModel.is_appoint boolValue];
             if (is_appoint) {
-                text1 = @"前去预约";
-                type = ORDERACTIONTYPE_Appoint;
+                rightText = @"前去预约";
+                rightActionType = ORDERACTIONTYPE_Appoint;
             }else
             {
-                text1 = @"已预约";
-                type = ORDERACTIONTYPE_Default;
+                rightText = @"已预约";
+                rightActionType = ORDERACTIONTYPE_Default;
                 
-                cell.actionButton.hidden = NO;
-                [cell.actionButton setTitle:@"再次购买" forState:UIControlStateNormal];
-                cell.actionButton.actionType = ORDERACTIONTYPE_BuyAgain;
-
+                leftButton.hidden = NO;
+                [leftButton setTitle:@"再次购买" forState:UIControlStateNormal];
+                leftButton.actionType = ORDERACTIONTYPE_BuyAgain;
             }
         }
         
@@ -681,65 +735,67 @@
 
         //显示退款状态
         if (refund_status == 3) { //退款成功 只显示一个退款状态
-            cell.actionButton.hidden = YES;
-            text1 = text;
-            type = ORDERACTIONTYPE_Refund;
+            leftButton.hidden = YES;
+            rightText = leftText;
+            rightActionType = ORDERACTIONTYPE_Refund;
             
         }else if(refund_status > 0) //显示退款状态、显示前去预约
         {
-            cell.actionButton.hidden = NO;
-            [cell.actionButton setTitle:text forState:UIControlStateNormal];
+            leftButton.hidden = NO;
+            leftButton.actionType = ORDERACTIONTYPE_Default;
+            [leftButton setTitle:leftText forState:UIControlStateNormal];
         }
         
-        [cell.commentButton setTitle:text1 forState:UIControlStateNormal];
-        cell.commentButton.actionType = type;
+        [rightButton setTitle:rightText forState:UIControlStateNormal];
+        rightButton.actionType = rightActionType;
         
     }
     else if ([title isEqualToString:TableView_title_DaiFu])//待付款
     {
-        [cell.commentButton setTitle:@"去支付" forState:UIControlStateNormal];
-        cell.commentButton.actionType = ORDERACTIONTYPE_Pay;
+        [rightButton setTitle:@"去支付" forState:UIControlStateNormal];
+        rightButton.actionType = ORDERACTIONTYPE_Pay;
         
     }else if ([title isEqualToString:TableView_title_Payed])//已付款  根据实际订单状态判断 前去预约 还是 再次购买
     {
         //已付款
         BOOL is_appoint = [aModel.is_appoint boolValue];
         if (is_appoint) {
-            [cell.commentButton setTitle:@"前去预约" forState:UIControlStateNormal];
-            cell.commentButton.actionType = ORDERACTIONTYPE_Appoint;
+            [rightButton setTitle:@"前去预约" forState:UIControlStateNormal];
+            rightButton.actionType = ORDERACTIONTYPE_Appoint;
         }else
         {
-            [cell.commentButton setTitle:@"已预约" forState:UIControlStateNormal];
-            cell.commentButton.actionType = ORDERACTIONTYPE_Default;
+            [rightButton setTitle:@"已预约" forState:UIControlStateNormal];
+            rightButton.actionType = ORDERACTIONTYPE_Default;
             
-            cell.actionButton.hidden = NO;
-            [cell.actionButton setTitle:@"再次购买" forState:UIControlStateNormal];
-            cell.actionButton.actionType = ORDERACTIONTYPE_BuyAgain;
+            leftButton.hidden = NO;
+            [leftButton setTitle:@"再次购买" forState:UIControlStateNormal];
+            leftButton.actionType = ORDERACTIONTYPE_BuyAgain;
         }
         
     }else if ([title isEqualToString:TableView_title_TuiHuan])//退换
     {
-        [cell.commentButton setTitle:text forState:UIControlStateNormal];
+        [rightButton setTitle:leftText forState:UIControlStateNormal];
         
     }else if ([title isEqualToString:TableView_title_WanCheng]) //完成
     {
-        [cell.commentButton setTitle:@"再次购买" forState:UIControlStateNormal];
-        cell.actionButton.hidden = NO;
-        cell.actionButton.actionType = ORDERACTIONTYPE_Comment;
+        [rightButton setTitle:@"再次购买" forState:UIControlStateNormal];
+        rightButton.actionType = ORDERACTIONTYPE_BuyAgain;
+
+        leftButton.hidden = NO;
+        leftButton.actionType = ORDERACTIONTYPE_Comment;
         
-        //代表已评价
+        //1代表已评价
         if ([aModel.is_comment intValue] == 0) {
-            cell.actionButton.hidden = NO;
+            leftButton.hidden = NO;
         }else
         {
-            cell.actionButton.hidden = YES;
+            leftButton.hidden = YES;
         }
         
-        cell.commentButton.actionType = ORDERACTIONTYPE_BuyAgain;
     }
     
-    [cell.actionButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.commentButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
+    [leftButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(clickToAction:) forControlEvents:UIControlEventTouchUpInside];
         
     return cell;
 }

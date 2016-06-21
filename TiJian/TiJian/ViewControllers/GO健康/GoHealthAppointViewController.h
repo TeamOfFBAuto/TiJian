@@ -15,5 +15,6 @@
 @interface GoHealthAppointViewController : MyViewController
 
 @property(nonatomic,retain)NSString *productId;//目前每次只预约一个产品
+@property(nonatomic,retain)NSString *orderId;//订单id
 
 @end

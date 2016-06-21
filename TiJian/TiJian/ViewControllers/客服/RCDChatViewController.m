@@ -16,6 +16,7 @@
 #import "OrderInfoViewController.h"
 
 #import "ProductModel.h"
+#import "GoHealthProductDetailController.h"
 #import "OrderModel.h"
 #import "CustomProductMsgCell.h"//自定义套餐cell
 #import "CustomOrderMsgCell.h"//自定义订单cell
@@ -23,7 +24,9 @@
 
 typedef NS_ENUM(NSInteger,CustomMsgType) {
     CustomMsgTypeProduct = 0,//单品
-    CustomMsgTypeOrder //订单
+    CustomMsgTypeOrder, //订单
+    CustomMsgTypeProduct_goHealth,//go健康单品详情
+    CustomMsgTypeOrder_goHealth //go健康
 };
 
 @interface RCDChatViewController ()
@@ -94,15 +97,16 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     
     [self.pluginBoardView removeItemAtIndex:2];
     
-    if (_msgType == CustomMsgTypeProduct) {
+    if (_msgType == CustomMsgTypeProduct ||
+        _msgType == CustomMsgTypeProduct_goHealth) {
         //会话页面注册 UI
         [self registerClass:CustomProductMsgCell.class forCellWithReuseIdentifier:@"CustomProductMsgCell"];
-    }else if (_msgType == CustomMsgTypeOrder){
+    }else if (_msgType == CustomMsgTypeOrder ||
+              _msgType == CustomMsgTypeOrder_goHealth){
         
         [self registerClass:CustomOrderMsgCell.class forCellWithReuseIdentifier:@"CustomOrderMsgCell"];
     }
 }
-
 
 #pragma mark - 单品、订单链接消息处理
 
@@ -115,17 +119,15 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         
         if ([self.msg_model isKindOfClass:[ProductModel class]])
         {
-            _msgType = CustomMsgTypeProduct;
-            
+            _msgType = self.platType == PlatformType_goHealth ? CustomMsgTypeProduct_goHealth : CustomMsgTypeProduct;
             
         }else if ([self.msg_model isKindOfClass:[OrderModel class]])
         {
-            _msgType = CustomMsgTypeOrder;
+            _msgType = self.platType == PlatformType_goHealth ? CustomMsgTypeOrder_goHealth : CustomMsgTypeOrder;
         }
         
         //插入自定义cell
         [self addCustomMessage];
-        
     }
 }
 
@@ -157,21 +159,32 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     NSLog(@"发送消息");
     
     //发送单品图文消息
-    if (_msgType == CustomMsgTypeProduct) {
+    if (_msgType == CustomMsgTypeProduct ||
+        _msgType == CustomMsgTypeProduct_goHealth) {
         
         ProductModel *aModel = (ProductModel *)_msg_model;
-        NSString *extra = [NSString stringWithFormat:@"productId=%@",aModel.product_id];
+        NSString *extra = @"";
+        
+        //发送消息extra
+        CustomMsgType type = self.platType == PlatformType_goHealth ? CustomMsgTypeProduct_goHealth : CustomMsgTypeProduct;
+        extra = [self extraWithType:type infoId:aModel.product_id];
+        
         NSString *content = aModel.info_url;//单品链接
-//        content = [NSString stringWithFormat:@"详情链接:%@",content];
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;
         [self sendMessage:msg pushContent:@"套餐详情"];
 
         
-    }else if (_msgType == CustomMsgTypeOrder){
+    }else if (_msgType == CustomMsgTypeOrder ||
+              _msgType == CustomMsgTypeOrder_goHealth){
         
         OrderModel *aModel = (OrderModel *)_msg_model;
-        NSString *extra = [NSString stringWithFormat:@"orderId=%@",aModel.order_id];
+        NSString *extra = @"";
+        
+        //发送消息extra
+        CustomMsgType type = self.platType == PlatformType_goHealth ? CustomMsgTypeOrder_goHealth : CustomMsgTypeOrder;
+        extra = [self extraWithType:type infoId:aModel.order_id];
+        
         NSString *content = aModel.info_url;//订单详情链接
         RCTextMessage *msg = [RCTextMessage messageWithContent:content];
         msg.extra = extra;
@@ -182,6 +195,23 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     [self removeCustomMessage];
 }
 
+/**
+ *  获取发送消息extra拓展信息
+ *
+ *  @param type   消息类型
+ *  @param infoId 对应id
+ *
+ *  @return
+ */
+- (NSString *)extraWithType:(CustomMsgType)type
+                     infoId:(NSString *)infoId
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetInt:type forKey:@"msgType"];
+    [dic safeSetValue:infoId forKey:@"infoId"];
+    NSString *jsonString = [LTools JSONStringWithObject:dic];
+    return jsonString;
+}
 
 #pragma mark -
 
@@ -191,97 +221,88 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
  *  @param orderId  订单id
  *  @param orderNum 订单num
  */
--(void)setOrderMessageWithOrderId:(NSString *)orderId
-                                orderNum:(NSString *)orderNum
-{
-    _orderId = orderId;
-    _orderNum = orderNum;
-    //发送订单图文消息
-    if (_orderId) {
-        
-        [self sendOrderDetailMessageWithOrderId:_orderId orderNum:_orderNum];
-    }
-}
-
-- (void)sendOrderDetailMessageWithOrderId:(NSString *)orderId orderNum:(NSString *)orderNum
-{
-    NSString *imageUrl = @"http://123.57.51.27:86/order.jpg";
-    NSString *digest = @"";
-    
-    NSString *orderInfo = [NSString stringWithFormat:@"orderId=%@",orderId];
-    NSString *title = [NSString stringWithFormat:@"订单编号:%@",orderNum];
-    
-    [self sendMessageTitle:title digest:digest imageUrl:imageUrl extra:orderInfo];
-}
+//-(void)setOrderMessageWithOrderId:(NSString *)orderId
+//                                orderNum:(NSString *)orderNum
+//{
+//    _orderId = orderId;
+//    _orderNum = orderNum;
+//    //发送订单图文消息
+//    if (_orderId) {
+//        
+//        [self sendOrderDetailMessageWithOrderId:_orderId orderNum:_orderNum];
+//    }
+//}
+//
+//- (void)sendOrderDetailMessageWithOrderId:(NSString *)orderId orderNum:(NSString *)orderNum
+//{
+//    NSString *imageUrl = @"http://123.57.51.27:86/order.jpg";
+//    NSString *digest = @"";
+//    
+//    NSString *orderInfo = [NSString stringWithFormat:@"orderId=%@",orderId];
+//    NSString *title = [NSString stringWithFormat:@"订单编号:%@",orderNum];
+//    
+//    [self sendMessageTitle:title digest:digest imageUrl:imageUrl extra:orderInfo];
+//}
 
 /**
  *  复制单品详情图文消息
  *
  *  @param aModel 单品model
  */
-- (void)setProductMessageWithProductModel:(ProductModel *)aModel
-{
-    _p_model = aModel;
-    
-    //发送单品图文消息
-    if (_p_model) {
-        
-        [self sendProductDetailMessageWithId:_p_model.product_id productName:_p_model.setmeal_name coverImageUrl:_p_model.cover_pic currentPrice:[_p_model.setmeal_original_price floatValue] originalPrice:[_p_model.setmeal_price floatValue]];
-        
-    }
-}
+//- (void)setProductMessageWithProductModel:(ProductModel *)aModel
+//{
+//    _p_model = aModel;
+//    
+//    //发送单品图文消息
+//    if (_p_model) {
+//        
+//        [self sendProductDetailMessageWithId:_p_model.product_id productName:_p_model.setmeal_name coverImageUrl:_p_model.cover_pic currentPrice:[_p_model.setmeal_original_price floatValue] originalPrice:[_p_model.setmeal_price floatValue]];
+//        
+//    }
+//}
 
 //发送产品图文链接
 
--(void)sendProductDetailMessageWithId:(NSString *)productId
-                          productName:(NSString *)productName
-                        coverImageUrl:(NSString *)coverImageUrl
-                         currentPrice:(CGFloat)currentPrice
-                        originalPrice:(CGFloat)originalPrice
-{
-    NSString *imageUrl = coverImageUrl;
-    NSString *digest = [NSString stringWithFormat:@"\n现价:%.2f元\n原价:%.2f元",currentPrice,originalPrice];
-    
-    NSString *extra = [NSString stringWithFormat:@"productId=%@",productId];
-    
-    NSString *title = [NSString stringWithFormat:@"我在看:[%@]",productName];
-    
-    [self sendMessageTitle:title digest:digest imageUrl:imageUrl extra:extra];
-}
+//-(void)sendProductDetailMessageWithId:(NSString *)productId
+//                          productName:(NSString *)productName
+//                        coverImageUrl:(NSString *)coverImageUrl
+//                         currentPrice:(CGFloat)currentPrice
+//                        originalPrice:(CGFloat)originalPrice
+//{
+//    NSString *imageUrl = coverImageUrl;
+//    NSString *digest = [NSString stringWithFormat:@"\n现价:%.2f元\n原价:%.2f元",currentPrice,originalPrice];
+//    
+//    NSString *extra = [NSString stringWithFormat:@"productId=%@",productId];
+//    
+//    NSString *title = [NSString stringWithFormat:@"我在看:[%@]",productName];
+//    
+//    [self sendMessageTitle:title digest:digest imageUrl:imageUrl extra:extra];
+//}
 
-- (void)sendMessageTitle:(NSString *)title
-                    digest:(NSString *)digest
-                  imageUrl:(NSString *)imageUrl
-                     extra:(NSString *)extra
-{
-    //2.0
-    
+//- (void)sendMessageTitle:(NSString *)title
+//                    digest:(NSString *)digest
+//                  imageUrl:(NSString *)imageUrl
+//                     extra:(NSString *)extra
+//{
+//    //2.0
+//    
 //    RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
-//    [[RCIM sharedRCIM]sendMessage:ConversationType_APPSERVICE targetId:SERVICE_ID_2 content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
+//    
+//    [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID_2 content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
 //        DDLOG(@"messageid %ld",messageId);
 //        
 //    } error:^(RCErrorCode nErrorCode, long messageId) {
 //        DDLOG(@"nErrorCode %ld",(long)nErrorCode);
-//        
+//
 //    }];
-    
-    //1.0
-    RCRichContentMessage *msg = [RCRichContentMessage messageWithTitle:title digest:digest imageURL:imageUrl extra:extra];
-    
-    [[RCIM sharedRCIM]sendMessage:ConversationType_CUSTOMERSERVICE targetId:SERVICE_ID content:msg pushContent:@"客服消息" pushData:nil success:^(long messageId) {
-        DDLOG(@"messageid %ld",messageId);
-        
-    } error:^(RCErrorCode nErrorCode, long messageId) {
-        DDLOG(@"nErrorCode %ld",(long)nErrorCode);
-
-    }];
-}
+//}
 
 #pragma - mark 自定义消息重写方法
 
 -(RCMessageBaseCell *)rcConversationCollectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_msgType == CustomMsgTypeProduct) {
+    if (_msgType == CustomMsgTypeProduct ||
+        _msgType == CustomMsgTypeProduct_goHealth) {
         
         NSString * cellIndentifier=@"CustomProductMsgCell";
         CustomProductMsgCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
@@ -289,7 +310,8 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         [cell.senderButton addTarget:self action:@selector(clickToSendMessage) forControlEvents:UIControlEventTouchUpInside];
         [cell loadData:self.msg_model];
         return (RCMessageBaseCell *)cell;
-    }else if (_msgType == CustomMsgTypeOrder){
+    }else if (_msgType == CustomMsgTypeOrder ||
+              _msgType == CustomMsgTypeOrder_goHealth){
         
         NSString * cellIndentifier=@"CustomOrderMsgCell";
         CustomOrderMsgCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
@@ -376,6 +398,7 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
  *  @param url   Url String
  *  @param model 数据
  */
+
 - (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model
 {
     RCRichContentMessage *msg = (RCRichContentMessage *)model.content;
@@ -384,55 +407,155 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     
     NSString *extra = msg.extra;
     
-    //单品
-    if ([extra containsString:@"productId="]) {
+    NSDictionary *result = [LTools parseJSONStringToNSDictionary:extra];
+    //    [dic safeSetInt:type forKey:@"msgType"];
+//    [dic safeSetValue:infoId forKey:@"infoId"];
+    
+    if (result && [LTools isDictinary:result])
+    {
+        NSString *infoId = result[@"infoId"];
+        CustomMsgType msgType = [result[@"msgType"]intValue];
         
-        NSString *productId = @"";
-        NSArray *arr = [msg.extra componentsSeparatedByString:@"productId="];
-        if (arr.count > 1) {
-            
-            productId = arr.lastObject;
-        }else
+        if (msgType == CustomMsgTypeProduct)
         {
-            return;
-        }
-        
-        if (productId.length) {
-            
             GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
-            cc.productId = productId;
-            cc.hidesBottomBarWhenPushed = YES;
+            cc.productId = infoId;
             [self.navigationController pushViewController:cc animated:YES];
-        }else
-        {
-            NSLog(@"单品id有误");
         }
-    }
-    //订单
-    else if ([extra containsString:@"orderId="]){
-        
-        NSString *orderId = @"";
-        NSArray *arr = [msg.extra componentsSeparatedByString:@"orderId="];
-        if (arr.count > 1) {
-            
-            orderId = arr.lastObject;
-        }else
+        else if (msgType == CustomMsgTypeProduct_goHealth)
         {
-            return;
+            GoHealthProductDetailController *detail = [[GoHealthProductDetailController alloc]init];
+            detail.productId = infoId;
+            [self.navigationController pushViewController:detail animated:YES];
         }
-        
-        if (orderId.length) {
-            
+        else if (msgType == CustomMsgTypeOrder)
+        {
             OrderInfoViewController *cc = [[OrderInfoViewController alloc]init];
-            cc.order_id = orderId;
-            cc.hidesBottomBarWhenPushed = YES;
+            cc.order_id = infoId;
             [self.navigationController pushViewController:cc animated:YES];
-        }else
-        {
-            NSLog(@"订单id有误");
         }
+        else if (msgType == CustomMsgTypeOrder_goHealth)
+        {
+            OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
+            orderInfo.platformType = PlatformType_goHealth;
+            orderInfo.order_id = infoId;
+            orderInfo.lastViewController = self;
+            [self.navigationController pushViewController:orderInfo animated:YES];
+
+        }
+        
+    }else
+    {
+        //单品
+        if ([extra containsString:@"productId="]) {
+            
+            NSString *productId = @"";
+            NSArray *arr = [msg.extra componentsSeparatedByString:@"productId="];
+            if (arr.count > 1) {
+                
+                productId = arr.lastObject;
+            }else
+            {
+                return;
+            }
+            
+            if (productId.length) {
+                
+                GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+                cc.productId = productId;
+                cc.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:cc animated:YES];
+            }else
+            {
+                NSLog(@"单品id有误");
+            }
+        }
+        //订单
+        else if ([extra containsString:@"orderId="]){
+            
+            NSString *orderId = @"";
+            NSArray *arr = [msg.extra componentsSeparatedByString:@"orderId="];
+            if (arr.count > 1) {
+                
+                orderId = arr.lastObject;
+            }else
+            {
+                return;
+            }
+            
+            if (orderId.length) {
+                
+                OrderInfoViewController *cc = [[OrderInfoViewController alloc]init];
+                cc.order_id = orderId;
+                cc.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:cc animated:YES];
+            }else
+            {
+                NSLog(@"订单id有误");
+            }
+        }
+
     }
+    
 }
+
+//- (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model
+//{
+//    RCRichContentMessage *msg = (RCRichContentMessage *)model.content;
+//    
+//    NSLog(@"model %@",msg.extra);
+//    
+//    NSString *extra = msg.extra;
+//    
+//    //单品
+//    if ([extra containsString:@"productId="]) {
+//        
+//        NSString *productId = @"";
+//        NSArray *arr = [msg.extra componentsSeparatedByString:@"productId="];
+//        if (arr.count > 1) {
+//            
+//            productId = arr.lastObject;
+//        }else
+//        {
+//            return;
+//        }
+//        
+//        if (productId.length) {
+//            
+//            GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+//            cc.productId = productId;
+//            cc.hidesBottomBarWhenPushed = YES;
+//            [self.navigationController pushViewController:cc animated:YES];
+//        }else
+//        {
+//            NSLog(@"单品id有误");
+//        }
+//    }
+//    //订单
+//    else if ([extra containsString:@"orderId="]){
+//        
+//        NSString *orderId = @"";
+//        NSArray *arr = [msg.extra componentsSeparatedByString:@"orderId="];
+//        if (arr.count > 1) {
+//            
+//            orderId = arr.lastObject;
+//        }else
+//        {
+//            return;
+//        }
+//        
+//        if (orderId.length) {
+//            
+//            OrderInfoViewController *cc = [[OrderInfoViewController alloc]init];
+//            cc.order_id = orderId;
+//            cc.hidesBottomBarWhenPushed = YES;
+//            [self.navigationController pushViewController:cc animated:YES];
+//        }else
+//        {
+//            NSLog(@"订单id有误");
+//        }
+//    }
+//}
 
 /**
  *  点击消息内容中的电话号码，此事件不会再触发didTapMessageCell

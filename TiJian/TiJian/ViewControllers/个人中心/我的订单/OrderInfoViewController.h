@@ -16,5 +16,6 @@
 @property(nonatomic,retain)NSString *msg_id;//消息id
 @property(nonatomic,assign)BOOL isPayResultVcPush;//是否为支付结果页面跳转过来的
 @property(nonatomic,assign)BOOL cancelOrderSuccess;//支付结果页面跳转过来然后取消订单成功
+@property(nonatomic,assign)PlatformType platformType;//区分体检商城、go健康、自测用药等
 
 @end

@@ -19,8 +19,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *numLabel;
 @property (strong, nonatomic) IBOutlet UILabel *addressLabel;
 @property (strong, nonatomic) IBOutlet UILabel *realPriceLabel;
-@property (strong, nonatomic) IBOutlet PropertyButton *commentButton;//右边按钮
-@property (strong, nonatomic) IBOutlet PropertyButton *actionButton;//左边按钮
+@property (strong, nonatomic) IBOutlet PropertyButton *leftButton;//actionButton左边按钮
+@property (strong, nonatomic) IBOutlet PropertyButton *rightButton;//commentButton右边按钮
+
 @property (strong, nonatomic) NSIndexPath *indexPath;
 
 @property (strong, nonatomic) IBOutlet UIView *infoView;
@@ -28,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *addTimeLabel;
 
 @property (nonatomic,retain)LScrollView *contentScroll;//放置多个商品
+@property (strong, nonatomic) IBOutlet UIView *topLine; //从上第一条线
 
 - (void)setCellWithModel:(id)aModel;
 

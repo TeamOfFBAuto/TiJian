@@ -35,7 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.myTitle = @"套餐清单";
+    self.myTitle = @"订单清单";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_SUCCESS object:nil];
@@ -54,7 +54,6 @@
 {
     //刷新预约情况
     [_table showRefreshHeader:YES];
-    
 }
 
 #pragma mark - 视图创建
@@ -76,6 +75,11 @@
                              @"order_id":self.orderId};;
     NSString *api = GET_SETMEALS_BY_ORDER;
     
+//    GoHealth_get_order_info
+    
+    if (self.platformType == PlatformType_goHealth) {
+        api = GoHealth_get_order_info;
+    }
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];

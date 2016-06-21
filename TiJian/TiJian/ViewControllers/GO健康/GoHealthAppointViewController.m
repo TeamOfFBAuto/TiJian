@@ -615,6 +615,7 @@
     [params safeSetValue:productionIds forKey:@"productionIds"];
     [params safeSetValue:cityid forKey:@"cityId"];
     [params safeSetValue:districtid forKey:@"districtId"];
+    [params safeSetInt:1 forKey:@"respTimeInDate"];
     
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
@@ -634,15 +635,7 @@
 {
     result = result[@"data"];
     NSArray *dates = result[@"dates"];
-    NSArray *hours = result[@"hours"];
-    _hours = [NSArray arrayWithArray:hours];
     _dates = [NSArray arrayWithArray:dates];
-    //    ": [
-    //    "2016-06-17 00:00:00 +0800",
-    //    "2016-06-18 00:00:00 +0800",
-    //    "2016-06-19 00:00:00 +0800"
-    //    ],
-    //    ""
     
     [self selectBookdate];
 }
@@ -703,7 +696,9 @@
     if (component == 0) {
         return _dates.count;
     }else if (component == 1){
-        return _hours.count;
+        NSDictionary *date = _dates[[pickerView selectedRowInComponent:0]];
+        NSArray *hours = date[@"hours"];
+        return hours.count;
     }
     return 60;
 }
@@ -711,21 +706,26 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     if (component == 0) {
         
-        NSString *string = _dates[row];
-        
+        NSDictionary *dateDic = _dates[row];
+        NSString *string = dateDic[@"date"];
         NSDate *date = [LTools dateFromString:string withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
         
         return [NSString stringWithFormat:@"%@ %@",[LTools timeDate:date withFormat:@"MM/dd"],[LTools weekWithDate:date]];
         
     }else if (component == 1){
-        return [NSString stringWithFormat:@"%d点",[_hours[row] intValue]];
+        
+        NSDictionary *date = _dates[[pickerView selectedRowInComponent:0]];
+        NSArray *hours = date[@"hours"];
+        return [NSString stringWithFormat:@"%d点",[hours[row] intValue]];
     }
     return [self doubleString:(int)row];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     
-    NSLog(@"年龄%d",(int)row + 1);
+    if (component == 0) {
+        [pickerView reloadComponent:1];
+    }
 }
 
 //- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
@@ -735,12 +735,10 @@
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
     if (component == 0) {
-        return 150.f;
+        return 170.f;
     }
-    return 80;
+    return 50;
 }
-
-
 
 #pragma mark - UITextFieldDelegate
 

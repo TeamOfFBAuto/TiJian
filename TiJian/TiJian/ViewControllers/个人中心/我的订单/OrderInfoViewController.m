@@ -135,10 +135,16 @@
         params = [params addObject:@{@"msg_id":self.msg_id}];
     }
     
+    NSString *api = ORDER_GET_ORDER_INFO;
+    
+    if (self.platformType == PlatformType_goHealth) {
+        api = GoHealth_get_order_info;
+    }
+    
     __weak typeof(self)weakSelf = self;
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_GET_ORDER_INFO parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"获取订单详情%@ %@",result[RESULT_INFO],result);
         [weakSelf parseDataWithResult:result];
         
@@ -360,7 +366,8 @@
  */
 - (void)clickToChat:(UIButton *)sender
 {
-    [MiddleTools pushToChatWithSourceType:SourceType_Order fromViewController:self model:_orderModel];
+    SourceType type = self.platformType == PlatformType_goHealth ? SourceType_Order_goHealth : SourceType_Order;
+    [MiddleTools pushToChatWithSourceType:type fromViewController:self model:_orderModel];
 }
 
 /**
@@ -598,13 +605,27 @@
     billView.backgroundColor = [UIColor whiteColor];
     [bgView addSubview:billView];
     
-    NSString *expressString = [_orderModel.require_post intValue] == 0 ? @"电子体检码" : @"快递体检凭证";
-    billtitle = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD title:@"快递方式"];
-    [billView addSubview:billtitle];
     
-    billContent = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - width, 0, width, 50) font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE title:expressString];
-    [billView addSubview:billContent];
     
+    int type = [_orderModel.type intValue];
+    
+    if (type == 2) { //go健康
+        
+        billtitle = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD title:@"服务方式"];
+        [billView addSubview:billtitle];
+        
+        billContent = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - width, 0, width, 50) font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE title:@"上门服务"];
+        [billView addSubview:billContent];
+
+    }else //海马医生
+    {
+        NSString *expressString = [_orderModel.require_post intValue] == 0 ? @"电子体检码" : @"快递体检凭证";
+        billtitle = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD title:@"快递方式"];
+        [billView addSubview:billtitle];
+        
+        billContent = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 15 - width, 0, width, 50) font:14 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE title:expressString];
+        [billView addSubview:billContent];
+    }
     
 //    real_price;//实际付款
 //    coupon_offset_money;  //优惠券优惠金额
@@ -786,7 +807,14 @@
 - (void)setViewsWithModel:(OrderModel *)aModel
 {
     _orderModel = aModel;
-    [self tableHeaderViewWithAddressModel:aModel];
+    int type = [aModel.type intValue];
+    if (type == 2) { // go健康
+        
+    }else if (type == 1)
+    {
+        [self tableHeaderViewWithAddressModel:aModel];
+
+    }
     [self tableViewFooter];
     [self createBottomView];
 }

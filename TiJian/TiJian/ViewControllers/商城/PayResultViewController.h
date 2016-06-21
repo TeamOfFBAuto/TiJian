@@ -18,6 +18,6 @@
 @property(nonatomic,retain)NSString *erroInfo;//失败原因
 @property(nonatomic,assign)PAY_RESULT_TYPE payResultType;//支付结果
 @property(nonatomic,assign)BOOL needAppoint;//需要前去预约
-@property(nonatomic,assign)PayActionType payActionType;//区分体检商城、go健康、自测用药等
+@property(nonatomic,assign)PlatformType payActionType;//区分体检商城、go健康、自测用药等
 
 @end

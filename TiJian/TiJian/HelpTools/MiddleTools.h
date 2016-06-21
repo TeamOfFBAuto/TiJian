@@ -8,24 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- *  开启客服来源类型
- */
-typedef NS_ENUM(NSInteger ,SourceType) {
-    /**
-     *  来源自普通进入方式
-     */
-    SourceType_Normal = 0,
-    /**
-     *  来源自单品详情
-     */
-    SourceType_ProductDetail = 1,
-    /**
-     *  来源自订单详情
-     */
-    SourceType_Order
-};
-
 @interface MiddleTools : NSObject
 
 + (id)shareInstance;

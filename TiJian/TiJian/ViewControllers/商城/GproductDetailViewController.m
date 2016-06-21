@@ -12,7 +12,6 @@
 #import "GShopCarViewController.h"
 #import "ProductCommentModel.h"
 #import "GcommentViewController.h"
-#import "RCDChatViewController.h"
 #import "ConfirmOrderViewController.h"
 #import "ProductModel.h"
 #import "CouponModel.h"
@@ -1294,12 +1293,5 @@
 {
     [MiddleTools pushToChatWithSourceType:SourceType_ProductDetail fromViewController:self model:_theProductModel];
 }
-
-
-
-
-
-
-
 
 @end

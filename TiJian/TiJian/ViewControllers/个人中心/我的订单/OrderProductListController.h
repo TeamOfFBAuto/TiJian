@@ -13,5 +13,6 @@
 @interface OrderProductListController : MyViewController
 
 @property(nonatomic,retain)NSString *orderId;
+@property(nonatomic,assign)PlatformType platformType;//区分体检商城、go健康、自测用药等
 
 @end

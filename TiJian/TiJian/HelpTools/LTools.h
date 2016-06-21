@@ -516,6 +516,15 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
  */
 + (NSString *)JSONStringWithObject:(id)object;
 
+/**
+ *  解析jsonString to NSDictionary
+ *
+ *  @param JSONString
+ *
+ *  @return
+ */
++(NSDictionary *)parseJSONStringToNSDictionary:(NSString *)JSONString;
+
 #pragma - mark 图片处理相关
 
 #pragma mark 切图

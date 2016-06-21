@@ -69,7 +69,7 @@
 @property(nonatomic,retain)NSString *require_post;//快递方式 0电子体检码 1快递体检凭证
 
 @property(nonatomic,retain)NSString *info_url;//详情web链接
-
+@property(nonatomic,retain)NSNumber *type;//type参数为1的 咱海马的订单 为2是go健康的订单
 
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 

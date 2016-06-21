@@ -20,7 +20,6 @@
 #import "GShopCarViewController.h"
 #import "DLNavigationEffectKit.h"
 #import "GSearchView.h"
-#import "RCDChatViewController.h"
 #import "ProductListViewController.h"
 #import "StoreHomeOneBrandModel.h"
 #import "LocationChooseViewController.h"

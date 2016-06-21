@@ -14,11 +14,11 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    [self.commentButton setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
-    [self.commentButton addCornerRadius:3.f];
+    [self.rightButton setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
+    [self.rightButton addCornerRadius:3.f];
     
-    [self.actionButton setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE];
-    [self.actionButton addCornerRadius:3.f];
+    [self.leftButton setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE];
+    [self.leftButton addCornerRadius:3.f];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -29,9 +29,18 @@
 
 + (CGFloat)heightForAddress:(NSString *)address
 {
-    CGFloat height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
- 
-    return 89 + height + 10 + 10 + 50 + 20;
+    CGFloat height = 0.f;
+     
+    if ([LTools isEmpty:address]) {
+        height = - 20.f + 2;
+        
+    }else
+    {
+        address = [NSString stringWithFormat:@"配送地址:%@",[LTools NSStringNotNull:address]];
+        height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
+    }
+    
+    return 89 + height + 10 + 10 + 50 + 20 + 5;
 }
 
 - (void)setCellWithModel:(OrderModel *)aModel
@@ -82,25 +91,42 @@
             
             for (int i = 0; i < productNum; i ++) {
                 
-                ProductModel *product = [[ProductModel alloc]initWithDictionary:[aModel.products objectAtIndex:i]];
-
-                NSString *imageUrl = product.cover_pic;
-                UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((80 + 5) * i, 0, 80, 50)];
-                [aImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
-                aImageView.userInteractionEnabled = NO;
-                [_contentScroll addSubview:aImageView];
+                if ([aModel.products isKindOfClass:[NSArray class]]) {
+                    NSDictionary *dic = [aModel.products objectAtIndex:i];
+                    if ([LTools isDictinary:dic])
+                    {
+                        ProductModel *product = [[ProductModel alloc]initWithDictionary:dic];
+                        NSString *imageUrl = product.cover_pic;
+                        UIImageView *aImageView = [[UIImageView alloc]initWithFrame:CGRectMake((80 + 5) * i, 0, 80, 50)];
+                        [aImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+                        aImageView.userInteractionEnabled = NO;
+                        [_contentScroll addSubview:aImageView];
+                    }
+                }
             }
         }
     }
     
-    NSString *address = [NSString stringWithFormat:@"配送地址:%@",[LTools NSStringNotNull:aModel.address]];
+    NSString *address = @"";
+    CGFloat height = 0.f;
+    if (![LTools isEmpty:aModel.address]) {
+       address = [NSString stringWithFormat:@"配送地址:%@",[LTools NSStringNotNull:aModel.address]];
+       height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
+    }
     self.addressLabel.text = address;
     _addressLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _addressLabel.numberOfLines = 2;
-    CGFloat height = [LTools heightForText:address width:DEVICE_WIDTH - 20 font:14];
     _addressLabel.height = height;
+    
     self.realPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",[aModel.real_price floatValue]];
-    self.infoView.top = _addressLabel.bottom + 10;
+    
+    if (height > 0) {
+        self.infoView.top = _addressLabel.bottom + 10;
+    }else
+    {
+        self.infoView.top = self.topLine.top;
+    }
+    
     self.backView.height = _infoView.bottom;
     
     NSString *text = [NSString stringWithFormat:@"下单时间:%@",[LTools timeString:aModel.add_time withFormat:@"yyyy-MM-dd"]];

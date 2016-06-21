@@ -78,16 +78,31 @@
     chatService.targetId = SERVICE_ID_2;
     chatService.conversationType = ConversationType_APPSERVICE;//客服2.0
     
-//    chatService.title = chatService.userName;
-    
-//    if (type == SourceType_ProductDetail) {
-//        [chatService setProductMessageWithProductModel:model];
-//    }else if (SourceType_Order){
-//        [chatService setOrderMessageWithOrderId:((OrderModel *)model).order_id orderNum:((OrderModel *)model).order_no];
-//    }
-    //
     if (model) {
         chatService.msg_model = model;
+    }
+    
+//    SourceType_ProductDetail = 1,
+//    /**
+//     *  来源自订单详情
+//     */
+//    SourceType_Order,
+//    /**
+//     *  来源自单品详情
+//     */
+//    SourceType_ProductDetail_goHealth,
+//    /**
+//     *  来源自订单详情
+//     */
+//    SourceType_Order_goHealth
+    
+    if (type == SourceType_ProductDetail_goHealth ||
+        type == SourceType_Order_goHealth) {
+        
+        chatService.platType = PlatformType_goHealth;
+    }else
+    {
+        chatService.platType = PlatformType_default;
     }
     
     chatService.hidesBottomBarWhenPushed = hiddenBottom;

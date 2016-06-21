@@ -17,6 +17,6 @@
 @property(nonatomic,assign)float sumPrice;//总价格
 
 @property(nonatomic,assign)int payStyle;//1 支付宝 2 为微信
-@property(nonatomic,assign)PayActionType payActionType;//区分体检商城、go健康、自测用药等
+@property(nonatomic,assign)PlatformType platformType;//区分体检商城、go健康、自测用药等
 
 @end
