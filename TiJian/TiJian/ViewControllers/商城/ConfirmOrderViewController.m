@@ -278,8 +278,6 @@
                     
                     
                     
-                }else if ([coupon.type intValue] == 3){//新人优惠
-                    
                 }
             }else if([coupon.brand_id intValue] == 0) {//通用
                 if ([coupon.type intValue] == 1) {//满减
@@ -314,8 +312,6 @@
                     
                     CGFloat zhe = coupon.discount_num.floatValue;
                     youhuiquan += p_t_price *(1 - zhe);
-                }else if ([coupon.type intValue] == 3){//新人优惠
-                    
                 }
             }
             

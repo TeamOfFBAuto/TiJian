@@ -60,8 +60,7 @@
     
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
-//    [params safeSetString:self.productId forKey:@"productionIds"];
-    
+    [params safeSetString:self.productId forKey:@"productionIds"];
     
     __weak typeof (self)bself = self;
     
@@ -72,6 +71,7 @@
     } failBlock:^(NSDictionary *result) {
         _tab.tableHeaderView = nil;
         _tab.tableFooterView = [self resultViewWithType:PageResultType_requestFail];
+        _citiesArray = nil;
         [_tab finishReloadingData];
     }];
 }
@@ -87,7 +87,6 @@
     _tab.dataSource = self;
     [self.view addSubview:_tab];
     _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tab.tableHeaderView = [self tableHeaderView];
     [_tab showRefreshHeader:YES];
 }
 
@@ -324,6 +323,7 @@
         _tab.tableFooterView = nil;
     }
     
+    _tab.tableHeaderView = [self tableHeaderView];
     [_tab finishReloadingData];
 }
 

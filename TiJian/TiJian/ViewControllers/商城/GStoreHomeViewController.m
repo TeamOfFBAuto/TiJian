@@ -1150,12 +1150,9 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
-//    StoreHomeOneBrandModel *model_b = _table.dataArray[indexPath.section];
-//    ProductModel *aModel = model_b.list[indexPath.row];
-//    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
-    
-    GoHealthAppointViewController *cc = [[GoHealthAppointViewController alloc]init];
-    [self.navigationController pushViewController:cc animated:YES];
+    StoreHomeOneBrandModel *model_b = _table.dataArray[indexPath.section];
+    ProductModel *aModel = model_b.list[indexPath.row];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
     
 }
 

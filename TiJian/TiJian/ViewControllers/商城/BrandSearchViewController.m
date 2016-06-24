@@ -523,13 +523,11 @@
     }
     
     
-    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
     
     if ([LTools isEmpty:[self.shaixuanDic stringValueForKey:@"city_id"]] && [self.shaixuanDic stringValueForKey:@"province_id"]) {
         [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
         [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
-    }else{
-        temp_dic = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
     }
     
     [temp_dic safeSetString:NSStringFromInt(_rTab.pageNum)forKey:@"page"];
