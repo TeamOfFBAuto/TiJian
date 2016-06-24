@@ -12,7 +12,6 @@
 #import "PayActionViewController.h"//支付页面
 #import "OrderInfoViewController.h"//订单详情
 #import "RefreshTableView.h"
-#import "TuiKuanViewController.h"//退款页面
 #import "OrderProductListController.h"//订单的套餐列表
 #import "AddCommentViewController.h"
 #import "ConfirmOrderViewController.h"//确认订单
@@ -321,34 +320,34 @@
  *
  *  @param sender
  */
-- (void)buyAgain:(OrderModel *)order
-{
-    int type = [order.type intValue];
-    if (type == 2) { //go健康
-        
-        NSDictionary *p_dic = [order.products firstObject];
-        if (p_dic && [LTools isDictinary:p_dic]) {
-
-            GoHealthBugController *buy = [[GoHealthBugController alloc]init];
-            buy.productId = p_dic[@"product_id"];
-            [self.navigationController pushViewController:buy animated:YES];
-        }
-        
-    }else if (type == 1) //海马医生
-    {
-        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
-        for (NSDictionary *aDic in order.products) {
-            
-            ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
-            [temp addObject:aModel];
-        }
-        NSArray *productArr = temp;
-        ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
-        confirm.dataArray = productArr;
-        confirm.lastViewController = self;
-        [self.navigationController pushViewController:confirm animated:YES];
-    }
-}
+//- (void)buyAgain:(OrderModel *)order
+//{
+//    int type = [order.type intValue];
+//    if (type == 2) { //go健康
+//        
+//        NSDictionary *p_dic = [order.products firstObject];
+//        if (p_dic && [LTools isDictinary:p_dic]) {
+//
+//            GoHealthBugController *buy = [[GoHealthBugController alloc]init];
+//            buy.productId = p_dic[@"product_id"];
+//            [self.navigationController pushViewController:buy animated:YES];
+//        }
+//        
+//    }else if (type == 1) //海马医生
+//    {
+//        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
+//        for (NSDictionary *aDic in order.products) {
+//            
+//            ProductModel *aModel = [[ProductModel alloc]initWithDictionary:aDic];
+//            [temp addObject:aModel];
+//        }
+//        NSArray *productArr = temp;
+//        ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
+//        confirm.dataArray = productArr;
+//        confirm.lastViewController = self;
+//        [self.navigationController pushViewController:confirm animated:YES];
+//    }
+//}
 
 
 /**
@@ -363,23 +362,19 @@
     OrderModel *aModel = sender.aModel;
     int type = [aModel.type intValue];//判断是海马订单、go健康订单
     
+    PlatformType platformType = PlatformType_default;//默认 0 海马体检商城
+    if (type == 2) {
+        platformType = PlatformType_goHealth;//为2是go健康的订单
+    }
+    
     if (actionType == ORDERACTIONTYPE_BuyAgain) {
         //再次购买
-        [self buyAgain:aModel];
+        [MiddleTools pushToAgainBuyOrderType:platformType products:aModel.products viewController:self extendParams:nil];
         
     }else if (actionType == ORDERACTIONTYPE_Appoint){
         
-        if (type == 1)//海马
-        {
-            OrderProductListController *list = [[OrderProductListController alloc]init];
-            list.orderId = aModel.order_id;
-            list.platformType = PlatformType_default;
-            [self.navigationController pushViewController:list animated:YES];
-
-        }else if (type == 2)//go健康
-        {
-            [self appointGoHealthWithModel:aModel];
-        }
+        //前去预约
+        [MiddleTools pushToAppointPlatformType:platformType orderId:aModel.order_id products:aModel.products viewController:self extendParams:nil];
         
     }else if (actionType == ORDERACTIONTYPE_Comment){
         //评价晒单
@@ -394,18 +389,9 @@
         comment.theModelArray = temp;
         [self.navigationController pushViewController:comment animated:YES];
         
-    }else if (actionType == ORDERACTIONTYPE_Pay){
+    }else if (actionType == ORDERACTIONTYPE_PayNew){
         
-        PlatformType payActionType = PlatformType_default;//默认 0 海马体检商城
-        if (type == 2) {
-            payActionType = PlatformType_goHealth;//为2是go健康的订单
-        }
-        //支付
-        [self pushToPayPageWithOrderId:aModel.order_id
-                              orderNum:aModel.order_no
-                              sumPrice:[aModel.real_price floatValue]
-                              payStyle:[aModel.pay_type intValue]
-                         payActionType:payActionType];
+        [MiddleTools pushToPayOrderId:aModel.order_id orderNum:aModel.order_no sumPrice:[aModel.real_price floatValue] payStyle:[aModel.pay_type intValue] platformType:platformType viewController:self extendParams:nil];
     }
 }
 
@@ -659,7 +645,7 @@
         if (status == 1) {
             //待支付
             rightText = @"去支付";
-            rightActionType = ORDERACTIONTYPE_Pay;
+            rightActionType = ORDERACTIONTYPE_PayNew;
         }else if (status == 2){ // 新版本没有2
             //待预约
             rightText = @"前去预约";
@@ -733,7 +719,7 @@
     else if ([title isEqualToString:TableView_title_DaiFu])//待付款
     {
         [rightButton setTitle:@"去支付" forState:UIControlStateNormal];
-        rightButton.actionType = ORDERACTIONTYPE_Pay;
+        rightButton.actionType = ORDERACTIONTYPE_PayNew;
         
     }else if ([title isEqualToString:TableView_title_Payed])//已付款  根据实际订单状态判断 前去预约 还是 再次购买
     {

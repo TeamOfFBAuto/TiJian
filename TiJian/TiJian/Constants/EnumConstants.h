@@ -76,7 +76,8 @@ typedef enum{
     ORDERACTIONTYPE_Appoint,//去预约
     ORDERACTIONTYPE_Comment, //评价晒单
     ORDERACTIONTYPE_BuyAgain, //再次购买
-    ORDERACTIONTYPE_Refund  //申请退款
+    ORDERACTIONTYPE_Refund,  //申请退款
+    ORDERACTIONTYPE_PayNew //去支付(增加go健康)
 }ORDERACTIONTYPE; // 订单列表 操作类型
 
 

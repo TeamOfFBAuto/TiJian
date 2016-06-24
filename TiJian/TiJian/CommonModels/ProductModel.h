@@ -61,7 +61,8 @@
 @property(nonatomic,assign)CGFloat afterUsedDaijinquan_Price;//使用代金券之后的价钱
 
 //预约相关
-@property(nonatomic,strong)NSString *type;//1 公司购买套餐 2 公司代金券 3 普通套餐
+@property(nonatomic,strong)NSString *type;//1 公司购买套餐 2 公司代金券 3 普通套餐 4 go健康套餐
+@property(nonatomic,strong)NSString *c_type;//c_type=1 1为海马医生预约 2为go健康预约
 @property(nonatomic,strong)NSString *company_id;//公司id
 @property(nonatomic,strong)NSString *order_checkuper_id;//绑定的人
 @property(nonatomic,strong)NSDictionary *company_info;//"company_id": "1",company_name": "阿里集团"

@@ -10,8 +10,12 @@
 #import "GoHealthBugController.h"
 #import "ThirdProductModel.h"
 #import "LPhotoBrowser.h"
+#import "ThirdServiceModel.h"
 
-@interface GoHealthProductDetailController ()<UITableViewDelegate,UITableViewDataSource>
+#define kTag_ServicePhone 200 //拨打客服电话
+#define kTag_cancelService 201 //取消服务
+
+@interface GoHealthProductDetailController ()<UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate>
 {
     UITableView *_table;
     NSArray *_discriptionImages;//详情描述为图片
@@ -22,6 +26,7 @@
     CGFloat _maxHeight;//可选城市全显示高度
     UIButton *_arrowbtn;
     ThirdProductModel *_productModel;
+    ThirdServiceModel *_serviceModel;
 }
 
 @property(nonatomic,retain)UIButton *backButton;
@@ -46,7 +51,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self prepareRefreshTableView];
-    [self netWorkForList];
+    
+    //服务详情
+    if (self.detailType == DetailType_serviceDetail) {
+        
+        [self netWorkForServiceDetail];
+        
+    }
+    else //产品详情
+    {
+        [self netWorkForDetail:self.productId];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -124,71 +139,173 @@
     [chatBtn setImage:[UIImage imageNamed:@"goHealth_tel"] forState:UIControlStateNormal];
     [chatBtn setTitle:@"联系客服" forState:UIControlStateNormal];
     
-    //价格和立即购买
-    footView = [[UIView alloc]initWithFrame:CGRectMake(0, imageBgView.bottom, DEVICE_WIDTH, height)];
-    [headerView addSubview:footView];
-    footView.backgroundColor = [UIColor whiteColor];
-    //标题
-    UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 15, DEVICE_WIDTH - 90, footView.height) font:17 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:price];
-    [footView addSubview:priceLabel];
-    
-    NSString *key = @"(已包括护士服务费)";
-    price = [NSString stringWithFormat:@"%@ %@",price,key];
-    NSAttributedString *string = [LTools attributedString:price keyword:key color:DEFAULT_TEXTCOLOR_TITLE_SUB keywordFontSize:12];
-    [priceLabel setAttributedText:string];
-    
-    //联系卖家
-    chatWidth = [LTools fitWithIPhone6:67.f];
-    chatBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - chatWidth, footView.height - 30, chatWidth, 30) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(clickToBuy:)];
-    [footView addSubview:chatBtn];
-    [chatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [chatBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    chatBtn.backgroundColor = DEFAULT_TEXTCOLOR_ORANGE;
-    [chatBtn addCornerRadius:2.f];
-    [chatBtn setTitle:@"立即购买" forState:UIControlStateNormal];
-    
-    //可测人数 空腹 已售
-    footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 65)];
-    [headerView addSubview:footView];
-    footView.backgroundColor = [UIColor whiteColor];
-    
-    chatWidth = (DEVICE_WIDTH - 12 * 2) / 3.f;
-
-    NSArray *images = @[[UIImage imageNamed:@"goHealth_icon1"],
-                        [UIImage imageNamed:@"goHealth_icon2"],
-                        [UIImage imageNamed:@"goHealth_icon3"]];
-    for (int i = 0; i < 3; i ++) {
+    //服务详情
+    if (self.detailType == DetailType_serviceDetail) {
         
-        UIButton *chatBtn = [[UIButton alloc]initWithframe:CGRectMake(12 + chatWidth * i, 0, chatWidth, footView.height) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:nil];
-        [footView addSubview:chatBtn];
-        [chatBtn setTitleColor:DEFAULT_TEXTCOLOR_TITLE forState:UIControlStateNormal];
-        [chatBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
-        chatBtn.backgroundColor = [UIColor clearColor];
-        [chatBtn setImage:images[i] forState:UIControlStateNormal];
+        //服务信息
+        footView = [[UIView alloc]initWithFrame:CGRectMake(0, imageBgView.bottom, DEVICE_WIDTH, 0)];
+        footView.backgroundColor = [UIColor whiteColor];
+        [headerView addSubview:footView];
         
-        NSString *title = @"";
-        if (i == 0) {
-            title = [NSString stringWithFormat:@" 可测%d",[model.testeeNum intValue]];
-            [chatBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-        }else if (i == 1)
+        NSString *string = [NSString stringWithFormat:@"单号: %@",self.orderNum];
+        CGFloat width = [LTools widthForText:string font:14.f];
+        
+        //单号
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, width, 58) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:string];
+        [footView addSubview:label];
+        
+        //状态
+        label = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 5, label.top, DEVICE_WIDTH - 12 * 2 - 5 - width, 58) font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
+        [footView addSubview:label];
+        
+        NSString *state = [self serviceState:[_serviceModel.state intValue]];
+        string = [NSString stringWithFormat:@"状态: %@",state];
+        [label setAttributedText:[LTools attributedString:string keyword:state color:DEFAULT_TEXTCOLOR_ORANGE]];
+        
+        //线
+        //line
+        UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label.bottom, DEVICE_WIDTH, 0.5)];
+        line.backgroundColor = DEFAULT_LINECOLOR;
+        [footView addSubview:line];
+        
+        NSArray *titles = @[@"体检人信息:",@"预约上门时间:",@"上门服务地址:",@"护士信息:"];
+        for (int i = 0; i < titles.count; i ++)
         {
-//            isFasting	YES	Int		0 - 不需要空腹, 1 - 需要空腹
-            BOOL isFasting = [model.isFasting intValue];
-            if (isFasting == 1) {
-                title = @" 需要空腹";
-            }else
+            BOOL have = YES;//判断是否有该项信息
+            CGFloat top = label.bottom;
+            NSString *key = @"";
+            if (i == 0)
             {
-                title = @" 不需要空腹";
+                NSDictionary *dic = [_serviceModel.testees firstObject];
+                key = [NSString stringWithFormat:@"%@  %@",dic[@"name"],dic[@"phone"]];
+                top = line.bottom + 10.f;
+                
+            }else if (i == 1)
+            {
+                //zzz
+                NSDate *date = [LTools dateFromString:_serviceModel.bookTime withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
+                key = [LTools timeDate:date withFormat:@"yyyy-MM-dd HH:mm"];
+            }else if (i == 2)
+            {
+                NSDictionary *dic = _serviceModel.address;
+                NSString *cityName = dic[@"cityName"];
+                NSString *districtName = dic[@"districtName"];
+                NSString *address = dic[@"address"];
+                key = [NSString stringWithFormat:@"%@%@%@",districtName,cityName,address];
+            }else if (i == 3)
+            {
+                have = NO;
+                NSDictionary *dic = _serviceModel.nurse;
+                if (dic && [LTools isDictinary:dic]) {
+                    NSString *name = dic[@"name"];
+                    NSString *phone = dic[@"phone"];
+                    if (![LTools isEmpty:name] &&
+                        ![LTools isEmpty:phone]) {
+                        have = YES;
+                        key = [NSString stringWithFormat:@"%@  %@",name,phone];
+                    }else
+                    {
+                        have = NO;
+                    }
+                    
+                }else
+                {
+                    have = NO;
+                }
+                
             }
-        }else if (i == 2)
-        {
-            title = [NSString stringWithFormat:@" 已售%d",[model.testeeNum intValue]];
-            [chatBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+            string = [NSString stringWithFormat:@"%@  %@",titles[i],key];
+            
+            if (have) {
+                label = [[UILabel alloc]initWithFrame:CGRectMake(12, top, DEVICE_WIDTH - 12 * 2, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:string];
+                [footView addSubview:label];
+            }
         }
-        [chatBtn setTitle:title forState:UIControlStateNormal];
+        
+        //state 1、2时可以取消服务 case 1: @"护士未接单";2: @"护士已接单";
+        int stateCode = [_serviceModel.state intValue];
+        if (stateCode == 1 ||
+            stateCode == 2) {
+            UIButton *cancelBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 72, label.bottom, 72, 30) buttonType:UIButtonTypeCustom normalTitle:@"取消服务" selectedTitle:nil target:self action:@selector(clickToCancelService)];
+            [footView addSubview:cancelBtn];
+            cancelBtn.backgroundColor = DEFAULT_TEXTCOLOR_ORANGE;
+            [cancelBtn addCornerRadius:3.f];
+            [cancelBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+            
+            footView.height = cancelBtn.bottom + 12;
+        }else
+        {
+            footView.height = label.bottom + 12;
+        }
+        
+    }else
+    {
+        //价格和立即购买
+        footView = [[UIView alloc]initWithFrame:CGRectMake(0, imageBgView.bottom, DEVICE_WIDTH, height)];
+        [headerView addSubview:footView];
+        footView.backgroundColor = [UIColor whiteColor];
+        //标题
+        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 15, DEVICE_WIDTH - 90, footView.height) font:17 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:price];
+        [footView addSubview:priceLabel];
+        
+        NSString *key = @"(已包括护士服务费)";
+        price = [NSString stringWithFormat:@"%@ %@",price,key];
+        NSAttributedString *string = [LTools attributedString:price keyword:key color:DEFAULT_TEXTCOLOR_TITLE_SUB keywordFontSize:12];
+        [priceLabel setAttributedText:string];
+        
+        //联系卖家
+        chatWidth = [LTools fitWithIPhone6:67.f];
+        chatBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - chatWidth, footView.height - 30, chatWidth, 30) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(clickToBuy:)];
+        [footView addSubview:chatBtn];
+        [chatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [chatBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
+        chatBtn.backgroundColor = DEFAULT_TEXTCOLOR_ORANGE;
+        [chatBtn addCornerRadius:2.f];
+        [chatBtn setTitle:@"立即购买" forState:UIControlStateNormal];
+        
+        //可测人数 空腹 已售
+        footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 65)];
+        [headerView addSubview:footView];
+        footView.backgroundColor = [UIColor whiteColor];
+        
+        chatWidth = (DEVICE_WIDTH - 12 * 2) / 3.f;
+        
+        NSArray *images = @[[UIImage imageNamed:@"goHealth_icon1"],
+                            [UIImage imageNamed:@"goHealth_icon2"],
+                            [UIImage imageNamed:@"goHealth_icon3"]];
+        for (int i = 0; i < 3; i ++) {
+            
+            UIButton *chatBtn = [[UIButton alloc]initWithframe:CGRectMake(12 + chatWidth * i, 0, chatWidth, footView.height) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:nil];
+            [footView addSubview:chatBtn];
+            [chatBtn setTitleColor:DEFAULT_TEXTCOLOR_TITLE forState:UIControlStateNormal];
+            [chatBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
+            chatBtn.backgroundColor = [UIColor clearColor];
+            [chatBtn setImage:images[i] forState:UIControlStateNormal];
+            
+            NSString *title = @"";
+            if (i == 0) {
+                title = [NSString stringWithFormat:@" 可测%d",[model.testeeNum intValue]];
+                [chatBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+            }else if (i == 1)
+            {
+                //isFasting	YES	Int		0 - 不需要空腹, 1 - 需要空腹
+                BOOL isFasting = [model.isFasting intValue];
+                if (isFasting == 1) {
+                    title = @" 需要空腹";
+                }else
+                {
+                    title = @" 不需要空腹";
+                }
+            }else if (i == 2)
+            {
+                title = [NSString stringWithFormat:@" 已售%d",[model.testeeNum intValue]];
+                [chatBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+            }
+            [chatBtn setTitle:title forState:UIControlStateNormal];
+        }
     }
     
-    //可测人数 空腹 已售
+    //服务城市
     footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 40)];
     [headerView addSubview:footView];
     footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
@@ -232,7 +349,7 @@
 
 #pragma mark - 网络请求
 
-- (void)netWorkForList
+- (void)netWorkForDetail:(NSString *)productId
 {
     NSString *nonceStr = [LTools randomNum:32];//随机字符串
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -243,7 +360,7 @@
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
     
-    NSString *api = [NSString stringWithFormat:GoHealth_productionsDetail,self.productId];
+    NSString *api = [NSString stringWithFormat:GoHealth_productionsDetail,productId];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
      @WeakObj(self);
@@ -259,8 +376,92 @@
     }];
 }
 
-#pragma mark - 数据解析处理
+/**
+ *  服务详情
+ */
+- (void)netWorkForServiceDetail
+{
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+    NSString *api = [NSString stringWithFormat:GoHealth_serviceDetail,self.serviceId];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    @WeakObj(self);
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+        [Weakself parseDataWithServiceResult:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        //        NSLog(@"goHealth fail result %@",result);
+        NSLog(@"%@",result[@"msg"]);
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+    }];
+}
 
+/**
+ *  取消服务
+ */
+- (void)netWorkForCancelService
+{
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetValue:@"海马医生iOS" forKey:@"operator"];
+    
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+    NSString *api = [NSString stringWithFormat:GoHealth_serviceCancel,self.serviceId];
+    
+    id jsonString = [LTools JSONStringWithObject:params];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    @WeakObj(self);
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost_goHealth api:api parameters:jsonString constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_CANCEL_SUCCESS object:nil];
+        
+        [LTools showMBProgressWithText:result[@"取消服务成功！"] addToView:Weakself.view];
+        
+        [Weakself performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"%@",result[@"msg"]);
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
+    }];
+}
+
+#pragma mark - 数据解析处理
+/**
+ *  服务详情
+ *
+ *  @param result
+ */
+- (void)parseDataWithServiceResult:(NSDictionary *)result
+{
+    NSDictionary *data = result[@"data"];
+    NSDictionary *service = data[@"service"];
+    _serviceModel = [[ThirdServiceModel alloc]initWithDictionary:service];
+    
+    NSString *productId = [_serviceModel.productionIds firstObject];
+    [self netWorkForDetail:productId];
+}
+
+/**
+ *  套餐详情
+ *
+ *  @param result
+ */
 - (void)parseDataWithResult:(NSDictionary *)result
 {
     NSDictionary *data = result[@"data"];
@@ -319,7 +520,7 @@
     NSRegularExpression *rExpretion_src =[NSRegularExpression regularExpressionWithPattern:reg_src
                                                                                    options:0
                                                                                      error:&erro];
-    NSLog(@"erro%@",erro);
+//    NSLog(@"erro%@",erro);
     NSArray *temp = [rExpretion_src matchesInString:string options:NSMatchingReportProgress range:NSMakeRange(0, string.length)];
     NSMutableArray *tempArr = [NSMutableArray array];
     for (NSTextCheckingResult *result in temp) {
@@ -338,6 +539,77 @@
 }
 
 #pragma mark - 事件处理
+
+- (NSString *)serviceState:(int)state
+{
+    switch (state) {
+        case 1:
+            return @"护士未接单";
+            break;
+        case 2:
+            return @"护士已接单";
+            break;
+        case 3:
+            return @"护士已出发";
+            break;
+        case 4:
+            return @"护士已到达";
+            break;
+        case 5:
+            return @"护士开始服务";
+            break;
+        case 6:
+            return @"护士完成服务";
+            break;
+        case 7:
+            return @"标本运送中";
+            break;
+        case 8:
+            return @"标本已送达";
+            break;
+        case 9:
+            return @"标本检测中";
+            break;
+        case 10:
+            return @"检测完成";
+            break;
+        case 11:
+            return @"已出报告";
+            break;
+        case 12:
+            return @"用户取消服务";
+            break;
+        case 13:
+            return @"用户取消服务";
+            break;
+        case 14:
+            return @"护士取消";
+            break;
+        case 15:
+            return @"管理员取消";
+            break;
+        case 16:
+            return @"标本丢失(护士)";
+            break;
+        case 17:
+            return @"标本丢失(物流)	";
+            break;
+        default:
+            break;
+    }
+    return @"";
+}
+
+- (void)clickToCancelService
+{
+    NSString *msg = @"是否确定取消本次服务？";
+    if ([_serviceModel.state intValue] == 2) {
+        msg = [NSString stringWithFormat:@"护士已接单,%@",msg];
+    }
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = kTag_cancelService;
+    [alert show];
+}
 
 //购买
 - (void)clickToBuy:(UIButton *)sender
@@ -371,6 +643,7 @@
 {
     NSString *msg = [NSString stringWithFormat:@"是否拨打:%@客服电话",HaiMa_service];
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = kTag_ServicePhone;
     [alert show];
 }
 
@@ -425,16 +698,31 @@
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1) {
-        
-        NSString *phone = HaiMa_service;
-        
-        if (phone) {
+    if (alertView.tag == kTag_ServicePhone)
+    {
+        if (buttonIndex == 1) {
             
-            NSString *phoneNum = phone;
-            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",phoneNum]]];
+            NSString *phone = HaiMa_service;
+            
+            if (phone) {
+                
+                NSString *phoneNum = phone;
+                [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",phoneNum]]];
+            }
+        }
+    }else if (alertView.tag == kTag_cancelService)
+    {
+        if (buttonIndex == 0)
+        {
+            //取消操作
+        }else if (buttonIndex == 1)
+        {
+            //铁了心要取消服务
+            [self netWorkForCancelService];
         }
     }
+    
+    
 }
 #pragma mark - 代理
 

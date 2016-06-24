@@ -251,33 +251,6 @@
 }
 
 /**
- *  再次购买
- *
- *  @param sender
- */
-- (void)buyAgain:(OrderModel *)order
-{
-//    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:order.products.count];
-//    
-//    for (NSDictionary *aDic in order.products) {
-//        
-//        if ([aDic isKindOfClass:[NSDictionary class]]) {
-//            NSArray *list = aDic[@"list"];
-//            for (NSDictionary *p_dic in list) {
-//                ProductModel *aModel = [[ProductModel alloc]initWithDictionary:p_dic];
-//                [temp addObject:aModel];
-//            }
-//        }
-//    }
-    NSArray *productArr = self.products;
-    ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
-    confirm.dataArray = productArr;
-    confirm.lastViewController = self;
-    [self.navigationController pushViewController:confirm animated:YES];
-}
-
-
-/**
  *  事件处理
  *
  *  @param sender
@@ -287,10 +260,18 @@
     NSString *text = sender.titleLabel.text;
     NSLog(@"text %@",text);
     
+    OrderModel *aModel = _orderModel;
+    int type = [aModel.type intValue];//判断是海马订单、go健康订单
+    
+    PlatformType platformType = PlatformType_default;//默认 0 海马体检商城
+    if (type == 2) {
+        platformType = PlatformType_goHealth;//为2是go健康的订单
+    }
+    
     if ([text isEqualToString:@"去支付"]) {
-        
         //去支付
-        [self pushToPayPageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
+//        [self pushToPayPageWithOrderId:_orderModel.order_id orderNum:_orderModel.order_no];
+        [MiddleTools pushToPayOrderId:aModel.order_id orderNum:aModel.order_no sumPrice:[aModel.real_price floatValue] payStyle:[aModel.pay_type intValue] platformType:platformType viewController:self extendParams:nil];
         
     }else if ([text isEqualToString:@"取消订单"]){
         
@@ -301,12 +282,13 @@
         
     }else if ([text isEqualToString:@"再次购买"]){
         
-        //再次购买通知
-        [self buyAgain:_orderModel];
+        //再次购买
+        [MiddleTools pushToAgainBuyOrderType:platformType products:self.products viewController:self extendParams:nil];
         
     }else if ([text isEqualToString:@"前去预约"]){
         
-        [self clickToAppoint];
+        //前去预约
+        [MiddleTools pushToAppointPlatformType:platformType orderId:aModel.order_id products:aModel.products viewController:self extendParams:nil];
         
     }else if ([text isEqualToString:@"删除订单"]){
         
@@ -317,19 +299,17 @@
         
     }else if ([text isEqualToString:@"申请退款"]){
         
-        OrderModel *aModel = _orderModel;
         TuiKuanViewController *tuiKuan = [[TuiKuanViewController alloc]init];
         tuiKuan.tuiKuanPrice = [aModel.real_price floatValue];
         tuiKuan.orderId = aModel.order_id;
+        tuiKuan.platformType = platformType;
         tuiKuan.lastVc = self;
         [self.navigationController pushViewController:tuiKuan animated:YES];
+        
     }else if ([text isEqualToString:@"评价晒单"]){
         
-        OrderModel *aModel = _orderModel;
         //评价晒单
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getOrderInfo) name:NOTIFICATION_COMMENTSUCCESS object:nil];
-        
         AddCommentViewController *comment = [[AddCommentViewController alloc]init];
         comment.dingdanhao = aModel.order_no;
         comment.theModelArray = self.products;
@@ -350,7 +330,6 @@
     pay.sumPrice = [_orderModel.real_price floatValue];
     pay.payStyle = [_orderModel.pay_type intValue];//支付类型
     pay.lastViewController = self.lastViewController;
-//    pay.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:pay animated:YES];
 }
 
@@ -731,7 +710,12 @@
                                      @"action":@"cancel"
                                      };
             
-            [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_HANDLE_ORDER parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+            NSString *api = ORDER_HANDLE_ORDER;
+            if ([_orderModel.type intValue] == 2) { //go健康
+                api = GoHealth_handle_order;
+            }
+            
+            [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
                 NSLog(@"result取消订单 %@",result);
                 if (self.isPayResultVcPush) {
                     self.cancelOrderSuccess = YES;
@@ -763,6 +747,10 @@
                                      @"order_id":_orderModel.order_id,
                                      @"action":@"del"};
             
+            NSString *api = ORDER_HANDLE_ORDER;
+            if ([_orderModel.type intValue] == 2) { //go健康
+                api = GoHealth_handle_order;
+            }
             [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:ORDER_HANDLE_ORDER parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
                 
             } failBlock:^(NSDictionary *result) {

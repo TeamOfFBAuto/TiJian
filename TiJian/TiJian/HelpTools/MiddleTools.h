@@ -80,6 +80,56 @@
                           viewController:(UIViewController *)viewController
                                    extendParams:(NSDictionary *)extendParams;
 
+#pragma mark - 订单
+
+/**
+ *  订单再次购买
+ *
+ *  @param platformType   区分海马、go健康
+ *  @param products       产品数组(ProductModel或者NSDictionary)
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToAgainBuyOrderType:(PlatformType)platformType
+                       products:(NSArray *)products
+                 viewController:(UIViewController *)viewController
+                   extendParams:(NSDictionary *)extendParams;
+
+/**
+ *  订单支付
+ *
+ *  @param orderId        订单id
+ *  @param orderNum       订单num 201600010
+ *  @param sumPrice       总实付价格
+ *  @param payStyle       //1 支付宝 2 微信
+ *  @param platformType  平台区分 海马、go健康
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToPayOrderId:(NSString *)orderId
+                orderNum:(NSString *)orderNum
+                sumPrice:(CGFloat)sumPrice
+                payStyle:(int)payStyle
+            platformType:(PlatformType)platformType
+          viewController:(UIViewController *)viewController
+            extendParams:(NSDictionary *)extendParams;
+
+
+/**
+ *  前去预约(海马、go健康)
+ *
+ *  @param platformType   区分海马、go健康
+ *  @param orderid        订单id
+ *  @param products       产品
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToAppointPlatformType:(PlatformType)platformType
+                          orderId:(NSString *)orderid
+                         products:(NSArray *)products
+                   viewController:(UIViewController *)viewController
+                     extendParams:(NSDictionary *)extendParams;
+
 #pragma mark - 分享
 
 /**
@@ -133,5 +183,20 @@
  *  @return
  */
 + (NSString *)goHealthSignWithParams:(NSDictionary *)params;
+
+/**
+ *  跳转至go健康服务详情
+ *
+ *  @param serviceId       服务id
+ *  @param productId       套餐产品id
+ *  @param orderNum        订单id
+ *  @param controller
+ *  @param extensionParams 拓展参数备用
+ */
++ (void)pushToGoHealthServiceId:(NSString *)serviceId
+                      productId:(NSString *)productId
+                       orderNum:(NSString *)orderNum
+             fromViewController:(UIViewController *)controller
+                extensionParams:(NSDictionary *)extensionParam;
 
 @end

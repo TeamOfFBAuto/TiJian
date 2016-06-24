@@ -15,6 +15,7 @@
 #import "GStoreHomeViewController.h"//商城
 #import "GoneClassListViewController.h"
 #import "AppointProgressDetailController.h"//已体检预约进度
+#import "GoHealthProductDetailController.h" //go健康详情页或者服务详情页
 
 #import "ProductModel.h"
 #import "AppointmentCell.h"
@@ -287,13 +288,15 @@
     if (table == [self tableViewWithIndex:0]) {
         
         api = GET_ALL_APPOINTS;
-        params = @{@"authcode":authkey};
+        params = @{@"authcode":authkey,
+                   @"level":@"2"};
     }
     //待预约
     else if (table == [self tableViewWithIndex:1]) {
         
         api = GET_NO_APPOINTS;
-        params = @{@"authcode":authkey};
+        params = @{@"authcode":authkey,
+                   @"level":@"2"};
     }
     //已预约
     else if (table == [self tableViewWithIndex:2])
@@ -301,8 +304,7 @@
         api = GET_APPOINT;
         params = @{@"authcode":authkey,
                    @"expired":@"0",
-                   @"page":NSStringFromInt(table.pageNum),
-                   @"per_page":NSStringFromInt(PAGESIZE_MID)};
+                   @"level":@"2"};
     }
     //已过期
     else if (table == [self tableViewWithIndex:3])
@@ -566,6 +568,36 @@
     [self.navigationController pushViewController:cc animated:YES];
 }
 
+/**
+ *  预约go健康
+ *
+ *  @param aModel
+ */
+- (void)appointGoHealthWithProductId:(NSString *)p_id
+                         productName:(NSString *)p_name
+                             orderId:(NSString *)o_id
+{
+    NSString *product_id = p_id;
+    NSString *product_name = p_name;
+    NSString *orderId = o_id;
+    
+    GoHealthAppointViewController *goHealthAppoint = [[GoHealthAppointViewController alloc]init];
+    goHealthAppoint.orderId = orderId;
+    goHealthAppoint.productId = product_id;
+    goHealthAppoint.productName = product_name;
+    [self.navigationController pushViewController:goHealthAppoint animated:YES];
+}
+
+/**
+ *  查看go健康服务详情
+ *
+ *  @param aModel
+ */
+- (void)clickToGoServiceWithModel:(AppointModel *)aModel
+{
+    [MiddleTools pushToGoHealthServiceId:aModel.serviceId productId:aModel.product_id orderNum:aModel.order_no fromViewController:self extensionParams:nil];
+}
+
 #pragma mark - 代理
 
 #pragma - mark UIScrollDelegate
@@ -593,6 +625,8 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView
 {
     int index = (int)tableView.tag - kTagTableView;
+    
+    //全部、未预约
     if (index == 0 || index == 1) {
         
         ProductModel *aModel;
@@ -619,39 +653,57 @@
             }
         }
         
+        int type = [aModel.type intValue];//1 公司购买套餐 2 公司代金券 3 普通套餐
+        int c_type = [aModel.c_type intValue];//c_type=1 1为海马医生预约 2为go健康预约
+
         if ([aModel isKindOfClass:[ProductModel class]] &&
-            [aModel.type intValue] == 2) { //代金券
+            type == 2) { //代金券
             return;
         }
         
+        //公司、个人套餐 预约操作
         if (indexPath.section == 0 ||
             indexPath.section == 1) {
             
-            ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
-            choose.gender = [aModel.gender intValue];
-            //公司
-            if ([aModel.type intValue] == 1) {
+            if (c_type == 2) { //go健康
                 
-                NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
-                NSString *companyId = aModel.company_info[@"company_id"];
-                
-                [choose companyAppointWithOrderId:aModel.order_id
-                                       productId:aModel.product_id
-                                       companyId:companyId order_checkuper_id:order_checkuper_id
-                                    noAppointNum:[aModel.no_appointed_num intValue]
-                                          gender:[aModel.gender intValue]];
+                int no_appointed_num = [aModel.no_appointed_num intValue];
+                if (no_appointed_num > 0) {
+                    [self appointGoHealthWithProductId:aModel.product_id productName:aModel.product_name orderId:aModel.order_id];
+                }else
+                {
+                    [LTools showMBProgressWithText:@"此套餐已预约完成!" addToView:self.view];
+                }
             }else
             {
-                [choose appointWithProductId:aModel.product_id
-                                     orderId:aModel.order_id
-                                noAppointNum:[aModel.no_appointed_num intValue]];
-                choose.lastViewController = self;//需要选择体检人的时候需要传
+                ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
+                choose.gender = [aModel.gender intValue];
+                //公司
+                if (type == 1) {
+                    
+                    NSString *order_checkuper_id = aModel.checkuper_info[@"order_checkuper_id"];
+                    NSString *companyId = aModel.company_info[@"company_id"];
+                    
+                    [choose companyAppointWithOrderId:aModel.order_id
+                                            productId:aModel.product_id
+                                            companyId:companyId order_checkuper_id:order_checkuper_id
+                                         noAppointNum:[aModel.no_appointed_num intValue]
+                                               gender:[aModel.gender intValue]];
+                }else
+                {
+                    [choose appointWithProductId:aModel.product_id
+                                         orderId:aModel.order_id
+                                    noAppointNum:[aModel.no_appointed_num intValue]];
+                    choose.lastViewController = self;//需要选择体检人的时候需要传
+                }
+                
+                [self.navigationController pushViewController:choose animated:YES];
             }
-            
-            [self.navigationController pushViewController:choose animated:YES];
-        }else
+        
+        }
+        else //跳转详情页
         {
-            AppointModel *aModel;
+            
             BOOL progress = NO;
             if (indexPath.section == 2){
                 if (index_row < _no_expired.count) {
@@ -667,21 +719,45 @@
                 }
                 progress = YES;
             }
-            if (progress) {
-                AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
-                detail.appointId = aModel.appoint_id;
-                [self.navigationController pushViewController:detail animated:YES];
+            
+            //已预约、已过期、已体检 都为AppointModel,否则不执行
+            if (![aModel isKindOfClass:[AppointModel class]]) {
+                return;
+            }
+            AppointModel *appointModel = (AppointModel *)aModel;
+            
+            int type = [aModel.c_type intValue];//1海马 2go健康
+            if (type == 2) { //go健康
+                
+                [self clickToGoServiceWithModel:appointModel];
+                
             }else
             {
-                AppointDetailController *detail = [[AppointDetailController alloc]init];
-                detail.appoint_id = aModel.appoint_id;
-                [self.navigationController pushViewController:detail animated:YES];
+                if (progress) {
+                    AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
+                    detail.appointId = appointModel.appoint_id;
+                    [self.navigationController pushViewController:detail animated:YES];
+                }else
+                {
+                    AppointDetailController *detail = [[AppointDetailController alloc]init];
+                    detail.appoint_id = appointModel.appoint_id;
+                    [self.navigationController pushViewController:detail animated:YES];
+                }
             }
         }
         
-    }else if (index == 4){
-        
+    }
+    else if (index == 4) //已体检
+    {
         AppointModel *aModel = tableView.dataArray[indexPath.row];
+        int type = [aModel.c_type intValue];
+        
+        if (type == 2) { //go健康
+            
+            [self clickToGoServiceWithModel:aModel];
+            return;
+        }
+        
         AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
         detail.appointId = aModel.appoint_id;
         [self.navigationController pushViewController:detail animated:YES];
@@ -689,6 +765,12 @@
     else
     {
         AppointModel *aModel = tableView.dataArray[indexPath.row];
+        int type = [aModel.c_type intValue];
+        if (type == 2) { //go健康
+            
+            [self clickToGoServiceWithModel:aModel];
+            return;
+        }
         AppointDetailController *detail = [[AppointDetailController alloc]init];
         detail.appoint_id = aModel.appoint_id;
         [self.navigationController pushViewController:detail animated:YES];
@@ -789,8 +871,6 @@
                 return 0.f;
             }
         }
-        
-        
         return 40.f;
     }
     return 0.f;
@@ -845,7 +925,9 @@
 {
     int index = (int)tableView.tag - kTagTableView;
     
-    if (index == 1 || (index == 0 && (indexPath.section == 0 || indexPath.section == 1)) ){
+    //未预约 以及 （全部里面第一部分公司套餐、第二部分个人套餐）
+    if (index == 1 ||
+        (index == 0 && (indexPath.section == 0 || indexPath.section == 1)) ){
         
         AppointmentCell *cell = nil;
         ProductModel *aModel = nil;
@@ -885,18 +967,6 @@
         cell.contentView.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        if (indexPath.section == 0) {
-            if (indexPath.row < _company.count) {
-                aModel = _company[indexPath.row];
-            }
-        }else
-        {
-            if (indexPath.row < _personal.count) {
-                
-                aModel = _personal[indexPath.row];
-            }
-        }
-        
         [cell setCellWithModel:aModel];
         
         return cell;
@@ -924,7 +994,6 @@
         
         UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 10 - timeWidth, 0, timeWidth, 55) title:nil font:13 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
         [view addSubview:timeLabel];
-//        timeLabel.backgroundColor = [UIColor redColor];
         timeLabel.tag = 102;
     }
     cell.backgroundColor = [UIColor clearColor];
@@ -958,16 +1027,28 @@
             aModel = table.dataArray[indexPath.row];
         }
     }
+    
+    int type = [aModel.c_type intValue];
+    
+    NSString *text = @"";
     NSString *name = aModel.user_name;
-    NSString *text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,aModel.user_name];
-    [nameLabel setAttributedText:[LTools attributedString:text keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
-    centerLabel.text = aModel.center_name;
+    if (type == 2){ //go健康
+        text = [NSString stringWithFormat:@"%@",name];
+        [nameLabel setAttributedText:[LTools attributedString:text keyword:@"" color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+        
+        centerLabel.text = aModel.appoint_status;
+    }else
+    {
+        text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,name];
+        [nameLabel setAttributedText:[LTools attributedString:text keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+        centerLabel.text = aModel.center_name;//分院
+    }
+    
     
     //未过期
     if (index == 2 || (index == 0 && indexPath.section == 2)) {
         
         timeLabel.text = [LTools timeString:aModel.appointment_exam_time withFormat:@"yyyy.MM.dd"];
-
     }
     //已过期
     else if (index == 3 || (index == 0 && indexPath.section == 3)){

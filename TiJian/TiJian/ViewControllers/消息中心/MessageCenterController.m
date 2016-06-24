@@ -402,6 +402,10 @@
         MessageModel *msg = tableView.dataArray[indexPath.row];
         MsgType type = [msg.type intValue];
         
+        PlatformType platformType = PlatformType_default;//默认 0 海马体检商城
+        if ([msg.app_id intValue] == 2) {
+            platformType = PlatformType_goHealth;//为2是go健康的订单
+        }
          @WeakObj(self);
          @WeakObj(tableView);
          @WeakObj(msg);
@@ -419,11 +423,13 @@
                 };
             }
             [self.navigationController pushViewController:detail animated:YES];
+            
         }else if (type == MsgType_OrderRefundState){ //订单申请退款
             
             OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
             orderInfo.order_id = msg.theme_id;
             orderInfo.lastViewController = self;
+            orderInfo.platformType = platformType;
             if ([msg.is_read intValue] == 1) { //未读的时候才传
                 orderInfo.msg_id = msg.msg_id;
                 orderInfo.updateParamsBlock = ^(NSDictionary *params){
@@ -435,6 +441,7 @@
             [self.navigationController pushViewController:orderInfo animated:YES];
             
         }else if (type == MsgType_PEAlert){ //体检提醒
+            
             
             AppointDetailController *detail = [[AppointDetailController alloc]init];
             detail.appoint_id = msg.theme_id;

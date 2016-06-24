@@ -160,7 +160,7 @@
     OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
     orderInfo.order_id = self.orderId;
     orderInfo.isPayResultVcPush = YES;
-    orderInfo.platformType = self.payActionType;
+    orderInfo.platformType = self.platformType;
     [self.navigationController pushViewController:orderInfo animated:YES];
 }
 
@@ -217,7 +217,7 @@
 {
     OrderProductListController *list = [[OrderProductListController alloc]init];
     list.orderId = self.orderId;
-    list.platformType = self.payActionType;
+    list.platformType = self.platformType;
     [self.navigationController pushViewController:list animated:YES];
 }
 

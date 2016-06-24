@@ -57,10 +57,10 @@
     NSString *nonceStr = [LTools randomNum:32];//随机字符串
     [params safeSetValue:nonceStr forKey:@"nonceStr"];
     [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetString:self.productId forKey:@"productionIds"];
     
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
-    [params safeSetString:self.productId forKey:@"productionIds"];
     
     __weak typeof (self)bself = self;
     

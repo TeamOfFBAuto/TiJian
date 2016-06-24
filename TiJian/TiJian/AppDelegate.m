@@ -19,6 +19,7 @@
 #import "OrderInfoViewController.h"//订单详情
 #import "WebviewController.h"//web
 #import "AppointDetailController.h"//预约
+#import "AppointProgressDetailController.h"//体检报告进度
 #import "LogView.h"
 //#import <Bugtags/Bugtags.h>//bugtags
 #import <JSPatch/JSPatch.h> //在线修复bug
@@ -64,7 +65,7 @@
     [self umengSocial];
     
     //JSPatch
-//    [self JSPatch];
+    [self JSPatch];
     
     //JPush
     [self JPush:launchOptions];
@@ -1013,7 +1014,13 @@
     NSString *theme_id = userInfo[@"theme_id"];//对应活动、报告、订单等id
     NSString *msg_id = userInfo[@"msg_id"];//信息id
     NSString *url = userInfo[@"url"];//活动url
-
+    NSString *app_id = userInfo[@"app_id"];//1:表示海马医生  2:表示go健康
+    
+    PlatformType platformType = PlatformType_default;//默认 0 海马体检商城
+    if ([app_id intValue] == 2) {
+        platformType = PlatformType_goHealth;//为2是go健康的订单
+    }
+    
     MsgType type = [msg_type intValue];
     
     UIViewController *targetViewController;
@@ -1038,6 +1045,7 @@
         OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
         orderInfo.order_id = theme_id;
         orderInfo.msg_id = msg_id;
+        orderInfo.platformType = platformType;
         targetViewController = orderInfo;
         
     }else if (type == MsgType_PEAlert){ //体检提醒
@@ -1061,6 +1069,9 @@
     }else if (type == MsgType_PEProgress){ //体检报告进度
         
         DDLOG(@"体检进度报告");
+        AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
+        detail.appointId = theme_id;
+        targetViewController = detail;
     }
     
     if (viewsCount == 1) {

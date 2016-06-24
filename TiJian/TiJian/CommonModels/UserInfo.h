@@ -28,8 +28,10 @@
 @property(nonatomic,retain)NSString *mobile;
 @property(nonatomic,retain)NSString *dateline;
 @property(nonatomic,retain)NSString *state;
-@property(nonatomic,retain)NSString *type;//1普通 2查询报告
+@property(nonatomic,retain)NSString *type;//1普通 2查询报告 type=3标识go健康
 @property(nonatomic,retain)NSString *photo;
+
+@property(nonatomic,retain)NSString *is_vip;//是否是vip
 
 @property(nonatomic,retain)NSString *avatar;//头像
 @property(nonatomic,retain)NSString *third_avatar;

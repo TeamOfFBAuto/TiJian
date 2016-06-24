@@ -1,4 +1,4 @@
-//
+ //
 //  YJYRequstManager.m
 //  YiYiProject
 //
@@ -80,11 +80,13 @@
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript", nil];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"text/json",@"text/javascript",@"application/json; charset=utf-8", nil];
     // 设置超时时间
     [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
     manager.requestSerializer.timeoutInterval = 15.f;
     [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
+    
+//    [manager.requestSerializer setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     
     AFHTTPRequestOperation *requestOpertation;
     
@@ -115,19 +117,17 @@
     {
         serverUrl = [NSString stringWithFormat:@"%@%@",serverUrl,apiString];
         
-        NSArray *allkeys = [paramsDic allKeys];
-        
-        NSMutableString *url = [NSMutableString stringWithString:serverUrl];
-        
-        for (NSString *key in allkeys) {
-            
-            NSString *param = [NSString stringWithFormat:@"&%@=%@",key,paramsDic[key]];
-            [url appendString:param];
-        }
-        
         if (method == YJYRequstMethodGet ||
             method == YJYRequstMethodGet_goHealth)
         {
+            NSArray *allkeys = [paramsDic allKeys];
+            NSMutableString *url = [NSMutableString stringWithString:serverUrl];
+    
+            for (NSString *key in allkeys) {
+                NSString *param = [NSString stringWithFormat:@"&%@=%@",key,paramsDic[key]];
+                [url appendString:param];
+            }
+
             DDLOG(@"Method:get url:%@",url);
             
         }else if (method == YJYRequstMethodPost ||
@@ -149,8 +149,7 @@
                 [weakSelf failureOperation:operation error:error failtBlock:failBlock];
             }];
             
-        }else if (method == YJYRequstMethodPost ||
-                  method == YJYRequstMethodPost_goHealth){
+        }else if (method == YJYRequstMethodPost){
             
             if (constructingBlock) {
                 
@@ -180,8 +179,30 @@
                     [weakSelf failureOperation:operation error:error failtBlock:failBlock];
                     
                 }];
+ 
             }
             
+        }
+        else if (method == YJYRequstMethodPost_goHealth)
+        {
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:serverUrl]];
+            [request setHTTPMethod:@"POST"];
+            [request setValue:@"application/json; charset=utf-8"forHTTPHeaderField:@"Content-Type"];
+            NSString *json = (NSString *)paramsDic;
+            NSData *JSONData = [json dataUsingEncoding:NSUTF8StringEncoding];
+            int length = (int)json.length;
+            [request setValue:NSStringFromInt(length) forHTTPHeaderField:@"Content-length"];
+            [request setHTTPBody:JSONData];
+            
+           AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject)
+            {
+                [weakSelf successOperation:operation completion:completionBlock failBlock:failBlock];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [weakSelf failureOperation:operation error:error failtBlock:failBlock];
+            }];
+            
+            [manager.operationQueue addOperation:operation];
         }
 
     }
@@ -273,7 +294,6 @@
             }
         }
     }
-    
     
     [self removeOperation:operation];
     completionBlock = nil;

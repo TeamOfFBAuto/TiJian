@@ -337,7 +337,11 @@
 
 - (void)clickToSure:(UIButton *)sender
 {
-    [self confirmOrderBtnClicked];
+    [LoginManager isLogin:self loginBlock:^(BOOL success) {
+        if (success) {
+            [self confirmOrderBtnClicked];
+        }
+    }];
 }
 
 /**
@@ -385,7 +389,7 @@
     result.sumPrice = theSumPrice;
     result.payResultType = resultType;
     result.erroInfo = erroInfo;
-    result.payActionType = PlatformType_goHealth;
+    result.platformType = PlatformType_goHealth;
     
     if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
         [self.lastViewController.navigationController popViewControllerAnimated:NO];

@@ -31,6 +31,6 @@
 @property(nonatomic,retain)NSString *pic_height;
 @property(nonatomic,retain)NSString *url;//活动的详情url
 
-//
+@property(nonatomic,retain)NSString *app_id;//1:表示海马医生  2:表示go健康
 
 @end

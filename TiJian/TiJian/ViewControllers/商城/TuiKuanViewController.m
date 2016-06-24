@@ -33,17 +33,12 @@
     [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
-
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"申请退款";
-    
     
     UIControl *aa = [[UIControl alloc]initWithFrame:self.view.bounds];
     [aa addTaget:self action:@selector(ggshou) tag:0];
@@ -82,13 +77,18 @@
         _request = [YJYRequstManager shareInstance];
     }
     
+    NSString *api = ORDER_REFUND;
+    if (self.platformType == PlatformType_goHealth) {
+        api = GoHealth_apply_refund;
+    }
+    
     NSDictionary *dic = @{
                           @"authcode":[UserInfo getAuthkey],
                           @"order_id":self.orderId,
                           @"refund_reason":_refund_reason_tf.text
                           };
     
-    [_request requestWithMethod:YJYRequstMethodPost api:ORDER_REFUND parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [_request requestWithMethod:YJYRequstMethodPost api:api parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         [GMAPI showAutoHiddenMBProgressWithText:[result stringValueForKey:@"msg"] addToView:self.view];
@@ -181,9 +181,6 @@
         tf.text = [NSString stringWithFormat:@"%.2f",self.tuiKuanPrice];
         [cLabel_backView addSubview:tf];
         
-        
-        
-        
     }else if (indexPath.row == 1){
         
         UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, 30)];
@@ -250,14 +247,6 @@
 {
     return 0.01f;
 }
-
-
-
-
-
-
-
-
 
 
 @end

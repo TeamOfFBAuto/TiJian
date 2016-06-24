@@ -124,6 +124,14 @@ defineClass('LTools', [ ], {
 }})
 
 
-
-
-
+//修复首页右上角活动入口,未开启定位时未获取活动信息bug
+defineClass('HomeViewController', [ ], { alertView_clickedButtonAtIndex:function(alertView,buttonIndex)
+{
+        var tag = alertView.tag();
+        if (tag == 25) {
+            self.ORIGalertView_clickedButtonAtIndex(alertView, buttonIndex);
+        } else {
+            self.getUnreadActivityNum();
+            self.ORIGalertView_clickedButtonAtIndex(alertView, buttonIndex);
+        }
+}})

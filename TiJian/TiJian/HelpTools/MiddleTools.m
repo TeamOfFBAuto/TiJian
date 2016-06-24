@@ -12,6 +12,12 @@
 #import "ProductModel.h"
 #import "WebviewController.h"//内置浏览器
 #import "GproductDetailViewController.h"//单品详情
+#import "GoHealthProductDetailController.h"//go健康产品详情、服务详情
+#import "GoHealthBugController.h" //go健康购买
+#import "ConfirmOrderViewController.h"//确认订单
+#import "PayActionViewController.h"//支付页面
+#import "GoHealthAppointViewController.h"//go健康预约
+#import "OrderProductListController.h"//go健康 订单产品清单
 
 #import "UMSocial.h"
 #import "UMSocialQQHandler.h"
@@ -183,6 +189,171 @@
     [viewController.navigationController pushViewController:cc animated:YES];
 }
 
+#pragma mark - 订单
+
+/**
+ *  订单再次购买
+ *
+ *  @param platformType   区分海马、go健康
+ *  @param products       产品数组(ProductModel或者NSDictionary)
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToAgainBuyOrderType:(PlatformType)platformType
+                       products:(NSArray *)products
+             viewController:(UIViewController *)viewController
+               extendParams:(NSDictionary *)extendParams
+{
+    if (platformType == PlatformType_goHealth) { //go健康
+        
+        id object = [products firstObject];
+        if (object) {
+            
+            NSString *productId;
+            if ([LTools isDictinary:object]) //字典
+            {
+                productId = object[@"product_id"];
+                
+            }else if ([object isKindOfClass:[ProductModel class]])
+            {
+                productId = ((ProductModel *)object).product_id;
+            }
+            GoHealthBugController *buy = [[GoHealthBugController alloc]init];
+            buy.productId = productId;
+            [viewController.navigationController pushViewController:buy animated:YES];
+        }
+    }else
+    {
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:products.count];
+        for (id object in products) {
+            
+            ProductModel *aModel;
+            if ([object isKindOfClass:[ProductModel class]]) {
+                aModel = object;
+            }else if ([LTools isDictinary:object])
+            {
+                aModel = [[ProductModel alloc]initWithDictionary:object];
+            }
+            [temp addObject:aModel];
+        }
+        NSArray *productArr = temp;
+        ConfirmOrderViewController *confirm = [[ConfirmOrderViewController alloc]init];
+        confirm.dataArray = productArr;
+        confirm.lastViewController = viewController;
+        [viewController.navigationController pushViewController:confirm animated:YES];
+    }
+}
+
+/**
+ *  订单支付
+ *
+ *  @param orderId        订单id
+ *  @param orderNum       订单num 201600010
+ *  @param sumPrice       总实付价格
+ *  @param payStyle       //1 支付宝 2 微信
+ *  @param platformType  平台区分 海马、go健康
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToPayOrderId:(NSString *)orderId
+                orderNum:(NSString *)orderNum
+                sumPrice:(CGFloat)sumPrice
+                payStyle:(int)payStyle
+            platformType:(PlatformType)platformType
+          viewController:(UIViewController *)viewController
+            extendParams:(NSDictionary *)extendParams
+
+{
+    PayActionViewController *pay = [[PayActionViewController alloc]init];
+    pay.orderId = orderId;
+    pay.orderNum = orderNum;
+    pay.sumPrice = sumPrice;
+    pay.payStyle = payStyle;
+    pay.platformType = platformType;
+    pay.lastViewController = viewController;
+    [viewController.navigationController pushViewController:pay animated:YES];
+}
+
+/**
+ *  前去预约(海马、go健康)
+ *
+ *  @param platformType   区分海马、go健康
+ *  @param orderid        订单id
+ *  @param products       产品
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToAppointPlatformType:(PlatformType)platformType
+                          orderId:(NSString *)orderid
+                         products:(NSArray *)products
+                   viewController:(UIViewController *)viewController
+                     extendParams:(NSDictionary *)extendParams
+
+{
+    if (platformType == PlatformType_default)//海马
+    {
+        [self pushToAppointHaimaProducts:products orderId:orderid viewController:viewController extendParams:extendParams];
+        
+    }else if (platformType == PlatformType_goHealth)//go健康
+    {
+        [self pushToAppointGoHealthProducts:products orderId:orderid viewController:viewController extendParams:extendParams];
+    }
+}
+
+/**
+ *  预约海马
+ *
+ *  @param products       产品列表
+ *  @param orderId        订单id
+ *  @param viewController
+ *  @param extendParams
+ */
++ (void)pushToAppointHaimaProducts:(NSArray *)products
+                           orderId:(NSString *)orderId
+                    viewController:(UIViewController *)viewController
+                      extendParams:(NSDictionary *)extendParams
+{
+    OrderProductListController *list = [[OrderProductListController alloc]init];
+    list.orderId = orderId;
+    list.platformType = PlatformType_default;
+    [viewController.navigationController pushViewController:list animated:YES];
+}
+
+/**
+ *  预约go健康
+ *
+ *  @param aModel
+ */
++ (void)pushToAppointGoHealthProducts:(NSArray *)products
+                              orderId:(NSString *)orderId
+                       viewController:(UIViewController *)viewController
+                         extendParams:(NSDictionary *)extendParams
+{
+    if (products.count == 1)//只有一个
+    {
+        NSDictionary *p_dic = [products firstObject];
+        if ([LTools isDictinary:p_dic])
+        {
+            NSString *product_num = p_dic[@"product_num"];
+            NSString *product_id = p_dic[@"product_id"];
+            NSString *product_name = p_dic[@"product_name"];
+            
+            if ([product_num intValue] == 1) {
+                GoHealthAppointViewController *goHealthAppoint = [[GoHealthAppointViewController alloc]init];
+                goHealthAppoint.orderId = orderId;
+                goHealthAppoint.productId = product_id;
+                goHealthAppoint.productName = product_name;
+                [viewController.navigationController pushViewController:goHealthAppoint animated:YES];
+                return;
+            }
+        }
+    }
+    OrderProductListController *list = [[OrderProductListController alloc]init];
+    list.orderId = orderId;
+    list.platformType = PlatformType_goHealth;
+    [viewController.navigationController pushViewController:list animated:YES];
+}
+
 #pragma mark - 分享
 
 /**
@@ -302,7 +473,7 @@
 }
 
 
-#pragma mark go健康对接签名算法
+#pragma mark go健康
 
 /**
  *  go健康对接签名
@@ -319,7 +490,6 @@
     NSArray *tempKeys = [allkeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         return [obj1 compare:obj2 options:NSNumericSearch];
     }];
-    NSLog(@"tempKeys %@",tempKeys);
     
     //key=value的格式拼接
     NSString *tempKey = [tempKeys firstObject];
@@ -341,6 +511,29 @@
     NSString *sign = [stringSignTemp uppercaseString];//转大写
     
     return sign;
+}
+
+/**
+ *  跳转至go健康服务详情
+ *
+ *  @param serviceId       服务id
+ *  @param productId       套餐产品id
+ *  @param orderNum        订单id
+ *  @param controller
+ *  @param extensionParams 拓展参数备用
+ */
++ (void)pushToGoHealthServiceId:(NSString *)serviceId
+                      productId:(NSString *)productId
+                       orderNum:(NSString *)orderNum
+             fromViewController:(UIViewController *)controller
+                extensionParams:(NSDictionary *)extensionParams
+{
+    GoHealthProductDetailController *detail = [[GoHealthProductDetailController alloc]init];
+    detail.detailType = DetailType_serviceDetail;
+    detail.serviceId = serviceId;
+    detail.productId = productId;
+    detail.orderNum = orderNum;
+    [controller.navigationController pushViewController:detail animated:YES];
 }
 
 @end

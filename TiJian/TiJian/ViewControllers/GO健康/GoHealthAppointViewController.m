@@ -57,9 +57,6 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"预约上门";
     
-//    self.orderId = @"33";
-//    self.productId = @"1110009852737";
-    
     _textFieldArray = [NSMutableArray arrayWithCapacity:1];
     [self creatScrollView];
     [self creatUpView];
@@ -815,13 +812,14 @@
     
     NSLog(@"%@",postDic);
 
-     @WeakObj(self);
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    @WeakObj(self);
     [_request requestWithMethod:YJYRequstMethodPost api:GoHealth_upAppointUserInfo parameters:postDic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [Weakself appointSuccessWithResult:result];
         
     } failBlock:^(NSDictionary *result) {
-        
+        [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [LTools showMBProgressWithText:@"预约失败,请稍后再试" addToView:Weakself.view];
     }];
 }

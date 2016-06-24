@@ -25,8 +25,9 @@
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
+#define kTagGoHealth 102 //go健康健康
 #define kTagHealth 103 //健康资讯
-#define kTagHealthList 102 //健康资讯列表
+#define kTagHealthList 104 //健康资讯列表
 
 #define kTagGuahao 200 //挂号部分
 #define kTagZiXun 201 //咨询台
@@ -154,6 +155,8 @@
 }
 
 
+#pragma mark - UIAlertViewDelegate
+
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
@@ -166,7 +169,13 @@
             [self updateLeftUpLocationStr];
         }
     }else{
-        if (buttonIndex == 0) {
+        
+        //可以定位时,定位完再请求活动;不能定位时,点击取消或者设置时请求获取活动
+        [self getUnreadActivityNum];
+        
+        if (buttonIndex == 0)
+        {
+            
         }else if (buttonIndex == 1){
             
             if (IOS8_OR_LATER) {
@@ -833,17 +842,19 @@
     //体检预约、体检商城入口
     
     NSArray *images = @[[UIImage imageNamed:@"homepage_tijianyuyue"],
-                        [UIImage imageNamed:@"homepage_shangcheng"]];
-    NSArray *titles = @[@" 体检预约",@" 体检商城"];
+                        [UIImage imageNamed:@"homepage_shangcheng"],
+                        [UIImage imageNamed:@"homepage_shangmen"]];
+    NSArray *titles = @[@" 体检预约",@" 体检商城",@" 上门体检"];
 //    NSArray *titles_sub = @[@"足不出户 快速预约",@"体检套餐 任你挑选"];
     
     CGFloat bottom = btn.bottom;
     
-    CGFloat width_small = DEVICE_WIDTH / 2.f;
+    CGFloat width_small = DEVICE_WIDTH / images.count;
     
-    CGFloat radio_small = 376.f/152.f;//宽比高
+    CGFloat radio_small = 250.f/150.f;//宽比高
     
     CGFloat height_small = width_small / radio_small;
+    
     for (int i = 0; i < images.count; i ++) {
         
         UIButton *classBtn = [self classViewStyleOneFrame:CGRectMake((width_small + 0.5) * i, btn.bottom, width_small, height_small)
@@ -854,7 +865,6 @@
                                          titleDis:5
                                               tag:100 + i];
         [bgScroll addSubview:classBtn];
-        
         if (i == 0) {
             //line
             UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(classBtn.right, classBtn.top, 0.5, classBtn.height)];
@@ -1317,15 +1327,26 @@
     if (tag == kTagOrder) {
         //预约
         [self pushToOrder];
-    }else if (tag == kTagMarket){
+    }else if (tag == kTagMarket)
+    {
         //商城
         [self pushToShangCheng];
-    }else if (tag == kTagHealth){
+        
+    }else if (tag == kTagGoHealth)
+    {
+        //上门体检
+        [self clickToGoHealth];
+        
+    }else if (tag == kTagHealth)
+    {
         //健康资讯
         [self pushToHealthNews];
-    }else if (tag == kTagHealthList){
+        
+    }else if (tag == kTagHealthList)
+    {
         //健康资讯列表
         [self pushToHealthNewsList];
+        
     }else if (tag == kTagZiXun)
     {
         //咨询台 对应 公立医院主治医生 target 4
@@ -1346,7 +1367,6 @@
                 [Weakself pushToVipAppoint];
             }
         }];
-        
         
     }else if (tag == kTagZhuanJiaWenZhen)
     {
@@ -1447,8 +1467,7 @@
         
     [LoginViewController isLogin:self loginBlock:^(BOOL success) {
         if (success) {
-//            [weakSelf loginToAppoint];
-            [weakSelf clickToGoHealth];
+            [weakSelf loginToAppoint];
         }
     }];
 }

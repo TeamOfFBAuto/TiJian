@@ -34,6 +34,8 @@
     UILabel *_sexLabel;
     UIImageView *_sexImage;
     UIView *_headview;//table headview
+    UIImageView *_vipHat;//vip皇冠
+    UIImageView *_vipImage;//vip
 }
 
 @property(nonatomic,retain)UIView *loginView;
@@ -73,7 +75,7 @@
 
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLogoutNotify:) name:NOTIFICATION_LOGOUT object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForLoginNotify:) name:NOTIFICATION_LOGIN object:nil];
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(netWorkForList) name:NOTIFICATION_PAY_SUCCESS object:nil];
     _userInfo = [UserInfo userInfoForCache];
     
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 49) style:UITableViewStylePlain];
@@ -218,6 +220,7 @@
     NSString *sexString = (sex == 1) ? @"男" : @"女";
     _sexLabel.text = sexString;
     
+    [self updateVipState];//vip状态
 }
 
 #pragma - mark 创建视图
@@ -250,12 +253,20 @@
     _headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 80)];
     _headview.backgroundColor = [UIColor whiteColor];
     
-    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 60, 60)];
+    
+    //vip皇冠
+    UIImageView *vipHat = [[UIImageView alloc]initWithFrame:CGRectMake(15 + 4, 4, 42, 20)];
+    vipHat.image = [UIImage imageNamed:@"personal_viphat"];
+    [_headview addSubview:vipHat];
+    _vipHat = vipHat;
+    
+    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(15, vipHat.bottom - 4, 50, 50)];
     [logo addRoundCorner];
     [_headview addSubview:logo];
     logo.backgroundColor = [UIColor colorWithHexString:@"e6e6e6"];
     [logo addTaget:self action:@selector(clickToChangeUserHeadImage) tag:0];
     _headImageView = logo;
+//    logo.backgroundColor = [UIColor redColor];
     
     //设置头像
     BOOL updateState = [LTools boolForKey:USER_UPDATEHEADIMAGE_STATE];
@@ -318,8 +329,16 @@
     _loginView.backgroundColor = [UIColor whiteColor];
     
     NSString *name = [NSString stringWithFormat:@"用户名:%@",_userInfo.user_name];
-    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 22.5, 200, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    CGFloat width = [LTools widthForText:name font:14];
+    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 22.5, width, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [_loginView addSubview:_nameLabel];
+    
+    //VIP标识
+    UIImageView *vipImage = [[UIImageView alloc]initWithFrame:CGRectMake(_nameLabel.right + 5, 0, 15.5, 15.5)];
+    vipImage.image = [UIImage imageNamed:@"personal_vipyes"];
+    [_loginView addSubview:vipImage];
+    vipImage.centerY = _nameLabel.centerY;
+    _vipImage = vipImage;
     
     UILabel *sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(_nameLabel.left, _nameLabel.bottom + 7, 35, 15) title:@"性别:" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [_loginView addSubview:sexLabel];
@@ -370,6 +389,18 @@
 }
 
 #pragma - mark 事件处理
+
+/**
+ *  更新Vip状态
+ */
+- (void)updateVipState
+{
+    _userInfo = [UserInfo userInfoForCache];
+    BOOL isVip = [_userInfo.is_vip boolValue];
+    _vipImage.hidden = !isVip;
+    _vipHat.hidden = !isVip;
+}
+
 /**
  *  更新登录状态
  *
@@ -397,6 +428,8 @@
         _headImageView.image = DEFAULT_HEADIMAGE;
         [_headview addSubview:self.unloginView];
     }
+    
+    [self updateVipState];
 }
 
 - (void)clickToEditUserInfo

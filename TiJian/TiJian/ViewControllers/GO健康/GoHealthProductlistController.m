@@ -24,12 +24,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
-    self.myTitle = @"轻体检";
-    
+    self.myTitle = @"上门体检";
     [self prepareRefreshTableView];
-    
-//    [self netWorkForCityList];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -258,14 +254,17 @@
     NSDictionary *pic = [model.pictures firstObject];
     CGFloat width = [pic[@"width"]floatValue];
     CGFloat height = [pic[@"height"]floatValue];
-    if (height) {
-        
-        height = DEVICE_WIDTH * (width/height);
-        
-        imageView.height = height;
-    }
+    
     NSString *imageUrl = [model.pictures firstObject][@"thumb"];
-    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+    
+    imageView.height = DEVICE_WIDTH / 1.6;
+//    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+    
+    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        if (height) {
+            imageView.height = DEVICE_WIDTH * (width/height);;
+        }
+    }];
     
     return cell;
 }

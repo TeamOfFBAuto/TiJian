@@ -27,5 +27,7 @@
 @property(nonatomic,retain)NSNumber *noFreeService;
 @property(nonatomic,retain)NSNumber *profitPrice;
 //@property(nonatomic,retain)NSString *description;//产品描述
+@property(nonatomic,retain)NSNumber *idNumber;
 
 @end
+

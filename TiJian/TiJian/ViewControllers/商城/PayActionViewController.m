@@ -427,6 +427,7 @@
     result.payResultType = resultType;
     result.erroInfo = erroInfo;
     result.needAppoint = self.needAppoint;//是否前去预约
+    result.platformType = self.platformType;
 //    if (self.lastViewController && (resultType != PAY_RESULT_TYPE_Fail)) { //成功和等待中需要pop掉,失败的时候不需要,有可能返回重新支付
 //       [self.lastViewController.navigationController popToViewController:self.lastViewController animated:NO];
 //        [self.lastViewController.navigationController pushViewController:result animated:YES];
@@ -452,6 +453,7 @@
     NSLog(@"查看订单");
     OrderInfoViewController *orderInfo = [[OrderInfoViewController alloc]init];
     orderInfo.order_id = self.orderId;
+    orderInfo.platformType = self.platformType;
     [self.navigationController pushViewController:orderInfo animated:YES];
 }
 

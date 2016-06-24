@@ -14,6 +14,7 @@
 
 @property(nonatomic,retain)NSString *appoint_id;
 @property(nonatomic,retain)NSString *order_id;
+@property(nonatomic,retain)NSString *order_no;
 @property(nonatomic,retain)NSString *user_relation;
 @property(nonatomic,retain)NSString *user_name;
 @property(nonatomic,retain)NSString *exam_center_id;
@@ -44,6 +45,9 @@
 @property(nonatomic,retain)NSString *center_latitude;//维度
 @property(nonatomic,retain)NSString *center_longitude;//经度
 @property(nonatomic,retain)NSString *report_status;//体检报告的进度状态
-
+@property(nonatomic,retain)NSNumber *type;//1 海马、 2 go健康
+@property(nonatomic,strong)NSString *c_type;//c_type=1 1为海马医生预约 2为go健康预约
+@property(nonatomic,retain)NSString *appoint_status;//go健康服务状态
+@property(nonatomic,retain)NSString *serviceId;//go健康服务id
 
 @end
