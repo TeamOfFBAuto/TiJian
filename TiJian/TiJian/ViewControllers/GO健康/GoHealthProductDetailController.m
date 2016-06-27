@@ -27,6 +27,9 @@
     UIButton *_arrowbtn;
     ThirdProductModel *_productModel;
     ThirdServiceModel *_serviceModel;
+    UIButton *_salesButton;//显示已售数量
+    UIView *_cityTopView;//可用
+    
 }
 
 @property(nonatomic,retain)UIButton *backButton;
@@ -298,49 +301,50 @@
                 }
             }else if (i == 2)
             {
-                title = [NSString stringWithFormat:@" 已售%d",[model.testeeNum intValue]];
+                title = [NSString stringWithFormat:@" 已售%d",0];
                 [chatBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+                _salesButton = chatBtn;
             }
             [chatBtn setTitle:title forState:UIControlStateNormal];
         }
     }
     
-    //服务城市
-    footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 40)];
-    [headerView addSubview:footView];
-    footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
-    //可服务城市
-    UILabel *cityTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 12 * 2, footView.height) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:@"可服务城市"];
-    [footView addSubview:cityTitleLabel];
-    
-    footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 0)];
-    [headerView addSubview:footView];
-    footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
-    
-    _selectCityView = footView;
-    
-    width = DEVICE_WIDTH - 12 * 2 - 11;
-    NSString *cityString = @"北京、上海、北京、上海、北京、上海、北京、上海、北京、上海、北京、上海、北京、上海";
-    _smallHeight =  [LTools heightForText:@"北京、上海" width:width font:14];
-    _maxHeight = [LTools heightForText:cityString width:width font:14];
-    if (_maxHeight < _smallHeight) {
-        _maxHeight = _smallHeight;
-    }
-    
-    UILabel *cityLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, width, _smallHeight) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:cityString];
-    [footView addSubview:cityLabel];
-    cityLabel.numberOfLines = 0;
-    cityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    _cityLabel = cityLabel;
-    
-    footView.height = cityLabel.height;
-    //箭头
-    if (_maxHeight > _smallHeight) {
-        UIButton *arrow = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 11, 0, 11, _smallHeight) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"jiantou_down"] selectedImage:[UIImage imageNamed:@"jiantou_up"] target:self action:@selector(clickToMoreCity:)];
-        [footView addSubview:arrow];
-        [footView addTaget:self action:@selector(clickToMoreCity:) tag:0];
-        _arrowbtn = arrow;
-    }
+//    //服务城市=============================
+//    footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 40)];
+//    [headerView addSubview:footView];
+//    footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
+//    //可服务城市
+//    UILabel *cityTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 12 * 2, footView.height) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:@"可服务城市"];
+//    [footView addSubview:cityTitleLabel];
+//    
+//    footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 0)];
+//    [headerView addSubview:footView];
+//    footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
+//    
+//    _selectCityView = footView;
+//    
+//    width = DEVICE_WIDTH - 12 * 2 - 11;
+//    NSString *cityString = @"";
+//    _smallHeight =  [LTools heightForText:@"北京、上海" width:width font:14];
+//    _maxHeight = [LTools heightForText:cityString width:width font:14];
+//    if (_maxHeight < _smallHeight) {
+//        _maxHeight = _smallHeight;
+//    }
+//    
+//    UILabel *cityLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, width, _smallHeight) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:cityString];
+//    [footView addSubview:cityLabel];
+//    cityLabel.numberOfLines = 0;
+//    cityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+//    _cityLabel = cityLabel;
+//    
+//    footView.height = cityLabel.height;
+//    //箭头
+//    if (_maxHeight > _smallHeight) {
+//        UIButton *arrow = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 11, 0, 11, _smallHeight) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"jiantou_down"] selectedImage:[UIImage imageNamed:@"jiantou_up"] target:self action:@selector(clickToMoreCity:)];
+//        [footView addSubview:arrow];
+//        [footView addTaget:self action:@selector(clickToMoreCity:) tag:0];
+//        _arrowbtn = arrow;
+//    }
     
     headerView.height = footView.bottom;
     _table.tableHeaderView = headerView;
@@ -367,6 +371,8 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [Weakself parseDataWithResult:result];
+        [Weakself netWorkForProductSales];
+        [Weakself networkForAvailableCity];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -441,7 +447,133 @@
     }];
 }
 
+/**
+ *  获取可用城市
+ */
+-(void)networkForAvailableCity{
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetString:self.productId forKey:@"productionIds"];
+    
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+     @WeakObj(self);
+    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_citylist parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [Weakself setCityDataWithDic:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+    }];
+}
+
+/**
+ *  获取产品销量
+ */
+- (void)netWorkForProductSales
+{
+    NSString *api = GoHealth_product_sale;
+    NSDictionary *params = @{@"product_id":self.productId};
+    __weak typeof(self)weakSelf = self;
+    //    __weak typeof(RefreshTableView *)weakTable = _table;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        [weakSelf showSaleWithResult:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        
+    }];
+}
+
+/**
+ *  显示销售数量
+ *
+ *  @param result
+ */
+- (void)showSaleWithResult:(NSDictionary *)result
+{
+    NSNumber *sale_num = result[@"sale_num"];
+    NSString *title = [NSString stringWithFormat:@" 已售%d",[sale_num intValue]];
+    [_salesButton setTitle:title forState:UIControlStateNormal];
+}
+
 #pragma mark - 数据解析处理
+
+-(void)setCityDataWithDic:(NSDictionary *)result{
+    NSDictionary *dataDic = [result dictionaryValueForKey:@"data"];
+    NSArray *provinceArray = [dataDic arrayValueForKey:@"geos"];
+    
+    //城市
+    NSMutableArray *cityNameArray = [NSMutableArray arrayWithCapacity:1];
+    for (NSDictionary *dic in provinceArray) {
+        NSArray *geos = [dic arrayValueForKey:@"geos"];
+        for (NSDictionary *cityDic in geos) {
+            NSString *name = cityDic[@"name"];
+            [cityNameArray addObject:name];
+        }
+    }
+    
+    NSString *cityString = [cityNameArray componentsJoinedByString:@"、"];
+    [self showAvailableCityString:cityString];
+}
+
+/**
+ *  显示可用服务城市
+ *
+ *  @param cityString
+ */
+- (void)showAvailableCityString:(NSString *)cityString
+{
+    if ([LTools isEmpty:cityString]) {
+        return;
+    }
+    UIView *headerView = _table.tableHeaderView;
+    //服务城市=============================
+    UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, headerView.height, DEVICE_WIDTH, 40)];
+    [headerView addSubview:footView];
+    footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
+    //可服务城市
+    UILabel *cityTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 12 * 2, footView.height) font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:@"可服务城市"];
+    [footView addSubview:cityTitleLabel];
+
+    footView = [[UIView alloc]initWithFrame:CGRectMake(0, footView.bottom, DEVICE_WIDTH, 0)];
+    [headerView addSubview:footView];
+    footView.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
+
+    _selectCityView = footView;
+
+    CGFloat width = DEVICE_WIDTH - 12 * 2 - 11;
+    _smallHeight =  [LTools heightForText:@"北京、上海" width:width font:14];
+    _maxHeight = [LTools heightForText:cityString width:width font:14];
+    if (_maxHeight < _smallHeight) {
+        _maxHeight = _smallHeight;
+    }
+
+    UILabel *cityLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, width, _smallHeight) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:cityString];
+    [footView addSubview:cityLabel];
+    cityLabel.numberOfLines = 0;
+    cityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    _cityLabel = cityLabel;
+
+    footView.height = cityLabel.height;
+    //箭头
+    if (_maxHeight > _smallHeight) {
+        UIButton *arrow = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 11, 0, 11, _smallHeight) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"jiantou_down"] selectedImage:[UIImage imageNamed:@"jiantou_up"] target:self action:@selector(clickToMoreCity:)];
+        [footView addSubview:arrow];
+        [footView addTaget:self action:@selector(clickToMoreCity:) tag:0];
+        _arrowbtn = arrow;
+    }
+    
+    headerView.height = footView.bottom + 20.f;
+    _table.tableHeaderView = headerView;
+}
+
 /**
  *  服务详情
  *
@@ -630,7 +762,7 @@
     sender.height = _cityLabel.height =_selectCityView.height = sender.selected ? _maxHeight : _smallHeight;
         
     CGFloat selectHeight = _selectCityView.bottom;
-    headerView.height = floorf(selectHeight);
+    headerView.height = floorf(selectHeight) + 20.f;
     _table.tableHeaderView = headerView;
    
 }
@@ -746,7 +878,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20.f;
+    return 0.f;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
@@ -755,7 +887,7 @@
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 20.f)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0.f)];
     view.backgroundColor = [UIColor colorWithHexString:@"eeeeee"];
     return view;
 }

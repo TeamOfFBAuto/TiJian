@@ -865,7 +865,7 @@
                                          titleDis:5
                                               tag:100 + i];
         [bgScroll addSubview:classBtn];
-        if (i == 0) {
+        if (i != images.count - 1) {
             //line
             UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(classBtn.right, classBtn.top, 0.5, classBtn.height)];
             line.backgroundColor = DEFAULT_LINECOLOR;

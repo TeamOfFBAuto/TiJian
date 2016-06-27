@@ -508,4 +508,7 @@
 //9、用户取消/删除订单
 #define GoHealth_handle_order @"/index.php?d=api&c=go_order&m=handle_order"
 
+//go健康产品已销售数量
+#define GoHealth_product_sale @"/index.php?d=api&c=go_order&m=get_product_sale"
+
 #endif
