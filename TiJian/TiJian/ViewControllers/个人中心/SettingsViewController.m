@@ -127,6 +127,8 @@
     [UserInfo cleanUserInfo];
 
     [LTools setObject:[NSNumber numberWithInt:0] forKey:USER_MSG_NUM];//未读消息
+    [LTools setObject:[NSNumber numberWithInt:0] forKey:USER_Ac_Num];//未读活动消息
+    [LTools setObject:[NSNumber numberWithInt:0] forKey:USER_Notice_Num];//未读通知消息
     //保存登录状态 yes
     [LTools setBool:NO forKey:LOGIN_SERVER_STATE];
     [LTools setObject:nil forKey:USER_AUTHOD];

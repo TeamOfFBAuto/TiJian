@@ -55,7 +55,14 @@
         
         NSString *imageUrl = product.cover_pic;
 
-        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+         @WeakObj(self);
+        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            
+            UIImage *newImage = [image imageCompressForTargetSize:CGSizeMake(320, 200)];
+            if (newImage) {
+                Weakself.iconImageView.image = newImage;
+            }
+        }];
         self.titleLabel.text = product.product_name;
         _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
         _titleLabel.numberOfLines = 2;

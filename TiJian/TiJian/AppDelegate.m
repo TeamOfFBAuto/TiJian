@@ -20,6 +20,7 @@
 #import "WebviewController.h"//web
 #import "AppointDetailController.h"//预约
 #import "AppointProgressDetailController.h"//体检报告进度
+#import "GoHealthProductDetailController.h"//go健康服务详情
 #import "LogView.h"
 //#import <Bugtags/Bugtags.h>//bugtags
 #import <JSPatch/JSPatch.h> //在线修复bug
@@ -945,9 +946,14 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         
-        int count = [[result objectForKey:@"count"]intValue];
+        int sum = [[result objectForKey:@"count"]intValue];//总数
+        int notice_count = [[result objectForKey:@"notice_count"]intValue];//通知
+        int ac_count = [[result objectForKey:@"ac_count"]intValue];//活动
         
-        [LTools setObject:[NSNumber numberWithInt:count] forKey:USER_MSG_NUM];//未读消息个数
+        [LTools setObject:[NSNumber numberWithInt:sum] forKey:USER_MSG_NUM];//未读总数个数
+        [LTools setObject:[NSNumber numberWithInt:notice_count] forKey:USER_Notice_Num];//未读通知个数
+        [LTools setObject:[NSNumber numberWithInt:ac_count] forKey:USER_Ac_Num];//未读活动个数
+
         [LTools updateTabbarUnreadMessageNumber];
         
     } failBlock:^(NSDictionary *result) {
@@ -972,6 +978,7 @@
 - (void)pushToMessageDetailWithResult:(NSDictionary *)userInfo
                              ignoreRongcloud:(BOOL)ignoreRongcloud
 {
+    NSLog(@"JPush %@",userInfo);
     //非融云
     UITabBarController *root = (UITabBarController *)self.window.rootViewController;
     int selectIndex = (int)root.selectedIndex;
@@ -988,7 +995,7 @@
         NSString *userId = rc[@"fId"];
         if (userId) {
             
-            NSLog(@"该远程推送来自融云的推送服务");
+            DDLOG(@"该远程推送来自融云的推送服务");
             
             BOOL hidden = false;
             if (viewsCount == 1) {
@@ -1072,6 +1079,27 @@
         AppointProgressDetailController *detail = [[AppointProgressDetailController alloc]init];
         detail.appointId = theme_id;
         targetViewController = detail;
+        
+    }else if (type == MsgType_GoHealthAppointState) //go健康预约状态
+    {
+        if (![LTools isEmpty:url]) //说明出报告了
+        {
+            WebviewController *web = [[WebviewController alloc]init];
+            web.webUrl = url;
+            web.navigationTitle = @"体检报告";
+            targetViewController = web;
+        }else
+        {
+            NSString *serviceId = userInfo[@"theme_id"];
+            NSString *productId = userInfo[@"productId"];
+            NSString *orderNum  = userInfo[@"theme_id"];
+            GoHealthProductDetailController *detail = [[GoHealthProductDetailController alloc]init];
+            detail.detailType = DetailType_serviceDetail;
+            detail.serviceId = serviceId;
+            detail.productId = productId;
+            detail.orderNum = orderNum;
+            targetViewController = detail;
+        }
     }
     
     if (viewsCount == 1) {
@@ -1079,34 +1107,6 @@
     }
     [unVc pushViewController:targetViewController animated:YES];
 }
-
-
-#pragma mark - go健康接口测试
-
-- (void)testNetwork
-{
-    //    http://121.40.167.147:3005/v1/productions?appId=gjk001061?&nonceStr=09DS2LSDKFSF6CQ2502SI8ZNMTM67VS&sign=D1A831FA8945B84C15D041AC3EA556C9
-    
-    NSString *nonceStr = [LTools randomNum:32];//随机字符串
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params safeSetValue:GoHealthAppId forKey:@"appId"];
-    [params safeSetValue:nonceStr forKey:@"nonceStr"];
-    [params safeSetValue:NSStringFromInt(1) forKey:@"page"];//第几页
-    [params safeSetValue:NSStringFromInt(20) forKey:@"limit"];//每页数量
-    
-    NSString *sign = [MiddleTools goHealthSignWithParams:params];
-    [params safeSetValue:sign forKey:@"sign"];
-    
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_productionsList parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"goHealth success result %@",result);
-    } failBlock:^(NSDictionary *result) {
-        
-        NSLog(@"goHealth fail result %@",result);
-        NSLog(@"%@",result[@"msg"]);
-        
-    }];
-}
-
 
 
 @end

@@ -265,11 +265,12 @@
         number_str = [NSString stringWithFormat:@"%d",unreadMsgCount];
     }
     //通知消息
-    int msgNum = [[LTools objectForKey:USER_MSG_NUM]intValue];
+    int msgNum = [[LTools objectForKey:USER_MSG_NUM]intValue];//总数
+    int msgNum_ac = [[LTools objectForKey:USER_Ac_Num]intValue];//活动
+
+    int sum = msgNum + [number_str intValue];//总通知数 + 客服消息
     
-    int sum = msgNum + [number_str intValue];
-    
-    DDLOG(@"未读消息--客服:%d 通知:%d",unreadMsgCount,msgNum);
+    DDLOG(@"unread msg num -- service:%d notice:%d activity:%d",unreadMsgCount,msgNum,msgNum_ac);
     
     UITabBarController *root = (UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
     
@@ -280,12 +281,12 @@
             unvc.tabBarItem.badgeValue = nil;
         }else
         {
-            int temp = sum - msgNum;
+            int temp = sum - msgNum_ac;//去掉活动
             if (temp <= 0) {
                 unvc.tabBarItem.badgeValue = nil;
             }else
             {
-                unvc.tabBarItem.badgeValue = NSStringFromInt(sum - msgNum);//tabbar上个数暂时不显示 活动未读数据
+                unvc.tabBarItem.badgeValue = NSStringFromInt(temp);//tabbar上个数暂时不显示 活动未读数据
             }
         }
         

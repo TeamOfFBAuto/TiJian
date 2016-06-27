@@ -132,7 +132,11 @@ typedef enum{
     /**
      *  订单退款状态 6
      */
-    MsgType_OrderRefundState = 6 //6、订单的退款状态    theme_id: 订单id
+    MsgType_OrderRefundState = 6, //6、订单的退款状态    theme_id: 订单id
+    /**
+     *  go健康的预约状态推送
+     */
+    MsgType_GoHealthAppointState = 7
 
 }MsgType;
 //pic: 封面图(可能为空)

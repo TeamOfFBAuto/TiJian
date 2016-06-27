@@ -371,8 +371,6 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [Weakself parseDataWithResult:result];
-        [Weakself netWorkForProductSales];
-        [Weakself networkForAvailableCity];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -436,7 +434,7 @@
         [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_CANCEL_SUCCESS object:nil];
         
-        [LTools showMBProgressWithText:result[@"取消服务成功！"] addToView:Weakself.view];
+        [LTools showMBProgressWithText:@"取消服务成功！" addToView:Weakself.view];
         
         [Weakself performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
         
@@ -450,8 +448,11 @@
 /**
  *  获取可用城市
  */
--(void)networkForAvailableCity{
-    
+-(void)networkForAvailableCityWithProductId:(NSString *)productId
+{
+    if ([LTools isEmpty:productId]) {
+        return;
+    }
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *nonceStr = [LTools randomNum:32];//随机字符串
     [params safeSetValue:nonceStr forKey:@"nonceStr"];
@@ -474,10 +475,13 @@
 /**
  *  获取产品销量
  */
-- (void)netWorkForProductSales
+- (void)netWorkForProductSalesWithProductId:(NSString *)productId
 {
+    if ([LTools isEmpty:productId]) {
+        return;
+    }
     NSString *api = GoHealth_product_sale;
-    NSDictionary *params = @{@"product_id":self.productId};
+    NSDictionary *params = @{@"product_id":productId};
     __weak typeof(self)weakSelf = self;
     //    __weak typeof(RefreshTableView *)weakTable = _table;
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
@@ -587,6 +591,11 @@
     
     NSString *productId = [_serviceModel.productionIds firstObject];
     [self netWorkForDetail:productId];
+    
+    //请求完服务详情回调
+    if (self.updateParamsBlock) {
+        self.updateParamsBlock(@{RESULT_INFO:@"ok"});
+    }
 }
 
 /**
@@ -601,6 +610,10 @@
     
     ThirdProductModel *model = [[ThirdProductModel alloc]initWithDictionary:production];
     _productModel = model;
+    
+    //销量
+    [self netWorkForProductSalesWithProductId:model.id];
+    [self networkForAvailableCityWithProductId:model.id];
     
     NSString *desc = [production objectForKey:@"description"];
     

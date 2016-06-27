@@ -258,6 +258,7 @@
     UIImageView *vipHat = [[UIImageView alloc]initWithFrame:CGRectMake(15 + 4, 4, 42, 20)];
     vipHat.image = [UIImage imageNamed:@"personal_viphat"];
     [_headview addSubview:vipHat];
+    vipHat.hidden = YES;
     _vipHat = vipHat;
     
     UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(15, vipHat.bottom - 4, 50, 50)];

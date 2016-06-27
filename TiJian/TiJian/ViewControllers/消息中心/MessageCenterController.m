@@ -15,6 +15,7 @@
 #import "AppointDetailController.h"//预约详情
 #import "NSDate+FSExtension.h"
 #import "WebviewController.h"
+#import "GoHealthProductDetailController.h"//go健康服务详情
 
 #define TableView_tag_Notification 200 //通知
 #define TableView_tag_Activity 202 //活动
@@ -107,7 +108,7 @@
             
             int num = 0;
             if (i == 0) {
-                num = [[LTools objectForKey:USER_MSG_NUM]intValue];
+                num = [[LTools objectForKey:USER_Notice_Num]intValue];
             }else if (i == 1){
                 
                 num = [LTools rongCloudUnreadNum];
@@ -228,7 +229,6 @@
         
         int num = [result[@"count"]intValue];
         [Weakself buttonForTag:Tag_redpoint + 2].hidden = num > 0 ? NO : YES;
-
         
     } failBlock:^(NSDictionary *result) {
         
@@ -241,20 +241,20 @@
  *  @param
  */
 - (void)updateActivityStatusWithMsgId:(NSString *)msgId
+                              msgType:(MsgType)type
 {
     NSString *authey = [UserInfo getAuthkey];
-    if (authey.length == 0) {
+    if (authey.length == 0 || [LTools isEmpty:msgId]) {
         return;
     }
     NSString *api = UPDATE_MSG_STATUE;
-
     NSDictionary *params = @{@"authcode":authey,
                              @"msg_id":msgId};
     @WeakObj(self);
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result)
+    {
         DDLOG(@"update success");
-        [Weakself updateMsgNum];
+        [Weakself updateMsgNumType:type];
 
     } failBlock:^(NSDictionary *result) {
         
@@ -279,14 +279,41 @@
 /**
  *  更新未读通知
  */
-- (void)updateMsgNum
+- (void)updateMsgNumType:(MsgType)type
 {
     int num = [[LTools objectForKey:USER_MSG_NUM]intValue];
-    num --;
-    
-    if (num <= 0) {
+    if (num > 0) {
+        num --;
+    }else
+    {
         num = 0;
     }
+    
+    if (type == MsgType_Activity)//活动
+    {
+        int num_ac = [[LTools objectForKey:USER_Ac_Num]intValue];
+        
+        if (num_ac > 0) {
+            num_ac --;
+        }else
+        {
+            num_ac = 0;
+        }
+        [LTools setObject:[NSNumber numberWithInt:num_ac] forKey:USER_Ac_Num];
+        
+    }else //除了活动的通知
+    {
+        int num_notice = [[LTools objectForKey:USER_Notice_Num]intValue];
+        if (num_notice > 0) {
+            num_notice --;
+        }else
+        {
+            num_notice = 0;
+        }
+        [LTools setObject:[NSNumber numberWithInt:num_notice] forKey:USER_Notice_Num];
+
+    }
+    
     [LTools setObject:[NSNumber numberWithInt:num] forKey:USER_MSG_NUM];
     [LTools updateTabbarUnreadMessageNumber];
 }
@@ -419,7 +446,7 @@
                 detail.updateParamsBlock = ^(NSDictionary *params){
                     Weakmsg.is_read = @"2";
                     [WeaktableView reloadData];
-                    [Weakself updateMsgNum];
+                    [Weakself updateMsgNumType:type];
                 };
             }
             [self.navigationController pushViewController:detail animated:YES];
@@ -435,13 +462,12 @@
                 orderInfo.updateParamsBlock = ^(NSDictionary *params){
                     Weakmsg.is_read = @"2";
                     [WeaktableView reloadData];
-                    [Weakself updateMsgNum];
+                    [Weakself updateMsgNumType:type];
                 };
             }
             [self.navigationController pushViewController:orderInfo animated:YES];
             
         }else if (type == MsgType_PEAlert){ //体检提醒
-            
             
             AppointDetailController *detail = [[AppointDetailController alloc]init];
             detail.appoint_id = msg.theme_id;
@@ -450,10 +476,41 @@
                 detail.updateParamsBlock = ^(NSDictionary *params){
                     Weakmsg.is_read = @"2";
                     [WeaktableView reloadData];
-                    [Weakself updateMsgNum];
+                    [Weakself updateMsgNumType:type];
                 };
             }
             [self.navigationController pushViewController:detail animated:YES];
+        }else if (type == MsgType_GoHealthAppointState) //go健康预约状态
+        {
+            NSString *url = msg.url;
+            if (![LTools isEmpty:url]) //说明出报告了
+            {
+                @WeakObj(self);
+                [MiddleTools pushToWebFromViewController:self weburl:msg.url extensionParams:@{Share_title:@"体检报告"} moreInfo:NO hiddenBottom:YES updateParamsBlock:^(NSDictionary *params) {
+                    //更新未读状态
+                    [Weakself updateActivityStatusWithMsgId:msg.msg_id msgType:type];
+                }];
+            }else
+            {
+                NSString *serviceId = msg.theme_id;
+                NSString *productId = msg.productId;
+                NSString *orderNum  = msg.orderNum;
+                GoHealthProductDetailController *detail = [[GoHealthProductDetailController alloc]init];
+                detail.detailType = DetailType_serviceDetail;
+                detail.serviceId = serviceId;
+                detail.productId = productId;
+                detail.orderNum = orderNum;
+                if ([msg.is_read intValue] == 1) { //未读的时候才传
+                    detail.updateParamsBlock = ^(NSDictionary *params){
+                        Weakmsg.is_read = @"2";
+                        [WeaktableView reloadData];
+                        if (![LTools isEmpty:msg.msg_id]) {
+                            [Weakself updateActivityStatusWithMsgId:msg.msg_id msgType:type];
+                        }
+                    };
+                }
+                [self.navigationController pushViewController:detail animated:YES];
+            }
         }
     }
     //活动详情
@@ -471,7 +528,7 @@
             //更新未读状态
             //更新未读状态
             if ([params[@"result"]boolValue]) {
-                [Weakself updateActivityStatusWithMsgId:aModel.msg_id];
+                [Weakself updateActivityStatusWithMsgId:aModel.msg_id msgType:MsgType_Activity];
             }
         }];
     }

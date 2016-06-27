@@ -450,7 +450,7 @@
                                                 int show = [result[@"show"]intValue];
                                                 _unreadActivityNum = num;
                                                 //首页未读活动数量
-                                                [LTools setObject:[NSNumber numberWithInt:num] forKey:USER_MSG_NUM];//未读消息个数
+                                                [LTools setObject:[NSNumber numberWithInt:num] forKey:USER_Ac_Num];//未读消息个数
                                                 Weakself.right_button.hidden =  show == 1 ? NO : YES;//打开活动按钮
                                                 Weakself.redPoint.hidden = num > 0 ? NO : YES;
                                                 

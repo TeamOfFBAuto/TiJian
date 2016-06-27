@@ -88,6 +88,45 @@
 }
 
 /**
+ *  根据需要图片size等比例裁图
+ *
+ *  @param url
+ *  @param imageSize   希望大小
+ *  @param placeholder
+ */
+-(void)l_setImageWithURL:(NSURL *)url
+                clipSize:(CGSize)imageSize
+        placeholderImage:(UIImage *)placeholder
+{
+     @WeakObj(self);
+    
+    [self l_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        
+        
+        CGFloat o_radio = image.size.width / image.size.height;
+        CGFloat n_radio = imageSize.width / imageSize.height;
+        
+        NSLog(@"o:%@ n:%@",NSStringFromFloat(o_radio),NSStringFromFloat(n_radio));
+        
+        CGFloat x = o_radio - n_radio;
+        if (x >= -0.1 && x <= 0.1) { //此比例下不需要重新切图
+            
+            DDLOG(@"图片比例满足条件");
+            
+        }else
+        {
+            image = [image imageCompressForTargetSize:imageSize];//裁切
+            [[SDWebImageManager sharedManager]saveImageToCache:image forURL:url];
+            DDLOG(@"切图");
+        }
+        
+        Weakself.image = image;
+        
+    }];
+    
+}
+
+/**
  *  imageView赋值image 适用于imageView不定大小情况
  *
  *  @param url         图片地址

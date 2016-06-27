@@ -21,4 +21,15 @@
 
 - (void)l_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder completed:(SDWebImageCompletionBlock)completedBlock;
 
+/**
+ *  根据需要图片size等比例裁图
+ *
+ *  @param url
+ *  @param imageSize   希望大小
+ *  @param placeholder
+ */
+-(void)l_setImageWithURL:(NSURL *)url
+                clipSize:(CGSize)imageSize
+        placeholderImage:(UIImage *)placeholder;
+
 @end
