@@ -101,11 +101,6 @@
 }
 
 
-
-
-
-
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -154,10 +149,7 @@
     [self creatDownBtnView];//创建下层四个按钮view
     [self creatMysearchView];//创建搜索界面
     [self creatRightTranslucentSideBar];//创建筛选侧滑栏
-    
-    
-    
-    
+  
 }
 
 - (void)didReceiveMemoryWarning {
@@ -217,10 +209,7 @@
     for (UIView *view in self.theTopView.subviews) {
         [view removeFromSuperview];
     }
-    
-    
-
-    
+ 
     //设置轮播图
     [self creatUpCycleScrollView];
     
@@ -290,7 +279,6 @@
     ttl.textColor = [UIColor blackColor];
     
     [self.theTopView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, jingpintuijian.bottom)];
-    
     
     _table.tableHeaderView = self.theTopView;
     
@@ -440,9 +428,6 @@
         
     }
     [self.view addSubview:_downView];
-    
-    
-    
 }
 
 //创建tabelview
@@ -582,9 +567,6 @@
     
     return YES;
 }
-
-
-
 
 
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
