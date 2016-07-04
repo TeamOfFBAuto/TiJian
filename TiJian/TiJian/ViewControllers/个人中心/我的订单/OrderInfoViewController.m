@@ -165,6 +165,8 @@
 
 - (void)parseDataWithResult:(NSDictionary *)result
 {
+    int type = self.platformType == PlatformType_goHealth ? 2 : 1;
+    
     NSDictionary *info = result[@"info"];
     NSArray *products = info[@"products"];
     OrderModel *aModel = [[OrderModel alloc]initWithDictionary:info];
@@ -174,6 +176,7 @@
         NSMutableArray *p_temp = [NSMutableArray arrayWithCapacity:b_model.list.count];
         for (NSDictionary *p_dic in b_model.list) {
             ProductModel *p_model = [[ProductModel alloc]initWithDictionary:p_dic];//商品
+            p_model.type = NSStringFromInt(type);
             [p_temp addObject:p_model];
         }
         b_model.productsArray = [NSArray arrayWithArray:p_temp];
@@ -888,8 +891,7 @@
             
             BrandModel *b_model = _dataArray[indexPath.section];
             ProductModel *aModel = [b_model.productsArray objectAtIndex:indexPath.row];
-            [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
-            
+            [MiddleTools pushToProductDetailWithProductId:aModel.product_id platType:self.platformType viewController:self extendParams:nil updateParamsBlock:nil];
         }
     }
 
@@ -987,13 +989,11 @@
         view.tag = 102;
         
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 80, 50) title:@"给商家留言:" font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
-//        titleLabel.backgroundColor = [UIColor orangeColor];
         [view addSubview:titleLabel];
         titleLabel.tag = 100;
         
         
         UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.right, 16, DEVICE_WIDTH - 30 - 80, 15) title:@"" font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
-//        contentLabel.backgroundColor = [UIColor redColor];
         [view addSubview:contentLabel];
         contentLabel.numberOfLines = 0;
         contentLabel.lineBreakMode = NSLineBreakByCharWrapping;

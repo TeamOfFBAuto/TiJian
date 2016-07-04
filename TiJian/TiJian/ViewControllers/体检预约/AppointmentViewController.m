@@ -312,16 +312,14 @@
         api = GET_APPOINT;
         params = @{@"authcode":authkey,
                    @"expired":@"1",
-                   @"page":NSStringFromInt(table.pageNum),
-                   @"per_page":NSStringFromInt(PAGESIZE_MID)};
+                   @"level":@"2"};
     }
     //已体检
     else if (table == [self tableViewWithIndex:4])
     {
         api = GET_FINISHED_APPOINT;
         params = @{@"authcode":authkey,
-                   @"page":NSStringFromInt(table.pageNum),
-                   @"per_page":NSStringFromInt(PAGESIZE_MID)};
+                   @"level":@"2"};
     }
     __weak typeof(self)weakSelf = self;
     __weak typeof(table)weakTable = table;
@@ -345,7 +343,8 @@
     NSDictionary *setmeal_list = result[@"appoint_list"];
 
     //全部
-    if (index == 0) {
+    if (index == 0)
+    {
         
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
             
@@ -390,8 +389,8 @@
         
     }
     //待预约
-    if (index == 1) {
-        
+    if (index == 1)
+    {
        setmeal_list = result[@"setmeal_list"];
 
         if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
@@ -420,7 +419,10 @@
         [[self tableViewWithIndex:index] finishReloadingData];
         
         
-    }else if (index == 2){
+    }
+    //已预约
+    else if (index == 2)
+    {
         
         NSArray *temp = [AppointModel modelsFromArray:result[@"appoint_list"]];
         if (temp.count == 0) {
@@ -430,7 +432,7 @@
             [self.appointedView removeFromSuperview];
             self.appointedView = nil;
         }
-        [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
+        [[self tableViewWithIndex:index] reloadData:temp pageSize:1000];
         
     }else if (index == 3){
         
@@ -442,7 +444,7 @@
             [self.appointedOverView removeFromSuperview];
             self.appointedOverView = nil;
         }
-        [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
+        [[self tableViewWithIndex:index] reloadData:temp pageSize:1000];
 
     }else if (index == 4){ //已体检部分
         
@@ -454,7 +456,7 @@
             [self.appointedExamedView removeFromSuperview];
             self.appointedExamedView = nil;
         }
-        [[self tableViewWithIndex:index] reloadData:temp pageSize:PAGESIZE_MID];
+        [[self tableViewWithIndex:index] reloadData:temp pageSize:1000];
         
     }
 }
@@ -595,7 +597,10 @@
  */
 - (void)clickToGoServiceWithModel:(AppointModel *)aModel
 {
-    [MiddleTools pushToGoHealthServiceId:aModel.serviceId productId:aModel.product_id orderNum:aModel.order_no fromViewController:self extensionParams:nil];
+    NSString *report_html = aModel.report_html;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetString:report_html forKey:@"report_html"];
+    [MiddleTools pushToGoHealthServiceId:aModel.serviceId productId:aModel.product_id orderNum:aModel.order_no fromViewController:self extensionParams:params];
 }
 
 #pragma mark - 代理
@@ -1030,25 +1035,29 @@
     
     int type = [aModel.c_type intValue];
     
-    NSString *text = @"";
+    NSString *leftText = @"";
+    NSString *centerText = @"";
+    NSString *rightText = @"";
     NSString *name = aModel.user_name;
-    if (type == 2){ //go健康
-        text = [NSString stringWithFormat:@"%@",name];
-        [nameLabel setAttributedText:[LTools attributedString:text keyword:@"" color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+    
+    if (type == 2)//go健康
+    {
+        leftText = [NSString stringWithFormat:@"%@",name];
+        [nameLabel setAttributedText:[LTools attributedString:leftText keyword:@"" color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+        centerText = aModel.report_status;
         
-        centerLabel.text = aModel.appoint_status;
     }else
     {
-        text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,name];
-        [nameLabel setAttributedText:[LTools attributedString:text keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
-        centerLabel.text = aModel.center_name;//分院
+        leftText = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,name];
+        [nameLabel setAttributedText:[LTools attributedString:leftText keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+        centerText = aModel.center_name;
     }
     
-    
-    //未过期
+    //未过期(已预约)
     if (index == 2 || (index == 0 && indexPath.section == 2)) {
         
         timeLabel.text = [LTools timeString:aModel.appointment_exam_time withFormat:@"yyyy.MM.dd"];
+        
     }
     //已过期
     else if (index == 3 || (index == 0 && indexPath.section == 3)){
@@ -1063,6 +1072,7 @@
             text = [NSString stringWithFormat:@"过期%@天",days];
         }
         [timeLabel setAttributedText:[LTools attributedString:text keyword:days color:[UIColor colorWithHexString:@"f88326"]]];
+        
     }
     //已体检
     else if (index == 4 || (index == 0 && indexPath.section == 4)){
@@ -1070,7 +1080,22 @@
         NSString *days = aModel.report_status;
         timeLabel.text = days;
         timeLabel.textColor = DEFAULT_TEXTCOLOR_ORANGE;
+        
+        centerText = aModel.center_name;
     }
+    
+    centerLabel.text = centerText;
+//    if (type == 2){ //go健康
+//        text = [NSString stringWithFormat:@"%@",name];
+//        [nameLabel setAttributedText:[LTools attributedString:text keyword:@"" color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+//        
+//        centerLabel.text = aModel.report_status;
+//    }else
+//    {
+//        text = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,name];
+//        [nameLabel setAttributedText:[LTools attributedString:text keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
+//        centerLabel.text = aModel.center_name;//分院
+//    }
     
     return cell;
 }

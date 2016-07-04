@@ -190,7 +190,10 @@
     cell.contentView.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    [cell setCellWithModel:_table.dataArray[indexPath.row]];
+    ProductModel *aModel = _table.dataArray[indexPath.row];
+    int type = self.platformType == PlatformType_goHealth ? 2 : 1;
+    aModel.c_type = NSStringFromInt(type);
+    [cell setCellWithModel:aModel];
     
     return cell;
 }

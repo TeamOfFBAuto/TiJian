@@ -20,7 +20,7 @@
 @property(nonatomic,retain)NSString *isFasting;
 @property(nonatomic,retain)NSNumber *price;
 @property(nonatomic,retain)NSNumber *discountPrice;
-@property(nonatomic,retain)NSNumber *settlePrice;//
+@property(nonatomic,retain)NSNumber *settlePrice;//结算价格
 @property(nonatomic,retain)NSArray *items;//体检项目
 @property(nonatomic,retain)NSArray *avaliableCities;//可用城市
 @property(nonatomic,retain)NSArray *pictures;

@@ -62,6 +62,8 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_UPDATEMSGNUM object:nil];
     
+    [self testSomething];
+    
     //友盟
     [self umengSocial];
     
@@ -1108,5 +1110,73 @@
     [unVc pushViewController:targetViewController animated:YES];
 }
 
+/**
+ *  用于测试
+ */
+- (void)testSomething
+{
+    
+    //    [LTools setObject:@"WiVULQd+ULYHvAWYB7cI3wKnA+FarwHwAi9WZ1cyAzEHNlFiVjRdaQI1AzMAZQBwBTEBOwdjA2VXZ1Bl" forKey:USER_AUTHOD];
+    
+//    NSString *serviceId = @"1010053490049";
+//    [self netWorkForMakeReportTestingWithServiceId:serviceId];
+//    [self netWorkForMakeReportWithServiceId:serviceId];
+
+}
+
+#pragma mark - Go健康测试送检、出报告
+
+/**
+ *  把服务状态改为送检中
+ */
+- (void)netWorkForMakeReportTestingWithServiceId:(NSString *)serviceId
+{
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetString:serviceId forKey:@"id"];//服务id
+
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+ 
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_makeReportTesting parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"goHealth success result %@",result);
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"goHealth fail result %@",result);
+        NSLog(@"%@",result[@"msg"]);
+    }];
+}
+
+
+/**
+ *  把服务状态模拟生成报告
+ */
+- (void)netWorkForMakeReportWithServiceId:(NSString *)serviceId
+{
+    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+    [params safeSetString:serviceId forKey:@"id"];//服务id
+    
+    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+    [params safeSetValue:sign forKey:@"sign"];
+    
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_makeReport parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"goHealth success result %@",result);
+        
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"goHealth fail result %@",result);
+        NSLog(@"%@",result[@"msg"]);
+    }];
+}
 
 @end

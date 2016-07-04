@@ -820,7 +820,7 @@
         
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
-        [LTools showMBProgressWithText:@"预约失败,请稍后再试" addToView:Weakself.view];
+//        [LTools showMBProgressWithText:@"预约失败,请稍后再试" addToView:Weakself.view];
     }];
 }
 

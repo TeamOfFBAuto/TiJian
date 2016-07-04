@@ -189,6 +189,35 @@
     [viewController.navigationController pushViewController:cc animated:YES];
 }
 
+/**
+ *  查看产品详情(海马、go健康)
+ *
+ *  @param productId
+ *  @param platType          区分海马、go健康
+ *  @param viewController
+ *  @param extendParams
+ *  @param updateParamsBlock
+ */
++ (void)pushToProductDetailWithProductId:(NSString *)productId
+                                platType:(PlatformType)platType
+                          viewController:(UIViewController *)viewController
+                            extendParams:(NSDictionary *)extendParams
+                       updateParamsBlock:(UpdateParamsBlock)updateParamsBlock
+{
+    if (platType == PlatformType_default) //海马
+    {
+        GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
+        cc.productId = productId;
+        [viewController.navigationController pushViewController:cc animated:YES];
+    }
+    else if (platType == PlatformType_goHealth) //go健康
+    {
+        GoHealthProductDetailController *detail = [[GoHealthProductDetailController alloc]init];
+        detail.productId = productId;
+        [viewController.navigationController pushViewController:detail animated:YES];
+    }
+}
+
 #pragma mark - 订单
 
 /**
@@ -533,7 +562,11 @@
     detail.serviceId = serviceId;
     detail.productId = productId;
     detail.orderNum = orderNum;
+    if (extensionParams && [LTools isDictinary:extensionParams]) {
+        detail.report_html = extensionParams[@"report_html"];
+    }
     [controller.navigationController pushViewController:detail animated:YES];
 }
+
 
 @end

@@ -271,7 +271,9 @@
     [productInfo safeSetValue:self.productModel.id forKey:@"product_id"];
     [productInfo safeSetValue:self.productModel.name forKey:@"product_name"];
     [productInfo safeSetValue:imageUrl forKey:@"product_cover_url"];
-    [productInfo safeSetValue:self.productModel.discountPrice forKey:@"product_price"];
+    [productInfo safeSetValue:self.productModel.discountPrice forKey:@"product_price"];//折扣、实际销售价格
+    [productInfo safeSetValue:self.productModel.settlePrice forKey:@"product_original_price"];//与合作方的结算价格、商品原价 （选填)
+
     [productInfo safeSetInt:num forKey:@"product_num"];
     
     NSArray *products = @[productInfo];

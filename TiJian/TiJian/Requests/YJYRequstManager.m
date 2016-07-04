@@ -288,7 +288,7 @@
                 
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:result];
                 if (!erroInfo) {
-                    [params safeSetString:Alert_ServerErroInfo forKey:erroInfo];
+                    [params safeSetString:Alert_ServerErroInfo_Inner forKey:erroInfo];
                 }
                 failBlock(result);
             }
@@ -332,7 +332,8 @@
             break;
     }
     
-    NSDictionary *failDic = @{Erro_Info: errInfo};
+    NSDictionary *failDic = @{Erro_Info: errInfo,
+                              Erro_Code:NSStringFromInt((int)error.code)};
     failBlock(failDic);
     
     [self removeOperation:operation];

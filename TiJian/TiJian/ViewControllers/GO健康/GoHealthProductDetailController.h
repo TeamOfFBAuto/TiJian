@@ -20,5 +20,6 @@ typedef enum {
 @property(nonatomic,retain)NSString *productId;
 @property(nonatomic,retain)NSString *serviceId;//服务id
 @property(nonatomic,retain)NSString *orderNum;//订单号
+@property(nonatomic,retain)NSString *report_html;//报告地址
 
 @end

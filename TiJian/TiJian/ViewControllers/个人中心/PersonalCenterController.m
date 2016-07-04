@@ -254,20 +254,19 @@
     _headview.backgroundColor = [UIColor whiteColor];
     
     
-    //vip皇冠
-    UIImageView *vipHat = [[UIImageView alloc]initWithFrame:CGRectMake(15 + 4, 4, 42, 20)];
-    vipHat.image = [UIImage imageNamed:@"personal_viphat"];
-    [_headview addSubview:vipHat];
-    vipHat.hidden = YES;
-    _vipHat = vipHat;
-    
-    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(15, vipHat.bottom - 4, 50, 50)];
+    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(15, 15, 60, 60)];
     [logo addRoundCorner];
     [_headview addSubview:logo];
     logo.backgroundColor = [UIColor colorWithHexString:@"e6e6e6"];
     [logo addTaget:self action:@selector(clickToChangeUserHeadImage) tag:0];
     _headImageView = logo;
-//    logo.backgroundColor = [UIColor redColor];
+    
+    //头像加vip
+    UIImageView *vipHat = [[UIImageView alloc]initWithFrame:CGRectMake(logo.right - 18, logo.bottom - 18, 18, 18)];
+    vipHat.image = [UIImage imageNamed:@"personal_vip"];
+    [_headview addSubview:vipHat];
+    vipHat.hidden = YES;
+    _vipHat = vipHat;
     
     //设置头像
     BOOL updateState = [LTools boolForKey:USER_UPDATEHEADIMAGE_STATE];
@@ -331,7 +330,7 @@
     
     NSString *name = [NSString stringWithFormat:@"用户名:%@",_userInfo.user_name];
     CGFloat width = [LTools widthForText:name font:14];
-    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 22.5, width, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
+    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 22.5, width + 5, 15) title:name font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"323232"]];
     [_loginView addSubview:_nameLabel];
     
     //VIP标识

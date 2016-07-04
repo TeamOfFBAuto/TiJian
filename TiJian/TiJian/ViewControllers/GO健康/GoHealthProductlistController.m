@@ -252,12 +252,12 @@
     label2.text = price;
     
     NSDictionary *pic = [model.pictures firstObject];
-//    CGFloat width = [pic[@"width"]floatValue];
+    CGFloat width = [pic[@"width"]floatValue];
 //    CGFloat height = [pic[@"height"]floatValue];
-    
-    NSString *imageUrl = [model.pictures firstObject][@"url"];
-    
-    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(imageView.size.width * 3, imageView.size.height * 3) placeholderImage:DEFAULT_HEADIMAGE];
+    CGFloat height = width / 1.6;
+    NSString *imageUrl = pic[@"url"];
+
+    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
     
     return cell;
 }

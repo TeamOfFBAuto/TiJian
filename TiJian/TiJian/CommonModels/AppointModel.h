@@ -49,5 +49,6 @@
 @property(nonatomic,strong)NSString *c_type;//c_type=1 1为海马医生预约 2为go健康预约
 @property(nonatomic,retain)NSString *appoint_status;//go健康服务状态
 @property(nonatomic,retain)NSString *serviceId;//go健康服务id
+@property(nonatomic,retain)NSString *report_html;//go健康体检报告
 
 @end

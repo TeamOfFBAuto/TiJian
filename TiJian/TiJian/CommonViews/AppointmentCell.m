@@ -170,7 +170,16 @@
         return;
     }
     
-    [self.iconImageView l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    int type = [aModel.c_type intValue];
+    if (type == 2) { //go健康
+        
+        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] clipSize:CGSizeMake(320, 200) placeholderImage:DEFAULT_HEADIMAGE];
+        
+    }else
+    {
+        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:aModel.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    }
+    
     self.productNameLabel.text = aModel.product_name;
     NSString *text = [aModel.appointed_num intValue] > 0 ? @"剩" : @"共";
     if ([aModel.type intValue] == 1) {

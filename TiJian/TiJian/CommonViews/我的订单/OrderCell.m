@@ -54,15 +54,17 @@
         ProductModel *product = [[ProductModel alloc]initWithDictionary:[aModel.products lastObject]];
         
         NSString *imageUrl = product.cover_pic;
-
-         @WeakObj(self);
-        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        
+        int type = [aModel.type intValue];
+        if (type == 2) { //go健康
             
-            UIImage *newImage = [image imageCompressForTargetSize:CGSizeMake(320, 200)];
-            if (newImage) {
-                Weakself.iconImageView.image = newImage;
-            }
-        }];
+            [self.iconImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(320, 200) placeholderImage:DEFAULT_HEADIMAGE];
+            
+        }else
+        {
+            [self.iconImageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+        }
+       
         self.titleLabel.text = product.product_name;
         _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
         _titleLabel.numberOfLines = 2;

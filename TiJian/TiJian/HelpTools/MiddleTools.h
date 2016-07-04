@@ -80,6 +80,22 @@
                           viewController:(UIViewController *)viewController
                                    extendParams:(NSDictionary *)extendParams;
 
+
+/**
+ *  查看产品详情(海马、go健康)
+ *
+ *  @param productId
+ *  @param platType          区分海马、go健康
+ *  @param viewController
+ *  @param extendParams
+ *  @param updateParamsBlock
+ */
++ (void)pushToProductDetailWithProductId:(NSString *)productId
+                                platType:(PlatformType)platType
+                          viewController:(UIViewController *)viewController
+                            extendParams:(NSDictionary *)extendParams
+                       updateParamsBlock:(UpdateParamsBlock)updateParamsBlock;
+
 #pragma mark - 订单
 
 /**

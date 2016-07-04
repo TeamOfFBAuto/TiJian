@@ -98,30 +98,38 @@
                 clipSize:(CGSize)imageSize
         placeholderImage:(UIImage *)placeholder
 {
-     @WeakObj(self);
+    @WeakObj(self);
     
-    [self l_setImageWithURL:url placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    NSString *imageUrlString = url.absoluteString;
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    
+    NSString *clipImageUrlString = [NSString stringWithFormat:@"%@?clip=%.f×%.f",imageUrlString,imageSize.width,imageSize.height];
+    clipImageUrlString = [clipImageUrlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];//防止特殊符号 URL为nil
+    NSURL *clipImageUrl = [NSURL URLWithString:clipImageUrlString];//NSURL
+    
+    [self l_setImageWithURL:clipImageUrl placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         
-        
-        CGFloat o_radio = image.size.width / image.size.height;
-        CGFloat n_radio = imageSize.width / imageSize.height;
-        
-        NSLog(@"o:%@ n:%@",NSStringFromFloat(o_radio),NSStringFromFloat(n_radio));
-        
-        CGFloat x = o_radio - n_radio;
-        if (x >= -0.1 && x <= 0.1) { //此比例下不需要重新切图
-            
-            DDLOG(@"图片比例满足条件");
-            
-        }else
+        if (image)
         {
-            image = [image imageCompressForTargetSize:imageSize];//裁切
-            [[SDWebImageManager sharedManager]saveImageToCache:image forURL:url];
-            DDLOG(@"切图");
+            CGFloat o_radio = image.size.width / image.size.height;
+            CGFloat n_radio = imageSize.width / imageSize.height;
+            
+            NSLog(@"o:%@ n:%@",NSStringFromFloat(o_radio),NSStringFromFloat(n_radio));
+            
+            CGFloat x = o_radio - n_radio;
+            if (x >= -0.1 && x <= 0.1) { //此比例下不需要重新切图
+                
+                DDLOG(@"图片比例满足条件");
+                
+            }else
+            {
+                image = [image imageCompressForTargetSize:imageSize];//裁切
+                [manager saveImageToCache:image forURL:clipImageUrl];
+                DDLOG(@"切图");
+            }
+            
+            Weakself.image = image;
         }
-        
-        Weakself.image = image;
-        
     }];
     
 }

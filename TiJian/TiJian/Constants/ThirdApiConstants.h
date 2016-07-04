@@ -30,4 +30,7 @@
 #define GoHealth_serviceDetail @"/v1/services/%@" //服务详情
 #define GoHealth_serviceCancel @"/v1/services/%@/cancel" //取消服务非RestFull
 
+#define GoHealth_makeReportTesting @"/tests/make_report_testing"//把服务状态改为送检中
+#define GoHealth_makeReport @"/tests/make_report"//模拟生成报告
+
 #endif /* ThirdApiConstants_h */

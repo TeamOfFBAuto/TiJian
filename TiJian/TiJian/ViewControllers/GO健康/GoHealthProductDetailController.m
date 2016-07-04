@@ -101,11 +101,15 @@
     
     NSDictionary *pic = [model.pictures firstObject];
     CGFloat width = [pic[@"width"]floatValue];
-    CGFloat imageHeight = [pic[@"height"]floatValue];
-    if (imageHeight) {
-        imageHeight = DEVICE_WIDTH * (width/imageHeight);
-    }
-    NSString *imageUrl = [model.pictures firstObject][@"thumb"];
+//    CGFloat imageHeight = [pic[@"height"]floatValue];
+    CGFloat imageHeight = 250.f * width / 375;
+    
+//    CGFloat radio = 375.f / 250.f;//宽高比
+    
+//    if (imageHeight) {
+//        imageHeight = DEVICE_WIDTH * (width/imageHeight);
+//    }
+    NSString *imageUrl = [model.pictures firstObject][@"url"];
     
     UIView *headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     
@@ -115,11 +119,11 @@
     imageBgView.clipsToBounds = YES;
     [headerView addSubview:imageBgView];
     
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, imageBgView.height)];
     imageView.backgroundColor = [UIColor redColor];
     [imageBgView addSubview:imageView];
-    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
-    imageView.height = imageHeight;
+//    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width, imageHeight) placeholderImage:DEFAULT_HEADIMAGE];
     _coverImageView = imageView;
     [imageView addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:0];
     
@@ -161,9 +165,15 @@
         label = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 5, label.top, DEVICE_WIDTH - 12 * 2 - 5 - width, 58) font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE title:@""];
         [footView addSubview:label];
         
-        NSString *state = [self serviceState:[_serviceModel.state intValue]];
+        int stateNum = [_serviceModel.state intValue];// 服务状态id
+        NSString *state = [self serviceState:stateNum];
         string = [NSString stringWithFormat:@"状态: %@",state];
         [label setAttributedText:[LTools attributedString:string keyword:state color:DEFAULT_TEXTCOLOR_ORANGE]];
+        
+        //已出报告
+        if (stateNum == 11) {
+            [label addTaget:self action:@selector(clickToViewReportHtml) tag:0];
+        }
         
         //线
         //line
@@ -171,7 +181,7 @@
         line.backgroundColor = DEFAULT_LINECOLOR;
         [footView addSubview:line];
         
-        NSArray *titles = @[@"体检人信息:",@"预约上门时间:",@"上门服务地址:",@"护士信息:"];
+        NSArray *titles = @[@"体 检 人 信 息:",@"预约上门时间:",@"上门服务地址:",@"护  士  信   息:"];
         for (int i = 0; i < titles.count; i ++)
         {
             BOOL have = YES;//判断是否有该项信息
@@ -194,7 +204,7 @@
                 NSString *cityName = dic[@"cityName"];
                 NSString *districtName = dic[@"districtName"];
                 NSString *address = dic[@"address"];
-                key = [NSString stringWithFormat:@"%@%@%@",districtName,cityName,address];
+                key = [NSString stringWithFormat:@"%@%@%@",cityName,districtName,address];
             }else if (i == 3)
             {
                 have = NO;
@@ -217,10 +227,26 @@
                 }
                 
             }
-            string = [NSString stringWithFormat:@"%@  %@",titles[i],key];
+            string = titles[i];
             
             if (have) {
-                label = [[UILabel alloc]initWithFrame:CGRectMake(12, top, DEVICE_WIDTH - 12 * 2, 25) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:string];
+                
+                CGFloat titleWidth = [LTools widthForText:string font:14];
+                
+                CGFloat height = [LTools heightForText:string width:titleWidth font:14];
+                
+                label = [[UILabel alloc]initWithFrame:CGRectMake(12, top + 5, titleWidth, height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:string];
+//                label.backgroundColor = [UIColor redColor];
+                [footView addSubview:label];
+                
+                
+                CGFloat contentWidth = DEVICE_WIDTH - 12 - label.right - 5;
+                height = [LTools heightForText:key width:contentWidth font:14];
+                
+                label = [[UILabel alloc]initWithFrame:CGRectMake(label.right + 5, label.top, contentWidth, height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:key];
+                label.numberOfLines = 0;
+                label.lineBreakMode = NSLineBreakByClipping;
+//                label.backgroundColor = [UIColor orangeColor];
                 [footView addSubview:label];
             }
         }
@@ -229,7 +255,7 @@
         int stateCode = [_serviceModel.state intValue];
         if (stateCode == 1 ||
             stateCode == 2) {
-            UIButton *cancelBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 72, label.bottom, 72, 30) buttonType:UIButtonTypeCustom normalTitle:@"取消服务" selectedTitle:nil target:self action:@selector(clickToCancelService)];
+            UIButton *cancelBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - 72, label.bottom + 5, 72, 30) buttonType:UIButtonTypeCustom normalTitle:@"取消服务" selectedTitle:nil target:self action:@selector(clickToCancelService)];
             [footView addSubview:cancelBtn];
             cancelBtn.backgroundColor = DEFAULT_TEXTCOLOR_ORANGE;
             [cancelBtn addCornerRadius:3.f];
@@ -434,13 +460,13 @@
         [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_CANCEL_SUCCESS object:nil];
         
-        [LTools showMBProgressWithText:@"取消服务成功！" addToView:Weakself.view];
+        [LTools showMBProgressWithText:@"成功取消本次服务！" addToView:Weakself.view];
         
         [Weakself performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
         
     } failBlock:^(NSDictionary *result) {
         
-        NSLog(@"%@",result[@"msg"]);
+        DDLOG(@"%@",result[@"msg"]);
         [MBProgressHUD hideHUDForView:Weakself.view animated:YES];
     }];
 }
@@ -719,7 +745,7 @@
             return @"检测完成";
             break;
         case 11:
-            return @"已出报告";
+            return @"已出报告(点击查看)";
             break;
         case 12:
             return @"用户取消服务";
@@ -819,14 +845,12 @@
         NSMutableArray *temp = [NSMutableArray array];
         
         for (int i = 0; i < count; i ++) {
-            
-            //    NSString *imageUrl = [model.pictures firstObject][@"thumb"];
-            
+                        
             NSDictionary *dic = img[i];
             
             UIImageView *imageView = _coverImageView;
             LPhotoModel *photo = [[LPhotoModel alloc]init];
-            photo.imageUrl = dic[@"url"];
+            photo.imageUrl = dic[@"raw"];
             imageView = imageView;
             photo.thumbImage = imageView.image;
             photo.sourceImageView = imageView;
@@ -836,6 +860,18 @@
         
         return temp;
     }];
+}
+
+/**
+ *  查看体检报告
+ *
+ *  @param reportHtml
+ */
+- (void)clickToViewReportHtml
+{
+    if (self.report_html) {
+        [MiddleTools pushToWebFromViewController:self weburl:self.report_html title:@"体检报告" moreInfo:NO hiddenBottom:NO];
+    }
 }
 
 #pragma - mark UIAlertViewDelegate <NSObject>

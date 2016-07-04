@@ -91,17 +91,15 @@
     
     _theModel = model;
     
-    //图片
-//    [self.iconImageView l_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:nil];
-    
-    @WeakObj(self);
-    [self.iconImageView l_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:DEFAULT_HEADIMAGE completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    int type = [model.type intValue];
+    if (type == 2) { //go健康
         
-        UIImage *newImage = [image imageCompressForTargetSize:CGSizeMake(320, 200)];
-        if (newImage) {
-            Weakself.iconImageView.image = newImage;
-        }
-    }];
+        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:model.cover_pic] clipSize:CGSizeMake(320, 200) placeholderImage:DEFAULT_HEADIMAGE];
+        
+    }else
+    {
+        [self.iconImageView l_setImageWithURL:[NSURL URLWithString:model.cover_pic] placeholderImage:DEFAULT_HEADIMAGE];
+    }
     
     //内容
     self.contentLabel.text = model.product_name;
