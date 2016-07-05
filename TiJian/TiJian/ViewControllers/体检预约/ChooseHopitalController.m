@@ -52,6 +52,7 @@ typedef enum {
 @property(nonatomic,retain)UIView *calendarView;//日历背景view
 @property(nonatomic,retain)ResultView *nodataView;
 @property(nonatomic,retain)NSDate *beginDate;//开始时间
+@property(nonatomic,retain)UILabel *hintLabel;//提示语
 
 @end
 
@@ -78,7 +79,8 @@ typedef enum {
                         WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
     _currentCalendar = [NSCalendar currentCalendar];
-
+    //提示语
+    [self.view addSubview:self.hintLabel];
     //日历
     [self.view addSubview:self.calendarView];
     
@@ -116,7 +118,7 @@ typedef enum {
     if (_beginDate) {
         return _beginDate;
     }
-    _beginDate = [[NSDate date]fs_dateByAddingDays:1];
+    _beginDate = [[NSDate date]fs_dateByAddingDays:4];
     return _beginDate;
 }
 
@@ -148,13 +150,22 @@ typedef enum {
     return result;
 }
 
+- (UILabel *)hintLabel
+{
+    if (_hintLabel) {
+        return _hintLabel;
+    }
+    _hintLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 12 * 2, 30) font:10 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:@"温馨提示:预约信息提交后,客服将在24小时内与您联系！"];
+    return _hintLabel;
+}
+
 - (UIView *)calendarView
 {
     if (_calendarView) {
         return _calendarView;
     }
     
-    self.calendarView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_HEIGHT, 108 + 27)];
+    self.calendarView = [[UIView alloc]initWithFrame:CGRectMake(0, self.hintLabel.bottom, DEVICE_HEIGHT, 108 + 27)];
     _calendarView.backgroundColor = [UIColor whiteColor];
     
     [self.calendarView addSubview:self.calendar];
@@ -461,9 +472,13 @@ typedef enum {
  */
 - (void)appointSuccessWithResult:(NSDictionary *)result
 {
+    NSString *msg = result[RESULT_INFO];
+    if ([LTools isEmpty:msg]) {
+        msg = Alert_AppointSucess;
+    }
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:Alert_AppointSucess delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     alert.tag = kTag_appointSuccess;
     [alert show];
 }
@@ -677,15 +692,22 @@ typedef enum {
 
 - (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date
 {
-    if ([date fs_isEqualToDateForDay:[NSDate date]]) {
-        
-        if ([date fs_isEqualToDateForDay:[NSDate date]]) {
-            
-            [LTools showMBProgressWithText:@"只能预约今天以后分院!" addToView:self.view];
-        }
-        
+//    if ([date fs_isEqualToDateForDay:[NSDate date]]) {
+//        
+//        if ([date fs_isEqualToDateForDay:[NSDate date]]) {
+//            
+//            [LTools showMBProgressWithText:@"只能预约今天以后分院!" addToView:self.view];
+//        }
+//        
+//        return NO;
+//    }
+    
+    int days = (int)[date fs_daysFrom:self.beginDate];
+    
+    if (days < 0) {
         return NO;
     }
+    
     return YES;
 }
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date
@@ -707,14 +729,14 @@ typedef enum {
 
 - (NSDate *)minimumDateForCalendar:(FSCalendar *)calendar
 {
-    return [NSDate date];
+    return self.beginDate;
 }
 //- (NSDate *)maximumDateForCalendar:(FSCalendar *)calendar;
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat offsetY = scrollView.contentOffset.y;
-    NSLog(@"offsety %f",offsetY);
+//    NSLog(@"offsety %f",offsetY);
     
     if (offsetY < -40) {
         if (!self.closeButton.selected) {
@@ -858,17 +880,17 @@ typedef enum {
         
         [cell.textLabel setAttributedText:[LTools attributedString:text keyword:name color:[UIColor colorWithHexString:@"323232"]]];
         
-        NSString *numString = [NSString stringWithFormat:@"%d%%",[h_model.appoint_percent intValue]];
-        NSString *d_text = [NSString stringWithFormat:@"已预约%@",numString];
+//        NSString *numString = [NSString stringWithFormat:@"%d%%",[h_model.appoint_percent intValue]];
+//        NSString *d_text = [NSString stringWithFormat:@"已预约%@",numString];
 
         if ([h_model.appoint_percent intValue] == 100) {
             
             cell.backgroundColor = [UIColor colorWithHexString:@"fafafa"];
-            label.text = d_text;
+//            label.text = d_text;
         }else
         {
             cell.backgroundColor = [UIColor whiteColor];
-            [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
+//            [label setAttributedText:[LTools attributedString:d_text keyword:numString color:[UIColor colorWithHexString:@"f88323"]]];
         }
         
     }

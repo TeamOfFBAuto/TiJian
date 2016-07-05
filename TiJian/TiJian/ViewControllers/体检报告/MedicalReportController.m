@@ -366,7 +366,12 @@
         //todo
         [_table.dataArray removeObjectAtIndex:index];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        [_table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        //剩最后一行了,直接删除会有问题
+        if (_table.dataArray.count > 0){
+            [_table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+        
         [self deleteReportId:user.report_id];
         if (_table.dataArray.count == 0) {
             [_table reloadData:nil pageSize:G_PER_PAGE noDataView:self.resultView];

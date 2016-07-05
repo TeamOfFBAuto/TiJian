@@ -334,11 +334,15 @@
  */
 - (void)appointSuccessWithResult:(NSDictionary *)result
 {
-    NSLog(@"%@",result);
+    NSString *msg = result[RESULT_INFO];
+    if ([LTools isEmpty:msg]) {
+        msg = Alert_AppointSucess;
+    }
+    
     //预约成功通知
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_APPOINT_SUCCESS object:nil];
     
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:Alert_AppointSucess delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     alert.tag = kTag_Appoint_success;
     [alert show];
 }

@@ -286,7 +286,11 @@
 
 -(void)rightButtonTap2:(UIButton *)sender
 {
-    [[MiddleTools shareInstance]shareFromViewController:self withImageUrl:self.extensionParams[Share_imageUrl]  shareTitle:self.extensionParams[Share_title] shareContent:self.extensionParams[Share_content] linkUrl:self.webUrl];
+    NSString *temp = self.webUrl;
+    if (temp && [temp containsString:@"share="]) {
+        temp = [temp stringByReplacingOccurrencesOfString:@"share=0" withString:@"share=1"];//区别分享链接
+    }
+    [[MiddleTools shareInstance]shareFromViewController:self withImageUrl:self.extensionParams[Share_imageUrl]  shareTitle:self.extensionParams[Share_title] shareContent:self.extensionParams[Share_content] linkUrl:temp];
 }
 
 /**
@@ -513,8 +517,8 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"navigationType %ld",(long)navigationType);
-    NSLog(@"request %@",request.URL.relativeString);
+    DDLOG(@"navigationType %ld",(long)navigationType);
+    DDLOG(@"request %@",request.URL.relativeString);
     
     NSString *relativeUrl = request.URL.relativeString;
     

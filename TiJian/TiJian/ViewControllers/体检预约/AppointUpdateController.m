@@ -153,9 +153,7 @@
  *  去选择体检人
  */
 - (void)clickToSelectUserInfo
-{
-    NSLog(@"选择体检人");
-    
+{    
     _isUpdated = YES;
     
     PeopleManageController *people = [[PeopleManageController alloc]init];

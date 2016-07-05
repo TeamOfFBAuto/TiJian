@@ -1242,32 +1242,41 @@
 -(ActivityView *)activityView
 {
     if (!_activityView && _activityArray.count) {
+        
+         @WeakObj(self);
         _activityView = [[ActivityView alloc]initWithActivityArray:_activityArray actionBlock:^(ActionStyle style,NSInteger index) {
             
             if (style == ActionStyle_Select) {
                 
                 ActivityModel *aModel = _activityArray[index];
-                
-                NSString *shareImageUrl = aModel.cover_pic;
-                NSString *shareTitle = aModel.title;
-                NSString *shareContent = aModel.summary;
-                NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
-                                         Share_title:shareTitle,
-                                         Share_content:shareContent};
-                @WeakObj(self);
-
-                [MiddleTools pushToWebFromViewController:self weburl:aModel.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:^(NSDictionary *params) {
-                    //更新未读状态
-                    if ([params[@"result"]boolValue]) {
-                        
-                        [Weakself getUnreadActivityNum];
-                    }
-                }];
-
+                [Weakself pushToActivityModel:aModel];
             }
         }];
     }
     return _activityView;
+}
+
+/**
+ *  跳转至活动详情
+ *
+ *  @param aModel
+ */
+- (void)pushToActivityModel:(ActivityModel *)aModel
+{
+    NSString *shareImageUrl = aModel.cover_pic;
+    NSString *shareTitle = aModel.title;
+    NSString *shareContent = aModel.summary;
+    NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
+                             Share_title:shareTitle,
+                             Share_content:shareContent};
+    @WeakObj(self);
+    [MiddleTools pushToWebFromViewController:self weburl:aModel.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:^(NSDictionary *params) {
+        //更新未读状态
+        if ([params[@"result"]boolValue]) {
+            
+            [Weakself getUnreadActivityNum];
+        }
+    }];
 }
 
 /**

@@ -232,6 +232,7 @@
     NSString *api = REPORT_DEL;
     
     __weak typeof(self)weakSelf = self;
+     @WeakObj(_table);
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
@@ -240,6 +241,7 @@
             
             [LTools showMBProgressWithText:@"删除报告成功" addToView:weakSelf.view];
         }
+        [Weak_table refreshNewData];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -655,46 +657,51 @@
     return 1 + 1;
 }
 
-//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//    return YES;
-//}
-//
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//    if (editingStyle == UITableViewCellEditingStyleDelete)
-//    {
-//        UserInfo *user = _table.dataArray[indexPath.row];
-//        
-//        NSString *title = [NSString stringWithFormat:@"是否确定删除(%@)的体检报告",user.family_user_name];
-//        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:title delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-//        alert.tag = 100 + indexPath.row;
-//        [alert show];
-//    }
-//}
-//
-//// 这里默认删除的按钮为英文，想要改变成中文，需要再实现一个方法。
-//
-//- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0){
-//    
-//    return @"删除";
-//}
-//
-//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    if (buttonIndex == 1) {
-//        
-//        int index = (int)alertView.tag - 100;
-//        UserInfo *user = _table.dataArray[index];
-//        //todo
-//        [_table.dataArray removeObjectAtIndex:index];
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-//        [_table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-//        [self deleteReportId:user.report_id];
-//        if (_table.dataArray.count == 0) {
-//            [_table reloadData:nil pageSize:G_PER_PAGE noDataView:self.resultView];
-//        }
-//    }
-//}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        UserInfo *user = _table.dataArray[indexPath.row];
+        
+        NSString *title = [NSString stringWithFormat:@"是否确定删除(%@)的体检报告",user.family_user_name];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:title delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        alert.tag = 100 + indexPath.row;
+        [alert show];
+    }
+}
+
+// 这里默认删除的按钮为英文，想要改变成中文，需要再实现一个方法。
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0){
+    
+    return @"删除";
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        
+        int index = (int)alertView.tag - 100;
+        UserInfo *user = _table.dataArray[index];
+        //todo
+        [_table.dataArray removeObjectAtIndex:index];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        
+        //剩最后一行了,直接删除会有问题
+        if (_table.dataArray.count > 0){
+            [_table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+        
+        [self deleteReportId:user.report_id];
+        if (_table.dataArray.count == 0) {
+            [_table reloadData:nil pageSize:G_PER_PAGE noDataView:self.resultView];
+        }
+    }
+}
 
 @end

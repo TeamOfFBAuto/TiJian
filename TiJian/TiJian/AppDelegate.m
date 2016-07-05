@@ -1116,12 +1116,6 @@
 - (void)testSomething
 {
     
-    //    [LTools setObject:@"WiVULQd+ULYHvAWYB7cI3wKnA+FarwHwAi9WZ1cyAzEHNlFiVjRdaQI1AzMAZQBwBTEBOwdjA2VXZ1Bl" forKey:USER_AUTHOD];
-    
-//    NSString *serviceId = @"1010053490049";
-//    [self netWorkForMakeReportTestingWithServiceId:serviceId];
-//    [self netWorkForMakeReportWithServiceId:serviceId];
-
 }
 
 #pragma mark - Go健康测试送检、出报告
@@ -1131,11 +1125,20 @@
  */
 - (void)netWorkForMakeReportTestingWithServiceId:(NSString *)serviceId
 {
+//    array(3) {
+//        ["appId"]=>
+//        string(9) "gjk001061"
+//        ["id"]=>
+//        string(13) "1010052961320"
+//        ["nonceStr"]=>
+//        string(31) "09DS2LSDKFSF6CQ2502SI8ZNMTM67VS"
+//    }
+    
     NSString *nonceStr = [LTools randomNum:32];//随机字符串
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params safeSetValue:GoHealthAppId forKey:@"appId"];
-    [params safeSetValue:nonceStr forKey:@"nonceStr"];
-    [params safeSetString:serviceId forKey:@"id"];//服务id
+    [params safeSetValue:@"09DS2LSDKFSF6CQ2502SI8ZNMTM67VS" forKey:@"nonceStr"];
+    [params safeSetString:@"1010052961320" forKey:@"id"];//服务id
 
     NSString *sign = [MiddleTools goHealthSignWithParams:params];
     [params safeSetValue:sign forKey:@"sign"];
