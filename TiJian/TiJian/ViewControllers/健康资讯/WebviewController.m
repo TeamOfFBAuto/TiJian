@@ -14,6 +14,12 @@
 #import "NJKWebViewProgress.h"
 #import "AddPeopleViewController.h"
 #import "UMSocial.h"
+//#import <AVFoundation/AVCaptureDevice.h>
+//#import <AVFoundation/AVMediaFormat.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+
+#define kTag_photo 1000
+
 
 @interface WebviewController ()<UIWebViewDelegate,UIAlertViewDelegate,NJKWebViewProgressDelegate,UMSocialUIDelegate>
 {
@@ -26,6 +32,8 @@
     NSString *_shareUrl;
     NSString *_shareContent;
     NSString *_shareTitle;
+    
+    UIButton *_saveButton;//保存体检报告的按钮
 }
 
 @property(nonatomic,retain)UIWebView *webView;
@@ -169,6 +177,9 @@
         }
         
         title = self.myTitle;
+        
+        
+        
     }
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
@@ -237,6 +248,23 @@
     return _failView;
 }
 
+
+-(UIButton *)saveButton
+{
+    if (!_saveButton) {
+        _saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _saveButton.frame =CGRectMake(DEVICE_WIDTH - 20 - 40, DEVICE_HEIGHT - 50 - 40 - 64, 40, 40);
+        [_saveButton setImage:[UIImage imageNamed:@"report_save.png"] forState:UIControlStateNormal];
+        [self.view addSubview:_saveButton];
+        [_saveButton addTarget:self action:@selector(saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view bringSubviewToFront:_saveButton];
+    }
+    return _saveButton;
+}
+
+
+
+
 #pragma - mark 事件处理
 
 - (void)clickToRefresh
@@ -300,17 +328,166 @@
     }
 }
 
+//保存体检报告
+-(void)saveButtonClicked{
+    
+    //相机
+//    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    
+    
+    ALAuthorizationStatus author = [ALAssetsLibrary authorizationStatus];
+    
+//    case ALAuthorizationStatusNotDetermined:{
+//    NSString *tips = @"请允许本App可以访问相册";
+//    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"保存到相册需要授权" message:tips delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil] autorelease];
+//
+//    case ALAuthorizationStatusRestricted:
+//    NSString *tips = @"你的权限受限";
+//    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"保存到相册需要授权" message:tips delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil]
+//            
+//    case ALAuthorizationStatusDenied:
+//            NSString *tips = @"需要保存图片到相册\n请授权本App可以访问相册\n设置方式:手机设置->隐私->照片\n允许本App访问相册";
+    
+    
+    if (author == ALAuthorizationStatusRestricted || author ==ALAuthorizationStatusDenied)
+    {
+        //无权限
+        NSString *title = @"此应用没有权限访问您的相册";
+        NSString *errorMessage = @"您可以在\"隐私设置\"中启用访问。";
+        
+        //iOS8 之后可以打开系统设置界面
+        if (IOS8_OR_LATER) {
+            
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                               message:errorMessage
+                                                              delegate:self
+                                                     cancelButtonTitle:@"取消"
+                                                     otherButtonTitles:@"设置", nil];
+            alertView.tag = kTag_photo;
+            [alertView show];
+        }else
+        {
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title
+                                                               message:errorMessage
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"确定"
+                                                     otherButtonTitles:nil, nil];
+            alertView.tag = kTag_photo;
+            [alertView show];
+        }
+        return;
+    }
+    
+    
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    //把webView转为图片
+    UIImage *img = [self imageRepresentation];
+    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, img.size.width, img.size.height)];
+    [imv setImage:img];
+    //保存到图片库
+    UIGraphicsBeginImageContext(imv.bounds.size);
+    [imv.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageWriteToSavedPhotosAlbum(temp, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    
+    
+}
+
+
+
+
+
+
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error
+  contextInfo:(void *)contextInfo
+{
+    // Was there an error?
+    if (error != NULL)
+    {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [GMAPI showAutoHiddenMBProgressWithText:@"保存体检报告失败" addToView:self.view];
+        
+    }
+    else  // No errors
+    {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [GMAPI showAutoHiddenMBProgressWithText:@"保存体检报告成功" addToView:self.view];
+    }
+}
+
+
+- (UIImage *)imageRepresentation{
+    CGFloat scale = [UIScreen mainScreen].scale;
+    
+    CGSize boundsSize = self.webView.bounds.size;
+    CGFloat boundsWidth = boundsSize.width;
+    CGFloat boundsHeight = boundsSize.height;
+    
+    CGSize contentSize = self.webView.scrollView.contentSize;
+    CGFloat contentHeight = contentSize.height;
+    
+    CGPoint offset = self.webView.scrollView.contentOffset;
+    
+    [self.webView.scrollView setContentOffset:CGPointMake(0, 0)];
+    
+    NSMutableArray *images = [NSMutableArray array];
+    while (contentHeight > 0) {
+        UIGraphicsBeginImageContextWithOptions(boundsSize, NO, 0.0);
+        [self.webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [images addObject:image];
+        
+        CGFloat offsetY = self.webView.scrollView.contentOffset.y;
+        [self.webView.scrollView setContentOffset:CGPointMake(0, offsetY + boundsHeight)];
+        contentHeight -= boundsHeight;
+    }
+    
+    [self.webView.scrollView setContentOffset:offset];
+    
+    CGSize imageSize = CGSizeMake(contentSize.width * scale,
+                                  contentSize.height * scale);
+    UIGraphicsBeginImageContext(imageSize);
+    [images enumerateObjectsUsingBlock:^(UIImage *image, NSUInteger idx, BOOL *stop) {
+        [image drawInRect:CGRectMake(0,
+                                     scale * boundsHeight * idx,
+                                     scale * boundsWidth,
+                                     scale * boundsHeight)];
+    }];
+    UIImage *fullImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return fullImage;
+}
+
 #pragma - mark UIAlertViewDelegate
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
-        [self leftButtonTap:nil];
+        if (alertView.tag == kTag_photo) {
+            
+        }else{
+            [self leftButtonTap:nil];
+        }
+        
     }
     
     if (buttonIndex == 1) {
         
         if (alertView.tag >= 100) {
+            
+            if (alertView.tag == kTag_photo) {
+                
+                if (IOS8_OR_LATER) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+                }
+                
+                return;
+            }
             
             [self addFailView];
             
@@ -368,13 +545,9 @@
         self.updateParamsBlock(@{@"result":[NSNumber numberWithBool:YES]});//加载完成
     }
     
-//    NSString *title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-//
-//    _shareTitle = title;
-//    
-//    NSString *imageUrl = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('img')[0].getAttribute('src')"];
-//    
-//    NSLog(@"image %@ %@",title,imageUrl);
+    if ([self.myTitle isEqualToString:@"体检报告"]) {
+        [self saveButton];
+    }
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
 {

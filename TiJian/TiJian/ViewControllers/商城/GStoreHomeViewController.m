@@ -511,13 +511,13 @@
             [_bannerView setAutomicScrollingDuration:3];
             
             [self.theTopView addSubview:_bannerView];
+            
+            [_table setFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50)];
+            
         }else{//无轮播图
             [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
             _bannerView = [[LBannerView alloc] initWithFrame:CGRectZero];
-//            CGFloat height = self.theTopView.frame.size.height;
-//            height -= [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/468];
-//            [self.theTopView setHeight:height];
-//            _table.tableHeaderView = self.theTopView;
+
         }
     }else{
         [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];

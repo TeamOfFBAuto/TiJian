@@ -210,7 +210,7 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    cell.textLabel.text = self.dataArray[indexPath.row];
+    cell.textLabel.text = self.dataArray[self.dataArray.count - indexPath.row - 1];
     cell.textLabel.font = [UIFont systemFontOfSize:13];
     cell.textLabel.textColor = RGBCOLOR(38, 38, 39);
     
@@ -221,7 +221,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSString *str = self.dataArray[indexPath.row];
+    NSString *str = self.dataArray[self.dataArray.count - indexPath.row - 1];
     self.kuangBlock(str);
 }
 
