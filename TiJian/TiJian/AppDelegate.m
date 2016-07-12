@@ -297,7 +297,6 @@
     [JSPatch startWithAppKey:JSPatchAppKey];
     [JSPatch sync];
 #endif
-    
 }
 
 #pragma mark - 友盟相关
@@ -1123,63 +1122,63 @@
 /**
  *  把服务状态改为送检中
  */
-- (void)netWorkForMakeReportTestingWithServiceId:(NSString *)serviceId
-{
-//    array(3) {
-//        ["appId"]=>
-//        string(9) "gjk001061"
-//        ["id"]=>
-//        string(13) "1010052961320"
-//        ["nonceStr"]=>
-//        string(31) "09DS2LSDKFSF6CQ2502SI8ZNMTM67VS"
-//    }
-    
-    NSString *nonceStr = [LTools randomNum:32];//随机字符串
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params safeSetValue:GoHealthAppId forKey:@"appId"];
-    [params safeSetValue:@"09DS2LSDKFSF6CQ2502SI8ZNMTM67VS" forKey:@"nonceStr"];
-    [params safeSetString:@"1010052961320" forKey:@"id"];//服务id
-
-    NSString *sign = [MiddleTools goHealthSignWithParams:params];
-    [params safeSetValue:sign forKey:@"sign"];
-    
- 
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_makeReportTesting parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"goHealth success result %@",result);
-        
-        
-    } failBlock:^(NSDictionary *result) {
-        
-        NSLog(@"goHealth fail result %@",result);
-        NSLog(@"%@",result[@"msg"]);
-    }];
-}
-
-
-/**
- *  把服务状态模拟生成报告
- */
-- (void)netWorkForMakeReportWithServiceId:(NSString *)serviceId
-{
-    NSString *nonceStr = [LTools randomNum:32];//随机字符串
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params safeSetValue:GoHealthAppId forKey:@"appId"];
-    [params safeSetValue:nonceStr forKey:@"nonceStr"];
-    [params safeSetString:serviceId forKey:@"id"];//服务id
-    
-    NSString *sign = [MiddleTools goHealthSignWithParams:params];
-    [params safeSetValue:sign forKey:@"sign"];
-    
-    
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_makeReport parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"goHealth success result %@",result);
-        
-        
-    } failBlock:^(NSDictionary *result) {
-        
-        NSLog(@"goHealth fail result %@",result);
-        NSLog(@"%@",result[@"msg"]);
-    }];
-}
+//- (void)netWorkForMakeReportTestingWithServiceId:(NSString *)serviceId
+//{
+////    array(3) {
+////        ["appId"]=>
+////        string(9) "gjk001061"
+////        ["id"]=>
+////        string(13) "1010052961320"
+////        ["nonceStr"]=>
+////        string(31) "09DS2LSDKFSF6CQ2502SI8ZNMTM67VS"
+////    }
+//    
+//    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+//    [params safeSetValue:@"09DS2LSDKFSF6CQ2502SI8ZNMTM67VS" forKey:@"nonceStr"];
+//    [params safeSetString:@"1010052961320" forKey:@"id"];//服务id
+//
+//    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+//    [params safeSetValue:sign forKey:@"sign"];
+//    
+// 
+//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_makeReportTesting parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+//        NSLog(@"goHealth success result %@",result);
+//        
+//        
+//    } failBlock:^(NSDictionary *result) {
+//        
+//        NSLog(@"goHealth fail result %@",result);
+//        NSLog(@"%@",result[@"msg"]);
+//    }];
+//}
+//
+//
+///**
+// *  把服务状态模拟生成报告
+// */
+//- (void)netWorkForMakeReportWithServiceId:(NSString *)serviceId
+//{
+//    NSString *nonceStr = [LTools randomNum:32];//随机字符串
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    [params safeSetValue:GoHealthAppId forKey:@"appId"];
+//    [params safeSetValue:nonceStr forKey:@"nonceStr"];
+//    [params safeSetString:serviceId forKey:@"id"];//服务id
+//    
+//    NSString *sign = [MiddleTools goHealthSignWithParams:params];
+//    [params safeSetValue:sign forKey:@"sign"];
+//    
+//    
+//    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet_goHealth api:GoHealth_makeReport parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+//        NSLog(@"goHealth success result %@",result);
+//        
+//        
+//    } failBlock:^(NSDictionary *result) {
+//        
+//        NSLog(@"goHealth fail result %@",result);
+//        NSLog(@"%@",result[@"msg"]);
+//    }];
+//}
 
 @end

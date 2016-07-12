@@ -72,6 +72,14 @@
 				<string>sina.0c0ba054bfabec2b2cb3dc0cef811eb6</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>haimayisheng/view</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>3.0</string>

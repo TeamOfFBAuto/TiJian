@@ -135,3 +135,34 @@ defineClass('HomeViewController', [ ], { alertView_clickedButtonAtIndex:function
             self.ORIGalertView_clickedButtonAtIndex(alertView, buttonIndex);
         }
 }})
+
+//体检报告下方资讯详情页每页分享按钮 version 3.0开始
+defineClass('NewMedicalReportController',[],{didSelectRowAtIndexPath_tableView:function(indexPath, tableView)
+{
+    var section = indexPath.section();
+
+    if (section == 0)
+    {
+        self.ORIGdidSelectRowAtIndexPath_tableView(indexPath,tableView);
+    }else
+    {
+        var articleArray = self.valueForKey("_articleArray");
+        var indexRow = indexPath.row();
+        var acticleModel = articleArray.objectAtIndex(indexRow);
+
+        var shareImageUrl = acticleModel.valueForKey("cover_pic");
+        var shareTitle = acticleModel.valueForKey("title");
+        var content = acticleModel.valueForKey("summary");
+        var url = acticleModel.valueForKey("url");
+
+        require('NSMutableDictionary');
+        var dict = NSMutableDictionary.dictionaryWithCapacity(1);
+        dict.setObject_forKey(shareImageUrl, 'shareImageUrl');
+        dict.setObject_forKey(shareTitle, 'shareTitle');
+        dict.setObject_forKey(content, 'shareContent');
+        require('MiddleTools');
+
+        MiddleTools.pushToWebFromViewController_weburl_extensionParams_moreInfo_hiddenBottom_updateParamsBlock(self,url,dict,true,true,null);
+    }
+}});
+

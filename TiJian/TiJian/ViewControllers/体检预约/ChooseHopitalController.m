@@ -85,7 +85,7 @@ typedef enum {
     [self.view addSubview:self.calendarView];
     
     //列表
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, self.calendarView.bottom, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _calendarView.bottom) style:UITableViewStylePlain];
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, self.calendarView.bottom, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - _calendarView.bottom - self.hintLabel.height) style:UITableViewStylePlain];
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
@@ -668,7 +668,7 @@ typedef enum {
      @WeakObj(_table);
     [UIView animateWithDuration:0.3 animations:^{
         Weakself.calendarView.height = Weakself.closeButton.height + size.height;
-        Weak_table.height = DEVICE_HEIGHT - 64 - Weakself.calendarView.height;
+        Weak_table.height = DEVICE_HEIGHT - 64 - Weakself.calendarView.height - Weakself.hintLabel.height;
         Weak_table.top = _calendarView.bottom;
         [Weakself updateResultView];
     }];

@@ -441,8 +441,17 @@
         
     }else
     {
-        ArticleModel *aModel = _articleArray[indexPath.row];
-        [MiddleTools pushToWebFromViewController:self weburl:aModel.url title:nil moreInfo:NO hiddenBottom:YES];
+//        ArticleModel *aModel = _articleArray[indexPath.row];
+//        [MiddleTools pushToWebFromViewController:self weburl:aModel.url title:nil moreInfo:NO hiddenBottom:YES];
+        
+        ArticleModel *article = _articleArray[indexPath.row];
+        NSString *shareImageUrl = article.cover_pic;
+        NSString *shareTitle = article.title;
+        NSString *shareContent = article.summary;
+        NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
+                                 Share_title:shareTitle,
+                                 Share_content:shareContent};
+        [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:nil];
     }
     
 }
