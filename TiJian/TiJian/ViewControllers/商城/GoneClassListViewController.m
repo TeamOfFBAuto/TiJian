@@ -29,7 +29,6 @@
     
     NSMutableArray *_productOneClassArray;//商品列表
     UIView *_backBlackView;//筛选界面下面的黑色透明view
-    UIButton *_filterButton;//筛选按钮
     
     //搜索框相关
     UIView *_searchView;
@@ -438,17 +437,10 @@
         
         [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
         
-        if (_productOneClassArray.count == 0) {
-            [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
-            
-        }else{
-            _filterButton.hidden = NO;
-        }
-        
         
     } failBlock:^(NSDictionary *result) {
+        [_table loadFail];
         
-        [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
     }];
  
     
@@ -469,61 +461,7 @@
 
 
 
-//根据关键词搜索
--(void)prepareNetDataWithSearchDic:(NSDictionary *)theDic{
-    
-    if (!_request) {
-        _request = [YJYRequstManager shareInstance];
-    }
-    
-    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-    if (!theDic) {
-        [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
-        [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
-    }
-    [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
-    [temp_dic safeSetString:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
-    if (self.uc_id) {
-        [temp_dic safeSetString:self.uc_id forKey:@"uc_id"];
-    }
-    if (self.brand_id) {
-        [temp_dic safeSetString:self.brand_id forKey:@"brand_id"];
-    }
-    if (self.category_id) {
-        [temp_dic safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
-    }
-    
-    
-    [temp_dic safeSetString:self.theSearchWorld forKey:@"keywords"];
-    
-    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:temp_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        NSArray *arr = [result arrayValueForKey:@"data"];
-        
-        _productOneClassArray = [NSMutableArray arrayWithCapacity:1];
-        
-        for (NSDictionary *dic in arr) {
-            ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-            [_productOneClassArray addObject:model];
-        }
-        
-        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
-        
-        if (_productOneClassArray.count == 0) {
-            [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
-            
-        }else{
-            _filterButton.hidden = NO;
-        }
-        
-        
-    } failBlock:^(NSDictionary *result) {
-        
-        [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
-    }];
-    
-    
-}
+
 
 //根据城市查询品牌列表
 -(void)prepareBrandListWithLocation{

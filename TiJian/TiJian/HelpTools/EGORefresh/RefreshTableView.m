@@ -328,6 +328,8 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
         if (self.tableFooterView != self.refreshFooterView || !self.tableFooterView) {
             self.tableFooterView = self.refreshFooterView;
         }
+    }else{
+        self.tableFooterView = nil;
     }
     
     if (_isReloadData) { //刷新
