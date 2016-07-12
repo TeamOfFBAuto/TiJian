@@ -673,15 +673,17 @@
     }else if (tableView.tag == 3){//价格选择
         num = _priceArray.count;
     }else if (tableView.tag == 4){//体检品牌
-        
-        if (self.delegate.brand_city_list.count == 0) {//没有获取到品牌信息
-            num = 0;
-            if (!self.noBrandView) {
-                [self creatNoBrandView];
+        if (self.delegate) {
+            if (self.delegate.brand_city_list.count == 0) {//没有获取到品牌信息
+                num = 0;
+                if (!self.noBrandView) {
+                    [self creatNoBrandView];
+                }
+            }else{
+                num = self.delegate.brand_city_list.count+1;
             }
-        }else{
-            num = self.delegate.brand_city_list.count+1;
         }
+        
     }
     return num;
 }

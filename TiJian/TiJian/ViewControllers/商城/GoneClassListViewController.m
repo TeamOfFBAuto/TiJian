@@ -28,7 +28,6 @@
     AFHTTPRequestOperation *_request_hotSearch;
     
     NSMutableArray *_productOneClassArray;//商品列表
-    int _count;//网络请求个数
     UIView *_backBlackView;//筛选界面下面的黑色透明view
     UIButton *_filterButton;//筛选按钮
     
@@ -62,7 +61,6 @@
     _table.dataSource = nil;
     _table = nil;
     [_request removeOperation:_request_ProductOneClass];
-    [self removeObserver:self forKeyPath:@"_count"];
 }
 
 
@@ -84,20 +82,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    [self addObserver:self forKeyPath:@"_count" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    
-    
-    if (self.shaixuanDic) {
-        if (![LTools isEmpty:[self.shaixuanDic stringValueForKey:@"category_id"]]) {
-            self.category_id = [[self.shaixuanDic stringValueForKey:@"category_id"]intValue];
-        }
-        if (![LTools isEmpty:[self.shaixuanDic stringValueForKey:@"brand_id"]]) {
-            self.brand_id = [self.shaixuanDic stringValueForKey:@"brand_id"];
-        }
-
-    }
-    
     
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
@@ -419,60 +403,29 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    _count = 0;
 
-    NSDictionary *dic;
-    
-    if (theDic) {
-        NSString *voucherId = self.uc_id ? self.uc_id : @"";
-        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
-        
-        if (voucherId.length > 0) {
-            [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金券id
-            dic = temp_dic;
-        }else
-        {
-            dic = temp_dic;
-        }
-        
-        if (self.brand_id) {
-            if ([[temp_dic stringValueForKey:@"brand_id"]intValue] != [self.brand_id intValue]) {
-                [temp_dic safeSetString:[temp_dic stringValueForKey:@"brand_id"] forKey:@"brand_id"];
-            }else{
-                [temp_dic setObject:self.brand_id forKey:@"brand_id"];
-            }
-            
-            dic = temp_dic;
-        }
-        if (self.category_id) {
-            [temp_dic setObject:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
-            dic = temp_dic;
-        }
-        
-    }else{
-        
-        dic = @{
-                  @"category_id":[NSString stringWithFormat:@"%d",self.category_id],
-                  @"province_id":[GMAPI getCurrentProvinceId],
-                  @"city_id":[GMAPI getCurrentCityId],
-                  @"uc_id":self.uc_id ? self.uc_id : @"", //加上代金券id
-                  @"page":NSStringFromInt(_table.pageNum),
-                  @"per_page":NSStringFromInt(PAGESIZE_MID)
-                  };
-        
-        if (self.brand_id) {
-            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-            [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-            [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
-            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
-            dic = temp_dic;
-        }
-        
+    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+    if (!theDic) {
+        [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    }
+    [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
+    [temp_dic safeSetString:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+    if (self.uc_id) {
+        [temp_dic safeSetString:self.uc_id forKey:@"uc_id"];
+    }
+    if (self.brand_id) {
+        [temp_dic safeSetString:self.brand_id forKey:@"brand_id"];
+    }
+    if (self.category_id) {
+        [temp_dic safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
+    }
+    if (![LTools isEmpty:self.theSearchWorld]) {
+        [temp_dic safeSetString:self.theSearchWorld forKey:@"keywords"];
     }
     
-    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    
+    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:temp_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         
@@ -483,7 +436,6 @@
             [_productOneClassArray addObject:model];
         }
         
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
         
         if (_productOneClassArray.count == 0) {
@@ -523,58 +475,28 @@
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
     }
-    _count = 0;
     
-    NSDictionary *dic;
-    
-    if (theDic) {
-        NSString *voucherId = self.uc_id ? self.uc_id : @"";
-        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
-        
-        if (voucherId.length > 0) {
-            [temp_dic setObject:voucherId forKey:@"uc_id"];//加上代金券id
-            dic = temp_dic;
-        }else{
-            
-            dic = temp_dic;
-        }
-        
-        if (self.brand_id) {
-            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
-            dic = temp_dic;
-        }
-        
-        
-    }else{
-        
-        dic = @{
-                @"province_id":[GMAPI getCurrentProvinceId],
-                @"city_id":[GMAPI getCurrentCityId],
-                @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":NSStringFromInt(PAGESIZE_MID)
-                };
-        
-        
-        if (self.brand_id) {
-            NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-            [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-            [temp_dic setObject:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
-            [temp_dic setObject:self.brand_id forKey:@"brand_id"];//加上代金券id
-            dic = temp_dic;
-        }
-        
+    NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
+    if (!theDic) {
+        [temp_dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+        [temp_dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    }
+    [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
+    [temp_dic safeSetString:NSStringFromInt(PAGESIZE_MID) forKey:@"per_page"];
+    if (self.uc_id) {
+        [temp_dic safeSetString:self.uc_id forKey:@"uc_id"];
+    }
+    if (self.brand_id) {
+        [temp_dic safeSetString:self.brand_id forKey:@"brand_id"];
+    }
+    if (self.category_id) {
+        [temp_dic safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
     }
     
     
+    [temp_dic safeSetString:self.theSearchWorld forKey:@"keywords"];
     
-    
-    
-    NSMutableDictionary *m_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    [m_dic safeSetString:self.theSearchWorld forKey:@"keywords"];
-    
-    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:m_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:temp_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         
@@ -585,7 +507,6 @@
             [_productOneClassArray addObject:model];
         }
         
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
         
         if (_productOneClassArray.count == 0) {
@@ -616,26 +537,24 @@
         NSDictionary *dic = @{@"brand_id":self.brandId,
                               @"brand_name":self.brandName
                               };
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         self.brand_city_list = @[dic];
         
         return;
     }
     
     
-//    //商城首页品牌跳转 单品详情页品牌跳转
-//    if ([self.brand_id intValue] > 0) {
-//        //过滤掉其他品牌
-//        if ([LTools isEmpty:self.brand_name]) {
-//            self.brand_name = @"其他品牌";
-//        }
-//        NSDictionary *dic = @{@"brand_id":self.brand_id,
-//                              @"brand_name":self.brand_name
-//                              };
-//        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
-//        self.brand_city_list = @[dic];
-//        return;
-//    }
+    //商城首页品牌跳转 单品详情页品牌跳转
+    if ([self.brand_id intValue] > 0) {
+        //过滤掉其他品牌
+        if ([LTools isEmpty:self.brand_name]) {
+            self.brand_name = @"其他品牌";
+        }
+        NSDictionary *dic = @{@"brand_id":self.brand_id,
+                              @"brand_name":self.brand_name
+                              };
+        self.brand_city_list = @[dic];
+        return;
+    }
     
     if (!_request) {
         _request = [YJYRequstManager shareInstance];
@@ -644,7 +563,6 @@
         
         NSArray *arr = [result arrayValueForKey:@"data"];
         self.brand_city_list = [NSArray arrayWithArray:arr];
-        [self setValue:[NSNumber numberWithInt:_count + 1] forKeyPath:@"_count"];
         
         if (_pushView) {
             _pushView.tab4.tableFooterView = nil;
@@ -679,41 +597,12 @@
     
     [_request removeOperation:_request_ProductOneClass];
     
-    
-//    if (self.brand_id && self.category_id) {
-//        NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
-//        [temp safeSetString:self.brand_id forKey:@"brand_id"];
-//        [temp safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
-//        self.shaixuanDic = temp;
-//    }
-    
-    
-    if (self.theSearchWorld) {
-        [self prepareNetDataWithSearchDic:self.shaixuanDic];
-    }else{
-        [self prepareNetDataWithDic:self.shaixuanDic];
-    }
-    
-    
+    [self prepareNetDataWithDic:self.shaixuanDic];
     
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    if (self.brand_id && self.category_id) {
-        NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:self.shaixuanDic];
-        [temp safeSetString:self.brand_id forKey:@"brand_id"];
-        [temp safeSetString:[NSString stringWithFormat:@"%d",self.category_id] forKey:@"category_id"];
-        self.shaixuanDic = temp;
-    }
-    
-    
-    
-    if (self.theSearchWorld) {
-        [self prepareNetDataWithSearchDic:self.shaixuanDic];
-    }else{
-        [self prepareNetDataWithDic:self.shaixuanDic];
-    }
-    
+    [self prepareNetDataWithDic:self.shaixuanDic];
     
 }
 
