@@ -18,7 +18,7 @@
         //取消选中效果
         self.selectionStyle = UITableViewCellSeparatorStyleNone;
         
-        CGFloat cellHeight = DEVICE_WIDTH / 1.6;
+        CGFloat cellHeight = DEVICE_WIDTH / 1.6f;
         CGFloat kWidth = DEVICE_WIDTH;
         
         //裁剪看不到的
@@ -35,7 +35,8 @@
             UIImageView * picture = [[UIImageView alloc]initWithFrame:CGRectMake(0, -cellHeight/2, kWidth, cellHeight * 2)];
 //            UIImageView * picture = [[UIImageView alloc]initWithFrame:CGRectMake(0, -dis/2, kWidth, imgHeight)];
 
-            picture.contentMode = UIViewContentModeScaleAspectFill;
+            picture.contentMode = UIViewContentModeScaleAspectFit;
+            picture.backgroundColor = [UIColor greenColor];
             
             picture;
         });
@@ -45,6 +46,7 @@
         //底部
         CGFloat height = [LTools fitWithIPhone6:50];
         UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, cellHeight - height + 1, DEVICE_WIDTH, height)];
+        footView.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:0.9];
         [self.contentView addSubview:footView];
         
         _titleLabel = ({
@@ -101,16 +103,17 @@
     CGFloat cellOffsetY = CGRectGetMidY(toWindow) - windowCenter.y;
     
     //位移比例
-    CGFloat offsetDig = 2 * cellOffsetY / self.superview.frame.size.height ;
+    CGFloat offsetDig = 2 * cellOffsetY / self.superview.frame.size.height;
     
-    CGFloat cellHeight = DEVICE_WIDTH / 1.6;
+    CGFloat cellHeight = DEVICE_WIDTH / 1.6f;
     //要补偿的位移
     CGFloat offset =  - offsetDig * cellHeight / 2;
     
     //让pictureViewY轴方向位移offset
+//    self.pictureView.transform = CGAffineTransformIdentity;
     CGAffineTransform transY = CGAffineTransformMakeTranslation(0,offset);
     self.pictureView.transform = transY;
-    DDLOG(@"offset %f",offset);
+    
     return offset;
 }
 

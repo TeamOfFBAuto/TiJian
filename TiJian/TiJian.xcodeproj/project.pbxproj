@@ -292,6 +292,7 @@
 		13B07A211C071A4200742AF7 /* order_chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A1F1C071A4200742AF7 /* order_chat@2x.png */; };
 		13B07A221C071A4200742AF7 /* order_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A201C071A4200742AF7 /* order_phone@2x.png */; };
 		13BD11FA1D35F8C6003B71BD /* GoProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BD11F91D35F8C6003B71BD /* GoProductCell.m */; };
+		13BD11FE1D363BB4003B71BD /* SDZoomHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BD11FD1D363BB4003B71BD /* SDZoomHeaderView.m */; };
 		13BE40121CC763A3007EE6BB /* NJKWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BE400F1CC763A3007EE6BB /* NJKWebViewProgress.m */; };
 		13BE40131CC763A3007EE6BB /* NJKWebViewProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BE40111CC763A3007EE6BB /* NJKWebViewProgressView.m */; };
 		13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */; };
@@ -1026,6 +1027,8 @@
 		13B07A201C071A4200742AF7 /* order_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_phone@2x.png"; sourceTree = "<group>"; };
 		13BD11F81D35F8C6003B71BD /* GoProductCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoProductCell.h; sourceTree = "<group>"; };
 		13BD11F91D35F8C6003B71BD /* GoProductCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoProductCell.m; sourceTree = "<group>"; };
+		13BD11FC1D363BB4003B71BD /* SDZoomHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDZoomHeaderView.h; sourceTree = "<group>"; };
+		13BD11FD1D363BB4003B71BD /* SDZoomHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDZoomHeaderView.m; sourceTree = "<group>"; };
 		13BE400E1CC763A3007EE6BB /* NJKWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJKWebViewProgress.h; sourceTree = "<group>"; };
 		13BE400F1CC763A3007EE6BB /* NJKWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJKWebViewProgress.m; sourceTree = "<group>"; };
 		13BE40101CC763A3007EE6BB /* NJKWebViewProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJKWebViewProgressView.h; sourceTree = "<group>"; };
@@ -2287,6 +2290,15 @@
 			path = "我的订单";
 			sourceTree = "<group>";
 		};
+		13BD11FB1D363BB4003B71BD /* SDZoomHeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				13BD11FC1D363BB4003B71BD /* SDZoomHeaderView.h */,
+				13BD11FD1D363BB4003B71BD /* SDZoomHeaderView.m */,
+			);
+			path = SDZoomHeaderView;
+			sourceTree = "<group>";
+		};
 		13BE400D1CC763A3007EE6BB /* NJKWebViewProgress */ = {
 			isa = PBXGroup;
 			children = (
@@ -2542,6 +2554,7 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				13BD11FB1D363BB4003B71BD /* SDZoomHeaderView */,
 				13BE400D1CC763A3007EE6BB /* NJKWebViewProgress */,
 				E30FE38B1C3CCCE9001CF9BA /* DLNavigationEffectKit */,
 				13F9D10E1C2FB06800993738 /* LPhotoBrowser */,
@@ -3872,6 +3885,7 @@
 				E3D8AE211BF5E7E1003AE2E3 /* GproductCommentView.m in Sources */,
 				13F8C5B11C05AA7E004C3FC7 /* JKPhotoBrowser.m in Sources */,
 				13D119A41C27A3920042EB6D /* RefreshFooterView.m in Sources */,
+				13BD11FE1D363BB4003B71BD /* SDZoomHeaderView.m in Sources */,
 				13F1F3F71BBA9C2500885D31 /* LNavigationController.m in Sources */,
 				E3D8AE2A1BF6054B003AE2E3 /* GcommentViewController.m in Sources */,
 				13CCAF6C1BD8DCB100BF9AA8 /* QuestionModel.m in Sources */,

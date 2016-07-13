@@ -199,7 +199,8 @@
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    return DEVICE_WIDTH / 1.6f;
+    CGFloat cellHeight = DEVICE_WIDTH / 1.6f;
+    return cellHeight;
 }
 
 -(void)refreshScrollViewDidScroll:(UIScrollView *)scrollView
@@ -215,36 +216,33 @@
     }];
 }
 
-#pragma - mark UITableViewDataSource
+//将要显示
+- (void)refreshTableView:(RefreshTableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    GoProductCell * myCell = (GoProductCell *)cell;
+    ThirdProductModel *model = _table.dataArray[indexPath.row];
+    NSDictionary *pic = [model.pictures firstObject];
+    
+    NSString *imageUrl = pic[@"url"];
+    
+    //    [myCell.pictureView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
+    [myCell.pictureView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+    
+    [myCell cellOffset];
+}
 
-#pragma - mark UITableViewDataSource<NSObject>
+#pragma - mark UITableViewDataSource
 
 - (NSInteger)tableView:(RefreshTableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
     return tableView.dataArray.count;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    GoProductCell * myCell = (GoProductCell *)cell;
-    
-    ThirdProductModel *model = _table.dataArray[indexPath.row];
-    NSDictionary *pic = [model.pictures firstObject];
-//    CGFloat width = [pic[@"width"]floatValue];
-    //    CGFloat height = [pic[@"height"]floatValue];
-//    CGFloat height = width / 1.6;
-    NSString *imageUrl = pic[@"url"];
-
-//    [myCell.pictureView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
-    [myCell.pictureView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
-
-    [myCell cellOffset];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *identifier = @"GoProductCell";
     GoProductCell *cell = (GoProductCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+
     if (!cell) {
         cell = [[GoProductCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
@@ -252,7 +250,7 @@
     UIImageView *imageView = cell.pictureView;
     UILabel *label = cell.titleLabel;
     UILabel *label2 = cell.littleLabel;
-    
+       
     ThirdProductModel *model = _table.dataArray[indexPath.row];
     label.text = model.name;
     
@@ -268,7 +266,7 @@
     
 //    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
     
-    [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
     
     return cell;
 }

@@ -11,6 +11,7 @@
 #import "ThirdProductModel.h"
 #import "LPhotoBrowser.h"
 #import "ThirdServiceModel.h"
+#import "SDZoomHeaderView.h"
 
 #define kTag_ServicePhone 200 //拨打客服电话
 #define kTag_cancelService 201 //取消服务
@@ -33,6 +34,7 @@
 }
 
 @property(nonatomic,retain)UIButton *backButton;
+@property (nonatomic, strong) SDZoomHeaderView *headerZoomView;
 
 @end
 
@@ -100,38 +102,65 @@
     NSString *price = [NSString stringWithFormat:@"¥%.2f",[dicountPrice floatValue]];
     
     NSDictionary *pic = [model.pictures firstObject];
-    CGFloat width = [pic[@"width"]floatValue];
-//    CGFloat imageHeight = [pic[@"height"]floatValue];
-    CGFloat imageHeight = 250.f * width / 375;
+    CGFloat imageWidth = [pic[@"width"]floatValue];
+    CGFloat imageHeight = [pic[@"height"]floatValue];
     
-//    CGFloat radio = 375.f / 250.f;//宽高比
     
-//    if (imageHeight) {
-//        imageHeight = DEVICE_WIDTH * (width/imageHeight);
-//    }
+    CGFloat showHeight = DEVICE_WIDTH / 1.6f;//实际显示大小
+    
+    if (imageHeight) {
+        imageHeight = DEVICE_WIDTH * imageHeight / imageWidth;//宽度为屏幕宽度,自适应高度
+    }
+    
+//    CGFloat dis = imageHeight - showHeight;//图片大小与实际显示大小高的差
+    
     NSString *imageUrl = [model.pictures firstObject][@"url"];
     
     UIView *headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     
     //图 背景view
-    CGFloat tempHeight = 250.f;
-    UIView *imageBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, [LTools fitWithIPhone6:tempHeight])];
+    UIView *imageBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, showHeight)];
     imageBgView.clipsToBounds = YES;
     [headerView addSubview:imageBgView];
+    imageBgView.backgroundColor = [UIColor redColor];
     
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, imageBgView.height)];
-    imageView.backgroundColor = [UIColor redColor];
-    [imageBgView addSubview:imageView];
+//    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, -dis / 2.f, DEVICE_WIDTH, imageHeight)];
+//    imageView.backgroundColor = [UIColor redColor];
+//    [imageBgView addSubview:imageView];
+//    
 //    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
-    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width, imageHeight) placeholderImage:DEFAULT_HEADIMAGE];
-    _coverImageView = imageView;
-    [imageView addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:0];
+////    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(imageWidth, imageHeight) placeholderImage:DEFAULT_HEADIMAGE];
+//    _coverImageView = imageView;
+//    [imageView addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:0];
+    
+    //用于拉伸显示图片
+    self.headerZoomView = [[SDZoomHeaderView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, imageHeight)];
+    [_headerZoomView.imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+    [imageBgView addSubview:_headerZoomView];
+    
+    _coverImageView = _headerZoomView.imageView;
+    [_headerZoomView.imageView addTapGestureTaget:self action:@selector(tapToBrowser:) imageViewTag:0];
     
     //底部
     CGFloat height = [LTools fitWithIPhone6:50];
     UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, imageBgView.height - height, DEVICE_WIDTH, height)];
     [imageBgView addSubview:footView];
     footView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5];
+    
+    
+    //下拉放大图片,同步更新headerZoomView 父视图以及父视图上子视图
+     @WeakObj(imageBgView);//图片的背景view
+     @WeakObj(footView);//图片上文字、按钮等
+     @WeakObj(self);
+    [_headerZoomView setUpdateBlock:^(CGRect frame){
+        
+        WeakimageBgView.height = showHeight - frame.origin.y;
+        WeakimageBgView.top = frame.origin.y;
+        
+        WeakfootView.top = imageBgView.height - height;
+        Weakself.headerZoomView.top = -1 * frame.origin.y;//zoomView
+    }];
+    
     //标题
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 90, footView.height) font:17 align:NSTextAlignmentLeft textColor:[UIColor whiteColor] title:name];
     [footView addSubview:titleLabel];
@@ -906,6 +935,28 @@
     
 }
 #pragma mark - 代理
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    self.headerZoomView.offsetY = offsetY;
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    
+    CGFloat temp = -100.f;
+    if (iPhone6PLUS) {
+        temp = -140.f;
+    }
+    if (iPhone6) {
+        temp = -120.f;
+    }
+    if (offsetY < temp) {
+        [self tapToBrowser:nil];
+    }
+}
 
 #pragma - mark UITableViewDelegate
 
