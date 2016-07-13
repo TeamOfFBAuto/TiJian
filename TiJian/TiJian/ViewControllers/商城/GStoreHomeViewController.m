@@ -708,11 +708,11 @@ typedef enum{
     [dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
     [dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
     [dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
-    [dic safeSetString:NSStringFromInt(1) forKey:@"per_page"];
+    [dic safeSetString:NSStringFromInt(PAGESIZE_SMALL) forKey:@"per_page"];
     
     if (_StoreProductListArray.count == 0) {
         _table.tableFooterView = [self loadingInfoViewWithState:loading];
-//        [_table reloadData:nil pageSize:5 CustomNoDataView:[self loadingInfoViewWithState:loading]];
+//        [_table reloadData:nil pageSize:PAGESIZE_SMALL CustomNoDataView:[self loadingInfoViewWithState:loading]];
     }
     
     
@@ -742,13 +742,13 @@ typedef enum{
         if (Weak_table.pageNum == 1) {
             [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         }
-        [Weak_table reloadData:_StoreProductListArray pageSize:1 CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
+        [Weak_table reloadData:_StoreProductListArray pageSize:PAGESIZE_SMALL CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
         
         
         
     } failBlock:^(NSDictionary *result) {
         _jingpintuijian.hidden = YES;
-        [Weak_table reloadData:nil pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadFail]];
+        [Weak_table reloadData:nil pageSize:PAGESIZE_SMALL CustomNoDataView:[Weakself loadingInfoViewWithState:loadFail]];
     }];
 }
 
