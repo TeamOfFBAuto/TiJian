@@ -646,21 +646,13 @@
     
     [_searchTf resignFirstResponder];
     
-//    if (!isHot) {
-//        if (![LTools isEmpty:self.searchTf.text]) {
-//            [GMAPI setuserCommonlyUsedSearchWord:self.searchTf.text];
-//        }
-//    }
+
     if (![LTools isEmpty:self.searchTf.text]) {
         self.theSearchWorld = theWord;
         [_rTab showRefreshHeader:YES];
     }
     
-//    BrandSearchViewController *cc = [[BrandSearchViewController alloc]init];
-//    cc.brand_id = self.brand_id;
-//    cc.brand_name = self.brand_name;
-//    cc.theSearchWorld = theWord;
-//    [self.navigationController pushViewController:cc animated:YES];
+
     
 }
 

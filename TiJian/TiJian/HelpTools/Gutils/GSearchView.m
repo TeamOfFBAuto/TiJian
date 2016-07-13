@@ -14,8 +14,6 @@
 
 @implementation GSearchView
 
-
-
 -(id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
@@ -39,23 +37,15 @@
 //热搜按钮点击
 -(void)hotSearchBtnClicked:(UIButton *)sender{
     [GMAPI setuserCommonlyUsedSearchWord:sender.titleLabel.text];
-    
     [self.delegate searchBtnClickedWithStr:sender.titleLabel.text isHotSearch:YES];
-    
-    
 }
 
 //清空历史搜索
 -(void)qingkongBtnClicked{
     
-    
-    
     UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"确定清空历史记录？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     al.delegate = self;
     [al show];
-    
-    
-    
     
 }
 
@@ -193,10 +183,7 @@
     lishi_line.backgroundColor = RGBCOLOR(199, 200, 202);
     [hostoryTitleView addSubview:lishi_line];
     
-    
-    
-    
-    
+
     return view;
     
 }
@@ -236,19 +223,9 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     NSLog(@"%s",__FUNCTION__);
     
-    
     [self.delegate.searchTf resignFirstResponder];
     [self.delegate setEffectViewAlpha:1];
-    
-//    if (self.d1) {
-//        [self.d1.searchTf resignFirstResponder];
-//        [self.d1 setEffectViewAlpha:1];
-//    }
-//    
-//    if (self.d2) {
-//        [self.d2.searchTf resignFirstResponder];
-//        [self.d2 setEffectViewAlpha:1];
-//    }
+
     
     
 }

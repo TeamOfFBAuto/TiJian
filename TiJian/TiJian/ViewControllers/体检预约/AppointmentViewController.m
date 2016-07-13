@@ -559,6 +559,7 @@
     }
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
+    cc.haveChooseGender = YES;
     cc.className = @"使用代金券";
     cc.vouchers_id = aModel.coupon_id;//代金券
     if (user) {

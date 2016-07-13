@@ -146,6 +146,7 @@
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.theSearchWorld = theWord;
+    cc.haveChooseGender = YES;
     [self.navigationController pushViewController:cc animated:YES];
     
     
