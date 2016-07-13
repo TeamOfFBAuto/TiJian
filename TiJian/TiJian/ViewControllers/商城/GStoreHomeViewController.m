@@ -728,7 +728,7 @@ typedef enum{
     }
     
     if (_StoreProductListArray.count == 0) {
-        _table.tableFooterView = [self loadingInfoViewWithState:loading];
+        [_table reloadData:nil pageSize:5 CustomNoDataView:[self loadingInfoViewWithState:loading]];
     }
     
      @WeakObj(_table);
@@ -788,7 +788,7 @@ typedef enum{
     
     
     if (_StoreProductListArray.count == 0) {
-        _table.tableFooterView = [self loadingInfoViewWithState:loading];
+        [_table reloadData:nil pageSize:5 CustomNoDataView:[self loadingInfoViewWithState:loading]];
     }
     
     @WeakObj(_table);
@@ -1441,7 +1441,6 @@ typedef enum{
         [actvIndi startAnimating];
         [view addSubview:actvIndi];
     }else if (state == loadSuccess){//加载成功
-        
     }else if (state == loadFail){//加载失败
         view = [self resultViewWithType:PageResultType_nodata];
 
