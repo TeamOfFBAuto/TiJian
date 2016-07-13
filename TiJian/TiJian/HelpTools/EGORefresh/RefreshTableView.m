@@ -179,10 +179,6 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
     
 }
 
-
-
-
-
 /**
  *  reload 数据
  *
@@ -286,9 +282,6 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
 - (void)finishReloadDataWithView:(UIView *)noDataView
                         pageSize:(int)pageSize
 {
-    
-    NSLog(@"%s1",__FUNCTION__);
-    
     /**
      *  此处仅处理没有数据时的默认视图情况,顶部和底部加载view不在此处理
      */
@@ -329,6 +322,7 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
             self.tableFooterView = self.refreshFooterView;
         }
     }
+    //没有更多数据时移除底部加载视图
     else{
         if (self.tableFooterView == self.refreshFooterView) {
             self.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -579,6 +573,13 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
     }
     
     // 下拉到最底部时显示更多数据
+    
+    DDLOG(@"%f",scrollView.contentOffset.x );
+    //左右划
+    if (scrollView.contentOffset.x != 0) {
+        DDLOG(@"左右滑动");
+        return;
+    }
     
     if(_isHaveMoreData && scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height - 40)))
     {

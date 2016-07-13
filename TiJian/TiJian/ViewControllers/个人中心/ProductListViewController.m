@@ -190,7 +190,6 @@
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         //todo
-        
         ProductModel *model = _table.dataArray[indexPath.row];
         [_table.dataArray removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];

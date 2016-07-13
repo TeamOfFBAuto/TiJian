@@ -291,6 +291,7 @@
 		13B07A1E1C070B0300742AF7 /* OrderInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07A1D1C070B0300742AF7 /* OrderInfoViewController.m */; };
 		13B07A211C071A4200742AF7 /* order_chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A1F1C071A4200742AF7 /* order_chat@2x.png */; };
 		13B07A221C071A4200742AF7 /* order_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13B07A201C071A4200742AF7 /* order_phone@2x.png */; };
+		13BD11FA1D35F8C6003B71BD /* GoProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BD11F91D35F8C6003B71BD /* GoProductCell.m */; };
 		13BE40121CC763A3007EE6BB /* NJKWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BE400F1CC763A3007EE6BB /* NJKWebViewProgress.m */; };
 		13BE40131CC763A3007EE6BB /* NJKWebViewProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BE40111CC763A3007EE6BB /* NJKWebViewProgressView.m */; };
 		13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13C6CAD51C182A18002A2F33 /* refresh_arrow_down@2x.png */; };
@@ -1023,6 +1024,8 @@
 		13B07A1D1C070B0300742AF7 /* OrderInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderInfoViewController.m; sourceTree = "<group>"; };
 		13B07A1F1C071A4200742AF7 /* order_chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_chat@2x.png"; sourceTree = "<group>"; };
 		13B07A201C071A4200742AF7 /* order_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order_phone@2x.png"; sourceTree = "<group>"; };
+		13BD11F81D35F8C6003B71BD /* GoProductCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoProductCell.h; sourceTree = "<group>"; };
+		13BD11F91D35F8C6003B71BD /* GoProductCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoProductCell.m; sourceTree = "<group>"; };
 		13BE400E1CC763A3007EE6BB /* NJKWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJKWebViewProgress.h; sourceTree = "<group>"; };
 		13BE400F1CC763A3007EE6BB /* NJKWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJKWebViewProgress.m; sourceTree = "<group>"; };
 		13BE40101CC763A3007EE6BB /* NJKWebViewProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJKWebViewProgressView.h; sourceTree = "<group>"; };
@@ -2023,6 +2026,8 @@
 				131EC6151C58DE150008F517 /* RecommendCell.m */,
 				131EC6211C58FA290008F517 /* BrandRecomendCell.h */,
 				131EC6221C58FA290008F517 /* BrandRecomendCell.m */,
+				13BD11F81D35F8C6003B71BD /* GoProductCell.h */,
+				13BD11F91D35F8C6003B71BD /* GoProductCell.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -4059,6 +4064,7 @@
 				13F8C57A1C058611004C3FC7 /* OrderCell.m in Sources */,
 				13F1F2671BBA78ED00885D31 /* main.m in Sources */,
 				E3E2B3F61BFAFFE3007988C5 /* DataBase.m in Sources */,
+				13BD11FA1D35F8C6003B71BD /* GoProductCell.m in Sources */,
 				1320F27D1C32325E008E5B05 /* ChooseHopitalController.m in Sources */,
 				13F8C5B51C05AA7E004C3FC7 /* PhotoAlbumManager.m in Sources */,
 				E3C4DBEC1C45D40700A29259 /* GCustomSearchViewController.m in Sources */,

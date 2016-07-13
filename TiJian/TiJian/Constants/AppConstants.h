@@ -83,7 +83,7 @@
 #define MIAOSHAO_PRE_TEXT @"秒杀结束倒计时:"
 
 //分页网络请求
-#define G_PER_PAGE 20
+#define G_PER_PAGE 10
 #define PAGESIZE_BIG 50 //根据需求选择不同页size
 #define PAGESIZE_MID 20
 #define PAGESIZE_SMALL 10

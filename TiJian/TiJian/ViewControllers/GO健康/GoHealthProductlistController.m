@@ -9,6 +9,7 @@
 #import "GoHealthProductlistController.h"
 #import "ThirdProductModel.h"
 #import "GoHealthProductDetailController.h"
+#import "GoProductCell.h"
 
 @interface GoHealthProductlistController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -198,7 +199,20 @@
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
-    return DEVICE_WIDTH / 1.6;
+    return DEVICE_WIDTH / 1.6f;
+}
+
+-(void)refreshScrollViewDidScroll:(UIScrollView *)scrollView
+{
+    // visibleCells 获取界面上能显示出来了cell
+    NSArray<GoProductCell *> *array = [_table visibleCells];
+    
+    //enumerateObjectsUsingBlock 类似于for，但是比for更快
+    [array enumerateObjectsUsingBlock:^(GoProductCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        [obj cellOffset];
+        
+    }];
 }
 
 #pragma - mark UITableViewDataSource
@@ -210,39 +224,34 @@
     return tableView.dataArray.count;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    GoProductCell * myCell = (GoProductCell *)cell;
+    
+    ThirdProductModel *model = _table.dataArray[indexPath.row];
+    NSDictionary *pic = [model.pictures firstObject];
+//    CGFloat width = [pic[@"width"]floatValue];
+    //    CGFloat height = [pic[@"height"]floatValue];
+//    CGFloat height = width / 1.6;
+    NSString *imageUrl = pic[@"url"];
+
+//    [myCell.pictureView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
+    [myCell.pictureView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
+
+    [myCell cellOffset];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"identify";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    static NSString *identifier = @"GoProductCell";
+    GoProductCell *cell = (GoProductCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.contentView.clipsToBounds = YES;
-        cell.clipsToBounds = YES;
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH / 1.6)];
-        imageView.backgroundColor = [UIColor orangeColor];
-        [cell.contentView addSubview:imageView];
-        imageView.tag = 100;
-        
-        //底部
-        CGFloat height = [LTools fitWithIPhone6:50];
-        UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, imageView.height - height, DEVICE_WIDTH, height)];
-        [cell.contentView addSubview:footView];
-        footView.backgroundColor = [UIColor whiteColor];
-        //标题
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 90, footView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:nil];
-        [footView addSubview:label];
-        label.tag = 101;
-        //价格
-        UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 12 - 76, 10, 76, footView.height - 20) font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor] title:nil];
-        [footView addSubview:label2];
-        label2.backgroundColor = DEFAULT_TEXTCOLOR_ORANGE;
-        [label2 addCornerRadius:3.f];
-        label2.tag = 102;
+        cell = [[GoProductCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    UILabel *label = [cell.contentView viewWithTag:101];
-    UILabel *label2 = [cell.contentView viewWithTag:102];
+    UIImageView *imageView = cell.pictureView;
+    UILabel *label = cell.titleLabel;
+    UILabel *label2 = cell.littleLabel;
     
     ThirdProductModel *model = _table.dataArray[indexPath.row];
     label.text = model.name;
@@ -252,15 +261,69 @@
     label2.text = price;
     
     NSDictionary *pic = [model.pictures firstObject];
-    CGFloat width = [pic[@"width"]floatValue];
+//    CGFloat width = [pic[@"width"]floatValue];
 //    CGFloat height = [pic[@"height"]floatValue];
-    CGFloat height = width / 1.6;
+//    CGFloat height = width / 1.6;
     NSString *imageUrl = pic[@"url"];
-
-    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
+    
+//    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
+    
+    [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:DEFAULT_HEADIMAGE];
     
     return cell;
 }
+
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+//{
+//    static NSString *identifier = @"identify";
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//    if (!cell) {
+//        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+//        cell.contentView.clipsToBounds = YES;
+//        cell.clipsToBounds = YES;
+//        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH / 1.6)];
+//        imageView.backgroundColor = [UIColor orangeColor];
+//        [cell.contentView addSubview:imageView];
+//        imageView.tag = 100;
+//        
+//        //底部
+//        CGFloat height = [LTools fitWithIPhone6:50];
+//        UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, imageView.height - height, DEVICE_WIDTH, height)];
+//        [cell.contentView addSubview:footView];
+//        footView.backgroundColor = [UIColor whiteColor];
+//        //标题
+//        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 90, footView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:nil];
+//        [footView addSubview:label];
+//        label.tag = 101;
+//        //价格
+//        UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 12 - 76, 10, 76, footView.height - 20) font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor] title:nil];
+//        [footView addSubview:label2];
+//        label2.backgroundColor = DEFAULT_TEXTCOLOR_ORANGE;
+//        [label2 addCornerRadius:3.f];
+//        label2.tag = 102;
+//    }
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
+//    UILabel *label = [cell.contentView viewWithTag:101];
+//    UILabel *label2 = [cell.contentView viewWithTag:102];
+//    
+//    ThirdProductModel *model = _table.dataArray[indexPath.row];
+//    label.text = model.name;
+//    
+//    NSNumber *dicountPrice = model.discountPrice;
+//    NSString *price = [NSString stringWithFormat:@"¥%.2f",[dicountPrice floatValue]];
+//    label2.text = price;
+//    
+//    NSDictionary *pic = [model.pictures firstObject];
+//    CGFloat width = [pic[@"width"]floatValue];
+////    CGFloat height = [pic[@"height"]floatValue];
+//    CGFloat height = width / 1.6;
+//    NSString *imageUrl = pic[@"url"];
+//
+//    [imageView l_setImageWithURL:[NSURL URLWithString:imageUrl] clipSize:CGSizeMake(width,height) placeholderImage:DEFAULT_HEADIMAGE];
+//    
+//    return cell;
+//}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
