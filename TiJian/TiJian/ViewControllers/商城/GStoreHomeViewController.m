@@ -658,14 +658,6 @@ typedef enum{
         _request = [YJYRequstManager shareInstance];
     }
     
-    
-    if (_isShaixuan) {
-        //首页精品推荐
-        [self prepareProductsWithDic:self.shaixuanDic];
-        _isShaixuan = NO;
-        return;
-    }
-    
     //根据城市查询品牌列表
     [self prepareBrandListWithLocation];
     //获取热门搜索
@@ -675,7 +667,7 @@ typedef enum{
     //轮播图
     [self getAdvCycleNetData];
     //首页精品推荐
-    [self prepareProductsWithDic:self.shaixuanDic];
+    [self prepareProducts];
 }
 
 //轮播图
@@ -709,32 +701,26 @@ typedef enum{
 
 
 //首页精品推荐
--(void)prepareProductsWithDic:(NSDictionary *)theDic{
-    NSDictionary *dic;
-    if (theDic) {
-        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic safeSetString:NSStringFromInt(5) forKey:@"per_page"];
-        [temp_dic safeSetString:@"2" forKey:@"show_type"];
-        dic = temp_dic;
-    }else{
-        dic = @{
-                @"province_id":[GMAPI getCurrentProvinceId],
-                @"city_id":[GMAPI getCurrentCityId],
-                @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":NSStringFromInt(5)
-                };
-        
-    }
+-(void)prepareProducts{
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    [dic safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+    [dic safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    [dic safeSetString:NSStringFromInt(_table.pageNum) forKey:@"page"];
+    [dic safeSetString:NSStringFromInt(1) forKey:@"per_page"];
     
     if (_StoreProductListArray.count == 0) {
-        [_table reloadData:nil pageSize:5 CustomNoDataView:[self loadingInfoViewWithState:loading]];
+        _table.tableFooterView = [self loadingInfoViewWithState:loading];
+//        [_table reloadData:nil pageSize:5 CustomNoDataView:[self loadingInfoViewWithState:loading]];
     }
+    
     
      @WeakObj(_table);
      @WeakObj(self);
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
+        _table.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
         _jingpintuijian.hidden = NO;
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
@@ -756,7 +742,7 @@ typedef enum{
         if (Weak_table.pageNum == 1) {
             [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         }
-        [Weak_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
+        [Weak_table reloadData:_StoreProductListArray pageSize:1 CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
         
         
         
@@ -765,61 +751,6 @@ typedef enum{
         [Weak_table reloadData:nil pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadFail]];
     }];
 }
-
-
-//选择完地区之后请求首页精品推荐
--(void)gotoPrepareProductsWithDic:(NSDictionary *)theDic{
-    NSDictionary *dic;
-    if (theDic) {
-        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:theDic];
-        [temp_dic setObject:NSStringFromInt(_table.pageNum) forKey:@"page"];
-        [temp_dic setObject:NSStringFromInt(5) forKey:@"per_page"];
-        [temp_dic setObject:@"2" forKey:@"show_type"];
-        dic = temp_dic;
-    }else{
-        dic = @{
-                @"province_id":[GMAPI getCurrentProvinceId],
-                @"city_id":[GMAPI getCurrentCityId],
-                @"page":NSStringFromInt(_table.pageNum),
-                @"per_page":[NSString stringWithFormat:@"%d",5]
-                };
-        
-    }
-    
-    
-    if (_StoreProductListArray.count == 0) {
-        [_table reloadData:nil pageSize:5 CustomNoDataView:[self loadingInfoViewWithState:loading]];
-    }
-    
-    @WeakObj(_table);
-     @WeakObj(self);
-    _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        
-        _jingpintuijian.hidden = NO;
-        
-        _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
-        NSArray *data = [result arrayValueForKey:@"data"];
-        for (NSDictionary *dic in data) {
-            NSArray *list = [dic arrayValueForKey:@"list"];
-            NSMutableArray *model_listArray = [NSMutableArray arrayWithCapacity:1];
-            for (NSDictionary *dic in list) {
-                ProductModel *model = [[ProductModel alloc]initWithDictionary:dic];
-                [model_listArray addObject:model];
-            }
-            StoreHomeOneBrandModel *model_b = [[StoreHomeOneBrandModel alloc]initWithDictionary:dic];
-            model_b.list = model_listArray;
-            [_StoreProductListArray addObject:model_b];
-        }
-        
-        [Weak_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
-        [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
-        
-    } failBlock:^(NSDictionary *result) {
-        _jingpintuijian.hidden = YES;
-        [Weak_table reloadData:nil pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadFail]];
-    }];
-}
-
 
 
 //获取购物车数量
@@ -1098,7 +1029,7 @@ typedef enum{
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView{
     
-    [self prepareProductsWithDic:self.shaixuanDic];
+    [self prepareProducts];
 
 }
 
@@ -1530,7 +1461,7 @@ typedef enum{
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
     _table.pageNum = 1;
     _table.isReloadData = YES;
-    [self gotoPrepareProductsWithDic:self.shaixuanDic];
+    [self prepareProducts];
 }
 
 
@@ -1601,8 +1532,6 @@ typedef enum{
 
 -(void)shaixuanFinishWithDic:(NSDictionary *)dic{
     self.shaixuanDic = dic;
-    _isShaixuan = YES;
-    
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
     cc.isShowShaixuanData = YES;
     cc.haveChooseGender = YES;
