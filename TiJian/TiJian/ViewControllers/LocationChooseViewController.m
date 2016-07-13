@@ -370,8 +370,8 @@
         }
     }else{
         UILabel *ll = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 50, 40)];
-        ll.font = [UIFont systemFontOfSize:13];
-        ll.textColor = [UIColor blackColor];
+        ll.font = [UIFont systemFontOfSize:12];
+        ll.textColor = [UIColor grayColor];
         ll.text = @"暂无";
         [zuijinfangwenCity_c addSubview:ll];
     }
@@ -421,6 +421,14 @@
         
         [btn addTarget:self action:@selector(hotCityClicked:) forControlEvents:UIControlEventTouchUpInside];
         
+    }
+    
+    if (!totle) {
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, theWidth, btnHeight)];
+        label.text = @"获取失败";
+        label.textColor = [UIColor grayColor];
+        label.font = [UIFont systemFontOfSize:12];
+        [hotCityView_c addSubview:label];
     }
     
     
@@ -516,7 +524,6 @@
     _tabelView.dataSource = self;
     [self.view addSubview:_tabelView];
     _tabelView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tabelView.tableHeaderView = _tabHeaderView;
     
 }
 
