@@ -423,6 +423,8 @@
         [temp_dic safeSetString:self.theSearchWorld forKey:@"keywords"];
     }
     
+    __weak typeof(self)weakSelf = self;
+    __weak typeof(_table)weakTable = _table;
     
     _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:temp_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
@@ -435,11 +437,12 @@
             [_productOneClassArray addObject:model];
         }
         
-        [_table reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
+        [weakTable reloadData:_productOneClassArray pageSize:PAGESIZE_MID noDataView:[weakSelf resultViewWithType:PageResultType_nodata]];
         
         
     } failBlock:^(NSDictionary *result) {
-        [_table loadFail];
+        
+        [_table reloadData:nil pageSize:PAGESIZE_MID noDataView:[self resultViewWithType:PageResultType_nodata]];
         
     }];
  
