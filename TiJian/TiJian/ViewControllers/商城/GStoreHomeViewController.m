@@ -31,6 +31,13 @@
 #import "GView.h"//分类自定义view
 #import "WebviewController.h"
 
+typedef enum{
+    loading = 0,
+    loadSuccess,
+    loadFail,
+    loadNoData
+}LoadingProductInfo;
+
 @interface GStoreHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate,LocationChooseDelegate>
 {
     LBannerView *_bannerView;//轮播图
@@ -74,6 +81,9 @@
     UIPanGestureRecognizer *_panGestureRecognizer;
     GPushView *_pushView;//筛选view
     BOOL _isShaixuan;//是否为筛选刷新数据
+    
+    UIView *_jingpintuijian;
+    UIActivityIndicatorView *_juhua;
     
 }
 
@@ -266,19 +276,22 @@
     [self.theTopView addSubview:dingzhiImv];
     
     //设置精品推荐
-    UIView *jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
-                                                                     CGRectGetMaxY(dingzhiImv.frame),
+    _jingpintuijian = [[UIView alloc]initWithFrame:CGRectMake(0,
+                                                                CGRectGetMaxY(dingzhiImv.frame),
                                                                      DEVICE_WIDTH,
                                                                      [GMAPI scaleWithHeight:0 width:DEVICE_WIDTH theWHscale:750.0/80])];
-    jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
-    [self.theTopView addSubview:jingpintuijian];
-    UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, jingpintuijian.frame.size.height)];
+    _jingpintuijian.backgroundColor = RGBCOLOR(244, 245, 246);
+    if (_StoreProductListArray.count == 0) {
+        _jingpintuijian.hidden = YES;
+    }
+    [self.theTopView addSubview:_jingpintuijian];
+    UILabel *ttl = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 80, _jingpintuijian.frame.size.height)];
     ttl.font = [UIFont systemFontOfSize:15];
-    [jingpintuijian addSubview:ttl];
+    [_jingpintuijian addSubview:ttl];
     ttl.text = @"精品推荐";
     ttl.textColor = [UIColor blackColor];
     
-    [self.theTopView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, jingpintuijian.bottom)];
+    [self.theTopView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, _jingpintuijian.bottom)];
     
     _table.tableHeaderView = self.theTopView;
     
@@ -714,9 +727,15 @@
         
     }
     
+    if (_StoreProductListArray.count == 0) {
+        _table.tableFooterView = [self loadingInfoViewWithState:loading];
+    }
+    
      @WeakObj(_table);
      @WeakObj(self);
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _jingpintuijian.hidden = NO;
         
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *data = [result arrayValueForKey:@"data"];
@@ -737,10 +756,13 @@
         if (Weak_table.pageNum == 1) {
             [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         }
-        [Weak_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[Weakself resultViewWithT]];
+        [Weak_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
+        
+        
         
     } failBlock:^(NSDictionary *result) {
-        [Weak_table loadFail];
+        _jingpintuijian.hidden = YES;
+        [Weak_table reloadData:nil pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadFail]];
     }];
 }
 
@@ -763,9 +785,18 @@
                 };
         
     }
+    
+    
+    if (_StoreProductListArray.count == 0) {
+        _table.tableFooterView = [self loadingInfoViewWithState:loading];
+    }
+    
     @WeakObj(_table);
      @WeakObj(self);
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _jingpintuijian.hidden = NO;
+        
         _StoreProductListArray = [NSMutableArray arrayWithCapacity:1];
         NSArray *data = [result arrayValueForKey:@"data"];
         for (NSDictionary *dic in data) {
@@ -780,12 +811,12 @@
             [_StoreProductListArray addObject:model_b];
         }
         
-        Weak_table.tableFooterView = nil;
-        [Weak_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[Weakself resultViewWithT]];
+        [Weak_table reloadData:_StoreProductListArray pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadNoData]];
         [GMAPI cache:result ForKey:@"GStoreHomeVc_StoreProductListDic"];
         
     } failBlock:^(NSDictionary *result) {
-        [Weak_table loadFail];
+        _jingpintuijian.hidden = YES;
+        [Weak_table reloadData:nil pageSize:5 CustomNoDataView:[Weakself loadingInfoViewWithState:loadFail]];
     }];
 }
 
@@ -1388,46 +1419,83 @@
 
 
 
-#pragma mark - 无数据默认view
--(UIView *)resultViewWithT
-{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 150)];
-    view.backgroundColor = RGBCOLOR(240, 245, 246);
+#pragma mark - 加载时四种状态
+
+-(UIView *)loadingInfoViewWithState:(LoadingProductInfo)state{
     
-    UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 85)];
-    view1.backgroundColor = [UIColor whiteColor];
-    [view addSubview:view1];
+    UIView *view;
     
-    
-    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(200.0/830*DEVICE_WIDTH, 85*0.5 - 36*0.5, 36, 36)];
-    [imv setImage:[UIImage imageNamed:@"storehomeNodatatixing.png"]];
-    [view1 addSubview:imv];
-    
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(imv.right + 10, imv.frame.origin.y, 270.0/830*DEVICE_WIDTH,imv.frame.size.height)];
-    titleLabel.textColor = RGBCOLOR(130, 133, 133);
-    titleLabel.font = [UIFont systemFontOfSize:10];
-    titleLabel.numberOfLines = 2;
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = @"该城市还没有相应套餐先去其他城市逛逛吧";
-    [view1 addSubview:titleLabel];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.backgroundColor = [UIColor whiteColor];
-    btn.layer.borderWidth = 0.5;
-    btn.layer.borderColor = [RGBCOLOR(236, 237, 240)CGColor];
-    [btn setFrame:CGRectMake(40, CGRectGetMaxY(view1.frame)+17, DEVICE_WIDTH - 80, 32)];
-    btn.titleLabel.font = [UIFont systemFontOfSize:12];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btn setTitle:@"切换城市" forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(changeCityBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:btn];
-    
-    
-    
-    
+    if (state == loading) {//加载中
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 150)];
+        
+        UILabel *loadingTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 65, 20)];
+        loadingTextLabel.font = [UIFont systemFontOfSize:15];
+        loadingTextLabel.textAlignment = NSTextAlignmentCenter;
+        loadingTextLabel.textColor = [UIColor grayColor];
+        loadingTextLabel.text = @"加载中...";
+        loadingTextLabel.center = view.center;
+        [view addSubview:loadingTextLabel];
+        
+        UIActivityIndicatorView *actvIndi = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        actvIndi.center = CGPointMake(view.center.x - 50, view.center.y);
+        [actvIndi startAnimating];
+        [view addSubview:actvIndi];
+    }else if (state == loadSuccess){//加载成功
+        
+    }else if (state == loadFail){//加载失败
+        view = [self resultViewWithType:PageResultType_nodata];
+
+    }else if (state == loadNoData){//所在地区无产品
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 150)];
+        view.backgroundColor = RGBCOLOR(240, 245, 246);
+        
+        UIView *view1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 85)];
+        view1.backgroundColor = [UIColor whiteColor];
+        [view addSubview:view1];
+        
+        
+        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(200.0/830*DEVICE_WIDTH, 85*0.5 - 36*0.5, 36, 36)];
+        [imv setImage:[UIImage imageNamed:@"storehomeNodatatixing.png"]];
+        [view1 addSubview:imv];
+        
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(imv.right + 10, imv.frame.origin.y, 270.0/830*DEVICE_WIDTH,imv.frame.size.height)];
+        titleLabel.textColor = RGBCOLOR(130, 133, 133);
+        titleLabel.font = [UIFont systemFontOfSize:10];
+        titleLabel.numberOfLines = 2;
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.text = @"该城市还没有相应套餐先去其他城市逛逛吧";
+        [view1 addSubview:titleLabel];
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.backgroundColor = [UIColor whiteColor];
+        btn.layer.borderWidth = 0.5;
+        btn.layer.borderColor = [RGBCOLOR(236, 237, 240)CGColor];
+        [btn setFrame:CGRectMake(40, CGRectGetMaxY(view1.frame)+17, DEVICE_WIDTH - 80, 32)];
+        btn.titleLabel.font = [UIFont systemFontOfSize:12];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btn setTitle:@"切换城市" forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(changeCityBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:btn];
+    }
     
     return view;
 }
+
+
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"下拉重新加载";
+    }
+    
+    ResultView *result = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                    title:@"加载失败"
+                                                  content:content];
+    return result;
+}
+
 
 
 -(void)changeCityBtnClicked{
@@ -1537,7 +1605,6 @@
     _isShaixuan = YES;
     
     GoneClassListViewController *cc = [[GoneClassListViewController alloc]init];
-    cc.className = @"精品推荐";
     cc.isShowShaixuanData = YES;
     cc.haveChooseGender = YES;
     cc.shaixuanDic = self.shaixuanDic;
