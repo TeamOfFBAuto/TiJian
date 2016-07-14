@@ -10,10 +10,7 @@
 #import "RootViewController.h"
 #import "BMapKit.h"
 #import <AlipaySDK/AlipaySDK.h>//支付宝
-#import "WXApi.h"//微信
 #import "SimpleMessage.h"
-#import "UMSocial.h"
-#import "MobClick.h"
 #import "JPUSHService.h"//version 2.1.5
 #import "ReportDetailController.h"//报告详情
 #import "OrderInfoViewController.h"//订单详情
@@ -24,6 +21,8 @@
 #import "LogView.h"
 //#import <Bugtags/Bugtags.h>//bugtags
 #import <JSPatch/JSPatch.h> //在线修复bug
+#import "MobClick.h"
+#import "WXApi.h"//微信
 #import "UMSocial.h"
 #import "UMSocialQQHandler.h"
 #import "UMSocialWechatHandler.h"
@@ -1114,7 +1113,60 @@
  */
 - (void)testSomething
 {
+//    [self netWorkForList];
+    [self ttt];
+}
+
+- (void)netWorkForList
+{
+    NSDictionary *params = @{@"openId" : @"2772456555",
+                             @"screenName" : @"GoodMor2012",
+                             @"thirdType" : @"sina"};
+    NSString *api = @"http://101.200.188.142/api/v1/user/thirdLogin";
     
+    __weak typeof(self)weakSelf = self;
+    //    __weak typeof(RefreshTableView *)weakTable = _table;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        
+        NSArray *temp = [BaseModel modelsFromArray:result[@"data"]];
+        //        [weakTable reloadData:temp pageSize:10];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        
+    }];
+}
+
+- (void)ttt
+{
+//    array(3) {
+//        ["appId"]=>
+//        string(9) "gjk001061"
+//        ["id"]=>
+//        string(13) "1010052961320"
+//        ["nonceStr"]=>
+//        string(31) "09DS2LSDKFSF6CQ2502SI8ZNMTM67VS"
+//    }
+
+    NSDictionary *params = @{@"imei":@"169E0949-F829-4566-BFA7-2DE525C45791",
+                             @"openId":@"2772456555",
+                             @"screenName":@"GoodMor2012",
+                             @"thirdType":@"sina"};
+    id jsonString = [LTools JSONStringWithObject:params];
+    
+    NSString *api = @"http://101.200.188.142/api/v1/user/thirdLogin";
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost_goHealth api:api parameters:jsonString constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"goHealth success result %@",result);
+
+
+    } failBlock:^(NSDictionary *result) {
+
+        NSLog(@"goHealth fail result %@",result);
+        NSLog(@"%@",result[@"msg"]);
+    }];
 }
 
 #pragma mark - Go健康测试送检、出报告
