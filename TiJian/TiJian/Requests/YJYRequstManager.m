@@ -76,7 +76,6 @@
         method == YJYRequstMethodPost_goHealth)
     {
         serverUrl = GoHealthServerUrl;
-        serverUrl = @"";
     }
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -186,7 +185,7 @@
         }
         else if (method == YJYRequstMethodPost_goHealth)
         {
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://101.200.188.142/api/v1/user/thirdLogin"]];
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:serverUrl]];
             [request setHTTPMethod:@"POST"];
             [request setValue:@"application/json; charset=utf-8"forHTTPHeaderField:@"Content-Type"];
             NSString *json = (NSString *)paramsDic;
