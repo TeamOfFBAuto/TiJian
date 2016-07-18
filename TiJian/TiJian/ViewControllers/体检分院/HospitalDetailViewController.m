@@ -11,17 +11,21 @@
 #import "LPhotoBrowser.h"
 #import "ProductModel.h"
 #import "HospitalModel.h"
+#import "GProductCellTableViewCell.h"
 
 @interface HospitalDetailViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
-    NSString *_brandid;//品牌id
-    UIView *_recommendView;//品牌推荐
-    NSArray *_recommendArray;//品牌推荐的单品
     HospitalModel *_hospitalModel;
     CGFloat _recommentTop;//推荐部分y坐标
     
     UITableView *_tab;
     UIView *_tabFooterView;
+    UIView *_tabHeaderView;
+    int _page;//当前页
+    NSMutableArray *_productsArray;
+    UIView *_clickToMoreView;//点击查看更多
+    UIButton *_clickedToMoreBtn;
+    UIActivityIndicatorView *_act;
 }
 
 @end
@@ -35,14 +39,16 @@
     self.myTitle = @"分院详情";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
+    _productsArray = [NSMutableArray arrayWithCapacity:1];
     
     [self creatTab];
     
     //分院详情
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
+    _page = 1;
     [self netWorkForDetail];
-    
+    [self networkForProducts];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,28 +58,52 @@
 
 #pragma mark - 视图创建
 
+
+
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64)];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
     _tab.delegate =self;
     _tab.dataSource = self;
     [self.view addSubview:_tab];
     
     _tab.tableFooterView = [self createTabFooterView];
+    _tab.tableHeaderView = [self creatTabHeader];
+}
+
+-(UIView *)creatTabHeader{
+    _tabHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH*370/750)];
+    
+    UIImageView *imv = [[UIImageView alloc]initWithFrame:_tabHeaderView.bounds];
+    [imv l_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:nil];
+    
+    UIView *centerNameView = [[UIView alloc]initWithFrame:CGRectMake(0, _tabHeaderView.frame.size.height - 30, DEVICE_WIDTH, 30)];
+    centerNameView.backgroundColor = [UIColor blackColor];
+    centerNameView.alpha = 0.7;
+    [_tabHeaderView addSubview:centerNameView];
+    
+    UILabel *centerNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, centerNameView.frame.size.width-10, 30)];
+    centerNameLabel.text = _hospitalModel.center_name;
+    centerNameLabel.textColor = [UIColor whiteColor];
+    centerNameLabel.font = [UIFont systemFontOfSize:12];
+    [centerNameView addSubview:centerNameLabel];
+    
+    return _tabHeaderView;
 }
 
 - (UIView *)createTabFooterView
 {
     _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
+    _tabFooterView.backgroundColor =  RGBCOLOR(244, 244, 244);
     
     //分院名称
-    UIView *nameView = [[UIView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 45)];
+    UIView *nameView = [[UIView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 30)];
     nameView.backgroundColor = [UIColor whiteColor];
     [_tabFooterView addSubview:nameView];
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院名称"];
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院介绍"];
     [nameView addSubview:title];
     
-    NSString *centerName = _hospitalModel.center_name;
-    UILabel *content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 0, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:centerName];
+//    NSString *centerName = _hospitalModel.center_name;
+    UILabel *content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 0, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:nil];
     [nameView addSubview:content];
     
     //公交路线
@@ -248,6 +278,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger num = 0;
+    num = _productsArray.count;
     return num;
 }
 
@@ -258,11 +289,15 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     CGFloat height = 0.01;
+    if (_productsArray.count>0) {
+        height = 30;
+    }
     return height;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat height = 0;
+    height = [GProductCellTableViewCell getCellHight];
     return height;
 }
 
@@ -272,17 +307,54 @@
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
-    return view;
+    
+    _clickToMoreView = [[UIView alloc]init];
+    _clickToMoreView.backgroundColor = [UIColor whiteColor];
+    
+    if (_productsArray.count >0) {
+        
+        [_clickToMoreView setFrame:CGRectMake(0, 0, DEVICE_WIDTH, 30)];
+        
+        _act = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [_clickToMoreView addSubview:_act];
+        _act.center = _clickToMoreView.center;
+        
+        _clickedToMoreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_clickedToMoreBtn setFrame:CGRectMake(0, 0, 150, 30)];
+        [_clickedToMoreBtn setTitle:@"点击查看更多" forState:UIControlStateNormal];
+        _clickedToMoreBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+        [_clickedToMoreBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_clickedToMoreBtn addTarget:self action:@selector(clickedToMore) forControlEvents:UIControlEventTouchUpInside];
+        [_clickToMoreView addSubview:_clickedToMoreBtn];
+        _clickedToMoreBtn.center = _clickToMoreView.center;
+        
+    }else{
+        [_clickToMoreView setFrame:CGRectZero];
+    }
+    
+    
+    return _clickToMoreView;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"identifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    GProductCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[GProductCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    
+    ProductModel *p = _productsArray[indexPath.row];
+    
+    [cell loadData:p];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    ProductModel *aModel = _productsArray[indexPath.row];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
 }
 
 
@@ -387,7 +459,9 @@
         
         return;
     }
-    NSDictionary *params = @{@"exam_center_id":self.centerId};
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+    [params safeSetString:self.centerId forKey:@"exam_center_id"];
     
     NSString *api = Get_hospital_detail;
     
@@ -396,6 +470,7 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [weakSelf parseDataWithResult:result];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -409,40 +484,40 @@
 {
     NSDictionary *data = result[@"data"];
     _hospitalModel = [[HospitalModel alloc]initWithDictionary:data];
-    
-//    [self createHospitalInfoView];//创建视图
     _tab.tableFooterView = [self createTabFooterView];
-    
-    [self networkForRecommendWithBrandId:_hospitalModel.brand_id];
+    _tab.tableHeaderView = [self creatTabHeader];;
 }
 
-//品牌推荐
--(void)networkForRecommendWithBrandId:(NSString *)brandId
+//推荐的体检商品
+-(void)networkForProducts
 {
-    
-    NSString *theP_id = [GMAPI getCurrentProvinceId];
-    NSString *theC_id = [GMAPI getCurrentCityId];
-    
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    [param safeSetString:brandId forKey:@"brand_id"];
-    [param safeSetString:theP_id forKey:@"province_id"];
-    [param safeSetString:theC_id forKey:@"city_id"];
-    [param safeSetString:@"1" forKey:@"page"];
+    [param safeSetString:self.centerId forKey:@"exam_center_id"];
+    [param safeSetString:NSStringFromInt(_page) forKey:@"page"];
     [param safeSetString:@"3" forKey:@"per_page"];
     
-     @WeakObj(self);
-    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:param constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    
+    
+     @WeakObj(_tab);
+    [[YJYRequstManager shareInstance] requestWithMethod:YJYRequstMethodGet api:Get_hospital_products parameters:param constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        _page++;
         
         NSArray *data = result[@"data"];
-        _recommendArray = [NSArray arrayWithArray:[ProductModel modelsFromArray:data]];
+        NSArray *arr = [NSArray arrayWithArray:[ProductModel modelsFromArray:data]];
         
-//        //品牌推荐
-//        [Weakself createRecommendViewWithTop:_recommentTop];
+        for (ProductModel *model in arr) {
+            [_productsArray addObject:model];
+        }
+        
+        
+        [Weak_tab reloadData];
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-
+        
         
     } failBlock:^(NSDictionary *result) {
+        
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
     }];
@@ -451,13 +526,22 @@
 #pragma mark - 数据解析处理
 #pragma mark - 事件处理
 
+
+-(void)clickedToMore{
+    _clickedToMoreBtn.hidden = YES;
+    [_act startAnimating];
+    [self networkForProducts];
+}
+
+
+
 /**
  *  品牌推荐->单品详情
  */
 - (void)clickToProductDetail:(UIButton *)btn
 {
     int index = (int)btn.tag - 100;
-    ProductModel *aModel = _recommendArray[index];
+    ProductModel *aModel = _productsArray[index];
     [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
 }
 

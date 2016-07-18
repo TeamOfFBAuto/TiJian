@@ -11,9 +11,9 @@
 #ifndef WJXC_ApiConstants_h
 #define WJXC_ApiConstants_h
 
-#define SERVER_URL @"http://www.haimayisheng.com/" //海马医生域名
+//#define SERVER_URL @"http://www.haimayisheng.com/" //海马医生域名
 
-//#define SERVER_URL @"http://182.92.106.193:88" //海马医生域名 测试服务器
+#define SERVER_URL @"http://182.92.106.193:88" //海马医生域名 测试服务器
 
 
 //体检须知
@@ -423,6 +423,9 @@
 
 //10、分院详情
 #define Get_hospital_detail @"/index.php?d=api&c=appoint&m=get_center_detail"
+
+//分院体检商品推荐
+#define Get_hospital_products @"/index.php?d=api&c=appoint&m=get_product_by_center"
 
 //=======================================================
 
