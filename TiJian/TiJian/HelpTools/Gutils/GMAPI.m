@@ -342,7 +342,7 @@
 
 +(NSString *)getCurrentCityName{
     NSString *ss = [self getCurrentCityId];
-    NSString *cc = [self cityNameForId:[ss intValue]];
+    NSString *cc = [self getCityNameOf4CityWithCityId:[ss intValue]];
     return cc;
 }
 

@@ -12,14 +12,16 @@
 #import "ProductModel.h"
 #import "HospitalModel.h"
 
-@interface HospitalDetailViewController ()
+@interface HospitalDetailViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
-    UIScrollView *_scrollView;
     NSString *_brandid;//品牌id
     UIView *_recommendView;//品牌推荐
     NSArray *_recommendArray;//品牌推荐的单品
     HospitalModel *_hospitalModel;
     CGFloat _recommentTop;//推荐部分y坐标
+    
+    UITableView *_tab;
+    UIView *_tabFooterView;
 }
 
 @end
@@ -33,11 +35,12 @@
     self.myTitle = @"分院详情";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
-    [self.view addSubview:_scrollView];
+    
+    [self creatTab];
     
     //分院详情
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [self netWorkForDetail];
     
 }
@@ -49,12 +52,23 @@
 
 #pragma mark - 视图创建
 
-- (void)createHospitalInfoView
+-(void)creatTab{
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64)];
+    _tab.delegate =self;
+    _tab.dataSource = self;
+    [self.view addSubview:_tab];
+    
+    _tab.tableFooterView = [self createTabFooterView];
+}
+
+- (UIView *)createTabFooterView
 {
+    _tabFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
+    
     //分院名称
     UIView *nameView = [[UIView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 45)];
     nameView.backgroundColor = [UIColor whiteColor];
-    [_scrollView addSubview:nameView];
+    [_tabFooterView addSubview:nameView];
     UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院名称"];
     [nameView addSubview:title];
     
@@ -72,7 +86,7 @@
         
         nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
         nameView.backgroundColor = [UIColor whiteColor];
-        [_scrollView addSubview:nameView];
+        [_tabFooterView addSubview:nameView];
         
         title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"公交路线"];
         [nameView addSubview:title];
@@ -95,7 +109,7 @@
         
         nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
         nameView.backgroundColor = [UIColor whiteColor];
-        [_scrollView addSubview:nameView];
+        [_tabFooterView addSubview:nameView];
         
         title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"休息时间"];
         [nameView addSubview:title];
@@ -112,7 +126,7 @@
     //分院地址
     nameView = [[UIView alloc]initWithFrame:CGRectMake(0, nameView.bottom + 5, DEVICE_WIDTH, 45)];
     nameView.backgroundColor = [UIColor whiteColor];
-    [_scrollView addSubview:nameView];
+    [_tabFooterView addSubview:nameView];
     
     title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院地址"];
     [nameView addSubview:title];
@@ -138,13 +152,13 @@
     //line
     UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, nameView.bottom, DEVICE_WIDTH, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
-    [_scrollView addSubview:line];
+    [_tabFooterView addSubview:line];
     
     
     //分院电话
     nameView = [[UIView alloc]initWithFrame:CGRectMake(0, line.bottom, DEVICE_WIDTH, 45)];
     nameView.backgroundColor = [UIColor whiteColor];
-    [_scrollView addSubview:nameView];
+    [_tabFooterView addSubview:nameView];
     
     title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院电话"];
     [nameView addSubview:title];
@@ -164,7 +178,7 @@
     //line
     line = [[UIImageView alloc]initWithFrame:CGRectMake(0, nameView.bottom, DEVICE_WIDTH, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
-    [_scrollView addSubview:line];
+    [_tabFooterView addSubview:line];
     
     //分院环境
     
@@ -180,7 +194,7 @@
         
         nameView = [[UIView alloc]initWithFrame:CGRectMake(0, line.bottom, DEVICE_WIDTH, 45)];
         nameView.backgroundColor = [UIColor whiteColor];
-        [_scrollView addSubview:nameView];
+        [_tabFooterView addSubview:nameView];
         
         title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院环境"];
         [nameView addSubview:title];
@@ -217,91 +231,146 @@
     
     _recommentTop = re_top;
     
-    _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, nameView.bottom > DEVICE_HEIGHT ? nameView.bottom + 20 : DEVICE_HEIGHT);
+//    _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, nameView.bottom > DEVICE_HEIGHT ? nameView.bottom + 20 : DEVICE_HEIGHT);
+    
+    [_tabFooterView setHeight:_recommentTop];
+    
+    return _tabFooterView;
+    
 }
 
-/**
- *  品牌推荐view
- */
-- (void)createRecommendViewWithTop:(CGFloat)top
-{    
-    //没有推荐套餐则不显示该部分
-    if (!_recommendArray || _recommendArray.count == 0) {
-        return;
-    }
-    
-    NSInteger count = _recommendArray.count;
-    CGFloat height = 0.f;
-    
-    if (count >= 3) {
-        count = 3;
-        height = 175 + 20;
-    }
-    
-    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, height)];
-    backView.backgroundColor = [UIColor whiteColor];
-    [_scrollView addSubview:backView];
-    
-    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, 45)];
-    tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
-    tLabel.text = @"套餐推荐";
-    tLabel.font = [UIFont systemFontOfSize:14];
-    [backView addSubview:tLabel];
-    
-    CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
-    CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
-    
-    for (int i = 0; i < count; i++) {
-        
-        ProductModel *amodel = _recommendArray[i];
-        UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), tLabel.bottom, theW, theH)];
-        logoAndContentView.layer.borderWidth = 0.5;
-        logoAndContentView.layer.borderColor = [RGBCOLOR(235, 236, 238)CGColor];
-        [backView addSubview:logoAndContentView];
-        
-        logoAndContentView.tag = 100 + i;
-        [logoAndContentView addTaget:self action:@selector(clickToProductDetail:) tag:logoAndContentView.tag];
-        
-        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
-        [imv l_setImageWithURL:[NSURL URLWithString:amodel.cover_pic] placeholderImage:nil];
-        [logoAndContentView addSubview:imv];
-        
-        UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(imv.frame)+5, theW-10, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/60])];
-        titleLable.text = amodel.setmeal_name;
-        titleLable.numberOfLines = 2;
-        titleLable.font = [UIFont systemFontOfSize:11];
-        [logoAndContentView addSubview:titleLable];
-        
-        
-        NSString *xianjia = [NSString stringWithFormat:@"%.1f",[amodel.setmeal_price floatValue]];
-        NSString *yuanjia = [NSString stringWithFormat:@"%.1f",[amodel.setmeal_original_price floatValue]];
-        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(titleLable.frame)+5, imv.frame.size.width - 5, 12)];
-        NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
-        NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
-        [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
-        [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(0, xianjia.length+1)];
-        
-        [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-        [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:8] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-        [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
-        priceLabel.attributedText = aaa;
-        [logoAndContentView addSubview:priceLabel];
-    }
-    
-    if (count>0) {
+#pragma mark - UITableViewDelegate && UITableViewDataSource
 
-    }else{
-        
-        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, 45, DEVICE_WIDTH - 40, 30)];
-        tt.text = @"暂无可推荐套餐";
-        tt.textAlignment = NSTextAlignmentCenter;
-        tt.font = [UIFont systemFontOfSize:11];
-        tt.textColor = [UIColor grayColor];
-        [backView addSubview:tt];
-    }
-    
-    _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, backView.bottom > DEVICE_HEIGHT ? backView.bottom + 20 : DEVICE_HEIGHT);
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    NSInteger num = 1;
+    return num;
 }
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    NSInteger num = 0;
+    return num;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    CGFloat height = 0.01;
+    return height;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    CGFloat height = 0.01;
+    return height;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    CGFloat height = 0;
+    return height;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    return view;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+    return view;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *identifier = @"identifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    return cell;
+}
+
+
+
+
+
+///**
+// *  品牌推荐view
+// */
+//- (void)createRecommendViewWithTop:(CGFloat)top
+//{    
+//    //没有推荐套餐则不显示该部分
+//    if (!_recommendArray || _recommendArray.count == 0) {
+//        return;
+//    }
+//    
+//    NSInteger count = _recommendArray.count;
+//    CGFloat height = 0.f;
+//    
+//    if (count >= 3) {
+//        count = 3;
+//        height = 175 + 20;
+//    }
+//    
+//    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, height)];
+//    backView.backgroundColor = [UIColor whiteColor];
+//    [_scrollView addSubview:backView];
+//    
+//    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, 45)];
+//    tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
+//    tLabel.text = @"套餐推荐";
+//    tLabel.font = [UIFont systemFontOfSize:14];
+//    [backView addSubview:tLabel];
+//    
+//    CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
+//    CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
+//    
+//    for (int i = 0; i < count; i++) {
+//        
+//        ProductModel *amodel = _recommendArray[i];
+//        UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), tLabel.bottom, theW, theH)];
+//        logoAndContentView.layer.borderWidth = 0.5;
+//        logoAndContentView.layer.borderColor = [RGBCOLOR(235, 236, 238)CGColor];
+//        [backView addSubview:logoAndContentView];
+//        
+//        logoAndContentView.tag = 100 + i;
+//        [logoAndContentView addTaget:self action:@selector(clickToProductDetail:) tag:logoAndContentView.tag];
+//        
+//        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
+//        [imv l_setImageWithURL:[NSURL URLWithString:amodel.cover_pic] placeholderImage:nil];
+//        [logoAndContentView addSubview:imv];
+//        
+//        UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(imv.frame)+5, theW-10, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/60])];
+//        titleLable.text = amodel.setmeal_name;
+//        titleLable.numberOfLines = 2;
+//        titleLable.font = [UIFont systemFontOfSize:11];
+//        [logoAndContentView addSubview:titleLable];
+//        
+//        
+//        NSString *xianjia = [NSString stringWithFormat:@"%.1f",[amodel.setmeal_price floatValue]];
+//        NSString *yuanjia = [NSString stringWithFormat:@"%.1f",[amodel.setmeal_original_price floatValue]];
+//        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(titleLable.frame)+5, imv.frame.size.width - 5, 12)];
+//        NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
+//        NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
+//        [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
+//        [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(0, xianjia.length+1)];
+//        
+//        [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+//        [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:8] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
+//        [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
+//        priceLabel.attributedText = aaa;
+//        [logoAndContentView addSubview:priceLabel];
+//    }
+//    
+//    if (count>0) {
+//
+//    }else{
+//        
+//        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, 45, DEVICE_WIDTH - 40, 30)];
+//        tt.text = @"暂无可推荐套餐";
+//        tt.textAlignment = NSTextAlignmentCenter;
+//        tt.font = [UIFont systemFontOfSize:11];
+//        tt.textColor = [UIColor grayColor];
+//        [backView addSubview:tt];
+//    }
+//    
+//    _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, backView.bottom > DEVICE_HEIGHT ? backView.bottom + 20 : DEVICE_HEIGHT);
+//}
 
 #pragma mark - 网络请求
 
@@ -341,7 +410,8 @@
     NSDictionary *data = result[@"data"];
     _hospitalModel = [[HospitalModel alloc]initWithDictionary:data];
     
-    [self createHospitalInfoView];//创建视图
+//    [self createHospitalInfoView];//创建视图
+    _tab.tableFooterView = [self createTabFooterView];
     
     [self networkForRecommendWithBrandId:_hospitalModel.brand_id];
 }
@@ -366,7 +436,8 @@
         NSArray *data = result[@"data"];
         _recommendArray = [NSArray arrayWithArray:[ProductModel modelsFromArray:data]];
         
-        [Weakself createRecommendViewWithTop:_recommentTop];
+//        //品牌推荐
+//        [Weakself createRecommendViewWithTop:_recommentTop];
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
@@ -437,7 +508,7 @@
     
     NSInteger initPage = index;
     
-    @WeakObj(_scrollView);
+    @WeakObj(_tabFooterView);
     [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
         
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
@@ -446,7 +517,7 @@
             
             NSDictionary *imageDic = img[i];
             
-            UIImageView *imageView = [Weak_scrollView viewWithTag:200 + i];
+            UIImageView *imageView = [Weak_tabFooterView viewWithTag:200 + i];
             LPhotoModel *photo = [[LPhotoModel alloc]init];
             if ([imageDic isKindOfClass:[NSDictionary class]]) {
                 photo.imageUrl = imageDic[@"url"];
