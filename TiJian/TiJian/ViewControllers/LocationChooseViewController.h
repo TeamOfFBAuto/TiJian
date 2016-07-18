@@ -13,9 +13,9 @@
 #import "MyViewController.h"
 
 @protocol LocationChooseDelegate <NSObject>
-
+@optional
 @property(nonatomic,strong)UILabel *leftLabel;
-
+@required
 -(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince;
 
 @end
