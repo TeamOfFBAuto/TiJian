@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ResultView.h"
+#import "RefreshTableView.h"
 typedef enum
 {
     MyViewControllerLeftbuttonTypeBack = 0,//返回按钮
@@ -41,6 +42,7 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 @interface MyViewController : UIViewController
 {
     ResultView *_resultView;
+    RefreshTableView *_tableView;
 }
 @property(nonatomic,strong)NSString * rightString;//navigationbar right button text
 @property(nonatomic,strong)NSString * leftString;//navigationbar left button text
@@ -63,8 +65,21 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 @property(nonatomic,strong)UIButton *right_button;//右边文字button
 @property(nonatomic,strong)UIButton *right_button2;//右边button,左1
 
+@property(nonatomic,strong)RefreshTableView *tableView;
 
--(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType WithRightButtonType:(MyViewControllerRightbuttonType)rightType;
+-(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType
+                     WithRightButtonType:(MyViewControllerRightbuttonType)rightType;
+
+/**
+ *  设置导航栏左、右按钮以及navigationTitle
+ *
+ *  @param theType   左侧按钮type
+ *  @param rightType 右侧按钮type
+ *  @param title     navigationBar标题
+ */
+-(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType
+                     withRightButtonType:(MyViewControllerRightbuttonType)rightType
+                         navigationTitle:(NSString *)title;
 
 - (void)setNavigationStyle:(NAVIGATIONSTYLE)style
                      title:(NSString *)title;
@@ -81,5 +96,21 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 -(void)rightButtonTap:(UIButton *)sender;
 -(void)rightButtonTap2:(UIButton *)sender;
 
+/**
+ *  请求数据结果页
+ *
+ *  @param type           结果类型
+ *  @param title          信息提示title
+ *  @param errMsg         信息提示信息
+ *  @param btnTitle       按钮信息
+ *  @param updateSelector 点击行为
+ *
+ *  @return
+ */
+-(ResultView *)resultViewWithType:(PageResultType)type
+                            title:(NSString *)title
+                              msg:(NSString *)errMsg
+                         btnTitle:(NSString *)btnTitle
+                         selector:(SEL)selector;
 
 @end

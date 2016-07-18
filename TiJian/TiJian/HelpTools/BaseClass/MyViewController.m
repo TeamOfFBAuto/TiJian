@@ -8,7 +8,8 @@
 
 #import "MyViewController.h"
 
-@interface MyViewController ()
+@interface MyViewController ()<RefreshDelegate,UITableViewDataSource>
+
 {
     UISwipeGestureRecognizer * swipe;
     UIButton *_backButton;//返回按钮
@@ -26,6 +27,7 @@
 @property(nonatomic,retain)UIBarButtonItem *rightButtonItem2;//右2
 @property(nonatomic,retain)UIBarButtonItem *leftButtonItem;//左
 @property(nonatomic,retain)UIBarButtonItem *leftButtonItem2;//左2
+@property(nonatomic,retain)UIButton *stateButton;//结果页刷新按钮
 
 @end
 
@@ -90,6 +92,22 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
 }
 
+#pragma mark - 视图个性化 新version
+
+/**
+ *  设置导航栏左、右按钮以及navigationTitle
+ *
+ *  @param theType   左侧按钮type
+ *  @param rightType 右侧按钮type
+ *  @param title     navigationBar标题
+ */
+-(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType
+                     withRightButtonType:(MyViewControllerRightbuttonType)rightType
+                         navigationTitle:(NSString *)title
+{
+    [self setMyViewControllerLeftButtonType:theType WithRightButtonType:rightType];
+    self.myTitle = title;
+}
 
 #pragma mark - 视图个性化method
 
@@ -325,6 +343,82 @@
 
 #pragma mark - 视图创建
 
+/**
+ *  请求数据结果页
+ *
+ *  @param type           结果类型
+ *  @param title          信息提示title
+ *  @param errMsg         信息提示信息
+ *  @param btnTitle       按钮信息
+ *  @param updateSelector 点击行为
+ *
+ *  @return
+ */
+-(ResultView *)resultViewWithType:(PageResultType)type
+                            title:(NSString *)title
+                              msg:(NSString *)errMsg
+                         btnTitle:(NSString *)btnTitle
+                         selector:(SEL)selector
+{
+    if (!title) {
+        title = @"温馨提示";
+    }
+    
+    if (!btnTitle) {
+        btnTitle = @"重新加载";
+    }
+    
+    if (!errMsg) {
+        
+        if (type == PageResultType_requestFail)
+        {
+            errMsg = @"获取数据异常,点击重新加载";
+            
+        }else if (type == PageResultType_nodata)
+        {
+           errMsg = @"没有获取到您想要的内容";
+        }
+    }
+    
+    if (!_resultView) {
+        _resultView = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"]
+                                                 title:title
+                                               content:errMsg];
+    }
+    
+    [_resultView setContent:errMsg];
+    [_stateButton setTitle:btnTitle forState:UIControlStateNormal];
+    
+    if (!_stateButton) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 140, 36);
+        [btn addCornerRadius:5.f];
+        btn.backgroundColor = DEFAULT_TEXTCOLOR;
+        [btn setTitle:btnTitle forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [btn addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+        [_resultView setBottomView:btn];
+        _stateButton = btn;
+    }
+    
+    return _resultView;
+}
+
+
+-(RefreshTableView *)tableView
+{
+    if (!_tableView)
+    {
+        _tableView = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+        _tableView.refreshDelegate = self;
+        _tableView.dataSource = self;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        [self.view addSubview:_tableView];
+    }
+    return _tableView;
+}
+
 -(UIBarButtonItem *)rightButtonItem
 {
     if (!_rightButtonItem) {
@@ -441,6 +535,31 @@
 - (void)leftButtonTap2:(UIButton *)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma - mark UITableViewDataSource
+
+- (NSInteger)tableView:(RefreshTableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return tableView.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifier = @"GoProductCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    return cell;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
 }
 
 @end

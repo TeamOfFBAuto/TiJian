@@ -45,16 +45,6 @@
 
 @implementation AppointmentViewController
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -1036,7 +1026,7 @@
     
     NSString *leftText = @"";
     NSString *centerText = @"";
-    NSString *rightText = @"";
+//    NSString *rightText = @"";
     NSString *name = aModel.user_name;
     
     if (type == 2)//go健康

@@ -141,6 +141,7 @@
 		1324B6A71BD76B6A00FB47A9 /* PersonalCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */; };
 		1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */; };
 		1338D5AC1D3CABA9003A2924 /* AppointDirectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338D5AB1D3CABA9003A2924 /* AppointDirectController.m */; };
+		1338D5AE1D3CD3D8003A2924 /* location@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1338D5AD1D3CD3D8003A2924 /* location@2x.png */; };
 		1338F1661D22606F008DDC42 /* personal_vip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1338F1651D22606F008DDC42 /* personal_vip@2x.png */; };
 		1339F2F31C478BA10001F74B /* NSDictionary+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */; };
 		133FB5CD1C43AB09002A2DDE /* ActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133FB5CC1C43AB09002A2DDE /* ActivityView.m */; };
@@ -846,6 +847,7 @@
 		1338D5A91D3C88C1003A2924 /* TiJian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TiJian.entitlements; sourceTree = "<group>"; };
 		1338D5AA1D3CABA9003A2924 /* AppointDirectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointDirectController.h; sourceTree = "<group>"; };
 		1338D5AB1D3CABA9003A2924 /* AppointDirectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointDirectController.m; sourceTree = "<group>"; };
+		1338D5AD1D3CD3D8003A2924 /* location@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location@2x.png"; sourceTree = "<group>"; };
 		1338F1651D22606F008DDC42 /* personal_vip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_vip@2x.png"; sourceTree = "<group>"; };
 		1339F2F11C478BA10001F74B /* NSDictionary+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Additions.h"; sourceTree = "<group>"; };
 		1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Additions.m"; sourceTree = "<group>"; };
@@ -1733,6 +1735,7 @@
 		1303C33A1BEB0D7100700847 /* 预约 */ = {
 			isa = PBXGroup;
 			children = (
+				1338D5AD1D3CD3D8003A2924 /* location@2x.png */,
 				136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */,
 				136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */,
 				13FCD6A41BFAD935005AE05B /* yuyue_wenhao@2x.png */,
@@ -3569,6 +3572,7 @@
 				1303C2C61BE9ABCA00700847 /* navigationbarBackgroudImage_iOS6@2x.png in Resources */,
 				13E2D8701CC8C58100A684D7 /* personal_guanhaozhuanzhen@2x.png in Resources */,
 				E3FEFA691C5B6C550024AE0E /* back_storehome@2x.png in Resources */,
+				1338D5AE1D3CD3D8003A2924 /* location@2x.png in Resources */,
 				139333B21BE0DF3E00B4628B /* 17_1@2x.png in Resources */,
 				13F9D10D1C2FAD1300993738 /* home_button_top@2x.png in Resources */,
 				139333B01BE0DF3E00B4628B /* 16_3@2x.png in Resources */,
