@@ -42,14 +42,12 @@ static int seconds = 60;//计时60s
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
     [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"注册"];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
     [self renewTimer];
 }
 

@@ -20,7 +20,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
     _isClick = YES;
     [self notifyUpdateUnreadMessageCount];
 }
@@ -28,7 +27,6 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
 - (void)viewDidLoad {

@@ -1,5 +1,5 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/FSCalendar" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/FMDB" "${PODS_ROOT}/Headers/Public/FSCalendar" "${PODS_ROOT}/Headers/Public/JSONKit" "${PODS_ROOT}/Headers/Public/MBProgressHUD" "${PODS_ROOT}/Headers/Public/Masonry" "${PODS_ROOT}/Headers/Public/Reachability" "${PODS_ROOT}/Headers/Public/RongCloudIMKit" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/SSLunarDate" "${PODS_ROOT}/Headers/Public/UMengAnalytics-NO-IDFA"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/FSCalendar" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/FMDB" "${PODS_ROOT}/Headers/Public/FSCalendar" "${PODS_ROOT}/Headers/Public/JSONKit" "${PODS_ROOT}/Headers/Public/MBProgressHUD" "${PODS_ROOT}/Headers/Public/MagicWindowSDK" "${PODS_ROOT}/Headers/Public/Masonry" "${PODS_ROOT}/Headers/Public/Reachability" "${PODS_ROOT}/Headers/Public/RongCloudIMKit" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/SSLunarDate" "${PODS_ROOT}/Headers/Public/UMengAnalytics-NO-IDFA"
 OTHER_LDFLAGS = -framework "QuartzCore" -framework "UIKit"
 PODS_ROOT = ${SRCROOT}
 SKIP_INSTALL = YES

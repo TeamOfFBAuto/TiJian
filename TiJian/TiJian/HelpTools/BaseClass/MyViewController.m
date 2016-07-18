@@ -49,15 +49,16 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -65,8 +66,9 @@
     [super viewWillDisappear:animated];
     
     [self.navigationController setNavigationBarHidden:self.lastPageNavigationHidden animated:animated];
+    
+    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
-
 
 - (void)viewDidLoad
 {
@@ -84,6 +86,8 @@
     _navTitleLabel.textColor = DEFAULT_TEXTCOLOR;
     _navTitleLabel.font = [UIFont systemFontOfSize:17];
     self.navigationItem.titleView = _navTitleLabel;
+    
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
 }
 
 

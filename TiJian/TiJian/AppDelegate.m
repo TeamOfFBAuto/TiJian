@@ -28,6 +28,8 @@
 #import "UMSocialWechatHandler.h"
 #import "UMSocialSinaSSOHandler.h"
 
+#import "MWApi.h"//魔窗
+
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
 #define kAlertViewTag_active 102 //正在前台 推送消息
@@ -93,6 +95,11 @@
 
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
+    
+    //魔窗
+    //初始化SDK，必写
+    [MWApi registerApp:@"L99P9WE7DRD8GTBWI0T7BQSP9BUN0B05"];
+    
     return YES;
 }
 
@@ -459,6 +466,8 @@
     
     DDLOG(@"openURL------ %@",url);
     
+    [MWApi routeMLink:url];
+    
     BOOL result = [UMSocialSnsService handleOpenURL:url];
     if (result == FALSE) {
         //调用其他SDK，例如支付宝SDK等
@@ -495,6 +504,20 @@
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
     return  [WXApi handleOpenURL:url delegate:self];
+}
+
+//iOS9+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(nonnull NSDictionary *)options
+{
+    //必写
+    [MWApi routeMLink:url];
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+    //如果使用了Universal link ，此方法必写
+    return [MWApi continueUserActivity:userActivity];
 }
 
 #pragma - mark 微信支付回调

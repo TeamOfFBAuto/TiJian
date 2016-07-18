@@ -59,19 +59,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_TO_CART object:nil];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
-
-
-
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];

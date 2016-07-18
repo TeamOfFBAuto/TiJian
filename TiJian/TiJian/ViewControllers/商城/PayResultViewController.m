@@ -21,17 +21,11 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
-
-
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];

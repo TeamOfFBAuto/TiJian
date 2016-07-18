@@ -119,8 +119,8 @@ typedef enum{
     _isPresenting = NO;
     [MobClick beginLogPageView:@"GStoreHomeViewController"];
     
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     //模态
@@ -136,8 +136,6 @@ typedef enum{
     //还原下拉刷新之前的状态栏状态
     [[UIApplication sharedApplication] setStatusBarHidden:FALSE];
     self.currentNavigationBar.alpha = 1;
-    
-    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
 

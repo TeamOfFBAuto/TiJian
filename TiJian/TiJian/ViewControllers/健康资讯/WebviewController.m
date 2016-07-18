@@ -46,14 +46,12 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
     [self.navigationController.navigationBar addSubview:_progressView];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
     // Remove progress view
     // because UINavigationBar is shared with other ViewControllers
     [_progressView removeFromSuperview];

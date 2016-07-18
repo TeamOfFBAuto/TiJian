@@ -57,19 +57,6 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     return self;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
-    self.navigationController.navigationBarHidden = NO;
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
-}
-
 -(void)viewDidLoad
 {
     [super viewDidLoad];

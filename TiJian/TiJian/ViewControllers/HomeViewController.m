@@ -11,7 +11,7 @@
 #import "GStoreHomeViewController.h"
 #import "RecommendMedicalCheckController.h"
 #import "PhysicalTestResultController.h"
-#import "AppointmentViewController.h"//预约
+#import "AppointDirectController.h"//预约
 #import "ArticleListController.h"//健康资讯列表
 #import "WebviewController.h"
 #import "ArticleModel.h"
@@ -72,16 +72,11 @@
 {
     [super viewWillAppear:animated];
     [self setNavigationStyle:NAVIGATIONSTYLE_WHITE title:@"海马医生"];
-
-    [MobClick beginLogPageView:NSStringFromClass([self class])];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:NSStringFromClass([self class])];
 }
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -1483,7 +1478,7 @@
 
 - (void)loginToAppoint
 {
-    AppointmentViewController *m_order = [[AppointmentViewController alloc]init];
+    AppointDirectController *m_order = [[AppointDirectController alloc]init];
     m_order.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:m_order animated:YES];
 }
