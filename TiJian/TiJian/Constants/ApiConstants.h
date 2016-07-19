@@ -424,6 +424,9 @@
 //10、分院详情
 #define Get_hospital_detail @"/index.php?d=api&c=appoint&m=get_center_detail"
 
+//分院体检商品推荐
+#define Get_hospital_products @"/index.php?d=api&c=appoint&m=get_product_by_center"
+
 //=======================================================
 
 #pragma - mark 体检报告
