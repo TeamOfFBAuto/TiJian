@@ -39,5 +39,7 @@
 @property(nonatomic,retain)NSString *desc;//品牌介绍
 @property(nonatomic,retain)NSArray *pic;//分院介绍图
 @property(nonatomic,retain)NSString *bus_route;//公交路线
+@property(nonatomic,retain)NSString *cover_pic;//封面url
+@property(nonatomic,retain)NSArray *product;//分院对应的套餐
 
 @end

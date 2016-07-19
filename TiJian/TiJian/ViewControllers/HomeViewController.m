@@ -339,7 +339,7 @@
 }
 
 
-#pragma mark -
+#pragma mark - LocationChooseDelegate
 
 -(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince{
     self.leftLabel.text = theCity;

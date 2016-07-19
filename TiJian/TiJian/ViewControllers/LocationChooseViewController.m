@@ -27,13 +27,11 @@
     NSMutableArray *_provinceArray;
     NSMutableArray *_citiesArray;
     
-    
     int _isOpen[500];
     
     NSArray *_hotCityArray;
     
     YJYRequstManager *_request;
-    
 }
 
 @end
@@ -43,7 +41,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     self.myTitle = @"选择城市";
@@ -86,12 +83,7 @@
         _tabHeaderView = [self creatTabHeaderView];
         _tabelView.tableHeaderView = _tabHeaderView;
         [_tabelView reloadData];
-        
     }];
-    
-    
-    
-    
 }
 
 
@@ -154,11 +146,6 @@
         }
     }
     
-    
-    
-    
-    
-    
     return view;
 }
 
@@ -170,15 +157,12 @@
     
     NSString *provinceName = _provinceArray[indexPath.section];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
-        [self.delegate afterChooseCity:cityName province:provinceName];
-    }
+    //选择回调处理
+    [self chooseDelegateCity:cityName province:provinceName];
+    
     [self setuserCommonlyUsedCityWithStr:cityName];
     [self.navigationController popViewControllerAnimated:YES];
 }
-
-
-
 
 #pragma mark - 点击section选择直辖市
 -(void)chooseTheStr:(UIGestureRecognizer*)ges{
@@ -186,14 +170,11 @@
     
      NSString *str = _provinceArray[ges.view.tag - 10];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
-        [self.delegate afterChooseCity:str province:str];
-    }
+    //选择回调处理
+    [self chooseDelegateCity:str province:str];
    
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
-    
-    
 }
 
 
@@ -203,20 +184,18 @@
     
     NSIndexSet *indexSet=[[NSIndexSet alloc]initWithIndex:ges.view.tag-10];
     [_tabelView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 44;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     CGFloat height = 0;
 
     height = 44;
     return height;
-
 }
-
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
@@ -227,47 +206,34 @@
     return 0.5;
 }
 
-
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *str = @"dddd";
+    static NSString *str = @"cityCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:str];
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:str];
     }
     
-    
-    
     for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
     
-    
     cell.backgroundColor= [UIColor whiteColor];
-    
     
     UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 0, DEVICE_WIDTH-20, 44)];
     tLabel.font = [UIFont systemFontOfSize:12];
-    
     
     NSArray *citiesArray = _citiesArray[indexPath.section];
     NSString *cityName = citiesArray[indexPath.row];
     
     tLabel.text = cityName;
-    
     [cell.contentView addSubview:tLabel];
-    
     
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(30, 43.5, DEVICE_WIDTH-30, 0.5)];
     line.backgroundColor = RGBCOLOR(244, 245, 246);
     [cell.contentView addSubview:line];
     
-    
-    
-    
     return cell;
 }
-
-
 
 #pragma mark - 视图创建
 //创建tableHeaderView
@@ -311,9 +277,6 @@
         [bself theLocationDictionary:dic];
     }];
     height += locationView_c.frame.size.height;
-    
-    
-    
     
     //最近访问城市
     UIView *zuijinfangwenCity = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 40)];
@@ -363,11 +326,8 @@
         ll.text = @"暂无";
         [zuijinfangwenCity_c addSubview:ll];
     }
-    
-    
-    
+
     height += zuijinfangwenCity_c.frame.size.height;
-    
     
     //热门城市
     UIView *hotCityView = [[UIView alloc]initWithFrame:CGRectMake(0, height, DEVICE_WIDTH, 40)];
@@ -454,9 +414,8 @@
     aaa = [aaa stringByAppendingString:@"00"];
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
-        [self.delegate afterChooseCity:str province:ppp];
-    }
+    //选择回调处理
+    [self chooseDelegateCity:str province:ppp];
     
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
@@ -471,9 +430,9 @@
     aaa = [aaa stringByAppendingString:@"00"];
     aa = [aaa intValue];
     NSString *ppp = [GMAPI cityNameForId:aa];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
-        [self.delegate afterChooseCity:str province:ppp];
-    }
+    
+    //选择回调处理
+    [self chooseDelegateCity:str province:ppp];
     
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
@@ -575,12 +534,11 @@
     if ([LTools isEmpty:theString]) {
         [self.nowLocationBtn_c setTitle:@"定位失败默认城市为北京" forState:UIControlStateNormal];
         [self.nowLocationBtn_c setWidth:145];
-    }else{
+    }else
+    {
         [self.nowLocationBtn_c setTitle:theString forState:UIControlStateNormal];
         [self.nowLocationBtn_c setWidth:85];
-        
     }
-    
     
     self.nowLocationBtn_c.userInteractionEnabled = YES;
     [self.nowLocationBtn_c addTarget:self action:@selector(nowLocationBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -608,7 +566,6 @@
         }
     }
 
-    
 }
 
 
@@ -623,7 +580,6 @@
         str = self.nowLocationBtn_c.titleLabel.text;
     }
     
-    
     int aa = [GMAPI cityIdForName:str];
     NSString *aaa = [NSString stringWithFormat:@"%d",aa];
     aaa = [aaa substringWithRange:NSMakeRange(0, 2)];
@@ -632,9 +588,8 @@
     NSString *ppp = [GMAPI cityNameForId:aa];
     [self setuserCommonlyUsedCityWithStr:str];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
-        [self.delegate afterChooseCity:str province:ppp];
-    }
+    //选择回调处理
+    [self chooseDelegateCity:str province:ppp];
     
     [self setuserCommonlyUsedCityWithStr:str];
     [self.navigationController popViewControllerAnimated:YES];
@@ -643,9 +598,8 @@
 
 
 //设置最近访问城市
--(void)setuserCommonlyUsedCityWithStr:(NSString*)cityName{
-    
-    
+-(void)setuserCommonlyUsedCityWithStr:(NSString*)cityName
+{
     NSArray *arr = [GMAPI cacheForKey:USERCOMMONLYUSEDADDRESS];
     if (!arr) {
         NSMutableArray *adressArray = [[NSMutableArray alloc]initWithCapacity:5];
@@ -674,14 +628,23 @@
             }
             
             [GMAPI cache:(NSArray*)adressMutabelArray ForKey:USERCOMMONLYUSEDADDRESS];
-            
-            
         }
-        
     }
 }
 
-
+#pragma mark - 事件处理
+/**
+ *  选择城市统一回调
+ *
+ *  @param city
+ *  @param province
+ */
+- (void)chooseDelegateCity:(NSString *)city province:(NSString *)province
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(afterChooseCity:province:)]) {
+        [self.delegate afterChooseCity:city province:province];
+    }
+}
 
 
 @end

@@ -142,6 +142,8 @@
 		1324B6AB1BD76DEF00FB47A9 /* LQuestionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */; };
 		1338D5AC1D3CABA9003A2924 /* AppointDirectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338D5AB1D3CABA9003A2924 /* AppointDirectController.m */; };
 		1338D5AE1D3CD3D8003A2924 /* location@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1338D5AD1D3CD3D8003A2924 /* location@2x.png */; };
+		1338D5B11D3CDF97003A2924 /* NewCenterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338D5B01D3CDF97003A2924 /* NewCenterCell.m */; };
+		1338D5B51D3CE07E003A2924 /* NewCenterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1338D5B41D3CE07E003A2924 /* NewCenterCell.xib */; };
 		1338F1661D22606F008DDC42 /* personal_vip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1338F1651D22606F008DDC42 /* personal_vip@2x.png */; };
 		1339F2F31C478BA10001F74B /* NSDictionary+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */; };
 		133FB5CD1C43AB09002A2DDE /* ActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133FB5CC1C43AB09002A2DDE /* ActivityView.m */; };
@@ -848,6 +850,9 @@
 		1338D5AA1D3CABA9003A2924 /* AppointDirectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointDirectController.h; sourceTree = "<group>"; };
 		1338D5AB1D3CABA9003A2924 /* AppointDirectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointDirectController.m; sourceTree = "<group>"; };
 		1338D5AD1D3CD3D8003A2924 /* location@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location@2x.png"; sourceTree = "<group>"; };
+		1338D5AF1D3CDF97003A2924 /* NewCenterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCenterCell.h; sourceTree = "<group>"; };
+		1338D5B01D3CDF97003A2924 /* NewCenterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCenterCell.m; sourceTree = "<group>"; };
+		1338D5B41D3CE07E003A2924 /* NewCenterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewCenterCell.xib; sourceTree = "<group>"; };
 		1338F1651D22606F008DDC42 /* personal_vip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_vip@2x.png"; sourceTree = "<group>"; };
 		1339F2F11C478BA10001F74B /* NSDictionary+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Additions.h"; sourceTree = "<group>"; };
 		1339F2F21C478BA10001F74B /* NSDictionary+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Additions.m"; sourceTree = "<group>"; };
@@ -2040,6 +2045,9 @@
 				131EC6221C58FA290008F517 /* BrandRecomendCell.m */,
 				13BD11F81D35F8C6003B71BD /* GoProductCell.h */,
 				13BD11F91D35F8C6003B71BD /* GoProductCell.m */,
+				1338D5AF1D3CDF97003A2924 /* NewCenterCell.h */,
+				1338D5B01D3CDF97003A2924 /* NewCenterCell.m */,
+				1338D5B41D3CE07E003A2924 /* NewCenterCell.xib */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -3456,6 +3464,7 @@
 				13D6DAA01C48C6A90091FCFE /* extension_36_6.png in Resources */,
 				E3B7209C1BF32887007F7FFE /* shuliang-@2x.png in Resources */,
 				139333A41BE0DF3E00B4628B /* 11_2@2x.png in Resources */,
+				1338D5B51D3CE07E003A2924 /* NewCenterCell.xib in Resources */,
 				131EC6181C58E2700008F517 /* star@2x.png in Resources */,
 				E3B720991BF3268B007F7FFE /* shuliang@2x.png in Resources */,
 				1303C2D41BE9B72100700847 /* zhuanjiajianyi@2x.png in Resources */,
@@ -4010,6 +4019,7 @@
 				E3EE361E1BEA13320089A89C /* GPushView.m in Sources */,
 				13F8C5AF1C05AA7E004C3FC7 /* JKAssetsViewCell.m in Sources */,
 				1322E0651C44F991008A3222 /* CustomOrderMsgCell.m in Sources */,
+				1338D5B11D3CDF97003A2924 /* NewCenterCell.m in Sources */,
 				130D2E061BFDBF30002E301F /* UpdateUserInfoController.m in Sources */,
 				13F9D12B1C2FB06800993738 /* LPhotoModel.m in Sources */,
 				1385D38F1C3B74CB006DE304 /* MessageCenterController.m in Sources */,

@@ -334,7 +334,7 @@
     NSString *str;
     NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
     str = [dic stringValueForKey:@"city"];
-    if ([LTools isEmpty:str]) {
+    if ([LTools isEmpty:str] || [str intValue] == 0) {
         str = @"1005";//海淀
     }
     return str;
@@ -345,8 +345,6 @@
     NSString *cc = [self getCityNameOf4CityWithCityId:[ss intValue]];
     return cc;
 }
-
-
 
 +(NSString*)getProvineIdWithCityId:(int)cityId{
     

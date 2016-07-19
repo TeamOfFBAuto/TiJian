@@ -15,12 +15,16 @@
 #import "GoneClassListViewController.h"
 #import "AppointProgressDetailController.h"//已体检预约进度
 #import "GoHealthProductDetailController.h" //go健康详情页或者服务详情页
+#import "HospitalDetailViewController.h"//分院详情
+#import "LocationChooseViewController.h"//选择位置
 
 #import "ProductModel.h"
 #import "AppointmentCell.h"
 #import "AppointModel.h"
+#import "HospitalModel.h"
+#import "NewCenterCell.h"
 
-@interface AppointDirectController ()
+@interface AppointDirectController ()<LocationChooseDelegate>
 {
     NSArray *_company;
     NSArray *_personal;
@@ -40,8 +44,6 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_SUCCESS object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForAppointSuccess) name:NOTIFICATION_APPOINT_CANCEL_SUCCESS object:nil];
-    //更新预约
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForUpdateAppointSuccess) name:NOTIFICATION_APPOINT_UPDATE_SUCCESS object:nil];
     
     [self.tableView showRefreshHeader:YES];
 }
@@ -75,7 +77,8 @@
     
     api = GET_NO_APPOINTS;
     params = @{@"authcode":authkey,
-                   @"level":@"2"};
+                   @"level":@"2",
+               @"num":@"3"};
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_tableView)weakTable = self.tableView;
@@ -87,6 +90,46 @@
         
         NSLog(@"fail result %@",result);
         [weakTable loadFail];
+        
+    }];
+}
+
+/**
+ *
+ * 获取分院列表 带套餐
+ */
+- (void)netWorkForCenterList
+{
+//WithLong:(NSString *)lon
+//lat:(NSString *)lat
+    NSString *lon = [UserInfo getLontitude];
+    NSString *lat = [UserInfo getLatitude];
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+    [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+//    [params safeSetString:self.brand_id forKey:@"brand_id"];//品牌
+    [params safeSetString:lon forKey:@"longitude"];
+    [params safeSetString:lat forKey:@"latitude"];
+    [params safeSetInt:_tableView.pageNum forKey:@"page"];
+    [params safeSetInt:10 forKey:@"per_page"];
+    [params safeSetInt:2 forKey:@"num"];//数字代表几个套餐
+
+    NSString *api = Get_hospital_list;
+    
+//    __weak typeof(self)weakSelf = self;
+    __weak typeof(_tableView)weakTable = _tableView;
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        
+        NSArray *temp = [HospitalModel modelsFromArray:result[@"list"]];
+        [weakTable reloadData:temp pageSize:10 noDataView:[self resultViewWithType:PageResultType_nodata title:nil msg:@"没有找到附近的分院!" btnTitle:nil selector:@selector(refreshData)]];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        [weakTable reloadData:nil pageSize:10 noDataView:[self resultViewWithType:PageResultType_nodata title:nil msg:@"没有找到附近的分院!" btnTitle:nil selector:@selector(refreshData)]];
         
     }];
 }
@@ -115,6 +158,11 @@
 }
 
 #pragma mark - 事件处理
+
+- (void)refreshData
+{
+    [_tableView showRefreshHeader:YES];
+}
 
 /**
  *  预约go健康
@@ -205,22 +253,63 @@
     [self.navigationController pushViewController:cc animated:YES];
 }
 
-#pragma mark - 代理
+//跳转到定位区域选择vc
+-(void)pushToChooseLocation
+{
+    LocationChooseViewController *cc = [[LocationChooseViewController alloc]init];
+    cc.delegate = self;
+    cc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
+
+#pragma mark - LocationChooseDelegate
+
+-(void)afterChooseCity:(NSString *)theCity province:(NSString *)theProvince
+{    
+    [_locationButton setTitle:theCity forState:UIControlStateNormal];
+    
+    NSString *pStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:theProvince]];
+    NSString *cStr = [NSString stringWithFormat:@"%d",[GMAPI cityIdForName:theCity]];
+    
+    if ([pStr isEqualToString:cStr]) {
+        cStr = @"0";
+    }
+    
+    NSDictionary *dic = @{
+                          @"province":pStr,
+                          @"city":cStr
+                          };
+    [GMAPI cache:dic ForKey:USERLocation];
+    
+    //请求分院列表
+    [self netWorkForCenterList];
+}
 
 #pragma - mark RefreshDelegate <NSObject>
 
 - (void)loadNewDataForTableView:(RefreshTableView *)tableView
 {
     [self netWorkForListWithTable:tableView];
+    [self netWorkForCenterList];
 }
 - (void)loadMoreDataForTableView:(RefreshTableView *)tableView
 {
-    [self netWorkForListWithTable:tableView];
+    [self netWorkForCenterList];
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView
 {
-    //全部、未预约
+    if (indexPath.section == 2) {
+        
+        HospitalModel *aModel = tableView.dataArray[indexPath.row];
+        HospitalDetailViewController *hospital = [[HospitalDetailViewController alloc]init];
+        hospital.centerId = aModel.exam_center_id;
+        [self.navigationController pushViewController:hospital animated:YES];
+        
+        return;
+    }
     
+    //未预约
         ProductModel *aModel;
         int index_row = (int)indexPath.row;
         if (indexPath.section == 0) {
@@ -287,7 +376,7 @@
 {
     if (indexPath.section == 2)
     {
-        return 60.f;
+        return 112.f;
     }
         
     ProductModel *aModel;
@@ -343,6 +432,7 @@
         [chatBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         NSString *cityName = [GMAPI getCurrentCityName];
         [chatBtn setTitle:cityName forState:UIControlStateNormal];
+        [chatBtn addTarget:self action:@selector(pushToChooseLocation) forControlEvents:UIControlEventTouchUpInside];
         
         _locationButton = chatBtn;
     }
@@ -360,21 +450,45 @@
         
         if (_company.count == 0) {
             return 0.f;
+        }else
+        {
+            return 40.f;
         }
     }
     if (section == 1) {
         if (_personal.count == 0) {
             return 0.f;
+        }else
+        {
+            return 40.f;
         }
+    }
+    
+    if (_tableView.isHaveLoaded == NO) {
+        return 0.f;
     }
     return 40.f;
 }
 
 -(CGFloat)heightForFooterInSection:(NSInteger)section tableView:(RefreshTableView *)tableView
 {
-    if (section == 0 || section == 1)
-    {
-        return 5.f;
+    
+    if (section == 0) {
+        
+        if (_company.count == 0) {
+            return 0.f;
+        }else
+        {
+            return 5.f;
+        }
+    }
+    if (section == 1) {
+        if (_personal.count == 0) {
+            return 0.f;
+        }else
+        {
+            return 5.f;
+        }
     }
     return 0.f;
 }
@@ -392,16 +506,12 @@
 
 #pragma - mark UITableViewDataSource
 
-#pragma - mark UITableViewDataSource<NSObject>
-
 - (NSInteger)tableView:(RefreshTableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
     if (section == 0) {
         return _company.count;
     }else if (section == 1){
         return _personal.count;
-    }else if (section == 2){
-        return 5;
     }
     return tableView.dataArray.count;
 }
@@ -455,59 +565,19 @@
         return cell;
     }
     
-    static NSString *identifier = @"identify";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    static NSString *identifier = @"NewCenterCell";
+    NewCenterCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = (NewCenterCell *)[LTools cellForIdentify:identifier cellName:identifier forTable:tableView];
         
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 5, DEVICE_WIDTH, 55)];
-        view.backgroundColor = [UIColor whiteColor];
-        [cell.contentView addSubview:view];
-        
-        CGFloat nameWidth = 120;
-        CGFloat timeWidth = 70;
-        CGFloat centerWidth = DEVICE_WIDTH - nameWidth - timeWidth - 20;
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, nameWidth, 55) title:nil font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE];
-        [view addSubview:nameLabel];
-        nameLabel.tag = 100;
-        
-        UILabel *centerLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.right, 0, centerWidth, 55) title:nil font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE];
-        [view addSubview:centerLabel];
-        centerLabel.tag = 101;
-        
-        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(DEVICE_WIDTH - 10 - timeWidth, 0, timeWidth, 55) title:nil font:13 align:NSTextAlignmentRight textColor:DEFAULT_TEXTCOLOR_TITLE];
-        [view addSubview:timeLabel];
-        timeLabel.tag = 102;
+        //line
+        UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 112 - 0.5, DEVICE_WIDTH, 0.5)];
+        line.backgroundColor = DEFAULT_LINECOLOR;
+        [cell.contentView addSubview:line];
     }
-    cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UILabel *nameLabel = [cell.contentView viewWithTag:100];
-    UILabel *centerLabel = [cell.contentView viewWithTag:101];
-    UILabel *timeLabel = [cell.contentView viewWithTag:102];
-    RefreshTableView *table = (RefreshTableView *)tableView;
-    AppointModel *aModel;
     
-    int type = [aModel.c_type intValue];
-    
-    NSString *leftText = @"";
-    NSString *centerText = @"";
-    //    NSString *rightText = @"";
-    NSString *name = aModel.user_name;
-    
-    if (type == 2)//go健康
-    {
-        leftText = [NSString stringWithFormat:@"%@",name];
-        [nameLabel setAttributedText:[LTools attributedString:leftText keyword:@"" color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
-        centerText = aModel.report_status;
-        
-    }else
-    {
-        leftText = [NSString stringWithFormat:@"%@ (%@)",aModel.user_relation,name];
-//        [nameLabel setAttributedText:[LTools attributedString:leftText keyword:name color:DEFAULT_TEXTCOLOR_TITLE_THIRD]];
-        centerText = aModel.center_name;
-    }
-    
-    centerLabel.text = centerText;
+    [cell setCenterModel:_tableView.dataArray[indexPath.row]];
     
     return cell;
 }
