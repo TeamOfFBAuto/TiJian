@@ -86,7 +86,14 @@
 
 
 //地区选择相关
-//根据name找id
+
+/**
+ *  根据name找id
+ *
+ *  @param cityName 省份str或城市str
+ *
+ *  @return 对应id
+ */
 + (int)cityIdForName:(NSString *)cityName//根据城市名获取id
 {
     //打开数据库
@@ -112,7 +119,13 @@
     return 0;
 }
 
-//根据id找name
+/**
+ *  根据id找name
+ *
+ *  @param cityId 城市id或者省份id
+ *
+ *  @return name
+ */
 + (NSString *)cityNameForId:(int)cityId{
     //打开数据库
     sqlite3 *db = [DataBase openDB];

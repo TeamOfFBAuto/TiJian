@@ -24,7 +24,7 @@
 @interface LocationChooseViewController : MyViewController
 
 
-@property(nonatomic,strong)UIButton *nowLocationBtn_c ;
+@property(nonatomic,strong)UIButton *nowLocationBtn_c;
 
 @property(nonatomic,assign)int nowLocationBtn_cityid;
 

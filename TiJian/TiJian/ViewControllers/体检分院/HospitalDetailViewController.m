@@ -26,6 +26,7 @@
     UIView *_clickToMoreView;//点击查看更多
     UIButton *_clickedToMoreBtn;
     UIActivityIndicatorView *_act;
+    NSString *_centerBannerDefaultImName;
 }
 
 @end
@@ -74,18 +75,20 @@
     _tabHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH*370/750)];
     
     UIImageView *imv = [[UIImageView alloc]initWithFrame:_tabHeaderView.bounds];
-    [imv l_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:nil];
+    [imv sd_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:[UIImage imageNamed:_centerBannerDefaultImName]];
+//    [imv l_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:[UIImage imageNamed:_centerBannerDefaultImName]];
+    [_tabHeaderView addSubview:imv];
     
     UIView *centerNameView = [[UIView alloc]initWithFrame:CGRectMake(0, _tabHeaderView.frame.size.height - 30, DEVICE_WIDTH, 30)];
     centerNameView.backgroundColor = [UIColor blackColor];
-    centerNameView.alpha = 0.7;
+    centerNameView.alpha = 0.3;
     [_tabHeaderView addSubview:centerNameView];
     
-    UILabel *centerNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, centerNameView.frame.size.width-10, 30)];
-    centerNameLabel.text = _hospitalModel.center_name;
+    UILabel *centerNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _tabHeaderView.frame.size.height - 30, _tabHeaderView.frame.size.width-10, 30)];
+    centerNameLabel.text = [NSString stringWithFormat:@"%@ %@",_hospitalModel.brand_name,_hospitalModel.center_name];
     centerNameLabel.textColor = [UIColor whiteColor];
     centerNameLabel.font = [UIFont systemFontOfSize:12];
-    [centerNameView addSubview:centerNameLabel];
+    [_tabHeaderView addSubview:centerNameLabel];
     
     return _tabHeaderView;
 }
@@ -322,6 +325,11 @@
         _clickedToMoreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_clickedToMoreBtn setFrame:CGRectMake(0, 0, 150, 30)];
         [_clickedToMoreBtn setTitle:@"点击查看更多" forState:UIControlStateNormal];
+        [_clickedToMoreBtn setImage:[UIImage imageNamed:@"center_downPoint.png"] forState:UIControlStateNormal];
+        [_clickedToMoreBtn setTitleEdgeInsets:UIEdgeInsetsMake(-5, 0, 0, 0)];
+        [_clickedToMoreBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 64, -20, 0)];
+        
+        
         _clickedToMoreBtn.titleLabel.font = [UIFont systemFontOfSize:10];
         [_clickedToMoreBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_clickedToMoreBtn addTarget:self action:@selector(clickedToMore) forControlEvents:UIControlEventTouchUpInside];
@@ -484,6 +492,13 @@
 {
     NSDictionary *data = result[@"data"];
     _hospitalModel = [[HospitalModel alloc]initWithDictionary:data];
+    if ([_hospitalModel.brand_id intValue] == 1) {//慈铭
+        _centerBannerDefaultImName = @"center_banner_ciming";
+    }else if ([_hospitalModel.brand_id intValue] == 2){//美年
+        _centerBannerDefaultImName = @"center_banner_meinian";
+    }else if ([_hospitalModel.brand_id intValue] == 3){//爱康
+        _centerBannerDefaultImName = @"center_banner_aikang";
+    }
     _tab.tableFooterView = [self createTabFooterView];
     _tab.tableHeaderView = [self creatTabHeader];;
 }
