@@ -372,7 +372,14 @@
 
 #pragma - mark 体检预约相关接口
 
-//1、获取未预约
+//1、获取未预约 get方式
+//参数：authcode
+//level=2 包括go健康的预约 不传或者为1表示只有海马医生的预约
+//$num=2 (1~10) 个人预约显示数量 可不传
+//$type company 只获取公司待预约 personal 只获取个人待预约 不传就全部
+//返回数据：
+//type 1 =》公司指定套餐 2=》公司代金券 3=》个人投资套餐
+//c_type=1 1为海马医生预约 2为go健康预约
 #define GET_NO_APPOINTS @"/index.php?d=api&c=appoint&m=get_no_appoints"
 
 //2、获取预约体检分院
@@ -426,6 +433,7 @@
 
 //分院体检商品推荐
 #define Get_hospital_products @"/index.php?d=api&c=appoint&m=get_product_by_center"
+
 
 //=======================================================
 
@@ -484,6 +492,15 @@
 
 #define Guahao_doctorDetail @"/index.php?d=api&c=register&m=doctor_url"
 
+//4、转诊预约新版: 提交数据，详细字段参考app专家号即挂号网精准预约H5页面，参数不确定)
+#define Guahao_referral_data @"/index.php?d=api&c=register&m=referral_data"
+//post 方式
+//参数：
+//authcode 必填、family_uid 家人uid 选填 如果是家人就填 自己就不写这个参数或为0、desc 描述
+//province_id 省份id、city_id 城市id
+//hospital 医院id、/alternative_hospital  备选医院id 选填、dept 科室id、appoint_date 预约时间和备注 字符串
+//可以上传图片 支持多张 二进制流方式
+
 
 #pragma - mark Go健康对接
 
@@ -513,5 +530,14 @@
 
 //go健康产品已销售数量
 #define GoHealth_product_sale @"/index.php?d=api&c=go_order&m=get_product_sale"
+
+//10、根据用户ID获取挂号网转诊次数和总数
+//get方式
+//参数：authcode
+//返回数据
+//register_referral_counts : 适用次数\register_referral_total_counts : 总数
+#define get_register_referral_counts @"/index.php?d=api&c=user&m=get_register_referral_counts"
+
+
 
 #endif

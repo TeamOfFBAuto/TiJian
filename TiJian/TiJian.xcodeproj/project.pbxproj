@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1300AE291D3F630700467126 /* VipRegisteringController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1300AE281D3F630700467126 /* VipRegisteringController.m */; };
 		1301A24E1C292C180041FF8D /* baocun@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1301A24D1C292C180041FF8D /* baocun@2x.png */; };
 		1301A2541C293EF30041FF8D /* LScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1301A2531C293EF30041FF8D /* LScrollView.m */; };
 		13020A6E1C04480D006FC365 /* ProductListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13020A6D1C04480D006FC365 /* ProductListViewController.m */; };
@@ -338,6 +339,7 @@
 		13D6DAA01C48C6A90091FCFE /* extension_36_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA841C48C6A90091FCFE /* extension_36_6.png */; };
 		13D6DAA11C48C6A90091FCFE /* extension_36_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA851C48C6A90091FCFE /* extension_36_7.png */; };
 		13D6DAA21C48C6A90091FCFE /* extension_36_8.png in Resources */ = {isa = PBXBuildFile; fileRef = 13D6DA861C48C6A90091FCFE /* extension_36_8.png */; };
+		13E0F1A01D3DF9B500D702FC /* AppointListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E0F19F1D3DF9B500D702FC /* AppointListViewController.m */; };
 		13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E23DBC1C1411AA006FE62F /* UIImage+Additions.m */; };
 		13E2D86D1CC8C58100A684D7 /* personal_guahaowenzhen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E2D8611CC8C58100A684D7 /* personal_guahaowenzhen@2x.png */; };
 		13E2D86E1CC8C58100A684D7 /* personal_guahaoyuyue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E2D8621CC8C58100A684D7 /* personal_guahaoyuyue@2x.png */; };
@@ -437,6 +439,20 @@
 		13F9D12A1C2FB06800993738 /* LPhotoBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D1161C2FB06800993738 /* LPhotoBrowserView.m */; };
 		13F9D12B1C2FB06800993738 /* LPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D1191C2FB06800993738 /* LPhotoModel.m */; };
 		13F9D12C1C2FB06800993738 /* LPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9D11B1C2FB06800993738 /* LPhotoView.m */; };
+		13FAD6171D4084F7003038B8 /* vip_+@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD60C1D4084F7003038B8 /* vip_+@2x.png */; };
+		13FAD6181D4084F7003038B8 /* vip_alert@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD60D1D4084F7003038B8 /* vip_alert@2x.png */; };
+		13FAD6191D4084F7003038B8 /* vip_bianji@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD60E1D4084F7003038B8 /* vip_bianji@2x.png */; };
+		13FAD61A1D4084F7003038B8 /* vip_fangdajing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD60F1D4084F7003038B8 /* vip_fangdajing@2x.png */; };
+		13FAD61B1D4084F7003038B8 /* vip_iphone4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6101D4084F7003038B8 /* vip_iphone4.jpg */; };
+		13FAD61C1D4084F7003038B8 /* vip_iphone5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6111D4084F7003038B8 /* vip_iphone5.jpg */; };
+		13FAD61D1D4084F7003038B8 /* vip_iphone6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6121D4084F7003038B8 /* vip_iphone6.jpg */; };
+		13FAD61E1D4084F7003038B8 /* vip_iphone6p.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6131D4084F7003038B8 /* vip_iphone6p.jpg */; };
+		13FAD61F1D4084F7003038B8 /* vip_no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6141D4084F7003038B8 /* vip_no@2x.png */; };
+		13FAD6201D4084F7003038B8 /* vip_xuanze@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6151D4084F7003038B8 /* vip_xuanze@2x.png */; };
+		13FAD6211D4084F7003038B8 /* vip_yes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6161D4084F7003038B8 /* vip_yes@2x.png */; };
+		13FAD6251D40A0E5003038B8 /* LTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FAD6241D40A0E5003038B8 /* LTextView.m */; };
+		13FAD6271D40AC57003038B8 /* vip_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6261D40AC57003038B8 /* vip_add@2x.png */; };
+		13FAD6301D41C3EF003038B8 /* FamilyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FAD62F1D41C3EF003038B8 /* FamilyCell.m */; };
 		13FC32E31CE9B1700073539D /* report_daoru@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FC32E21CE9B1700073539D /* report_daoru@2x.png */; };
 		13FC32E61CE9B84C0073539D /* QueryReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FC32E51CE9B84C0073539D /* QueryReportController.m */; };
 		13FC32E91CE9C64D0073539D /* LPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FC32E81CE9C64D0073539D /* LPickerView.m */; };
@@ -648,6 +664,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1300AE271D3F630700467126 /* VipRegisteringController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VipRegisteringController.h; sourceTree = "<group>"; };
+		1300AE281D3F630700467126 /* VipRegisteringController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VipRegisteringController.m; sourceTree = "<group>"; };
 		1301A24D1C292C180041FF8D /* baocun@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baocun@2x.png"; sourceTree = "<group>"; };
 		1301A2521C293EF30041FF8D /* LScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LScrollView.h; sourceTree = "<group>"; };
 		1301A2531C293EF30041FF8D /* LScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LScrollView.m; sourceTree = "<group>"; };
@@ -1090,6 +1108,8 @@
 		13D6DA841C48C6A90091FCFE /* extension_36_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_36_6.png; sourceTree = "<group>"; };
 		13D6DA851C48C6A90091FCFE /* extension_36_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_36_7.png; sourceTree = "<group>"; };
 		13D6DA861C48C6A90091FCFE /* extension_36_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extension_36_8.png; sourceTree = "<group>"; };
+		13E0F19E1D3DF9B500D702FC /* AppointListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointListViewController.h; sourceTree = "<group>"; };
+		13E0F19F1D3DF9B500D702FC /* AppointListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointListViewController.m; sourceTree = "<group>"; };
 		13E23DBB1C1411AA006FE62F /* UIImage+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Additions.h"; sourceTree = "<group>"; };
 		13E23DBC1C1411AA006FE62F /* UIImage+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Additions.m"; sourceTree = "<group>"; };
 		13E2D8611CC8C58100A684D7 /* personal_guahaowenzhen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personal_guahaowenzhen@2x.png"; sourceTree = "<group>"; };
@@ -1328,6 +1348,22 @@
 		13F9D1191C2FB06800993738 /* LPhotoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPhotoModel.m; sourceTree = "<group>"; };
 		13F9D11A1C2FB06800993738 /* LPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LPhotoView.h; sourceTree = "<group>"; };
 		13F9D11B1C2FB06800993738 /* LPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LPhotoView.m; sourceTree = "<group>"; };
+		13FAD60C1D4084F7003038B8 /* vip_+@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_+@2x.png"; sourceTree = "<group>"; };
+		13FAD60D1D4084F7003038B8 /* vip_alert@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_alert@2x.png"; sourceTree = "<group>"; };
+		13FAD60E1D4084F7003038B8 /* vip_bianji@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_bianji@2x.png"; sourceTree = "<group>"; };
+		13FAD60F1D4084F7003038B8 /* vip_fangdajing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_fangdajing@2x.png"; sourceTree = "<group>"; };
+		13FAD6101D4084F7003038B8 /* vip_iphone4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone4.jpg; sourceTree = "<group>"; };
+		13FAD6111D4084F7003038B8 /* vip_iphone5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone5.jpg; sourceTree = "<group>"; };
+		13FAD6121D4084F7003038B8 /* vip_iphone6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone6.jpg; sourceTree = "<group>"; };
+		13FAD6131D4084F7003038B8 /* vip_iphone6p.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone6p.jpg; sourceTree = "<group>"; };
+		13FAD6141D4084F7003038B8 /* vip_no@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_no@2x.png"; sourceTree = "<group>"; };
+		13FAD6151D4084F7003038B8 /* vip_xuanze@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_xuanze@2x.png"; sourceTree = "<group>"; };
+		13FAD6161D4084F7003038B8 /* vip_yes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_yes@2x.png"; sourceTree = "<group>"; };
+		13FAD6231D40A0E5003038B8 /* LTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTextView.h; sourceTree = "<group>"; };
+		13FAD6241D40A0E5003038B8 /* LTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTextView.m; sourceTree = "<group>"; };
+		13FAD6261D40AC57003038B8 /* vip_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_add@2x.png"; sourceTree = "<group>"; };
+		13FAD62E1D41C3EF003038B8 /* FamilyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FamilyCell.h; sourceTree = "<group>"; };
+		13FAD62F1D41C3EF003038B8 /* FamilyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FamilyCell.m; sourceTree = "<group>"; };
 		13FC32E21CE9B1700073539D /* report_daoru@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_daoru@2x.png"; sourceTree = "<group>"; };
 		13FC32E41CE9B84C0073539D /* QueryReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryReportController.h; sourceTree = "<group>"; };
 		13FC32E51CE9B84C0073539D /* QueryReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueryReportController.m; sourceTree = "<group>"; };
@@ -1924,6 +1960,8 @@
 			children = (
 				1338D5AA1D3CABA9003A2924 /* AppointDirectController.h */,
 				1338D5AB1D3CABA9003A2924 /* AppointDirectController.m */,
+				13E0F19E1D3DF9B500D702FC /* AppointListViewController.h */,
+				13E0F19F1D3DF9B500D702FC /* AppointListViewController.m */,
 				13F2422F1BF5E17D002C9D81 /* AppointmentViewController.h */,
 				13F242301BF5E17D002C9D81 /* AppointmentViewController.m */,
 				136ABCDE1C8EB41900F2B834 /* AppointProgressDetailController.h */,
@@ -2048,6 +2086,8 @@
 				1338D5AF1D3CDF97003A2924 /* NewCenterCell.h */,
 				1338D5B01D3CDF97003A2924 /* NewCenterCell.m */,
 				1338D5B41D3CE07E003A2924 /* NewCenterCell.xib */,
+				13FAD62E1D41C3EF003038B8 /* FamilyCell.h */,
+				13FAD62F1D41C3EF003038B8 /* FamilyCell.m */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -2332,6 +2372,8 @@
 			children = (
 				13CA06C91CD1D8960040A9A1 /* VipAppointViewController.h */,
 				13CA06CA1CD1D8960040A9A1 /* VipAppointViewController.m */,
+				1300AE271D3F630700467126 /* VipRegisteringController.h */,
+				1300AE281D3F630700467126 /* VipRegisteringController.m */,
 			);
 			path = "挂号";
 			sourceTree = "<group>";
@@ -2339,6 +2381,18 @@
 		13CA06CC1CD1DFFE0040A9A1 /* 转诊预约 */ = {
 			isa = PBXGroup;
 			children = (
+				13FAD6261D40AC57003038B8 /* vip_add@2x.png */,
+				13FAD60C1D4084F7003038B8 /* vip_+@2x.png */,
+				13FAD60D1D4084F7003038B8 /* vip_alert@2x.png */,
+				13FAD60E1D4084F7003038B8 /* vip_bianji@2x.png */,
+				13FAD60F1D4084F7003038B8 /* vip_fangdajing@2x.png */,
+				13FAD6101D4084F7003038B8 /* vip_iphone4.jpg */,
+				13FAD6111D4084F7003038B8 /* vip_iphone5.jpg */,
+				13FAD6121D4084F7003038B8 /* vip_iphone6.jpg */,
+				13FAD6131D4084F7003038B8 /* vip_iphone6p.jpg */,
+				13FAD6141D4084F7003038B8 /* vip_no@2x.png */,
+				13FAD6151D4084F7003038B8 /* vip_xuanze@2x.png */,
+				13FAD6161D4084F7003038B8 /* vip_yes@2x.png */,
 				13CA06D31CD1EF860040A9A1 /* vip_bg@2x.png */,
 				13CA06D11CD1EF700040A9A1 /* vip_select2@2x.png */,
 			);
@@ -2572,6 +2626,7 @@
 		13F1F2A01BBA9A4B00885D31 /* HelpTools */ = {
 			isa = PBXGroup;
 			children = (
+				13FAD6221D40A0C2003038B8 /* LTextView */,
 				13BD11FB1D363BB4003B71BD /* SDZoomHeaderView */,
 				13BE400D1CC763A3007EE6BB /* NJKWebViewProgress */,
 				E30FE38B1C3CCCE9001CF9BA /* DLNavigationEffectKit */,
@@ -2973,6 +3028,15 @@
 				13F9D1101C2FB06800993738 /* imageFail@2x.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		13FAD6221D40A0C2003038B8 /* LTextView */ = {
+			isa = PBXGroup;
+			children = (
+				13FAD6231D40A0E5003038B8 /* LTextView.h */,
+				13FAD6241D40A0E5003038B8 /* LTextView.m */,
+			);
+			path = LTextView;
 			sourceTree = "<group>";
 		};
 		13FFBFC51C0D4FEA0077DD29 /* 客服 */ = {
@@ -3458,8 +3522,10 @@
 				131C118F1BF04BF100629938 /* user_mima2@2x.png in Resources */,
 				139333DD1BE0DF3E00B4628B /* 2_m_1@2x.png in Resources */,
 				1303C36B1BEB0D7100700847 /* personal_b@2x.png in Resources */,
+				13FAD6201D4084F7003038B8 /* vip_xuanze@2x.png in Resources */,
 				131EC6271C5904F00008F517 /* selected_small_selected@2x.png in Resources */,
 				139333E41BE0DF3E00B4628B /* 2_w_3@2x.png in Resources */,
+				13FAD6191D4084F7003038B8 /* vip_bianji@2x.png in Resources */,
 				1303C3761BEB0D7200700847 /* jiantou@2x.png in Resources */,
 				13D6DAA01C48C6A90091FCFE /* extension_36_6.png in Resources */,
 				E3B7209C1BF32887007F7FFE /* shuliang-@2x.png in Resources */,
@@ -3499,6 +3565,7 @@
 				13D6DA991C48C6A90091FCFE /* extension_39_1.png in Resources */,
 				13D6DA951C48C6A90091FCFE /* extension_38_1.png in Resources */,
 				139333B91BE0DF3E00B4628B /* 19_1@2x.png in Resources */,
+				13FAD61F1D4084F7003038B8 /* vip_no@2x.png in Resources */,
 				1303C3591BEB0D7100700847 /* personal_youhuiquan_r@2x.png in Resources */,
 				137780AC1C1188BE00677363 /* hema_heart@2x.png in Resources */,
 				1303C36E1BEB0D7100700847 /* report_g@2x.png in Resources */,
@@ -3579,6 +3646,7 @@
 				139333ED1BE0DF3E00B4628B /* 5_1@2x.png in Resources */,
 				139333B51BE0DF3E00B4628B /* 18_1@2x.png in Resources */,
 				1303C2C61BE9ABCA00700847 /* navigationbarBackgroudImage_iOS6@2x.png in Resources */,
+				13FAD6211D4084F7003038B8 /* vip_yes@2x.png in Resources */,
 				13E2D8701CC8C58100A684D7 /* personal_guanhaozhuanzhen@2x.png in Resources */,
 				E3FEFA691C5B6C550024AE0E /* back_storehome@2x.png in Resources */,
 				1338D5AE1D3CD3D8003A2924 /* location@2x.png in Resources */,
@@ -3602,6 +3670,7 @@
 				131529791CF58F8B001A2705 /* icon180.png in Resources */,
 				1301A24E1C292C180041FF8D /* baocun@2x.png in Resources */,
 				1303C35C1BEB0D7100700847 /* personal_youhuiquan_yishiyong@2x.png in Resources */,
+				13FAD6181D4084F7003038B8 /* vip_alert@2x.png in Resources */,
 				13F8C5711C0563FB004C3FC7 /* 19_3@2x.png in Resources */,
 				1303C2C91BE9AEC900700847 /* back_w@2x.png in Resources */,
 				139333DF1BE0DF3E00B4628B /* 2_m_3@2x.png in Resources */,
@@ -3624,6 +3693,7 @@
 				E3D8AE501BF6203F003AE2E3 /* youhuiquan_r@2x.png in Resources */,
 				131482F41CEF0FEF00D04305 /* UMSocialLocalizable.strings in Resources */,
 				E306F4B71CE32D74003EE0C6 /* sh_qiyetijian@2x.png in Resources */,
+				13FAD61D1D4084F7003038B8 /* vip_iphone6.jpg in Resources */,
 				1303C3711BEB0D7200700847 /* fenyuan@2x.png in Resources */,
 				131482FD1CEF0FEF00D04305 /* UMSShareListController.xib in Resources */,
 				136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */,
@@ -3637,6 +3707,7 @@
 				13D6DAA21C48C6A90091FCFE /* extension_36_8.png in Resources */,
 				1303C35A1BEB0D7100700847 /* personal_youhuiquan_y@2x.png in Resources */,
 				1374B3891CFD40610010CDE7 /* main.js in Resources */,
+				13FAD61C1D4084F7003038B8 /* vip_iphone5.jpg in Resources */,
 				139333C51BE0DF3E00B4628B /* 22_3@2x.png in Resources */,
 				13D6DA911C48C6A90091FCFE /* extension_34_3.png in Resources */,
 				13E2D8781CC8C58100A684D7 /* personal_tijianyuyue@2x.png in Resources */,
@@ -3670,6 +3741,7 @@
 				13E2D8721CC8C58100A684D7 /* personal_settings@2x.png in Resources */,
 				131A17791BF33B7900B12D2F /* dingzhi@2x.png in Resources */,
 				139333AE1BE0DF3E00B4628B /* 16_1@2x.png in Resources */,
+				13FAD6271D40AC57003038B8 /* vip_add@2x.png in Resources */,
 				E3796D1E1BFB389E004B63F7 /* shopping_cart_icon@2x.png in Resources */,
 				13F1F3DC1BBA9A4B00885D31 /* SVProgressHUD.bundle in Resources */,
 				139333CA1BE0DF3E00B4628B /* 23_3@2x.png in Resources */,
@@ -3709,11 +3781,13 @@
 				13D6DA8C1C48C6A90091FCFE /* extension_32_4.png in Resources */,
 				1316DF241C2AAB4C00864949 /* report_tianjia@2x.png in Resources */,
 				139333B71BE0DF3E00B4628B /* 18_3@2x.png in Resources */,
+				13FAD61E1D4084F7003038B8 /* vip_iphone6p.jpg in Resources */,
 				13C6CAD61C182A18002A2F33 /* refresh_arrow_down@2x.png in Resources */,
 				139333CE1BE0DF3E00B4628B /* 24_2@2x.png in Resources */,
 				1303C3771BEB0D7200700847 /* tijianren@2x.png in Resources */,
 				131C11911BF04BF100629938 /* user_shoujihao@2x.png in Resources */,
 				139333B61BE0DF3E00B4628B /* 18_2@2x.png in Resources */,
+				13FAD61A1D4084F7003038B8 /* vip_fangdajing@2x.png in Resources */,
 				13F242191BF4925A002C9D81 /* yuyue_jiantou_down@2x.png in Resources */,
 				E329A8B81C00AD440017A5D3 /* personalxiugai@2x.png in Resources */,
 				13D6DA871C48C6A90091FCFE /* extension_31_1.png in Resources */,
@@ -3748,6 +3822,7 @@
 				139333E11BE0DF3E00B4628B /* 2_m_5_4fb8ce@2x.png in Resources */,
 				139333D91BE0DF3E00B4628B /* 28_2@2x.png in Resources */,
 				13F1F3D11BBA9A4B00885D31 /* mapapi.bundle in Resources */,
+				13FAD61B1D4084F7003038B8 /* vip_iphone4.jpg in Resources */,
 				1303C3671BEB0D7100700847 /* homepage_b@2x.png in Resources */,
 				13CA06D21CD1EF700040A9A1 /* vip_select2@2x.png in Resources */,
 				13D6DA8E1C48C6A90091FCFE /* extension_33_2.png in Resources */,
@@ -3767,6 +3842,7 @@
 				E3E2B4071BFB203B007988C5 /* ProductBuyCell.xib in Resources */,
 				E3D93F501BEB45BB00C0BE52 /* garea.plist in Resources */,
 				E31F86FD1C14CF9400914824 /* TabCartSelected@2x.png in Resources */,
+				13FAD6171D4084F7003038B8 /* vip_+@2x.png in Resources */,
 				139333BD1BE0DF3E00B4628B /* 1_2_boy@2x.png in Resources */,
 				13E2D86D1CC8C58100A684D7 /* personal_guahaowenzhen@2x.png in Resources */,
 				13E2D8711CC8C58100A684D7 /* personal_jiarenguanli@2x.png in Resources */,
@@ -3898,6 +3974,7 @@
 				13F242261BF5CC36002C9D81 /* ArticleListController.m in Sources */,
 				E3EE35FD1BE89B0E0089A89C /* GProductCellTableViewCell.m in Sources */,
 				13F1F3991BBA9A4B00885D31 /* NSDate+Additons.m in Sources */,
+				13FAD6301D41C3EF003038B8 /* FamilyCell.m in Sources */,
 				13F242291BF5D589002C9D81 /* BasicTableViewCell.m in Sources */,
 				13020A711C0454B5006FC365 /* FeedBackViewController.m in Sources */,
 				13F1F39B1BBA9A4B00885D31 /* UIButton+Additions.m in Sources */,
@@ -3935,6 +4012,7 @@
 				E3E2B3F91BFB0859007988C5 /* GchooseAreaViewController.m in Sources */,
 				E3FEFA631C5B44710024AE0E /* GBrandTabHeaderView.m in Sources */,
 				E3EE36061BE9D4A10089A89C /* GproductDirectoryTableViewCell.m in Sources */,
+				13E0F1A01D3DF9B500D702FC /* AppointListViewController.m in Sources */,
 				13F8C5AA1C05AA7E004C3FC7 /* JKAssets.m in Sources */,
 				E335FAB91BFF172800708BF6 /* GuserAddressTableViewCell.m in Sources */,
 				13F1F4021BBA9D5500885D31 /* RefreshHeaderView.m in Sources */,
@@ -3942,6 +4020,7 @@
 				134822D81BEC80C400EA2E06 /* SettingsViewController.m in Sources */,
 				E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */,
 				1303C2DE1BE9F6DC00700847 /* NSObject+Addtions.m in Sources */,
+				13FAD6251D40A0E5003038B8 /* LTextView.m in Sources */,
 				E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */,
 				E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */,
 				134822E81BECBD7A00EA2E06 /* AddPeopleViewController.m in Sources */,
@@ -4050,6 +4129,7 @@
 				13F9D12A1C2FB06800993738 /* LPhotoBrowserView.m in Sources */,
 				130D2E091BFDC0FE002E301F /* LDatePicker.m in Sources */,
 				134822DE1BEC80F200EA2E06 /* UpdatePWDController.m in Sources */,
+				1300AE291D3F630700467126 /* VipRegisteringController.m in Sources */,
 				13F1F26A1BBA78ED00885D31 /* AppDelegate.m in Sources */,
 				134F399D1C59EE2600A92E77 /* RecommendProjectModel.m in Sources */,
 				E31F86E91C14595A00914824 /* LBannerItem.m in Sources */,

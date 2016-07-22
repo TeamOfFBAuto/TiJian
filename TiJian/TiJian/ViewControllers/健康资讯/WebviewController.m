@@ -307,7 +307,7 @@
 - (void)editOtherPeople
 {
     AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
-    add.actionStyle = ACTIONSTYLE_DetailByFamily_uid;
+    add.actionStyle = ACTIONSTYLE_EditDetailByFamily_uid;
     add.family_uid = _targetFamilyUid;
     [add setUpdateParamsBlock:^(NSDictionary *params){
         

@@ -196,7 +196,7 @@
                 
                 NSData *data = [aImage dataWithCompressMaxSize:200 * 1000 compression:0.5];
                                 
-                NSLog(@"---> 大小 %ld",(unsigned long)data.length);
+                DDLOG(@"---> 大小 %ld",(unsigned long)data.length);
                 
                 NSString *imageName = [NSString stringWithFormat:@"icon%d.jpg",i];
                 

@@ -566,7 +566,7 @@
                 
                 
                 UserInfo *user = [UserInfo userInfoForCache];
-                
+                user.family_user_name = user.real_name;
                 [self selectPeople:user myself:YES];
                 
             }else

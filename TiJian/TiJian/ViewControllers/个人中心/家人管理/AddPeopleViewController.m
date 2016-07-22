@@ -67,7 +67,7 @@
         
         self.rightString = @"提交";
         
-    }else if (self.actionStyle == ACTIONSTYLE_DetailByFamily_uid){
+    }else if (self.actionStyle == ACTIONSTYLE_EditDetailByFamily_uid){
         self.rightString = @"提交";
         [self networkForFamilyUserInfo];
     }
@@ -174,7 +174,15 @@
                    @"age":NSStringFromInt(age),
                    @"mobile":mobile};
         
-    }else if (self.actionStyle == ACTIONSTYLE_DETTAILT){
+    }else if (self.actionStyle == ACTIONSTYLE_DETTAILT || self.actionStyle == ACTIONSTYLE_EditDetailByFamily_uid){
+        
+        NSString *familyUid = @"";
+        if (self.actionStyle == ACTIONSTYLE_DETTAILT) {
+            familyUid = self.userModel.family_uid;
+        }else
+        {
+            familyUid = self.family_uid;
+        }
         
         params = @{@"authcode":authcode,
                    @"family_user_name":family_user_name,
@@ -183,7 +191,7 @@
                    @"gender":NSStringFromInt(gender),
                    @"age":NSStringFromInt(age),
                    @"mobile":mobile,
-                   @"family_uid": self.userModel.family_uid};
+                   @"family_uid": familyUid};
     }
     
     NSString *api = self.actionStyle == ACTIONSTYLE_ADD ? ADD_FAMILY : EDIT_FAMILY;
@@ -289,7 +297,7 @@
 -(void)rightButtonTap:(UIButton *)sender
 {
     if (self.actionStyle == ACTIONSTYLE_DETTAILT ||
-        self.actionStyle == ACTIONSTYLE_DetailByFamily_uid) {
+        self.actionStyle == ACTIONSTYLE_EditDetailByFamily_uid) {
         //提交修改结果
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"是否确定提交修改信息" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];

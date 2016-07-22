@@ -9,16 +9,30 @@
 #import "VipAppointViewController.h"
 #import "WebviewController.h"
 #import "AddPeopleViewController.h"
+#import "VipRegisteringController.h"//VIP专家号
+#import "EditUserInfoViewController.h"
+#import "PropertyButton.h"
+#import "FamilyCell.h"
+
+#define TableViewWidth DEVICE_WIDTH * 3 / 5.f //右侧选择就诊人view宽度
 
 @interface VipAppointViewController ()<RefreshDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 {
     BOOL _sliderOpen;
+    //VIP标记
+    UIButton *_vipBtn;
+    UILabel *_useStateLaebl;//使用状态label
+    int _availableNum;//可服务次数
+    int _totalNum;//可服务次数
+    UIButton *_guaHaoBtn;//开始挂号按钮
+    int _selectUserFamilyid;//选择用户id
 }
 
 @property(nonatomic,retain)RefreshTableView *table;
 @property(nonatomic,retain)UIView *sliderBgView;
 @property(nonatomic,retain)UIView *footerView;
 @property(nonatomic,retain)UIActivityIndicatorView *indicator;
+@property(nonatomic,retain)UIImageView *vipAlert;//vip弹框
 
 @end
 
@@ -31,30 +45,123 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
     imageView.backgroundColor = [UIColor orangeColor];
-    imageView.image = [UIImage imageNamed:@"vip_bg"];
+    
+    if (iPhone4) {
+       imageView.image = [UIImage imageNamed:@"vip_iphone4.jpg"];
+    }else
+    {
+       imageView.image = [UIImage imageNamed:@"vip_iphone6.jpg"];
+    }
     imageView.userInteractionEnabled = YES;
     [self.view addSubview:imageView];
     
-    UIButton *sender = [UIButton buttonWithType:UIButtonTypeCustom];
-    sender.frame = CGRectMake(0, imageView.height - 80 - 40, DEVICE_WIDTH/2.f, 40.f);
+    CGFloat senderWidth = DEVICE_WIDTH / 2.f + 10;//挂号按钮宽度
+    CGFloat vipTop = 100;
+    CGFloat senderTop = imageView.height - 80 - 40;
+    if (iPhone4) {
+        vipTop = 155;
+        senderTop = imageView.height - 152;
+    }else if (iPhone5)
+    {
+        vipTop = 205;
+        senderTop = imageView.height - 172;
+    }else if (iPhone6)
+    {
+        vipTop = 245;
+        senderTop = imageView.height - 217;
+    }else if (iPhone6PLUS)
+    {
+        vipTop = 285;
+        senderTop = imageView.height - 237;
+    }
+    
+    //VIP标记
+    _vipBtn = [[UIButton alloc]initWithframe:CGRectMake(0, vipTop, 61, 64) buttonType:UIButtonTypeCustom nornalImage:[UIImage imageNamed:@"vip_yes"] selectedImage:[UIImage imageNamed:@"vip_no"] target:self action:nil];
+    [self.view addSubview:_vipBtn];
+    _vipBtn.centerX = imageView.width / 2.f;
+    _vipBtn.selected = ![UserInfo getVipState];
+    
+    //开始挂号
+    UIButton *sender = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    sender.frame = CGRectMake(0, senderTop, senderWidth, 50.f);
     [sender.titleLabel setFont:[UIFont systemFontOfSize:18]];
-    [sender setTitle:@"选择就诊人" forState:UIControlStateNormal];
-    [sender setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [sender setBackgroundImage:[UIImage imageNamed:@"vip_select2"] forState:UIControlStateNormal];
-    [sender addCornerRadius:20.f];
+    [sender setTitle:@"开始挂号" forState:UIControlStateNormal];
+    [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [sender setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.1]];
+    [sender addCornerRadius:25.f];
     [imageView addSubview:sender];
     sender.centerX = imageView.width / 2.f;
     [sender addTarget:self action:@selector(clickToSelectPeople:) forControlEvents:UIControlEventTouchUpInside];
+    _guaHaoBtn = sender;
+    
+    //使用情况
+    _useStateLaebl = [[UILabel alloc]initWithFrame:CGRectMake(0, sender.bottom + 10, DEVICE_WIDTH, 16) font:12 align:NSTextAlignmentCenter textColor:[UIColor whiteColor] title:nil];
+    [_useStateLaebl setAttributedText:[self useStringWithUseNum:0 lastNum:0]];
+    [self.view addSubview:_useStateLaebl];
     
     [self.view addSubview:self.sliderBgView];
     
     //初始化值
     _sliderOpen = NO;
+    
+    //获取vip状态
+    [self netWorkForVipState];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+/**
+ *  使用次数AttributeString
+ *
+ *  @param useNum  已使用次数
+ *  @param lastNum 剩余次数
+ *
+ *  @return
+ */
+- (NSAttributedString *)useStringWithUseNum:(int)useNum
+                                    lastNum:(int)lastNum
+{
+    _availableNum = lastNum;//默认0次
+    NSString *usedkey1 = NSStringFromInt(useNum);
+    NSString *lastkey2 = NSStringFromInt(lastNum);
+    NSString *content = [NSString stringWithFormat:@"您已经使用 %@ 次   还有 %@ 次服务",usedkey1,lastkey2];
+    
+    NSAttributedString *temp = [LTools attributedString:content keyword:usedkey1 color:DEFAULT_TEXTCOLOR_ORANGE];
+    NSMutableAttributedString *m_string = [[NSMutableAttributedString alloc]initWithAttributedString:temp];
+    return [LTools attributedString:m_string originalString:content AddKeyword:lastkey2 color:DEFAULT_TEXTCOLOR_ORANGE];
+}
+
+#pragma mark - getter
+
+/**
+ *  非vip提醒
+ *
+ *  @return
+ */
+-(UIImageView *)vipAlert
+{
+    if (!_vipAlert) {
+        
+        UIImage *alertImage = [UIImage imageNamed:@"vip_alert"];
+        CGSize imageSize = alertImage.size;
+        CGFloat width = imageSize.width;
+        CGFloat height = imageSize.height;
+        
+        CGFloat realWidth = DEVICE_WIDTH * height / width;//实际要显示宽
+        CGFloat realHeight = realWidth * height / width;//实际显示高度
+        _vipAlert = [[UIImageView alloc]initWithFrame:CGRectMake((DEVICE_WIDTH - realWidth)/2.f - 3, _guaHaoBtn.top - 10 - realHeight, realWidth, realHeight)];
+        _vipAlert.image = alertImage;
+        _vipAlert.userInteractionEnabled = YES;
+
+        
+        UIButton *closeBtn = [[UIButton alloc]initWithframe:CGRectMake(_vipAlert.width - 50, 0, 50, 50) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(hiddenVipAlert)];
+        [_vipAlert addSubview:closeBtn];
+//        closeBtn.backgroundColor = [UIColor redColor];
+    }
+    return _vipAlert;
 }
 
 #pragma mark - 视图创建
@@ -63,28 +170,31 @@
 {
     if (!_footerView) {
 
-        CGFloat width = DEVICE_WIDTH * 2 / 5.f;
+        CGFloat width = TableViewWidth;
         _footerView = [[UIView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH, self.sliderBgView.height - 150, width,150)];
         _footerView.backgroundColor = [UIColor whiteColor];
         
         UIButton *add = [UIButton buttonWithType:UIButtonTypeCustom];
-        [add setTitle:@"添加就诊人" forState:UIControlStateNormal];
-        add.frame = CGRectMake(20, _footerView.height - 80 - 30 - 30 - 5, width - 40, 30);
+        [add setTitle:@"  添加就诊人" forState:UIControlStateNormal];
+        add.frame = CGRectMake(20, _footerView.height - 80 - 30 - 30 - 5, width - 60, 30);
         [add addCornerRadius:15];
         add.backgroundColor = DEFAULT_TEXTCOLOR;
         [add.titleLabel setFont:[UIFont systemFontOfSize:12]];
         [add addTarget:self action:@selector(clickToAddPeople) forControlEvents:UIControlEventTouchUpInside];
+        [add setImage:[UIImage imageNamed:@"vip_+"] forState:UIControlStateNormal];
         [_footerView addSubview:add];
+        add.centerX = _footerView.width / 2.f;
         
         UIButton *cancel = [UIButton buttonWithType:UIButtonTypeCustom];
         [cancel setTitle:@"取消" forState:UIControlStateNormal];
-        cancel.frame = CGRectMake(20, add.bottom + 15 + 10, width - 40, 30);
+        cancel.frame = CGRectMake(20, add.bottom + 15 + 10, width - 60, 30);
         [cancel addCornerRadius:15];
-        cancel.backgroundColor = [UIColor lightGrayColor];
+        cancel.backgroundColor = [UIColor colorWithHexString:@"bfbfbf"];
         [cancel.titleLabel setFont:[UIFont systemFontOfSize:12]];
         [cancel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [cancel addTarget:self action:@selector(hiddeSliderView) forControlEvents:UIControlEventTouchUpInside];
         [_footerView addSubview:cancel];
+        cancel.centerX = _footerView.width / 2.f;
     }
     return _footerView;
 }
@@ -99,6 +209,11 @@
     return _indicator;
 }
 
+/**
+ *  右侧选择就诊人View
+ *
+ *  @return
+ */
 -(UIView *)sliderBgView
 {
     if (!_sliderBgView)
@@ -121,19 +236,19 @@
 -(RefreshTableView *)table
 {
     if (!_table) {
-        CGFloat width = DEVICE_WIDTH * 2 / 5.f;
+        CGFloat width = TableViewWidth;
         _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH, 0, width, self.sliderBgView.height - 150) style:UITableViewStylePlain refreshHeaderHidden:YES];
         _table.refreshDelegate = self;
         _table.backgroundColor = [UIColor whiteColor];
         _table.dataSource = self;
         [self.sliderBgView addSubview:_table];
-        _table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _table.separatorStyle = UITableViewCellSeparatorStyleNone;
         
         
         UIView *header = [[UIView alloc]initWithFrame:CGRectMake(0, 0, width, 66)];
         _table.tableHeaderView = header;
         
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 33, width, 33) font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor] title:@"选择就诊人"];
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, width, 33) font:14 align:NSTextAlignmentCenter textColor:[UIColor whiteColor] title:@"选择就诊人"];
         label.backgroundColor = DEFAULT_TEXTCOLOR;
         [header addSubview:label];
     }
@@ -158,11 +273,74 @@
 
 #pragma mark - 事件处理
 
+/**
+ *  编辑用户信息
+ *
+ *  @param sender
+ */
+- (void)clickToEditUserInfo:(PropertyButton *)sender
+{
+    UserInfo *aModel = sender.aModel;
+    NSString *familyUid = aModel.family_uid;
+    if (familyUid && [familyUid intValue] > 0)
+    {
+        [self editFamilyUserInfoFamilyUid:familyUid];
+    }else
+    {
+        [self editLoginUserInfo];
+    }
+}
+
+/**
+ *  编辑本人信息
+ */
+- (void)editLoginUserInfo
+{
+    EditUserInfoViewController *edit = [[EditUserInfoViewController alloc]init];
+    edit.isFullUserInfo = YES;
+    [edit setUpdateParamsBlock:^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+    }];
+    [self.navigationController pushViewController:edit animated:YES];
+}
+
+/**
+ *  编辑家人信息
+ */
+- (void)editFamilyUserInfoFamilyUid:(NSString *)familyUid
+{
+    AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
+    add.actionStyle = ACTIONSTYLE_EditDetailByFamily_uid;
+    add.family_uid = familyUid;
+     @WeakObj(self);
+    [add setUpdateParamsBlock:^(NSDictionary *params){
+        
+        NSLog(@"params %@",params);
+        [Weakself.table refreshNewData];
+    }];
+    [self.navigationController pushViewController:add animated:YES];
+}
+
+/**
+ *  隐藏vipalert
+ */
+- (void)hiddenVipAlert
+{
+    [self.vipAlert removeFromSuperview];
+    _vipAlert = nil;
+}
+
 - (void)hiddeSliderView
 {
     [self selectPeople:NO];
 }
 
+/**
+ *  控制 右侧选择就诊人view移动动画
+ *
+ *  @param selected
+ */
 - (void)selectPeople:(BOOL)selected
 {
     _sliderOpen = selected;
@@ -171,8 +349,8 @@
     [UIView animateWithDuration:0.3 animations:^{
         
         if (selected) {
-            Weakself.table.left = DEVICE_WIDTH * 3 / 5.f;
-            Weakself.footerView.left = DEVICE_WIDTH * 3 / 5.f;
+            Weakself.table.left = DEVICE_WIDTH * 2 / 5.f;
+            Weakself.footerView.left = DEVICE_WIDTH * 2 / 5.f;
             Weakself.sliderBgView.alpha = 1;
         }else
         {
@@ -183,13 +361,42 @@
     }];
 }
 
+/**
+ *  开始挂号
+ *
+ *  @param sender
+ */
 - (void)clickToSelectPeople:(UIButton *)sender
 {
-    [self selectPeople:YES];
-    
-    if (self.table.dataArray.count == 0) {
+    if (_availableNum <= 0) { //没有可用服务次数
         
-        [self getFamily];
+        if(_totalNum == 1) //总数为1 而且使用完了
+        {
+            self.vipAlert.transform = CGAffineTransformScale(self.vipAlert.transform,0.5,0.5);
+            [UIView animateWithDuration:0.2 animations:^{
+                [self.view addSubview:self.vipAlert];
+                self.vipAlert.transform = CGAffineTransformIdentity;
+                self.vipAlert.transform = CGAffineTransformScale(self.vipAlert.transform,1.1,1.1);
+            } completion:^(BOOL finished) {
+                
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.vipAlert.transform = CGAffineTransformIdentity;
+                }];
+            }];
+            
+        }else
+        {
+            [LTools showMBProgressWithText:@"您的服务次数已用完！" addToView:self.view];
+        }
+        
+    }else
+    {
+        [self selectPeople:YES];
+        
+        if (self.table.dataArray.count == 0) {
+            
+            [self getFamily];
+        }
     }
 }
 
@@ -209,6 +416,18 @@
     [self.navigationController pushViewController:web animated:YES];
 }
 
+/**
+ *  点击跳转至native挂号
+ *
+ *  @param btn
+ */
+- (void)pushToNativeGuaHaoWithUserInfo:(UserInfo *)userInfo
+{
+    VipRegisteringController *vipRegister = [[VipRegisteringController alloc]init];
+    vipRegister.userInfo = userInfo;
+    [self.navigationController pushViewController:vipRegister animated:YES];
+}
+
 - (void)clickToAddPeople
 {
     AddPeopleViewController *add = [[AddPeopleViewController alloc]init];
@@ -225,7 +444,49 @@
     [self.navigationController pushViewController:add animated:YES];
 }
 
+
+/**
+ *  根据结果控制vip状态
+ *
+ *  @param result
+ */
+- (void)updateVipStateWithResult:(NSDictionary *)result
+{
+    int register_referral_counts = [result[@"register_referral_counts"] intValue];//使用的次数
+    int register_referral_total_counts = [result[@"register_referral_total_counts"] intValue];//一共可使用的次数
+    _availableNum = register_referral_total_counts - register_referral_counts;//剩余次数
+    _totalNum = register_referral_total_counts;
+    
+//    _availableNum = 0;
+//    _totalNum = 1;
+    
+    [_useStateLaebl setAttributedText:[self useStringWithUseNum:register_referral_counts lastNum:_availableNum]];
+}
+
 #pragma mark - 网络请求
+
+/**
+ *  获取vip状态信息
+ */
+- (void)netWorkForVipState
+{
+    NSString *authkey = [UserInfo getAuthkey];
+    NSDictionary *params = @{@"authcode":authkey};
+    NSString *api = get_register_referral_counts;
+    
+    __weak typeof(self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [weakSelf updateVipStateWithResult:result];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+    }];
+}
 
 - (void)getFamily
 {
@@ -234,7 +495,7 @@
     NSString *authkey = [UserInfo getAuthkey];
     __weak typeof(self)weakSelf = self;
 //    __weak typeof(_table)weakTable = _table;
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:GET_FAMILY parameters:@{@"authcode":authkey} constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:GET_FAMILY parameters:@{@"authcode":authkey} constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *temp = [UserInfo modelsFromArray:result[@"family_list"]];
         UserInfo *selfUser = [UserInfo userInfoForCache];
@@ -277,7 +538,7 @@
 
 - (void)loadNewDataForTableView:(UITableView *)tableView
 {
-    
+    [self getFamily];
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView
 {
@@ -286,7 +547,9 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
     UserInfo *user = _table.dataArray[indexPath.row];
-    [self pushToGuaHaoType:2 familyuid:user.family_uid];
+//    [self pushToGuaHaoType:2 familyuid:user.family_uid];
+    
+    [self pushToNativeGuaHaoWithUserInfo:user];
     
     [self hiddeSliderView];
 }
@@ -306,23 +569,24 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    static NSString *identifier = @"peopleManagerCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    static NSString *identifier = @"FamilyCell";
+    FamilyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
+        cell = [[FamilyCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     UserInfo *aModel = _table.dataArray[indexPath.row];
     
+    [cell.editButton addTarget:self action:@selector(clickToEditUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+    cell.editButton.aModel = aModel;
+    cell.nameLabel.width = TableViewWidth - 50 * 2;
+    cell.selectButton.left = TableViewWidth - 50;
+
     NSString *name = aModel.family_user_name;
-//    NSString *alia = aModel.appellation;
-//    NSString *temp = [NSString stringWithFormat:@"(%@)%@",alia,name];
-    
-    cell.textLabel.text = name;
-    
+    cell.nameLabel.text = name;
+        
     return cell;
 }
 

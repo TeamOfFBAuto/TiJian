@@ -490,9 +490,9 @@
 {
     if (!_leftButton) {
         
-        UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
+        UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,20,44)];
         [button_back addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-//        button_back.backgroundColor = [UIColor orangeColor];
+//        button_back.backgroundColor = [UIColor redColor];
         [button_back setImage:BACK_DEFAULT_IMAGE forState:UIControlStateNormal];
         [button_back setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         _leftButton = button_back;

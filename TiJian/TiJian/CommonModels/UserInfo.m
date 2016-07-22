@@ -139,6 +139,18 @@
 
 #pragma mark - 获取用户信息
 
+/**
+ *  获取vip状态
+ *
+ *  @return
+ */
++ (BOOL)getVipState
+{
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    BOOL isVip = [userInfo.is_vip boolValue];
+    return isVip;
+}
+
 + (NSString *)getAuthkey
 {
     NSString *value = [LTools objectForKey:USER_AUTHOD];

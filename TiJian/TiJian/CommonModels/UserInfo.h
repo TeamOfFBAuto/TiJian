@@ -110,6 +110,12 @@
 #pragma mark - 用户信息获取
 
 + (NSString *)getAuthkey;
+/**
+ *  获取vip状态
+ *
+ *  @return
+ */
++ (BOOL)getVipState;
 + (NSString *)getDeviceToken;
 + (NSString *)getUserId;
 + (BOOL)getCustomState;//是否定制化过
