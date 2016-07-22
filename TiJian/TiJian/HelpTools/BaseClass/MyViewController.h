@@ -67,6 +67,13 @@ typedef void(^UpdateParamsBlock)(NSDictionary *params);
 
 @property(nonatomic,strong)RefreshTableView *tableView;
 
+/**
+ *  设置block回调
+ *
+ *  @param updateParamsBlock block
+ */
+-(void)setUpdateParamsBlock:(UpdateParamsBlock)updateParamsBlock;
+
 -(void)setMyViewControllerLeftButtonType:(MyViewControllerLeftbuttonType)theType
                      WithRightButtonType:(MyViewControllerRightbuttonType)rightType;
 

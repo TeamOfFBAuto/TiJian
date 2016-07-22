@@ -92,6 +92,8 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
 }
 
+
+
 #pragma mark - 视图个性化 新version
 
 /**

@@ -30,6 +30,8 @@
 #import "GPushView.h"
 #import "GView.h"//分类自定义view
 #import "WebviewController.h"
+#import "GChooseProvinceViewController.h"
+#import "GHospitalOfProvinceViewController.h"
 
 typedef enum{
     loading = 0,
@@ -950,8 +952,18 @@ typedef enum{
 
 //跳转分院
 -(void)pushToFenyuan{
-    HospitalViewController *hospital = [[HospitalViewController alloc]init];
-    [self.navigationController pushViewController:hospital animated:YES];
+//    GChooseProvinceViewController *cc = [[GChooseProvinceViewController alloc]init];
+//    [cc setUpdateParamsBlock:^(NSDictionary *params) {
+//        NSLog(@"%@",params);
+//    }];
+    
+    GHospitalOfProvinceViewController *cc = [[GHospitalOfProvinceViewController alloc]init];
+    
+    
+    [self.navigationController pushViewController:cc animated:YES];
+    
+//    HospitalViewController *hospital = [[HospitalViewController alloc]init];
+//    [self.navigationController pushViewController:hospital animated:YES];
 }
 
 

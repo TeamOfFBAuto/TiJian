@@ -26,7 +26,15 @@
 
 
 
-//出入宽或高和比例 想计算的值传0
+/**
+ *  输入宽或高和比例 想计算的值传0
+ *
+ *  @param theH   高
+ *  @param theW   宽
+ *  @param theWHS 宽高比
+ *
+ *  @return 宽or高
+ */
 +(CGFloat)scaleWithHeight:(CGFloat)theH width:(CGFloat)theW theWHscale:(CGFloat)theWHS;
 
 //提示浮层
@@ -41,16 +49,54 @@
 +(NSString *)timechangeYMDhms:(NSString *)placetime;
 
 //地区选择相关
-//根据name找id
+/**
+ *  根据name找id
+ *
+ *  @param cityName 省份str或城市str
+ *
+ *  @return 对应id
+ */
 + (int)cityIdForName:(NSString *)cityName;
-//根据id找name
+
+/**
+ *  根据id找name
+ *
+ *  @param cityId 城市id或者省份id
+ *
+ *  @return name
+ */
 + (NSString *)cityNameForId:(int)cityId;
 
-//获取当前定位省份id 城市id
+/**
+ *  获取当前用户选择省份id
+ *
+ *  @return provinceId
+ */
 +(NSString *)getCurrentProvinceId;
+
+/**
+ *  获取当前用户选择城市id
+ *
+ *  @return cityId
+ */
 +(NSString *)getCurrentCityId;
 
+/**
+ *  获取当前用户选择城市 四个直辖市具体到市
+ *
+ *  @return cityName
+ */
 +(NSString *)getCurrentCityName;
+
+
+/**
+ *  根据city_id查询province_id;
+ *
+ *  @param cityId 城市id
+ *
+ *  @return provinceid
+ */
++(NSString*)getProvineIdWithCityId:(int)cityId;
 
 //获取appdelegate
 + (AppDelegate *)appDeledate;
@@ -60,7 +106,6 @@
 
 //开启定位
 -(void)startDingwei;
-
 
 //NSUserDefault存
 + (void)cache:(id)dataInfo ForKey:(NSString *)key;
@@ -72,14 +117,18 @@
 + (void)deleteCacheForKey:(NSString *)key;
 
 
-//根据city_id查询province_id;
-+(NSString*)getProvineIdWithCityId:(int)cityId;
 
 
-//根据cityid 拿到city名 如果cityid是4个直辖市的区id 则取provinceName
+
+
+/**
+ *  根据cityid 拿到city名 如果cityid是4个直辖市的区id 则取provinceName
+ *
+ *  @param cityId 城市id
+ *
+ *  @return cityName or provinceName
+ */
 +(NSString *)getCityNameOf4CityWithCityId:(int)cityId;
-
-
 
 
 

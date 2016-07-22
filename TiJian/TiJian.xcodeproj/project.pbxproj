@@ -478,6 +478,10 @@
 		E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3931C3CCCE9001CF9BA /* UIViewController+load.m */; };
 		E30FE3991C3CCCE9001CF9BA /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */; };
 		E30FE39C1C3E56DF001CF9BA /* GSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = E30FE39B1C3E56DF001CF9BA /* GSearchView.m */; };
+		E30FF9541D40BD460032256A /* center_banner_aikang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30FF9501D40BD460032256A /* center_banner_aikang@2x.png */; };
+		E30FF9551D40BD460032256A /* center_banner_ciming@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30FF9511D40BD460032256A /* center_banner_ciming@2x.png */; };
+		E30FF9561D40BD460032256A /* center_banner_meinian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30FF9521D40BD460032256A /* center_banner_meinian@2x.png */; };
+		E30FF9571D40BD460032256A /* center_downPoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E30FF9531D40BD460032256A /* center_downPoint@2x.png */; };
 		E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */ = {isa = PBXBuildFile; fileRef = E31E1A311C05926400CB995D /* GcustomNavcView.m */; };
 		E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E31F86E21C14526F00914824 /* yishoucang@2x.png */; };
 		E31F86E91C14595A00914824 /* LBannerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E31F86E61C14595A00914824 /* LBannerItem.m */; };
@@ -547,6 +551,7 @@
 		E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E38551041C0ACFDB00CE23E7 /* MyCouponTableViewCell.m */; };
 		E38551081C0AE46A00CE23E7 /* MyWalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E38551071C0AE46A00CE23E7 /* MyWalletViewController.m */; };
 		E385510A1C0AF73700CE23E7 /* daijinquan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E38551091C0AF73700CE23E7 /* daijinquan@2x.png */; };
+		E385521B1D3F5E9500278E42 /* GCustomDownOfProductView.m in Sources */ = {isa = PBXBuildFile; fileRef = E385521A1D3F5E9500278E42 /* GCustomDownOfProductView.m */; };
 		E3856F321D0E944300ABC197 /* GoHealthAppointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3856F311D0E944300ABC197 /* GoHealthAppointViewController.m */; };
 		E3856F411D10127C00ABC197 /* GappointGenderChoose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3856F3F1D10127C00ABC197 /* GappointGenderChoose@2x.png */; };
 		E3856F421D10127C00ABC197 /* GappointGenderNoChoose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3856F401D10127C00ABC197 /* GappointGenderNoChoose@2x.png */; };
@@ -557,6 +562,10 @@
 		E390A94E1C28FB4600C76DEA /* roundblue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E390A94C1C28FB4600C76DEA /* roundblue@2x.png */; };
 		E390A94F1C28FB4600C76DEA /* roundgray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E390A94D1C28FB4600C76DEA /* roundgray@2x.png */; };
 		E39148481BFC573A004E26B0 /* GconfirmOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39148471BFC573A004E26B0 /* GconfirmOrderCell.m */; };
+		E39DFC791D40E46200B013CD /* GChooseProvinceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC781D40E46200B013CD /* GChooseProvinceViewController.m */; };
+		E39DFC7C1D40E49800B013CD /* GHospitalOfProvinceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */; };
+		E39DFC851D41D25B00B013CD /* gbtnLightBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC831D41D25B00B013CD /* gbtnLightBlue@2x.png */; };
+		E39DFC861D41D25B00B013CD /* gbtnWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */; };
 		E39F1E0C1C0D013B00E9B41F /* Gbtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E39F1E0B1C0D013B00E9B41F /* Gbtn.m */; };
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
 		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; };
@@ -1406,6 +1415,10 @@
 		E30FE3951C3CCCE9001CF9BA /* UIViewController+NavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NavigationBar.m"; sourceTree = "<group>"; };
 		E30FE39A1C3E56DF001CF9BA /* GSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSearchView.h; sourceTree = "<group>"; };
 		E30FE39B1C3E56DF001CF9BA /* GSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSearchView.m; sourceTree = "<group>"; };
+		E30FF9501D40BD460032256A /* center_banner_aikang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "center_banner_aikang@2x.png"; sourceTree = "<group>"; };
+		E30FF9511D40BD460032256A /* center_banner_ciming@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "center_banner_ciming@2x.png"; sourceTree = "<group>"; };
+		E30FF9521D40BD460032256A /* center_banner_meinian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "center_banner_meinian@2x.png"; sourceTree = "<group>"; };
+		E30FF9531D40BD460032256A /* center_downPoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "center_downPoint@2x.png"; sourceTree = "<group>"; };
 		E31E1A301C05926400CB995D /* GcustomNavcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcustomNavcView.h; sourceTree = "<group>"; };
 		E31E1A311C05926400CB995D /* GcustomNavcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GcustomNavcView.m; sourceTree = "<group>"; };
 		E31F86E21C14526F00914824 /* yishoucang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yishoucang@2x.png"; sourceTree = "<group>"; };
@@ -1491,6 +1504,8 @@
 		E38551061C0AE46A00CE23E7 /* MyWalletViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyWalletViewController.h; sourceTree = "<group>"; };
 		E38551071C0AE46A00CE23E7 /* MyWalletViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyWalletViewController.m; sourceTree = "<group>"; };
 		E38551091C0AF73700CE23E7 /* daijinquan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daijinquan@2x.png"; sourceTree = "<group>"; };
+		E38552191D3F5E9500278E42 /* GCustomDownOfProductView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCustomDownOfProductView.h; sourceTree = "<group>"; };
+		E385521A1D3F5E9500278E42 /* GCustomDownOfProductView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCustomDownOfProductView.m; sourceTree = "<group>"; };
 		E3856F301D0E944300ABC197 /* GoHealthAppointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoHealthAppointViewController.h; sourceTree = "<group>"; };
 		E3856F311D0E944300ABC197 /* GoHealthAppointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoHealthAppointViewController.m; sourceTree = "<group>"; };
 		E3856F3F1D10127C00ABC197 /* GappointGenderChoose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GappointGenderChoose@2x.png"; sourceTree = "<group>"; };
@@ -1503,6 +1518,12 @@
 		E390A94D1C28FB4600C76DEA /* roundgray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "roundgray@2x.png"; sourceTree = "<group>"; };
 		E39148461BFC573A004E26B0 /* GconfirmOrderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GconfirmOrderCell.h; sourceTree = "<group>"; };
 		E39148471BFC573A004E26B0 /* GconfirmOrderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GconfirmOrderCell.m; sourceTree = "<group>"; };
+		E39DFC771D40E46200B013CD /* GChooseProvinceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GChooseProvinceViewController.h; sourceTree = "<group>"; };
+		E39DFC781D40E46200B013CD /* GChooseProvinceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GChooseProvinceViewController.m; sourceTree = "<group>"; };
+		E39DFC7A1D40E49800B013CD /* GHospitalOfProvinceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHospitalOfProvinceViewController.h; sourceTree = "<group>"; };
+		E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHospitalOfProvinceViewController.m; sourceTree = "<group>"; };
+		E39DFC831D41D25B00B013CD /* gbtnLightBlue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gbtnLightBlue@2x.png"; sourceTree = "<group>"; };
+		E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gbtnWhite@2x.png"; sourceTree = "<group>"; };
 		E39F1E0A1C0D013B00E9B41F /* Gbtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gbtn.h; sourceTree = "<group>"; };
 		E39F1E0B1C0D013B00E9B41F /* Gbtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gbtn.m; sourceTree = "<group>"; };
 		E3A293D21BD88D66001CF93D /* GmoveImv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmoveImv.h; sourceTree = "<group>"; };
@@ -2370,10 +2391,14 @@
 		13CA06C81CD1D87A0040A9A1 /* 挂号 */ = {
 			isa = PBXGroup;
 			children = (
+				E39DFC771D40E46200B013CD /* GChooseProvinceViewController.h */,
+				E39DFC781D40E46200B013CD /* GChooseProvinceViewController.m */,
 				13CA06C91CD1D8960040A9A1 /* VipAppointViewController.h */,
 				13CA06CA1CD1D8960040A9A1 /* VipAppointViewController.m */,
 				1300AE271D3F630700467126 /* VipRegisteringController.h */,
 				1300AE281D3F630700467126 /* VipRegisteringController.m */,
+				E39DFC7A1D40E49800B013CD /* GHospitalOfProvinceViewController.h */,
+				E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */,
 			);
 			path = "挂号";
 			sourceTree = "<group>";
@@ -3269,6 +3294,8 @@
 				E3FEFA621C5B44710024AE0E /* GBrandTabHeaderView.m */,
 				E361DFA61CE1C4D500BE71A0 /* GView.h */,
 				E361DFA71CE1C4D500BE71A0 /* GView.m */,
+				E38552191D3F5E9500278E42 /* GCustomDownOfProductView.h */,
+				E385521A1D3F5E9500278E42 /* GCustomDownOfProductView.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -3316,6 +3343,12 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E39DFC831D41D25B00B013CD /* gbtnLightBlue@2x.png */,
+				E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */,
+				E30FF9501D40BD460032256A /* center_banner_aikang@2x.png */,
+				E30FF9511D40BD460032256A /* center_banner_ciming@2x.png */,
+				E30FF9521D40BD460032256A /* center_banner_meinian@2x.png */,
+				E30FF9531D40BD460032256A /* center_downPoint@2x.png */,
 				E306F4BC1CE34013003EE0C6 /* fenyuan_storehome@2x.png */,
 				E306F4AC1CE32D74003EE0C6 /* sh_dushiliren@2x.png */,
 				E306F4AD1CE32D74003EE0C6 /* sh_fangai@2x.png */,
@@ -3635,6 +3668,7 @@
 				1303C3721BEB0D7200700847 /* gouwudai@2x.png in Resources */,
 				13F8C5BA1C05AA7E004C3FC7 /* compose_pic_add@3x.png in Resources */,
 				E3796D231BFB389E004B63F7 /* shoppingcart_reduce_r@2x.png in Resources */,
+				E30FF9541D40BD460032256A /* center_banner_aikang@2x.png in Resources */,
 				1303C35B1BEB0D7100700847 /* personal_youhuiquan_yiguoqi@2x.png in Resources */,
 				E3BFACD21C5F5B8900F97E73 /* order_jiaxiangbao@2x.png in Resources */,
 				1303C34F1BEB0D7100700847 /* personal_jiaren_tianjia@2x.png in Resources */,
@@ -3699,6 +3733,7 @@
 				136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */,
 				139333A51BE0DF3E00B4628B /* 12_1@2x.png in Resources */,
 				13D6DA9E1C48C6A90091FCFE /* extension_36_4.png in Resources */,
+				E39DFC861D41D25B00B013CD /* gbtnWhite@2x.png in Resources */,
 				139333F31BE0DF3E00B4628B /* 8_1@2x.png in Resources */,
 				1303C3681BEB0D7100700847 /* homepage_g@2x.png in Resources */,
 				139333FF1BE1F29A00B4628B /* 9_1@2x.png in Resources */,
@@ -3760,6 +3795,7 @@
 				131529751CF551EA001A2705 /* share3@2x.png in Resources */,
 				131482FC1CEF0FEF00D04305 /* UMSnsAccountViewController.xib in Resources */,
 				139333B11BE0DF3E00B4628B /* 16_4@2x.png in Resources */,
+				E30FF9551D40BD460032256A /* center_banner_ciming@2x.png in Resources */,
 				13F2421A1BF4925A002C9D81 /* yuyue_jiantou_up@2x.png in Resources */,
 				139333B81BE0DF3E00B4628B /* 18_4@2x.png in Resources */,
 				13F4708C1D07CC8D00297E95 /* goHealth_tel@2x.png in Resources */,
@@ -3806,6 +3842,7 @@
 				1303C34B1BEB0D7100700847 /* personal_jiaren_jiantou_t@2x.png in Resources */,
 				139333D51BE0DF3E00B4628B /* 26_5@2x.png in Resources */,
 				131C11941BF04EF000629938 /* LoginViewController.xib in Resources */,
+				E39DFC851D41D25B00B013CD /* gbtnLightBlue@2x.png in Resources */,
 				139333E21BE0DF3E00B4628B /* 2_w_1@2x.png in Resources */,
 				E3796D0C1BFB37CD004B63F7 /* my_zhifubao@2x.png in Resources */,
 				1303C2CB1BE9B6EE00700847 /* back@2x.png in Resources */,
@@ -3838,6 +3875,7 @@
 				139333A71BE0DF3E00B4628B /* 12_3@2x.png in Resources */,
 				E3D8AE4D1BF6203F003AE2E3 /* youhui_yilingqu@2x.png in Resources */,
 				E3796D121BFB37CD004B63F7 /* zhifuchulizhong@2x.png in Resources */,
+				E30FF9571D40BD460032256A /* center_downPoint@2x.png in Resources */,
 				13D6DA941C48C6A90091FCFE /* extension_35_3.png in Resources */,
 				E3E2B4071BFB203B007988C5 /* ProductBuyCell.xib in Resources */,
 				E3D93F501BEB45BB00C0BE52 /* garea.plist in Resources */,
@@ -3889,6 +3927,7 @@
 				13B07A121C06DB7300742AF7 /* homepage_star1@2x.png in Resources */,
 				E352F91A1C0B91680037E4AE /* pinpaidian_pd@2x.png in Resources */,
 				13F4708A1D07CC8D00297E95 /* goHealth_icon2@2x.png in Resources */,
+				E30FF9561D40BD460032256A /* center_banner_meinian@2x.png in Resources */,
 				1303C3601BEB0D7100700847 /* personal_yuyue_xiugai@2x.png in Resources */,
 				139333DA1BE0DF3E00B4628B /* 29_1@2x.png in Resources */,
 				131483011CEF0FEF00D04305 /* WeiboSDK.bundle in Resources */,
@@ -3998,10 +4037,13 @@
 				131EC6161C58DE150008F517 /* RecommendCell.m in Sources */,
 				E3A709A51BE0AE7100750D27 /* CycleAdvModel.m in Sources */,
 				E3E2B41A1BFB2144007988C5 /* OrderOtherInfoCell.m in Sources */,
+				E385521B1D3F5E9500278E42 /* GCustomDownOfProductView.m in Sources */,
+				E39DFC791D40E46200B013CD /* GChooseProvinceViewController.m in Sources */,
 				E3E2B3FC1BFB1E90007988C5 /* PayActionViewController.m in Sources */,
 				E38551021C0AC8A500CE23E7 /* MyCouponViewController.m in Sources */,
 				E3D8AE1E1BF4B310003AE2E3 /* ConfirmOrderViewController.m in Sources */,
 				13F8C5B31C05AA7E004C3FC7 /* JKPromptView.m in Sources */,
+				E39DFC7C1D40E49800B013CD /* GHospitalOfProvinceViewController.m in Sources */,
 				1303C3071BEA14EB00700847 /* LoginViewController.m in Sources */,
 				E3CC5CB71C43BE8000BA517D /* GFapiaoViewController.m in Sources */,
 				130D2E011BFC7229002E301F /* MapViewController.m in Sources */,
