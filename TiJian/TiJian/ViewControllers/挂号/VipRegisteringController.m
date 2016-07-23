@@ -542,7 +542,7 @@
         if (type == HospitalType_selectNormal ||
             type == HospitalType_search) //主医院\搜索
         {
-            NSString *hospitalId = params[@"hospitalId"];//选择医院id
+            NSString *hospitalId = params[@"hospital_id"];//选择医院id
             if (hospitalId) {
                 _hospital_id = hospitalId;
             }
@@ -551,12 +551,12 @@
                 [Weakself textfieldWithTag:kTag_hospital].text = hospitalName;
             }
             
-            NSString *deptId = params[@"deptId"];//科室id
+            NSString *deptId = params[@"dept_id"];//科室id
             if (deptId) {
                 _dept = deptId;
             }
 
-            NSString *deptName = params[@"deptName"];//科室name
+            NSString *deptName = params[@"dept_name"];//科室name
             if (deptName) {
                 [Weakself textfieldWithTag:kTag_dept].text = deptName;
             }
