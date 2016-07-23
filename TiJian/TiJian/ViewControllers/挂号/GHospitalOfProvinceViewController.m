@@ -244,6 +244,8 @@
         if (self.updateParamsBlock) {
             self.updateParamsBlock(params);
         }
+        
+        [self.navigationController popViewControllerAnimated:YES];
     }
     
 }
