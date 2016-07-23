@@ -205,15 +205,11 @@
     }];
 }
 
+#pragma mark - RefreshDelegate
 
-
-
--(void)reloadRightViewWithTag:(NSInteger)theTag{
-    
-    
+- (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
+    [_searchTF resignFirstResponder];
 }
-
-
 
 - (void)loadNewDataForTableView:(RefreshTableView *)tableView{
     [self getHospitals];
@@ -224,6 +220,8 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
+    
+    [_searchTF resignFirstResponder];
     
     if (self.hospitalType == HospitalType_selectNormal || //选择主医院
         self.hospitalType == HospitalType_search) {
@@ -244,7 +242,7 @@
         [params safeSetString:[dic stringValueForKey:@"hospital_name"] forKey:@"alternativeHospitalName"];
         
         if (self.updateParamsBlock) {
-            self.updateParamsBlock(dic);
+            self.updateParamsBlock(params);
         }
     }
     
@@ -378,7 +376,6 @@
     }else{
         _selectRow = index;
         sender.selected = YES;
-        [self reloadRightViewWithTag:_selectRow];
         if (index == 0) {
             _theCityId = nil;
             [_rTab refreshNewData];
