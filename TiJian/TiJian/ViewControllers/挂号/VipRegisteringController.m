@@ -551,7 +551,7 @@
                 [Weakself textfieldWithTag:kTag_hospital].text = hospitalName;
             }
             
-            NSString *deptId = params[@"dept_id"];//科室id
+            NSString *deptId = params[@"deptId"];//科室id
             if (deptId) {
                 _dept = deptId;
             }
