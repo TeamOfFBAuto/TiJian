@@ -365,7 +365,7 @@
     int padding = 1;
     //星期天 1
     int week = (int)[beginDate fs_weekday];
-    if (week == 1 || week == 2|| week == 3 || week == 4)//周一至周三 和 周天 需要加9天
+    if (week == 1 || week == 2|| week == 3 || week == 4) //周一至周三 和 周天 需要加9天
     {
         padding = 9;
         
