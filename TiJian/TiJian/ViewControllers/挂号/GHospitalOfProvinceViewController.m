@@ -8,6 +8,8 @@
 
 #import "GHospitalOfProvinceViewController.h"
 #import "GChooseProvinceViewController.h"
+#import "GHospitalOfProvinceTableViewCell.h"
+#import "GDeptOfHospitalViewController.h"
 @interface GHospitalOfProvinceViewController ()<UITableViewDelegate,UITableViewDataSource,RefreshDelegate>
 {
     UITableView *_tab;
@@ -42,6 +44,8 @@
     // Do any additional setup after loading the view.
     _selectRow = 0;
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     _theProvinceId = [GMAPI getCurrentProvinceId];
     
     [self setupNavigation];
@@ -68,10 +72,11 @@
     _tab.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_tab];
     
-    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(100, 0, DEVICE_WIDTH - 100, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(106, 0, DEVICE_WIDTH - 106, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.tag = 101;
+    _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_rTab refreshNewData];
     [self.view addSubview:_rTab];
     
@@ -136,48 +141,7 @@
     return _searchTF;
 }
 
-#pragma mark - 返回上个界面及参数回传
 
-/**
- *  传递医院、备选医院、科室信息
- *
- *  @param params @{@"hospitalName":@"",
- *
- */
-- (void)transferParams:(NSDictionary *)params
-{
-//    //首选医院信息 需要传递的参数
-//    params = @{@"hospitalId":@"",
-//               @"hospitalName":@"",
-//               @"deptId":@"",
-//               @"deptName":@""};
-//    
-//    
-//    //备选医院信息 需要传递的参数
-//    params = @{@"alternativeHospitalName":@"",
-//               @"alternativeHospitalId":@""};
-    
-    
-    if (self.hospitalType == HospitalType_selectNormal ||
-        self.hospitalType == HospitalType_search) //主医院\搜索医院
-    {
-        // 首选医院信息 需要传递的参数
-        params = @{@"hospitalId":@"teeteet",
-                   @"hospitalName":@"上地医院",
-                   @"deptId":@"dads",
-                   @"deptName":@"内科"};
-        
-    }else if (self.hospitalType == HospitalType_selectAlternative) //备选医院
-    {
-        //    //备选医院信息 需要传递的参数
-            params = @{@"alternativeHospitalName":@"积水潭医院",
-                       @"alternativeHospitalId":@"lll"};
-    }
-    
-    if (self.updateParamsBlock) {
-        self.updateParamsBlock(params);
-    }
-}
 #pragma mark - 切换城市
 -(void)myNavcRightBtnClicked{
     GChooseProvinceViewController *cc = [[GChooseProvinceViewController alloc]init];
@@ -259,8 +223,34 @@
 }
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView{
+    NSLog(@"%s",__FUNCTION__);
+    
+    if (self.hospitalType == HospitalType_selectNormal || //选择主医院
+        self.hospitalType == HospitalType_search) {
+        NSDictionary *dic = _rTab.dataArray[indexPath.row];
+        
+        GDeptOfHospitalViewController *cc = [[GDeptOfHospitalViewController alloc]init];
+        cc.hospital_name = [dic stringValueForKey:@"hospital_name"];
+        cc.hospital_id = [dic stringValueForKey:@"hospital_id"];
+        cc.updateParamsBlock = self.updateParamsBlock;
+        [self.navigationController pushViewController:cc animated:YES];
+
+    }else if (self.hospitalType == HospitalType_selectAlternative){//选择备选医院
+        
+        #pragma mark - 返回上个界面及参数回传
+        NSDictionary *dic = _rTab.dataArray[indexPath.row];
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+        [params safeSetString:[dic stringValueForKey:@"hospital_id"]forKey:@"alternativeHospitalId"];
+        [params safeSetString:[dic stringValueForKey:@"hospital_name"] forKey:@"alternativeHospitalName"];
+        
+        if (self.updateParamsBlock) {
+            self.updateParamsBlock(dic);
+        }
+    }
     
 }
+
+
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView{
     CGFloat height = 0;
     height = 50;
@@ -283,7 +273,10 @@
         NSDictionary *dic;
         NSString *title;
         if (indexPath.row == 0) {
-            title = [NSString stringWithFormat:@"全%@(%@)",[GMAPI cityNameForId:[_theProvinceId intValue]],_hospital_count];
+            if (![LTools isEmpty:_hospital_count]) {
+                title = [NSString stringWithFormat:@"全%@(%@)",[GMAPI cityNameForId:[_theProvinceId intValue]],_hospital_count];
+            }
+            
         }else{
             dic = _citiesArray[indexPath.row-1];
             title = [NSString stringWithFormat:@"%@(%@)",[dic stringValueForKey:@"city_name"],[dic stringValueForKey:@"hospital_count"]];
@@ -327,9 +320,9 @@
         return cell;
     }else if (tableView.tag == 101){//医院选择
         static NSString *identifier = @"identifierd";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        GHospitalOfProvinceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         if (!cell) {
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+            cell = [[GHospitalOfProvinceTableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         }
         
         NSDictionary *dic = _rTab.dataArray[indexPath.row];
@@ -340,7 +333,6 @@
         cell.detailTextLabel.text = [dic stringValueForKey:@"level_desc"];
         cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
         cell.detailTextLabel.textColor = RGBCOLOR(108, 109, 110);
-        
         
         return cell;
     }
@@ -392,8 +384,8 @@
             [_rTab refreshNewData];
         }else{
             NSDictionary *cityDic = _citiesArray[index-1];
-            _theProvinceId = [cityDic stringValueForKey:@"local_province_id"];
-            _theCityId = [cityDic stringValueForKey:@"local_city_id"];
+            _theProvinceId = [cityDic stringValueForKey:@"province_id"];
+            _theCityId = [cityDic stringValueForKey:@"city_id"];
             [_rTab refreshNewData];
         }
         

@@ -21,6 +21,8 @@ typedef void(^downViewClickedBlock)(NSInteger theTag);
 
 -(void)setDownViewClickedBlock:(downViewClickedBlock)downViewClickedBlock;
 
+-(id)initWithFrame:(CGRect)frame customType:(TheDownViewType)theType;
+
 +(GCustomDownOfProductView*)customViewWithType:(TheDownViewType)theType;
 
 

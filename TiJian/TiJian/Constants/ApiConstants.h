@@ -510,6 +510,8 @@
 #define NGuahao_getCity @"/index.php?d=api&c=register&m=get_city"
 //2、获取医院 参数 province_id city_id hospital_name
 #define NGuahao_getHospital @"/index.php?d=api&c=register&m=get_hospital"
+//3、获取科室 参数 hospital_id
+#define NGuahao_getDept @"/index.php?d=api&c=register&m=get_dept"
 
 #pragma - mark Go健康对接
 

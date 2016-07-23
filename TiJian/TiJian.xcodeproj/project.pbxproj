@@ -566,6 +566,8 @@
 		E39DFC7C1D40E49800B013CD /* GHospitalOfProvinceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */; };
 		E39DFC851D41D25B00B013CD /* gbtnLightBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC831D41D25B00B013CD /* gbtnLightBlue@2x.png */; };
 		E39DFC861D41D25B00B013CD /* gbtnWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */; };
+		E39DFC891D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */; };
+		E39DFC8C1D4378D000B013CD /* GDeptOfHospitalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */; };
 		E39F1E0C1C0D013B00E9B41F /* Gbtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E39F1E0B1C0D013B00E9B41F /* Gbtn.m */; };
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
 		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; };
@@ -1524,6 +1526,10 @@
 		E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHospitalOfProvinceViewController.m; sourceTree = "<group>"; };
 		E39DFC831D41D25B00B013CD /* gbtnLightBlue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gbtnLightBlue@2x.png"; sourceTree = "<group>"; };
 		E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gbtnWhite@2x.png"; sourceTree = "<group>"; };
+		E39DFC871D4372B300B013CD /* GHospitalOfProvinceTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHospitalOfProvinceTableViewCell.h; sourceTree = "<group>"; };
+		E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHospitalOfProvinceTableViewCell.m; sourceTree = "<group>"; };
+		E39DFC8A1D4378D000B013CD /* GDeptOfHospitalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDeptOfHospitalViewController.h; sourceTree = "<group>"; };
+		E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDeptOfHospitalViewController.m; sourceTree = "<group>"; };
 		E39F1E0A1C0D013B00E9B41F /* Gbtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gbtn.h; sourceTree = "<group>"; };
 		E39F1E0B1C0D013B00E9B41F /* Gbtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gbtn.m; sourceTree = "<group>"; };
 		E3A293D21BD88D66001CF93D /* GmoveImv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmoveImv.h; sourceTree = "<group>"; };
@@ -2399,6 +2405,8 @@
 				1300AE281D3F630700467126 /* VipRegisteringController.m */,
 				E39DFC7A1D40E49800B013CD /* GHospitalOfProvinceViewController.h */,
 				E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */,
+				E39DFC8A1D4378D000B013CD /* GDeptOfHospitalViewController.h */,
+				E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */,
 			);
 			path = "挂号";
 			sourceTree = "<group>";
@@ -3296,6 +3304,8 @@
 				E361DFA71CE1C4D500BE71A0 /* GView.m */,
 				E38552191D3F5E9500278E42 /* GCustomDownOfProductView.h */,
 				E385521A1D3F5E9500278E42 /* GCustomDownOfProductView.m */,
+				E39DFC871D4372B300B013CD /* GHospitalOfProvinceTableViewCell.h */,
+				E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -4149,6 +4159,7 @@
 				13F2422C1BF5D5E0002C9D81 /* ArticleCell.m in Sources */,
 				13F1F26D1BBA78ED00885D31 /* ViewController.m in Sources */,
 				13B07A1E1C070B0300742AF7 /* OrderInfoViewController.m in Sources */,
+				E39DFC891D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m in Sources */,
 				1303C2E41BEA0DE600700847 /* ProductModel.m in Sources */,
 				1303C3061BEA14EB00700847 /* GRegisterViewController.m in Sources */,
 				13F8C5AB1C05AA7E004C3FC7 /* JKAssetsCollectionFooterView.m in Sources */,
@@ -4189,6 +4200,7 @@
 				131EC61D1C58F3670008F517 /* SetmealModel.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
+				E39DFC8C1D4378D000B013CD /* GDeptOfHospitalViewController.m in Sources */,
 				E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */,
 				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
 				E3ED61071C801D53001E5BFC /* BrandSearchViewController.m in Sources */,
