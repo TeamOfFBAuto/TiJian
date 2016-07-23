@@ -204,6 +204,9 @@
 //latest_activity_id：最新的活动id,用来判断是否需要自动弹出活动页
 #define Get_Show_activity @"/index.php?d=api&c=activity&m=show_activity"
 
+//获取首页banner信息
+#define Get_cus_img @"/index.php?d=api&c=customization&m=get_cus_img"
+
 /******************商品相关接口*******************/
 
 #pragma mark - 商品相关

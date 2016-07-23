@@ -207,6 +207,7 @@
     
     self.navigationItem.titleView = self.searchTF;
     
+    CGFloat titleWidth = 65;
     CGFloat width = DEVICE_WIDTH - 12 * 2;
     
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(12, 12, width , 432)];
@@ -214,12 +215,12 @@
     [view addCornerRadius:5.f];
     [self.scrollView addSubview:view];
     //就诊人
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, 55, 45) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"就 诊 人 :"];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, titleWidth, 45) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"就 诊 人 :"];
     [view addSubview:titleLabel];
     
     NSString *name = self.userInfo.family_user_name;
     
-    UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.right + 12, 0, width - titleLabel.right - 12 - 50, 45) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:name];
+    UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.right + 12, 0, width - titleLabel.right - 12 - 50, 45) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:name];
     [view addSubview:contentLabel];
     _nameLabel = contentLabel;
     [contentLabel addTaget:self action:@selector(clickToSelectUserInfo:) tag:0];
@@ -237,7 +238,7 @@
     [view addSubview:line];
     
     //病情描述
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, line.bottom + 17, 55, 30) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"病情描述:"];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, line.bottom + 17, titleWidth, 30) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"病情描述:"];
     [view addSubview:titleLabel];
     
     CGFloat t_width = width - titleLabel.right - 12 - 12;
@@ -254,7 +255,7 @@
     [textView setPlaceHolderColor:RGBCOLOR(196, 198, 205)];
     
     //添加图片
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, textView.bottom + 15, 55, 30) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"添加图片:"];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, textView.bottom + 15, titleWidth, 30) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"添加图片:"];
     [view addSubview:titleLabel];
     
     //添加图片按钮
@@ -269,7 +270,7 @@
     NSArray *titles = @[@"医       院:",@"科       室:",@"备选医院:",@"预约时间:"];
     NSArray *placeHolders = @[@"医院(必填)",@"科室(必填)",@"请选择备选医院"];
     for (int i = 0; i < titles.count; i ++) {
-        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, top, 55, 45) font:12 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:titles[i]];
+        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, top, titleWidth, 45) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:titles[i]];
         [view addSubview:titleLabel];
         top = titleLabel.bottom+ 5;
         

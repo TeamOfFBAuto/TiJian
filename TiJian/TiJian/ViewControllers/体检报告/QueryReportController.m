@@ -11,6 +11,7 @@
 #define Cache_brandName @"cache_brandname" //缓存品牌名
 #define Cache_brandId @"cache_brandid" //缓存品牌id
 #define Cache_account @"cache_account" //缓存账号
+#define Cache_account_password @"cache_account_password" //缓存账号对应密码
 #define Cache_brandId_newest @"cache_brandid_newest" //缓存品牌id最近的一个
 
 @interface QueryReportController ()<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
@@ -84,6 +85,11 @@
         {
             tf.returnKeyType = UIReturnKeyDone;
             tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+            
+            NSString *accountPassword = [self getAccountPasswordWithBrandId:[self getNewestBrandId]];
+            if (![LTools isEmpty:accountPassword]) {
+                tf.text = accountPassword;
+            }
         }
         
         top = bgView.bottom;
@@ -144,6 +150,13 @@
     return account;
 }
 
+- (NSString *)getAccountPasswordWithBrandId:(NSString *)brandId
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_account_password,brandId];
+    NSString *account = [LTools objectForKey:key];
+    return account;
+}
+
 //---------- set
 
 - (void)setBrandName:(NSString *)brandName
@@ -158,6 +171,13 @@
 {
     NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_account,brandId];
     [LTools setObject:account forKey:key];
+}
+
+- (void)setAccountPassword:(NSString *)accountPassword
+       withBrandId:(NSString *)brandId
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@",Cache_account_password,brandId];
+    [LTools setObject:accountPassword forKey:key];
 }
 
 #pragma mark - 网络请求
@@ -222,6 +242,7 @@
     //本地缓存
     [LTools setObject:brandId forKey:Cache_brandId_newest];
     [self setAccount:accountNo withBrandId:brandId];
+    [self setAccountPassword:password withBrandId:brandId];//保存密码
     [self setBrandName:_brandName withBrandId:brandId];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -238,7 +259,6 @@
         [_loading hide:YES];
         
         if ([result[RESULT_CODE] intValue] == 0) {
-            
             NSString *url = result[@"url"];
             [MiddleTools pushToWebFromViewController:Weakself weburl:url title:@"体检报告" moreInfo:NO hiddenBottom:NO];
         }
@@ -246,6 +266,8 @@
         
     } failBlock:^(NSDictionary *result) {
         [_loading hide:YES];
+        int errocode = [result[RESULT_CODE]intValue];
+        DDLOG(@"result %@ %@",result[RESULT_CODE],result[RESULT_INFO]);
     }];
 }
 
@@ -298,6 +320,16 @@
     }else
     {
         [self textFieldWithTag:101].text = nil;
+    }
+    
+    NSString *account_password = [self getAccountPasswordWithBrandId:_brandId];
+    if (![LTools isEmpty:account_password]) {
+        
+        [self textFieldWithTag:102].text = account_password;
+        
+    }else
+    {
+        [self textFieldWithTag:102].text = nil;
     }
 }
 

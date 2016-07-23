@@ -232,6 +232,9 @@
         right = @"个性化定制";
         [self.rightBtn setTitle:@"个性化定制" forState:UIControlStateNormal];
         [self.rightBtn addTarget:self action:@selector(clickToTest:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self performSelector:@selector(clickToTest:) withObject:nil afterDelay:0.5];//自动跳转至测试页
+        
     }else
     {
         right = @"刷新";

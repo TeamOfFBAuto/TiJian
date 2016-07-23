@@ -348,7 +348,7 @@
     NSDictionary *dic = [GMAPI cacheForKey:USERLocation];
     str = [dic stringValueForKey:@"city"];
     if ([LTools isEmpty:str] || [str intValue] == 0) {
-        str = @"1005";//海淀
+        str = @"0";
     }
     return str;
 }

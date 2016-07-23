@@ -50,6 +50,7 @@
     
     NSDictionary *_needChangeLocationDic;//需要更改的用户定位信息
     
+    UIImageView *_bannerCusImageView;//顶部个性化定制img view
 }
 
 @property(nonatomic,retain)UIView *healthView;//背景view
@@ -117,6 +118,9 @@
     //定位相关
     [self creatNavcLeftLabel];
     [self getLocalLocation];
+    
+    //获取动态banner图片
+    [self netWorkForHomeBanner];
     
 }
 
@@ -382,6 +386,28 @@
 }
 
 #pragma mark - 网络请求
+
+/**
+ *  获取首页banner信息
+ */
+- (void)netWorkForHomeBanner
+{
+    NSString *api = Get_cus_img;
+    
+    __weak typeof(self)weakSelf = self;
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        
+        NSString *img_url = result[@"img_url"];
+        [LTools setObject:img_url forKey:HomePage_cus_img];//缓存imageurl
+        [_bannerCusImageView l_setImageWithURL:[NSURL URLWithString:img_url] placeholderImage:[weakSelf cacheBannerImage]];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        
+    }];
+}
 
 /**
  *  获取活动列表
@@ -812,25 +838,54 @@
 //    bgScroll.contentSize = CGSizeMake(DEVICE_WIDTH, view_health.bottom + 15);
 //}
 
+/**
+ *  获取默认的首页个性化定制banner
+ *
+ *  @return
+ */
+- (UIImage *)cacheBannerImage
+{
+    NSString *imgUrl = [LTools objectForKey:HomePage_cus_img];
+    UIImage *cacheImage;//
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    //存在换成图片
+    if ([manager cachedImageExistsForURL:[NSURL URLWithString:imgUrl]]) {
+        
+        NSString *key = [manager cacheKeyForURL:[NSURL URLWithString:imgUrl]];
+        cacheImage = [[SDImageCache sharedImageCache]imageFromDiskCacheForKey:key];
+    }else
+    {
+        cacheImage = [UIImage imageNamed:@"homepage_banner"];
+    }
+    return cacheImage;
+}
+
 - (void)prepareViewsVersionThree
 {
     UIView *bgScroll = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 49 - 64)];
+    bgScroll.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:bgScroll];
     
     CGFloat width_sum = DEVICE_WIDTH;
-    UIImage *image = [UIImage imageNamed:@"homepage_banner"];
     
-    CGFloat radio = image.size.height / image.size.width;
+    UIImage *cacheImage = [self cacheBannerImage];//缓存图片
+    
+    CGFloat radio = cacheImage.size.height / cacheImage.size.width;
     
     //个性定制
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(pushToPersonalCustom) forControlEvents:UIControlEventTouchUpInside];
+    UIImageView *btn = [[UIImageView alloc]init];
+    btn.userInteractionEnabled = YES;
+    btn.image = [self cacheBannerImage];
     [bgScroll addSubview:btn];
+    
     btn.backgroundColor = [UIColor whiteColor];
     CGFloat width = width_sum;
     CGFloat height = width *radio;
     btn.frame = CGRectMake(0, 0, width, height);
+    
+    [btn addTaget:self action:@selector(pushToPersonalCustom) tag:0];
+    
+    _bannerCusImageView = btn;
     
     //体检预约、体检商城入口
     

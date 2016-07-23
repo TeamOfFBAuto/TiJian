@@ -131,6 +131,7 @@
 #define USER_UPDATEHEADIMAGE_STATE @"updateHeadImage"//更新用户头像
 #define USER_NEWHEADIMAGE @"newHeadImage"//新头像
 
+#define HomePage_cus_img @"HomePage_cus_img" //首页个性化定制顶部banner
 
 //***************************** 三方平台appkey **********************************
 

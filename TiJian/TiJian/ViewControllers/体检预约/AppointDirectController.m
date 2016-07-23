@@ -109,6 +109,12 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
     [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    
+    
+    NSLog(@"province id:%@ name:%@",[GMAPI getCurrentProvinceId],[GMAPI cityNameForId:[[GMAPI getCurrentProvinceId] intValue]]);
+    NSLog(@"cityid:%@ name:%@",[GMAPI getCurrentCityId],[GMAPI cityNameForId:[[GMAPI getCurrentCityId] intValue]]);
+
+    
 //    [params safeSetString:self.brand_id forKey:@"brand_id"];//品牌
     [params safeSetString:lon forKey:@"longitude"];
     [params safeSetString:lat forKey:@"latitude"];
@@ -122,7 +128,7 @@
     __weak typeof(_tableView)weakTable = _tableView;
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        NSLog(@"success result %@",result);
+//        NSLog(@"success result %@",result);
         
         NSArray *temp = [HospitalModel modelsFromArray:result[@"list"]];
         [weakTable reloadData:temp pageSize:10 noDataView:[self resultViewWithType:PageResultType_nodata title:nil msg:@"没有找到附近的分院!" btnTitle:nil selector:@selector(refreshData)]];
@@ -143,7 +149,8 @@
         
     if (![setmeal_list isKindOfClass:[NSDictionary class]]) {
         
-        [self.tableView finishReloadingData];
+        [self netWorkForCenterList];//请求分院
+
         return;
     }
     
@@ -165,7 +172,8 @@
         //没有待预约
         
     }
-    [self.tableView finishReloadingData];
+    
+    [self netWorkForCenterList];//请求分院
 }
 
 #pragma mark - 事件处理
@@ -306,7 +314,7 @@
     [GMAPI cache:dic ForKey:USERLocation];
     
     //请求分院列表
-    [self refreshData];
+    [self.tableView refreshNewData];
 }
 
 #pragma - mark RefreshDelegate <NSObject>
@@ -314,7 +322,6 @@
 - (void)loadNewDataForTableView:(RefreshTableView *)tableView
 {
     [self netWorkForListWithTable:tableView];
-    [self netWorkForCenterList];
 }
 - (void)loadMoreDataForTableView:(RefreshTableView *)tableView
 {
