@@ -41,7 +41,8 @@
 
 
 #pragma mark - 视图创建
--(void)creatTab{
+-(void)creatTab
+{
     _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 64,80, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _tab.backgroundColor = RGBCOLOR(241, 240, 245);
     _tab.delegate = self;
@@ -127,14 +128,62 @@
     
 }
 
-#pragma mark - 返回上个界面
--(void)gogoback{
-    [self.navigationController popViewControllerAnimated:YES];
+#pragma mark - 返回上个界面及参数回传
+
+/**
+ *  传递医院、备选医院、科室信息
+ *
+ *  @param params @{@"hospitalName":@"",
+ *
+ */
+- (void)transferParams:(NSDictionary *)params
+{
+//    //首选医院信息 需要传递的参数
+//    params = @{@"hospitalId":@"",
+//               @"hospitalName":@"",
+//               @"deptId":@"",
+//               @"deptName":@""};
+//    
+//    
+//    //备选医院信息 需要传递的参数
+//    params = @{@"alternativeHospitalName":@"",
+//               @"alternativeHospitalId":@""};
+    
+    
+    if (self.hospitalType == HospitalType_selectNormal ||
+        self.hospitalType == HospitalType_search) //主医院\搜索医院
+    {
+        // 首选医院信息 需要传递的参数
+        params = @{@"hospitalId":@"teeteet",
+                   @"hospitalName":@"上地医院",
+                   @"deptId":@"dads",
+                   @"deptName":@"内科"};
+        
+    }else if (self.hospitalType == HospitalType_selectAlternative) //备选医院
+    {
+        //    //备选医院信息 需要传递的参数
+            params = @{@"alternativeHospitalName":@"积水潭医院",
+                       @"alternativeHospitalId":@"lll"};
+    }
+    
+    if (self.updateParamsBlock) {
+        self.updateParamsBlock(params);
+    }
 }
 
 
+-(void)gogoback
+{
+    //update by lcw  继承自MyViewController 已经有 -(void)leftButtonTap:(UIButton *)sender 方法(返回功能)
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    [self transferParams:nil];//test 正式去掉
+}
+
 #pragma mark - 网络请求
--(void)prepareNetData{
+
+-(void)prepareNetData
+{
     
     NSDictionary *parameters = @{
                                  

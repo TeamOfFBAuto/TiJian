@@ -17,6 +17,9 @@ typedef void(^DateBlock)(ACTIONTYPE type, NSString *dateString);
     UIDatePicker *datePicker;
 }
 
+@property (nonatomic,retain)NSDate *minDate;
+@property (nonatomic,retain)NSDate *maxDate;
+
 /**
  *  设置显示日期
  *

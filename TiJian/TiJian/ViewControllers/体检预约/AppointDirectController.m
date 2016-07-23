@@ -306,7 +306,7 @@
     [GMAPI cache:dic ForKey:USERLocation];
     
     //请求分院列表
-    [self netWorkForCenterList];
+    [self refreshData];
 }
 
 #pragma - mark RefreshDelegate <NSObject>

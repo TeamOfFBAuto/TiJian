@@ -1475,7 +1475,6 @@ typedef enum{
 }
 
 
-
 #pragma mark - Gesture Handler
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer
 {

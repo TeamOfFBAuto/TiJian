@@ -423,9 +423,34 @@
  */
 - (void)pushToNativeGuaHaoWithUserInfo:(UserInfo *)userInfo
 {
+    //预约结果通知
     VipRegisteringController *vipRegister = [[VipRegisteringController alloc]init];
     vipRegister.userInfo = userInfo;
+     @WeakObj(self);
+    [vipRegister setUpdateParamsBlock:^(NSDictionary *params) {
+       
+        BOOL result = [params[@"result"]boolValue];
+        if (result) {
+            
+            [Weakself actionForRefferalSucess];
+        }
+        
+    }];
     [self.navigationController pushViewController:vipRegister animated:YES];
+}
+
+/**
+ *  vip挂号预约成功
+ */
+- (void)actionForRefferalSucess
+{
+    //
+    _availableNum -= 1;//剩余次数
+    if (_availableNum < 0) {
+        _availableNum = 0;
+    }
+    [_useStateLaebl setAttributedText:[self useStringWithUseNum:_totalNum - _availableNum lastNum:_availableNum]];
+    
 }
 
 - (void)clickToAddPeople

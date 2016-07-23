@@ -353,10 +353,18 @@
     return str;
 }
 
-+(NSString *)getCurrentCityName{
-    NSString *ss = [self getCurrentCityId];
-    NSString *cc = [self getCityNameOf4CityWithCityId:[ss intValue]];
-    return cc;
++(NSString *)getCurrentCityName
+{
+    NSString *str;//存储的地区
+    NSDictionary *lastDic = [GMAPI cacheForKey:USERLocation];
+    if ([[lastDic stringValueForKey:@"city"]intValue] == 0) {
+        int theId = [[lastDic stringValueForKey:@"province"]intValue];
+        str = [GMAPI cityNameForId:theId];
+    }else{
+        int theId = [[lastDic stringValueForKey:@"city"]intValue];
+        str = [GMAPI getCityNameOf4CityWithCityId:theId];
+    }
+    return str;
 }
 
 +(NSString*)getProvineIdWithCityId:(int)cityId{
@@ -369,7 +377,7 @@
     
     NSString *city_name = [self cityNameForId:cityId];
     
-    if (cityId<1400) {
+    if (cityId < 1400) {
         NSString *p_id = [self getProvineIdWithCityId:cityId];
         city_name = [self cityNameForId:[p_id intValue]];
         

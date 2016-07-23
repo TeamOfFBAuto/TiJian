@@ -101,6 +101,26 @@
     datePicker.date = date;
 }
 
+/**
+ *  设置最小时间
+ *
+ *  @param minDate
+ */
+-(void)setMinDate:(NSDate *)minDate
+{
+    [datePicker setMinimumDate:minDate];
+}
+
+/**
+ *  设置最大时间
+ *
+ *  @param maxDate
+ */
+-(void)setMaxDate:(NSDate *)maxDate
+{
+    [datePicker setMaximumDate:maxDate];
+}
+
 - (void)showDateBlock:(DateBlock)aBlock
 {
     dateBlock = aBlock;

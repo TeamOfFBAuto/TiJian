@@ -280,9 +280,7 @@
                                           @"province":[NSString stringWithFormat:@"%d",procinceId],
                                           @"city":[NSString stringWithFormat:@"%d",cityId]
                                           };
-                _needChangeLocationDic = cachDic;
-                
-                
+                _needChangeLocationDic = cachDic;                
             }
         }else{//没有存储地区信息
             self.leftLabel.text = theString;

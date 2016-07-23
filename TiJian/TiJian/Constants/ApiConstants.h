@@ -497,8 +497,8 @@
 //post 方式
 //参数：
 //authcode 必填、family_uid 家人uid 选填 如果是家人就填 自己就不写这个参数或为0、desc 描述
-//province_id 省份id、city_id 城市id
-//hospital 医院id、/alternative_hospital  备选医院id 选填、dept 科室id、appoint_date 预约时间和备注 字符串
+//hospital 医院id、/alternative_hospital  备选医院id 选填、dept 科室id、
+//appoint_date 预约起止时间 字符串  例：2016-07-22【空格】2016-07-30
 //可以上传图片 支持多张 二进制流方式
 
 

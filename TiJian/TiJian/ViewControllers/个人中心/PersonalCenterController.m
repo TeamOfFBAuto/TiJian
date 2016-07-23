@@ -657,7 +657,7 @@
             
         }else if (indexPath.row == 1){
             
-            //@"挂号转诊";
+            //@"挂专家号";
             [self clickToGuaHaoType:8];
             
         }else if (indexPath.row == 2){
@@ -769,7 +769,7 @@
             
         }else if (indexPath.row == 1){
             
-            cell.textLabel.text = @"挂号转诊";
+            cell.textLabel.text = @"挂专家号";
             cell.imageView.image = [UIImage imageNamed:@"personal_guanhaozhuanzhen"];
             
             
