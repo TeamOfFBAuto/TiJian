@@ -958,8 +958,6 @@ typedef enum{
 //    }];
     
     GHospitalOfProvinceViewController *cc = [[GHospitalOfProvinceViewController alloc]init];
-    
-    
     [self.navigationController pushViewController:cc animated:YES];
     
 //    HospitalViewController *hospital = [[HospitalViewController alloc]init];

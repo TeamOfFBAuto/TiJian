@@ -502,6 +502,12 @@
 //可以上传图片 支持多张 二进制流方式
 
 
+#pragma mark - 挂号网Native
+//1、获取城市列表 参数 province_id
+#define NGuahao_getCity @"/index.php?d=api&c=register&m=get_city"
+//2、获取医院 参数 province_id city_id hospital_name
+#define NGuahao_getHospital @"/index.php?d=api&c=register&m=get_hospital"
+
 #pragma - mark Go健康对接
 
 //1、提交订单
