@@ -84,7 +84,7 @@
     
     #pragma mark - 返回上个界面及参数回传
     if (self.updateParamsBlock) {
-        self.updateParamsBlock(child);
+        self.updateParamsBlock(params);
     }
     int count = (int)self.navigationController.viewControllers.count;
     if (count > 3) {
