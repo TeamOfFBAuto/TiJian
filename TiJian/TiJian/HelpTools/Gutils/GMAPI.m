@@ -466,6 +466,45 @@
     }
 }
 
+//设置最近搜索医院
++(void)setUserSearchHospital:(NSString*)searchWorlds{
+    
+    
+    NSArray *arr = [GMAPI cacheForKey:USERHistorySearch_hospital];
+    if (!arr) {
+        NSMutableArray *adressArray = [[NSMutableArray alloc]initWithCapacity:5];
+        [adressArray addObject:searchWorlds];
+        [GMAPI cache:(NSArray*)adressArray ForKey:USERHistorySearch_hospital];
+    }else{
+        BOOL isHave = NO;
+        for (NSString*str in arr) {
+            if ([str isEqualToString:searchWorlds]) {
+                isHave = YES;
+                continue;
+            }
+        }
+        
+        NSMutableArray *adressMutabelArray = [NSMutableArray arrayWithArray:arr];
+        
+        if (isHave) {//有
+            
+        }else{//没有
+            if (arr.count<20) {
+                [adressMutabelArray addObject:searchWorlds];
+                
+            }else{
+                [adressMutabelArray removeObjectAtIndex:0];
+                [adressMutabelArray addObject:searchWorlds];
+            }
+            
+            [GMAPI cache:(NSArray*)adressMutabelArray ForKey:USERHistorySearch_hospital];
+            
+            
+        }
+        
+    }
+}
+
 /**
  *  判断是否可以定位
  *

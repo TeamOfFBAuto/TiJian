@@ -10,9 +10,6 @@
 
 @interface GHospitalOfProvinceTableViewCell : UITableViewCell
 
-@property(nonatomic,strong)UILabel *hospitalNameLabel;
-@property(nonatomic,strong)UILabel *descLabel;
-
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end

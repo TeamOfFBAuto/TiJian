@@ -146,6 +146,8 @@
 //设置最近搜索
 +(void)setuserCommonlyUsedSearchWord:(NSString*)searchWorlds;
 
+//设置最近搜索医院
++(void)setUserSearchHospital:(NSString*)searchWorlds;
 
 
 /**

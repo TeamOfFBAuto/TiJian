@@ -10,7 +10,8 @@
 #import "GChooseProvinceViewController.h"
 #import "GHospitalOfProvinceTableViewCell.h"
 #import "GDeptOfHospitalViewController.h"
-@interface GHospitalOfProvinceViewController ()<UITableViewDelegate,UITableViewDataSource,RefreshDelegate>
+#import "GHospitalsearchView.h"
+@interface GHospitalOfProvinceViewController ()<UITableViewDelegate,UITableViewDataSource,RefreshDelegate,UITextFieldDelegate>
 {
     UITableView *_tab;
     NSInteger _selectRow;
@@ -19,20 +20,20 @@
     
     UIButton *_myNavcRightBtn;
     int _editState;//0常态 1编辑状态
-    UIView *_searchView;//输入框下层view
     UITextField *_searchTF;//textfield
-    UIBarButtonItem *_rightItem1;
     
     BOOL _isPresenting;//是否在模态
     
-    
     RefreshTableView *_rTab;//右边的tableView
-    
     
     NSString *_theProvinceId;//省份id
     NSString *_theCityId;//城市id
     
     NSString *_hospital_count;//所有医院的数量
+    
+    GHospitalsearchView *_theCustomSearchView;//自定义搜索view
+    
+    
 }
 @end
 
@@ -45,12 +46,16 @@
     _selectRow = 0;
     
     self.view.backgroundColor = [UIColor whiteColor];
-    
     _theProvinceId = [GMAPI getCurrentProvinceId];
     
     [self setupNavigation];
     [self creatTab];
+    [self creatMysearchView];
     [self prepareNetData];
+    
+    if (self.hospitalType == HospitalType_search) {
+        [_searchTF becomeFirstResponder];
+    }
     
 }
 
@@ -70,6 +75,7 @@
     _tab.tag = 100;
     _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tab.showsVerticalScrollIndicator = NO;
+    _tab.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_tab];
     
     _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(106, 0, DEVICE_WIDTH - 106, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
@@ -84,25 +90,9 @@
 
 //创建自定义navigation
 - (void)setupNavigation{
-    //调整与左边的间距
-    UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceButton1.width = -10;
     
-    if (iPhone6PLUS) {
-        spaceButton1.width = -15;
-    };
-
-    UIView *leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-    UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [leftBtn setFrame:CGRectMake(0, 0, 32, 32)];
-    [leftBtn setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-    [leftBtn addTarget:self action:@selector(leftButtonTap:) forControlEvents:UIControlEventTouchUpInside];
-    [leftView addSubview:leftBtn];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftView];
-    self.navigationItem.leftBarButtonItems = @[spaceButton1,leftItem];
+    self.navigationItem.titleView = [self searchTF];
     
-    
-    _rightItem1 = [[UIBarButtonItem alloc]initWithCustomView:[self searchTF]];
     UIBarButtonItem *spaceButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     [spaceButtonItem setWidth:-16];
     _myNavcRightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -110,20 +100,16 @@
     [_myNavcRightBtn setTitle:@"切换城市" forState:UIControlStateNormal];
     _myNavcRightBtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [_myNavcRightBtn setTitleColor:RGBCOLOR(85, 145, 204) forState:UIControlStateNormal];
-    [_myNavcRightBtn addTarget:self action:@selector(myNavcRightBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [_myNavcRightBtn addTarget:self action:@selector(myNavcRightBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightBtnItem = [[UIBarButtonItem alloc]initWithCustomView:_myNavcRightBtn];
     
-    self.navigationItem.rightBarButtonItems = @[spaceButtonItem,rightBtnItem,_rightItem1];
-    
-    
+    self.navigationItem.rightBarButtonItems = @[spaceButtonItem,rightBtnItem];
 }
-
-
 
 -(UITextField *)searchTF
 {
     if (!_searchTF) {
-        UITextField *searchTF = [[UITextField alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 118, 30)];
+        UITextField *searchTF = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH - 100, 30)];
         [searchTF addCornerRadius:14.f];
         [searchTF setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"dfe1e6"]];
         searchTF.placeholder = @"搜索医院";
@@ -131,25 +117,69 @@
         searchTF.backgroundColor = [UIColor colorWithHexString:@"f6f9fb"];
         searchTF.clearButtonMode = UITextFieldViewModeWhileEditing;
         searchTF.leftViewMode = UITextFieldViewModeAlways;
+        searchTF.returnKeyType = UIReturnKeySearch;
         _searchTF = searchTF;
         
         UIImageView *leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 13 + 8 + 8, 28)];
         leftImage.contentMode = UIViewContentModeCenter;
-        leftImage.image = [UIImage imageNamed:@"vip_fangdajing"];
+        leftImage.image = [UIImage imageNamed:@"vip_fangdajing.png"];
         searchTF.leftView = leftImage;
     }
+    
+    _searchTF.delegate = self;
     return _searchTF;
+}
+//创建搜索界面
+-(void)creatMysearchView{
+    _theCustomSearchView = [[GHospitalsearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _theCustomSearchView.hidden = YES;
+    _theCustomSearchView.backgroundColor = [UIColor whiteColor];
+    __weak typeof (UITextField*)bSearchTf = _searchTF;
+    __weak typeof (self)bself = self;
+    
+    [_theCustomSearchView setUpdateBlock:^(NSDictionary *dic) {
+        if (dic) {
+            if (![LTools isEmpty:[dic stringValueForKey:@"searchWorld"]]) {//有关键字
+                bSearchTf.text = [dic stringValueForKey:@"searchWorld"];
+                [bSearchTf resignFirstResponder];
+            }
+            
+            if (![LTools isEmpty:[dic stringValueForKey:@"hospital_name"]] &&
+                ![LTools isEmpty:[dic stringValueForKey:@"hospital_id"]]){
+                [bself pushToDeptFromSearchViewWithDic:dic];
+            }
+        }
+    }];
+    
+    
+    [self.view addSubview:_theCustomSearchView];
+    
+}
+
+#pragma mark - 从搜索页跳转科室
+-(void)pushToDeptFromSearchViewWithDic:(NSDictionary *)dic{
+    GDeptOfHospitalViewController *cc = [[GDeptOfHospitalViewController alloc]init];
+    cc.hospital_name = [dic stringValueForKey:@"hospital_name"];
+    cc.hospital_id = [dic stringValueForKey:@"hospital_id"];
+    cc.updateParamsBlock = self.updateParamsBlock;
+    [self.navigationController pushViewController:cc animated:YES];
 }
 
 
 #pragma mark - 切换城市
--(void)myNavcRightBtnClicked{
-    GChooseProvinceViewController *cc = [[GChooseProvinceViewController alloc]init];
-    __weak typeof (self)bself = self;
-    [cc setUpdateParamsBlock:^(NSDictionary *params) {
-        [bself getNewCityAndHospitalWithDic:params];
-    }];
-    [self.navigationController pushViewController:cc animated:YES];
+-(void)myNavcRightBtnClicked:(UIButton *)sender{
+    if ([sender.titleLabel.text isEqualToString:@"切换城市"]) {
+        GChooseProvinceViewController *cc = [[GChooseProvinceViewController alloc]init];
+        __weak typeof (self)bself = self;
+        [cc setUpdateParamsBlock:^(NSDictionary *params) {
+            [bself getNewCityAndHospitalWithDic:params];
+        }];
+        [self.navigationController pushViewController:cc animated:YES];
+    }else if ([sender.titleLabel.text isEqualToString:@"取消"]){
+        _theCustomSearchView.hidden = YES;
+        [self hiddenKeyBord];
+    }
+    
 }
 
 -(void)getNewCityAndHospitalWithDic:(NSDictionary *)dic{
@@ -208,7 +238,7 @@
 #pragma mark - RefreshDelegate
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    [_searchTF resignFirstResponder];
+    [self hiddenKeyBord];
 }
 
 - (void)loadNewDataForTableView:(RefreshTableView *)tableView{
@@ -221,7 +251,7 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView{
     NSLog(@"%s",__FUNCTION__);
     
-    [_searchTF resignFirstResponder];
+    [self hiddenKeyBord];
     
     if (self.hospitalType == HospitalType_selectNormal || //选择主医院
         self.hospitalType == HospitalType_search) {
@@ -260,6 +290,10 @@
 
 #pragma mark - UITableViewDelegate && UITableViewDatasource
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self hiddenKeyBord];
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell;
     if (tableView.tag == 100) {//城市选择
@@ -293,6 +327,8 @@
         [btn setFrame:CGRectMake(0, 0, 100, 50)];
         [btn setBackgroundImage:[UIImage imageNamed:@"gbtnLightBlue.png"] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"gbtnWhite.png"] forState:UIControlStateSelected];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btn setTitleColor:RGBCOLOR(85, 145, 205) forState:UIControlStateSelected];
         [btn setTitle:title forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:13];
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -372,6 +408,8 @@
 
 -(void)classClicked:(UIButton *)sender{
     
+    [self hiddenKeyBord];
+    
     NSInteger index = sender.tag - 10;
     if (index == _selectRow) {
         
@@ -393,6 +431,64 @@
     }
     
 }
+
+
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+    _theCustomSearchView.hidden = NO;
+    
+    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    NSLog(@"%s",__FUNCTION__);
+    if (![LTools isEmpty:_searchTF.text]) {
+        _theCustomSearchView.searchWorld = _searchTF.text;
+        [_theCustomSearchView.rTab showRefreshHeader:YES];
+        [_searchTF resignFirstResponder];
+        
+        [GMAPI setUserSearchHospital:_searchTF.text];
+    }
+    
+    
+    
+    return YES;
+}
+
+
+
+#pragma mark - 改变searchTf和框的大小
+/**
+ *  改变searchTf和框的大小
+ *
+ *  @param state 1 编辑状态 0常态
+ */
+-(void)changeSearchViewAndKuangFrameAndTfWithState:(int)state{
+    _editState = state;
+    if (state == 0) {//常态
+        
+        [_myNavcRightBtn setTitle:@"切换城市" forState:UIControlStateNormal];
+        [_searchTF setFrame:CGRectMake(0, 7, DEVICE_WIDTH - 118, 30)];
+ 
+    }else if (state == 1){//编辑状态
+        [_myNavcRightBtn setTitle:@"取消" forState:UIControlStateNormal];
+        
+        [_searchTF setWidth:DEVICE_WIDTH];
+        
+        [self.navigationController.navigationBar bringSubviewToFront:_searchTF];
+        
+    }
+}
+
+#pragma mark - 收键盘
+-(void)hiddenKeyBord{
+    [_searchTF resignFirstResponder];
+    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+}
+
 
 
 @end

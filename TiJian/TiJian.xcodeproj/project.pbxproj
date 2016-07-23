@@ -568,6 +568,7 @@
 		E39DFC861D41D25B00B013CD /* gbtnWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */; };
 		E39DFC891D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */; };
 		E39DFC8C1D4378D000B013CD /* GDeptOfHospitalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */; };
+		E39DFC8F1D43B88100B013CD /* GHospitalsearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */; };
 		E39F1E0C1C0D013B00E9B41F /* Gbtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E39F1E0B1C0D013B00E9B41F /* Gbtn.m */; };
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
 		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; };
@@ -1530,6 +1531,8 @@
 		E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHospitalOfProvinceTableViewCell.m; sourceTree = "<group>"; };
 		E39DFC8A1D4378D000B013CD /* GDeptOfHospitalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDeptOfHospitalViewController.h; sourceTree = "<group>"; };
 		E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDeptOfHospitalViewController.m; sourceTree = "<group>"; };
+		E39DFC8D1D43B88100B013CD /* GHospitalsearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHospitalsearchView.h; sourceTree = "<group>"; };
+		E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHospitalsearchView.m; sourceTree = "<group>"; };
 		E39F1E0A1C0D013B00E9B41F /* Gbtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gbtn.h; sourceTree = "<group>"; };
 		E39F1E0B1C0D013B00E9B41F /* Gbtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gbtn.m; sourceTree = "<group>"; };
 		E3A293D21BD88D66001CF93D /* GmoveImv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmoveImv.h; sourceTree = "<group>"; };
@@ -3306,6 +3309,8 @@
 				E385521A1D3F5E9500278E42 /* GCustomDownOfProductView.m */,
 				E39DFC871D4372B300B013CD /* GHospitalOfProvinceTableViewCell.h */,
 				E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */,
+				E39DFC8D1D43B88100B013CD /* GHospitalsearchView.h */,
+				E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -4075,6 +4080,7 @@
 				13FAD6251D40A0E5003038B8 /* LTextView.m in Sources */,
 				E31E1A321C05926400CB995D /* GcustomNavcView.m in Sources */,
 				E3EE36031BE8C4F00089A89C /* UILabel+GautoMatchedText.m in Sources */,
+				E39DFC8F1D43B88100B013CD /* GHospitalsearchView.m in Sources */,
 				134822E81BECBD7A00EA2E06 /* AddPeopleViewController.m in Sources */,
 				1303C3041BEA14EB00700847 /* ForgetPwdController.m in Sources */,
 				E3F364C31BE747BE00C34A0B /* GproductDetailViewController.m in Sources */,
@@ -4329,8 +4335,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -4374,8 +4381,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -4402,7 +4410,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				ENABLE_BITCODE = NO;
@@ -4429,7 +4437,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "999a22d6-c2a5-4d7f-b1e4-625011153305";
+				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4440,7 +4448,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				ENABLE_BITCODE = NO;
@@ -4467,7 +4475,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "999a22d6-c2a5-4d7f-b1e4-625011153305";
+				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;
