@@ -574,7 +574,6 @@
                 [Weakself textfieldWithTag:kTag_hospital2].text = alterHospitalName;
             }
         }
-
     }];
     [self.navigationController pushViewController:hospital animated:YES];
 }
