@@ -42,6 +42,7 @@
     
     _productsArray = [NSMutableArray arrayWithCapacity:1];
     
+    
     [self creatTab];
     
     //分院详情
@@ -76,19 +77,18 @@
     
     UIImageView *imv = [[UIImageView alloc]initWithFrame:_tabHeaderView.bounds];
     [imv sd_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:[UIImage imageNamed:_centerBannerDefaultImName]];
-//    [imv l_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:[UIImage imageNamed:_centerBannerDefaultImName]];
     [_tabHeaderView addSubview:imv];
     
-    UIView *centerNameView = [[UIView alloc]initWithFrame:CGRectMake(0, _tabHeaderView.frame.size.height - 30, DEVICE_WIDTH, 30)];
-    centerNameView.backgroundColor = [UIColor blackColor];
-    centerNameView.alpha = 0.3;
-    [_tabHeaderView addSubview:centerNameView];
-    
-    UILabel *centerNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _tabHeaderView.frame.size.height - 30, _tabHeaderView.frame.size.width-10, 30)];
-    centerNameLabel.text = [NSString stringWithFormat:@"%@ %@",_hospitalModel.brand_name,_hospitalModel.center_name];
-    centerNameLabel.textColor = [UIColor whiteColor];
-    centerNameLabel.font = [UIFont systemFontOfSize:12];
-    [_tabHeaderView addSubview:centerNameLabel];
+//    UIView *centerNameView = [[UIView alloc]initWithFrame:CGRectMake(0, _tabHeaderView.frame.size.height - 30, DEVICE_WIDTH, 30)];
+//    centerNameView.backgroundColor = [UIColor blackColor];
+//    centerNameView.alpha = 0.3;
+//    [_tabHeaderView addSubview:centerNameView];
+//    
+//    UILabel *centerNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _tabHeaderView.frame.size.height - 30, _tabHeaderView.frame.size.width-10, 30)];
+//    centerNameLabel.text = [NSString stringWithFormat:@"%@ %@",_hospitalModel.brand_name,_hospitalModel.center_name];
+//    centerNameLabel.textColor = [UIColor whiteColor];
+//    centerNameLabel.font = [UIFont systemFontOfSize:12];
+//    [_tabHeaderView addSubview:centerNameLabel];
     
     return _tabHeaderView;
 }
@@ -105,7 +105,6 @@
     UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, nameView.height) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"分院介绍"];
     [nameView addSubview:title];
     
-//    NSString *centerName = _hospitalModel.center_name;
     UILabel *content = [[UILabel alloc]initWithFrame:CGRectMake(title.right + 15, 0, DEVICE_WIDTH - 10 - title.right - 15, nameView.height) font:13 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:nil];
     [nameView addSubview:content];
     
@@ -420,6 +419,16 @@
     }else if ([_hospitalModel.brand_id intValue] == 3){//爱康
         _centerBannerDefaultImName = @"center_banner_aikang";
     }
+    
+    
+    if (![LTools isEmpty:_hospitalModel.brand_name] && ![LTools isEmpty:_hospitalModel.center_name]) {
+        self.myTitle = [NSString stringWithFormat:@"%@ %@",_hospitalModel.brand_name,_hospitalModel.center_name];
+    }else{
+        self.myTitle = @"分院详情";
+    }
+    
+    
+    
     _tab.tableFooterView = [self createTabFooterView];
     _tab.tableHeaderView = [self creatTabHeader];;
 }
