@@ -306,7 +306,6 @@
     if ([pStr isEqualToString:cStr]) {
         cStr = @"0";
     }
-    
     NSDictionary *dic = @{
                           @"province":pStr,
                           @"city":cStr
