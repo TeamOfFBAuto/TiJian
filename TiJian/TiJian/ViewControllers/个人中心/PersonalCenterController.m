@@ -21,6 +21,7 @@
 #import <AVFoundation/AVCaptureDevice.h>
 #import <AVFoundation/AVMediaFormat.h>
 #import "WebviewController.h"
+#import "GRegisterListViewController.h"
 
 @interface PersonalCenterController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 {
@@ -441,6 +442,16 @@
     }
 }
 
+/**
+ *  专家挂号列表
+ */
+- (void)clickToGuhaoList
+{
+    GRegisterListViewController *cc = [[GRegisterListViewController alloc]init];
+    cc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:cc animated:YES];
+}
+
 - (void)clickToChangeUserHeadImage
 {
     NSLog(@"修改个人头像");
@@ -658,7 +669,9 @@
         }else if (indexPath.row == 1){
             
             //@"挂专家号";
-            [self clickToGuaHaoType:8];
+//            [self clickToGuaHaoType:8];
+            
+            [self clickToGuhaoList];
             
         }else if (indexPath.row == 2){
             

@@ -952,16 +952,9 @@ typedef enum{
 
 //跳转分院
 -(void)pushToFenyuan{
-//    GChooseProvinceViewController *cc = [[GChooseProvinceViewController alloc]init];
-//    [cc setUpdateParamsBlock:^(NSDictionary *params) {
-//        NSLog(@"%@",params);
-//    }];
-    
-    GHospitalOfProvinceViewController *cc = [[GHospitalOfProvinceViewController alloc]init];
-    [self.navigationController pushViewController:cc animated:YES];
-    
-//    HospitalViewController *hospital = [[HospitalViewController alloc]init];
-//    [self.navigationController pushViewController:hospital animated:YES];
+
+    HospitalViewController *hospital = [[HospitalViewController alloc]init];
+    [self.navigationController pushViewController:hospital animated:YES];
 }
 
 
