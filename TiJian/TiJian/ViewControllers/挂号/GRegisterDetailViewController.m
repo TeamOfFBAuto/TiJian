@@ -129,6 +129,8 @@
     cell.textLabel.attributedText = aaa;
     
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     return cell;
 }
 
