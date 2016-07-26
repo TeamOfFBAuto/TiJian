@@ -50,4 +50,19 @@
                               width:(CGFloat)theWidth;
 
 
+/**
+ *  获取地区医院结果无数据view
+ *
+ *  @param image    显示图标
+ *  @param title    标题
+ *  @param content  正文
+ *  @param theWidth 宽
+ *
+ *  @return
+ */
+-(instancetype)initWithNoHospitalImage:(UIImage *)image
+                              title:(NSString *)title
+                            content:(NSString *)content
+                              width:(CGFloat)theWidth;
+
 @end

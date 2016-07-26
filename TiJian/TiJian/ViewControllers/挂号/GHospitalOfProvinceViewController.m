@@ -75,7 +75,7 @@
     _tab.tag = 100;
     _tab.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tab.showsVerticalScrollIndicator = NO;
-    _tab.backgroundColor = [UIColor whiteColor];
+    _tab.backgroundColor = RGBCOLOR(222, 238, 248);
     [self.view addSubview:_tab];
     
     _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(106, 0, DEVICE_WIDTH - 106, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
@@ -228,7 +228,7 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:NGuahao_getHospital parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *list = [result arrayValueForKey:@"list"];
-        [_rTab reloadData:list pageSize:PAGESIZE_MID CustomNoDataView:nil];
+        [_rTab reloadData:list pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_nodata]];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -238,7 +238,9 @@
 #pragma mark - RefreshDelegate
 
 - (void)refreshScrollViewDidScroll:(UIScrollView *)scrollView{
-    [self hiddenKeyBord];
+    if ([_searchTF isFirstResponder]) {
+        [self hiddenKeyBord];
+    }
 }
 
 - (void)loadNewDataForTableView:(RefreshTableView *)tableView{
@@ -489,6 +491,21 @@
     [self changeSearchViewAndKuangFrameAndTfWithState:0];
 }
 
+#pragma mark - 无数据默认view
+-(ResultView *)resultViewWithType:(PageResultType)type
+{
+    NSString *content;
+    if (type == PageResultType_nodata){
+        
+        content = @"暂无可选医院";
+    }
+
+
+    ResultView *result = [[ResultView alloc]initWithNoHospitalImage:[UIImage imageNamed:@"hema_heart"] title:@"温馨提示" content:@"暂无可选医院" width:DEVICE_WIDTH - 106];
+    
+    
+    return result;
+}
 
 
 @end

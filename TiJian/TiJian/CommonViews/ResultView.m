@@ -185,6 +185,66 @@
 }
 
 
+-(instancetype)initWithNoHospitalImage:(UIImage *)image
+                                 title:(NSString *)title
+                               content:(NSString *)content
+                                 width:(CGFloat)theWidth{
+    
+    self = [super initWithFrame:CGRectMake(0, 0, theWidth, DEVICE_HEIGHT - 64)];
+    if (self) {
+        
+        self.backgroundColor = [UIColor whiteColor];
+        
+        self.imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        _imageView.image = image;
+        [self addSubview:_imageView];
+        
+        if (image) {
+            CGFloat imageWith = image.size.width;
+            CGFloat imageHeight = image.size.height;
+            
+            imageWith = FitScreen(imageWith);
+            imageWith = iPhone4 ? imageWith : imageWith * 0.8;
+            
+            imageHeight = FitScreen(imageHeight);
+            imageHeight = iPhone4 ? imageHeight : imageHeight * 0.8;
+            
+            _imageView.size = CGSizeMake(imageWith, imageHeight);
+            _imageView.centerX = self.width / 2;
+            _imageView.centerY = self.height *0.4;
+            
+        }
+        
+        CGFloat top = _imageView.bottom + kDisOne;
+        
+        if (title) {
+            self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, top, theWidth, 15) title:title font:14 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE];
+            [self addSubview:_titleLabel];
+            top = _titleLabel.bottom + kDisTwo;
+        }
+        
+        if (!self.activityIndicationVeiw) {
+            self.activityIndicationVeiw = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 10, 10)];
+        }
+        CGPoint center = self.titleLabel.center;
+        center.y += 20;
+        self.activityIndicationVeiw.color = [UIColor grayColor];
+        [self addSubview:self.activityIndicationVeiw];
+        self.activityIndicationVeiw.center = center;
+        
+        if (content) {
+            
+            self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, top, theWidth, 15) title:content font:12 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
+            [self addSubview:_contentLabel];
+            
+            top = _contentLabel.bottom;
+        }
+        
+    }
+    
+    return self;
+    
+}
 
 
 
