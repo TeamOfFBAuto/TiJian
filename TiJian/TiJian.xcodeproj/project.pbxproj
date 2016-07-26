@@ -569,6 +569,11 @@
 		E39DFC891D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */; };
 		E39DFC8C1D4378D000B013CD /* GDeptOfHospitalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */; };
 		E39DFC8F1D43B88100B013CD /* GHospitalsearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */; };
+		E39DFC921D46930900B013CD /* GRegisterListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC911D46930900B013CD /* GRegisterListViewController.m */; };
+		E39DFC951D46B81700B013CD /* GRegisterListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC941D46B81700B013CD /* GRegisterListCell.m */; };
+		E39DFC981D46C83500B013CD /* GRegisterDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DFC971D46C83500B013CD /* GRegisterDetailViewController.m */; };
+		E39DFC9A1D47264A00B013CD /* kefu_pd1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC991D47264A00B013CD /* kefu_pd1@2x.png */; };
+		E39DFC9C1D47265F00B013CD /* dianhua_pd1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39DFC9B1D47265F00B013CD /* dianhua_pd1@2x.png */; };
 		E39F1E0C1C0D013B00E9B41F /* Gbtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E39F1E0B1C0D013B00E9B41F /* Gbtn.m */; };
 		E3A293D81BD88D66001CF93D /* GmoveImv.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D31BD88D66001CF93D /* GmoveImv.m */; };
 		E3A293D91BD88D66001CF93D /* GTouchMoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A293D51BD88D66001CF93D /* GTouchMoveView.m */; };
@@ -1533,6 +1538,14 @@
 		E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDeptOfHospitalViewController.m; sourceTree = "<group>"; };
 		E39DFC8D1D43B88100B013CD /* GHospitalsearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHospitalsearchView.h; sourceTree = "<group>"; };
 		E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHospitalsearchView.m; sourceTree = "<group>"; };
+		E39DFC901D46930900B013CD /* GRegisterListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRegisterListViewController.h; sourceTree = "<group>"; };
+		E39DFC911D46930900B013CD /* GRegisterListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRegisterListViewController.m; sourceTree = "<group>"; };
+		E39DFC931D46B81700B013CD /* GRegisterListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRegisterListCell.h; sourceTree = "<group>"; };
+		E39DFC941D46B81700B013CD /* GRegisterListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRegisterListCell.m; sourceTree = "<group>"; };
+		E39DFC961D46C83500B013CD /* GRegisterDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRegisterDetailViewController.h; sourceTree = "<group>"; };
+		E39DFC971D46C83500B013CD /* GRegisterDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRegisterDetailViewController.m; sourceTree = "<group>"; };
+		E39DFC991D47264A00B013CD /* kefu_pd1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kefu_pd1@2x.png"; sourceTree = "<group>"; };
+		E39DFC9B1D47265F00B013CD /* dianhua_pd1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dianhua_pd1@2x.png"; sourceTree = "<group>"; };
 		E39F1E0A1C0D013B00E9B41F /* Gbtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gbtn.h; sourceTree = "<group>"; };
 		E39F1E0B1C0D013B00E9B41F /* Gbtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gbtn.m; sourceTree = "<group>"; };
 		E3A293D21BD88D66001CF93D /* GmoveImv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GmoveImv.h; sourceTree = "<group>"; };
@@ -2410,6 +2423,10 @@
 				E39DFC7B1D40E49800B013CD /* GHospitalOfProvinceViewController.m */,
 				E39DFC8A1D4378D000B013CD /* GDeptOfHospitalViewController.h */,
 				E39DFC8B1D4378D000B013CD /* GDeptOfHospitalViewController.m */,
+				E39DFC901D46930900B013CD /* GRegisterListViewController.h */,
+				E39DFC911D46930900B013CD /* GRegisterListViewController.m */,
+				E39DFC961D46C83500B013CD /* GRegisterDetailViewController.h */,
+				E39DFC971D46C83500B013CD /* GRegisterDetailViewController.m */,
 			);
 			path = "挂号";
 			sourceTree = "<group>";
@@ -3311,6 +3328,8 @@
 				E39DFC881D4372B300B013CD /* GHospitalOfProvinceTableViewCell.m */,
 				E39DFC8D1D43B88100B013CD /* GHospitalsearchView.h */,
 				E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */,
+				E39DFC931D46B81700B013CD /* GRegisterListCell.h */,
+				E39DFC941D46B81700B013CD /* GRegisterListCell.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -3358,6 +3377,8 @@
 		E3B720911BF1F9EE007F7FFE /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
+				E39DFC9B1D47265F00B013CD /* dianhua_pd1@2x.png */,
+				E39DFC991D47264A00B013CD /* kefu_pd1@2x.png */,
 				E39DFC831D41D25B00B013CD /* gbtnLightBlue@2x.png */,
 				E39DFC841D41D25B00B013CD /* gbtnWhite@2x.png */,
 				E30FF9501D40BD460032256A /* center_banner_aikang@2x.png */,
@@ -3810,6 +3831,7 @@
 				131529751CF551EA001A2705 /* share3@2x.png in Resources */,
 				131482FC1CEF0FEF00D04305 /* UMSnsAccountViewController.xib in Resources */,
 				139333B11BE0DF3E00B4628B /* 16_4@2x.png in Resources */,
+				E39DFC9C1D47265F00B013CD /* dianhua_pd1@2x.png in Resources */,
 				E30FF9551D40BD460032256A /* center_banner_ciming@2x.png in Resources */,
 				13F2421A1BF4925A002C9D81 /* yuyue_jiantou_up@2x.png in Resources */,
 				139333B81BE0DF3E00B4628B /* 18_4@2x.png in Resources */,
@@ -3919,6 +3941,7 @@
 				13F4708B1D07CC8D00297E95 /* goHealth_icon3@2x.png in Resources */,
 				E3796D0F1BFB37CD004B63F7 /* shopping_cart_address_add@2x.png in Resources */,
 				135E3D491C9BEA7000B5F0FD /* feedback_tianjia@2x.png in Resources */,
+				E39DFC9A1D47264A00B013CD /* kefu_pd1@2x.png in Resources */,
 				13E2D8741CC8C58100A684D7 /* personal_tijiandingdan@2x.png in Resources */,
 				13D6DA8A1C48C6A90091FCFE /* extension_32_2.png in Resources */,
 				E31F86E31C14526F00914824 /* yishoucang@2x.png in Resources */,
@@ -4097,6 +4120,7 @@
 				E30FE3981C3CCCE9001CF9BA /* UIViewController+load.m in Sources */,
 				E3D0850C1BF0A48500279DFC /* GshopCarTableViewCell.m in Sources */,
 				136ABCE01C8EB41900F2B834 /* AppointProgressDetailController.m in Sources */,
+				E39DFC981D46C83500B013CD /* GRegisterDetailViewController.m in Sources */,
 				13BE40121CC763A3007EE6BB /* NJKWebViewProgress.m in Sources */,
 				13F4707D1D06C96200297E95 /* GoHealthProductlistController.m in Sources */,
 				13E23DBD1C1411AA006FE62F /* UIImage+Additions.m in Sources */,
@@ -4206,6 +4230,7 @@
 				131EC61D1C58F3670008F517 /* SetmealModel.m in Sources */,
 				13F1F39A1BBA9A4B00885D31 /* NSString+Additions.m in Sources */,
 				136276841C1320770077C75D /* ZoomScrollView.m in Sources */,
+				E39DFC921D46930900B013CD /* GRegisterListViewController.m in Sources */,
 				E39DFC8C1D4378D000B013CD /* GDeptOfHospitalViewController.m in Sources */,
 				E3B16A2C1C5749540061A384 /* GBrandListViewController.m in Sources */,
 				13C867C21C40FC25002DF5CA /* LogView.m in Sources */,
@@ -4221,6 +4246,7 @@
 				136276651C1312420077C75D /* MoreReportViewController.m in Sources */,
 				1378ED3E1C3CEE4900A40582 /* ActivityModel.m in Sources */,
 				E39148481BFC573A004E26B0 /* GconfirmOrderCell.m in Sources */,
+				E39DFC951D46B81700B013CD /* GRegisterListCell.m in Sources */,
 				1303C2C31BE9A8B800700847 /* PhysicalTestResultController.m in Sources */,
 				13F251EA1BE8AC2F0021BF4C /* RecommendMedicalCheckController.m in Sources */,
 				137780AF1C118A3200677363 /* ResultView.m in Sources */,

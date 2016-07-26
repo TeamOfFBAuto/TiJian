@@ -362,95 +362,14 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     ProductModel *aModel = _productsArray[indexPath.row];
-    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
+    NSDictionary *dic = @{
+                          @"downType":@"1"
+                          };
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:dic];
 }
 
 
 
-
-
-///**
-// *  品牌推荐view
-// */
-//- (void)createRecommendViewWithTop:(CGFloat)top
-//{    
-//    //没有推荐套餐则不显示该部分
-//    if (!_recommendArray || _recommendArray.count == 0) {
-//        return;
-//    }
-//    
-//    NSInteger count = _recommendArray.count;
-//    CGFloat height = 0.f;
-//    
-//    if (count >= 3) {
-//        count = 3;
-//        height = 175 + 20;
-//    }
-//    
-//    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, top, DEVICE_WIDTH, height)];
-//    backView.backgroundColor = [UIColor whiteColor];
-//    [_scrollView addSubview:backView];
-//    
-//    UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 60, 45)];
-//    tLabel.textColor = DEFAULT_TEXTCOLOR_TITLE;
-//    tLabel.text = @"套餐推荐";
-//    tLabel.font = [UIFont systemFontOfSize:14];
-//    [backView addSubview:tLabel];
-//    
-//    CGFloat theW = (DEVICE_WIDTH - 20 - 10)/3;
-//    CGFloat theH = [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/265];
-//    
-//    for (int i = 0; i < count; i++) {
-//        
-//        ProductModel *amodel = _recommendArray[i];
-//        UIView *logoAndContentView = [[UIView alloc]initWithFrame:CGRectMake(10+i*(theW+5), tLabel.bottom, theW, theH)];
-//        logoAndContentView.layer.borderWidth = 0.5;
-//        logoAndContentView.layer.borderColor = [RGBCOLOR(235, 236, 238)CGColor];
-//        [backView addSubview:logoAndContentView];
-//        
-//        logoAndContentView.tag = 100 + i;
-//        [logoAndContentView addTaget:self action:@selector(clickToProductDetail:) tag:logoAndContentView.tag];
-//        
-//        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, logoAndContentView.frame.size.width, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/145])];
-//        [imv l_setImageWithURL:[NSURL URLWithString:amodel.cover_pic] placeholderImage:nil];
-//        [logoAndContentView addSubview:imv];
-//        
-//        UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(imv.frame)+5, theW-10, [GMAPI scaleWithHeight:0 width:theW theWHscale:230.0/60])];
-//        titleLable.text = amodel.setmeal_name;
-//        titleLable.numberOfLines = 2;
-//        titleLable.font = [UIFont systemFontOfSize:11];
-//        [logoAndContentView addSubview:titleLable];
-//        
-//        
-//        NSString *xianjia = [NSString stringWithFormat:@"%.1f",[amodel.setmeal_price floatValue]];
-//        NSString *yuanjia = [NSString stringWithFormat:@"%.1f",[amodel.setmeal_original_price floatValue]];
-//        UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(titleLable.frame)+5, imv.frame.size.width - 5, 12)];
-//        NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
-//        NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
-//        [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
-//        [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(0, xianjia.length+1)];
-//        
-//        [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-//        [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:8] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-//        [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
-//        priceLabel.attributedText = aaa;
-//        [logoAndContentView addSubview:priceLabel];
-//    }
-//    
-//    if (count>0) {
-//
-//    }else{
-//        
-//        UILabel *tt = [[UILabel alloc]initWithFrame:CGRectMake(20, 45, DEVICE_WIDTH - 40, 30)];
-//        tt.text = @"暂无可推荐套餐";
-//        tt.textAlignment = NSTextAlignmentCenter;
-//        tt.font = [UIFont systemFontOfSize:11];
-//        tt.textColor = [UIColor grayColor];
-//        [backView addSubview:tt];
-//    }
-//    
-//    _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, backView.bottom > DEVICE_HEIGHT ? backView.bottom + 20 : DEVICE_HEIGHT);
-//}
 
 #pragma mark - 网络请求
 
@@ -548,17 +467,6 @@
     [self networkForProducts];
 }
 
-
-
-/**
- *  品牌推荐->单品详情
- */
-- (void)clickToProductDetail:(UIButton *)btn
-{
-    int index = (int)btn.tag - 100;
-    ProductModel *aModel = _productsArray[index];
-    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:nil];
-}
 
 - (void)clickToMap
 {

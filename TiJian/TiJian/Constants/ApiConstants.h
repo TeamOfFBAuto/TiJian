@@ -512,6 +512,12 @@
 #define NGuahao_getHospital @"/index.php?d=api&c=register&m=get_hospital"
 //3、获取科室 参数 hospital_id
 #define NGuahao_getDept @"/index.php?d=api&c=register&m=get_dept"
+//4、获取预约列表 参数 authcode 必填 
+#define NGuahao_getYuyueList @"/index.php?d=api&c=register&m=referral_list"
+//5、获取预约详情 参数 authcode 必填
+#define NGuahao_getYuyueDetail @"/index.php?d=api&c=register&m=referral_detail"
+//6、取消预约 post方式 参数authcode 必填 j_referral_id 预约id 必填
+#define NGuahao_cancelYuyue @"/index.php?d=api&c=register&m=cancel_referral_data"
 
 #pragma - mark Go健康对接
 

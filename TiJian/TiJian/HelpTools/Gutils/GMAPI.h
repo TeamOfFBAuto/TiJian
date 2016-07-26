@@ -159,4 +159,9 @@
 
 
 
+/**
+ *  获取订单状态描述字符串
+ */
+
++(NSString *)orderStateStr:(NSString*)num;
 @end

@@ -186,6 +186,9 @@
 {
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     cc.productId = productId;
+    if ([[extendParams stringValueForKey:@"downType"] intValue] == 1) {//立即预约
+        cc.theDownType = TheDownViewType_yuyue;
+    }
     [viewController.navigationController pushViewController:cc animated:YES];
 }
 

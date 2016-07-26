@@ -12,85 +12,134 @@
 
 
 -(id)initWithFrame:(CGRect)frame customType:(TheDownViewType)theType{
-    if (!self) {
-        self = [super initWithFrame:frame];
-    }
-    self.backgroundColor = RGBCOLOR(38, 51, 62);
-    if (theType == TheDownViewType_gouwuche) {
-        UIButton *_shoucang_btn;
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = RGBCOLOR(38, 51, 62);
         
-        UIButton *_addShopCarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _addShopCarBtn.tag = 104;
-        CGFloat theW = [GMAPI scaleWithHeight:50 width:0 theWHscale:180.0/100];
-        [_addShopCarBtn setFrame:CGRectMake(self.frame.size.width-theW, 0, theW, 50)];
-        _addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
-        [_addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
-        
-        [_addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-        [_addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_addShopCarBtn];
-        
-        CGFloat tw = (self.frame.size.width-theW)/4;
-        NSArray *titleArray = @[@"客服",@"收藏",@"预约",@"购物车"];
-        NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"yuyue_pd.png",@"gouwuche_pd.png"];
-        for (int i = 0; i<4; i++) {
-            UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
-            [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
-            [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
-            if (i == 1) {
-                _shoucang_btn = oneBtn;
-                [oneBtn setImage:[UIImage imageNamed:@"shoucang_pd.png"] forState:UIControlStateNormal];
-                [oneBtn setImage:[UIImage imageNamed:@"yishoucang.png"] forState:UIControlStateSelected];
-                //                if ([self.theProductModel.is_favor intValue] == 1) {//已收藏
-                //                    oneBtn.selected = YES;
-                //                }else{
-                //                    oneBtn.selected = NO;
-                //                }
-                
+        if (theType == TheDownViewType_gouwuche || theType == TheDownViewType_vourcher) {
+            self.addShopCarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            self.addShopCarBtn.tag = 104;
+            CGFloat theW = [GMAPI scaleWithHeight:50 width:0 theWHscale:180.0/100];
+            [self.addShopCarBtn setFrame:CGRectMake(self.frame.size.width-theW, 0, theW, 50)];
+            self.addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
+            
+            [self.addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
+            if (theType == TheDownViewType_vourcher) {
+                [self.addShopCarBtn setTitle:@"立即购买" forState:UIControlStateNormal];
             }
-            if (i<3) {
-                [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
-            }else{
-                if (DEVICE_WIDTH<375) {//4s 5s
-                    [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
+            [self.addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            self.addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+            [self.addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.addShopCarBtn];
+            
+            CGFloat tw = (self.frame.size.width-theW)/4;
+            NSArray *titleArray = @[@"客服",@"收藏",@"预约",@"购物车"];
+            NSArray *imageNameArray = @[@"kefu_pd.png",@"shoucang_pd.png",@"yuyue_pd.png",@"gouwuche_pd.png"];
+            for (int i = 0; i<4; i++) {
+                UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
+                [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
+                [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
+                if (i == 1) {
+                    self.shoucang_btn = oneBtn;
+                    [oneBtn setImage:[UIImage imageNamed:@"shoucang_pd.png"] forState:UIControlStateNormal];
+                    [oneBtn setImage:[UIImage imageNamed:@"yishoucang.png"] forState:UIControlStateSelected];
+                    
+                }
+                if (i<3) {
+                    [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
                 }else{
-                    [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+                    if (DEVICE_WIDTH<375) {//4s 5s
+                        [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
+                    }else{
+                        [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+                    }
+                    
                 }
                 
-            }
-            
-            [oneBtn setTitleEdgeInsets:UIEdgeInsetsMake(25, -20, 0, 0)];
-            oneBtn.titleLabel.font = [UIFont systemFontOfSize:10];
-            oneBtn.tag = 100+i;
-            [oneBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:oneBtn];
-            
-            if (i == 3) {
-                UILabel * _shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-                _shopCarNumLabel.textColor = RGBCOLOR(242, 120, 47);
-                _shopCarNumLabel.backgroundColor = [UIColor whiteColor];
-                _shopCarNumLabel.layer.cornerRadius = 5;
-                _shopCarNumLabel.layer.borderColor = [[UIColor whiteColor]CGColor];
-                _shopCarNumLabel.layer.borderWidth = 0.5f;
-                _shopCarNumLabel.layer.masksToBounds = YES;
-                _shopCarNumLabel.font = [UIFont systemFontOfSize:8];
-                _shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
-                _shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
-                [oneBtn addSubview:_shopCarNumLabel];
-                //                _gouwucheOneBtn = oneBtn;
+                [oneBtn setTitleEdgeInsets:UIEdgeInsetsMake(25, -20, 0, 0)];
+                oneBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+                oneBtn.tag = 100+i;
+                [oneBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [self addSubview:oneBtn];
+                
+                if (i == 3) {
+                    self.shopCarNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+                    self.shopCarNumLabel.textColor = RGBCOLOR(242, 120, 47);
+                    self.shopCarNumLabel.backgroundColor = [UIColor whiteColor];
+                    self.shopCarNumLabel.layer.cornerRadius = 5;
+                    self.shopCarNumLabel.layer.borderColor = [[UIColor whiteColor]CGColor];
+                    self.shopCarNumLabel.layer.borderWidth = 0.5f;
+                    self.shopCarNumLabel.layer.masksToBounds = YES;
+                    self.shopCarNumLabel.font = [UIFont systemFontOfSize:8];
+                    self.shopCarNumLabel.textAlignment = NSTextAlignmentCenter;
+                    self.shopCarNumLabel.text = [NSString stringWithFormat:@"0"];
+                    [oneBtn addSubview:self.shopCarNumLabel];
+                    self.gouwucheOneBtn = oneBtn;
+                    
+                }
+                
                 
             }
+            
+            
+            
+        }else if (theType == TheDownViewType_yuyue){
+            self.addShopCarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            self.addShopCarBtn.tag = 104;
+            CGFloat theW = [GMAPI scaleWithHeight:50 width:0 theWHscale:180.0/100];
+            [self.addShopCarBtn setFrame:CGRectMake(self.frame.size.width-theW, 0, theW, 50)];
+            self.addShopCarBtn.backgroundColor = RGBCOLOR(224, 103, 20);
+            
+            [self.addShopCarBtn setTitle:@"加入购物车" forState:UIControlStateNormal];
+            if (theType == TheDownViewType_yuyue) {
+                [self.addShopCarBtn setTitle:@"立即预约" forState:UIControlStateNormal];
+            }
+            [self.addShopCarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            self.addShopCarBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+            [self.addShopCarBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.addShopCarBtn];
+            
+            CGFloat tw = (self.frame.size.width-theW)/3;
+            NSArray *titleArray = @[@"联系卖家",@"电话咨询",@"收藏"];
+            NSArray *imageNameArray = @[@"kefu_pd1.png",@"dianhua_pd1.png",@"shoucang_pd.png"];
+            for (int i = 0; i<3; i++) {
+                UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [oneBtn setFrame:CGRectMake(i*tw, 0, tw, 50)];
+                [oneBtn setTitle:titleArray[i] forState:UIControlStateNormal];
+                [oneBtn setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
+                if (i == 2) {
+                    self.shoucang_btn = oneBtn;
+                    [oneBtn setImage:[UIImage imageNamed:@"shoucang_pd.png"] forState:UIControlStateNormal];
+                    [oneBtn setImage:[UIImage imageNamed:@"yishoucang.png"] forState:UIControlStateSelected];
+                    
+                }
+                if (i<2) {
+                    if (DEVICE_WIDTH<375) {//4s 5s
+                        [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
+                    }else{
+                        [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 34, 25, 0)];
+                    }
+                }else{
+                    [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 18, 25, 0)];
+                    
+                }
+                
+                [oneBtn setTitleEdgeInsets:UIEdgeInsetsMake(25, -20, 0, 0)];
+                oneBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+                oneBtn.tag = 100+i;
+                [oneBtn addTarget:self action:@selector(downBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [self addSubview:oneBtn];
+                
+            }
+            
+            
+            
             
             
         }
-        
-        
-        
-    }else if (theType == TheDownViewType_yuyue){
-        
     }
+    
     
     return self;
 }

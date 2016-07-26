@@ -536,5 +536,24 @@
 
 
 
++(NSString *)orderStateStr:(NSString*)num{
+    NSString *str;
+    if ([num intValue] == 1) {
+        str = @"预约中";
+    }else if ([num intValue] == 2){
+        str = @"预约成功";
+    }else if ([num intValue] == 3){
+        str = @"预约失败";
+    }else if ([num intValue] == 4){
+        str = @"取消预约中";
+    }else if ([num intValue] == 5){
+        str = @"取消预约成功";
+    }else if ([num intValue] == 6){
+        str = @"取消预约失败";
+    }
+    return str;
+}
+
+
 
 @end

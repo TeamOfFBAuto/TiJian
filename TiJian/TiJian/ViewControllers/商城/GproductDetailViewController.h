@@ -10,6 +10,7 @@
 //商品详情页
 
 #import "MyViewController.h"
+#import "GCustomDownOfProductView.h"//下方工具栏
 @class ProductModel;
 
 @interface GproductDetailViewController : MyViewController
@@ -20,6 +21,7 @@
 
 @property(nonatomic,strong)ProductModel *theProductModel;//产品model
 @property(nonatomic,strong)UIImage *gouwucheProductImage;//动画image
+@property(nonatomic,assign)TheDownViewType theDownType;//下方工具栏type
 
 //代金券购买 (默认选择传过来的代金券)
 @property(nonatomic,strong)NSString *VoucherId;//代金券id
@@ -34,5 +36,11 @@
 -(void)goToProductDetailVcWithId:(NSString *)productId;
 
 -(void)goToBrandStoreHomeVc;
+
+/**
+ *  立即预约
+ */
+-(void)setDownViewOfYueyu:(NSString *)productId;
+
 
 @end
