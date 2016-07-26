@@ -905,7 +905,6 @@
         cc.brand_id = self.theProductModel.brand_id;
         [self.navigationController pushViewController:cc animated:YES];
     }
-    
 }
 
 

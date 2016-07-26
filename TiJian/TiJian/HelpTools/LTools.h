@@ -150,6 +150,10 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 /**
  *  计算宽度
  */
++ (CGFloat)widthForText:(NSString *)text uiFont:(UIFont *)font;
+/**
+ *  计算宽度
+ */
 + (CGFloat)widthForText:(NSString *)text font:(CGFloat)size;
 
 + (CGFloat)widthForText:(NSString *)text boldFont:(CGFloat)size;

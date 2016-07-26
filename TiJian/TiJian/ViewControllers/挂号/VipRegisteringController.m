@@ -20,6 +20,8 @@
 #define kTag_beginTime 104 //开始时间
 #define kTag_endTime 105 //结束时间
 
+#define kDateFormatter @"yyyy-MM-dd"
+
 @interface VipRegisteringController ()<UITextFieldDelegate,JKImagePickerControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
     UILabel *_nameLabel;//就诊人name
@@ -27,9 +29,9 @@
     NSDate *_beginDate;//开始时间
     
     NSString *_familyUid;//就诊人familyUid
-    __block NSString *_hospital_id;//选择医院
-    __block NSString *_alternative_hospital_id;//备选医院
-    __block NSString *_dept;//科室
+    __block NSString *_hospital_id;//选择医院id
+    __block NSString *_alternative_hospital_id;//备选医院id
+    __block NSString *_dept;//科室id
 }
 
 @property(nonatomic,retain)UITextField *searchTF;
@@ -56,6 +58,38 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - 参数合法判断
+
+/**
+ *  判断参数是否合法
+ *
+ *  @return
+ */
+- (BOOL)isParamsValidate
+{
+    NSString *desc = _sickDescTextView.text;//病情描述
+    if (desc.length < 10) {
+        [LTools showMBProgressWithText:@"病情描述不少于10字,方便医生做出正确诊断" addToView:self.view];
+        return NO;
+    }
+    
+    if ([LTools isEmpty:_hospital_id]) {
+        [LTools showMBProgressWithText:@"请选择医院" addToView:self.view];
+        return NO;
+    }
+    
+    NSString *beginTime = [self textfieldWithTag:kTag_beginTime].text;//选择的开始时间
+    NSString *endTime = [self textfieldWithTag:kTag_endTime].text;//选择的结束时间
+    
+    if (![self isEndTime:endTime validateForBeginTime:beginTime]) {
+        
+        [LTools showMBProgressWithText:@"预约截止时间距开始时间不少于7个工作日" addToView:self.view];
+        return NO;
+    }
+    
+    return YES;
+}
+
 #pragma mark - 网络请求
 
 /**
@@ -65,12 +99,22 @@
  */
 - (NSDictionary *)referralParams
 {
+    [self clickToHiddenKeyboard];
+    
     NSString *familyUid = _familyUid;
     NSString *desc = _sickDescTextView.text;//病情描述
+    if (desc.length < 10) {
+        [LTools showMBProgressWithText:@"病情描述不少于10字,方便医生做出正确诊断" addToView:self.view];
+        return nil;
+    }
     
-    NSString *hospital = @"005e9c12-f6e7-4d9a-a8f9-1d1f46ffd2ae000";//选择医院
-    NSString *alternative_hospital = @"";//备选医院
-    NSString *dept = @"18a0dcc1-978c-45a0-a00a-c5a129650435000";//科室
+    if ([LTools isEmpty:_hospital_id]) {
+        [LTools showMBProgressWithText:@"请选择医院" addToView:self.view];
+        return nil;
+    }
+    NSString *hospital = _hospital_id;//选择医院
+    NSString *alternative_hospital = _alternative_hospital_id;//备选医院
+    NSString *dept = _dept;//科室
     
     NSString *benginTime = [self textfieldWithTag:kTag_beginTime].text;
     NSString *endTime = [self textfieldWithTag:kTag_endTime].text;
@@ -248,11 +292,12 @@
     [view addSubview:textView];
     [textView addCornerRadius:3.f];
     [textView setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"dfe1e6"]];
-    textView.font = [UIFont systemFontOfSize:12];
+    textView.font = [UIFont systemFontOfSize:11];
     _sickDescTextView = textView;
     
     [textView setPlaceHolder:@"请详细描述您的疾病、症状(必填,10个字以上)"];
     [textView setPlaceHolderColor:RGBCOLOR(196, 198, 205)];
+    [textView setPlaceHolderFont:[UIFont systemFontOfSize:11]];
     
     //添加图片
     titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, textView.bottom + 15, titleWidth, 30) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"添加图片:"];
@@ -282,7 +327,7 @@
             [view addSubview:tf];
             [tf addCornerRadius:2.f];
             [tf setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"dfe1e6"]];
-            tf.font = [UIFont systemFontOfSize:10];
+            tf.font = [UIFont systemFontOfSize:12];
             [tf setPlaceholder:placeHolders[i]];
             
             if (i == 0) {
@@ -313,13 +358,20 @@
                 [view addSubview:tf];
                 [tf addCornerRadius:2.f];
                 [tf setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"dfe1e6"]];
-                tf.font = [UIFont systemFontOfSize:10];
+                tf.font = [UIFont systemFontOfSize:12];
                 [tf setPlaceholder:titles[i]];
                 
                 
                 if (i == 1) {
-                    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.right + 12, tf.bottom + 5, t_width, 20) font:10 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:@"注:仅预约今天以后、距结束时间不少于7个工作日"];
+                    
+                    NSString *title = @"注:仅预约今天以后、预约截止时间距开始时间不少于7个工作日";
+                    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLabel.right + 12, tf.bottom + 5, t_width, 20) font:10 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_ORANGE title:title];
                     [view addSubview:titleLabel];
+                    
+                    titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+                    titleLabel.numberOfLines = 0;
+                    CGFloat height = [LTools heightForText:title width:t_width font:10];
+                    titleLabel.height = height;
                     
                     tf.tag = kTag_endTime;
                     
@@ -329,7 +381,10 @@
                 {
                     tf.tag = kTag_beginTime;
                     
-                    tf.text = [LTools timeDate:beginDate withFormat:@"yyyy-MM-dd"];
+                    tf.text = [LTools timeDate:beginDate withFormat:kDateFormatter];
+                    
+                    UILabel *line = [[UILabel alloc]initWithFrame:CGRectMake(tf.right, titleLabel.top, 15, titleLabel.height) font:8 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE title:@"—"];
+                    [view addSubview:line];
                 }
             }
         }
@@ -342,45 +397,6 @@
     [sender.titleLabel setFont:[UIFont systemFontOfSize:14]];
     
     [self.scrollView setContentSize:CGSizeMake(DEVICE_WIDTH, sender.bottom + 10)];
-}
-
-/**
- *  根据开始时间计算结束时间
- *
- *  @param beginDate
- *
- *  @return
- */
-- (NSString *)endTimeWithBeginTime:(NSDate *)beginDate
-{
-    NSDate *endDate = [self endTimeDateWithBeginDate:beginDate];
-    
-    NSString *endTimeString = [LTools timeDate:endDate withFormat:@"yyyy-MM-dd"];
-    
-    return endTimeString;
-}
-
-- (NSDate *)endTimeDateWithBeginDate:(NSDate *)beginDate
-{
-    int padding = 1;
-    //星期天 1
-    int week = (int)[beginDate fs_weekday];
-    if (week == 1 || week == 2|| week == 3 || week == 4) //周一至周三 和 周天 需要加9天
-    {
-        padding = 9;
-        
-    }else if( week == 5 || week == 6 ) //周四和周五 11
-    {
-        padding = 11;
-        
-    }else if (week == 7) //周六
-    {
-        padding = 10;
-    }
-    
-    NSDate *endDate = [[NSDate date] fs_dateByAddingDays:padding];
-    
-    return endDate;
 }
 
 #pragma mark - getter
@@ -453,18 +469,27 @@
 {
 //    __weak typeof(self)weakSelf = self;
     int tag = (int)textField.tag;
-    if (tag == kTag_endTime) {
+    if (tag == kTag_endTime)
+    {
+        
         [self.datePicker setMinDate:[self endTimeDateWithBeginDate:_beginDate]];
     }else
     {
         [self.datePicker setMinDate:_beginDate];
     }
+    [self.datePicker setInitDate:[LTools dateFromString:textField.text withFormat:kDateFormatter]];//开始显示时间
     
+     @WeakObj(self);
     [self.datePicker showDateBlock:^(ACTIONTYPE type, NSString *dateString) {
         
         if (type == ACTIONTYPE_SURE) {
             
             textField.text = dateString;
+            
+            if (tag == kTag_beginTime) {
+                
+                [Weakself textfieldWithTag:kTag_endTime].text = [Weakself ajustEndTime];//动态调整结束时间
+            }
         }
         
         NSLog(@"dateBlock %@",dateString);
@@ -485,6 +510,89 @@
     _datePicker = [[LDatePicker alloc] init];
     
     return _datePicker;
+}
+
+/**
+ *  根据开始时间自动调整结束时间
+ */
+- (NSString *)ajustEndTime
+{
+    NSString *beginTime = [self textfieldWithTag:kTag_beginTime].text;//选择的开始时间
+    NSString *endTime = [self textfieldWithTag:kTag_endTime].text;//选择的结束时间
+    NSDate *beginDate = [LTools dateFromString:beginTime withFormat:kDateFormatter];
+    
+    if ([self isEndTime:endTime validateForBeginTime:beginTime]) {
+        return endTime;
+    }
+    
+    return [self endTimeWithBeginTime:beginDate];
+}
+
+/**
+ *  判断结束时间相对开始时间是否合法
+ *
+ *  @param endTime   结束时间
+ *  @param beginTime 开始时间
+ *
+ *  @return
+ */
+- (BOOL)isEndTime:(NSString *)endTime validateForBeginTime:(NSString *)beginTime
+{
+    NSString *format = kDateFormatter;
+    
+    NSDate *beginDate = [LTools dateFromString:beginTime withFormat:format];
+    NSDate *endDate = [LTools dateFromString:endTime withFormat:format];
+    
+    NSString *validateEndTime = [self endTimeWithBeginTime:beginDate];//实际合法的最小结束时间(根据选择的开始时间重新计算)
+    NSDate *validateEndDate = [LTools dateFromString:validateEndTime withFormat:format];
+    //实际有效结束时间 和 当前显示结束时间比较 相差天数
+    
+    NSInteger padding = [endDate fs_daysFrom:validateEndDate];
+    
+    if (padding >= 0) {
+        
+        return YES;
+    }
+    return NO;
+}
+
+/**
+ *  根据开始时间计算结束时间
+ *
+ *  @param beginDate
+ *
+ *  @return
+ */
+- (NSString *)endTimeWithBeginTime:(NSDate *)beginDate
+{
+    NSDate *endDate = [self endTimeDateWithBeginDate:beginDate];
+    
+    NSString *endTimeString = [LTools timeDate:endDate withFormat:kDateFormatter];
+    
+    return endTimeString;
+}
+
+- (NSDate *)endTimeDateWithBeginDate:(NSDate *)beginDate
+{
+    int padding = 1;
+    //星期天 1
+    int week = (int)[beginDate fs_weekday];
+    if (week == 1 || week == 2|| week == 3 || week == 4) //周一至周三 和 周天 需要加9天
+    {
+        padding = 9;
+        
+    }else if( week == 5 || week == 6 ) //周四和周五 11
+    {
+        padding = 11;
+        
+    }else if (week == 7) //周六
+    {
+        padding = 10;
+    }
+    
+    NSDate *endDate = [beginDate fs_dateByAddingDays:padding];
+    
+    return endDate;
 }
 
 #pragma mark - 事件处理
@@ -603,7 +711,10 @@
  */
 - (void)clickToGuahao:(UIButton *)sender
 {
-    [self getUploadImages];
+    if ([self isParamsValidate]) {
+        
+        [self getUploadImages];
+    }
 }
 
 /**

@@ -444,7 +444,6 @@
 		13FAD6191D4084F7003038B8 /* vip_bianji@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD60E1D4084F7003038B8 /* vip_bianji@2x.png */; };
 		13FAD61A1D4084F7003038B8 /* vip_fangdajing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD60F1D4084F7003038B8 /* vip_fangdajing@2x.png */; };
 		13FAD61B1D4084F7003038B8 /* vip_iphone4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6101D4084F7003038B8 /* vip_iphone4.jpg */; };
-		13FAD61C1D4084F7003038B8 /* vip_iphone5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6111D4084F7003038B8 /* vip_iphone5.jpg */; };
 		13FAD61D1D4084F7003038B8 /* vip_iphone6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6121D4084F7003038B8 /* vip_iphone6.jpg */; };
 		13FAD61E1D4084F7003038B8 /* vip_iphone6p.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6131D4084F7003038B8 /* vip_iphone6p.jpg */; };
 		13FAD61F1D4084F7003038B8 /* vip_no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13FAD6141D4084F7003038B8 /* vip_no@2x.png */; };
@@ -1370,7 +1369,6 @@
 		13FAD60E1D4084F7003038B8 /* vip_bianji@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_bianji@2x.png"; sourceTree = "<group>"; };
 		13FAD60F1D4084F7003038B8 /* vip_fangdajing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_fangdajing@2x.png"; sourceTree = "<group>"; };
 		13FAD6101D4084F7003038B8 /* vip_iphone4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone4.jpg; sourceTree = "<group>"; };
-		13FAD6111D4084F7003038B8 /* vip_iphone5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone5.jpg; sourceTree = "<group>"; };
 		13FAD6121D4084F7003038B8 /* vip_iphone6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone6.jpg; sourceTree = "<group>"; };
 		13FAD6131D4084F7003038B8 /* vip_iphone6p.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = vip_iphone6p.jpg; sourceTree = "<group>"; };
 		13FAD6141D4084F7003038B8 /* vip_no@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vip_no@2x.png"; sourceTree = "<group>"; };
@@ -2440,7 +2438,6 @@
 				13FAD60E1D4084F7003038B8 /* vip_bianji@2x.png */,
 				13FAD60F1D4084F7003038B8 /* vip_fangdajing@2x.png */,
 				13FAD6101D4084F7003038B8 /* vip_iphone4.jpg */,
-				13FAD6111D4084F7003038B8 /* vip_iphone5.jpg */,
 				13FAD6121D4084F7003038B8 /* vip_iphone6.jpg */,
 				13FAD6131D4084F7003038B8 /* vip_iphone6p.jpg */,
 				13FAD6141D4084F7003038B8 /* vip_no@2x.png */,
@@ -3778,7 +3775,6 @@
 				13D6DAA21C48C6A90091FCFE /* extension_36_8.png in Resources */,
 				1303C35A1BEB0D7100700847 /* personal_youhuiquan_y@2x.png in Resources */,
 				1374B3891CFD40610010CDE7 /* main.js in Resources */,
-				13FAD61C1D4084F7003038B8 /* vip_iphone5.jpg in Resources */,
 				139333C51BE0DF3E00B4628B /* 22_3@2x.png in Resources */,
 				13D6DA911C48C6A90091FCFE /* extension_34_3.png in Resources */,
 				13E2D8781CC8C58100A684D7 /* personal_tijianyuyue@2x.png in Resources */,

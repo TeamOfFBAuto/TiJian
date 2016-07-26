@@ -453,6 +453,16 @@
 /**
  *  计算宽度
  */
++ (CGFloat)widthForText:(NSString *)text uiFont:(UIFont *)font
+{
+    NSDictionary *attributes = @{NSFontAttributeName: font};
+    CGSize aSize = [text sizeWithAttributes:attributes];
+    return aSize.width;
+}
+
+/**
+ *  计算宽度
+ */
 + (CGFloat)widthForText:(NSString *)text font:(CGFloat)size
 {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:size]};
@@ -1210,7 +1220,7 @@
 //    hud.color = DEFAULT_TEXTCOLOR;
 //    hud.labelFont = [UIFont systemFontOfSize:12];
     [hud setCornerRadius:3.f];
-    [hud hide:YES afterDelay:1.f];
+    [hud hide:YES afterDelay:1.5f];
 }
 
 + (MBProgressHUD *)MBProgressWithText:(NSString *)text addToView:(UIView *)aView

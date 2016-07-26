@@ -11,6 +11,7 @@
 #import "AddPeopleViewController.h"
 #import "VipRegisteringController.h"//VIP专家号
 #import "EditUserInfoViewController.h"
+#import "GStoreHomeViewController.h"
 #import "PropertyButton.h"
 #import "FamilyCell.h"
 
@@ -48,9 +49,13 @@
     
     if (iPhone4) {
        imageView.image = [UIImage imageNamed:@"vip_iphone4.jpg"];
+    }
+    else if(iPhone6PLUS)
+    {
+        imageView.image = [UIImage imageNamed:@"vip_iphone6p.jpg"];
     }else
     {
-       imageView.image = [UIImage imageNamed:@"vip_iphone6.jpg"];
+       imageView.image = [UIImage imageNamed:@"vip_iphone6.jpg"];// 5 6 公用一张
     }
     imageView.userInteractionEnabled = YES;
     [self.view addSubview:imageView];
@@ -106,6 +111,10 @@
     
     //获取vip状态
     [self netWorkForVipState];
+    
+    //支付成功更新vip状态
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(netWorkForVipState) name:NOTIFICATION_PAY_SUCCESS object:nil];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -160,6 +169,11 @@
         UIButton *closeBtn = [[UIButton alloc]initWithframe:CGRectMake(_vipAlert.width - 50, 0, 50, 50) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(hiddenVipAlert)];
         [_vipAlert addSubview:closeBtn];
 //        closeBtn.backgroundColor = [UIColor redColor];
+        
+        UIButton *buyBtn = [[UIButton alloc]initWithframe:CGRectMake(0, closeBtn.bottom + 10, _vipAlert.width, _vipAlert.height - closeBtn.bottom - 80) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(clickToBuy)];
+        [_vipAlert addSubview:buyBtn];
+//        buyBtn.backgroundColor = [[UIColor orangeColor]colorWithAlphaComponent:0.3];
+        
     }
     return _vipAlert;
 }
@@ -272,6 +286,22 @@
 }
 
 #pragma mark - 事件处理
+
+/**
+ *  去购买套餐
+ */
+- (void)clickToBuy
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic safeSetValue:@"HomeViewController" forKey:@"style"];
+    [[MiddleTools shareInstance]umengEvent:@"Store_home" attributes:dic number:[NSNumber numberWithInt:1]];
+    
+    GStoreHomeViewController *cc= [[GStoreHomeViewController alloc]init];
+    cc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:cc animated:YES];
+    
+    [self hiddenVipAlert];
+}
 
 /**
  *  编辑用户信息

@@ -46,7 +46,6 @@
     if (!placeHolder) {
         return;
     }
-    
     self.placeHolderLabel.text = placeHolder;
 }
 
@@ -66,6 +65,26 @@
 -(void)setPlaceHoderFrame:(CGRect)placeHoderFrame
 {
     self.placeHolderLabel.frame = placeHoderFrame;
+}
+
+#pragma mark - 
+
+/**
+ *  动态调整placeHolder
+ */
+- (void)updatePlaceHolder
+{
+    NSString *placeHolder = self.placeHolderLabel.text;
+    if ([LTools isEmpty:placeHolder]) {
+        return;
+    }
+    self.placeHolderLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    self.placeHolderLabel.numberOfLines = 0.f;
+    
+    UIFont *font = self.placeHolderLabel.font;
+    CGFloat size = font.pointSize;
+    CGFloat height = [LTools heightForText:placeHolder width:self.placeHolderLabel.width font:size];
+    self.placeHolderLabel.height = height;
 }
 
 #pragma - mark UITextViewDelegate 
