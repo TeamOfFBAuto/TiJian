@@ -146,7 +146,17 @@
             
             if (![LTools isEmpty:[dic stringValueForKey:@"hospital_name"]] &&
                 ![LTools isEmpty:[dic stringValueForKey:@"hospital_id"]]){
-                [bself pushToDeptFromSearchViewWithDic:dic];
+                
+                //选择备选医院
+                if (bself.hospitalType == HospitalType_selectAlternative) {
+                    
+                    [bself selectAlternativeHospitalId:[dic stringValueForKey:@"hospital_id"] hospitalName:[dic stringValueForKey:@"hospital_name"]];
+                }else
+                {
+                    [bself pushToDeptFromSearchViewWithDic:dic];
+
+                }
+                
             }
         }
     }];
@@ -154,6 +164,28 @@
     
     [self.view addSubview:_theCustomSearchView];
     
+}
+
+
+#pragma mark - 事件处理
+
+/**
+ *  选择备选医院
+ *
+ *  @param hospitalId   医院id
+ *  @param hospitalName 医院name
+ */
+- (void)selectAlternativeHospitalId:(NSString *)hospitalId
+                       hospitalName:(NSString *)hospitalName
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+    [params safeSetString:hospitalId forKey:@"alternativeHospitalId"];
+    [params safeSetString:hospitalName forKey:@"alternativeHospitalName"];
+    
+    if (self.updateParamsBlock) {
+        self.updateParamsBlock(params);
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - 从搜索页跳转科室
@@ -269,15 +301,7 @@
         
         #pragma mark - 返回上个界面及参数回传
         NSDictionary *dic = _rTab.dataArray[indexPath.row];
-        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
-        [params safeSetString:[dic stringValueForKey:@"hospital_id"]forKey:@"alternativeHospitalId"];
-        [params safeSetString:[dic stringValueForKey:@"hospital_name"] forKey:@"alternativeHospitalName"];
-        
-        if (self.updateParamsBlock) {
-            self.updateParamsBlock(params);
-        }
-        
-        [self.navigationController popViewControllerAnimated:YES];
+        [self selectAlternativeHospitalId:[dic stringValueForKey:@"hospital_id"] hospitalName:[dic stringValueForKey:@"hospital_name"]];
     }
     
 }
@@ -318,12 +342,9 @@
             title = [NSString stringWithFormat:@"%@(%@)",[dic stringValueForKey:@"city_name"],[dic stringValueForKey:@"hospital_count"]];
         }
         
-        
-        
         for (UIView *view in cell.contentView.subviews) {
             [view removeFromSuperview];
         }
-        
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         [btn setFrame:CGRectMake(0, 0, 100, 50)];
@@ -405,9 +426,6 @@
     return height;
 }
 
-
-
-
 -(void)classClicked:(UIButton *)sender{
     
     [self hiddenKeyBord];
@@ -427,13 +445,9 @@
             _theCityId = [cityDic stringValueForKey:@"city_id"];
             [_rTab refreshNewData];
         }
-        
-        
         [_tab reloadData];
     }
-    
 }
-
 
 #pragma mark - UITextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
@@ -454,9 +468,6 @@
         
         [GMAPI setUserSearchHospital:_searchTF.text];
     }
-    
-    
-    
     return YES;
 }
 

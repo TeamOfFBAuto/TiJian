@@ -45,10 +45,14 @@ typedef enum {
  *  @param productId
  *  @param gender       套餐适用性别
  *  @param noAppointNum 剩余可预约数
+ *  @param centerId       选择分院id(需要传,不需要不传)
+ *  @param centerName 选择分院name(需要传,不需要不传)
  */
 - (void)apppointNoPayWithProductModel:(ProductModel *)productModel
                                gender:(Gender)gender
-                         noAppointNum:(int)noAppointNum;
+                         noAppointNum:(int)noAppointNum
+                             centerId:(NSString *)examCenterId
+                           centerName:(NSString *)examCenterName;
 
 /**
  *  公司预约参数

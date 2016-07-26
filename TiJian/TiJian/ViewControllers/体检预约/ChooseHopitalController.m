@@ -369,10 +369,14 @@ typedef enum {
  *  @param productId
  *  @param gender       套餐适用性别
  *  @param noAppointNum 剩余可预约数
+ *  @param centerId       选择分院id
+ *  @param centerName 选择分院name
  */
 - (void)apppointNoPayWithProductModel:(ProductModel *)productModel
                                gender:(Gender)gender
                          noAppointNum:(int)noAppointNum
+                             centerId:(NSString *)examCenterId
+                           centerName:(NSString *)examCenterName
 {
     _chooseType = ChooseType_nopayAppoint;
     _productId = productModel.product_id;
@@ -380,6 +384,9 @@ typedef enum {
     _gender = gender;
     _noAppointNum = noAppointNum;
     _nopayAppoint = YES;
+    
+    _selectHospitalId = [examCenterId intValue];
+    _selectCenterName = examCenterName;
 }
 
 /**
@@ -690,16 +697,6 @@ typedef enum {
 
 - (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date
 {
-//    if ([date fs_isEqualToDateForDay:[NSDate date]]) {
-//        
-//        if ([date fs_isEqualToDateForDay:[NSDate date]]) {
-//            
-//            [LTools showMBProgressWithText:@"只能预约今天以后分院!" addToView:self.view];
-//        }
-//        
-//        return NO;
-//    }
-    
     int days = (int)[date fs_daysFrom:self.beginDate];
     
     if (days < 0) {
@@ -729,12 +726,10 @@ typedef enum {
 {
     return self.beginDate;
 }
-//- (NSDate *)maximumDateForCalendar:(FSCalendar *)calendar;
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat offsetY = scrollView.contentOffset.y;
-//    NSLog(@"offsety %f",offsetY);
     
     if (offsetY < -40) {
         if (!self.closeButton.selected) {
@@ -745,41 +740,11 @@ typedef enum {
             [self clickToCloseClendar:_closeButton];
         }
     }
-
-//    if (_lastOffsetY > offsetY) {
-//        
-//        if (self.closeButton.selected) {
-//            
-//            [self clickToCloseClendar:self.closeButton];
-//            
-//        }
-//    }
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-//    CGFloat offsetY = scrollView.contentOffset.y;
-
     
-//    if (_lastOffsetY > offsetY) {
-//        
-//        if (self.closeButton.selected) {
-//            
-//            [self clickToCloseClendar:self.closeButton];
-//            
-//        }
-//    }else
-//    {
-//        if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.size.height - 40))
-//        {
-//            if (!self.closeButton.selected) {
-//                
-//                [self clickToCloseClendar:self.closeButton];
-//                
-//            }
-//        }
-//    }
-//    _lastOffsetY = offsetY;
 }
 
 #pragma - mark UITableViewDelegate

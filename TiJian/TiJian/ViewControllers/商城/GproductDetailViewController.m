@@ -52,9 +52,11 @@
     BOOL _toolShow;
     
     UILabel *_xiangmutLabel;//项目详情的套餐名称
-    
     NSString *_phone;//联系电话
 }
+
+@property (nonatomic,retain)NSString *centerId;//update by lcw
+@property (nonatomic,retain)NSString *centerName;//update by lcw
 
 @end
 
@@ -110,9 +112,23 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)setDownViewOfYueyu:(NSString *)productId{
+#pragma mark - 参数设置
+
+/**
+ *  跳转至详情页 参数设置
+ *
+ *  @param productId  产品id
+ *  @param centerId   对应分院id
+ *  @param centerName 对应分院name
+ */
+-(void)setDownViewOfYueyu:(NSString *)productId
+                 centerId:(NSString *)centerId
+               centerName:(NSString *)centerName
+{
     self.productId = productId;
     self.theDownType = TheDownViewType_yuyue;
+    self.centerId = centerId;
+    self.centerName = centerName;
 }
 
 #pragma mark - 视图创建
@@ -679,17 +695,16 @@
             }else{
                 //update by lcw 2期 直接预约
                 if ([LoginManager isLogin:self]) {//已登录
+                    
                     ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
                     [choose apppointNoPayWithProductModel:self.theProductModel
                                                    gender:[_theProductModel.gender_id intValue]
-                                             noAppointNum:1000];
+                                             noAppointNum:1000 centerId:self.centerId centerName:self.centerName];
                     choose.lastViewController = self;
                     [self.navigationController pushViewController:choose animated:YES];
                 }
             }
-            
-            
-            
+                        
         }else if (theTag == 103){//购物车
             
             if (self.isShopCarPush) {
@@ -757,16 +772,12 @@
                 ChooseHopitalController *choose = [[ChooseHopitalController alloc]init];
                 [choose apppointNoPayWithProductModel:self.theProductModel
                                                gender:[_theProductModel.gender_id intValue]
-                                         noAppointNum:1000];
+                                         noAppointNum:1000 centerId:self.centerId centerName:self.centerName];
                 choose.lastViewController = self;
                 [self.navigationController pushViewController:choose animated:YES];
             }
         }
-        
-        
     }
-    
-    
 }
 
 /**

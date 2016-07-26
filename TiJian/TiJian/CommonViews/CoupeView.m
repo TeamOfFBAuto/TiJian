@@ -90,8 +90,8 @@
             top = 0.f;
             
             CGFloat everyHeight = [LTools fitHeight:50 - 1];//每个优惠劵高度
-            listView.height = line.bottom + everyHeight * 3 + [LTools fitHeight:25] + [LTools fitHeight:15] * 2;
-            UIScrollView *scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, line.bottom, listView.width, everyHeight * 3)];
+            listView.height = line.bottom + everyHeight * 3 + [LTools fitHeight:25] + [LTools fitHeight:15] * 2 + 20;
+            UIScrollView *scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, line.bottom, listView.width, everyHeight * 3 + 20)];
             scroll.contentSize = CGSizeMake(listView.width, everyHeight * count);
             [listView addSubview:scroll];
             

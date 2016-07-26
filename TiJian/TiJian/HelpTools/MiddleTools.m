@@ -186,9 +186,15 @@
 {
     GproductDetailViewController *cc = [[GproductDetailViewController alloc]init];
     cc.productId = productId;
+    
+    NSString *centerId = extendParams[@"centerId"];
+    NSString *centerName = extendParams[@"centerName"];
+    
     if ([[extendParams stringValueForKey:@"downType"] intValue] == 1) {//立即预约
         cc.theDownType = TheDownViewType_yuyue;
+        [cc setDownViewOfYueyu:productId centerId:centerId centerName:centerName];
     }
+    
     [viewController.navigationController pushViewController:cc animated:YES];
 }
 

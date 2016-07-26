@@ -362,10 +362,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     ProductModel *aModel = _productsArray[indexPath.row];
-    NSDictionary *dic = @{
-                          @"downType":@"1"
-                          };
-    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:dic];
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params safeSetString:self.centerId forKey:@"centerId"];
+    [params safeSetString:_hospitalModel.center_name forKey:@"centerName"];
+    [params safeSetString:@"1" forKey:@"downType"];
+    [MiddleTools pushToProductDetailWithProductId:aModel.product_id viewController:self extendParams:params];
 }
 
 
@@ -541,7 +543,5 @@
         return temp;
     }];
 }
-
-#pragma mark - 代理
 
 @end

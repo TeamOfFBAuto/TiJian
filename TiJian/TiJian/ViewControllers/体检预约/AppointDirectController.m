@@ -313,6 +313,8 @@
                           };
     [GMAPI cache:dic ForKey:USERLocation];
     
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_UPDATE_HOMEVCLEFTSTR object:nil];
+    
     //请求分院列表
     [self.tableView refreshNewData];
 }

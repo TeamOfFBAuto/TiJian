@@ -40,7 +40,16 @@
 /**
  *  立即预约
  */
--(void)setDownViewOfYueyu:(NSString *)productId;
+/**
+ *  跳转至详情页 参数设置
+ *
+ *  @param productId  产品id
+ *  @param centerId   对应分院id
+ *  @param centerName 对应分院name
+ */
+-(void)setDownViewOfYueyu:(NSString *)productId
+                 centerId:(NSString *)centerId
+               centerName:(NSString *)centerName;
 
 
 @end
