@@ -463,10 +463,37 @@
  */
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    
+    return [self handleOpenUrl:url];
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return  [WXApi handleOpenURL:url delegate:self];
+}
+
+//iOS9+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(nonnull NSDictionary *)options
+{
+    return [self handleOpenUrl:url];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+    //如果使用了Universal link ，此方法必写
+    return [MWApi continueUserActivity:userActivity];
+}
+
+
+/**
+ *  处理OpenURL 2016-07-26
+ *
+ *  @param url
+ *
+ *  @return
+ */
+- (BOOL)handleOpenUrl:(NSURL *)url
+{
     DDLOG(@"openURL------ %@",url);
-    
-    [MWApi routeMLink:url];
     
     BOOL result = [UMSocialSnsService handleOpenURL:url];
     if (result == FALSE) {
@@ -499,25 +526,6 @@
         }
     }
     return result;
-}
-
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    return  [WXApi handleOpenURL:url delegate:self];
-}
-
-//iOS9+
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(nonnull NSDictionary *)options
-{
-    //必写
-    [MWApi routeMLink:url];
-    return YES;
-}
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
-{
-    //如果使用了Universal link ，此方法必写
-    return [MWApi continueUserActivity:userActivity];
 }
 
 #pragma - mark 微信支付回调

@@ -512,10 +512,10 @@
     _availableNum = register_referral_total_counts - register_referral_counts;//剩余次数
     _totalNum = register_referral_total_counts;
     
-//    _availableNum = 0;
-//    _totalNum = 1;
-    
     [_useStateLaebl setAttributedText:[self useStringWithUseNum:register_referral_counts lastNum:_availableNum]];
+    
+    BOOL is_vip = [result[@"is_vip"]boolValue];
+    _vipBtn.selected = !is_vip;
 }
 
 #pragma mark - 网络请求

@@ -266,7 +266,7 @@
         
     } failBlock:^(NSDictionary *result) {
         [_loading hide:YES];
-        int errocode = [result[RESULT_CODE]intValue];
+//        int errocode = [result[RESULT_CODE]intValue];
         DDLOG(@"result %@ %@",result[RESULT_CODE],result[RESULT_INFO]);
     }];
 }
