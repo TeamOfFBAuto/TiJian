@@ -266,6 +266,11 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [GMAPI showAutoHiddenMBProgressWithText:@"取消预约成功" addToView:self.view];
         [_rTab showRefreshHeader:YES];
+        
+        if (self.updateParamsBlock) {
+            self.updateParamsBlock(nil);
+        }
+        
     } failBlock:^(NSDictionary *result) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [GMAPI showAutoHiddenMBProgressWithText:@"取消预约失败" addToView:self.view];

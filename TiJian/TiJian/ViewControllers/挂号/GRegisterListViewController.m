@@ -246,6 +246,10 @@
 -(void)goToRegisterDetailWithId:(NSString *)theId{
     GRegisterDetailViewController *cc = [[GRegisterDetailViewController alloc]init];
     cc.j_referral_id = theId;
+    __weak typeof (_rTab)bRtab = _rTab;
+    [cc setUpdateParamsBlock:^(NSDictionary *params) {
+        [bRtab showRefreshHeader:YES];
+    }];
     [self.navigationController pushViewController:cc animated:YES];
     
 }
