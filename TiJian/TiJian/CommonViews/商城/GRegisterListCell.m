@@ -45,6 +45,7 @@
         self.stateLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.timeLabel.right, 0, DEVICE_WIDTH *130.0/750, 75)];
         self.stateLabel.textAlignment = NSTextAlignmentCenter;
         self.stateLabel.font = [UIFont systemFontOfSize:12];
+        self.stateLabel.numberOfLines = 5;
         self.stateLabel.textColor = [UIColor blackColor];
         [self.contentView addSubview:self.stateLabel];
         

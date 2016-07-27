@@ -503,6 +503,7 @@
 		E335F9F41BFEF36000708BF6 /* qrdd_jiantou_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E335F9E71BFEF35F00708BF6 /* qrdd_jiantou_small@2x.png */; };
 		E335F9F91BFEFDE700708BF6 /* GuserAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E335F9F81BFEFDE700708BF6 /* GuserAddressViewController.m */; };
 		E335FAB91BFF172800708BF6 /* GuserAddressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E335FAB81BFF172800708BF6 /* GuserAddressTableViewCell.m */; };
+		E33817061D48861300EC5D07 /* GRegisterDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E33817051D48861300EC5D07 /* GRegisterDetailCell.m */; };
 		E34F766F1CB65524002C2B46 /* confirmorderadd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34F766E1CB65524002C2B46 /* confirmorderadd@2x.png */; };
 		E352F8FD1C0B7D240037E4AE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F8FC1C0B7D240037E4AE /* CoreLocation.framework */; };
 		E352F8FF1C0B7D2E0037E4AE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E352F8FE1C0B7D2E0037E4AE /* QuartzCore.framework */; };
@@ -1453,6 +1454,8 @@
 		E335F9F81BFEFDE700708BF6 /* GuserAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuserAddressViewController.m; sourceTree = "<group>"; };
 		E335FAB71BFF172800708BF6 /* GuserAddressTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuserAddressTableViewCell.h; sourceTree = "<group>"; };
 		E335FAB81BFF172800708BF6 /* GuserAddressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuserAddressTableViewCell.m; sourceTree = "<group>"; };
+		E33817041D48861300EC5D07 /* GRegisterDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRegisterDetailCell.h; sourceTree = "<group>"; };
+		E33817051D48861300EC5D07 /* GRegisterDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRegisterDetailCell.m; sourceTree = "<group>"; };
 		E34F766E1CB65524002C2B46 /* confirmorderadd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "confirmorderadd@2x.png"; sourceTree = "<group>"; };
 		E352F8FC1C0B7D240037E4AE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		E352F8FE1C0B7D2E0037E4AE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -3327,6 +3330,8 @@
 				E39DFC8E1D43B88100B013CD /* GHospitalsearchView.m */,
 				E39DFC931D46B81700B013CD /* GRegisterListCell.h */,
 				E39DFC941D46B81700B013CD /* GRegisterListCell.m */,
+				E33817041D48861300EC5D07 /* GRegisterDetailCell.h */,
+				E33817051D48861300EC5D07 /* GRegisterDetailCell.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -4136,6 +4141,7 @@
 				13FC32E91CE9C64D0073539D /* LPickerView.m in Sources */,
 				E38551051C0ACFDB00CE23E7 /* MyCouponTableViewCell.m in Sources */,
 				E30FE39C1C3E56DF001CF9BA /* GSearchView.m in Sources */,
+				E33817061D48861300EC5D07 /* GRegisterDetailCell.m in Sources */,
 				13F9D1291C2FB06800993738 /* LPhotoBrowser.m in Sources */,
 				13F8C5AD1C05AA7E004C3FC7 /* JKAssetsGroupsView.m in Sources */,
 				E3E2B3FF1BFB1F19007988C5 /* PayResultViewController.m in Sources */,

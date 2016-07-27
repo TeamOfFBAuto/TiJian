@@ -7,6 +7,7 @@
 //
 
 #import "GRegisterDetailViewController.h"
+#import "GRegisterDetailCell.h"
 
 @interface GRegisterDetailViewController ()<UITableViewDataSource,RefreshDelegate,UIAlertViewDelegate>
 {
@@ -16,6 +17,7 @@
     NSArray *_dataArray;
     
     NSString *_status;
+    GRegisterDetailCell *_tmpCell;
 }
 @end
 
@@ -41,6 +43,7 @@
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _rTab.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_rTab];
     [_rTab showRefreshHeader:YES];
 }
@@ -67,6 +70,11 @@
 
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView{
     CGFloat height = 45;
+    if (!_tmpCell) {
+        _tmpCell = [[GRegisterDetailCell alloc]init];
+    }
+    NSDictionary *dic = _rTab.dataArray[indexPath.row];
+    height = [_tmpCell heightForCellWithDic:dic];
     return height;
 }
 
@@ -107,29 +115,15 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"identifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    GRegisterDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[GRegisterDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    
     NSDictionary *dic = _rTab.dataArray[indexPath.row];
-    NSString *title = [dic stringValueForKey:@"title"];
-    NSString *content = [dic stringValueForKey:@"content"];
     
+    [cell loadCustomViewWithDic:dic];
 
-    NSString *theStr = [NSString stringWithFormat:@"%@%@",title,content];
-    NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:theStr];
-    [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0, title.length)];
-    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, title.length)];
-    
-    [aaa addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(title.length, content.length)];
-    [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(title.length, content.length)];
-    
-    cell.textLabel.attributedText = aaa;
-    
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
 }
@@ -181,21 +175,31 @@
             [mArray addObject:theDic];
         }
         
-        if (![LTools isEmpty:[dic stringValueForKey:@"appoint_date"]]) {
+        if (![LTools isEmpty:[dic stringValueForKey:@"check_appoint_date"]]) {
             
-            NSString *content;
-            if ([[dic stringValueForKey:@"status"]intValue] != 1) {
-                content = [dic stringValueForKey:@"check_appoint_date"];//具体时间点
-            }else{
-                content = [dic stringValueForKey:@"appoint_date"];//时间段
-            }
+            NSString *content = [dic stringValueForKey:@"check_appoint_date"];//具体时间点
+            
             
             NSDictionary *theDic = @{
                                      @"title":@"预约时间：",
                                      @"content":content
                                      };
             [mArray addObject:theDic];
+        }else{
+            if (![LTools isEmpty:[dic stringValueForKey:@"appoint_date"]]) {
+                NSString *content = [dic stringValueForKey:@"appoint_date"];//具体时间点
+                
+                
+                NSDictionary *theDic = @{
+                                         @"title":@"预约时间：",
+                                         @"content":content
+                                         };
+                [mArray addObject:theDic];
+            }
         }
+        
+        
+        
         
         if (![LTools isEmpty:[dic stringValueForKey:@"hospital_name"]]) {
             NSDictionary *theDic = @{
