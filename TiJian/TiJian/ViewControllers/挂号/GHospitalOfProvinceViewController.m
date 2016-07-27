@@ -51,7 +51,7 @@
     [self setupNavigation];
     [self creatTab];
     [self creatMysearchView];
-    [self prepareNetData];
+    [self getCities];
     
     if (self.hospitalType == HospitalType_search) {
         [_searchTF becomeFirstResponder];
@@ -77,14 +77,16 @@
     _tab.showsVerticalScrollIndicator = NO;
     _tab.backgroundColor = RGBCOLOR(222, 238, 248);
     [self.view addSubview:_tab];
+    [self getCacheForCities];
     
     _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(106, 0, DEVICE_WIDTH - 106, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.tag = 101;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [_rTab refreshNewData];
     [self.view addSubview:_rTab];
+    [self getCacheForHospital];
+    [_rTab showRefreshHeader:YES];
     
 }
 
@@ -198,7 +200,7 @@
 }
 
 
-#pragma mark - 切换城市
+#pragma mark - 切换省份
 -(void)myNavcRightBtnClicked:(UIButton *)sender{
     if ([sender.titleLabel.text isEqualToString:@"切换城市"]) {
         GChooseProvinceViewController *cc = [[GChooseProvinceViewController alloc]init];
@@ -226,22 +228,20 @@
 
 #pragma mark - 网络请求
 
--(void)prepareNetData
-{
-    
-    [self getCities];
-}
-
 -(void)getCities{
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
     [params safeSetString:_theProvinceId forKey:@"province_id"];
+    
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:NGuahao_getCity parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *list = [result arrayValueForKey:@"list"];
         _citiesArray = list;
         _hospital_count = [result stringValueForKey:@"hospital_count"];
+        
+        [self setCitiesCache];
+        
         [_tab reloadData];
         
     } failBlock:^(NSDictionary *result) {
@@ -260,11 +260,43 @@
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:NGuahao_getHospital parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
         NSArray *list = [result arrayValueForKey:@"list"];
+        
+        [self setHospitalCacheWithList:list];
+        
         [_rTab reloadData:list pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_nodata]];
         
     } failBlock:^(NSDictionary *result) {
         
     }];
+}
+
+#pragma mark - 缓存相关
+-(void)setCitiesCache{
+    NSString *citiesKey = [GMAPI citiesKeyOfHostipalWithProvinceId:_theProvinceId];
+    NSMutableDictionary *cacheDic = [NSMutableDictionary dictionaryWithCapacity:1];
+    [cacheDic safeSetValue:_citiesArray forKey:@"cities"];
+    [cacheDic safeSetValue:_hospital_count forKey:@"count"];
+    [GMAPI cache:cacheDic ForKey:citiesKey];
+}
+
+-(void)setHospitalCacheWithList:(NSArray *)list{
+    NSString *citiesKey = [GMAPI hospitalKeyWithProvinceId:_theProvinceId cityId:_theCityId];
+    [GMAPI cache:list ForKey:citiesKey];
+    
+}
+
+-(void)getCacheForCities{
+    NSString *citiesKey = [GMAPI citiesKeyOfHostipalWithProvinceId:_theProvinceId];
+    NSDictionary *dic = [GMAPI cacheForKey:citiesKey];
+    _citiesArray = [dic arrayValueForKey:@"cities"];
+    _hospital_count = [dic stringValueForKey:@"count"];
+    [_tab reloadData];
+}
+
+-(void)getCacheForHospital{
+    NSString *citiesKey = [GMAPI hospitalKeyWithProvinceId:_theProvinceId cityId:_theCityId];
+    NSArray *hospitalArray = [GMAPI cacheForKey:citiesKey];
+    [_rTab reloadData:hospitalArray pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_nodata]];
 }
 
 #pragma mark - RefreshDelegate
@@ -426,6 +458,7 @@
     return height;
 }
 
+#pragma mark - 切换城市
 -(void)classClicked:(UIButton *)sender{
     
     [self hiddenKeyBord];
@@ -438,12 +471,12 @@
         sender.selected = YES;
         if (index == 0) {
             _theCityId = nil;
-            [_rTab refreshNewData];
+            [_rTab showRefreshHeader:YES];
         }else{
             NSDictionary *cityDic = _citiesArray[index-1];
             _theProvinceId = [cityDic stringValueForKey:@"province_id"];
             _theCityId = [cityDic stringValueForKey:@"city_id"];
-            [_rTab refreshNewData];
+            [_rTab showRefreshHeader:YES];
         }
         [_tab reloadData];
     }

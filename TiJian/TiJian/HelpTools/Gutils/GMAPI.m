@@ -292,16 +292,24 @@
 //NSUserDefault存
 + (void)cache:(id)dataInfo ForKey:(NSString *)key
 {
-    NSLog(@"key===%@",key);
+    if (!key) {
+        return;
+    }
     @try {
+        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:nil forKey:key];
         [defaults setObject:dataInfo forKey:key];
         [defaults synchronize];
+        
     }
     @catch (NSException *exception) {
+        
         NSLog(@"exception %@",exception);
+        
     }
     @finally {
+        
     }
 }
 
@@ -554,6 +562,27 @@
     return str;
 }
 
+
++(NSString *)citiesKeyOfHostipalWithProvinceId:(NSString *)pid{
+    NSString *str;
+    
+    if (![LTools isEmpty:pid]) {
+        str = [NSString stringWithFormat:@"%@%@",CitiesCacheOfHospital,pid];
+    }
+    return str;
+}
+
++(NSString *)hospitalKeyWithProvinceId:(NSString*)pid cityId:(NSString *)cid{
+    NSString *str;
+    
+    if (![LTools isEmpty:pid] && ![LTools isEmpty:cid]) {
+        str = [NSString stringWithFormat:@"%@%@%@",HospitalCacheOfHospital,pid,cid];
+    }else if (![LTools isEmpty:pid]){
+        str = [NSString stringWithFormat:@"%@%@",HospitalCacheOfHospital,pid];
+    }
+    
+    return str;
+}
 
 
 @end

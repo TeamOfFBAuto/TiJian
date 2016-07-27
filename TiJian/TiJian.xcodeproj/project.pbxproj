@@ -4465,7 +4465,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "29f760da-52c6-4bd4-9e18-15a34e3c4d44";
+				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4503,7 +4503,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "29f760da-52c6-4bd4-9e18-15a34e3c4d44";
+				PROVISIONING_PROFILE = "595ddaeb-3860-4f16-9bf3-c996986dc429";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;

@@ -164,4 +164,17 @@
  */
 
 +(NSString *)orderStateStr:(NSString*)num;
+
+
+/**
+ *  获取缓存城市的key
+ */
+
++(NSString *)citiesKeyOfHostipalWithProvinceId:(NSString *)pid;
+
+/**
+ *  获取缓存医院的key
+ */
++(NSString *)hospitalKeyWithProvinceId:(NSString*)pid cityId:(NSString *)cid;
+
 @end

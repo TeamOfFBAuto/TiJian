@@ -109,7 +109,8 @@
 #define USERCOMMONLYUSEDADDRESS_P @"USERCOMMONLYUSEDADDRESS_P"//预约挂号用户最近访问
 #define USERCOMMONLYUSEDSEARCHWORD @"USERCOMMONLYUSEDSEARCHWORD"//用户常用搜索
 #define USERHistorySearch_hospital @"USERHistorySearch_hospital"//医院历史搜索
-
+#define CitiesCacheOfHospital @"CitiesOfHospital_provinceId="//医院缓存key拼接provinceid
+#define HospitalCacheOfHospital @"HospitalOfHospital_provinceId="//医院缓存key拼接provinceid
 //分享相关
 #define Share_title @"shareTitle" //分享标题
 #define Share_imageUrl @"shareImageUrl" //分享图片地址
