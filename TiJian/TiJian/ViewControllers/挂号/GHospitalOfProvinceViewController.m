@@ -85,8 +85,12 @@
     _rTab.tag = 101;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_rTab];
-    [self getCacheForHospital];
-    [_rTab showRefreshHeader:YES];
+    if ([self getCacheForHospital]) {
+        [_rTab refreshNewData];
+    }else{
+        [_rTab showRefreshHeader:YES];
+    }
+    
     
 }
 
@@ -245,7 +249,7 @@
         [_tab reloadData];
         
     } failBlock:^(NSDictionary *result) {
-        
+        [_tab reloadData];
     }];
 }
 
@@ -266,6 +270,9 @@
         [_rTab reloadData:list pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_nodata]];
         
     } failBlock:^(NSDictionary *result) {
+        if (_rTab.dataArray <=0) {
+            [_rTab reloadData:nil pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_requestFail]];
+        }
         
     }];
 }
@@ -293,10 +300,14 @@
     [_tab reloadData];
 }
 
--(void)getCacheForHospital{
+-(BOOL)getCacheForHospital{
     NSString *citiesKey = [GMAPI hospitalKeyWithProvinceId:_theProvinceId cityId:_theCityId];
     NSArray *hospitalArray = [GMAPI cacheForKey:citiesKey];
     [_rTab reloadData:hospitalArray pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_nodata]];
+    if (hospitalArray.count>0) {//有缓存
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - RefreshDelegate
@@ -386,6 +397,8 @@
         [btn setTitleColor:RGBCOLOR(85, 145, 205) forState:UIControlStateSelected];
         [btn setTitle:title forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:13];
+        btn.titleLabel.numberOfLines = 2;
+        btn.titleLabel.textAlignment = NSTextAlignmentCenter;
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         btn.tag = indexPath.row+10;
         [btn addTarget:self action:@selector(classClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -471,12 +484,24 @@
         sender.selected = YES;
         if (index == 0) {
             _theCityId = nil;
-            [_rTab showRefreshHeader:YES];
+            
+            if ([self getCacheForHospital]) {
+                [_rTab refreshNewData];
+            }else{
+                [_rTab showRefreshHeader:YES];
+            }
+            
         }else{
             NSDictionary *cityDic = _citiesArray[index-1];
             _theProvinceId = [cityDic stringValueForKey:@"province_id"];
             _theCityId = [cityDic stringValueForKey:@"city_id"];
-            [_rTab showRefreshHeader:YES];
+            
+            if ([self getCacheForHospital]) {
+                [_rTab refreshNewData];
+            }else{
+                [_rTab showRefreshHeader:YES];
+            }
+            
         }
         [_tab reloadData];
     }
@@ -542,10 +567,12 @@
     if (type == PageResultType_nodata){
         
         content = @"暂无可选医院";
+    }else if (type == PageResultType_requestFail){
+        content = @"网络连接失败";
     }
 
 
-    ResultView *result = [[ResultView alloc]initWithNoHospitalImage:[UIImage imageNamed:@"hema_heart"] title:@"温馨提示" content:@"暂无可选医院" width:DEVICE_WIDTH - 106];
+    ResultView *result = [[ResultView alloc]initWithNoHospitalImage:[UIImage imageNamed:@"hema_heart"] title:@"温馨提示" content:content width:DEVICE_WIDTH - 106];
     
     
     return result;
