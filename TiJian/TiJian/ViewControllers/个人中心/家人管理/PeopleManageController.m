@@ -840,7 +840,14 @@
     UILabel *titleLable = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 35, bgView.height) title:@"本人" font:16 align:NSTextAlignmentLeft textColor:[UIColor blackColor]];
     [bgView addSubview:titleLable];
     
-    NSString *name = [UserInfo userInfoForCache].user_name;
+    UserInfo *userInfo = [UserInfo userInfoForCache];
+    
+    NSString *name = userInfo.user_name;
+    NSString *realName = userInfo.real_name;
+    if (![LTools isEmpty:realName]) {
+        name = realName;
+    }
+    
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(titleLable.right + 60, 0, 200, bgView.height) title:name font:15 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"313131"]];
     [bgView addSubview:nameLabel];
     

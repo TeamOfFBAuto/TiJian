@@ -355,4 +355,32 @@
     [userInfo cacheForKey:USERINFO_MODEL];
 }
 
+#pragma mark - 
+
+/**
+ *  判断本人信息是否完整
+ *
+ *  @return
+ */
++ (BOOL)isLoginUserInfoWell
+{
+    UserInfo *userInfo = [UserInfo userInfoForCache];
+    NSString *name = userInfo.real_name;
+    NSString *id_card = userInfo.id_card;
+    int sex = [userInfo.gender intValue];
+    int age = [userInfo.age intValue];
+    NSString *phone = userInfo.mobile;
+    
+    if (name.length > 0 &&
+        [LTools isValidateIDCard:id_card] &&
+        sex > 0 &&
+        age > 0 &&
+        [LTools isValidateMobile:phone]) {
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
 @end

@@ -58,7 +58,8 @@
         //需要显示 收货地址
     }
     
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    self.rightString = @"完成";
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
     [self netWorkForList];
     
@@ -187,8 +188,6 @@
             
             [UserInfo updateUserBirthday:param];
             _userInfo.birthday = [NSString stringWithFormat:@"%@",param];
-
-            
         }else if (type == UPDATEINFOTYPE_GENDER){
             
             [UserInfo updateUserSex:param];
@@ -228,9 +227,18 @@
     }];
 }
 
-#pragma mark - 数据解析处理
-
 #pragma mark - 事件处理
+
+/**
+ *  同步用户信息成功
+ */
+- (void)syncParams
+{
+    NSDictionary *params = @{@"result":[NSNumber numberWithBool:YES]};
+    if (self.updateParamsBlock && params) {
+        self.updateParamsBlock(params);
+    }
+}
 
 /**
  *  收货地址
@@ -264,6 +272,7 @@
         if (type == UPDATEINFOTYPE_REALNAME) {
             
             _userInfo.real_name = text;
+            [Weakself syncParams];
             
         }else if (type == UPDATEINFOTYPE_IDCARD){
             
@@ -272,6 +281,7 @@
             
         }else if (type == UPDATEINFOTYPE_USERNAME){
             _userInfo.user_name = text;
+            [Weakself syncParams];
         }
         [weakTable reloadData];
         
@@ -356,6 +366,12 @@
     [self presentViewController:imagePicker animated:YES completion:^{
         
     }];
+}
+
+//superClass method
+-(void)rightButtonTap:(UIButton *)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - 代理

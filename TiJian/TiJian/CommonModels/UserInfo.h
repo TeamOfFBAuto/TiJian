@@ -187,4 +187,13 @@
  */
 + (void)updateUserCustomed:(NSString *)customed;
 
+#pragma mark -
+
+/**
+ *  判断本人信息是否完整
+ *
+ *  @return
+ */
++ (BOOL)isLoginUserInfoWell;
+
 @end

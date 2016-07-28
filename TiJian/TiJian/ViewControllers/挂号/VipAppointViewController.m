@@ -328,11 +328,29 @@
 {
     EditUserInfoViewController *edit = [[EditUserInfoViewController alloc]init];
     edit.isFullUserInfo = YES;
+     @WeakObj(self);
     [edit setUpdateParamsBlock:^(NSDictionary *params){
-        
+        [Weakself updateLoginUser];
         NSLog(@"params %@",params);
     }];
     [self.navigationController pushViewController:edit animated:YES];
+}
+
+/**
+ *  同步当前登录用户
+ */
+- (void)updateLoginUser
+{
+    for (UserInfo *userInfo in _table.dataArray)
+    {
+        if ([userInfo.uid intValue] == [[UserInfo getUserId]intValue] &&
+            ([LTools isEmpty:userInfo.family_uid] || [userInfo.family_uid intValue] == 0))//判断是自己
+        {
+            UserInfo *loginUser = [UserInfo userInfoForCache];
+            userInfo.family_user_name = loginUser.real_name;
+            [_table reloadData];
+        }
+    }
 }
 
 /**
@@ -563,6 +581,7 @@
         {
             name = selfUser.real_name;
         }
+        selfUser.mySelf = YES;
         selfUser.family_user_name = name;
         
         NSMutableArray *arr = [NSMutableArray arrayWithObject:selfUser];
@@ -603,6 +622,18 @@
 {
     UserInfo *user = _table.dataArray[indexPath.row];
 //    [self pushToGuaHaoType:2 familyuid:user.family_uid];
+    
+    if ([LTools isEmpty:user.family_uid]
+        && user.mySelf) { //判断是否是自己
+        
+        if (![UserInfo isLoginUserInfoWell]) { //信心不完善
+            
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"用户信息不完整,去完善？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去完善", nil];
+            [alert show];
+            
+            return;
+        }
+    }
     
     [self pushToNativeGuaHaoWithUserInfo:user];
     
@@ -648,6 +679,16 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
+}
+
+#pragma - mark UIAlertViewDelegate <NSObject>
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self editLoginUserInfo];
+    }
 }
 
 @end
