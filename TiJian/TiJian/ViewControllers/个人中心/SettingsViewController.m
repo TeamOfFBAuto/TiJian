@@ -20,6 +20,8 @@
 }
 
 @property(nonatomic,retain)UILabel *phoneLabel;
+@property(nonatomic,retain)UILabel *cacheLabel;
+@property(nonatomic,retain)NSString *cacheSize;//缓存大小
 
 @end
 
@@ -32,7 +34,7 @@
     self.myTitle = @"设置";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    _titlesArr = @[@"手机号",@"修改密码",@"意见反馈",@"鼓励评价",@"关于我们"];
+    _titlesArr = @[@"手机号",@"修改密码",@"意见反馈",@"鼓励评价",@"清理缓存",@"关于我们"];
     
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.delegate = self;
@@ -40,6 +42,9 @@
     [self.view addSubview:_table];
     
     [self addLogoutButton];
+    
+    NSInteger cacheSize = [[SDImageCache sharedImageCache] getSize];
+    NSLog(@"缓存大小%ld",cacheSize);
 }
 
 -(void)viewDidLayoutSubviews
@@ -62,13 +67,30 @@
 
 #pragma mark - 创建视图
 
+- (UILabel *)label
+{
+    UILabel *label = [[UILabel alloc]init];
+    label.font = [UIFont systemFontOfSize:14];
+    label.textColor = [UIColor colorWithHexString:@"646464"];
+    label.textAlignment = NSTextAlignmentRight;
+    return label;
+}
+
 -(UILabel *)phoneLabel
 {
-    if (_phoneLabel) {
-        return _phoneLabel;
+    if (!_phoneLabel) {
+        _phoneLabel = [self label];
+
     }
-    _phoneLabel = [[UILabel alloc]init];
     return _phoneLabel;
+}
+
+-(UILabel *)cacheLabel
+{
+    if (!_cacheLabel) {
+        _cacheLabel = [self label];
+    }
+    return _cacheLabel;
 }
 
 - (void)addLogoutButton
@@ -131,6 +153,91 @@
     [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
 }
 
+#pragma mark - 缓存处理
+
+/**
+ *  清缓存
+ */
+- (void)clearCache
+{
+     @WeakObj(self);
+     @WeakObj(_table);
+    DDLOG(@"清理之前 %@",[Weakself cacheSize]);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *cachPath = [Weakself cacheFolderPath];
+        
+        NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachPath];
+        
+        for (NSString *p in files) {
+            NSError *error;
+            NSString *path = [cachPath stringByAppendingPathComponent:p];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            //清理完毕
+            [Weak_table reloadData];
+            [LTools showMBProgressWithText:@"清理完毕!" addToView:Weakself.view];
+        });
+    });
+}
+
+/**
+ *  获取缓存大小(主要是Library cache)
+ *
+ *  @return
+ */
+- (NSString *)cacheSize
+{
+    if (_cacheSize) {
+        return _cacheSize;
+    }
+    int size = [self sizeOfFolder:[self cacheFolderPath]];
+    NSString * lastSize = @"";
+    if (size < (1024 * 1024)) {
+        lastSize = [NSString stringWithFormat:@"%.1fKB",size/1024.0f];
+    }else if(size > (1024 * 1024)){
+        lastSize = [NSString stringWithFormat:@"%.1fMB",size/1024.0f/1024.0f];
+    }
+    return lastSize;
+}
+
+/**
+ *  缓存路径(目前只考虑这个文件夹下面缓存)
+ *
+ *  @return
+ */
+- (NSString *)cacheFolderPath
+{
+    return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+}
+
+/**
+ *  计算文件夹下文件大小
+ *
+ *  @param folderPath 文件夹路径
+ *
+ *  @return
+ */
+- (int)sizeOfFolder:(NSString*)folderPath
+{
+    NSArray *contents;
+    NSEnumerator *enumerator;
+    NSString *path;
+    contents = [[NSFileManager defaultManager] subpathsAtPath:folderPath];
+    enumerator = [contents objectEnumerator];
+    int fileSizeInt = 0;
+    while (path = [enumerator nextObject]) {
+        NSError *error;
+        NSDictionary *fattrib = [[NSFileManager defaultManager] attributesOfItemAtPath:[folderPath stringByAppendingPathComponent:path] error:&error];
+        fileSizeInt +=[fattrib fileSize];
+    }
+    return fileSizeInt;
+}
+
 #pragma mark - 网络请求
 
 /**
@@ -143,16 +250,14 @@
         return;
     }
     NSDictionary *params = @{@"authcode":authkey};
-//    __weak typeof(self)weakSelf = self;
+
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:USER_LOGOUT_ACTION parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        NSLog(@"completion %@ %@",result[Erro_Info],result);
-    
+        DDLOG(@"completion %@ %@",result[Erro_Info],result);
         
     } failBlock:^(NSDictionary *result) {
         
-        NSLog(@"failBlock %@",result[Erro_Info]);
-        
+        DDLOG(@"failBlock %@",result[Erro_Info]);
     }];
 }
 
@@ -179,14 +284,21 @@
     UIImageView *arrow = (UIImageView *)[cell.contentView viewWithTag:100];
     if (indexPath.row == 0) {
         //手机号
-        self.phoneLabel.frame = CGRectMake(DEVICE_WIDTH - 100 - 7, 0, 100, 50);
+        self.phoneLabel.frame = CGRectMake(DEVICE_WIDTH - 100 - 7 - 7, 0, 100, 50);
         [cell.contentView addSubview:_phoneLabel];
         _phoneLabel.text = [UserInfo userInfoForCache].mobile;
-        _phoneLabel.font = [UIFont systemFontOfSize:14];
-        _phoneLabel.textColor = [UIColor colorWithHexString:@"646464"];
         
         arrow.hidden = YES;
-    }else
+    }else if (indexPath.row == 4)
+    {
+        NSLog(@"缓存%@",[self cacheSize]);
+        self.cacheLabel.frame = CGRectMake(DEVICE_WIDTH - 100 - 7 - 7, 0, 100, 50);
+        [cell.contentView addSubview:_cacheLabel];
+        _cacheLabel.text = [self cacheSize];
+        
+        arrow.hidden = YES;
+    }
+    else
     {
         arrow.hidden = NO;
     }
@@ -261,6 +373,11 @@
         }
             break;
         case 4:
+        {
+            [self clearCache];//清理缓存
+        }
+            break;
+        case 5:
         {
             AboutUsController *about = [[AboutUsController alloc]init];
             [self.navigationController pushViewController:about animated:YES];
