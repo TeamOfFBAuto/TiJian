@@ -233,10 +233,12 @@
     _theProvinceId = [dic stringValueForKey:@"province_id"];
     _theCityId = nil;
     _selectRow = 0;
-    _rTab.pageNum = 1;
-    [_rTab.dataArray removeAllObjects];
+    
+    [self getCacheForCities];
     [self getCities];
-    [_rTab refreshNewData];
+    
+    [self getCacheForHospital];
+    [_rTab showRefreshHeader:YES];
 }
 
 #pragma mark - 网络请求
