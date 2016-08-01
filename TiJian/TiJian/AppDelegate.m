@@ -296,8 +296,12 @@
 {
     
 #ifdef DEBUG
-    //JSPatch develope
-    [JSPatch testScriptInBundle];
+    NSString *currentVersion = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+    NSComparisonResult result = [currentVersion compare:@"3.1"];
+    if (result != 1) {
+        //JSPatch develope
+        [JSPatch testScriptInBundle];
+    }
 #else
     //JSPatch distribution
     [JSPatch startWithAppKey:JSPatchAppKey];

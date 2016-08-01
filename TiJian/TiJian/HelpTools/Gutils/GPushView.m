@@ -58,6 +58,11 @@
     
     self.tempDic = theDic;
     
+    
+    if (![LTools isEmpty:[theDic stringValueForKey:@"category_id"]]) {
+        self.category_id = [theDic stringValueForKey:@"category_id"];
+    }
+    
     //数据部分
     self.isGender = theGender;
     _GenderTitleArray = @[@"全部",@"男",@"女"];
@@ -831,6 +836,7 @@
 
     self.selectDic = nil;
     self.selectDic = [NSMutableDictionary dictionaryWithCapacity:1];
+    [self.selectDic safeSetString:self.category_id forKey:@"category_id"];
     self.tf_low.text = nil;
     self.tf_high.text = nil;
     

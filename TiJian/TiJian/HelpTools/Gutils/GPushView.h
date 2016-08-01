@@ -86,6 +86,7 @@
 @property(nonatomic,strong)NSMutableDictionary *selectDic;//cellforrow取值
 @property(nonatomic,strong)NSDictionary *tempDic;//存储初始值 只在开始时备份(把tempDic = select)和最后点击取消时(select = tempDic)改变
 
+@property(nonatomic,strong)NSString *category_id;
 
 
 
