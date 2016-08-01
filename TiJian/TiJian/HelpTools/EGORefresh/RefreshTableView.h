@@ -99,6 +99,13 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidde;
 #pragma mark - 刷新数据
 
 -(void)showRefreshHeader:(BOOL)animated;//代码出发刷新
+/**
+ *  延迟执行
+ *
+ *  @param delay
+ */
+- (void)refreshNewDataDelay:(CGFloat)delay;
+
 -(void)refreshNewData;//刷新数据 无偏移
 
 #pragma mark - 完成数据加载

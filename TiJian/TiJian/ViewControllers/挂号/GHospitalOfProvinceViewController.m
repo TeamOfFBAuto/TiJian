@@ -33,6 +33,7 @@
     
     GHospitalsearchView *_theCustomSearchView;//自定义搜索view
     
+    int _isFirstSelect[50];
     
 }
 @end
@@ -48,6 +49,11 @@
     self.view.backgroundColor = [UIColor whiteColor];
     _theProvinceId = [GMAPI getCurrentProvinceId];
     
+    for (int i = 0; i<50; i++) {
+        _isFirstSelect[i] = 0;
+    }
+    
+    
     [self setupNavigation];
     [self creatTab];
     [self creatMysearchView];
@@ -56,6 +62,8 @@
     if (self.hospitalType == HospitalType_search) {
         [_searchTF becomeFirstResponder];
     }
+    
+    
     
 }
 
@@ -85,8 +93,9 @@
     _rTab.tag = 101;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_rTab];
-    if ([self getCacheForHospital]) {
-        [_rTab refreshNewData];
+    if ([self isHaveCacheForHospital]) {
+        [self getCacheForHospital];
+        [_rTab refreshNewDataDelay:0];
     }else{
         [_rTab showRefreshHeader:YES];
     }
@@ -300,15 +309,23 @@
     [_tab reloadData];
 }
 
--(BOOL)getCacheForHospital{
+-(void)getCacheForHospital{
     NSString *citiesKey = [GMAPI hospitalKeyWithProvinceId:_theProvinceId cityId:_theCityId];
     NSArray *hospitalArray = [GMAPI cacheForKey:citiesKey];
+    _rTab.isReloadData = YES;
+    _rTab.pageNum = 1;
     [_rTab reloadData:hospitalArray pageSize:PAGESIZE_MID CustomNoDataView:[self resultViewWithType:PageResultType_nodata]];
+}
+
+-(BOOL)isHaveCacheForHospital{
+    NSString *citiesKey = [GMAPI hospitalKeyWithProvinceId:_theProvinceId cityId:_theCityId];
+    NSArray *hospitalArray = [GMAPI cacheForKey:citiesKey];
     if (hospitalArray.count>0) {//有缓存
         return YES;
     }
     return NO;
 }
+
 
 #pragma mark - RefreshDelegate
 
@@ -482,13 +499,19 @@
     }else{
         _selectRow = index;
         sender.selected = YES;
+        
         if (index == 0) {
             _theCityId = nil;
             
-            if ([self getCacheForHospital]) {
-                [_rTab refreshNewData];
+            BOOL isHaveCache = [self isHaveCacheForHospital];
+            
+            if (isHaveCache && _isFirstSelect[sender.tag - 10] == 1) {//有缓存并更新过
+                [self getCacheForHospital];
+            }else if (isHaveCache){
+                [self getCacheForHospital];
+                [_rTab refreshNewDataDelay:0];
             }else{
-                [_rTab showRefreshHeader:YES];
+                [_rTab showRefreshHeader:YES];//有偏移刷新
             }
             
         }else{
@@ -496,15 +519,24 @@
             _theProvinceId = [cityDic stringValueForKey:@"province_id"];
             _theCityId = [cityDic stringValueForKey:@"city_id"];
             
-            if ([self getCacheForHospital]) {
-                [_rTab refreshNewData];
+            BOOL isHaveCache = [self isHaveCacheForHospital];
+            
+            if (isHaveCache && _isFirstSelect[sender.tag - 10] == 1) {//有缓存并更新过
+                [self getCacheForHospital];
+            }else if (isHaveCache) {
+                [self getCacheForHospital];
+                [_rTab refreshNewDataDelay:0];
+                
             }else{
-                [_rTab showRefreshHeader:YES];
+                [_rTab showRefreshHeader:YES];//有偏移刷新
             }
             
         }
         [_tab reloadData];
     }
+    
+    
+    _isFirstSelect[sender.tag - 10] = 1;
 }
 
 #pragma mark - UITextFieldDelegate

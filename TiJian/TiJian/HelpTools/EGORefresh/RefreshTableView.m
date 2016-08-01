@@ -151,6 +151,16 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
     }
 }
 
+/**
+ *  延迟执行
+ *
+ *  @param delay
+ */
+- (void)refreshNewDataDelay:(CGFloat)delay
+{
+    [self performSelector:@selector(refreshNewData) withObject:nil afterDelay:delay];
+}
+
 
 #pragma mark - 完成数据加载
 
