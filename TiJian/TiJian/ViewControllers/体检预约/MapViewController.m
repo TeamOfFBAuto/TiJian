@@ -411,35 +411,39 @@
         ((BMKPinAnnotationView*)annotationView).pinColor = BMKPinAnnotationColorRed;
         // 设置重天上掉下的效果(annotation)
         ((BMKPinAnnotationView*)annotationView).animatesDrop = YES;
+        
+        
+        // 设置位置
+        annotationView.centerOffset = CGPointMake(0, -(annotationView.frame.size.height * 0.5));
+        annotationView.annotation = annotation;
+        // 单击弹出泡泡，弹出泡泡前提annotation必须实现title属性
+        annotationView.canShowCallout = YES;
+        // 设置是否可以拖拽
+        annotationView.draggable = NO;
+        
+        annotationView.image = [UIImage imageNamed:@"gpin.png"];
+        
+        [annotationView setSelected:YES animated:NO];
+        annotationView.enabled = YES;
+        
+        annotationView.rightCalloutAccessoryView = [[UIView alloc]initWithFrame:CGRectMake(0, 1, 34, 41)];
+        annotationView.rightCalloutAccessoryView.userInteractionEnabled = YES;
+        annotationView.clipsToBounds = YES;
+        
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [btn setTitle:@"导航" forState:UIControlStateNormal];
+        [btn setBackgroundColor:[[UIColor grayColor] colorWithAlphaComponent:0.5]];
+        [btn setFrame:annotationView.rightCalloutAccessoryView.bounds];
+        [btn addTarget:self action:@selector(gDaohang) forControlEvents:UIControlEventTouchUpInside];
+        btn.layer.masksToBounds = YES;
+        
+        [annotationView.rightCalloutAccessoryView addSubview:btn];
+        
     }
     
-    // 设置位置
-    annotationView.centerOffset = CGPointMake(0, -(annotationView.frame.size.height * 0.5));
-    annotationView.annotation = annotation;
-    // 单击弹出泡泡，弹出泡泡前提annotation必须实现title属性
-    annotationView.canShowCallout = YES;
-    // 设置是否可以拖拽
-    annotationView.draggable = NO;
     
-    annotationView.image = [UIImage imageNamed:@"gpin.png"];
-    
-    annotationView.selected = YES;
-    annotationView.enabled = YES;
-    
-    annotationView.rightCalloutAccessoryView = [[UIView alloc]initWithFrame:CGRectMake(0, 1, 34, 41)];
-    annotationView.rightCalloutAccessoryView.userInteractionEnabled = YES;
-    annotationView.clipsToBounds = YES;
-
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [btn setTitle:@"导航" forState:UIControlStateNormal];
-    [btn setBackgroundColor:[[UIColor grayColor] colorWithAlphaComponent:0.5]];
-    [btn setFrame:annotationView.rightCalloutAccessoryView.bounds];
-    [btn addTarget:self action:@selector(gDaohang) forControlEvents:UIControlEventTouchUpInside];
-    btn.layer.masksToBounds = YES;
-    
-    [annotationView.rightCalloutAccessoryView addSubview:btn];
     
     return annotationView;
 }
