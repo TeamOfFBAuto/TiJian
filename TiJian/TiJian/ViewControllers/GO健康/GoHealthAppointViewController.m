@@ -874,7 +874,7 @@
         NSString *string = dateDic[@"date"];
         NSDate *date = [LTools dateFromString:string withFormat:@"yyyy-MM-dd HH:mm:ssZ"];
         
-        return [NSString stringWithFormat:@"%@ %@",[LTools timeDate:date withFormat:@"MM/dd"],[LTools weekWithDate:date]];
+        return [NSString stringWithFormat:@"%@ %@",[LTools timeDate:date withFormat:@"MM/dd"],[date weekString]];
         
     }else if (component == 1){
         

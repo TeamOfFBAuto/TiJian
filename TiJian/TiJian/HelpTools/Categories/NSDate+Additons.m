@@ -36,4 +36,20 @@
     return  fabs(time / 60 / 60 / 24);
 }
 
+/**
+ *  返回星期
+ *
+ *  @return 星期几
+ */
+- (NSString *)weekString
+{
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    NSArray *weekdayAry = [NSArray arrayWithObjects:@"星期日", @"星期一", @"星期二", @"星期三", @"星期四", @"星期五", @"星期六", nil];
+    [dateFormat  setShortWeekdaySymbols:weekdayAry];
+    [dateFormat setDateFormat:@"eee"];
+    NSDate *date = self;
+    NSString *srting = [dateFormat stringFromDate:date];
+    return srting;
+}
+
 @end

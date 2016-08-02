@@ -1084,45 +1084,6 @@
 }
 
 /**
- *  获取星期几
- *
- *  @param date NSDate
- *
- *  @return
- */
-+ (NSString *)weekWithDate:(NSDate *)date
-{
-    int week = (int)[date fs_weekday];
-    switch (week) {
-        case 1:
-            return @"星期日";
-            break;
-        case 2:
-            return @"星期一";
-            break;
-        case 3:
-            return @"星期二";
-            break;
-        case 4:
-            return @"星期三";
-            break;
-        case 5:
-            return @"星期四";
-            break;
-        case 6:
-            return @"星期五";
-            break;
-        case 7:
-            return @"星期六";
-            break;
-       
-        default:
-            break;
-    }
-    return [LTools timeDate:date withFormat:@"yyyy-MM-dd"];
-}
-
-/**
  *  是否需要更新
  *
  *  @param hours      时间间隔
@@ -1156,7 +1117,7 @@
 
 + (void)alertText:(NSString *)text viewController:(UIViewController *)vc
 {
-    id obj=NSClassFromString(@"UIAlertController");
+    id obj = NSClassFromString(@"UIAlertController");
     if (obj) {
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:text preferredStyle:UIAlertControllerStyleAlert];
@@ -1182,7 +1143,8 @@
 
 + (void)alertText:(NSString *)text
 {
-    id obj=NSClassFromString(@"UIAlertController");
+    id obj = NSClassFromString(@"UIAlertController");
+    
     if (obj) {
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:text preferredStyle:UIAlertControllerStyleAlert];

@@ -28,4 +28,12 @@
  */
 - (NSInteger)daysBetweenDate:(NSDate *)toDate;
 
+
+/**
+ *  返回星期
+ *
+ *  @return 星期几
+ */
+- (NSString *)weekString;
+
 @end

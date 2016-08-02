@@ -574,10 +574,14 @@
 
 - (NSDate *)endTimeDateWithBeginDate:(NSDate *)beginDate
 {
+    NSDate *realDate = [beginDate fs_dateBySubtractingDays:1];//减1为实际的天数（备注:beginDate=今天+1）
+    
     int padding = 1;
     //星期天 1
-    int week = (int)[beginDate fs_weekday];
-    if (week == 1 || week == 2|| week == 3 || week == 4) //周一至周三 和 周天 需要加9天
+    int week = (int)[realDate fs_weekday]; //实际天数
+    
+    //week 周天为1 周一为2,往后推
+    if (week == 1 || week == 2|| week == 3 || week == 4) //周一2至周三4 和 周天 需要加9天
     {
         padding = 9;
         
@@ -590,7 +594,9 @@
         padding = 10;
     }
     
-    NSDate *endDate = [beginDate fs_dateByAddingDays:padding];
+    DDLOG(@"实际week %d 开始week:%d padding:%d",week,week + 1,padding);
+    
+    NSDate *endDate = [realDate fs_dateByAddingDays:padding];
     
     return endDate;
 }
