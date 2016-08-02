@@ -105,6 +105,7 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidde;
  *  @param delay
  */
 - (void)refreshNewDataDelay:(CGFloat)delay;
+-(void)showRefreshHeader:(BOOL)animated Delay:(CGFloat)delay;
 
 -(void)refreshNewData;//刷新数据 无偏移
 

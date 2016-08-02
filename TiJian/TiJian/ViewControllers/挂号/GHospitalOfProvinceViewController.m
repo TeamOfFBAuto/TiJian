@@ -238,7 +238,8 @@
     [self getCities];
     
     [self getCacheForHospital];
-    [_rTab showRefreshHeader:YES];
+    
+    [_rTab showRefreshHeader:YES Delay:0];
 }
 
 #pragma mark - 网络请求

@@ -161,6 +161,10 @@ refreshHeaderHidden:(BOOL)refreshHeaderHidden
     [self performSelector:@selector(refreshNewData) withObject:nil afterDelay:delay];
 }
 
+-(void)showRefreshHeader:(BOOL)animated Delay:(CGFloat)delay{
+    [self performSelector:@selector(showRefreshHeader:) withObject:[NSNumber numberWithBool:animated] afterDelay:delay];
+}
+
 
 #pragma mark - 完成数据加载
 
