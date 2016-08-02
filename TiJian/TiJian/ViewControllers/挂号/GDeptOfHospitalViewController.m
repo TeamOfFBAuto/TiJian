@@ -98,29 +98,27 @@
     
 }
 - (CGFloat)heightForRowIndexPath:(NSIndexPath *)indexPath tableView:(RefreshTableView *)tableView{
-    CGFloat height = 0.01;
-    height = 44;
+    CGFloat height = 44;
     return height;
 }
 
 - (UIView *)viewForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 50)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 44)];
     view.backgroundColor = RGBCOLOR(222, 238, 248);
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH, 50)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH, 44)];
     titleLabel.font = [UIFont systemFontOfSize:12];
     titleLabel.textColor = RGBCOLOR(87, 138, 189);
     NSDictionary *dic = _dataArray[section];
     NSString *dept_name = [dic stringValueForKey:@"dept_name"];
-    titleLabel.font = [UIFont systemFontOfSize:15];
+    titleLabel.font = [UIFont systemFontOfSize:14];
     titleLabel.text = dept_name;
     [view addSubview:titleLabel];
     
     return view;
 }
 - (CGFloat)heightForHeaderInSection:(NSInteger)section tableView:(RefreshTableView *)tableView{
-    CGFloat height = 0.01;
-    height = 44;
+    CGFloat height = 44;
     return height;
 }
 
