@@ -10,4 +10,3 @@ pod 'RongCloudIMKit', '~> 2.5.2'
 pod 'SSLunarDate', '~> 0.0.1'
 pod 'FSCalendar', '~> 1.6.3'
 pod 'UMengAnalytics-NO-IDFA'
-pod 'MagicWindowSDK' #魔窗

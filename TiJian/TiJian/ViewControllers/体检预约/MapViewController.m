@@ -447,7 +447,7 @@
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {
     
-//    NSLog(@"%s",__FUNCTION__);
+    NSLog(@"%s",__FUNCTION__);
     
     [mapView bringSubviewToFront:view];
     [mapView setNeedsDisplay];

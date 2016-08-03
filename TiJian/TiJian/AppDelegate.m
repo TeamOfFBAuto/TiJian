@@ -28,8 +28,6 @@
 #import "UMSocialWechatHandler.h"
 #import "UMSocialSinaSSOHandler.h"
 
-#import "MWApi.h"//魔窗
-
 #define kAlertViewTag_token 100 //融云token
 #define kAlertViewTag_otherClient 101 //其他设备登陆
 #define kAlertViewTag_active 102 //正在前台 推送消息
@@ -95,10 +93,6 @@
 
     RootViewController *root = [[RootViewController alloc]init];
     self.window.rootViewController = root;
-    
-    //魔窗
-    //初始化SDK，必写
-    [MWApi registerApp:@"L99P9WE7DRD8GTBWI0T7BQSP9BUN0B05"];
     
     return YES;
 }
@@ -480,13 +474,6 @@
 {
     return [self handleOpenUrl:url];
 }
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
-{
-    //如果使用了Universal link ，此方法必写
-    return [MWApi continueUserActivity:userActivity];
-}
-
 
 /**
  *  处理OpenURL 2016-07-26

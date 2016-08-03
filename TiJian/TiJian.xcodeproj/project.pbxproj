@@ -881,7 +881,6 @@
 		1324B6A61BD76B6A00FB47A9 /* PersonalCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCustomViewController.m; sourceTree = "<group>"; };
 		1324B6A91BD76DEF00FB47A9 /* LQuestionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQuestionView.h; sourceTree = "<group>"; };
 		1324B6AA1BD76DEF00FB47A9 /* LQuestionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQuestionView.m; sourceTree = "<group>"; };
-		1338D5A91D3C88C1003A2924 /* TiJian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TiJian.entitlements; sourceTree = "<group>"; };
 		1338D5AA1D3CABA9003A2924 /* AppointDirectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppointDirectController.h; sourceTree = "<group>"; };
 		1338D5AB1D3CABA9003A2924 /* AppointDirectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointDirectController.m; sourceTree = "<group>"; };
 		1338D5AD1D3CD3D8003A2924 /* location@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location@2x.png"; sourceTree = "<group>"; };
@@ -2611,7 +2610,6 @@
 		13F1F2641BBA78ED00885D31 /* TiJian */ = {
 			isa = PBXGroup;
 			children = (
-				1338D5A91D3C88C1003A2924 /* TiJian.entitlements */,
 				1374B3881CFD40610010CDE7 /* main.js */,
 				13F1F2981BBA99B800885D31 /* PrefixHeader.pch */,
 				1391FC5E1BBBB112005E06A8 /* Requests */,

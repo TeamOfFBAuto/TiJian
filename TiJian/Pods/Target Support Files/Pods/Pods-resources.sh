@@ -58,14 +58,12 @@ install_resource()
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "MagicWindowSDK/MagicWindowSDK/MagicWindowSDK/MagicWindow.bundle"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/RongCloud.bundle"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/en.lproj"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/zh-Hans.lproj"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/Emoji.plist"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "MagicWindowSDK/MagicWindowSDK/MagicWindowSDK/MagicWindow.bundle"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/RongCloud.bundle"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/en.lproj"
   install_resource "RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/zh-Hans.lproj"
