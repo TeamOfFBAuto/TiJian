@@ -187,7 +187,7 @@
             [mArray addObject:theDic];
         }else{
             if (![LTools isEmpty:[dic stringValueForKey:@"appoint_date"]]) {
-                NSString *content = [dic stringValueForKey:@"appoint_date"];//具体时间点
+                NSString *content = [dic stringValueForKey:@"appoint_date"];//时间段
                 
                 
                 NSDictionary *theDic = @{

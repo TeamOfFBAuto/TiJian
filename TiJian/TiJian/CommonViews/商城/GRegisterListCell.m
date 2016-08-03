@@ -38,7 +38,7 @@
         self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.hospitalNameLabel.right, 0, self.hospitalNameLabel.width, self.hospitalNameLabel.height)];
         self.timeLabel.numberOfLines = 5;
         self.timeLabel.textAlignment = NSTextAlignmentCenter;
-        self.timeLabel.font = [UIFont systemFontOfSize:12];
+        self.timeLabel.font = [UIFont systemFontOfSize:11];
         self.timeLabel.textColor = [UIColor blackColor];
         [self.contentView addSubview:self.timeLabel];
         
@@ -78,7 +78,12 @@
 
 -(void)loadDataWithDic:(NSDictionary *)dic indexPath:(NSIndexPath *)theIndex{
     self.hospitalNameLabel.text = [NSString stringWithFormat:@"%@(%@)",[dic stringValueForKey:@"hospital_name"],[dic stringValueForKey:@"hospital_level_desc"]];
-    self.timeLabel.text = [NSString stringWithFormat:@"%@\n%@",[dic stringValueForKey:@"check_appoint_date"],[dic stringValueForKey:@"dept_name"]];
+    if (![LTools isEmpty:[dic stringValueForKey:@"check_appoint_date"]]) {
+        self.timeLabel.text = [NSString stringWithFormat:@"%@\n%@",[dic stringValueForKey:@"check_appoint_date"],[dic stringValueForKey:@"dept_name"]];
+    }else{
+        self.timeLabel.text = [NSString stringWithFormat:@"%@\n%@",[dic stringValueForKey:@"appoint_date"],[dic stringValueForKey:@"dept_name"]];
+    }
+    
     self.stateLabel.text = [GMAPI orderStateStr:[dic stringValueForKey:@"status"]];
     self.detailBtn.tag = theIndex.row + 10;
     self.cancelBtn.tag = -theIndex.row  - 10;

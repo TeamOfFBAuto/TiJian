@@ -97,7 +97,7 @@
         [self getCacheForHospital];
         [_rTab refreshNewDataDelay:0];
     }else{
-        [_rTab showRefreshHeader:YES];
+        [_rTab showRefreshHeader:YES Delay:0];
     }
     
     
@@ -514,7 +514,7 @@
                 [self getCacheForHospital];
                 [_rTab refreshNewDataDelay:0];
             }else{
-                [_rTab showRefreshHeader:YES];//有偏移刷新
+                [_rTab showRefreshHeader:YES Delay:0];//有偏移刷新
             }
             
         }else{
@@ -531,7 +531,7 @@
                 [_rTab refreshNewDataDelay:0];
                 
             }else{
-                [_rTab showRefreshHeader:YES];//有偏移刷新
+                [_rTab showRefreshHeader:YES Delay:0];//有偏移刷新
             }
             
         }
@@ -556,7 +556,7 @@
     NSLog(@"%s",__FUNCTION__);
     if (![LTools isEmpty:_searchTF.text]) {
         _theCustomSearchView.searchWorld = _searchTF.text;
-        [_theCustomSearchView.rTab showRefreshHeader:YES];
+        [_theCustomSearchView.rTab showRefreshHeader:YES Delay:0];
         [_searchTF resignFirstResponder];
         
         [GMAPI setUserSearchHospital:_searchTF.text];

@@ -68,27 +68,16 @@
     _tab.dataSource = self;
     [self.view addSubview:_tab];
     
-    _tab.tableFooterView = [self createTabFooterView];
     _tab.tableHeaderView = [self creatTabHeader];
 }
 
 -(UIView *)creatTabHeader{
-    _tabHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH*370/750)];
+    _tabHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_WIDTH*375/750)];
     
     UIImageView *imv = [[UIImageView alloc]initWithFrame:_tabHeaderView.bounds];
     [imv sd_setImageWithURL:[NSURL URLWithString:_hospitalModel.cover_pic] placeholderImage:[UIImage imageNamed:_centerBannerDefaultImName]];
     [_tabHeaderView addSubview:imv];
     
-//    UIView *centerNameView = [[UIView alloc]initWithFrame:CGRectMake(0, _tabHeaderView.frame.size.height - 30, DEVICE_WIDTH, 30)];
-//    centerNameView.backgroundColor = [UIColor blackColor];
-//    centerNameView.alpha = 0.3;
-//    [_tabHeaderView addSubview:centerNameView];
-//    
-//    UILabel *centerNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _tabHeaderView.frame.size.height - 30, _tabHeaderView.frame.size.width-10, 30)];
-//    centerNameLabel.text = [NSString stringWithFormat:@"%@ %@",_hospitalModel.brand_name,_hospitalModel.center_name];
-//    centerNameLabel.textColor = [UIColor whiteColor];
-//    centerNameLabel.font = [UIFont systemFontOfSize:12];
-//    [_tabHeaderView addSubview:centerNameLabel];
     
     return _tabHeaderView;
 }
