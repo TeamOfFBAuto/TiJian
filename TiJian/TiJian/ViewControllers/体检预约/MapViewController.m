@@ -139,10 +139,10 @@
     if (_targetAnnocation) {
         return _targetAnnocation;
     }
-    BMKPointAnnotation* item = [[BMKPointAnnotation alloc]init];
-    item.coordinate = self.coordinate;
-    item.title = self.titleName;
-    return item;
+    _targetAnnocation = [[BMKPointAnnotation alloc]init];
+    _targetAnnocation.coordinate = self.coordinate;
+    _targetAnnocation.title = self.titleName;
+    return _targetAnnocation;
 }
 
 -(BMKPointAnnotation *)annocationWithCoordinate:(CLLocationCoordinate2D)coordinate
@@ -163,6 +163,7 @@
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
     [_mapView addAnnotation:self.targetAnnocation];//addAnnotation方法会掉BMKMapViewDelegate的-mapView:viewForAnnotation:函数来生成标注对应的View
+    [_mapView showAnnotations:_mapView.annotations animated:NO];
 }
 
 -(void)tiaozhuanAppleMap{
@@ -245,7 +246,35 @@
 -(void)setGMap{
     _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT-64)];
     _mapView.delegate = self;
+    _mapView.isSelectedAnnotationViewFront = YES;
     [self.view addSubview:_mapView];
+    
+    UIButton *backIBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backIBtn setFrame:CGRectMake(10, DEVICE_HEIGHT - 33 - 60, 33, 33)];
+    [backIBtn setImage:[UIImage imageNamed:@"backilocation.png"] forState:UIControlStateNormal];
+    backIBtn.layer.cornerRadius = 5;
+    backIBtn.backgroundColor = RGBCOLOR(245, 245, 245);
+    [backIBtn addTarget:self action:@selector(backILocation) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backIBtn];
+    
+    UIButton *backHospitalBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backHospitalBtn setFrame:CGRectMake(10, DEVICE_HEIGHT - 33 - 60 - 10 - 33, 33, 33)];
+    [backHospitalBtn setImage:[UIImage imageNamed:@"backHospital.png"] forState:UIControlStateNormal];
+    backHospitalBtn.layer.cornerRadius = 5;
+    backHospitalBtn.backgroundColor = RGBCOLOR(245, 245, 245);
+    [backHospitalBtn addTarget:self action:@selector(backHospital) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backHospitalBtn];
+}
+
+#pragma mark - 回到我的位置
+-(void)backILocation{
+    if (_userLocation.location) {
+        [_mapView setCenterCoordinate:_userLocation.location.coordinate animated:YES];
+    }
+}
+
+-(void)backHospital{
+    [_mapView setCenterCoordinate:self.coordinate animated:YES];
 }
 
 #pragma mark - 初始化定位服务
@@ -257,10 +286,7 @@
 #pragma mark - 开启定位罗盘态
 // 罗盘态
 -(void)startFollowHeading{
-    NSLog(@"进入罗盘态");
     [_locService startUserLocationService];
-//    _mapView.showsUserLocation = NO;
-//    _mapView.zoomLevel = 13;
     _mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView.showsUserLocation = YES;
 //    [_mapView  setCenterCoordinate:self.coordinate];//目标地址作为中心
@@ -271,7 +297,7 @@
 //在地图View将要启动定位时，会调用此函数
 - (void)willStartLocatingUser
 {
-    NSLog(@"start locate");
+    
 }
 
 /*!
@@ -326,7 +352,6 @@
 - (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
 {
     [_mapView updateLocationData:userLocation];
-    NSLog(@"heading is %@",userLocation.heading);
 }
 
 //用户位置更新后，会调用此函数
@@ -343,7 +368,7 @@
     
     //设置显示视野
     
-    DDLOG(@"user %f %f",user.latitude,user.longitude);
+//    DDLOG(@"user %f %f",user.latitude,user.longitude);
     
     if (_isFirst && user.latitude > 0) { //第一次进来
         
@@ -361,13 +386,13 @@
 //在地图View停止定位后，会调用此函数
 - (void)didStopLocatingUser
 {
-    NSLog(@"stop locate");
+    
 }
 
 //定位失败后，会调用此函数
 - (void)didFailToLocateUserWithError:(NSError *)error
 {
-    NSLog(@"location error");
+    
 }
 
 #pragma mark - 代理
@@ -409,10 +434,7 @@
     if (annotationView == nil) {
         annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
         ((BMKPinAnnotationView*)annotationView).pinColor = BMKPinAnnotationColorRed;
-        // 设置重天上掉下的效果(annotation)
-        ((BMKPinAnnotationView*)annotationView).animatesDrop = YES;
-        
-        
+    
         // 设置位置
         annotationView.centerOffset = CGPointMake(0, -(annotationView.frame.size.height * 0.5));
         annotationView.annotation = annotation;
@@ -421,15 +443,13 @@
         // 设置是否可以拖拽
         annotationView.draggable = NO;
         
-        annotationView.image = [UIImage imageNamed:@"gpin.png"];
-        
         [annotationView setSelected:YES animated:NO];
         annotationView.enabled = YES;
         
         annotationView.rightCalloutAccessoryView = [[UIView alloc]initWithFrame:CGRectMake(0, 1, 34, 41)];
         annotationView.rightCalloutAccessoryView.userInteractionEnabled = YES;
         annotationView.clipsToBounds = YES;
-        
+        [annotationView addTaget:self action:@selector(annotationViewClicked:) tag:0];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.titleLabel.font = [UIFont systemFontOfSize:14];
@@ -438,21 +458,58 @@
         [btn setFrame:annotationView.rightCalloutAccessoryView.bounds];
         [btn addTarget:self action:@selector(gDaohang) forControlEvents:UIControlEventTouchUpInside];
         btn.layer.masksToBounds = YES;
-        
         [annotationView.rightCalloutAccessoryView addSubview:btn];
         
     }
     
-    
+    annotationView.annotation = annotation;
     
     return annotationView;
 }
-#pragma mark - 点击标注执行的方法
+
+-(void)annotationViewClicked:(UIButton *)sender{
+    DDLOG(@"%@",sender);
+    
+    //方法1
+//    [_mapView removeAnnotation:self.targetAnnocation];
+//    [_mapView addAnnotation:self.targetAnnocation];
+    
+    //方法2
+    [_mapView selectAnnotation:self.targetAnnocation animated:YES];
+}
+
+
+
+/**
+ *当取消选中一个annotation views时，调用此接口
+ *@param mapView 地图View
+ *@param views 取消选中的annotation views
+ */
+- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
+    NSLog(@"%s",__FUNCTION__);
+
+}
+
+
+
+/**
+ *点中底图空白处会回调此接口
+ *@param mapview 地图View
+ *@param coordinate 空白处坐标点的经纬度
+ */
+- (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{
+    NSLog(@"%s",__FUNCTION__);
+}
+
+
+/**
+ *当选中一个annotation views时，调用此接口
+ *@param mapView 地图View
+ *@param views 选中的annotation views
+ */
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {
-    
-//    NSLog(@"%s",__FUNCTION__);
-    
+    NSLog(@"%s",__FUNCTION__);
     [mapView bringSubviewToFront:view];
     [mapView setNeedsDisplay];
 }
@@ -460,7 +517,6 @@
 
 - (void)mapView:(BMKMapView *)mapView didAddAnnotationViews:(NSArray *)views
 {
-    NSLog(@"didAddAnnotationViews");
     
     //声明解析时对坐标数据的位置区域的筛选，包括经度和纬度的最小值和最大值
 //    CLLocationDegrees minLat;
@@ -499,9 +555,8 @@
 
 #pragma mark - 弹出框点击代理方法
 // 当点击annotation view弹出的泡泡时，调用此接口
-- (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view;
+- (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view
 {
-    NSLog(@"%s",__FUNCTION__);
     if (_button_daohang.userInteractionEnabled) {
         [self gDaohang];
     }

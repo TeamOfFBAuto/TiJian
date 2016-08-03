@@ -150,7 +150,7 @@
     if (userCommonlyAdressArray.count>0) {
         for (int i = 0; i<ddddc; i++) {
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [btn setTitle:userCommonlyAdressArray[i] forState:UIControlStateNormal];
+            [btn setTitle:userCommonlyAdressArray[ddddc - 1 - i] forState:UIControlStateNormal];
             btn.layer.borderColor = [RGBCOLOR(80, 81, 82) CGColor];
             [btn setTitleColor:RGBCOLOR(80, 81, 82) forState:UIControlStateNormal];
             btn.layer.borderWidth = 0.5;
