@@ -43,4 +43,15 @@
 
 -(UIImage *)imageCompressForTargetSize:(CGSize)size;
 
+/**
+ *  指定宽度按比例缩放
+ *
+ *  @param sourceImage <#sourceImage description#>
+ *  @param defineWidth <#defineWidth description#>
+ *
+ *  @return
+ */
+-(UIImage *)imageCompressForWidth:(UIImage *)sourceImage
+                      targetWidth:(CGFloat)defineWidth;
+
 @end

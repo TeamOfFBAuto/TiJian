@@ -253,6 +253,8 @@
         _saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _saveButton.frame =CGRectMake(DEVICE_WIDTH - 20 - 40, DEVICE_HEIGHT - 50 - 40 - 64, 40, 40);
         [_saveButton setImage:[UIImage imageNamed:@"report_save.png"] forState:UIControlStateNormal];
+        _saveButton.backgroundColor = RGBCOLOR(245, 245, 245);
+        _saveButton.layer.cornerRadius = 10;
         [self.view addSubview:_saveButton];
         [_saveButton addTarget:self action:@selector(saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view bringSubviewToFront:_saveButton];
@@ -333,23 +335,7 @@
 //保存体检报告
 -(void)saveButtonClicked{
     
-    //相机
-//    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    
-    
     ALAuthorizationStatus author = [ALAssetsLibrary authorizationStatus];
-    
-//    case ALAuthorizationStatusNotDetermined:{
-//    NSString *tips = @"请允许本App可以访问相册";
-//    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"保存到相册需要授权" message:tips delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil] autorelease];
-//
-//    case ALAuthorizationStatusRestricted:
-//    NSString *tips = @"你的权限受限";
-//    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"保存到相册需要授权" message:tips delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil]
-//            
-//    case ALAuthorizationStatusDenied:
-//            NSString *tips = @"需要保存图片到相册\n请授权本App可以访问相册\n设置方式:手机设置->隐私->照片\n允许本App访问相册";
-    
     
     if (author == ALAuthorizationStatusRestricted || author ==ALAuthorizationStatusDenied)
     {
@@ -386,21 +372,15 @@
     
     //把webView转为图片
     UIImage *img = [self imageRepresentation];
-    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, img.size.width, img.size.height)];
-    [imv setImage:img];
+    
+//    UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
+//    NSData *imgData1 = [img1 dataWithCompressMaxSize:500000 compression:0.1];//压元数据
+    
     //保存到图片库
-    UIGraphicsBeginImageContext(imv.bounds.size);
-    [imv.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    UIImageWriteToSavedPhotosAlbum(temp, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
     
     
 }
-
-
-
-
 
 
 
