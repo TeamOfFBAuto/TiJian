@@ -39,16 +39,21 @@
 - (NSData *)dataWithCompressMaxSize:(NSInteger)maxSize
                         compression:(CGFloat)compression
 {
-    CGFloat maxCompression = 0.1f;//最大压缩0.1
-    NSData *imageData = UIImageJPEGRepresentation(self, compression);
+    //指定宽度裁切尺寸
+    UIImage *image = [self imageCompressForTargetWidth:600];
     
-    NSLog(@"imagedata1 %lu",(unsigned long)imageData.length);
+    CGFloat maxCompression = 0.01f;//最大压缩0.01
+    NSData *imageData = UIImageJPEGRepresentation(image, compression);
     
+    DDLOG(@"imagedata1 %lu",(unsigned long)imageData.length);
+
     while ([imageData length] > maxSize && compression > maxCompression) {
-        compression -= 0.1;
-        imageData = UIImageJPEGRepresentation(self, compression);
+        compression -= 0.05;
+        imageData = UIImageJPEGRepresentation(image, compression);
+        DDLOG(@"imagedata2 %lu",(unsigned long)imageData.length);
+
     }
-    
+
     return imageData;
 }
 
@@ -123,6 +128,89 @@
     return newImage;
     
 }
+
+
+/**
+ *  指定宽度按比例缩放
+ *
+ *  @param defineWidth 指定宽度
+ *
+ *  @return
+ */
+-(UIImage *)imageCompressForTargetWidth:(CGFloat)defineWidth{
+    
+    UIImage *sourceImage = self;
+    
+    UIImage *newImage = nil;
+    
+    CGSize imageSize = sourceImage.size;
+    
+    //尺寸偏小直接return
+    if (imageSize.width < defineWidth) {
+        return self;
+    }
+    
+    CGFloat width = imageSize.width;
+    
+    CGFloat height = imageSize.height;
+    
+    CGFloat targetWidth = defineWidth;
+    
+    CGFloat targetHeight = height / (width / targetWidth);
+    
+    CGSize size = CGSizeMake(targetWidth, targetHeight);
+    
+    CGFloat scaleFactor = 0.0;
+    
+    CGFloat scaledWidth = targetWidth;
+    
+    CGFloat scaledHeight = targetHeight;
+    
+    CGPoint thumbnailPoint = CGPointMake(0.0, 0.0);
+    
+    
+    if(CGSizeEqualToSize(imageSize, size) == NO){
+        
+        CGFloat widthFactor = targetWidth / width;
+        CGFloat heightFactor = targetHeight / height;
+        
+        if(widthFactor > heightFactor){
+            scaleFactor = widthFactor;
+        }
+        else{
+            scaleFactor = heightFactor;
+        }
+        scaledWidth = width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+        if(widthFactor > heightFactor){
+            
+            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+            
+        }else if(widthFactor < heightFactor){
+            
+            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+        }
+        
+    }
+    
+    UIGraphicsBeginImageContext(size);
+    CGRect thumbnailRect = CGRectZero;
+    thumbnailRect.origin = thumbnailPoint;
+    thumbnailRect.size.width = scaledWidth;
+    thumbnailRect.size.height = scaledHeight;
+    [sourceImage drawInRect:thumbnailRect];
+    
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    if(newImage == nil){
+        NSLog(@"scale image fail");
+    }
+    
+    UIGraphicsEndImageContext();
+    return newImage;
+    
+}
+
 
 
 //指定宽度按比例缩放

@@ -58,12 +58,17 @@
 	
 	[super setFrame:theFrame];
 	
+    //原先是使用的theFrame,现在修改为imageFrame
+    
+    CGRect imageFrame = self.imageView.frame;
+    
 	// update content size
-	self.contentSize = CGSizeMake(theFrame.size.width * self.zoomScale, theFrame.size.height * self.zoomScale );
+	self.contentSize = CGSizeMake(imageFrame.size.width * self.zoomScale, imageFrame.size.height * self.zoomScale );
 	
     NSLog(@"contentSize %f %f",self.contentSize.width,self.contentSize.height);
 	// resize image view and keep it proportional to the current zoom scale
-	_imageView.frame = CGRectMake( imagePoint.x, imagePoint.y, theFrame.size.width * self.zoomScale, theFrame.size.height * self.zoomScale);
+    
+	_imageView.frame = CGRectMake(imagePoint.x, imagePoint.y, imageFrame.size.width * self.zoomScale, imageFrame.size.height * self.zoomScale);
 }
 
 -(LLoadingView *)loadingView
@@ -108,7 +113,7 @@
     _isZoomed = NO;
     [self setZoomScale:self.minimumZoomScale animated:YES];
     [self setFrame:self.frame];
-    _imageView.frame = CGRectMake(0,0,self.frame.size.width,self.frame.size.height);
+//    _imageView.frame = CGRectMake(0,0,self.frame.size.width,self.frame.size.height);
     _imageView.contentMode = UIViewContentModeScaleAspectFit;
     _imageView.clipsToBounds = YES;
 }
@@ -151,8 +156,16 @@
     //高比较大
     else
     {
-        needHeight = self.frame.size.height;
-        needWidth = needHeight * w_h_radio;
+//        needHeight = self.frame.size.height;
+//        needWidth = needHeight * w_h_radio;
+//        //如果大于最大宽度
+//        if (needWidth > maxWidth) {
+//            needWidth = maxWidth;
+//            needHeight = needWidth / w_h_radio;
+//        }
+        
+        needWidth = self.frame.size.width;
+        needHeight = needWidth / w_h_radio;
         //如果大于最大宽度
         if (needWidth > maxWidth) {
             needWidth = maxWidth;
@@ -164,47 +177,14 @@
     frame.size = CGSizeMake(needWidth, needHeight);
     self.imageView.frame = frame;
     self.imageView.clipsToBounds = YES;
-    self.imageView.center = CGPointMake(self.frame.size.width / 2.f, self.frame.size.height / 2.f);
+    
+    //图片高度不够或者宽度不够则居中
+    if (needHeight < self.frame.size.height ||
+        needWidth < self.frame.size.width) {
+        self.imageView.center = CGPointMake(self.frame.size.width / 2.f, self.frame.size.height / 2.f);
+    }
 }
 
-
-//- (void)fitFrameWithImage
-//{
-//    //放大倍数归位
-//    _isZoomed = NO;
-//    [self setZoomScale:self.minimumZoomScale animated:YES];
-//    
-//    //跳转imageView和image同等大小
-//    CGSize imageSize = self.imageView.image.size;
-//    //image
-//    CGFloat imageWidth = imageSize.width;
-//    CGFloat imageHeight = imageSize.height;
-//    //实际
-//    CGFloat width = self.imageView.frame.size.width;
-//    CGFloat height = self.imageView.frame.size.height;
-//    
-//    if (imageWidth > width) {
-//        
-//        width = width;
-//        
-//        height = imageHeight / (imageWidth / width);//图片大的话,宽度按imageView;imageView大的话宽度按image
-//        
-//    }else
-//    {
-//        width = imageWidth;
-//        
-//        height = imageHeight;
-//    }
-//    
-//    CGRect frame = self.imageView.frame;
-//    frame.size = CGSizeMake(width, height);
-//    self.imageView.frame = frame;
-//    
-//    self.imageView.clipsToBounds = YES;
-//    
-//    UIView *view = self;
-//    self.imageView.center = CGPointMake(view.frame.size.width / 2.f, view.frame.size.height / 2.f);    
-//}
 
 #pragma - mark UIScrollViewDelegate
 

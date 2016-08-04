@@ -282,7 +282,9 @@ ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePick
     __block NSUInteger numberOfPhotos = 0;
     __block NSUInteger numberOfVideos = 0;
     
-    [self.selectAssetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+    //反序枚举
+    [self.selectAssetsGroup enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        
         if (result) {
             numberOfAssets++;
             NSString *type = [result valueForProperty:ALAssetPropertyType];
@@ -294,6 +296,7 @@ ALAssetsFilter * ALAssetsFilterFromJKImagePickerControllerFilterType(JKImagePick
             [assets addObject:result];
         }
     }];
+    
     
     self.assetsArray = assets;
     self.numberOfAssets = numberOfAssets;

@@ -126,9 +126,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     self.uploadImageArray = [NSMutableArray arrayWithCapacity:1];
-    
-    NSLog(@"-------%lu",(unsigned long)self.assetsArray.count);
-    
+        
     for (int i = 0;i < self.assetsArray.count; i++) {
         
         JKAssets* jkAsset = self.assetsArray[i];
@@ -137,7 +135,7 @@
         [lib assetForURL:jkAsset.assetPropertyURL resultBlock:^(ALAsset *asset) {
             
             if (asset) {
-                UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
+                UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
                 [self.uploadImageArray addObject:image];
                 
                 if (self.uploadImageArray.count == self.assetsArray.count) {

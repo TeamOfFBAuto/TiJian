@@ -176,7 +176,6 @@
     }else
     {
         zoom.imageView.image = photo.image;
-//        [zoom resetImageFrameAfterImageLoaded];
 
     }
 }

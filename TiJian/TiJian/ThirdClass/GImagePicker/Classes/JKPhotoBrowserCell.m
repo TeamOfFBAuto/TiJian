@@ -47,7 +47,7 @@
     if (_asset != asset) {
         _asset = asset;
         
-        self.image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
+        self.image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
     }
 }
 

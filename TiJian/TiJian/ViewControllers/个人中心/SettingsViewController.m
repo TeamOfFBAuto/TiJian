@@ -42,9 +42,6 @@
     [self.view addSubview:_table];
     
     [self addLogoutButton];
-    
-    NSInteger cacheSize = [[SDImageCache sharedImageCache] getSize];
-    NSLog(@"缓存大小%ld",cacheSize);
 }
 
 -(void)viewDidLayoutSubviews

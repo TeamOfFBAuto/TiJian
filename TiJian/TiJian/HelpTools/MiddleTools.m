@@ -421,7 +421,7 @@
     [MBProgressHUD showHUDAddedTo:controller.view animated:YES];
     [[SDWebImageManager sharedManager]downloadImageWithURL:url options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
-        DDLOG(@"%ld %ld",receivedSize,expectedSize);
+        DDLOG(@"%ld %ld",(long)receivedSize,expectedSize);
         
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
         
