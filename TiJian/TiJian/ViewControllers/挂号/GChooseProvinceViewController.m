@@ -373,7 +373,6 @@
     int cityId = 0;
     int procinceId = 0;
     
-    
     if ([[dic stringValueForKey:@"province"]isEqualToString:@"北京市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"上海市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"天津市"] || [[dic stringValueForKey:@"province"]isEqualToString:@"重庆市"]) {
         theString = [dic stringValueForKey:@"province"];
         
@@ -381,7 +380,7 @@
         cityId = 0;
         
     }else{
-        theString = [dic stringValueForKey:@"city"];
+        theString = [dic stringValueForKey:@"province"];
         
         procinceId =[GMAPI cityIdForName:[dic stringValueForKey:@"province"]];
         cityId = [GMAPI cityIdForName:[dic stringValueForKey:@"city"]];

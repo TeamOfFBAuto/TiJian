@@ -52,4 +52,7 @@
  */
 -(UIImage *)imageCompressForTargetWidth:(CGFloat)defineWidth;
 
+-(UIImage *)imageCompressForWidth:(UIImage *)sourceImage
+                      targetWidth:(CGFloat)defineWidth;
+
 @end
