@@ -169,7 +169,7 @@
         
         if (![LTools isEmpty:[dic stringValueForKey:@"desc"]]) {
             NSDictionary *theDic = @{
-                                     @"title":@"病情主诉：",
+                                     @"title":@"病情描述：",
                                      @"content":[dic stringValueForKey:@"desc"]
                                      };
             [mArray addObject:theDic];

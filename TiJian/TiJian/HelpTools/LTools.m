@@ -1174,8 +1174,10 @@
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
     hud.mode = MBProgressHUDModeText;
-    hud.labelText = text;
-    hud.margin = 10.f;
+//    hud.labelText = text;
+    hud.detailsLabelText = text;
+    hud.detailsLabelFont = [UIFont systemFontOfSize:13];
+    hud.margin = 12.f;
 //    hud.yOffset = 150.f;
 //    hud.opacity = 0.7f;
     hud.removeFromSuperViewOnHide = YES;

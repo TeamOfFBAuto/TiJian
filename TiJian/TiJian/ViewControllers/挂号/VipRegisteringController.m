@@ -10,6 +10,7 @@
 #import "PeopleManageController.h"
 #import "JKImagePickerController.h"
 #import "GHospitalOfProvinceViewController.h"
+#import "GDeptOfHospitalViewController.h"
 #import "LTextView.h"
 #import "LDatePicker.h"
 
@@ -21,6 +22,8 @@
 #define kTag_endTime 105 //结束时间
 
 #define kDateFormatter @"yyyy-MM-dd"
+
+#define kDes_sick @"病情描述不少于10字,方便医生做出正确诊断"
 
 @interface VipRegisteringController ()<UITextFieldDelegate,JKImagePickerControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
@@ -69,7 +72,7 @@
 {
     NSString *desc = _sickDescTextView.text;//病情描述
     if (desc.length < 10) {
-        [LTools showMBProgressWithText:@"病情描述不少于10字,方便医生做出正确诊断" addToView:self.view];
+        [LTools showMBProgressWithText:kDes_sick addToView:self.view];
         return NO;
     }
     
@@ -104,7 +107,7 @@
     NSString *familyUid = _familyUid;
     NSString *desc = _sickDescTextView.text;//病情描述
     if (desc.length < 10) {
-        [LTools showMBProgressWithText:@"病情描述不少于10字,方便医生做出正确诊断" addToView:self.view];
+        [LTools showMBProgressWithText:kDes_sick addToView:self.view];
         return nil;
     }
     
@@ -630,6 +633,39 @@
 }
 
 /**
+ *  选择科室
+ */
+- (void)clickToSelectDept
+{
+    NSString *hospotalName = [self textfieldWithTag:kTag_hospital].text;
+    if (_hospital_id && hospotalName) {
+        GDeptOfHospitalViewController *dept = [[GDeptOfHospitalViewController alloc]init];
+        dept.hospital_id = _hospital_id;
+        dept.hospital_name = hospotalName;
+        dept.fromType = FromType_dept;
+        
+         @WeakObj(self);
+        [dept setUpdateParamsBlock:^(NSDictionary *params) {
+            
+            NSString *deptId = params[@"deptId"];//科室id
+            if (deptId) {
+                _dept = deptId;
+            }
+            
+            NSString *deptName = params[@"deptName"];//科室name
+            if (deptName) {
+                [Weakself textfieldWithTag:kTag_dept].text = deptName;
+            }
+            
+        }];
+        [self.navigationController pushViewController:dept animated:YES];
+    }else //未选择医院
+    {
+        [self clickToSelectHospital:[self textfieldWithTag:kTag_hospital]];
+    }
+}
+
+/**
  *  去搜索医院
  */
 - (void)clickToSearchHospital:(UITextField *)textField
@@ -763,6 +799,10 @@
     {
         DDLOG(@"选择时间");
         [self clickToSelectTime:textField];
+    }else if (tag == kTag_dept) //选择科室
+    {
+        DDLOG(@"选择科室");
+        [self clickToSelectDept];
     }
     return NO;
 }

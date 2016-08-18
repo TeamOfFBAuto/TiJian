@@ -87,9 +87,8 @@
         self.updateParamsBlock(params);
     }
     int count = (int)self.navigationController.viewControllers.count;
-    if (count > 3) {
+    if (count > 3 && self.fromType == FromType_hospital) {
         UIViewController *vc = self.navigationController.viewControllers[count - 3];
-        
         [self.navigationController popToViewController:vc animated:YES];
     }else
     {
