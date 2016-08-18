@@ -135,6 +135,80 @@
     return YES;
 }
 
+#pragma mark - 免密登录
+
+/**
+ *  免密登录
+ *
+ *  @param sender
+ */
+- (IBAction)clickToLoginWithoutPassword:(id)sender {
+    
+    ForgetPwdController *forget = [[ForgetPwdController alloc]init];
+    forget.forgetType = ForgetType_loginWithoutPwd;
+    
+    @WeakObj(self);
+    [forget setUpdateParamsBlock:^(NSDictionary *params) {
+        
+        BOOL isLogin = params[@"isLogin"];//是否是登录
+        if (isLogin) {
+            [Weakself loginWithoutPwdWithParmas:params];
+        }
+    }];
+    [self.navigationController pushViewController:forget animated:YES];
+}
+
+/**
+ *  免密登录
+ *
+ *  @param params
+ */
+- (void)loginWithoutPwdWithParmas:(NSDictionary *)params
+{
+    NSString *mobile = params[@"mobile"];
+    NSString *securityCode = params[@"code"];//验证码
+    
+    [self loginType:Login_withoutPwd thirdId:nil nickName:nil thirdphoto:nil gender:Gender_Boy password:securityCode mobile:mobile];
+}
+
+/**
+ *  登录成功
+ *
+ *  @param newerCoupon 是否领取新人优惠劵
+ */
+- (void)actionForLoginWithResult:(NSDictionary *)result
+{
+    //判断是否领取了新人优惠劵
+    int newer_coupon = [result[@"newer_coupon"]intValue];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGIN object:nil];
+
+    [self loginResultIsSuccess:YES];
+    
+    if (newer_coupon == 1) { //领取了新人优惠劵
+        
+        NSString *title = result[RESULT_INFO];
+        NSString *msg = @"恭喜您获得新人优惠劵,已放入您的钱包";
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+        
+    }else
+    {
+        [LTools showMBProgressWithText:@"登录成功" addToView:[UIApplication sharedApplication].keyWindow];
+        [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.5];
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        
+        [self performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.3];
+    }
+}
+
 #pragma mark - 事件处理
 
 - (void)loginResultIsSuccess:(BOOL)isSuccess
@@ -169,8 +243,6 @@
     __weak typeof(self)weakSelf = self;
     
     regis.registerBlock = ^(NSString *phoneNum,NSString *password){
-        
-        NSLog(@"phone %@ password %@",phoneNum,password);
         
         weakSelf.phoneTF.text = phoneNum;
         weakSelf.pwdTF.text = password;
@@ -312,6 +384,12 @@
             provider = @"";
         }
             break;
+        case Login_withoutPwd: //免密登录
+        {
+            type = @"mobile";
+            provider = @"noPwd";
+        }
+            break;
         case Login_Sweibo:
         {
             type = @"s_weibo";
@@ -352,7 +430,17 @@
                    @"devicetoken":token,
                    @"login_source":@"iOS"
                    };
-    }else{
+    }else if ([type isEqualToString:@"mobile"])
+    {
+        params = @{
+                   @"type":type,
+                   @"mobile":mobile,
+                   @"code":password,
+                   @"devicetoken":token,
+                   @"login_source":@"iOS"
+                   };
+    }
+    else{
         
         thirdId = thirdId ? : @"";
         nickName = nickName ? : @"";
@@ -378,14 +466,15 @@
         [Mut_params setObject:registration_id forKey:@"registration_id"];
     }
     
+    UIView *rootView = [UIApplication sharedApplication].keyWindow;
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:rootView animated:YES];
     
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodPost api:USER_LOGIN_ACTION parameters:Mut_params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:rootView animated:YES];
         
-        NSLog(@"%@",result);
+        DDLOG(@"%@",result);
         
         UserInfo *user = [[UserInfo alloc]initWithDictionary:result];
         /**
@@ -396,24 +485,21 @@
         //记录authkey
         [LTools setObject:user.authcode forKey:USER_AUTHOD];
         
+        //记录没有密码
+        [LTools setObject:user.no_password forKey:USER_NoPwd];
+        
         //保存登录状态 yes
-        
         [LTools setBool:YES forKey:LOGIN_SERVER_STATE];
-        
-        [LTools showMBProgressWithText:result[RESULT_INFO] addToView:self.view];
-        
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIFICATION_LOGIN object:nil];
-        
-        [weakSelf performSelector:@selector(leftButtonTap:) withObject:nil afterDelay:0.2];
-        
-        [weakSelf loginResultIsSuccess:YES];
         
         //友盟账号统计
         NSString *uid = user.uid;
         [MobClick profileSignInWithPUID:uid provider:provider];
         
+        //处理登录结果
+        [weakSelf actionForLoginWithResult:result];
+        
     } failBlock:^(NSDictionary *result) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:rootView animated:YES];
         NSLog(@"%@",result);
         [weakSelf loginResultIsSuccess:NO];
     }];

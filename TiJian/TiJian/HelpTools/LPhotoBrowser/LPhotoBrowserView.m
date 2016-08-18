@@ -156,6 +156,7 @@
                 if (image && !error) {
                     //下载完成
                     DDLOG(@"completed success");
+                    [Weakzoom resetImageFrameWithImage];//失败时按照失败照片调整
                     [Weakzoom resetImageFrameAfterImageLoaded];
                 }else
                 {

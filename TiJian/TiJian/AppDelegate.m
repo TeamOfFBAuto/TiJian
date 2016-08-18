@@ -1137,8 +1137,10 @@
 {
 //    [self netWorkForList];
 //    [self ttt];
+//    [LTools setObject:@"B3hULVcuV7EFvgSZUeEB1geiVbdQpQX0BCkGNwdiXG0GMgcwVDcAM1NnAjICYVsrAjI=" forKey:USER_AUTHOD];
+//    //记录没有密码
+//    [LTools setObject:@"1" forKey:USER_NoPwd];
 }
-
 
 
 @end

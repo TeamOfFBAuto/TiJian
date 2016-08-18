@@ -32,6 +32,7 @@
 @property(nonatomic,retain)NSString *photo;
 
 @property(nonatomic,retain)NSString *is_vip;//是否是vip
+@property(nonatomic,retain)NSNumber *no_password;//1时代表免密登录,并且没有密码
 
 @property(nonatomic,retain)NSString *avatar;//头像
 @property(nonatomic,retain)NSString *third_avatar;
@@ -186,6 +187,11 @@
  *  更新个性化定制状态
  */
 + (void)updateUserCustomed:(NSString *)customed;
+
+/**
+ *  更新密码设置状态
+ */
++ (void)updateUserNoPassword:(NSNumber *)noPwd;
 
 #pragma mark -
 

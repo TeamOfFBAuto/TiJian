@@ -146,7 +146,8 @@
 
 //注册
 #define USER_REGISTER_ACTION @"/index.php?d=api&c=user&m=register"
-//获取验证码
+
+//获取验证码 type 短信用途 1=>注册获取验证码 2=>找回密码 3=》绑定手机号 4=>修改绑定手机 5=>支付成功通知 6=>自动领取优惠劵通知 7=>免密登录验证码
 #define USER_GET_SECURITY_CODE @"/index.php?d=api&c=user&m=get_code"
 //找回密码
 #define USER_GETBACK_PASSWORD @"/index.php?d=api&c=user&m=get_back_password"

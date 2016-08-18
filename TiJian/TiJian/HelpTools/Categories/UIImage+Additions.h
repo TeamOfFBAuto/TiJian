@@ -55,4 +55,11 @@
 -(UIImage *)imageCompressForWidth:(UIImage *)sourceImage
                       targetWidth:(CGFloat)defineWidth;
 
+/**
+ *  图片切圆角
+ *
+ *  @return
+ */
+- (UIImage *)cutCircleImage;
+
 @end

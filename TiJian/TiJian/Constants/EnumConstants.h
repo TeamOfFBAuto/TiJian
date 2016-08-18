@@ -16,7 +16,8 @@ typedef enum{
     Login_Normal = 0,
     Login_Sweibo,
     Login_QQ,
-    Login_Weixin
+    Login_Weixin,
+    Login_withoutPwd //免密登录
 }Login_Type;
 
 //性别
@@ -54,10 +55,18 @@ typedef enum{
 }Register_Type;
 
 //验证码用途 1=》注册 2=》商店短信验证 3=》找回密码 4⇒申请成为搭配师获取验证码 默认为1) int
+
+//获取验证码 type 短信用途
+// 1=>注册获取验证码 2=>找回密码 3=》绑定手机号 4=>修改绑定手机 5=>支付成功通知 6=>自动领取优惠劵通知 7=>免密登录验证码
+
 typedef enum{
     SecurityCode_Register = 1,
     SecurityCode_FindPWD,
-    SecurityCode_Match
+    SecurityCode_bindPhone = 3, //绑定手机号
+    SecurityCode_updateBindPhone, //修改绑定手机号
+    SecurityCode_paySuccess = 5, //支付成功通知
+    SecurityCode_getCoupe = 6, //自动领取优惠劵通知
+    SecurityCode_loginWithoutPwd, //免密登录验证码
 }SecurityCode_Type;
 
 typedef enum{

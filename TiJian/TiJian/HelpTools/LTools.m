@@ -1603,14 +1603,41 @@
 
 + (UIImage *)sd_imageForUrl:(NSString *)url
 {
-    //    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    //    NSString *imageKey = [manager cacheKeyForURL:[NSURL URLWithString:url]];
-    //
-    //    SDImageCache *cache = [SDImageCache sharedImageCache];
-    //    UIImage *cacheImage = [cache imageFromDiskCacheForKey:imageKey];
-    //
-    //    return cacheImage;
-    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    NSString *imageKey = [manager cacheKeyForURL:[NSURL URLWithString:url]];
+
+    SDImageCache *cache = [SDImageCache sharedImageCache];
+    UIImage *cacheImage = [cache imageFromDiskCacheForKey:imageKey];
+
+    return cacheImage;
+}
+
+//通过图片Data数据第一个字节 来获取图片扩展名
+//图片数第一个字节是固定的,代表图片的类型
+- (NSString *)contentTypeForImageData:(NSData *)data
+{
+    uint8_t c;
+    [data getBytes:&c length:1];
+    switch (c) {
+        case 0xFF:
+            return @"jpeg";
+        case 0x89:
+            return @"png";
+        case 0x47:
+            return @"gif";
+        case 0x49:
+        case 0x4D:
+            return @"tiff";
+        case 0x52:
+            if ([data length] < 12) {
+                return nil;
+            }
+            NSString *testString = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, 12)] encoding:NSASCIIStringEncoding];
+            if ([testString hasPrefix:@"RIFF"] && [testString hasSuffix:@"WEBP"]) {
+                return @"webp";
+            }
+            return nil;
+    }
     return nil;
 }
 

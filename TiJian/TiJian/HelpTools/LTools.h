@@ -531,6 +531,10 @@ typedef void(^versionBlock)(BOOL isNewVersion,NSString *updateUrl,NSString *upda
 
 + (UIImage *)sd_imageForUrl:(NSString *)url;
 
+//通过图片Data数据第一个字节 来获取图片扩展名
+//图片数第一个字节是固定的,代表图片的类型
+- (NSString *)contentTypeForImageData:(NSData *)data;
+
 #pragma - mark 图片比例计算
 
 /**

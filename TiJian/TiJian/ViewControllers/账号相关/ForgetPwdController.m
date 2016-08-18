@@ -27,7 +27,22 @@ static int seconds = 60;//计时60s
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"找回密码"];
+    
+    NSString *title = @"忘记密码";
+    NAVIGATIONSTYLE style = NAVIGATIONSTYLE_BLUE;
+    
+    if (self.forgetType == ForgetType_loginWithoutPwd) {
+        title = @"免密快捷登录";
+        style = NAVIGATIONSTYLE_BLUE;
+        
+    }else if (self.forgetType == ForgetType_setPwd)
+    {
+        title = @"设置密码";
+        style = NAVIGATIONSTYLE_WHITE;
+    }
+    
+    [self setNavigationStyle:style title:title];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -118,8 +133,13 @@ static int seconds = 60;//计时60s
         
     }
     
+    NSString *title = @"下一步";
+    if (self.forgetType == ForgetType_loginWithoutPwd) {
+        title = @"登录";
+    }
+    
     UIButton *sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [sureBtn setTitle:@"下一步" forState:UIControlStateNormal];
+    [sureBtn setTitle:title forState:UIControlStateNormal];
     sureBtn.frame = CGRectMake(30, oneView.bottom + 30, DEVICE_WIDTH - 60, 40);
     sureBtn.backgroundColor = DEFAULT_TEXTCOLOR;
     [sureBtn addCornerRadius:2.f];
@@ -203,10 +223,25 @@ static int seconds = 60;//计时60s
         return;
     }
     
-    [UIView animateWithDuration:0.5 animations:^{
-       
-        _bgView_second.left = 0.f;
-    }];
+    //免密登录
+    if (self.forgetType == ForgetType_loginWithoutPwd) {
+        
+        //走登录操作
+        if (self.updateParamsBlock) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            [dic safeSetBool:YES forKey:@"isLogin"];
+            [dic safeSetValue:_encryptcode forKey:@"code"];
+            [dic safeSetValue:self.phoneTF.text forKey:@"mobile"];
+            self.updateParamsBlock(dic);
+        }
+        
+    }else
+    {
+        [UIView animateWithDuration:0.5 animations:^{
+            
+            _bgView_second.left = 0.f;
+        }];
+    }
 }
 
 #pragma mark - 倒计时
@@ -265,7 +300,6 @@ static int seconds = 60;//计时60s
  */
 - (IBAction)clickToSecurityCode:(id)sender {
     
-//    SecurityCode_Type type = SecurityCode_FindPWD;//找回密码
     [self tapToHiddenKeyboard:nil];
     NSString *mobile = self.phoneTF.text;
     
@@ -277,10 +311,13 @@ static int seconds = 60;//计时60s
     
     __weak typeof(self)weakSelf = self;
     
-    
+    NSString *type = @"2";//找回密码
+    if (self.forgetType == ForgetType_loginWithoutPwd) {
+        type = @"7";//免密登录
+    }
     NSDictionary *dic = @{
                           @"mobile":mobile,
-                          @"type":@"2",
+                          @"type":type,
                           @"encryptcode":[LTools md5Phone:mobile]
                           };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -300,7 +337,6 @@ static int seconds = 60;//计时60s
 
 
 - (IBAction)clickToCommit:(id)sender {
-    
     
 //    get方式调取
 //    参数解释依次为:
@@ -352,7 +388,14 @@ static int seconds = 60;//计时60s
         
         [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
 
-        [LTools showMBProgressWithText:@"找回密码成功" addToView:self.view];
+        NSString *title = @"找回密码成功!";
+        if(self.forgetType == ForgetType_setPwd)
+        {
+            title = @"设置密码成功!";
+            [UserInfo updateUserNoPassword:[NSNumber numberWithInt:0]];//已经有密码
+        }
+        
+        [LTools showMBProgressWithText:title addToView:self.view];
         
         [self performSelector:@selector(clickToClose:) withObject:nil afterDelay:2];
         

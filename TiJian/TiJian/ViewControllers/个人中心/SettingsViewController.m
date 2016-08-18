@@ -10,6 +10,7 @@
 #import "UpdatePWDController.h"
 #import "AboutUsController.h"
 #import "FeedBackViewController.h"
+#import "ForgetPwdController.h"
 
 //#import <RongIMKit/RongIMKit.h>
 
@@ -349,8 +350,18 @@
             break;
         case 1:
         {
-            UpdatePWDController *updatePwd = [[UpdatePWDController alloc]init];
-            [self.navigationController pushViewController:updatePwd animated:YES];
+//          no_password;//1时代表免密登录,并且没有密码
+            int no_password = [[LTools objectForKey:USER_NoPwd] intValue];
+            if (no_password == 1) {
+                ForgetPwdController *forget = [[ForgetPwdController alloc]init];
+                forget.forgetType = ForgetType_setPwd;
+                [self.navigationController pushViewController:forget animated:YES];
+                
+            }else
+            {
+                UpdatePWDController *updatePwd = [[UpdatePWDController alloc]init];
+                [self.navigationController pushViewController:updatePwd animated:YES];
+            }
         }
             break;
         case 2:

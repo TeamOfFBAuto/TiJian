@@ -611,7 +611,7 @@ static int seconds = 60;//计时60s
     if (newer_coupon == 1) { //领取了新人优惠劵
         
         NSString *title = @"注册成功";
-        NSString *msg = @"恭喜您获得新人优惠劵一张,已放入您的钱包";
+        NSString *msg = @"恭喜您获得新人优惠劵,已放入您的钱包";
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
         

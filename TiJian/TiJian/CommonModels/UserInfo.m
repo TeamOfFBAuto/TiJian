@@ -355,6 +355,22 @@
     [userInfo cacheForKey:USERINFO_MODEL];
 }
 
+/**
+ *  更新密码设置状态
+ */
++ (void)updateUserNoPassword:(NSNumber *)noPwd
+{
+    if (!noPwd) {
+        return;
+    }
+    
+    //记录没有密码
+    [LTools setObject:noPwd forKey:USER_NoPwd];
+    UserInfo *userInfo = [UserInfo cacheResultForKey:USERINFO_MODEL];
+    userInfo.no_password = noPwd;
+    [userInfo cacheForKey:USERINFO_MODEL];
+}
+
 #pragma mark - 
 
 /**
