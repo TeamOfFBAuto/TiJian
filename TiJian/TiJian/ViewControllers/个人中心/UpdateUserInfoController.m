@@ -51,6 +51,8 @@
     self.textField.returnKeyType = UIReturnKeyDone;
     self.textField.delegate = self;
     [view addSubview:_textField];
+    self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+
     
 }
 

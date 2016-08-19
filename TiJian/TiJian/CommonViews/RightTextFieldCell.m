@@ -30,6 +30,8 @@
         _tf_right.font = [UIFont systemFontOfSize:15];
         _tf_right.textAlignment = NSTextAlignmentRight;
         _tf_right.delegate = textFieldDelegate;
+        _tf_right.clearButtonMode = UITextFieldViewModeWhileEditing;
+
         [self.contentView addSubview:_tf_right];
     }
     return self;

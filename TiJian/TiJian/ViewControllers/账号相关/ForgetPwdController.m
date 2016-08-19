@@ -95,9 +95,12 @@ static int seconds = 60;//计时60s
         pwd_tf.delegate = self;
         pwd_tf.backgroundColor = [UIColor whiteColor];
         pwd_tf.keyboardType = UIKeyboardTypeNumberPad;
+
         NSString *placeHolder;
         if (i == 0) {
             
+            pwd_tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+
             self.phoneTF = pwd_tf;
             placeHolder = @"请输入手机号";
             pwd_tf.returnKeyType = UIReturnKeyNext;
@@ -122,6 +125,8 @@ static int seconds = 60;//计时60s
             [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
             [self.codeButton.titleLabel setFont:[UIFont systemFontOfSize:10]];
             [self.codeButton addTarget:self action:@selector(clickToSecurityCode:) forControlEvents:UIControlEventTouchUpInside];
+            
+            pwd_tf.width = DEVICE_WIDTH - self.codeLabel.width - 15.f * 2 - 10;
             
         }else if(i == 1){
             

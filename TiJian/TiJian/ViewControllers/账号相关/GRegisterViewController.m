@@ -334,7 +334,7 @@ static int seconds = 60;//计时60s
     line.backgroundColor = DEFAULT_TEXTCOLOR;
     [phoneNumView addSubview:line];
     
-    self.phoneTF = [[UITextField alloc]initWithFrame:CGRectMake(phoneIcon.right + 10, 0, phoneNumView.frame.size.width - 20 - 40 - 10, 40)];
+    self.phoneTF = [[UITextField alloc]initWithFrame:CGRectMake(phoneIcon.right + 10, 0, phoneNumView.frame.size.width - 40 - 10, 40)];
     [phoneNumView addSubview:self.phoneTF];
     self.phoneTF.tag = 100;
     self.phoneTF.font = [UIFont systemFontOfSize:15];
@@ -343,7 +343,7 @@ static int seconds = 60;//计时60s
     self.phoneTF.returnKeyType = UIReturnKeyNext;
     self.phoneTF.textColor = [UIColor whiteColor];
     self.phoneTF.keyboardType = UIKeyboardTypeNumberPad;
-    
+    self.phoneTF.clearButtonMode = UITextFieldViewModeWhileEditing;
     NSAttributedString *string = [LTools attributedString:@"请输入手机号" keyword:@"请输入手机号" color:[UIColor whiteColor]];
     [self.phoneTF setAttributedPlaceholder:string];
     
@@ -414,9 +414,6 @@ static int seconds = 60;//计时60s
     UIView *mimaView = [[UIView alloc]initWithFrame:CGRectMake(DEVICE_WIDTH * 2, top, DEVICE_WIDTH-20, 100)];
     mimaView.backgroundColor = [UIColor clearColor];
     
-    //    UIView *fenge = [[UIView alloc]initWithFrame:CGRectMake(0, 49, mimaView.frame.size.width, 0.5)];
-    //    fenge.backgroundColor = [UIColor whiteColor];
-    //    [mimaView addSubview:fenge];
     [_downScrollView addSubview:mimaView];
     
     for (int i = 0; i < 2; i++) {
@@ -440,6 +437,8 @@ static int seconds = 60;//计时60s
         [mimaTf_view addSubview:pwd_tf];
         pwd_tf.delegate = self;
         pwd_tf.textColor = [UIColor whiteColor];
+        pwd_tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+
         
         NSString *placeHolder;
         if (i == 0) {

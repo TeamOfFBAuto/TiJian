@@ -13,6 +13,7 @@
 #import "ArticleListController.h"
 #import "QueryReportController.h"//查询报告
 #import "ArticleModel.h"
+#import "LSuitableView.h"
 
 @interface NewMedicalReportController ()<RefreshDelegate,UITableViewDataSource,UIAlertViewDelegate>
 {
@@ -207,6 +208,24 @@
     return result;
 }
 
+/**
+ *  显示疾病
+ *
+ *  @param array
+ */
+- (void)updateSickness:(NSArray *)array
+{
+    NSArray *titles = @[@"高血压",@"颈动脉斑块",@"甲状腺结节",@"眼底动脉硬化",@"心率不齐"];
+    UIView *footer = [[UIView alloc]init];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, 35 + 0.5) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"检后异常病症"];
+    [footer addSubview:label];
+    
+    LSuitableView *suitable = [[LSuitableView alloc]initWithFrame:CGRectMake(10, label.bottom, DEVICE_WIDTH, 0) itemsArray:titles];
+    [footer addSubview:suitable];
+    footer.height = suitable.bottom;
+    _table.tableFooterView = footer;
+}
+
 #pragma mark - 网络请求
 
 - (void)deleteReportId:(NSString *)reportId
@@ -320,6 +339,44 @@
 }
 
 
+/**
+ *  异常疾病
+ */
+- (void)netWorkForSickness
+{
+    
+    NSDictionary *params = @{@"page":@"1",
+                             @"per_page":@"10",
+                             @"category_id":@"2"};;
+    NSString *api = HEALTH_ACTICAL_LIST;
+    
+    //    __weak typeof(self)weakSelf = self;
+    __weak typeof(_table)weakTable = _table;
+    
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        
+        NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
+//        if (temp.count > 3) {
+//            _moreArticle = YES;//有更多常识
+//            NSMutableArray *mu_arr = [NSMutableArray arrayWithArray:temp];
+//            [mu_arr removeLastObject];
+//            temp = [NSArray arrayWithArray:mu_arr];
+//        }else
+//        {
+//            _moreArticle = NO;
+//        }
+//        _articleArray = [NSArray arrayWithArray:temp];
+//        [weakTable reloadData];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        
+    }];
+}
+
+
 #pragma mark - 数据解析处理
 
 #pragma mark - 事件处理
@@ -400,12 +457,14 @@
 - (void)loadNewDataForTableView:(UITableView *)tableView
 {
     [self netWorkForList];
-    [self netWorkForMeditalTestInfo];
+//    [self netWorkForMeditalTestInfo];
+    [self netWorkForSickness];
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView
 {
     [self netWorkForList];
-    [self netWorkForMeditalTestInfo];
+//    [self netWorkForMeditalTestInfo];
+    [self netWorkForSickness];
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {
@@ -429,17 +488,15 @@
         
     }else
     {
-//        ArticleModel *aModel = _articleArray[indexPath.row];
-//        [MiddleTools pushToWebFromViewController:self weburl:aModel.url title:nil moreInfo:NO hiddenBottom:YES];
-        
-        ArticleModel *article = _articleArray[indexPath.row];
-        NSString *shareImageUrl = article.cover_pic;
-        NSString *shareTitle = article.title;
-        NSString *shareContent = article.summary;
-        NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
-                                 Share_title:shareTitle,
-                                 Share_content:shareContent};
-        [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:nil];
+        DDLOG(@"跳转至疾病详情");
+//        ArticleModel *article = _articleArray[indexPath.row];
+//        NSString *shareImageUrl = article.cover_pic;
+//        NSString *shareTitle = article.title;
+//        NSString *shareContent = article.summary;
+//        NSDictionary *params = @{Share_imageUrl:shareImageUrl ? : @"",
+//                                 Share_title:shareTitle,
+//                                 Share_content:shareContent};
+//        [MiddleTools pushToWebFromViewController:self weburl:article.url extensionParams:params moreInfo:YES hiddenBottom:YES updateParamsBlock:nil];
     }
     
 }
@@ -651,7 +708,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1 + 1;
+    return 1;//先去掉体检常识部分
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{

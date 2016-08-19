@@ -461,6 +461,15 @@
 //4.删除报告 get 方式 authcode\report_id
 #define REPORT_DEL @"/index.php?d=api&c=report&m=del_report"
 
+
+//5.疾病列表
+#define Sickness_list @"/index.php?d=api&c=ailment&m=ailment_name_list"
+
+//6.疾病详情 //get and post 方式
+//参数：
+//authcode、ailment_id
+#define Sickness_detail @"/index.php?d=api&c=ailment&m=ailment_detail"
+
 //报告支持的品牌
 #define Report_center @"/index.php?d=api&c=report&m=get_report_center"
 

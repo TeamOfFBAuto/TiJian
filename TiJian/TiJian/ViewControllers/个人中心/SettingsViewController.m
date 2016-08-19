@@ -35,7 +35,14 @@
     self.myTitle = @"设置";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    _titlesArr = @[@"手机号",@"修改密码",@"意见反馈",@"鼓励评价",@"清理缓存",@"关于我们"];
+    
+    NSString *title = @"修改密码";
+    int no_password = [[LTools objectForKey:USER_NoPwd] intValue];
+    if (no_password == 1) {
+        title = @"设置密码";
+    }
+    
+    _titlesArr = @[@"手机号",title,@"意见反馈",@"鼓励评价",@"清理缓存",@"关于我们"];
     
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.delegate = self;
