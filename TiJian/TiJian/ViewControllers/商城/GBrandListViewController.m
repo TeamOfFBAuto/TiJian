@@ -438,9 +438,6 @@
     cc.brand_id = model_b.brand_id;
     [self.navigationController pushViewController:cc animated:YES];
     
-
-    
-    
 }
 
 

@@ -649,6 +649,9 @@
 		E3E6C3601BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E6C35D1BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png */; };
 		E3E6C3611BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E6C35E1BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png */; };
 		E3E6C3621BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E6C35F1BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png */; };
+		E3E8F2301D66E7910070A7FD /* DiseaseDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E8F22F1D66E7910070A7FD /* DiseaseDetailController.m */; };
+		E3E8F2321D670FCA0070A7FD /* report_detail_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E8F2311D670FCA0070A7FD /* report_detail_title@2x.png */; };
+		E3E8F2361D6723800070A7FD /* jiantou_blue_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E8F2351D6723800070A7FD /* jiantou_blue_up@2x.png */; };
 		E3ED61071C801D53001E5BFC /* BrandSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3ED61061C801D53001E5BFC /* BrandSearchViewController.m */; };
 		E3EE35FA1BE88DE00089A89C /* GMAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35F91BE88DE00089A89C /* GMAPI.m */; };
 		E3EE35FD1BE89B0E0089A89C /* GProductCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EE35FC1BE89B0E0089A89C /* GProductCellTableViewCell.m */; };
@@ -1658,6 +1661,10 @@
 		E3E6C35D1BF9AB1D00DFE33A /* shoppingcart_dd_top_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_dd_top_line@2x.png"; sourceTree = "<group>"; };
 		E3E6C35E1BF9AB1D00DFE33A /* shoppingcart_dd_top_name@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_dd_top_name@2x.png"; sourceTree = "<group>"; };
 		E3E6C35F1BF9AB1D00DFE33A /* shoppingcart_dd_top_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shoppingcart_dd_top_phone@2x.png"; sourceTree = "<group>"; };
+		E3E8F22E1D66E7910070A7FD /* DiseaseDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiseaseDetailController.h; sourceTree = "<group>"; };
+		E3E8F22F1D66E7910070A7FD /* DiseaseDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiseaseDetailController.m; sourceTree = "<group>"; };
+		E3E8F2311D670FCA0070A7FD /* report_detail_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "report_detail_title@2x.png"; sourceTree = "<group>"; };
+		E3E8F2351D6723800070A7FD /* jiantou_blue_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jiantou_blue_up@2x.png"; sourceTree = "<group>"; };
 		E3ED61051C801D53001E5BFC /* BrandSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrandSearchViewController.h; sourceTree = "<group>"; };
 		E3ED61061C801D53001E5BFC /* BrandSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrandSearchViewController.m; sourceTree = "<group>"; };
 		E3EE35F81BE88DE00089A89C /* GMAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMAPI.h; sourceTree = "<group>"; };
@@ -2216,6 +2223,8 @@
 		1362765B1C12D3370077C75D /* 体检报告 */ = {
 			isa = PBXGroup;
 			children = (
+				E3E8F2351D6723800070A7FD /* jiantou_blue_up@2x.png */,
+				E3E8F2311D670FCA0070A7FD /* report_detail_title@2x.png */,
 				E3612F851D2BB1A600864C44 /* report_save@2x.png */,
 				13FC32E21CE9B1700073539D /* report_daoru@2x.png */,
 				1378ED421C3D0D6C00A40582 /* report_tianjiabaogao@2x.png */,
@@ -2250,6 +2259,8 @@
 				136276611C12F37D0077C75D /* ReportDetailController.m */,
 				136276631C1312420077C75D /* MoreReportViewController.h */,
 				136276641C1312420077C75D /* MoreReportViewController.m */,
+				E3E8F22E1D66E7910070A7FD /* DiseaseDetailController.h */,
+				E3E8F22F1D66E7910070A7FD /* DiseaseDetailController.m */,
 			);
 			path = "体检报告";
 			sourceTree = "<group>";
@@ -3780,6 +3791,7 @@
 				E39DFC861D41D25B00B013CD /* gbtnWhite@2x.png in Resources */,
 				139333F31BE0DF3E00B4628B /* 8_1@2x.png in Resources */,
 				1303C3681BEB0D7100700847 /* homepage_g@2x.png in Resources */,
+				E3E8F2321D670FCA0070A7FD /* report_detail_title@2x.png in Resources */,
 				139333FF1BE1F29A00B4628B /* 9_1@2x.png in Resources */,
 				139333C11BE0DF3E00B4628B /* 21_1@2x.png in Resources */,
 				13E2D86E1CC8C58100A684D7 /* personal_guahaoyuyue@2x.png in Resources */,
@@ -3855,6 +3867,7 @@
 				139333CC1BE0DF3E00B4628B /* 23_5@2x.png in Resources */,
 				13D6DA931C48C6A90091FCFE /* extension_35_2.png in Resources */,
 				1385D39B1C3BD672006DE304 /* message_tuikuan@2x.png in Resources */,
+				E3E8F2361D6723800070A7FD /* jiantou_blue_up@2x.png in Resources */,
 				13D6DA961C48C6A90091FCFE /* extension_38_2.png in Resources */,
 				E3E2B40C1BFB205F007988C5 /* ConfirmInfoCell.xib in Resources */,
 				1303C35F1BEB0D7100700847 /* personal_yuyue_dianhua@2x.png in Resources */,
@@ -4142,6 +4155,7 @@
 				133FB5CD1C43AB09002A2DDE /* ActivityView.m in Sources */,
 				13F1F3DD1BBA9A4B00885D31 /* SVProgressHUD.m in Sources */,
 				13F8C5811C05A9C8004C3FC7 /* AddCommentDetailViewController.m in Sources */,
+				E3E8F2301D66E7910070A7FD /* DiseaseDetailController.m in Sources */,
 				137780B21C119CF800677363 /* AddReportViewController.m in Sources */,
 				136276621C12F37D0077C75D /* ReportDetailController.m in Sources */,
 				13FC32E91CE9C64D0073539D /* LPickerView.m in Sources */,

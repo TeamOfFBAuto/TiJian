@@ -565,6 +565,8 @@
 //register_referral_counts : 适用次数\register_referral_total_counts : 总数
 #define get_register_referral_counts @"/index.php?d=api&c=user&m=get_register_referral_counts"
 
-
+#pragma mark - 疾病相关
+//疾病详情
+#define Disease_Detail @"/index.php?d=api&c=ailment&m=ailment_detail"
 
 #endif
