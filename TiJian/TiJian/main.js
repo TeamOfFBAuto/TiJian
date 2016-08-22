@@ -166,3 +166,23 @@ defineClass('NewMedicalReportController',[],{didSelectRowAtIndexPath_tableView:f
     }
 }});
 
+
+//单品详情页 更改购物车数量后再添加商品时显示错误
+defineClass('GproductDetailViewController',[],{animationDidStop_finished: function(anim, flag){
+            require('CABasicAnimation,NSNumber,NSString');
+            var jslayer = self.valueForKey("layer");
+            var jsdownView = self.valueForKey("_downView") ;
+            var test = jslayer.animationForKey("group");
+            jslayer.removeFromSuperlayer();
+            self.setValue_forKey(null, "layer")
+            var shakeAnimation = CABasicAnimation.animationWithKeyPath("transform.translation.y");
+            shakeAnimation.setDuration(0.25);
+            shakeAnimation.setFromValue(NSNumber.numberWithFloat(-5));
+            shakeAnimation.setToValue(NSNumber.numberWithFloat(5));
+            shakeAnimation.setAutoreverses(YES);
+            jsdownView.gouwucheOneBtn().layer().addAnimation_forKey(shakeAnimation, null);
+            self.updateShopCarNumAndFrame();
+            
+}
+});
+
