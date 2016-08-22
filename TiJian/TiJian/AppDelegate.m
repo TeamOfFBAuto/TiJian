@@ -291,7 +291,7 @@
     
 #ifdef DEBUG
     NSString *currentVersion = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-    NSComparisonResult result = [currentVersion compare:@"3.1"];
+    NSComparisonResult result = [currentVersion compare:@"3.2"];
     if (result != 1) {
         //JSPatch develope
         [JSPatch testScriptInBundle];

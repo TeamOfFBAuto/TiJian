@@ -142,7 +142,7 @@
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
-    _table.backgroundColor = [UIColor clearColor];
+    _table.backgroundColor = [UIColor blackColor];
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     
@@ -357,16 +357,23 @@
     
     if (indexPath.row == 0) {
         
-        cell.backView.backgroundColor = [UIColor colorWithHexString:@"8ec7f7"];
+        cell.backView.backgroundColor = [[UIColor colorWithHexString:@"4ec298"]colorWithAlphaComponent:0.9];;
+//        cell.bgImageView.image = [UIImage imageNamed:@"report_r1"];
     }else if (indexPath.row == 1){
-        cell.backView.backgroundColor = [UIColor colorWithHexString:@"7cc1f8"];
+        cell.backView.backgroundColor = [[UIColor colorWithHexString:@"f3c455"]colorWithAlphaComponent:0.9];
+//        cell.bgImageView.image = [UIImage imageNamed:@"report_r2"];
+
     }else
     {
-        cell.backView.backgroundColor = [UIColor colorWithHexString:@"74bcf5"];
+        cell.backView.backgroundColor = [[UIColor colorWithHexString:@"87b1d4"]colorWithAlphaComponent:0.9];
+//        cell.bgImageView.image = [UIImage imageNamed:@"report_r3"];
     }
+    
+    cell.bgImageView.frame = CGRectMake(0, 0, DEVICE_WIDTH, [RecommendCell heightForCellWithModel:_dataArray[indexPath.row]]);
     RecommendProjectModel *p_model = _dataArray[indexPath.row];
     [cell setCellWithModel:p_model];
-    
+//    cell.contentView.backgroundColor = [UIColor orangeColor];
+//     cell.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:0.1];
     return cell;
 }
 
