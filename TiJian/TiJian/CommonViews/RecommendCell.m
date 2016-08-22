@@ -37,10 +37,15 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        
+        self.bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+        _bgImageView.contentMode = UIViewContentModeCenter;
+        [self.contentView addSubview:_bgImageView];
+        
         self.backView = [[UIView alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, 170)];
         _backView.clipsToBounds = YES;
-        [_backView addCornerRadius:3.f];
-        _backView.backgroundColor = DEFAULT_TEXTCOLOR;
+//        [_backView addCornerRadius:3.f];
+//        _backView.backgroundColor = DEFAULT_TEXTCOLOR;
         [self.contentView addSubview:_backView];
         
         UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, _backView.width - 20, 35) font:14 align:NSTextAlignmentLeft textColor:[UIColor whiteColor] title:@"基础套餐"];
@@ -61,7 +66,7 @@
         self.price_label = priceLabel;
         
         //line
-        UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(10, priceLabel.bottom, _backView.width - 20, 0.5)];
+        UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(10, priceLabel.bottom, _backView.width - 20 - 100, 0.5)];
         line.backgroundColor = DEFAULT_LINECOLOR;
         [_backView addSubview:line];
         
@@ -95,7 +100,7 @@
         content.height = height;
         
         //line
-        line = [[UIImageView alloc]initWithFrame:CGRectMake(10, content.bottom + 10, DEVICE_WIDTH - 20, 0.5)];
+        line = [[UIImageView alloc]initWithFrame:CGRectMake(10, content.bottom + 10, _backView.width - 20, 0.5)];
         line.backgroundColor = DEFAULT_LINECOLOR;
         [_backView addSubview:line];
         self.line = line;

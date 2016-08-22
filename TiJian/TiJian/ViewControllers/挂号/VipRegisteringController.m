@@ -53,6 +53,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    _familyUid = self.userInfo.family_uid;
     [self prepareViews];
 }
 

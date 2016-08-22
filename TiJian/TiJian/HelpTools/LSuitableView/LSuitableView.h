@@ -13,6 +13,17 @@
 
 @interface LSuitableView : UIView
 
+/**
+ *  初始化LSuitableView,自动适应大小
+ *
+ *  @param frame
+ *  @param itemViewArray view数组
+ *
+ *  @return
+ */
+-(instancetype)initWithFrame:(CGRect)frame
+               itemViewArray:(NSArray *)itemViewArray;
+
 -(instancetype)initWithFrame:(CGRect)frame
                   itemsArray:(NSArray *)itemsArray;
 

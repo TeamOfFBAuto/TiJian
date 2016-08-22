@@ -21,6 +21,7 @@
     NSArray *_articleArray;//体检资讯
     BOOL _moreReport;//更多报告
     BOOL _moreArticle;//更多体检常识
+    NSArray *_sicknessArray;//疾病列表
 }
 
 @property(nonatomic,retain)ResultView *nodataView;//未登录view
@@ -215,14 +216,27 @@
  */
 - (void)updateSickness:(NSArray *)array
 {
-    NSArray *titles = @[@"高血压",@"颈动脉斑块",@"甲状腺结节",@"眼底动脉硬化",@"心率不齐"];
+    _sicknessArray = [NSArray arrayWithArray:array];
+    
+    NSMutableArray *views = [NSMutableArray arrayWithCapacity:array.count];
+    for (int i = 0 ;i < array.count ; i ++) {
+        NSDictionary *dic = array[i];
+        NSString *title = dic[@"ailment_name"];
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 25) font:11 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:title];
+        [label setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
+        [label addCornerRadius:3.f];
+        label.width = [LTools widthForText:title font:11] + 10 * 2;
+        [views addObject:label];
+        [label addTaget:self action:@selector(clickSickness:) tag:100 + i];
+    }
     UIView *footer = [[UIView alloc]init];
+    footer.backgroundColor = [UIColor whiteColor];
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, 35 + 0.5) font:14 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE title:@"检后异常病症"];
     [footer addSubview:label];
     
-    LSuitableView *suitable = [[LSuitableView alloc]initWithFrame:CGRectMake(10, label.bottom, DEVICE_WIDTH, 0) itemsArray:titles];
+    LSuitableView *suitable = [[LSuitableView alloc]initWithFrame:CGRectMake(0, label.bottom, DEVICE_WIDTH, 0) itemViewArray:views];
     [footer addSubview:suitable];
-    footer.height = suitable.bottom;
+    footer.height = suitable.bottom + 10;
     _table.tableFooterView = footer;
 }
 
@@ -344,30 +358,15 @@
  */
 - (void)netWorkForSickness
 {
+    NSString *api = Sickness_list;
     
-    NSDictionary *params = @{@"page":@"1",
-                             @"per_page":@"10",
-                             @"category_id":@"2"};;
-    NSString *api = HEALTH_ACTICAL_LIST;
+    __weak typeof(self)weakSelf = self;
     
-    //    __weak typeof(self)weakSelf = self;
-    __weak typeof(_table)weakTable = _table;
-    
-    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:nil constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         
-        NSArray *temp = [ArticleModel modelsFromArray:result[@"article_list"]];
-//        if (temp.count > 3) {
-//            _moreArticle = YES;//有更多常识
-//            NSMutableArray *mu_arr = [NSMutableArray arrayWithArray:temp];
-//            [mu_arr removeLastObject];
-//            temp = [NSArray arrayWithArray:mu_arr];
-//        }else
-//        {
-//            _moreArticle = NO;
-//        }
-//        _articleArray = [NSArray arrayWithArray:temp];
-//        [weakTable reloadData];
+        NSArray *temp = result[@"data"];
+        [weakSelf updateSickness:temp];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -380,6 +379,36 @@
 #pragma mark - 数据解析处理
 
 #pragma mark - 事件处理
+
+/**
+ *  点击疾病按钮
+ *
+ *  @param button
+ */
+- (void)clickSickness:(UIButton *)button
+{
+    int index = (int)button.tag - 100;
+    
+    //跳转至详情
+    NSString *ailment_id = _sicknessArray[index][@"ailment_id"];
+    NSString *ailment_name = _sicknessArray[index][@"ailment_name"];
+
+    
+    for (int i = 0; i < _sicknessArray.count; i ++) {
+       
+        UIView *btn = [_table.tableFooterView viewWithTag:100 + i].superview;
+
+        if (i != index) {
+            
+            [btn setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
+
+        }else
+        {
+            [btn setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR];
+
+        }
+    }
+}
 
 /**
  *  查看更多

@@ -13,6 +13,7 @@
 @interface RecommendCell : UITableViewCell
 
 @property(nonatomic,retain)UIView *backView;
+@property(nonatomic,retain)UIImageView *bgImageView;//背景图片
 
 
 + (CGFloat)heightForCellWithModel:(id)amodel;

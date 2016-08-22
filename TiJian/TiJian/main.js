@@ -166,3 +166,12 @@ defineClass('NewMedicalReportController',[],{didSelectRowAtIndexPath_tableView:f
     }
 }});
 
+
+//挂专家号 选择家人问题
+defineClass('VipRegisteringController',[],{viewDidLoad:function()
+{
+    self.ORIGviewDidLoad();
+    var userInfo = self.userInfo(); 
+    var uid = userInfo.valueForKey("family_uid");;
+    self.setValue_forKey(uid, "_familyUid");
+}});
