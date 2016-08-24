@@ -11,9 +11,9 @@
 #ifndef WJXC_ApiConstants_h
 #define WJXC_ApiConstants_h
 
-//#define SERVER_URL @"http://www.haimayisheng.com/" //海马医生域名
+#define SERVER_URL @"http://www.haimayisheng.com/" //海马医生域名
 
-#define SERVER_URL @"http://182.92.106.193:88" //海马医生域名 测试服务器
+//#define SERVER_URL @"http://182.92.106.193:88" //海马医生域名 测试服务器
 
 
 //体检须知
@@ -469,6 +469,12 @@
 //参数：
 //authcode、ailment_id
 #define Sickness_detail @"/index.php?d=api&c=ailment&m=ailment_detail"
+
+//7.根据疾病获取体检套餐
+#define Sickness_getSetmeals @"/index.php?d=api&c=ailment&m=get_setmeals"
+
+//8.疾病推荐套餐
+#define Sickness_recommendSetmeals @"/index.php?d=api&c=ailment&m=get_a_setmeal_product"
 
 //报告支持的品牌
 #define Report_center @"/index.php?d=api&c=report&m=get_report_center"

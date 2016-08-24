@@ -115,6 +115,12 @@ typedef enum {
     PageResultType_requestFail = 3 //请求异常
 }PageResultType;//页面结果类型
 
+
+typedef enum {
+    RecommentType_default = 0, //个性化定制套餐
+    RecommentType_sickness = 1 //疾病项目推荐套餐
+}RecommendType; //套餐推荐类型
+
 //消息通知类型
 //PhysicalExamination (PE)
 typedef enum{

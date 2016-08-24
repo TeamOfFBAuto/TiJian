@@ -8,6 +8,8 @@
 
 #import "DiseaseDetailController.h"
 #import "UILabel+GautoMatchedText.h"
+#import "VipAppointViewController.h"
+#import "RecommendMedicalCheckController.h"
 
 @interface DiseaseDetailController ()<RefreshDelegate,UITableViewDataSource>
 {
@@ -26,10 +28,7 @@
     
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
-    self.disease_name = @"性激素异常";
-    self.disease_id = @"1";
     self.myTitle = self.disease_name;
-    
     
     [self creatTab];
     [self creatDownView];
@@ -124,7 +123,7 @@
     _tmpLabel.text = str;
     [_tmpLabel setMatchedFrame4LabelWithOrigin:CGPointMake(15, 0) width:DEVICE_WIDTH - 30];
     height = _tmpLabel.height +10;
-    NSLog(@"------------->%f",height);
+//    NSLog(@"------------->%f",height);
     return height;
 }
 
@@ -296,11 +295,19 @@
 -(void)downViewBtnClicked:(UIButton *)sender{
     DDLOG(@"---->%ld",(long)sender.tag);
     if (sender.tag == 100) {//推荐套餐
+       
+        RecommendMedicalCheckController *recommend = [[RecommendMedicalCheckController alloc]init];
+        recommend.recommendType = RecommentType_sickness;
+        recommend.diseaseId = self.disease_id;
+        [self.navigationController pushViewController:recommend animated:YES];
         
-    }else if (sender.tag == 101){//问医生
+    }else if (sender.tag == 101){//问医生 咨询
+        [MiddleTools pushToGuaHaoType:4 familyuid:nil viewController:self hiddenBottom:YES updateParamsBlock:nil extendParams:nil];
         
-    }else if (sender.tag == 102){//看医生
+    }else if (sender.tag == 102){//看医生 挂号
         
+        VipAppointViewController *vip = [[VipAppointViewController alloc]init];
+        [self.navigationController pushViewController:vip animated:YES];
     }
 }
 

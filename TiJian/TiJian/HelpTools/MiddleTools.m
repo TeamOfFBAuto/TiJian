@@ -392,6 +392,37 @@
     [viewController.navigationController pushViewController:list animated:YES];
 }
 
+#pragma mark - 挂号网相关
+
+/**
+ *  点击跳转至挂号网对接
+ *
+ *  @param familiyuid type为2时,转诊预约（VIP）需要此参数
+ */
++ (void)pushToGuaHaoType:(int)type
+               familyuid:(NSString *)familyuid
+          viewController:(UIViewController *)viewController
+            hiddenBottom:(BOOL)hiddenBottom
+       updateParamsBlock:(UpdateParamsBlock)updateParamsBlock
+            extendParams:(NSDictionary *)extendParams
+{
+    
+    [LoginManager isLogin:viewController loginBlock:^(BOOL success) {
+        if (success) {
+            
+            WebviewController *web = [[WebviewController alloc]init];
+            web.guaHao = YES;
+            web.type = type;
+            web.familyuid = familyuid;
+            web.hidesBottomBarWhenPushed = hiddenBottom;
+            web.updateParamsBlock = updateParamsBlock;
+            [viewController.navigationController pushViewController:web animated:YES];
+        }
+    }];
+    
+    
+}
+
 #pragma mark - 分享
 
 /**

@@ -96,6 +96,21 @@
                             extendParams:(NSDictionary *)extendParams
                        updateParamsBlock:(UpdateParamsBlock)updateParamsBlock;
 
+
+#pragma mark - 挂号网相关
+
+/**
+ *  点击跳转至挂号网对接
+ *
+ *  @param btn
+ */
++ (void)pushToGuaHaoType:(int)type
+               familyuid:(NSString *)familyuid
+          viewController:(UIViewController *)viewController
+            hiddenBottom:(BOOL)hiddenBottom
+       updateParamsBlock:(UpdateParamsBlock)updateParamsBlock
+            extendParams:(NSDictionary *)extendParams;
+
 #pragma mark - 订单
 
 /**

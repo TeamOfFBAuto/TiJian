@@ -37,8 +37,6 @@
     [super viewWillDisappear:animated];
 }
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -75,7 +73,6 @@
     _table.dataSource = self;
     [self.view addSubview:_table];
     
-//    [self creatBottomTools];
     UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 5)];
     _table.tableFooterView = footer;
     
@@ -128,6 +125,49 @@
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        NSLog(@"success result %@",result);
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+        NSArray *temp = result[@"data"];
+        if (temp.count > 0) {
+            
+            if (!_bottom) {
+                [weakSelf creatBottomTools];
+            }
+        }
+        [weakTable reloadData:temp pageSize:10 noDataView:self.resultView];
+        
+    } failBlock:^(NSDictionary *result) {
+        
+        NSLog(@"fail result %@",result);
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+        ResultView *resultView = (ResultView *)weakSelf.resultView;
+        resultView.content = @"请检查网络稍后再试";
+        [weakTable loadFailWithView:weakSelf.resultView pageSize:10];
+        
+    }];
+}
+
+/**
+ *  获取疾病推荐套餐
+ */
+- (void)netWorkForSicknessSetmeal
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *api = Sickness_recommendSetmeals;
+    
+    //获取最近体检结果
+    [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+    [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    [params safeSetString:[UserInfo getAuthkey] forKey:@"authcode"];
+    [params safeSetString:self.diseaseId forKey:@"ailment_id"];
+    [params safeSetInt:self.starNum forKey:@"type"];
+    
+    __weak typeof(self)weakSelf = self;
+    __weak typeof(_table)weakTable = _table;
+    //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
         NSLog(@"success result %@",result);
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
@@ -216,8 +256,6 @@
                 amodel.main_product_id = mainProductId;
                 amodel.package_project = [dic arrayValueForKey:@"package_project"];
                 [temp addObject:amodel];
-                
-//                cover_pic\product_name\product_num\is_append
             }
         }
         ConfirmOrderViewController *cc = [[ConfirmOrderViewController alloc]init];
@@ -268,11 +306,21 @@
 
 - (void)loadNewDataForTableView:(UITableView *)tableView
 {
-    [self netWorkForSetmeal];
+    if (self.recommendType == RecommentType_default) {
+        [self netWorkForSetmeal];
+    }else if (self.recommendType == RecommentType_sickness)
+    {
+        [self netWorkForSicknessSetmeal];
+    }
 }
 - (void)loadMoreDataForTableView:(UITableView *)tableView
 {
-    [self netWorkForSetmeal];
+    if (self.recommendType == RecommentType_default) {
+        [self netWorkForSetmeal];
+    }else if (self.recommendType == RecommentType_sickness)
+    {
+        [self netWorkForSicknessSetmeal];
+    }
 }
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
 {

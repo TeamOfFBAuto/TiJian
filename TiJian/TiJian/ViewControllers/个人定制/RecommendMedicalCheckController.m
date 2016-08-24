@@ -31,8 +31,6 @@
 @implementation RecommendMedicalCheckController
 
 
-
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -47,12 +45,26 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.myTitle = @"专家鉴定";
-    self.rightImage = [UIImage imageNamed:@"share3"];
-    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
+    [self createTable];
+    
+    MyViewControllerRightbuttonType type = MyViewControllerRightbuttonTypeNull;
+    NSString *title = @"";
+    if (self.recommendType == RecommentType_default) {
+        title = @"专家鉴定";
+        [self getCustomizationResult];
         
-    [self getCustomizationResult];
+        self.rightImage = [UIImage imageNamed:@"share3"];
+        type = MyViewControllerRightbuttonTypeOther;
+        
+    }else if (self.recommendType == RecommentType_sickness)
+    {
+        title = @"体检套餐";
+        [self getSicknessResult];
+    }
+    self.myTitle = title;
+    
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:type];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"f7f7f7"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -74,7 +86,7 @@
     return label;
 }
 
-- (void)createViewsWithDesc:(NSString *)desc
+- (void)createTable
 {
     _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
     _table.delegate = self;
@@ -82,8 +94,10 @@
     [self.view addSubview:_table];
     _table.backgroundColor = [UIColor clearColor];
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    
+}
+
+- (void)createViewsWithDesc:(NSString *)desc
+{
     UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     headview.backgroundColor = [UIColor whiteColor];
     
@@ -138,14 +152,6 @@
 
 - (void)createViewsWithProjects:(NSArray *)projects
 {
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
-    _table.delegate = self;
-    _table.dataSource = self;
-    [self.view addSubview:_table];
-    _table.backgroundColor = [UIColor blackColor];
-    _table.separatorStyle = UITableViewCellSeparatorStyleNone;
-
-    
     NSArray *items = projects;
     UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
     headview.backgroundColor = [UIColor clearColor];
@@ -235,6 +241,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *api;
     YJYRequstMethod method = YJYRequstMethodPost;
+    
     BOOL custom = NO;
     if (self.jsonString) {
         [params safeSetString:self.jsonString forKey:@"c_result"];
@@ -275,6 +282,38 @@
     }];
 }
 
+/**
+ *  获取疾病相关体检套餐
+ */
+- (void)getSicknessResult
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *api = Sickness_getSetmeals;
+ 
+    //获取最近体检结果
+    [params safeSetString:[GMAPI getCurrentProvinceId] forKey:@"province_id"];
+    [params safeSetString:[GMAPI getCurrentCityId] forKey:@"city_id"];
+    [params safeSetString:[UserInfo getAuthkey] forKey:@"authcode"];
+    [params safeSetString:self.diseaseId forKey:@"ailment_id"];
+    
+    __weak typeof(self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[YJYRequstManager shareInstance]requestWithMethod:YJYRequstMethodGet api:api parameters:params constructingBodyBlock:nil completion:^(NSDictionary *result) {
+        
+        [weakSelf parseSicknessWithResult:result];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+    } failBlock:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        
+    }];
+}
+
+/**
+ *  个性化体检结果处理
+ *
+ *  @param result
+ */
 - (void)parseDataWithResult:(NSDictionary *)result
 {
     [UserInfo updateUserCustomed:@"1"];//记录已个性化定制过状态
@@ -307,6 +346,37 @@
     
 }
 
+/**
+ *  解析疾病推荐套餐
+ *
+ *  @param result
+ */
+- (void)parseSicknessWithResult:(NSDictionary *)result
+{
+    NSArray *data = result[@"data"];
+    //推荐套餐
+    if ([data isKindOfClass:[NSArray class]]) {
+        
+        if (_table.tableHeaderView == nil) {
+            UIView *headview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 0)];
+            UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 10, 40) title:@"套餐推荐" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR];
+            [headview addSubview:label2];
+            
+            //line
+            UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(0, label2.bottom, DEVICE_WIDTH, 0.5)];
+            line.backgroundColor = DEFAULT_LINECOLOR;
+            [headview addSubview:line];
+            
+            headview.height = line.bottom + 15;
+            _table.tableHeaderView = headview;
+        }
+        
+        NSArray *temp = [RecommendProjectModel modelsFromArray:data];
+        _dataArray = [NSArray arrayWithArray:temp];
+        [_table reloadData];
+    }
+}
+
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
@@ -333,7 +403,16 @@
 {
     RecommendProjectModel *p_model = _dataArray[indexPath.row];
     BrandRecommendController *recommend = [[BrandRecommendController alloc]init];
-    recommend.result_id = _result_id;
+    
+    if (self.recommendType == RecommentType_default) {
+        
+        recommend.result_id = _result_id;
+        
+    }else if (self.recommendType == RecommentType_sickness)
+    {
+        recommend.diseaseId = self.diseaseId;
+    }
+    recommend.recommendType = self.recommendType;
     recommend.starNum = [p_model.star_num intValue];
     recommend.min_price = NSStringFromFloat([p_model.min_price floatValue]);
     [self.navigationController pushViewController:recommend animated:YES];

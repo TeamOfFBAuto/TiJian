@@ -14,6 +14,7 @@
 #import "QueryReportController.h"//查询报告
 #import "ArticleModel.h"
 #import "LSuitableView.h"
+#import "DiseaseDetailController.h"
 
 @interface NewMedicalReportController ()<RefreshDelegate,UITableViewDataSource,UIAlertViewDelegate>
 {
@@ -390,9 +391,10 @@
     int index = (int)button.tag - 100;
     
     //跳转至详情
-    NSString *ailment_id = _sicknessArray[index][@"ailment_id"];
-    NSString *ailment_name = _sicknessArray[index][@"ailment_name"];
+    NSString *aliment_id = _sicknessArray[index][@"ailment_id"];
+    NSString *aliment_name = _sicknessArray[index][@"ailment_name"];
 
+    [self pushToSicknessDetaiId:aliment_id alimentName:aliment_name];
     
     for (int i = 0; i < _sicknessArray.count; i ++) {
        
@@ -408,6 +410,22 @@
 
         }
     }
+}
+
+/**
+ *  跳转至疾病详情页
+ *
+ *  @param alimentId   id
+ *  @param alimentName name
+ */
+- (void)pushToSicknessDetaiId:(NSString *)alimentId
+                  alimentName:(NSString *)alimentName
+{
+    DiseaseDetailController *detail = [[DiseaseDetailController alloc]init];
+    detail.disease_id = alimentId;
+    detail.disease_name = alimentName;
+    detail.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:detail animated:YES];
 }
 
 /**

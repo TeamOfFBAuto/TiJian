@@ -44,6 +44,8 @@
     NSDictionary *_remoteMessageDic;//远程推送消息
 }
 
+@property(nonatomic,retain)NSObject *someObject;
+
 @end
 
 @implementation AppDelegate
@@ -1140,7 +1142,20 @@
 //    [LTools setObject:@"B3hULVcuV7EFvgSZUeEB1geiVbdQpQX0BCkGNwdiXG0GMgcwVDcAM1NnAjICYVsrAjI=" forKey:USER_AUTHOD];
 //    //记录没有密码
 //    [LTools setObject:@"1" forKey:USER_NoPwd];
+    
+//    NSObject * __weak someObject1 = [[NSObject alloc] init];
+//    
+//    NSObject * __weak someObject2 = self.someObject;
+    
+    
 }
 
+-(NSObject *)someObject
+{
+    if (!_someObject) {
+        _someObject = [[NSObject alloc]init];
+    }
+    return _someObject;
+}
 
 @end

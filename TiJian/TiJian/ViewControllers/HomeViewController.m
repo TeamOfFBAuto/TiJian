@@ -9,7 +9,6 @@
 #import "HomeViewController.h"
 #import "PersonalCustomViewController.h"
 #import "GStoreHomeViewController.h"
-#import "RecommendMedicalCheckController.h"
 #import "PhysicalTestResultController.h"
 #import "AppointDirectController.h"//预约
 #import "ArticleListController.h"//健康资讯列表
