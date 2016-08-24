@@ -118,12 +118,14 @@
         _tmpLabel = [[UILabel alloc]init];
     }
     _tmpLabel.font = [UIFont systemFontOfSize:13];
-    NSDictionary *dic = _rTab.dataArray[indexPath.row];
+    NSDictionary *dic = _rTab.dataArray[indexPath.section];
     NSString *str = [dic stringValueForKey:@"content"];
     _tmpLabel.text = str;
     [_tmpLabel setMatchedFrame4LabelWithOrigin:CGPointMake(15, 0) width:DEVICE_WIDTH - 30];
     height = _tmpLabel.height +10;
-
+    
+    DDLOG(@"%f",height);
+    
     return height;
 }
 
