@@ -1284,7 +1284,6 @@
         shakeAnimation.autoreverses = YES;
         [_downView.gouwucheOneBtn.layer addAnimation:shakeAnimation forKey:nil];
         
-        _downView.shopCarNumLabel.text = [NSString stringWithFormat:@"%d",_gouwucheNum];
         
         [self updateShopCarNumAndFrame];
         
