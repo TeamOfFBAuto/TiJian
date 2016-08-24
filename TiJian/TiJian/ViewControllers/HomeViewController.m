@@ -22,7 +22,6 @@
 #import "ActivityView.h"//活动view
 #import "ActivityModel.h"
 #import "DoctorModel.h"//对接专家医生model
-#import "DiseaseDetailController.h"//疾病详情
 
 #define kTagOrder 100 //体检预约
 #define kTagMarket 101 //体检商城
@@ -336,11 +335,9 @@
 //跳转到定位区域选择vc
 -(void)pushToLocationChoose{
     
-    DiseaseDetailController *cc = [[DiseaseDetailController alloc]init];
+    LocationChooseViewController *cc = [[LocationChooseViewController alloc]init];
+    cc.delegate = self;
     cc.hidesBottomBarWhenPushed = YES;
-//    LocationChooseViewController *cc = [[LocationChooseViewController alloc]init];
-//    cc.delegate = self;
-//    cc.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:cc animated:YES];
 }
 

@@ -27,7 +27,7 @@
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     self.disease_name = @"性激素异常";
-    self.disease_id = @"1";
+    self.disease_id = @"32";
     self.myTitle = self.disease_name;
     
     
@@ -124,7 +124,6 @@
     _tmpLabel.text = str;
     [_tmpLabel setMatchedFrame4LabelWithOrigin:CGPointMake(15, 0) width:DEVICE_WIDTH - 30];
     height = _tmpLabel.height +10;
-    NSLog(@"------------->%f",height);
     return height;
 }
 
@@ -221,7 +220,7 @@
         [cell.contentView addSubview:theCLabel];
     }
     
-    NSDictionary *dic = _rTab.dataArray[indexPath.row];
+    NSDictionary *dic = _rTab.dataArray[indexPath.section];
     UILabel *label = [cell.contentView viewWithTag:300];
     
     label.font = [UIFont systemFontOfSize:13];
@@ -272,6 +271,7 @@
             }
             [_isOpenArray addObject:num];
         }
+        
         
         [brtab reloadData:dataArray isHaveMore:NO];
         
