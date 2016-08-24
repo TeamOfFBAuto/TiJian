@@ -44,7 +44,7 @@
 #pragma mark - 视图创建
 
 -(void)creatTab{
-    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64-50) style:UITableViewStyleGrouped];
+    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;
