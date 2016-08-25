@@ -182,7 +182,6 @@ defineClass('GproductDetailViewController',[],{animationDidStop_finished: functi
             shakeAnimation.setAutoreverses(YES);
             jsdownView.gouwucheOneBtn().layer().addAnimation_forKey(shakeAnimation, null);
             self.updateShopCarNumAndFrame();
-            
 }
 });
 
@@ -194,3 +193,22 @@ defineClass('VipRegisteringController',[],{viewDidLoad:function()
     var uid = userInfo.valueForKey("family_uid");;
     self.setValue_forKey(uid, "_familyUid");
 }});
+
+//活动详情 标题bug
+defineClass('WebviewController',[],{webViewDidFinishLoad:function(webView)
+{
+    self.ORIGwebViewDidFinishLoad(webView);
+    var weburl = self.webUrl(); 
+    console.log(weburl);
+
+    var isActivity = weburl.containsString("activity");
+    console.log(isActivity);
+
+    if (isActivity) {
+        self.setMyTitle(webView.stringByEvaluatingJavaScriptFromString("document.title"));
+    };
+}});
+
+
+
+

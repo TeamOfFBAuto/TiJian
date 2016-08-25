@@ -10,7 +10,7 @@
 
 typedef enum{
     TheDownViewType_gouwuche =0,//正常(客服、收藏、预约、购物车、加入购物车)
-    TheDownViewType_yuyue,//立即预约(联系卖家、电话咨询、收藏、立即预约)
+    TheDownViewType_yuyue,//立即预约(联系客服、电话咨询、收藏、立即预约)
     TheDownViewType_vourcher//代金券跳转(客服、收藏、预约、购物车、立即购买)
 }TheDownViewType;
 

@@ -423,7 +423,6 @@
 - (void)clickToConfused:(UIButton *)sender
 {
     NSString *urlstring = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_ReportAccount];
-//    urlstring = @"http://www.hippodr.com/docs/center/curl_ciming.php";
     [MiddleTools pushToWebFromViewController:self weburl:urlstring title:@"体检账号说明" moreInfo:NO hiddenBottom:NO];
 }
 

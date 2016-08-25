@@ -878,7 +878,7 @@ typedef enum{
     
     if (sender.view.tag == 10) {//企业体检
         WebviewController *cc = [[WebviewController alloc]init];
-        cc.webUrl = @"http://www.hippodr.com/index.php?d=wap&c=company_consult&m=consult";
+        cc.webUrl = [NSString stringWithFormat:@"%@%@",SERVER_URL,URL_Company_consult];
         cc.navigationTitle = @"企业体检";
         [self.navigationController pushViewController:cc animated:YES];
     }else{

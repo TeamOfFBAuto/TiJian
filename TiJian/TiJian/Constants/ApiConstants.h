@@ -34,6 +34,8 @@
 //体检报告查询账号密码说
 #define URL_ReportAccount @"/data/report_account.html"
 
+//企业体检
+#define URL_Company_consult @"/index.php?d=wap&c=company_consult&m=consult"
 
 //商城首页轮播图
 #define StoreCycleAdv @"/index.php?d=api&c=adver&m=adver_list"

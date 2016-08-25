@@ -544,7 +544,7 @@
     [chatBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
     chatBtn.backgroundColor = [UIColor whiteColor];
     [chatBtn setImage:[UIImage imageNamed:@"order_chat"] forState:UIControlStateNormal];
-    [chatBtn setTitle:@"  联系卖家" forState:UIControlStateNormal];
+    [chatBtn setTitle:@"  联系客服" forState:UIControlStateNormal];
     
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(chatBtn.right, 5, 0.5, 21)];
     line.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;

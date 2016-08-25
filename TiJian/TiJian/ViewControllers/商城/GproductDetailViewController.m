@@ -743,7 +743,7 @@
         }
     }else if (type == TheDownViewType_yuyue){
         
-        if (theTag == 100) {//联系卖家
+        if (theTag == 100) {//联系客服
             [LoginViewController isLogin:self loginBlock:^(BOOL success) {
                 if (success) {//登录成功
                     

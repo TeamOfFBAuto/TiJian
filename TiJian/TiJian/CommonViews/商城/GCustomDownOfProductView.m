@@ -101,7 +101,7 @@
             [self addSubview:self.addShopCarBtn];
             
             CGFloat tw = (self.frame.size.width-theW)/3;
-            NSArray *titleArray = @[@"联系卖家",@"电话咨询",@"收藏"];
+            NSArray *titleArray = @[@"联系客服",@"电话咨询",@"收藏"];
             NSArray *imageNameArray = @[@"kefu_pd1.png",@"dianhua_pd1.png",@"shoucang_pd.png"];
             for (int i = 0; i<3; i++) {
                 UIButton *oneBtn = [UIButton buttonWithType:UIButtonTypeCustom];

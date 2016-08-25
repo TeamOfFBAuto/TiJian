@@ -818,11 +818,11 @@
 //    line2.backgroundColor = RGBCOLOR(244, 245, 246);
 //    [_tabFooterView addSubview:line2];
     
-//    //联系卖家
+//    //联系客服
 //    UIButton *chatBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 //    [chatBtn setFrame:CGRectMake(0, CGRectGetMaxY(line2.frame), DEVICE_WIDTH/2, 45)];
 //    [chatBtn setImage:[UIImage imageNamed:@"order_chat.png"] forState:UIControlStateNormal];
-//    [chatBtn setTitle:@"联系卖家" forState:UIControlStateNormal];
+//    [chatBtn setTitle:@"联系客服" forState:UIControlStateNormal];
 //    [chatBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
 //    chatBtn.titleLabel.font = [UIFont systemFontOfSize:14];
 //    [chatBtn setTitleColor:RGBCOLOR(93, 148, 201) forState:UIControlStateNormal];

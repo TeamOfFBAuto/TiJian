@@ -167,17 +167,13 @@
     }else
     {
         [self netWorkForUrl:self.webUrl];
-        self.myTitle = self.navigationTitle ? :  @"健康资讯";
+        self.myTitle = self.navigationTitle;
         
         NSString *title = self.extensionParams[Share_title];
         if (![LTools isEmpty:title]) {
             self.myTitle = title;
         }
-        
         title = self.myTitle;
-        
-        
-        
     }
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
@@ -529,6 +525,11 @@
     
     if ([self.myTitle isEqualToString:@"体检报告"]) {
         [self saveButton];
+    }
+    
+    //活动标题问题
+    if ([self.webUrl containsString:@"activity"]) {
+        self.myTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];//获取当前页面的title
     }
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error

@@ -165,7 +165,7 @@
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, 0, DEVICE_WIDTH - 90, footView.height) font:17 align:NSTextAlignmentLeft textColor:[UIColor whiteColor] title:name];
     [footView addSubview:titleLabel];
     
-    //联系卖家
+    //联系客服
     CGFloat chatWidth = [LTools fitWithIPhone6:67.f];
     UIButton *chatBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - chatWidth, 0, chatWidth, footView.height) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(clickToPhone:)];
     [footView addSubview:chatBtn];
@@ -311,7 +311,7 @@
         NSAttributedString *string = [LTools attributedString:price keyword:key color:DEFAULT_TEXTCOLOR_TITLE_SUB keywordFontSize:12];
         [priceLabel setAttributedText:string];
         
-        //联系卖家
+        //联系客服
         chatWidth = [LTools fitWithIPhone6:67.f];
         chatBtn = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 12 - chatWidth, footView.height - 30, chatWidth, 30) buttonType:UIButtonTypeCustom normalTitle:nil selectedTitle:nil target:self action:@selector(clickToBuy:)];
         [footView addSubview:chatBtn];
