@@ -61,6 +61,13 @@
     self.rightString = @"完成";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table.delegate = self;
+    _table.dataSource = self;
+    [self.view addSubview:_table];
+    _table.backgroundColor = [UIColor clearColor];
+
+    
     [self netWorkForList];
     
 }
@@ -95,14 +102,8 @@
 
     [self.userInfo cacheUserInfo];//存储
     
-    _titles = @[@"姓       名",@"昵       称",@"性       别",@"年       龄",@"出生日期",@"身份证号"];
-//    ,@"手  机  号"
-    
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
-    _table.delegate = self;
-    _table.dataSource = self;
-    [self.view addSubview:_table];
-    _table.backgroundColor = [UIColor clearColor];
+    _titles = @[@"姓       名",@"昵       称",@"性       别",@"出生日期",@"身份证号"];//去掉年龄
+
     
     UIView *header = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 65)];
     _table.tableHeaderView = header;
@@ -134,6 +135,8 @@
     UIImageView *line = [[UIImageView alloc]initWithFrame:CGRectMake(10, infoView.height - 0.5, DEVICE_WIDTH - 10, 0.5)];
     line.backgroundColor = DEFAULT_LINECOLOR;
     [infoView addSubview:line];
+    
+    [_table reloadData];
 }
 
 #pragma mark - 网络请求
@@ -404,17 +407,19 @@
         alert.tag = kTagSex;
         [alert showInView:self.view];
         
-    }else if (indexPath.row == 3){
-        
-        NSLog(@"更改年龄");
-        [self pickerViewShow:YES];
-        
-    }else if (indexPath.row == 4){
+    }
+//    else if (indexPath.row == 3){
+//        
+//        NSLog(@"更改年龄");
+//        [self pickerViewShow:YES];
+//        
+//    }
+    else if (indexPath.row == 3){
         
         NSLog(@"出生日期");
         [self clickToUpdateBirthday];
         
-    }else if (indexPath.row == 5){
+    }else if (indexPath.row == 4){
         
         NSLog(@"身份证号");
         [self clickToUpdateType:UPDATEINFOTYPE_IDCARD];
@@ -518,11 +523,13 @@
             detail = @"未选择";
         }
         
-    }else if (indexPath.row == 3){
-        
-        detail = [_userInfo.age intValue] > 0 ? _userInfo.age : @"未选择";
-        
-    }else if (indexPath.row == 4){
+    }
+//    else if (indexPath.row == 3){
+//        
+//        detail = [_userInfo.age intValue] > 0 ? _userInfo.age : @"未选择";
+//        
+//    }
+    else if (indexPath.row == 3){
         
         detail = [NSString stringWithFormat:@"%@",_userInfo.birthday];
         
@@ -530,7 +537,7 @@
             detail = @"未选择";
         }
         
-    }else if (indexPath.row == 5){
+    }else if (indexPath.row == 4){
         
         if ([LTools isValidateIDCard:_userInfo.id_card]) {
             detail = _userInfo.id_card;
@@ -539,7 +546,7 @@
             detail = @"未填写";
         }
         
-    }else if (indexPath.row == 6){
+    }else if (indexPath.row == 5){
         if ([LTools isValidateMobile:_userInfo.mobile]) {
             
             detail = _userInfo.mobile;

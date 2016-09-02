@@ -8,6 +8,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController">
             <connections>
+                <outlet property="loginButton" destination="pI7-sj-waQ" id="bFG-X5-KXq"/>
                 <outlet property="phoneTF" destination="JMt-fU-Yym" id="Qqf-uP-6Ve"/>
                 <outlet property="pwdTF" destination="hQJ-xQ-YBv" id="7uc-83-vcp"/>
                 <outlet property="registerBtn" destination="HeN-eq-Uu0" id="iWA-8K-CKF"/>
@@ -303,8 +304,7 @@
                             <exclude reference="aHW-Im-nRC"/>
                         </mask>
                     </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="12" y="173" width="84" height="27"/>
+                    <variation key="heightClass=regular-widthClass=compact">
                         <mask key="constraints">
                             <include reference="aHW-Im-nRC"/>
                         </mask>
@@ -350,18 +350,18 @@
                     <exclude reference="NyC-bL-M3B"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="J5z-t8-Agh"/>
-                    <exclude reference="mvX-ID-gAc"/>
-                    <exclude reference="sj2-Pe-rXB"/>
+                    <exclude reference="ddb-az-iUT"/>
+                    <exclude reference="nJV-vf-I5E"/>
                     <exclude reference="SxJ-13-pgY"/>
                     <exclude reference="TCR-R6-gac"/>
+                    <exclude reference="BRb-rS-hEb"/>
+                    <exclude reference="Cex-B5-UOF"/>
                     <exclude reference="YSB-Ye-kZK"/>
                     <exclude reference="dmK-eZ-aVb"/>
                     <exclude reference="g6q-GA-5U2"/>
-                    <exclude reference="BRb-rS-hEb"/>
-                    <exclude reference="Cex-B5-UOF"/>
-                    <exclude reference="ddb-az-iUT"/>
-                    <exclude reference="nJV-vf-I5E"/>
+                    <exclude reference="J5z-t8-Agh"/>
+                    <exclude reference="mvX-ID-gAc"/>
+                    <exclude reference="sj2-Pe-rXB"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
@@ -373,18 +373,18 @@
                     <include reference="NyC-bL-M3B"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="J5z-t8-Agh"/>
-                    <include reference="mvX-ID-gAc"/>
-                    <include reference="sj2-Pe-rXB"/>
+                    <include reference="ddb-az-iUT"/>
+                    <include reference="nJV-vf-I5E"/>
                     <include reference="SxJ-13-pgY"/>
                     <include reference="TCR-R6-gac"/>
+                    <include reference="BRb-rS-hEb"/>
+                    <include reference="Cex-B5-UOF"/>
                     <include reference="YSB-Ye-kZK"/>
                     <include reference="dmK-eZ-aVb"/>
                     <include reference="g6q-GA-5U2"/>
-                    <include reference="BRb-rS-hEb"/>
-                    <include reference="Cex-B5-UOF"/>
-                    <include reference="ddb-az-iUT"/>
-                    <include reference="nJV-vf-I5E"/>
+                    <include reference="J5z-t8-Agh"/>
+                    <include reference="mvX-ID-gAc"/>
+                    <include reference="sj2-Pe-rXB"/>
                 </mask>
             </variation>
             <connections>

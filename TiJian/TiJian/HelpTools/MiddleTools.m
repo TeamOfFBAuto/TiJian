@@ -449,7 +449,14 @@
 
     NSURL *url = [NSURL URLWithString:shareImageUrl];
     __weak typeof(self) weakself = self;
-    [MBProgressHUD showHUDAddedTo:controller.view animated:YES];
+    
+    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    //不存在图片
+    if (![manager cachedImageExistsForURL:url]) {
+        [MBProgressHUD showHUDAddedTo:controller.view animated:YES];
+    }
+    
     [[SDWebImageManager sharedManager]downloadImageWithURL:url options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
         DDLOG(@"%ld %ld",(long)receivedSize,expectedSize);

@@ -62,13 +62,13 @@
     // Do any additional setup after loading the view.
     
     if (self.moreInfo) {
-        self.rightImage = [UIImage imageNamed:@"ios7_refresh4139"];
-        self.rightImage2 = [UIImage imageNamed:@"share3"];
-        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeDouble];
+//        self.rightImage = [UIImage imageNamed:@"ios7_refresh4139"];
+        self.rightImage = [UIImage imageNamed:@"share3"];
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
     }else
     {
-        self.rightImageName = @"ios7_refresh4139.png";
-        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+//        self.rightImageName = @"ios7_refresh4139.png";
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     }
     
     self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
@@ -98,8 +98,8 @@
         
         self.leftImageName = @"back";
         self.leftString2 = @"关闭";
-        self.rightImageName = @"ios7_refresh4139.png";
-        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeDouble WithRightButtonType:MyViewControllerRightbuttonTypeOther];
+//        self.rightImageName = @"ios7_refresh4139.png";
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeDouble WithRightButtonType:MyViewControllerRightbuttonTypeNull];
         
         //导航栏左侧
         
@@ -276,8 +276,10 @@
 //        [self.navigationController pushViewController:article animated:YES];
 //    }else
 //    {
-        [_webView reload];
+//        [_webView reload];
 //    }
+    
+    [self rightButtonTap2:sender];
 }
 
 -(void)rightButtonTap2:(UIButton *)sender

@@ -16,6 +16,7 @@
 #import "JPUSHService.h" //JPush推送
 
 @interface LoginViewController ()<UITextFieldDelegate>
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
 @end
 
@@ -83,6 +84,46 @@
     [password addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, passText.length)];
     [self.pwdTF setAttributedPlaceholder:password];
     
+    //默认不可点击
+    self.loginButton.userInteractionEnabled = NO;
+    self.loginButton.alpha = 0.5f;
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldChange:) name:UITextFieldTextDidChangeNotification object:nil];
+    
+}
+
+#pragma mark - 通知处理
+
+- (void)textFieldChange:(NSNotification *)notify
+{
+    NSString *notifyName = notify.name;
+    if ([notifyName isEqualToString:UITextFieldTextDidChangeNotification]) {
+        
+        UITextField *textField = notify.object;
+        
+        NSString *phone = self.phoneTF.text;
+        
+        if (textField == self.phoneTF) {
+            
+            phone = [LTools stringByRemoveUnavailableWithPhone:phone];
+            textField.text = phone;
+        }
+        
+        NSString *pwd = self.pwdTF.text;
+        
+        if (phone &&
+            [LTools isValidateMobile:phone] &&
+            pwd.length) {
+            
+            self.loginButton.userInteractionEnabled = YES;
+            self.loginButton.alpha = 1.f;
+        }else
+        {
+            self.loginButton.userInteractionEnabled = NO;
+            self.loginButton.alpha = 0.5f;
+        }
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning {

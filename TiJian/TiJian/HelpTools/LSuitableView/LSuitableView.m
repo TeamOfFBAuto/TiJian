@@ -9,8 +9,8 @@
 #import "LSuitableView.h"
 
 #define SUITABLE_LEFT 15.f //左右间距
-#define SUITABLE_DIS 5.f //视图之间的间距
-#define SUITABLE_TOP 0.f //视图之间的间距
+#define SUITABLE_DIS 10.f //视图之间的间距
+#define SUITABLE_TOP 5.f //视图之间的间距
 
 @interface LSuitableView ()
 {
@@ -95,14 +95,14 @@
                     
                     _left = 15.f;
                     _remainWidth = frame.size.width - _left * 2;
-                    _top = _labelBottom + 7;
+                    _top = _labelBottom + 7 + SUITABLE_TOP;
                 }
             }else
             {
                 //都不满足换行
                 _left = 15.f;
                 _remainWidth = frame.size.width - _left * 2;
-                _top = _labelBottom + 7;
+                _top = _labelBottom + 7 + SUITABLE_TOP;
                 
                 continue;//重新开始
             }
