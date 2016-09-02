@@ -343,6 +343,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
+    
     ALAuthorizationStatus author = [ALAssetsLibrary authorizationStatus];
     
     if (author == ALAuthorizationStatusRestricted || author ==ALAuthorizationStatusDenied)
@@ -377,17 +378,25 @@
     }
     
     
+    //开启一个线程
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        //把webView转为图片
+//        UIImage *img = [self imageRepresentation];
+    
+//        UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
+        //    NSData *imgData1 = [img1 dataWithCompressMaxSize:500000 compression:0.1];//压元数据
+        
+        //保存到图片库
+//        UIImageWriteToSavedPhotosAlbum(img_small, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+//    });
     
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     
-    //把webView转为图片
-    UIImage *img = [self imageRepresentation];
-    
-    UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
-//    NSData *imgData1 = [img1 dataWithCompressMaxSize:500000 compression:0.1];//压元数据
-    
-    //保存到图片库
-    UIImageWriteToSavedPhotosAlbum(img_small, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        UIImage *img = [self imageRepresentation];
+        UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
+        UIImageWriteToSavedPhotosAlbum(img_small, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    });
     
     
 }
