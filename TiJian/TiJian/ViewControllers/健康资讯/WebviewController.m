@@ -279,6 +279,12 @@
 //        [_webView reload];
 //    }
     
+    if ([self.myTitle isEqualToString:@"体检报告"]) {
+        
+        [self saveButtonClicked];
+        return;
+    }
+    
     [self rightButtonTap2:sender];
 }
 
@@ -532,7 +538,10 @@
     }
     
     if ([self.myTitle isEqualToString:@"体检报告"]) {
-        [self saveButton];
+//        [self saveButton];
+        
+        self.rightString = @"保存";
+        [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     }
     
     //活动标题问题
