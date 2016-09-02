@@ -44,8 +44,6 @@
     NSDictionary *_remoteMessageDic;//远程推送消息
 }
 
-@property(nonatomic,retain)NSObject *someObject;
-
 @end
 
 @implementation AppDelegate
@@ -1148,14 +1146,6 @@
 //    NSObject * __weak someObject2 = self.someObject;
     
     
-}
-
--(NSObject *)someObject
-{
-    if (!_someObject) {
-        _someObject = [[NSObject alloc]init];
-    }
-    return _someObject;
 }
 
 @end

@@ -20,7 +20,7 @@
 }
 
 - (CGFloat)top {
-    return self.frame.origin.y;
+        return self.frame.origin.y;
 }
 
 - (void)setTop:(CGFloat)y {

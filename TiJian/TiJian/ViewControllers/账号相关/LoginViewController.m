@@ -150,7 +150,7 @@
     @WeakObj(self);
     [forget setUpdateParamsBlock:^(NSDictionary *params) {
         
-        BOOL isLogin = params[@"isLogin"];//是否是登录
+        BOOL isLogin = [params[@"isLogin"]boolValue];//是否是登录
         if (isLogin) {
             [Weakself loginWithoutPwdWithParmas:params];
         }

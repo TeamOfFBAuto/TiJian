@@ -225,7 +225,7 @@
         NSString *title = dic[@"ailment_name"];
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 25) font:11 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE_SUB title:title];
         [label setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE_SUB];
-        [label addCornerRadius:3.f];
+//        [label addCornerRadius:3.f];//此种方式在滑动视图中容易引起卡顿
         label.width = [LTools widthForText:title font:11] + 10 * 2;
         [views addObject:label];
         [label addTaget:self action:@selector(clickSickness:) tag:100 + i];
