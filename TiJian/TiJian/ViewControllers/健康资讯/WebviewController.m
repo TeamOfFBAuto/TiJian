@@ -333,6 +333,10 @@
 //保存体检报告
 -(void)saveButtonClicked{
     
+    NSLog(@"%s",__FUNCTION__);
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     ALAuthorizationStatus author = [ALAssetsLibrary authorizationStatus];
     
     if (author == ALAuthorizationStatusRestricted || author ==ALAuthorizationStatusDenied)
@@ -340,6 +344,8 @@
         //无权限
         NSString *title = @"此应用没有权限访问您的相册";
         NSString *errorMessage = @"您可以在\"隐私设置\"中启用访问。";
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         //iOS8 之后可以打开系统设置界面
         if (IOS8_OR_LATER) {
@@ -366,16 +372,16 @@
     
     
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     
     //把webView转为图片
     UIImage *img = [self imageRepresentation];
     
-//    UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
+    UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
 //    NSData *imgData1 = [img1 dataWithCompressMaxSize:500000 compression:0.1];//压元数据
     
     //保存到图片库
-    UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    UIImageWriteToSavedPhotosAlbum(img_small, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
     
     
 }
@@ -389,13 +395,13 @@
     if (error != NULL)
     {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [GMAPI showAutoHiddenMBProgressWithText:@"保存体检报告失败" addToView:self.view];
+        [GMAPI showAutoHiddenMBProgressWithText:@"体检报告保存到相册失败" addToView:self.view];
         
     }
     else  // No errors
     {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [GMAPI showAutoHiddenMBProgressWithText:@"保存体检报告成功" addToView:self.view];
+        [GMAPI showAutoHiddenMBProgressWithText:@"体检报告保存到相册成功" addToView:self.view];
     }
 }
 
