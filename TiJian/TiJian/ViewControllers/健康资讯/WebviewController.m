@@ -341,6 +341,8 @@
     
     NSLog(@"%s",__FUNCTION__);
     
+    self.right_button.userInteractionEnabled = NO;
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     
@@ -353,6 +355,7 @@
         NSString *errorMessage = @"您可以在\"隐私设置\"中启用访问。";
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        self.right_button.userInteractionEnabled = YES;
         
         //iOS8 之后可以打开系统设置界面
         if (IOS8_OR_LATER) {
@@ -393,10 +396,13 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     
-        UIImage *img = [self imageRepresentation];
-        UIImage *img_small = [img imageCompressForWidth:img targetWidth:375];//压比例
-        UIImageWriteToSavedPhotosAlbum(img_small, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIImage *img = [self imageRepresentation];
+            UIImage *img_small = [img imageCompressForWidth:img targetWidth:414];//压比例
+            UIImageWriteToSavedPhotosAlbum(img_small, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        });
     });
+
     
     
 }
@@ -406,20 +412,26 @@
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error
   contextInfo:(void *)contextInfo
 {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     // Was there an error?
     if (error != NULL)
     {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [GMAPI showAutoHiddenMBProgressWithText:@"体检报告保存到相册失败" addToView:self.view];
         
     }
     else  // No errors
     {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [GMAPI showAutoHiddenMBProgressWithText:@"体检报告保存到相册成功" addToView:self.view];
     }
+    
+    [self performSelector:@selector(rightBtnUserInteractionEnabled) withObject:nil afterDelay:1.5];
+    
 }
 
+
+-(void)rightBtnUserInteractionEnabled{
+    self.right_button.userInteractionEnabled = YES;
+}
 
 - (UIImage *)imageRepresentation{
     CGFloat scale = [UIScreen mainScreen].scale;
