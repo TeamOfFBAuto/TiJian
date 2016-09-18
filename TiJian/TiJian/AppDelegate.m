@@ -1145,7 +1145,6 @@
 //    
 //    NSObject * __weak someObject2 = self.someObject;
     
-    
 }
 
 @end
