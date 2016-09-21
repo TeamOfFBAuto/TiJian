@@ -211,4 +211,16 @@ defineClass('WebviewController',[],{webViewDidFinishLoad:function(webView)
 
 
 
+// 单品详情 适用人群相关文字适配
+defineClass('UILabel', {setMatchedFrame4LabelWithOrigin_width:function(o,theWidth){
+            theWidth += 5;
+            var r = self.matchedRectWithWidth(theWidth);
+            
+            self.setFrame({x:o.x,y:o.y,width:r.width,height:r.height});
+}});
+
+
+
+
+
 

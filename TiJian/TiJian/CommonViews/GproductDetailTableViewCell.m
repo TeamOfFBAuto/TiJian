@@ -282,11 +282,12 @@
         
         //适用地区
         UILabel *city_titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-        city_titleLabel.text = @"适用地区:";
+        city_titleLabel.text = @"适用地区：";
         [cView addSubview:city_titleLabel];
         
         UILabel *cityInfoLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(city_titleLabel.frame), city_titleLabel.frame.origin.y, cView.frame.size.width - city_titleLabel.frame.size.width, 12)];
         cityInfoLabel.textColor = [UIColor blackColor];
+        
         
         NSMutableArray *cityInfoArray = [NSMutableArray arrayWithCapacity:1];
         for (NSDictionary *dic in self.delegate.theProductModel.city_info) {
@@ -320,9 +321,9 @@
         
         //适用地区
         city_titleLabel.font = [UIFont systemFontOfSize:12];
-        [city_titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5) width:52];
+        [city_titleLabel setMatchedFrame4LabelWithOrigin:CGPointMake(0, CGRectGetMaxY(projectInfoLabel.frame)+5) width:60];
         cityInfoLabel.font = [UIFont systemFontOfSize:12];
-        [cityInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(CGRectGetMaxX(city_titleLabel.frame)+5, CGRectGetMaxY(projectInfoLabel.frame)+5) width:cView.frame.size.width - city_titleLabel.frame.size.width];
+        [cityInfoLabel setMatchedFrame4LabelWithOrigin:CGPointMake(CGRectGetMaxX(city_titleLabel.frame), CGRectGetMaxY(projectInfoLabel.frame)+5) width:cView.frame.size.width - city_titleLabel.frame.size.width];
         if (cityInfoLabel.frame.size.height == 0) {
             [cityInfoLabel setFrame:CGRectMake(CGRectGetMaxX(city_titleLabel.frame), city_titleLabel.frame.origin.y, 20, city_titleLabel.frame.size.height)];
         }

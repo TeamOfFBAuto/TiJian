@@ -24,7 +24,7 @@ char* const ASSOCIATION_TOPBUTTON = "ASSOCIATION_TOPBUTTON";
 - (void)addBackButtonWithTarget:(id)target action:(SEL)selector
 {
     UIBarButtonItem * spaceButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    spaceButton1.width = IOS7_OR_LATER ? -10 : 5;
+    spaceButton1.width = -10;
     
     UIButton *button_back=[[UIButton alloc]initWithFrame:CGRectMake(0,8,40,44)];
     [button_back addTarget:target action:selector forControlEvents:UIControlEventTouchUpInside];
