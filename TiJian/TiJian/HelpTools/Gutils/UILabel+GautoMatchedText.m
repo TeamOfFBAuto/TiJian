@@ -13,12 +13,18 @@
 
 //设定宽度 自适应高度
 -(void)setMatchedFrame4LabelWithOrigin:(CGPoint)o width:(CGFloat)theWidth{
+    
+    if( ([[[UIDevice currentDevice] systemVersion] doubleValue]>=10.0)){
+        theWidth += 5;
+    }
+    
     CGRect r = [self matchedRectWithWidth:theWidth];
     [self setFrame:CGRectMake(o.x, o.y, r.size.width, r.size.height)];
     
 }
 
 -(CGRect)matchedRectWithWidth:(CGFloat)width{
+    
     self.numberOfLines = 0;
     CGRect r = CGRectZero;
     

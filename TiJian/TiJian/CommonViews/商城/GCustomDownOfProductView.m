@@ -52,7 +52,13 @@
                     if (DEVICE_WIDTH<375) {//4s 5s
                         [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 19, 25, 14)];
                     }else{
-                        [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+                        if( ([[[UIDevice currentDevice] systemVersion] doubleValue]>=10.0)) {
+                            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 24, 25, 0)];
+                        }else{
+                            [oneBtn setImageEdgeInsets:UIEdgeInsetsMake(10, 25, 25, 0)];
+                        }
+                        
+                        
                     }
                     
                 }

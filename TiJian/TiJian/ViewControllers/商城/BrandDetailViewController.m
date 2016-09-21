@@ -99,7 +99,7 @@
             num = 0;
         }
     }else if (section == 1){
-        num = _fenyuanList.count;
+        num = _tab.dataArray.count;
     }
     return num;
 }
@@ -280,7 +280,7 @@
         c_label.font = [UIFont systemFontOfSize:12];
         c_label.textColor = RGBCOLOR(107, 108, 109);
         c_label.numberOfLines = 2;
-        NSDictionary *onedic = _fenyuanList[indexPath.row];
+        NSDictionary *onedic = _tab.dataArray[indexPath.row];
         NSString *fenyuan_Name = [onedic stringValueForKey:@"center_name"];
         NSString *juli = [onedic stringValueForKey:@"distance"];
         NSString *juli_str = [NSString stringWithFormat:@"%@m",juli];
@@ -418,6 +418,8 @@
     } failBlock:^(NSDictionary *result) {
         
     }];
+    
+    
 }
 
 

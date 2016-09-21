@@ -180,7 +180,7 @@
                 
         [self.navigationController setNavigationBarHidden:YES];
         
-        UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, IOS7_OR_LATER ? 0 : 20, DEVICE_WIDTH, IOS7_OR_LATER ? 64 : 44)];
+        UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 64)];
         [self.view addSubview:navigationView];
         navigationView.backgroundColor = DEFAULT_TEXTCOLOR;
         
