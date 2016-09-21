@@ -1,1 +1,1 @@
-../../../../RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/RongIMLib.framework/Headers/RCRealTimeLocationEndMessage.h
+../../../../RongCloudIMKit/Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/RongIMLib.framework/Headers/RCRealTimeLocationEndMessage.h

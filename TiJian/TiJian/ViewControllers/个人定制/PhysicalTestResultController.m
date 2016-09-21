@@ -30,7 +30,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    [self setNavigationStyle:NAVIGATIONSTYLE_BLUE title:@"测试结果"];
     self.myTitle = @"测试结果";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     [self getCustomizationResult];

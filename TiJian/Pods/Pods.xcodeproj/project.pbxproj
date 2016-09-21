@@ -388,6 +388,19 @@
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
+		<key>0799C57379F2A7F16EAD80735866B0F6</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>RongIMKit.framework</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/RongIMKit.framework</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>0840BDCFE2A0270C558E838578787663</key>
 		<dict>
 			<key>containerPortal</key>
@@ -651,6 +664,22 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>132BF50F331A666249E2BADE372C2A50</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>62532BF29C15C36FD094012F66C15B79</string>
+				<string>E30DF427FF0A415E1864C333A0F41783</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>RongCloudIMKit</string>
+			<key>path</key>
+			<string>RongCloudIMKit</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>136FB41CEB8D026BA1B0E0C514CD90F7</key>
 		<dict>
 			<key>fileRef</key>
@@ -834,19 +863,6 @@
 			<key>name</key>
 			<string>Release</string>
 		</dict>
-		<key>1AEF1C827FCAF65716FAA1D6A7A15ABF</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>name</key>
-			<string>en.lproj</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/en.lproj</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>1B95A6901AF324325AA1EE92FD3C1A93</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -898,21 +914,6 @@
 			<string>SSHolidayCountry.h</string>
 			<key>path</key>
 			<string>SSLunarDate/SSHolidayCountry.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>1EDD7606948BA300C8646941B88BC8E3</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>9C7CCAC1F19155BDBCFB653F56B4498E</string>
-				<string>30FD7F82850F5C6E6C64AAD2E03FA179</string>
-				<string>33DD962DCDB4FBD0237096BE23CA6993</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1329,6 +1330,19 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>2AD380DC6A1EFFB4F36B8A7D705BB1F2</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>49631F96D7585D76B2FC88C9790628DC</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>2AE10494588DAC9A22DDAE514445FB4D</key>
 		<dict>
 			<key>isa</key>
@@ -1500,19 +1514,6 @@
 			<string>sourcecode.c.objc</string>
 			<key>path</key>
 			<string>FMDB-dummy.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>30FD7F82850F5C6E6C64AAD2E03FA179</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>RongIMKit.framework</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/RongIMKit.framework</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1695,19 +1696,6 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>33DD962DCDB4FBD0237096BE23CA6993</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>RongIMLib.framework</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/RongIMLib.framework</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>3487FBF9D16258596902B7978D82B8D9</key>
 		<dict>
 			<key>children</key>
@@ -1812,19 +1800,6 @@
 					<string>Public</string>
 				</array>
 			</dict>
-		</dict>
-		<key>36302379C73B7D23AC171473611FE37E</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>UMMobClick.framework</string>
-			<key>path</key>
-			<string>umsdk_IOS_analyics_no-idfa_v4.0.5/UMMobClick.framework</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>373E861E04C99DD5D6EC8B0164775707</key>
 		<dict>
@@ -2199,19 +2174,6 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>447BD1288D5BA6C8724231BA23E0B35E</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>name</key>
-			<string>zh-Hans.lproj</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/zh-Hans.lproj</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>45B54DDFA251446E36B9F34127CAE6F9</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -2333,6 +2295,19 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>49631F96D7585D76B2FC88C9790628DC</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>UMMobClick.framework</string>
+			<key>path</key>
+			<string>umsdk_IOS_analyics_no-idfa_v4.1.1/UMMobClick.framework</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>49657747AD2D44E7DBE672A95A88A1BA</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -2359,7 +2334,7 @@
 				<string>166627E9E90F08EFB9DB89A7290F8F71</string>
 				<string>31B746DA9D440EBCB0A54010E6520FD8</string>
 				<string>E34AFF0F05BAA92995E4FC2D4E41786C</string>
-				<string>B247924C5689B6D4AF9BB5D5BD2FE7D1</string>
+				<string>132BF50F331A666249E2BADE372C2A50</string>
 				<string>EF4D3959454F9EE62A86A7D2B14B9F40</string>
 				<string>FDC98AC5F142F5F2E56BA97067A15A7C</string>
 				<string>9739E685ACE92BAC7DE53B762E3F2CAE</string>
@@ -2925,6 +2900,21 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>5D9A84885F273DD2338B0382618B7241</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>name</key>
+			<string>Emoji.plist</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/Emoji.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>5DFB5A46A57DE37A4FEAD5E01C998A05</key>
 		<dict>
 			<key>fileRef</key>
@@ -3103,6 +3093,21 @@
 			<string>sourcecode.c.h</string>
 			<key>path</key>
 			<string>Reachability-prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>62532BF29C15C36FD094012F66C15B79</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>B02BAE20F0FAA095F3AF7FBE727829A3</string>
+				<string>0799C57379F2A7F16EAD80735866B0F6</string>
+				<string>BED14DD74E4453A44AE89A7350D7E80B</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -3371,6 +3376,36 @@
 			<string>AFNetworkActivityIndicatorManager.h</string>
 			<key>path</key>
 			<string>UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6A30E826E71FE51AB7EBFC1B92C6D110</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.plug-in</string>
+			<key>name</key>
+			<string>RongCloud.bundle</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/RongCloud.bundle</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6B9FE8AD22D042A6ED831B195FBA2D74</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>name</key>
+			<string>RCConfig.plist</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/RCConfig.plist</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -4134,21 +4169,6 @@
 				<string>-DOS_OBJECT_USE_OBJC=0</string>
 			</dict>
 		</dict>
-		<key>8835F61522CB130F207487A203B2EEFE</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.plug-in</string>
-			<key>name</key>
-			<string>RongCloud.bundle</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/RongCloud.bundle</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>894887CA921C35E729CEBCA2930FAD4E</key>
 		<dict>
 			<key>fileRef</key>
@@ -4195,6 +4215,19 @@
 			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/UIKit.framework</string>
 			<key>sourceTree</key>
 			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>8AFB0FD2291237776AE4B4F9C95549A4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>name</key>
+			<string>zh-Hans.lproj</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/zh-Hans.lproj</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>8B2D82357BE4C2A10AB2CD4724B8E654</key>
 		<dict>
@@ -4513,7 +4546,7 @@
 		<dict>
 			<key>children</key>
 			<array>
-				<string>FF180849D952CE62B2E69B8E8BAFD0BA</string>
+				<string>2AD380DC6A1EFFB4F36B8A7D705BB1F2</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
@@ -4521,21 +4554,6 @@
 			<string>UMengAnalytics-NO-IDFA</string>
 			<key>path</key>
 			<string>UMengAnalytics-NO-IDFA</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>97621BDFB469C9C9289C57E3AC238DF4</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>name</key>
-			<string>Emoji.plist</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/Emoji.plist</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -4662,21 +4680,6 @@
 					<string>Public</string>
 				</array>
 			</dict>
-		</dict>
-		<key>9C7CCAC1F19155BDBCFB653F56B4498E</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>archive.ar</string>
-			<key>name</key>
-			<string>libopencore-amrnb.a</string>
-			<key>path</key>
-			<string>Rong_Cloud_iOS_IMKit_SDK_v2_5_2_stable/libopencore-amrnb.a</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>9ECCBA3A8092E326BE8CAD2075001BB2</key>
 		<dict>
@@ -5125,6 +5128,21 @@
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
+		<key>B02BAE20F0FAA095F3AF7FBE727829A3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>archive.ar</string>
+			<key>name</key>
+			<string>libopencore-amrnb.a</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/libopencore-amrnb.a</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>B0D2A2FE2C3356B681926A034A33C964</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -5168,22 +5186,6 @@
 			<string>SDWebImageDecoder.m</string>
 			<key>path</key>
 			<string>SDWebImage/SDWebImageDecoder.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>B247924C5689B6D4AF9BB5D5BD2FE7D1</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>1EDD7606948BA300C8646941B88BC8E3</string>
-				<string>D7D9CAEEE6FD0F285BE16098A5FF5BB3</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>RongCloudIMKit</string>
-			<key>path</key>
-			<string>RongCloudIMKit</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -5643,6 +5645,19 @@
 			<string>AFNetworking.h</string>
 			<key>path</key>
 			<string>AFNetworking/AFNetworking.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BED14DD74E4453A44AE89A7350D7E80B</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>RongIMLib.framework</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/RongIMLib.framework</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -6369,6 +6384,19 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>D3CA601EB77E8B9A97EBA2962420C9A1</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>name</key>
+			<string>en.lproj</string>
+			<key>path</key>
+			<string>Rong_Cloud_iOS_IMKit_SDK_v2_7_2_stable/en.lproj</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>D3D9F12613E23AD64C1FA5F7081A3668</key>
 		<dict>
 			<key>fileRef</key>
@@ -6526,22 +6554,6 @@
 			<string>PBXFrameworksBuildPhase</string>
 			<key>runOnlyForDeploymentPostprocessing</key>
 			<string>0</string>
-		</dict>
-		<key>D7D9CAEEE6FD0F285BE16098A5FF5BB3</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>97621BDFB469C9C9289C57E3AC238DF4</string>
-				<string>1AEF1C827FCAF65716FAA1D6A7A15ABF</string>
-				<string>8835F61522CB130F207487A203B2EEFE</string>
-				<string>447BD1288D5BA6C8724231BA23E0B35E</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Resources</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>D7DE65B460B5B33DEB56CEEE390C133C</key>
 		<dict>
@@ -6978,6 +6990,23 @@
 				<key>COMPILER_FLAGS</key>
 				<string>-DOS_OBJECT_USE_OBJC=0</string>
 			</dict>
+		</dict>
+		<key>E30DF427FF0A415E1864C333A0F41783</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>5D9A84885F273DD2338B0382618B7241</string>
+				<string>D3CA601EB77E8B9A97EBA2962420C9A1</string>
+				<string>6B9FE8AD22D042A6ED831B195FBA2D74</string>
+				<string>6A30E826E71FE51AB7EBFC1B92C6D110</string>
+				<string>8AFB0FD2291237776AE4B4F9C95549A4</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Resources</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>E34AFF0F05BAA92995E4FC2D4E41786C</key>
 		<dict>
@@ -7987,19 +8016,6 @@
 			<string>PBXHeadersBuildPhase</string>
 			<key>runOnlyForDeploymentPostprocessing</key>
 			<string>0</string>
-		</dict>
-		<key>FF180849D952CE62B2E69B8E8BAFD0BA</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>36302379C73B7D23AC171473611FE37E</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>FF682E8B083BAEBBDF38C52D89D45E37</key>
 		<dict>

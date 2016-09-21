@@ -570,7 +570,7 @@
         self.myTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];//获取当前页面的title
     }
 }
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     DDLOG(@"erro %@",error.userInfo);
     if (error) {

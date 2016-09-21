@@ -75,7 +75,6 @@
 		1306090F1C3E1302004489A5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1306090E1C3E1302004489A5 /* libz.tbd */; };
 		130609111C3E13E4004489A5 /* PushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 130609101C3E13E4004489A5 /* PushConfig.plist */; };
 		130609141C3E3A3C004489A5 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 130609131C3E3A3C004489A5 /* MessageModel.m */; };
-		130AE0A91CE2E114008E3257 /* jpush-ios-2.1.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */; };
 		130CF06E1CF0729E009EFB59 /* hema@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130CF06D1CF0729E009EFB59 /* hema@2x.png */; };
 		130D2E011BFC7229002E301F /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D2E001BFC7229002E301F /* MapViewController.m */; };
 		130D2E031BFC7332002E301F /* gpin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D2E021BFC7332002E301F /* gpin@2x.png */; };
@@ -134,6 +133,8 @@
 		131EC6271C5904F00008F517 /* selected_small_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131EC6251C5904F00008F517 /* selected_small_selected@2x.png */; };
 		1320F27D1C32325E008E5B05 /* ChooseHopitalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */; };
 		13217C9C1BDF1E9D00020C40 /* PropertyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 13217C9B1BDF1E9D00020C40 /* PropertyButton.m */; };
+		13228AFF1D9236EE006740BF /* jpush-ios-2.1.9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13228AFD1D9236EE006740BF /* jpush-ios-2.1.9.a */; };
+		13228B011D923796006740BF /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13228B001D923796006740BF /* UserNotifications.framework */; };
 		1322B6A71C1965E500596DAE /* CoupeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322B6A61C1965E500596DAE /* CoupeView.m */; };
 		1322E0621C44DE12008A3222 /* CustomProductMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322E0611C44DE12008A3222 /* CustomProductMsgCell.m */; };
 		1322E0651C44F991008A3222 /* CustomOrderMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1322E0641C44F991008A3222 /* CustomOrderMsgCell.m */; };
@@ -769,8 +770,6 @@
 		130609101C3E13E4004489A5 /* PushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PushConfig.plist; sourceTree = "<group>"; };
 		130609121C3E3A3C004489A5 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		130609131C3E3A3C004489A5 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
-		130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "jpush-ios-2.1.6.a"; sourceTree = "<group>"; };
-		130AE0A81CE2E114008E3257 /* JPUSHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPUSHService.h; sourceTree = "<group>"; };
 		130CF06D1CF0729E009EFB59 /* hema@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema@2x.png"; sourceTree = "<group>"; };
 		130D2DFF1BFC7229002E301F /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		130D2E001BFC7229002E301F /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
@@ -872,6 +871,10 @@
 		1320F27C1C32325E008E5B05 /* ChooseHopitalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseHopitalController.m; sourceTree = "<group>"; };
 		13217C9A1BDF1E9D00020C40 /* PropertyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyButton.h; sourceTree = "<group>"; };
 		13217C9B1BDF1E9D00020C40 /* PropertyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyButton.m; sourceTree = "<group>"; };
+		13228AFD1D9236EE006740BF /* jpush-ios-2.1.9.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "jpush-ios-2.1.9.a"; sourceTree = "<group>"; };
+		13228AFE1D9236EE006740BF /* JPUSHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPUSHService.h; sourceTree = "<group>"; };
+		13228B001D923796006740BF /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		13228B021D923824006740BF /* TiJian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TiJian.entitlements; sourceTree = "<group>"; };
 		1322B6A51C1965E500596DAE /* CoupeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoupeView.h; sourceTree = "<group>"; };
 		1322B6A61C1965E500596DAE /* CoupeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoupeView.m; sourceTree = "<group>"; };
 		1322E0601C44DE12008A3222 /* CustomProductMsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomProductMsgCell.h; sourceTree = "<group>"; };
@@ -1698,6 +1701,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13228B011D923796006740BF /* UserNotifications.framework in Frameworks */,
 				1314830B1CEF26AD00D04305 /* JavaScriptCore.framework in Frameworks */,
 				1306090F1C3E1302004489A5 /* libz.tbd in Frameworks */,
 				131483031CEF0FEF00D04305 /* TencentOpenAPI.framework in Frameworks */,
@@ -1705,7 +1709,6 @@
 				E352F9071C0B7D540037E4AE /* Security.framework in Frameworks */,
 				131483061CEF0FEF00D04305 /* libWeChatSDK.a in Frameworks */,
 				1306090D1C3E12EC004489A5 /* UIKit.framework in Frameworks */,
-				130AE0A91CE2E114008E3257 /* jpush-ios-2.1.6.a in Frameworks */,
 				131483051CEF0FEF00D04305 /* libSocialWechat.a in Frameworks */,
 				1306090B1C3E12E2004489A5 /* Foundation.framework in Frameworks */,
 				131482FF1CEF0FEF00D04305 /* libSocialSinaSSO.a in Frameworks */,
@@ -1718,6 +1721,7 @@
 				E352F9031C0B7D400037E4AE /* SystemConfiguration.framework in Frameworks */,
 				E352F9011C0B7D370037E4AE /* OpenGLES.framework in Frameworks */,
 				131483091CEF268F00D04305 /* JSPatch.framework in Frameworks */,
+				13228AFF1D9236EE006740BF /* jpush-ios-2.1.9.a in Frameworks */,
 				131482F51CEF0FEF00D04305 /* libUMSocial_Sdk_5.2.a in Frameworks */,
 				E352F8FF1C0B7D2E0037E4AE /* QuartzCore.framework in Frameworks */,
 				E352F8FD1C0B7D240037E4AE /* CoreLocation.framework in Frameworks */,
@@ -1893,8 +1897,8 @@
 		130609021C3E1291004489A5 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				130AE0A71CE2E114008E3257 /* jpush-ios-2.1.6.a */,
-				130AE0A81CE2E114008E3257 /* JPUSHService.h */,
+				13228AFD1D9236EE006740BF /* jpush-ios-2.1.9.a */,
+				13228AFE1D9236EE006740BF /* JPUSHService.h */,
 				130609101C3E13E4004489A5 /* PushConfig.plist */,
 			);
 			path = lib;
@@ -2627,6 +2631,7 @@
 		13F1F2641BBA78ED00885D31 /* TiJian */ = {
 			isa = PBXGroup;
 			children = (
+				13228B021D923824006740BF /* TiJian.entitlements */,
 				1374B3881CFD40610010CDE7 /* main.js */,
 				13F1F2981BBA99B800885D31 /* PrefixHeader.pch */,
 				1391FC5E1BBBB112005E06A8 /* Requests */,
@@ -3144,6 +3149,7 @@
 		C107AAEE1FE31A66B80F6446 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13228B001D923796006740BF /* UserNotifications.framework */,
 				1314830A1CEF26AD00D04305 /* JavaScriptCore.framework */,
 				1306090E1C3E1302004489A5 /* libz.tbd */,
 				1306090C1C3E12EC004489A5 /* UIKit.framework */,
@@ -3556,6 +3562,9 @@
 						DevelopmentTeam = 2JW86C8CFD;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 							com.apple.SafariKeychain = {
@@ -4404,7 +4413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "35d3e280-9476-4023-98ab-93bc82c2fd02";
@@ -4444,7 +4453,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "35d3e280-9476-4023-98ab-93bc82c2fd02";
 				SDKROOT = iphoneos;
@@ -4458,7 +4467,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				ENABLE_BITCODE = NO;
@@ -4484,7 +4493,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "35d3e280-9476-4023-98ab-93bc82c2fd02";
+				PROVISIONING_PROFILE = "999a22d6-c2a5-4d7f-b1e4-625011153305";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4495,7 +4504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
 				ENABLE_BITCODE = NO;
@@ -4521,7 +4530,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "35d3e280-9476-4023-98ab-93bc82c2fd02";
+				PROVISIONING_PROFILE = "999a22d6-c2a5-4d7f-b1e4-625011153305";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;

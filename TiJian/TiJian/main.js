@@ -209,6 +209,37 @@ defineClass('WebviewController',[],{webViewDidFinishLoad:function(webView)
     };
 }});
 
+//iOS 10适配
+defineClass('MyViewController',[],{viewDidLoad:function()
+{
+            self.ORIGviewDidLoad();
+            self.setEdgesForExtendedLayout(0);
+}});
 
+//iOS10 登录界面适配
+defineClass('MyViewController',[],{setNavigationStyle_title:function(style,title)
+            {
 
+            if (style == 1)
+            {
+       
+            require('UIImage,UIColor');
+            var aimg = UIImage.imageNamed("navigationbarBackgroudImage");
+        
+            var navController = self.navigationController();
+            
+            var navBar = navController.navigationBar();
+            navBar.setBackgroundImage_forBarMetrics(aimg, 0);
+            navBar.setBarTintColor(UIColor.colorWithHexString("87CEEB"));
+            self.leftButton().setImage_forState(UIImage.imageNamed("back_w"), 0); //白色返回按钮
+            var titleLabel = self.valueForKey("_navTitleLabel") ;
+            titleLabel.setTextColor(UIColor.whiteColor()); //白色字体
+            titleLabel.setText(title);
+
+            }else
+            {
+            self.ORIGsetNavigationStyle_title(style,title);
+            }
+            
+            }});
 

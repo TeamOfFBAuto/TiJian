@@ -776,7 +776,7 @@
     people.updateParamsBlock = ^(NSDictionary *params){
         
         UserInfo *user = params[@"result"];
-//        BOOL myself = [params[@"myself"]boolValue];
+        BOOL myself = [params[@"myself"]boolValue];
         _familyUid = user.family_uid;
         weakNameLabel.text = [NSString stringWithFormat:@"%@",user.family_user_name];
         

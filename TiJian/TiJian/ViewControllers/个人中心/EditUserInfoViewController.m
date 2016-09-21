@@ -450,7 +450,7 @@
         [infoView addTaget:self action:@selector(clickToChangeUserHeadImage) tag:0];
         
         //title
-        UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 60, 50) title:@"收货地址" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
+        UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 65, 50) title:@"收货地址" font:15 align:NSTextAlignmentLeft textColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
         [infoView addSubview:title];
         
         //箭头

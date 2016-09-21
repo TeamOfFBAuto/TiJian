@@ -165,7 +165,7 @@
         
         if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] )
         {
-            [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7_OR_LATER?IOS7DAOHANGLANBEIJING_PUSH:IOS6DAOHANGLANBEIJING] forBarMetrics: UIBarMetricsDefault];
+            [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:IOS7DAOHANGLANBEIJING_PUSH] forBarMetrics: UIBarMetricsDefault];
             [self.leftButton setImage:[UIImage imageNamed:@"back_w"] forState:UIControlStateNormal];//白色返回按钮
             _navTitleLabel.textColor = [UIColor whiteColor];//白色字体
         }
@@ -175,7 +175,8 @@
         [self.leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];//白色返回按钮
         _navTitleLabel.textColor = DEFAULT_TEXTCOLOR;
         
-    }else if (style == NAVIGATIONSTYLE_CUSTOM){
+    }
+    else if (style == NAVIGATIONSTYLE_CUSTOM){
                 
         [self.navigationController setNavigationBarHidden:YES];
         

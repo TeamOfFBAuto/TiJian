@@ -28,12 +28,12 @@ PODS:
   - Masonry (0.6.4)
   - MBProgressHUD (0.9.2)
   - Reachability (3.1.1)
-  - RongCloudIMKit (2.5.2)
+  - RongCloudIMKit (2.7.2)
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
   - SSLunarDate (0.0.1)
-  - UMengAnalytics-NO-IDFA (4.0.5)
+  - UMengAnalytics-NO-IDFA (4.1.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.3.1)
@@ -43,7 +43,7 @@ DEPENDENCIES:
   - Masonry (~> 0.6.3)
   - MBProgressHUD (~> 0.8)
   - Reachability (~> 3.1.1)
-  - RongCloudIMKit (~> 2.5.2)
+  - RongCloudIMKit (~> 2.7.2)
   - SDWebImage (~> 3.7.1)
   - SSLunarDate (~> 0.0.1)
   - UMengAnalytics-NO-IDFA
@@ -56,9 +56,9 @@ SPEC CHECKSUMS:
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   Reachability: dd9aa4fb6667b9f787690a74f53cb7634ce99893
-  RongCloudIMKit: cce0a68e8e5d0baaecb99ec5685048ca8800a27d
+  RongCloudIMKit: 9dcdee89da511bf1fa375ac0646754783cdb9c9e
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   SSLunarDate: d5d7d581f7e7e157c8d704a5f053b4ebcf760bba
-  UMengAnalytics-NO-IDFA: 965a219b05475ff2a4c09a164139a27bbaa0e25b
+  UMengAnalytics-NO-IDFA: 1064992c1b7aaa22823179c0b33a664813fd7a85
 
 COCOAPODS: 0.39.0
