@@ -17,9 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
-    imageView.image = [UIImage imageNamed:@"age.jpg"];
-    [self.view addSubview:imageView];
+    
 }
 
 - (void)didReceiveMemoryWarning {
