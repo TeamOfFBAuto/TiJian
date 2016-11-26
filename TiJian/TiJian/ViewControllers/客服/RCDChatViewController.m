@@ -82,16 +82,23 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
     _navigationTitle = _myTitleLabel;
 
     
-    [self.pluginBoardView removeItemAtIndex:2];
+//    [self.pluginBoardView removeItemAtIndex:2];
+//    chatSessionInputBarControl的pluginBoardView
+    [self.chatSessionInputBarControl.pluginBoardView removeItemAtIndex:2];
     
     if (_msgType == CustomMsgTypeProduct ||
         _msgType == CustomMsgTypeProduct_goHealth) {
         //会话页面注册 UI
         [self registerClass:CustomProductMsgCell.class forCellWithReuseIdentifier:@"CustomProductMsgCell"];
+        
+//        [self registerClass:CustomProductMsgCell.class forMessageClass:nil];
+        
     }else if (_msgType == CustomMsgTypeOrder ||
               _msgType == CustomMsgTypeOrder_goHealth){
         
         [self registerClass:CustomOrderMsgCell.class forCellWithReuseIdentifier:@"CustomOrderMsgCell"];
+//        [self registerClass:CustomProductMsgCell.class forMessageClass:nil];
+
     }
 }
 
@@ -292,7 +299,7 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
         _msgType == CustomMsgTypeProduct_goHealth) {
         
         NSString * cellIndentifier=@"CustomProductMsgCell";
-        CustomProductMsgCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier           forIndexPath:indexPath];
+        CustomProductMsgCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndentifier forIndexPath:indexPath];
         cell.backgroundColor = [UIColor whiteColor];
         [cell.senderButton addTarget:self action:@selector(clickToSendMessage) forControlEvents:UIControlEventTouchUpInside];
         [cell loadData:self.msg_model];
@@ -320,9 +327,9 @@ typedef NS_ENUM(NSInteger,CustomMsgType) {
 {
     //返回自定义cell的实际高度
     if (_msgType == CustomMsgTypeOrder) {
-        return CGSizeMake(DEVICE_WIDTH, 60 + 10);
+        return CGSizeMake(DEVICE_WIDTH, 60 + 10 + 30);
     }
-    return CGSizeMake(DEVICE_WIDTH, 60 + 50);
+    return CGSizeMake(DEVICE_WIDTH, 60 + 50 + 30);
 }
 
 -(void) leftBarButtonItemPressed:(id)sender

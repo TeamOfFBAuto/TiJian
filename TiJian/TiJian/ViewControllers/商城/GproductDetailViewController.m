@@ -23,7 +23,7 @@
 #import "ChooseHopitalController.h"//选择分院
 
 
-@interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface GproductDetailViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,CAAnimationDelegate>
 {
     YJYRequstManager *_request;
     AFHTTPRequestOperation *_request_productDetail;

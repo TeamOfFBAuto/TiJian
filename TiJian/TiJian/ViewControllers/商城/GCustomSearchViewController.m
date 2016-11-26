@@ -58,9 +58,6 @@
 }
 
 
-
-
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -205,7 +202,7 @@
     [self resetShowCustomNavigationBar:YES];
 
     _searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 7, DEVICE_WIDTH - 70, 30)];
-    
+    _searchView.backgroundColor = [UIColor whiteColor];
     //带框的view
     _kuangView = [[UIView alloc]initWithFrame:CGRectZero];
     _kuangView.layer.cornerRadius = 5;

@@ -14,6 +14,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
     [self.recommendLabel addCornerRadius:3.f];
     [self.recommendLabel setBorderWidth:0.5 borderColor:DEFAULT_TEXTCOLOR_TITLE_THIRD];
     [self.recommendLabel setFont:[UIFont systemFontOfSize:12.f]];

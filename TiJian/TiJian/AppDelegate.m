@@ -36,8 +36,7 @@
 #define kAlertViewTag_otherClient 101 //其他设备登陆
 #define kAlertViewTag_active 102 //正在前台 推送消息
 
-#define NSLog(...) printf("%f %s\n",[[NSDate date]timeIntervalSince1970],[[NSString stringWithFormat:__VA_ARGS__]UTF8String]);
-
+//#define NSLog(...) printf("%f %s\n",[[NSDate date]timeIntervalSince1970],[[NSString stringWithFormat:__VA_ARGS__]UTF8String]);
 
 @interface AppDelegate ()<BMKGeneralDelegate,WXApiDelegate,GgetllocationDelegate,RCIMReceiveMessageDelegate,RCIMUserInfoDataSource,RCIMConnectionStatusDelegate,JPUSHRegisterDelegate>
 {
@@ -1272,6 +1271,7 @@
 //    
 //    NSObject * __weak someObject2 = self.someObject;
     
+
 }
 
 @end

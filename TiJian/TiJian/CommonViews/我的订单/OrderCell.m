@@ -14,6 +14,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
     [self.rightButton setBorderWidth:0.5 borderColor:[UIColor colorWithHexString:@"ec7d24"]];
     [self.rightButton addCornerRadius:3.f];
     

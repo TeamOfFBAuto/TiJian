@@ -76,9 +76,7 @@
 {
     [super viewDidLoad];
     
-    if (IOS7_OR_LATER) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     
     self.view.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     
