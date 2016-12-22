@@ -1270,7 +1270,6 @@
 //    NSObject * __weak someObject1 = [[NSObject alloc] init];
 //    
 //    NSObject * __weak someObject2 = self.someObject;
-    
 
 }
 
