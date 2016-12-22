@@ -1075,10 +1075,16 @@ typedef enum{
                 }];
             }
         }else{
-            
+            [[UIApplication sharedApplication] setStatusBarHidden:FALSE withAnimation:UIStatusBarAnimationSlide];
+            [UIView animateWithDuration:0.2 animations:^{
+                self.currentNavigationBar.alpha = 1;
+            }];
         }
     }else{
-        
+        [[UIApplication sharedApplication] setStatusBarHidden:FALSE withAnimation:UIStatusBarAnimationSlide];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.currentNavigationBar.alpha = 1;
+        }];
     }
     
 }
