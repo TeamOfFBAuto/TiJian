@@ -381,6 +381,9 @@
         cityName = [GMAPI cityNameForId:[province_id intValue]];
     }
     
+    if ([LTools isEmpty:cityName]) {
+        cityName = @"定位失败";
+    }
     self.leftLabel.text = cityName;
     
 }

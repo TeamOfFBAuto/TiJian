@@ -489,8 +489,8 @@
         [al show];
         return;
     }else if (kCLAuthorizationStatusDenied == status){
-        NSLog(@"请允许衣加衣使用定位服务");
-        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"请允许衣加衣使用定位服务" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        NSLog(@"请允许海马医生使用定位服务");
+        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"请允许海马医生使用定位服务" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [al show];
         return;
     }

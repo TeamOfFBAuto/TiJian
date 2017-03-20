@@ -410,8 +410,8 @@
     }
     
     
-    if (![LTools isEmpty:_hospitalModel.brand_name] && ![LTools isEmpty:_hospitalModel.center_name]) {
-        self.myTitle = [NSString stringWithFormat:@"%@ %@",_hospitalModel.brand_name,_hospitalModel.center_name];
+    if (![LTools isEmpty:_hospitalModel.center_name]) {
+        self.myTitle = _hospitalModel.center_name;
     }else{
         self.myTitle = @"分院详情";
     }

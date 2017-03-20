@@ -17,7 +17,6 @@
     
     NSDictionary *_locationDic;
     
-    NSArray *_fenyuanList;//分院列表
     
     UILabel *_tmpLabel;
     
@@ -339,7 +338,7 @@
             [self clickToPhone];
         }
     }else if (indexPath.section == 1){
-        NSDictionary *dic = _fenyuanList[indexPath.row];
+        NSDictionary *dic = _tab.dataArray[indexPath.row];
         NSString *exam_center_id = [dic stringValueForKey:@"exam_center_id"];
         
         HospitalDetailViewController *hospital = [[HospitalDetailViewController alloc]init];
@@ -412,8 +411,8 @@
     
     
     [_request requestWithMethod:YJYRequstMethodGet api:GET_CENTER_LIST parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
-        _fenyuanList = [result arrayValueForKey:@"list"];
-        [_tab reloadData:_fenyuanList pageSize:G_PER_PAGE];
+        NSArray *arr = [result arrayValueForKey:@"list"];
+        [_tab reloadData:arr pageSize:G_PER_PAGE];
         
     } failBlock:^(NSDictionary *result) {
         
@@ -433,8 +432,8 @@
         [al show];
         return;
     }else if (kCLAuthorizationStatusDenied == status){
-        NSLog(@"请允许衣加衣使用定位服务");
-        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"请允许衣加衣使用定位服务" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        NSLog(@"请允许海马医生使用定位服务");
+        UIAlertView *al = [[UIAlertView alloc]initWithTitle:@"提示" message:@"请允许海马医生使用定位服务" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [al show];
         return;
     }

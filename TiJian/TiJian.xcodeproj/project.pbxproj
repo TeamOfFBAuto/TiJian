@@ -101,7 +101,6 @@
 		131483041CEF0FEF00D04305 /* TencentOpenApi_IOS_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 131482EB1CEF0FEF00D04305 /* TencentOpenApi_IOS_Bundle.bundle */; };
 		131483051CEF0FEF00D04305 /* libSocialWechat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 131482EE1CEF0FEF00D04305 /* libSocialWechat.a */; };
 		131483061CEF0FEF00D04305 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 131482EF1CEF0FEF00D04305 /* libWeChatSDK.a */; };
-		131483091CEF268F00D04305 /* JSPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 131483081CEF268F00D04305 /* JSPatch.framework */; };
 		1314830B1CEF26AD00D04305 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1314830A1CEF26AD00D04305 /* JavaScriptCore.framework */; };
 		13148E461CCF089D00829628 /* refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 13148E451CCF089D00829628 /* refresh@2x.png */; };
 		131529751CF551EA001A2705 /* share3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 131529741CF551EA001A2705 /* share3@2x.png */; };
@@ -176,7 +175,6 @@
 		136ABCE01C8EB41900F2B834 /* AppointProgressDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */; };
 		136ABCE31C8FF3F300F2B834 /* appointProgresscircle_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */; };
 		136ABCE41C8FF3F300F2B834 /* appointProgresscircle_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */; };
-		1374B3891CFD40610010CDE7 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 1374B3881CFD40610010CDE7 /* main.js */; };
 		137780AA1C1183AD00677363 /* MedicalReportController.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780A91C1183AD00677363 /* MedicalReportController.m */; };
 		137780AC1C1188BE00677363 /* hema_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 137780AB1C1188BE00677363 /* hema_heart@2x.png */; };
 		137780AF1C118A3200677363 /* ResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 137780AE1C118A3200677363 /* ResultView.m */; };
@@ -828,7 +826,6 @@
 		131482F11CEF0FEF00D04305 /* WechatAuthSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WechatAuthSDK.h; sourceTree = "<group>"; };
 		131482F21CEF0FEF00D04305 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		131482F31CEF0FEF00D04305 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
-		131483081CEF268F00D04305 /* JSPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JSPatch.framework; sourceTree = "<group>"; };
 		1314830A1CEF26AD00D04305 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		13148E451CCF089D00829628 /* refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh@2x.png"; sourceTree = "<group>"; };
 		131529741CF551EA001A2705 /* share3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share3@2x.png"; sourceTree = "<group>"; };
@@ -940,7 +937,6 @@
 		136ABCDF1C8EB41900F2B834 /* AppointProgressDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppointProgressDetailController.m; sourceTree = "<group>"; };
 		136ABCE11C8FF3F300F2B834 /* appointProgresscircle_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_1@2x.png"; sourceTree = "<group>"; };
 		136ABCE21C8FF3F300F2B834 /* appointProgresscircle_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appointProgresscircle_2@2x.png"; sourceTree = "<group>"; };
-		1374B3881CFD40610010CDE7 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		137780A81C1183AD00677363 /* MedicalReportController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalReportController.h; sourceTree = "<group>"; };
 		137780A91C1183AD00677363 /* MedicalReportController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalReportController.m; sourceTree = "<group>"; };
 		137780AB1C1188BE00677363 /* hema_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hema_heart@2x.png"; sourceTree = "<group>"; };
@@ -1720,7 +1716,6 @@
 				E352F9051C0B7D4A0037E4AE /* CoreGraphics.framework in Frameworks */,
 				E352F9031C0B7D400037E4AE /* SystemConfiguration.framework in Frameworks */,
 				E352F9011C0B7D370037E4AE /* OpenGLES.framework in Frameworks */,
-				131483091CEF268F00D04305 /* JSPatch.framework in Frameworks */,
 				13228AFF1D9236EE006740BF /* jpush-ios-2.1.9.a in Frameworks */,
 				131482F51CEF0FEF00D04305 /* libUMSocial_Sdk_5.2.a in Frameworks */,
 				E352F8FF1C0B7D2E0037E4AE /* QuartzCore.framework in Frameworks */,
@@ -2003,14 +1998,6 @@
 				131482F31CEF0FEF00D04305 /* WXApiObject.h */,
 			);
 			path = Wechat;
-			sourceTree = "<group>";
-		};
-		131483071CEF268F00D04305 /* JSPatch */ = {
-			isa = PBXGroup;
-			children = (
-				131483081CEF268F00D04305 /* JSPatch.framework */,
-			);
-			path = JSPatch;
 			sourceTree = "<group>";
 		};
 		131A17701BF32CC700B12D2F /* 体检预约 */ = {
@@ -2632,7 +2619,6 @@
 			isa = PBXGroup;
 			children = (
 				13228B021D923824006740BF /* TiJian.entitlements */,
-				1374B3881CFD40610010CDE7 /* main.js */,
 				13F1F2981BBA99B800885D31 /* PrefixHeader.pch */,
 				1391FC5E1BBBB112005E06A8 /* Requests */,
 				1324B6AC1BD7742F00FB47A9 /* Images */,
@@ -2778,7 +2764,6 @@
 		13F1F30E1BBA9A4B00885D31 /* ThirdClass */ = {
 			isa = PBXGroup;
 			children = (
-				131483071CEF268F00D04305 /* JSPatch */,
 				130609011C3E127C004489A5 /* JPush */,
 				13F8C5821C05AA7E004C3FC7 /* GImagePicker */,
 				13F1F30F1BBA9A4B00885D31 /* AlipaySDK */,
@@ -3560,6 +3545,7 @@
 					13F1F2611BBA78ED00885D31 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2JW86C8CFD;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -3806,7 +3792,6 @@
 				13E2D86E1CC8C58100A684D7 /* personal_guahaoyuyue@2x.png in Resources */,
 				13D6DAA21C48C6A90091FCFE /* extension_36_8.png in Resources */,
 				1303C35A1BEB0D7100700847 /* personal_youhuiquan_y@2x.png in Resources */,
-				1374B3891CFD40610010CDE7 /* main.js in Resources */,
 				139333C51BE0DF3E00B4628B /* 22_3@2x.png in Resources */,
 				13D6DA911C48C6A90091FCFE /* extension_34_3.png in Resources */,
 				13E2D8781CC8C58100A684D7 /* personal_tijianyuyue@2x.png in Resources */,
@@ -4469,13 +4454,13 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/AlipaySDK",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
-					"$(PROJECT_DIR)/TiJian/ThirdClass/JSPatch",
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/TiJian/PrefixHeader.pch";
 				INFOPLIST_FILE = TiJian/Info.plist;
@@ -4493,8 +4478,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "899ee5f6-44a0-4c9e-bed5-03fce7e0c708";
-				PROVISIONING_PROFILE_SPECIFIER = JiRuiJiaDevelopeProfile11;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4507,13 +4492,13 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/AlipaySDK",
 					"$(PROJECT_DIR)/TiJian/ThirdClass/UMengShare/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
-					"$(PROJECT_DIR)/TiJian/ThirdClass/JSPatch",
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/TiJian/PrefixHeader.pch";
 				INFOPLIST_FILE = TiJian/Info.plist;
@@ -4531,8 +4516,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "899ee5f6-44a0-4c9e-bed5-03fce7e0c708";
-				PROVISIONING_PROFILE_SPECIFIER = JiRuiJiaDevelopeProfile11;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;

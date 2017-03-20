@@ -147,8 +147,6 @@
 //友盟
 #define UmengAppkey @"562455d167e58ede5000b699"//正式 umeng后 mobile@jiruijia.com
 
-//JSPatch
-#define JSPatchAppKey @"6b423a27b6ba3cf4"
 
 //百度地图
 #define BAIDUMAP_APPKEY @"vEwczkv6IbBHcAjrkOswLmF3" //com.medical.hema

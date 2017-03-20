@@ -20,7 +20,6 @@
 #import "GoHealthProductDetailController.h"//go健康服务详情
 #import "LogView.h"
 //#import <Bugtags/Bugtags.h>//bugtags
-#import <JSPatch/JSPatch.h> //在线修复bug
 #import "MobClick.h"
 #import "WXApi.h"//微信
 #import "UMSocial.h"
@@ -72,8 +71,6 @@
     //友盟
     [self umengSocial];
     
-    //JSPatch
-    [self JSPatch];
     
     //JPush
     [self JPush:launchOptions];
@@ -358,24 +355,6 @@
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationForErrorNotification:) name:kJPFServiceErrorNotification object:nil];
 //}
 
-#pragma mark - JSPatch
-
-- (void)JSPatch
-{
-    
-#ifdef DEBUG
-    NSString *currentVersion = [[NSString alloc] initWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-    NSComparisonResult result = [currentVersion compare:@"3.5"];
-    if (result != 1) {
-        //JSPatch develope
-        [JSPatch testScriptInBundle];
-    }
-#else
-    //JSPatch distribution
-    [JSPatch startWithAppKey:JSPatchAppKey];
-    [JSPatch sync];
-#endif
-}
 
 #pragma mark - 友盟相关
 
