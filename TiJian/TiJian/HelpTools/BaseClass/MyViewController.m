@@ -458,7 +458,7 @@
 {
     if (!_right_button) {
         _right_button = [UIButton buttonWithType:UIButtonTypeCustom];
-        _right_button.frame = CGRectMake(0,0,60,44);
+        _right_button.frame = CGRectMake(0,0,80,44);
         _right_button.titleLabel.textAlignment = NSTextAlignmentRight;
         [_right_button setTitle:_rightString forState:UIControlStateNormal];
         [_right_button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];

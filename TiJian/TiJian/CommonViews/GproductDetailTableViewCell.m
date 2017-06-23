@@ -90,12 +90,16 @@
             }else{
                 NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
                 NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
+                
+                //删除线
+                [aaa setAttributes:@{NSStrikethroughStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSBaselineOffsetAttributeName : @(NSUnderlineStyleSingle)} range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
+                
                 [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
                 [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, xianjia.length+1)];
                 
                 [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
                 [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-                [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
+//                [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
                 priceLabel.attributedText = aaa;
             }
             
@@ -441,12 +445,18 @@
             UILabel *priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, CGRectGetMaxY(titleLable.frame)+5, imv.frame.size.width - 5, 12)];
             NSString *price = [NSString stringWithFormat:@"￥%@ ￥%@",xianjia,yuanjia];
             NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:price];
+            
+            
+            //删除线
+            [aaa setAttributes:@{NSStrikethroughStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSBaselineOffsetAttributeName : @(NSUnderlineStyleSingle)} range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
+            
+            
             [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(238, 115, 0) range:NSMakeRange(0, xianjia.length+1)];
             [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:10] range:NSMakeRange(0, xianjia.length+1)];
             
             [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(105, 106, 107) range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
             [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:8] range:NSMakeRange(xianjia.length+1, yuanjia.length+2)];
-            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
+//            [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(xianjia.length+2, yuanjia.length+1)];
             priceLabel.attributedText = aaa;
             [logoAndContentView addSubview:priceLabel];
             

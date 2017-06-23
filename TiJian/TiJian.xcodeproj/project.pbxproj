@@ -3545,7 +3545,7 @@
 					13F1F2611BBA78ED00885D31 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2JW86C8CFD;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -3560,10 +3560,12 @@
 					};
 					13F1F27A1BBA78EE00885D31 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 2JW86C8CFD;
 						TestTargetID = 13F1F2611BBA78ED00885D31;
 					};
 					13F1F2851BBA78EE00885D31 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 2JW86C8CFD;
 						TestTargetID = 13F1F2611BBA78ED00885D31;
 					};
 				};
@@ -4378,10 +4380,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4401,7 +4404,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "35d3e280-9476-4023-98ab-93bc82c2fd02";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4424,10 +4427,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4440,7 +4444,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "35d3e280-9476-4023-98ab-93bc82c2fd02";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4453,8 +4457,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4479,7 +4483,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Jiruijladistribution0320;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4491,8 +4495,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: jianwei ren (KRWU7DEJBD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
 				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4517,7 +4521,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Jiruijladistribution0320;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;

@@ -1230,7 +1230,7 @@
     view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view];
     
-    UILabel *tl0 = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 50, 50)];
+    UILabel *tl0 = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 55, 50)];
     tl0.font = [UIFont systemFontOfSize:15];
     tl0.text = @"实付款:";
     [view addSubview:tl0];

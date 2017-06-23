@@ -102,9 +102,13 @@
     
     NSString *p = [NSString stringWithFormat:@"￥%@",theModel.setmeal_original_price];
     NSMutableAttributedString  *aaa = [[NSMutableAttributedString alloc]initWithString:p];
+    
+    //删除线
+    [aaa setAttributes:@{NSStrikethroughStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSBaselineOffsetAttributeName : @(NSUnderlineStyleSingle)} range:NSMakeRange(0,p.length)];
+    
     [aaa addAttribute:NSForegroundColorAttributeName value:RGBCOLOR(80, 81, 82) range:NSMakeRange(0, p.length)];
     [aaa addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, p.length)];
-    [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, p.length)];
+//    [aaa addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, p.length)];
 
     
     self.originalPriceLabel.attributedText = aaa;
