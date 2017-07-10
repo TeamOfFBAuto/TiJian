@@ -66,7 +66,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_LOGIN object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(actionForNotification:) name:NOTIFICATION_UPDATEMSGNUM object:nil];
     
-    [self testSomething];
+//    [self testSomething];
     
     //友盟
     [self umengSocial];
