@@ -104,7 +104,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
         layout.headerReferenceSize = CGSizeMake(DEVICE_WIDTH, 10);
         layout.footerReferenceSize = CGSizeMake(DEVICE_WIDTH , 10);
         
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, DEVICE_HEIGHT - 64) collectionViewLayout:layout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(10, 0, DEVICE_WIDTH - 20, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor orangeColor];
         _collectionView.backgroundColor = [UIColor clearColor];
         [_collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:kPhotoCellIdentifier];

@@ -164,7 +164,7 @@
     label.font = [UIFont systemFontOfSize:15];
     label.text = @"设为默认地址";
     
-    _saveButton = [[UIButton alloc]initWithframe:CGRectMake(33, DEVICE_HEIGHT - 64 - 25 - 43, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"保存" selectedTitle:nil target:self action:@selector(clickToSave:)];
+    _saveButton = [[UIButton alloc]initWithframe:CGRectMake(33, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - 25 - 43, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"保存" selectedTitle:nil target:self action:@selector(clickToSave:)];
     [self.view addSubview:_saveButton];
     [_saveButton addCornerRadius:3.f];
     [_saveButton setTitleColor:[UIColor colorWithHexString:@"bcbcbc"] forState:UIControlStateNormal];
@@ -449,7 +449,7 @@
         }
     }
     
-    self.view.top = 64;
+    self.view.top = HMFitIphoneX_navcBarHeight;
 }
 
 /**

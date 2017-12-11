@@ -85,6 +85,8 @@
     [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
     manager.requestSerializer.timeoutInterval = 15.f;
     [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
+    //信任过期的SSL证书
+    [manager.securityPolicy setAllowInvalidCertificates:YES];
     
 //    [manager.requestSerializer setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     

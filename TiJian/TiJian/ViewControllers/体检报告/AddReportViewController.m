@@ -47,7 +47,7 @@
     self.rightString = @"提交";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeText];
     
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, _scrollView.height);
     _scrollView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [self.view addSubview:_scrollView];
@@ -402,7 +402,7 @@ static NSString *kPhotoCellIdentifier = @"kPhotoCellIdentifier";
         layout.headerReferenceSize = CGSizeMake(DEVICE_WIDTH, 10);
         layout.footerReferenceSize = CGSizeMake(DEVICE_WIDTH , 10);
         
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(10, 120, DEVICE_WIDTH - 20, DEVICE_HEIGHT - 64 - 120) collectionViewLayout:layout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(10, 120, DEVICE_WIDTH - 20, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - 120) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor orangeColor];
         _collectionView.backgroundColor = [UIColor clearColor];
         [_collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:kPhotoCellIdentifier];

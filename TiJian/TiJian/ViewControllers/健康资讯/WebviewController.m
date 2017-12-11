@@ -71,7 +71,7 @@
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     }
     
-    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     self.webView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [self.view addSubview:_webView];
     self.webView.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag; // 当拖动时移除键盘
@@ -247,7 +247,7 @@
 {
     if (!_saveButton) {
         _saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _saveButton.frame =CGRectMake(DEVICE_WIDTH - 20 - 40, DEVICE_HEIGHT - 50 - 40 - 64, 40, 40);
+        _saveButton.frame =CGRectMake(DEVICE_WIDTH - 20 - 40, DEVICE_HEIGHT - 50 - 40 - HMFitIphoneX_navcBarHeight, 40, 40);
         [_saveButton setImage:[UIImage imageNamed:@"report_save.png"] forState:UIControlStateNormal];
         _saveButton.backgroundColor = RGBCOLOR(245, 245, 245);
         _saveButton.layer.cornerRadius = 10;

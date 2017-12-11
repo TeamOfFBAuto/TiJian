@@ -20,6 +20,19 @@
 @property(nonatomic,strong)NSDictionary *shaixuanDic;//筛选条件集合
 @property(nonatomic,assign)BOOL haveChooseGender;//是否选择性别
 
+//navigationbar ios11
+@property(nonatomic,strong)UIView *searchView;
+@property(nonatomic,strong)UIView *kuangView;
+@property(nonatomic,strong)UIButton *myNavcRightBtn;
+@property(nonatomic,assign)int editState;
+@property(nonatomic,strong)UIPanGestureRecognizer *panGestureRecognizer;
+
+-(void)myNavcRightBtnClicked;
+-(void)gogoback;
+
+
+
+
 //点击键盘的搜索按钮
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot;
 //设置导航栏透明度

@@ -190,7 +190,7 @@
                                content:(NSString *)content
                                  width:(CGFloat)theWidth{
     
-    self = [super initWithFrame:CGRectMake(0, 0, theWidth, DEVICE_HEIGHT - 64)];
+    self = [super initWithFrame:CGRectMake(0, 0, theWidth, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     if (self) {
         
         self.backgroundColor = [UIColor whiteColor];

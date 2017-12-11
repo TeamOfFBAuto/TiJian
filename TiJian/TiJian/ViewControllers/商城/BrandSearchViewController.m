@@ -98,7 +98,7 @@
 
 //创建tab
 -(void)creatTab{
-    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 42, DEVICE_WIDTH, DEVICE_HEIGHT-64-42) style:UITableViewStylePlain];
+    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 42, DEVICE_WIDTH, DEVICE_HEIGHT-HMFitIphoneX_navcBarHeight-42) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;

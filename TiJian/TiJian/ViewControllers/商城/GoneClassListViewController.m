@@ -92,7 +92,7 @@
 #pragma mark - 视图创建
 //创建搜索界面
 -(void)creatMysearchView{
-    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _mySearchView.backgroundColor = [UIColor whiteColor];
     _mySearchView.hidden = YES;
     [self.view addSubview:_mySearchView];
@@ -164,7 +164,7 @@
 }
 
 -(void)creatTableView{
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     _table.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -409,6 +409,8 @@
     
     __weak typeof(self)weakSelf = self;
     __weak typeof(_table)weakTable = _table;
+    
+    NSLog(@"%@",temp_dic);
     
     _request_ProductOneClass = [_request requestWithMethod:YJYRequstMethodGet api:StoreProductList parameters:temp_dic constructingBodyBlock:nil completion:^(NSDictionary *result) {
         

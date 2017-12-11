@@ -103,7 +103,7 @@
 #pragma mark - 视图创建
 //创建主tableview
 -(void)creaTab{
-    self.rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
+    self.rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStyleGrouped];
     self.rTab.refreshDelegate = self;
     self.rTab.dataSource = self;
     
@@ -115,7 +115,7 @@
 
 //创建下方功能view
 -(void)creatDownView{
-    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT -64 - 50, DEVICE_WIDTH, 50)];
+    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT -HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight, DEVICE_WIDTH, HMFitIphoneX_tabBarHeight)];
     _downView.backgroundColor = [UIColor whiteColor];
     
     self.allChooseBtn = [UIButton buttonWithType:UIButtonTypeCustom];

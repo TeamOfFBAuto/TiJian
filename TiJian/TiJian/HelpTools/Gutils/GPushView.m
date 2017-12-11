@@ -203,12 +203,12 @@
 
 //创建上方导航栏
 -(void)creatNavcView{
-    self.navigationView = [[GcustomNavcView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 64)];
+    self.navigationView = [[GcustomNavcView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, HMFitIphoneX_navcBarHeight)];
     self.navigationView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.navigationView];
     
     //中
-    self.navc_midelLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 15, self.navigationView.theMidelView.frame.size.width, self.navigationView.theMidelView.frame.size.height-20)];
+    self.navc_midelLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, iPhoneX ? 15 : 5, self.navigationView.theMidelView.frame.size.width, self.navigationView.theMidelView.frame.size.height)];
     self.navc_midelLabel.textAlignment = NSTextAlignmentCenter;
     self.navc_midelLabel.text = @"筛选";
     self.navc_midelLabel.textColor = RGBCOLOR(62, 150, 205);
@@ -217,7 +217,7 @@
     
     //左
     self.navc_leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navc_leftBtn setFrame:CGRectMake(0, 15, 60, self.navigationView.theLeftView.frame.size.height-20)];
+    [self.navc_leftBtn setFrame:CGRectMake(0, iPhoneX ? 15 : 5, 60, self.navigationView.theLeftView.frame.size.height)];
     [self.navc_leftBtn setTitle:@"取消" forState:UIControlStateNormal];
     [self.navc_leftBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
     self.navc_leftBtn.tag = -1;
@@ -227,7 +227,7 @@
     
     //右
     self.navc_rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navc_rightBtn setFrame:CGRectMake(self.navigationView.theRightView.frame.size.width - 65, 15, 60, self.navigationView.theRightView.frame.size.height-20)];
+    [self.navc_rightBtn setFrame:CGRectMake(self.navigationView.theRightView.frame.size.width - 65, iPhoneX ? 15 : 5, 60, self.navigationView.theRightView.frame.size.height)];
     [self.navc_rightBtn setTitle:@"确定" forState:UIControlStateNormal];
     [self.navc_rightBtn setTitleColor:RGBCOLOR(107, 108, 109) forState:UIControlStateNormal];
     [self.navc_rightBtn addTarget:self action:@selector(rightBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -258,14 +258,14 @@
     
     
     //主筛选
-    self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
+    self.tab1 = [[UITableView alloc]initWithFrame:CGRectMake(0, HMFitIphoneX_navcBarHeight, self.frame.size.width, self.frame.size.height-HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     self.tab1.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab1.delegate = self;
     self.tab1.dataSource = self;
     self.tab1.tag = 1;
     
     //城市选择
-    self.tab2 = [[UITableView alloc]initWithFrame:CGRectMake(self.frame.size.width, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStyleGrouped];
+    self.tab2 = [[UITableView alloc]initWithFrame:CGRectMake(self.frame.size.width, HMFitIphoneX_navcBarHeight, self.frame.size.width, self.frame.size.height-HMFitIphoneX_navcBarHeight) style:UITableViewStyleGrouped];
     self.tab2.delegate = self;
     self.tab2.dataSource = self;
     self.tab2.tag = 2;
@@ -276,7 +276,7 @@
     
     
     //价格
-    self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(self.frame.size.width, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStyleGrouped];
+    self.tab3 = [[UITableView alloc]initWithFrame:CGRectMake(self.frame.size.width, HMFitIphoneX_navcBarHeight, self.frame.size.width, self.frame.size.height-HMFitIphoneX_navcBarHeight) style:UITableViewStyleGrouped];
     self.tab3.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab3.delegate = self;
     self.tab3.dataSource = self;
@@ -284,7 +284,7 @@
     [self creatTab3Header];
     
     //体检品牌
-    self.tab4 = [[UITableView alloc]initWithFrame:CGRectMake(self.frame.size.width, 64, self.frame.size.width, self.frame.size.height-64) style:UITableViewStylePlain];
+    self.tab4 = [[UITableView alloc]initWithFrame:CGRectMake(self.frame.size.width, HMFitIphoneX_navcBarHeight, self.frame.size.width, self.frame.size.height-HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     self.tab4.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tab4.delegate = self;
     self.tab4.dataSource = self;
@@ -628,7 +628,7 @@
 
 -(void)showTab:(UITableView *)theTab{
     [UIView animateWithDuration:0.2 animations:^{
-        [theTab setFrame:CGRectMake(0, 64, self.frame.size.width, self.frame.size.height-64)];
+        [theTab setFrame:CGRectMake(0, HMFitIphoneX_navcBarHeight, self.frame.size.width, self.frame.size.height-HMFitIphoneX_navcBarHeight)];
     }];
     
 }
@@ -638,7 +638,7 @@
     self.navc_rightBtn.hidden = NO;
     
     [UIView animateWithDuration:0.2 animations:^{
-        [theTab setFrame:CGRectMake(self.frame.size.width, 64, self.frame.size.width, self.frame.size.height-64)];
+        [theTab setFrame:CGRectMake(self.frame.size.width, HMFitIphoneX_navcBarHeight, self.frame.size.width, self.frame.size.height - HMFitIphoneX_navcBarHeight)];
     }];
 }
 

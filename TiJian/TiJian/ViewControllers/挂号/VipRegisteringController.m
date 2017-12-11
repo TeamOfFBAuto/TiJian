@@ -436,7 +436,7 @@
 -(UIScrollView *)scrollView
 {
     if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+        _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
         _scrollView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
         [self.view addSubview:_scrollView];
         [_scrollView addTapGestureTaget:self action:@selector(clickToHiddenKeyboard) imageViewTag:0];

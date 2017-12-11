@@ -185,7 +185,7 @@
     upline.backgroundColor = RGBCOLOR(235, 235, 235);
     [self.view addSubview:upline];
     
-    _scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 40)];
+    _scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 40, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - 40)];
     _scroll.delegate = self;
     _scroll.contentSize = CGSizeMake(DEVICE_WIDTH * count, _scroll.height);
     _scroll.showsHorizontalScrollIndicator = NO;

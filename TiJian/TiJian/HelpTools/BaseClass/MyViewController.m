@@ -7,6 +7,7 @@
 //
 
 #import "MyViewController.h"
+#import "UIViewController+Extensions.h"
 
 @interface MyViewController ()<RefreshDelegate,UITableViewDataSource>
 
@@ -61,6 +62,9 @@
     [super viewWillAppear:animated];
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [MobClick beginLogPageView:NSStringFromClass([self class])];
+    
+    
+    [self adjustsScrollViewForIOS11];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -411,7 +415,7 @@
 {
     if (!_tableView)
     {
-        _tableView = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+        _tableView = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
         _tableView.refreshDelegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

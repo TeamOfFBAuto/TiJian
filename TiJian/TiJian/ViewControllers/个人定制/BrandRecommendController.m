@@ -68,7 +68,7 @@
 
 - (void)prepareRefreshTableView
 {
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];
@@ -84,7 +84,7 @@
  */
 - (void)creatBottomTools
 {
-    _bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];
+    _bottom = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight, DEVICE_WIDTH, HMFitIphoneX_tabBarHeight)];
     [self.view addSubview:_bottom];
     _bottom.backgroundColor = [UIColor whiteColor];
     
@@ -94,15 +94,15 @@
     line.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [_bottom addSubview:line];
     
-    UILabel *label_heJi = [[UILabel alloc]initWithFrame:CGRectMake(10, line.bottom, 30, _bottom.height - line.height) title:@"合计" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"494949"]];
+    UILabel *label_heJi = [[UILabel alloc]initWithFrame:CGRectMake(10, line.bottom, 30, 49 - line.height) title:@"合计" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"494949"]];
     [_bottom addSubview:label_heJi];
     
-    _sumLabel = [[UILabel alloc]initWithFrame:CGRectMake(label_heJi.right + 10, top, 100, _bottom.height - top) title:@"￥0.00" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"f88600"]];
+    _sumLabel = [[UILabel alloc]initWithFrame:CGRectMake(label_heJi.right + 10, top, 100, 49 - top) title:@"￥0.00" font:14 align:NSTextAlignmentLeft textColor:[UIColor colorWithHexString:@"f88600"]];
     [_bottom addSubview:_sumLabel];
     
 //    [self updateSumPrice];//更新数据
     
-    UIButton *payButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 110, top, 110, _bottom.height - top) buttonType:UIButtonTypeCustom normalTitle:@"去结算" selectedTitle:nil target:self action:@selector(clickToPay:)];
+    UIButton *payButton = [[UIButton alloc]initWithframe:CGRectMake(DEVICE_WIDTH - 110, top, 110, 49 - top) buttonType:UIButtonTypeCustom normalTitle:@"去结算" selectedTitle:nil target:self action:@selector(clickToPay:)];
     [payButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     payButton.backgroundColor = [UIColor colorWithHexString:@"f98700"];
     [_bottom addSubview:payButton];

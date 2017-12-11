@@ -28,6 +28,7 @@ static char showCustomBar;
 #pragma mark -
 - (void)resetShowCustomNavigationBar:(BOOL)showBar
 {
+
     //防止重复迁移item数据，首次迁移完，会置空前一个navigationbar的topitem上所有item数据
     if (self.showCustomBar == showBar) {
         return;
@@ -39,7 +40,11 @@ static char showCustomBar;
         
         if (!self.customNavigationBar) {
             
-            UINavigationBar *bar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, DLScreenWidth, 64)];
+            CGFloat barHeight = 64.f;
+            if (iPhoneX) {
+                barHeight = 64 + 20 + 4;
+            }
+            UINavigationBar *bar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, DLScreenWidth, barHeight)];
             UIImage *image = [[UIImage alloc] init];
             [bar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
             [bar setShadowImage:image];
@@ -51,7 +56,7 @@ static char showCustomBar;
             self.customItem = baritem;
             
             
-            UIView * maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DLScreenWidth +1, 64)];
+            UIView * maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DLScreenWidth +1, bar.height)];
             maskView.backgroundColor = [UIColor clearColor];
             [bar resetEffectContainerView:maskView];
         }
@@ -73,6 +78,7 @@ static char showCustomBar;
     if (self.navigationController == nil) {
         [self.navigationController setNavigationBarHidden:showBar];
     }
+    
 }
 
 

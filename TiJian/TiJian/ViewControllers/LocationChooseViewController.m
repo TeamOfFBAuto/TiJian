@@ -466,7 +466,7 @@
         
     }
 
-    _tabelView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
+    _tabelView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) style:UITableViewStyleGrouped];
     _tabelView.delegate = self;
     _tabelView.dataSource = self;
     [self.view addSubview:_tabelView];

@@ -47,7 +47,7 @@
 //    @(ConversationType_CUSTOMERSERVICE) //客服1.0
     
     //自定义空会话的背景View。当会话列表为空时，将显示该View
-    UIView *blankView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, DEVICE_HEIGHT - 64 - 50)];
+    UIView *blankView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - 50)];
     blankView.backgroundColor=DEFAULT_VIEW_BACKGROUNDCOLOR;
     
     ResultView *view = [[ResultView alloc]initWithImage:[UIImage imageNamed:@"hema_heart"] title:@"暂时没有会话" content:nil];

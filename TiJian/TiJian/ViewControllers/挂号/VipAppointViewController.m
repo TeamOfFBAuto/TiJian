@@ -44,7 +44,7 @@
     // Do any additional setup after loading the view.
     self.myTitle = @"专家号";
     [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     imageView.backgroundColor = [UIColor orangeColor];
     
     if (iPhone4) {
@@ -232,7 +232,7 @@
 {
     if (!_sliderBgView)
     {
-        _sliderBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+        _sliderBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
         _sliderBgView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
         _sliderBgView.alpha = 0.f;
         [self.view addSubview:_sliderBgView];

@@ -754,7 +754,7 @@
 #pragma mark - 视图创建
 //创建tableview
 -(void)creatTab{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStyleGrouped];
     _tab.delegate = self;
     _tab.dataSource = self;
     [self.view addSubview:_tab];
@@ -1226,7 +1226,7 @@
 
 //创建下面view
 -(void)creatDownView{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 64 - 50, DEVICE_WIDTH, 50)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight, DEVICE_WIDTH, HMFitIphoneX_tabBarHeight)];
     view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view];
     

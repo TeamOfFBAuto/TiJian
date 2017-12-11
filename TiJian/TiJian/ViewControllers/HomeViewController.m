@@ -548,7 +548,7 @@
 
 - (void)prepareRefreshTableView
 {
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0  , DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 49)
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0  , DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight)
                                               style:UITableViewStylePlain
                                 refreshHeaderHidden:YES];
     _table.refreshDelegate = self;
@@ -865,7 +865,7 @@
 
 - (void)prepareViewsVersionThree
 {
-    UIView *bgScroll = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 49 - 64)];
+    UIView *bgScroll = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 49 - HMFitIphoneX_navcBarHeight)];
     bgScroll.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:bgScroll];
     
@@ -892,17 +892,26 @@
     
     //体检预约、体检商城入口
     
+//    NSArray *images = @[[UIImage imageNamed:@"homepage_tijianyuyue"],
+//                        [UIImage imageNamed:@"homepage_shangcheng"],
+//                        [UIImage imageNamed:@"homepage_shangmen"]];
+//    NSArray *titles = @[@" 体检预约",@" 体检商城",@" 上门体检"];
+    
+//    NSArray *titles_sub = @[@"足不出户 快速预约",@"体检套餐 任你挑选"];
+    
+    //去掉上门体检：go健康
     NSArray *images = @[[UIImage imageNamed:@"homepage_tijianyuyue"],
                         [UIImage imageNamed:@"homepage_shangcheng"],
-                        [UIImage imageNamed:@"homepage_shangmen"]];
-    NSArray *titles = @[@" 体检预约",@" 体检商城",@" 上门体检"];
-//    NSArray *titles_sub = @[@"足不出户 快速预约",@"体检套餐 任你挑选"];
+                        ];
+    NSArray *titles = @[@" 体检预约",@" 体检商城"];
+    
+    
     
     CGFloat bottom = btn.bottom;
     
     CGFloat width_small = DEVICE_WIDTH / images.count;
     
-    CGFloat radio_small = 250.f/150.f;//宽比高
+    CGFloat radio_small = 250.f/100.f;//宽比高
     
     CGFloat height_small = width_small / radio_small;
     

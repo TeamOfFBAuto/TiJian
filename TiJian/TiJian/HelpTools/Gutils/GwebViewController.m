@@ -60,7 +60,7 @@
     
     NSURLRequest *request =[NSURLRequest requestWithURL:url];
     
-    awebview=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64-40)];
+    awebview=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-HMFitIphoneX_navcBarHeight-40)];
     awebview.delegate=self;
     [awebview loadRequest:request];
     awebview.scalesPageToFit = YES;

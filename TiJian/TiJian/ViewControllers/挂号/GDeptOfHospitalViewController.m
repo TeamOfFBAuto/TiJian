@@ -34,7 +34,7 @@
 
 #pragma mark - 视图创建
 -(void)creatTab{
-    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStylePlain];
+    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     [self.view addSubview:_rTab];

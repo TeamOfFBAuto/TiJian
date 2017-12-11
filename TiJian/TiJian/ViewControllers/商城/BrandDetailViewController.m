@@ -67,7 +67,7 @@
 #pragma mark - 视图创建
 
 -(void)creatTab{
-    _tab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-64) style:UITableViewStyleGrouped];
+    _tab = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT-HMFitIphoneX_navcBarHeight) style:UITableViewStyleGrouped];
     _tab.refreshDelegate = self;
     _tab.dataSource = self;
     _tab.separatorStyle = UITableViewCellSeparatorStyleNone;

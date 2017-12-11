@@ -26,6 +26,7 @@
 #import "BrandDetailViewController.h"
 #import "BrandSearchViewController.h"
 
+
 @interface GBrandHomeViewController ()<RefreshDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate,GpushViewDelegate,GTranslucentSideBarDelegate>
 {
     YJYRequstManager *_request;
@@ -112,6 +113,8 @@
     
     self.haveChooseGender = YES;//筛选条件添加性别
     
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    
     _backBlackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT)];
     _backBlackView.backgroundColor = [UIColor blackColor];
     _backBlackView.alpha = 0.5;
@@ -127,6 +130,8 @@
     //视图创建
     [self creatTab];
     [self setupNavigation];
+//    [self setUpNavitationBar];
+    
     [self creatMysearchView];
     [self creatRightTranslucentSideBar];
     [self prepareBrandListWithLocation];
@@ -262,7 +267,7 @@
 
 -(void)creatTab{
     
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64-50) style:UITableViewStylePlain];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStylePlain];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     [self creatTabHeaderView];
@@ -346,7 +351,7 @@
 //创建下层四个按钮view
 -(void)creatDownBtnView{
     
-    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50-64, DEVICE_WIDTH, 50)];
+    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight, DEVICE_WIDTH, HMFitIphoneX_tabBarHeight)];
     _downView.backgroundColor = RGBCOLOR(38, 51, 62);
     [self.view addSubview:_downView];
     
@@ -476,7 +481,7 @@
 //创建搜索界面
 -(void)creatMysearchView{
     
-    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _mySearchView.backgroundColor = [UIColor blackColor];
     _mySearchView.alpha = 0.3;
     [_mySearchView addTapGestureTaget:self action:@selector(myNavcRightBtnClicked) imageViewTag:0];
@@ -736,7 +741,7 @@
         
     }else if (state == 1){//编辑状态
         _searchState = 1;
-        [_searchView setWidth:DEVICE_WIDTH - 10];
+        [_searchView setWidth:DEVICE_WIDTH - 40];
         [_kuangView setWidth:_searchView.frame.size.width - 45];
         [self.searchTf setFrame:CGRectMake(30, 0, _kuangView.frame.size.width - 30, 30)];
         if (!_rightItem2Btn) {

@@ -63,7 +63,7 @@
         [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeBack WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     }
     
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - 64)];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH,DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     _table.separatorStyle = self.isSelectAddress ? UITableViewCellSeparatorStyleSingleLine : UITableViewCellSeparatorStyleNone;    [self.view addSubview:_table];
@@ -206,8 +206,8 @@
         return;
     }
     
-    _table.height = DEVICE_HEIGHT - 64 - 43 - 25;
-    _footer = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 43 - 25 - 64, DEVICE_WIDTH, 43 + 25)];
+    _table.height = DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - 43 - 25;
+    _footer = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 43 - 25 - HMFitIphoneX_navcBarHeight, DEVICE_WIDTH, 43 + 25)];
     [self.view addSubview:_footer];
     
     UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(50, 14, DEVICE_WIDTH - 100, 40) buttonType:UIButtonTypeCustom normalTitle:@"添加新地址" selectedTitle:nil target:self action:@selector(clickToAddNewAddress:)];
@@ -219,7 +219,7 @@
 
 - (void)removeFooter
 {
-    _table.height = DEVICE_HEIGHT - 64;
+    _table.height = DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight;
     if (_footer) {
         [_footer removeFromSuperview];
         _footer = nil;

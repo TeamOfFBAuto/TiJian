@@ -25,6 +25,8 @@
 #import "GSearchView.h"
 #import "ProductListViewController.h"
 
+#import "GCustomSearchViewController+ios11NavigationBar.h"
+
 @interface GCustomSearchViewController ()<UITextFieldDelegate,UIScrollViewDelegate,GsearchViewDelegate>
 {
     
@@ -33,13 +35,11 @@
     AFHTTPRequestOperation *_request_hotSearch;
     
     UIView *_mySearchView;//点击搜索盖上的搜索浮层
-    UIView *_searchView;//输入框下层view
     GSearchView *_theCustomSearchView;//自定义搜索view
     NSArray *_hotSearchArray;//热门搜索
     
     UIBarButtonItem *_rightItem1;
     UILabel *_rightItem2Label;
-    UIView *_kuangView;
     
 }
 
@@ -76,7 +76,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self setupNavigation];
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeNull];
+    
+//    [self setupNavigation];
+    [self setUpNavitationBar];
     [self creatMysearchView];
     [self getHotSearch];
     
@@ -261,7 +264,7 @@
 //创建搜索界面
 -(void)creatMysearchView{
     
-    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, HMFitIphoneX_navcBarHeight, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _mySearchView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_mySearchView];
     

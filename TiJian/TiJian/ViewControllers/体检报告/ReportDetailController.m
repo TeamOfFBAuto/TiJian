@@ -45,7 +45,7 @@
 {
     _userInfo = report;
     
-    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, _scrollView.height + 50);
     _scrollView.backgroundColor = DEFAULT_VIEW_BACKGROUNDCOLOR;
     [self.view addSubview:_scrollView];
@@ -284,7 +284,7 @@
 {
     webView.height = webView.scrollView.contentSize.height;
     CGFloat height = webView.bottom;
-    height = height > DEVICE_HEIGHT - 64 ? height : DEVICE_HEIGHT - 64;
+    height = height > DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight ? height : DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight;
     _scrollView.contentSize = CGSizeMake(DEVICE_WIDTH, height);
     
      [webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('body')[0].style.background='#F5F5F5'"];

@@ -77,7 +77,7 @@
 
 -(void)creatTab
 {
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0,100, DEVICE_HEIGHT - 64) style:UITableViewStyleGrouped];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0,100, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     _tab.delegate = self;
     _tab.dataSource = self;
     _tab.tag = 100;
@@ -87,7 +87,7 @@
     [self.view addSubview:_tab];
     [self getCacheForCities];
     
-    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(106, 0, DEVICE_WIDTH - 106, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(106, 0, DEVICE_WIDTH - 106, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.tag = 101;
@@ -146,7 +146,7 @@
 }
 //创建搜索界面
 -(void)creatMysearchView{
-    _theCustomSearchView = [[GHospitalsearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _theCustomSearchView = [[GHospitalsearchView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _theCustomSearchView.hidden = YES;
     _theCustomSearchView.backgroundColor = [UIColor whiteColor];
     __weak typeof (UITextField*)bSearchTf = _searchTF;

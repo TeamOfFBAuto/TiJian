@@ -128,6 +128,9 @@
     [view_sex addSubview:closeBtn];
     closeBtn.frame = CGRectMake(0, 20, 44, 44);
     [closeBtn addTarget:self action:@selector(clickToClose) forControlEvents:UIControlEventTouchUpInside];
+    if (iPhoneX) {
+        [closeBtn setFrame:CGRectMake(0, 20 + 24, 44, 44)];
+    }
     
     UIImage *bgImage = [UIImage imageNamed:@"1_1_bg"];
     CGFloat width = bgImage.size.width;
@@ -183,7 +186,7 @@
        
         make.left.equalTo(self.view).offset(0);
         make.bottom.equalTo(self.view).offset(0);
-        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, FitScreen(40)));
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, FitScreen(HMFitIphoneX_tabBarHeight)));
     }];
     
     //返回按钮
@@ -1175,7 +1178,7 @@
     NSString *key = [NSString stringWithFormat:@"extension_question_%d",(int)questionId];
     NSString *initAnswerString = [_questionDictionary objectForKey:key];
     
-    LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+    LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(HMFitIphoneX_tabBarHeight)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
         
         DDLOG(@"result %@",result);
         
@@ -1219,6 +1222,9 @@
     }
     [view addSubview:closeBtn];
     closeBtn.frame = CGRectMake(0, 20, 44, 44);
+    if (iPhoneX) {
+        [closeBtn setFrame:CGRectMake(0, 20 + 24, 44, 44)];
+    }
     [closeBtn addTarget:self action:@selector(clickToClose) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -1276,7 +1282,7 @@
         }
         
         Gender gender = [[_questionDictionary objectForKey:Q_SEX]intValue];
-        _view_Age = [[LQuestionView alloc]initAgeViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH :0,  0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:gender initNum:age resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        _view_Age = [[LQuestionView alloc]initAgeViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH :0,  0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(HMFitIphoneX_tabBarHeight)) gender:gender initNum:age resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             
             [weakSelf updateQuestionType:type result:result];
         }];
@@ -1306,7 +1312,7 @@
                 height = 160.f;
             }
         }
-        _view_Height = [[LQuestionView alloc]initHeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:height resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        _view_Height = [[LQuestionView alloc]initHeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(HMFitIphoneX_tabBarHeight)) gender:_selectedGender initNum:height resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             
             [weakSelf updateQuestionType:type result:result];
         }];
@@ -1335,7 +1341,7 @@
                 weight = 45;
             }
         }
-        _view_Weight = [[LQuestionView alloc]initWeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) gender:_selectedGender initNum:weight resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        _view_Weight = [[LQuestionView alloc]initWeightViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0,0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(HMFitIphoneX_tabBarHeight)) gender:_selectedGender initNum:weight resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             [weakSelf updateQuestionType:type result:result];
         }];
         _view_Weight.backgroundColor = [UIColor whiteColor];
@@ -1377,7 +1383,7 @@
         NSString *key = [NSString stringWithFormat:@"answer_group_%d_question_%d",_groupId,(int)questionId];
         NSString *initAnswerString = [_questionDictionary objectForKey:key];
 
-        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(40)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
+        LQuestionView *quetionView = [[LQuestionView alloc]initQuestionViewWithFrame:CGRectMake(forward ? DEVICE_WIDTH : 0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - FitScreen(HMFitIphoneX_tabBarHeight)) answerImages:options_arr quesitonId:NSStringFromInt(aModel.questionId) questionTitle:aModel.questionName initAnswerString:initAnswerString resultBlock:^(QUESTIONTYPE type, id object, NSDictionary *result) {
             
             NSString *answerString = result[QUESTION_ANSERSTRING];
             [weakSelf updateQuestionAnswertring:answerString withQuestionId:aModel.questionId forGroupId:_groupId];//针对问题记录
@@ -1413,6 +1419,9 @@
     }
     [view addSubview:closeBtn];
     closeBtn.frame = CGRectMake(0, 20, 44, 44);
+    if (iPhoneX) {
+        [closeBtn setFrame:CGRectMake(0, 20 + 24, 44, 44)];
+    }
     [closeBtn addTarget:self action:@selector(clickToClose) forControlEvents:UIControlEventTouchUpInside];
     
 

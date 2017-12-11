@@ -104,7 +104,7 @@
     
     UIView *footer = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, _table.height - 50 * _titlesArr.count)];
     
-    UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(33, footer.height - 43 - 20, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"退出登录" selectedTitle:nil target:self action:@selector(clickToLogout:)];
+    UIButton *btn = [[UIButton alloc]initWithframe:CGRectMake(33, footer.height - HMFitIphoneX_navcBarHeight - 20, DEVICE_WIDTH - 66, 43) buttonType:UIButtonTypeCustom normalTitle:@"退出登录" selectedTitle:nil target:self action:@selector(clickToLogout:)];
     btn.backgroundColor = [UIColor colorWithHexString:@"ed1f1f"];
     [btn addCornerRadius:3.f];
 

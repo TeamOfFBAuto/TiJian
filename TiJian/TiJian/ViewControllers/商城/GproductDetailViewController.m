@@ -150,7 +150,7 @@
 
 //创建单品详情tableview
 -(void)creatTabOfProductDetail{
-    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStylePlain];
+    _tab = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStylePlain];
     _tab.tag = 1000;
     _tab.delegate = self;
     _tab.dataSource = self;
@@ -162,7 +162,7 @@
 //创建下方工具栏
 -(void)creatDownView{
     
-    _downView =  [[GCustomDownOfProductView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50 - 64, DEVICE_WIDTH, 50) customType:self.theDownType];
+    _downView =  [[GCustomDownOfProductView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight, DEVICE_WIDTH, HMFitIphoneX_tabBarHeight) customType:self.theDownType];
     
     __weak typeof (self)bself = self;
     [_downView setDownViewClickedBlock:^(NSInteger theTag) {
@@ -175,7 +175,7 @@
 
 
 -(void)creatHiddenView{
-    _hiddenView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_tab.frame), DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 50) style:UITableViewStyleGrouped];
+    _hiddenView = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_tab.frame), DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStyleGrouped];
     _hiddenView.delegate = self;
     _hiddenView.dataSource = self;
     _hiddenView.backgroundColor = [UIColor whiteColor];
@@ -1219,8 +1219,8 @@
     
     if (!_path) {
         _path = [UIBezierPath bezierPath];
-        [_path moveToPoint:CGPointMake(DEVICE_WIDTH-_downView.addShopCarBtn.frame.size.width*0.25, DEVICE_HEIGHT - _downView.addShopCarBtn.frame.size.height - 64)];//开始点
-        [_path addQuadCurveToPoint:CGPointMake(DEVICE_WIDTH - _downView.addShopCarBtn.frame.size.width - _downView.shoucang_btn.frame.size.width*0.5, DEVICE_HEIGHT - 64 - _downView.shoucang_btn.frame.size.height*0.5) controlPoint:CGPointMake(DEVICE_WIDTH - _downView.addShopCarBtn.frame.size.width, DEVICE_HEIGHT - 300)];//结束点
+        [_path moveToPoint:CGPointMake(DEVICE_WIDTH-_downView.addShopCarBtn.frame.size.width*0.25, DEVICE_HEIGHT - _downView.addShopCarBtn.frame.size.height - HMFitIphoneX_navcBarHeight)];//开始点
+        [_path addQuadCurveToPoint:CGPointMake(DEVICE_WIDTH - _downView.addShopCarBtn.frame.size.width - _downView.shoucang_btn.frame.size.width*0.5, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - _downView.shoucang_btn.frame.size.height*0.5) controlPoint:CGPointMake(DEVICE_WIDTH - _downView.addShopCarBtn.frame.size.width, DEVICE_HEIGHT - 300)];//结束点
     }
     
     

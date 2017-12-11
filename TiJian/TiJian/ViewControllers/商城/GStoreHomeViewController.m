@@ -33,6 +33,9 @@
 #import "GChooseProvinceViewController.h"
 #import "GHospitalOfProvinceViewController.h"
 
+//ios11
+#import "GStoreHomeViewController+ios11NavigationBar.h"
+
 typedef enum{
     loading = 0,
     loadSuccess,
@@ -57,7 +60,7 @@ typedef enum{
     NSMutableArray *_StoreProductListArray_cache;//缓存数据源
     
     UIView *_mySearchView;//点击搜索盖上的搜索浮层
-    UIView *_searchView;//输入框下层view
+//    UIView *_searchView;//输入框下层view
     UIView *_downView;//底部工具栏
     UILabel *_shopCarNumLabel;//购物车数量label
     
@@ -65,7 +68,7 @@ typedef enum{
     
     NSArray *_hotSearchArray;//热门搜索
     UIBarButtonItem *_rightItem1;
-    UIView *_kuangView;
+//    UIView *_kuangView;
     
     //购物车数量
     AFHTTPRequestOperation *_request_GetShopCarNum;
@@ -74,13 +77,13 @@ typedef enum{
     
     BOOL _isPresenting;//是否在模态
     
-    UIButton *_myNavcRightBtn;
-    int _editState;//0常态 1编辑状态
+//    UIButton *_myNavcRightBtn;
+//    int _editState;//0常态 1编辑状态
     
     UIView *_backBlackView;//筛选界面下面的黑色透明view
     
     //轻扫手势
-    UIPanGestureRecognizer *_panGestureRecognizer;
+//    UIPanGestureRecognizer *_panGestureRecognizer;
     GPushView *_pushView;//筛选view
     BOOL _isShaixuan;//是否为筛选刷新数据
     
@@ -117,7 +120,7 @@ typedef enum{
 {
     [super viewWillAppear:animated];
     
-    [self hiddenNavigationBar:YES animated:animated];
+    [self hiddenNavigationBar:YES animated:NO];
     _isPresenting = NO;
     [MobClick beginLogPageView:@"GStoreHomeViewController"];
     
@@ -143,6 +146,10 @@ typedef enum{
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.title = nil;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    [self setMyViewControllerLeftButtonType:MyViewControllerLeftbuttonTypeNull WithRightButtonType:MyViewControllerRightbuttonTypeNull];
     
     //添加通知
     [self setNotification];
@@ -153,7 +160,10 @@ typedef enum{
     //视图创建
     [self creatShaixuanBackBlackView];//只创建筛选界面下方的黑色透明view不添加到self.view上
     [self hiddenNavigationBar:YES animated:YES];//隐藏NavigationBar
-    [self setupNavigation];//创建自定义navigation
+    
+//    [self setupNavigation];//创建自定义navigation
+    [self setUpNavitationBar];
+    
     [self creatTableView];//创建RefreshTabelview
     [self creatRefreshHeader];//创建refresh头部
     [self creatDownBtnView];//创建下层四个按钮view
@@ -369,14 +379,15 @@ typedef enum{
     };
     
     [self setEffectViewAlpha:0];
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+//    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    [self changeNavigationBarSearchViewState:0];
     
 }
 
 
 //创建搜索界面
 -(void)creatMysearchView{
-    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _mySearchView = [[UIView alloc]initWithFrame:CGRectMake(0, HMFitIphoneX_navcBarHeight, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     _mySearchView.backgroundColor = [UIColor whiteColor];
     _mySearchView.hidden = YES;
     [self.view addSubview:_mySearchView];
@@ -396,7 +407,7 @@ typedef enum{
 
 //创建下层四个按钮view
 -(void)creatDownBtnView{
-    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - 50, DEVICE_WIDTH, 50)];
+    _downView = [[UIView alloc]initWithFrame:CGRectMake(0, DEVICE_HEIGHT - HMFitIphoneX_tabBarHeight, DEVICE_WIDTH, HMFitIphoneX_tabBarHeight)];
     _downView.backgroundColor = RGBCOLOR(38, 51, 62);
     
     CGFloat tw = _downView.frame.size.width/4;
@@ -445,7 +456,7 @@ typedef enum{
 
 //创建tabelview
 -(void)creatTableView{
-    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50) style:UITableViewStyleGrouped];
+    _table = [[RefreshTableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStyleGrouped];
     _table.refreshDelegate = self;
     _table.dataSource = self;
     _table.showsVerticalScrollIndicator = NO;
@@ -463,9 +474,12 @@ typedef enum{
     
     self.upAdvArray = [NSMutableArray arrayWithCapacity:1];
     
+//    //gmtest
+//    NSArray *arr = @[@{@"img_url":@"http://pic.sc.chinaz.com/files/pic/pic9/201712/bpic4611.jpg"},@{@"img_url":@"http://pic.sc.chinaz.com/files/pic/pic9/201712/bpic4611.jpg"}];
+//    _StoreCycleAdvDic = @{@"advertisements_data":arr};
+    
     NSArray *advertisements_data = [NSMutableArray arrayWithArray:[_StoreCycleAdvDic objectForKey:@"advertisements_data"]];
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:1];
-    
     
     if (_StoreCycleAdvDic) {//有轮播图缓存
         if (advertisements_data.count > 0) {//有轮播图
@@ -525,15 +539,15 @@ typedef enum{
             
             [self.theTopView addSubview:_bannerView];
             
-            [_table setFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 50)];
+            [_table setFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_tabBarHeight)];
             
         }else{//无轮播图
-            [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
+            [_table setFrame:CGRectMake(0, HMFitIphoneX_navcBarHeight, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight- HMFitIphoneX_tabBarHeight)];
             _bannerView = [[LBannerView alloc] initWithFrame:CGRectZero];
 
         }
     }else{
-        [_table setFrame:CGRectMake(0, 64, DEVICE_WIDTH, DEVICE_HEIGHT - 64- 50)];
+        [_table setFrame:CGRectMake(0, HMFitIphoneX_navcBarHeight, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight)];
         _bannerView = [[LBannerView alloc] initWithFrame:CGRectZero];
     }
     
@@ -549,7 +563,8 @@ typedef enum{
     
     [_theCustomSearchView.tab reloadData];
     
-    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+//    [self changeSearchViewAndKuangFrameAndTfWithState:1];
+    [self changeNavigationBarSearchViewState:1];
     
     UIView *effectView = self.currentNavigationBar.effectContainerView;
     if (effectView) {
@@ -584,7 +599,8 @@ typedef enum{
 
 -(void)searchBtnClickedWithStr:(NSString*)theWord isHotSearch:(BOOL)isHot{
     
-    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+//    [self changeSearchViewAndKuangFrameAndTfWithState:0];
+    [self changeNavigationBarSearchViewState:0];
     
     [_searchTf resignFirstResponder];
     _mySearchView.hidden = YES;
@@ -931,7 +947,8 @@ typedef enum{
     if (_editState == 0) {//常态 跳转分院
         [self pushToFenyuan];
     }else if (_editState == 1){//编辑态 取消搜索
-        [self changeSearchViewAndKuangFrameAndTfWithState:0];
+//        [self changeSearchViewAndKuangFrameAndTfWithState:0];
+        [self changeNavigationBarSearchViewState:0];
         self.searchTf.text = nil;
     }
     

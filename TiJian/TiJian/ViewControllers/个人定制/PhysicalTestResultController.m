@@ -99,7 +99,7 @@
         return;
     }
     
-    _bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64)];
+    _bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight)];
     [self.view addSubview:_bgView];
     
     NSString *title = @"已经完成测试,快来看看结果吧";

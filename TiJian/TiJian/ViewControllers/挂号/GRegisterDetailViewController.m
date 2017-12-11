@@ -39,7 +39,7 @@
 
 #pragma mark - 视图创建
 -(void)creatRtab{
-    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(12, 12, DEVICE_WIDTH - 24, DEVICE_HEIGHT - 64) style:UITableViewStylePlain];
+    _rTab = [[RefreshTableView alloc]initWithFrame:CGRectMake(12, 12, DEVICE_WIDTH - 24, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight) style:UITableViewStylePlain];
     _rTab.refreshDelegate = self;
     _rTab.dataSource = self;
     _rTab.separatorStyle = UITableViewCellSeparatorStyleNone;

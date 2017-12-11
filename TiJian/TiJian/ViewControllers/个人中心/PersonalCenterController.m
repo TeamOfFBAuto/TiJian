@@ -77,7 +77,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(netWorkForList) name:NOTIFICATION_PAY_SUCCESS object:nil];
     _userInfo = [UserInfo userInfoForCache];
     
-    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - 64 - 49) style:UITableViewStylePlain];
+    _table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT - HMFitIphoneX_navcBarHeight - HMFitIphoneX_tabBarHeight) style:UITableViewStylePlain];
     _table.delegate = self;
     _table.dataSource = self;
     [self.view addSubview:_table];

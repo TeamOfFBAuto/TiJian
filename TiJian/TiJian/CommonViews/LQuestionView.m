@@ -56,10 +56,13 @@
         _questionId = [questionId intValue];//记录问题id
         _specialOptionId = specialOptionId;
         //head
-        UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, 64)];
+        UIView *navigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DEVICE_WIDTH, HMFitIphoneX_navcBarHeight)];
         [self addSubview:navigationView];
         navigationView.backgroundColor = [UIColor colorWithHexString:@"7da1d1"];
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, DEVICE_WIDTH, 44)];
+        if (iPhoneX) {
+            [label setFrame:CGRectMake(0, 20+24, DEVICE_WIDTH, 44)];
+        }
         label.font = [UIFont systemFontOfSize:17];
         label.text = questionTitle;
         label.textAlignment = NSTextAlignmentCenter;
