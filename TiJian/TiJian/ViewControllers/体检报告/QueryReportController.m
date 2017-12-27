@@ -48,6 +48,7 @@
         [self.view addSubview:bgView];
         
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 50, 50) font:15 align:NSTextAlignmentCenter textColor:DEFAULT_TEXTCOLOR_TITLE title:items[i]];
+        titleLabel.tag = 1000 + i;
         [bgView addSubview:titleLabel];
         
         UITextField *tf = [[UITextField alloc]initWithFrame:CGRectMake(titleLabel.right, 2, bgView.width - titleLabel.width, bgView.height - 2)];
@@ -75,10 +76,10 @@
         if (i == 1) {
             tf.returnKeyType = UIReturnKeyNext;
             tf.clearButtonMode = UITextFieldViewModeWhileEditing;
-            NSString *account = [self getAccountWithBrandId:[self getNewestBrandId]];
-            if (![LTools isEmpty:account]) {
-                tf.text = account;
-            }
+//            NSString *account = [self getAccountWithBrandId:[self getNewestBrandId]];
+//            if (![LTools isEmpty:account]) {
+//                tf.text = account;
+//            }
         }
         //密码
         else if (i == 2)
@@ -86,10 +87,10 @@
             tf.returnKeyType = UIReturnKeyDone;
             tf.clearButtonMode = UITextFieldViewModeWhileEditing;
             
-            NSString *accountPassword = [self getAccountPasswordWithBrandId:[self getNewestBrandId]];
-            if (![LTools isEmpty:accountPassword]) {
-                tf.text = accountPassword;
-            }
+//            NSString *accountPassword = [self getAccountPasswordWithBrandId:[self getNewestBrandId]];
+//            if (![LTools isEmpty:accountPassword]) {
+//                tf.text = accountPassword;
+//            }
         }
         
         top = bgView.bottom;
@@ -351,7 +352,32 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     
-    NSLog(@"年龄%d",(int)row + 1);
+    NSLog(@"选择品牌：%d",(int)row + 1);
+    if (row + 1 == 4) {//姓名 手机号
+        UILabel *label_name = [self.view viewWithTag:1001];
+        label_name.text = @"姓名";
+        UITextField *tf_name = [self textFieldWithTag:101];
+        tf_name.placeholder = @"请输入姓名";
+        
+        UILabel *label_idCard = [self.view viewWithTag:1002];
+        label_idCard.text = @"身份证";
+        UITextField *tf_idCard = [self textFieldWithTag:102];
+        tf_idCard.placeholder = @"请输入身份证号";
+        tf_idCard.secureTextEntry = NO;
+        
+    }else{
+        UILabel *label_name = [self.view viewWithTag:1001];
+        label_name.text = @"账号";
+        UITextField *tf_name = [self textFieldWithTag:101];
+        tf_name.placeholder = @"请输入体检中心提供的账号";
+        
+        UILabel *label_phone = [self.view viewWithTag:1002];
+        label_phone.text = @"密码";
+        UITextField *tf_phone = [self textFieldWithTag:102];
+        tf_phone.placeholder = @"请输入体检中心提供的密码";
+        tf_phone.secureTextEntry = YES;
+    }
+    
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
