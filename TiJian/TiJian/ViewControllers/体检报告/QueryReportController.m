@@ -269,6 +269,7 @@
         [_loading hide:YES];
 //        int errocode = [result[RESULT_CODE]intValue];
         DDLOG(@"result %@ %@",result[RESULT_CODE],result[RESULT_INFO]);
+
     }];
 }
 
@@ -312,26 +313,26 @@
         return;
     }
     
-    //缓存数据
-    NSString *account = [self getAccountWithBrandId:_brandId];
-    if (![LTools isEmpty:account]) {
-        
-        [self textFieldWithTag:101].text = account;
-
-    }else
-    {
-        [self textFieldWithTag:101].text = nil;
-    }
-    
-    NSString *account_password = [self getAccountPasswordWithBrandId:_brandId];
-    if (![LTools isEmpty:account_password]) {
-        
-        [self textFieldWithTag:102].text = account_password;
-        
-    }else
-    {
-        [self textFieldWithTag:102].text = nil;
-    }
+//    //缓存数据
+//    NSString *account = [self getAccountWithBrandId:_brandId];
+//    if (![LTools isEmpty:account]) {
+//        
+//        [self textFieldWithTag:101].text = account;
+//
+//    }else
+//    {
+//        [self textFieldWithTag:101].text = nil;
+//    }
+//    
+//    NSString *account_password = [self getAccountPasswordWithBrandId:_brandId];
+//    if (![LTools isEmpty:account_password]) {
+//        
+//        [self textFieldWithTag:102].text = account_password;
+//        
+//    }else
+//    {
+//        [self textFieldWithTag:102].text = nil;
+//    }
 }
 
 #pragma mark UIPickerViewDataSource
