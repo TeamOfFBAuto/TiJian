@@ -731,7 +731,7 @@ typedef enum{
 //        [_table reloadData:nil pageSize:PAGESIZE_SMALL CustomNoDataView:[self loadingInfoViewWithState:loading]];
     }
     
-    
+    NSLog(@"--->%@",dic);
      @WeakObj(_table);
      @WeakObj(self);
     _request_ProductRecommend = [_request requestWithMethod:YJYRequstMethodGet api:StoreJingpinTuijian parameters:dic constructingBodyBlock:nil completion:^(NSDictionary *result) {

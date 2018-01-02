@@ -2628,10 +2628,10 @@
 		13F1F2641BBA78ED00885D31 /* TiJian */ = {
 			isa = PBXGroup;
 			children = (
+				1324B6AC1BD7742F00FB47A9 /* Images */,
 				13228B021D923824006740BF /* TiJian.entitlements */,
 				13F1F2981BBA99B800885D31 /* PrefixHeader.pch */,
 				1391FC5E1BBBB112005E06A8 /* Requests */,
-				1324B6AC1BD7742F00FB47A9 /* Images */,
 				13F1F2A01BBA9A4B00885D31 /* HelpTools */,
 				13F1F30E1BBA9A4B00885D31 /* ThirdClass */,
 				13F1F2991BBA99CE00885D31 /* Constants */,
@@ -3568,7 +3568,7 @@
 					13F1F2611BBA78ED00885D31 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 2JW86C8CFD;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -3583,13 +3583,13 @@
 					};
 					13F1F27A1BBA78EE00885D31 = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 2JW86C8CFD;
+						DevelopmentTeam = D6JQ99CWAA;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 13F1F2611BBA78ED00885D31;
 					};
 					13F1F2851BBA78EE00885D31 = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 2JW86C8CFD;
+						DevelopmentTeam = D6JQ99CWAA;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 13F1F2611BBA78ED00885D31;
 					};
@@ -4413,7 +4413,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 2JW86C8CFD;
+				DEVELOPMENT_TEAM = D6JQ99CWAA;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4433,7 +4433,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "6b43349f-6e94-4a3c-9044-a0e93c2c859d";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4461,7 +4461,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 2JW86C8CFD;
+				DEVELOPMENT_TEAM = D6JQ99CWAA;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4474,7 +4474,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "6b43349f-6e94-4a3c-9044-a0e93c2c859d";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4488,8 +4488,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4513,8 +4513,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "603f7487-3255-4b45-9a3d-9616e013a7ab";
-				PROVISIONING_PROFILE_SPECIFIER = Jiruijladistribution0320;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Debug;
@@ -4527,8 +4527,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = TiJian/TiJian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: JiRuiJia health technology (Beijing) co., Ltd (2JW86C8CFD)";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2JW86C8CFD;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4552,8 +4552,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.medical.hema;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "603f7487-3255-4b45-9a3d-9616e013a7ab";
-				PROVISIONING_PROFILE_SPECIFIER = Jiruijladistribution0320;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** $(PROJECT_DIR)/TiJian/ThirdClass/JPush/lib/**";
 			};
 			name = Release;
